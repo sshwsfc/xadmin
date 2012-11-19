@@ -1,0 +1,211 @@
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+.sidebar-nav {
+  padding: 9px 0;
+}
+a { cursor: pointer;}
+
+.popover{
+    width: auto;
+}
+.popover.right.dropdown-menu {
+  margin-top: -35px;
+  margin-left: -10px;
+}
+.popover.left.dropdown-menu {
+  margin-top: -35px;
+}
+.popover.right.dropdown-menu .arrow, .popover.left.dropdown-menu .arrow{
+  top: 47px;
+}
+#filter-menu .filter-date .menu-choice-date .popover {
+    width: 260px;
+}
+.filter-date .menu-choice-date .choice-year {
+    width: 38px;
+}
+.filter-date .menu-choice-date .choice-month,
+.filter-date .menu-choice-date .choice-day {
+    width: 22px;
+}
+.filter-date .menu-choice-date button {
+    margin-top: 0px;
+}
+
+.filter-date .menu-date-range .dropdown-menu {
+  width: 605px;
+  left: 10px;
+  top: 30px;
+}
+.filter-date .menu-date-range .ranges{
+  margin: 10px;
+  width: 115px;
+  float: left;
+}
+.filter-date .menu-date-range .daterangepicker{
+  float: right;
+}
+
+.filter-date .menu-date-range .dropdown-menu:before {
+  position: absolute;
+  top: -7px;
+  left: 9px;
+  display: inline-block;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid #ccc;
+  border-left: 7px solid transparent;
+  border-bottom-color: rgba(0, 0, 0, 0.2);
+  content: '';
+}
+
+.filter-date .menu-date-range .dropdown-menu:after {
+  position: absolute;
+  top: -6px;
+  left: 10px;
+  display: inline-block;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid #fff;
+  border-left: 6px solid transparent;
+  content: '';
+}
+
+/* COLLAPSED FIELDSETS */
+
+fieldset.collapsed * {
+    display: none;
+}
+
+fieldset.collapsed h2, fieldset.collapsed {
+    display: block !important;
+}
+
+fieldset.collapsed h2 {
+    background-image: url(../img/nav-bg.gif);
+    background-position: bottom left;
+    color: #999;
+}
+
+fieldset.collapsed .collapse-toggle {
+    background: transparent;
+    display: inline !important;
+}
+/* CUSTOM FORM FIELDS */
+
+.vSelectMultipleField {
+    vertical-align: top !important;
+}
+
+.vCheckboxField {
+    border: none;
+}
+
+.vDateField, .vTimeField {
+    margin-right: 2px;
+}
+
+.vURLField {
+    width: 30em;
+}
+
+.vLargeTextField, .vXMLLargeTextField {
+    width: 48em;
+}
+
+.flatpages-flatpage #id_content {
+    height: 40.2em;
+}
+
+.module table .vPositiveSmallIntegerField {
+    width: 2.2em;
+}
+
+.vTextField {
+    width: 20em;
+}
+
+.vIntegerField {
+    width: 5em;
+}
+
+.vForeignKeyRawIdAdminField {
+    width: 5em;
+}
+
+
+/* dropdowns */
+.dropdown-menu li.with_menu_btn > a:first-child {
+  padding-right: 35px;
+}
+.dropdown-menu .dropdown-menu-btn {
+  float: right;
+  margin-top: -26px;
+  height: 20px;
+  padding: 3px 5px;
+  margin-right: 7px;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+}
+.dropdown-menu .dropdown-menu-btn:hover {
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+     -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+}
+
+
+/* export */
+.export .dropdown-submenu .popover{
+  width: 240px;
+  margin-left: -80px;
+}
+
+/* results table */
+.table th {
+  background-color: #FAFAFA;
+  background-image: -moz-linear-gradient(top, white, #F2F2F2);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(white), to(#F2F2F2));
+  background-image: -webkit-linear-gradient(top, white, #F2F2F2);
+  background-image: -o-linear-gradient(top, white, #F2F2F2);
+  background-image: linear-gradient(to bottom, white, #F2F2F2);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#fff2f2f2', GradientType=0);
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.table td .btn-group {
+  font-size: 13px;
+}
+
+/* details dl */
+.data-details dl.dl-horizontal dt{
+  width: 80px;
+}
+.data-details dl.dl-horizontal dd{
+  margin-left: 90px;
+}
+.data-details .btn{
+  float: right;
+  margin-bottom: 10px;
+}
+
+/* related menu */
+.dropdown.related_menu .dropdown-menu {
+  left: -180px;
+  width: 200px;
+}
+.dropdown.related_menu .dropdown-menu > li > a {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+
+
+
+

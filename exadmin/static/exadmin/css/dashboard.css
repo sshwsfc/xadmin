@@ -1,0 +1,9 @@
+.portlet { width: 100%; position: relative; display: block; margin: 15px 0px;
+    z-index: 0;
+    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+    -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);}
+.portlet-header .icon { float: right; width: 20px; height: 20px; top: 50%; margin-right: 5px; cursor: pointer;}
+.portlet-content { padding: 0.4em; }
+.ui-sortable-placeholder { border: 1px dotted #CCC; visibility: visible !important; background: #FEFEFE; }
+.ui-sortable-placeholder * { visibility: hidden; }

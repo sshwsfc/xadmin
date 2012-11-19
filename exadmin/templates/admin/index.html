@@ -1,0 +1,74 @@
+{% extends "admin/base_site.html" %}
+{% load i18n exadmin %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "exadmin/css/dashboard.css" %}" />{% endblock %}
+{% block extrabody %}{{ block.super }}<script src="{% static "exadmin/js/portal.js" %}" type="text/javascript"></script>{% endblock %}
+
+{% block bodyclass %}dashboard{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+<div class="dashboard container-fluid">
+  <div class="row-fluid">
+    <div class="span6 column">
+      <div class="popover portlet"><div class="popover-inner">
+        <h3 class="popover-title portlet-header">Feed</h3>
+        <div class="popover-content portlet-content">
+          <form method="get" action="">
+            <div class="control-group">
+              <div class="controls">     
+                <div class="input-append">
+                  <input name="{{search_name}}" class="input-medium" type="text" value="{{search_val}}" placeholder=""/>
+                  <a class="btn" href="{{remove_url}}">x</a>
+                  <button class="btn btn-success" type="submit"><i class="icon-search icon-white"></i></button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div></div>
+      <div class="popover portlet">
+        <div class="popover-inner">
+          <h3 class="popover-title portlet-header">
+            Search
+          </h3>
+          <div class="popover-content portlet-content">
+            <form method="get" action="">
+              <div class="control-group">
+              <div class="controls">     
+                <div class="input-append">
+                  <input name="{{search_name}}" class="input-medium" type="text" value="{{search_val}}" placeholder=""/>
+                  <a class="btn" href="{{remove_url}}">x</a>
+                  <button class="btn btn-success" type="submit"><i class="icon-search icon-white"></i></button>
+                </div>
+              </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="span6 column">
+      <div class="popover portlet"><div class="popover-inner">
+        <h3 class="popover-title portlet-header">Shopping</h3>
+        <div class="popover-content portlet-content">
+          Lorem ipsum dolor sit amet, consectetuer adipiscing elit
+        </div>
+      </div></div>
+      <div class="popover portlet"><div class="popover-inner">
+        <h3 class="popover-title portlet-header">Links</h3>
+        <div class="popover-content portlet-content">
+          Lorem ipsum dolor sit amet, consectetuer adipiscing elit
+        </div>
+      </div></div>
+      <div class="popover portlet"><div class="popover-inner">
+        <h3 class="popover-title portlet-header">Images</h3>
+        <div class="popover-content portlet-content">
+          Lorem ipsum dolor sit amet, consectetuer adipiscing elit
+        </div>
+      </div></div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+{% load url from future %}
+{% load exadmin %}
+
+{% block extrahead %}{{ block.super }}
+{% url 'admin:jsi18n' as jsi18nurl %}
+<script type="text/javascript" src="{{ jsi18nurl|default:"../../../jsi18n/" }}"></script>
+{{ media }}
+{% endblock %}
+
+{% block coltype %}{% if ordered_objects %}colMS{% else %}colM{% endif %}{% endblock %}
+
+{% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} change-form{% endblock %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+  <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> <span class="divider">/</span></li>
+  <li>
+    {% if has_change_permission %}
+    <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+    {% else %}{{ opts.verbose_name_plural|capfirst }}{% endif %} <span class="divider">/</span>
+  </li>
+  <li class="active">
+    {% if add %}{% trans 'Add' %} {{ opts.verbose_name }}{% else %}{{ original|truncatewords:"18" }}{% endif %}
+  </li>
+</ul>
+{% endblock %}
+{% endif %}
+
+{% block content %}
+<form {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form" class="form-horizontal">{% csrf_token %}{% block form_top %}{% endblock %}
+{% if is_popup %}<input type="hidden" name="_popup" value="1" />{% endif %}
+{% if save_on_top %}{% block submit_buttons_top %}{% submit_row %}{% endblock %}{% endif %}
+{% if errors %}
+    <div class="alert alert-error">
+    {% blocktrans count counter=errors|length %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
+    </div>
+    {{ adminform.form.non_field_errors }}
+{% endif %}
+
+<legend>
+  {% block object-tools %}
+  {% if change %}{% if not is_popup %}
+  <div class="btn-group pull-right">
+    {% block object-tools-items %}
+    <a href="history/" class="btn btn-small historylink">{% trans "History" %}</a>
+    {% if has_absolute_url %}<a href="../../../r/{{ content_type_id }}/{{ object_id }}/" class="btn btn-small viewsitelink">{% trans "View on site" %}</a>{% endif%}
+    {% endblock %}
+  </div>
+  {% endif %}{% endif %}
+  {% endblock %}
+  {% if add %}{% trans 'Add' %} {{ opts.verbose_name }}{% else %}{{ original|truncatewords:"18" }}{% endif %}
+</legend>
+
+{% block field_sets %}
+{% for fieldset in adminform %}
+  {% include "admin/includes/fieldset.html" %}
+{% endfor %}
+{% endblock %}
+
+{% block after_field_sets %}{% endblock %}
+
+{% block inline_field_sets %}
+{% for inline_admin_formset in inline_admin_formsets %}
+    {% include inline_admin_formset.opts.template %}
+{% endfor %}
+{% endblock %}
+
+{% block after_related_objects %}{% endblock %}
+
+{% block submit_buttons_bottom %}{% submit_row %}{% endblock %}
+
+{% if adminform and add %}
+   <script type="text/javascript">document.getElementById("{{ adminform.first_field.id_for_label }}").focus();</script>
+{% endif %}
+
+</form>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% load i18n %}
+<li class="dropdown-submenu">
+  <a><i class="icon-{% if spec.is_used %}ok{%else%}blank{% endif %}"></i> {{ title }}</a>
+  <div class="popover right dropdown-menu">
+    <div class="arrow"></div>
+    <div class="popover-inner">
+      <h3 class="popover-title">
+        {% trans "Search" %} {{title}}
+      </h3>
+      <div class="popover-content">
+        <form method="get" action="">
+          {{ form_params|safe }}
+          <div class="control-group">
+          <div class="controls">     
+            <div class="input-append">
+              <input name="{{search_name}}" class="input-medium" type="text" value="{{search_val}}" placeholder="{% trans "Enter" %} {{title}}…"/>
+            {% if search_val %}
+              <a class="btn" href="{{remove_url}}">x</a>
+            {% endif %}
+              <button class="btn btn-success" type="submit"><i class="icon-search icon-white"></i></button>
+            </div>
+          </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</li>

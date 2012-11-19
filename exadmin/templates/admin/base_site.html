@@ -1,0 +1,81 @@
+{% extends "admin/base.html" %}
+{% load i18n exadmin %}
+
+{% block title %}{{ title }} | {% trans 'Django site exadmin' %}{% endblock %}
+
+{% block body %}
+  <!-- Header -->
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container-fluid">
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </a>
+        <a class="brand" href="#">{% block branding %}{% trans 'Django Exadmin' %}{% endblock %}</a>
+        <div class="nav-collapse collapse">
+          <ul class="nav pull-right">
+              <li><a href="">{% trans 'Log out' %}</a></li>
+              {% view_block 'top-nav-btn' %}
+          </ul>
+          {% if user.is_active and user.is_staff %}
+          <p class="navbar-text pull-right">
+              {% trans 'Welcome,' %}
+              <strong>{% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %}</strong>.
+          </p>
+          {% endif %}
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div id="left-side" class="span2 hidden-phone">
+      {% block navbar %}
+        {% if app_list %}
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+            {% view_block 'menu-nav' %}
+            </ul>
+          </div><!--/.well -->
+        {% endif %}
+      {% endblock %}
+      </div><!--/span-->
+
+      <div id="content-block" class="span10">
+
+        {% block breadcrumbs %}
+        <ul class="breadcrumb">
+        <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> <li>
+        {% if title %} &rsaquo; {{ title }}{% endif %}
+        </ul>
+        {% endblock %}
+
+        {% block messages %}
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">
+              <a class="close" data-dismiss="alert" href="#">&times;</a>
+              {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+        {% endblock messages %}
+
+        {% block content %}
+        {{ content }}
+        {% endblock %}
+
+      </div><!--/span-->
+    </div><!--/row-->
+
+    {% block footer %}
+      <hr>
+      <footer>
+        <p>&copy; my-company.inc 2013</p>
+      </footer>
+    {% endblock %}
+
+  </div><!--/.fluid-container-->
+{% endblock body %}

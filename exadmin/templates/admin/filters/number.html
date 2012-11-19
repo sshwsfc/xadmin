@@ -1,0 +1,44 @@
+{% load i18n %}
+<li class="dropdown-submenu filter-number">
+  <a><i class="icon-{% if spec.is_used %}ok{%else%}blank{% endif %}"></i> {{ title }}</a>
+  <div class="popover right dropdown-menu">
+    <div class="arrow"></div>
+    <div class="popover-inner">
+      <h3 class="popover-title">
+        {% trans "Search" %} {{title}}
+      </h3>
+      <div class="popover-content">
+        <form method="get" action="">
+          {{ form_params|safe }}
+          <div class="control-group">
+          <div class="controls">
+            <div class="input-prepend input-append">
+              <span class="add-on">=</span>
+              <a class="btn add-on toggle{%if ne_val%} active{%endif%}" data-toggle="button" data-off-name="{{equal_name}}" data-on-name="{{ne_name}}">!</a>
+              <input name="{%if ne_val %}{{ne_name}}{% else %}{{equal_name}}{%endif%}" class="input-small" type="text" value="{%if ne_val %}{{ne_val}}{% else %}{{equal_val}}{%endif%}" placeholder="{% trans "Enter Number" %}…"/>
+              <a class="add-on btn remove">x</a>
+            </div>
+            <div class="input-prepend input-append">
+              <span class="add-on">></span>
+              <a class="btn add-on toggle{%if gte_val%} active{%endif%}" data-toggle="button" data-off-name="{{gt_name}}" data-on-name="{{gte_name}}">=</a>
+              <input name="{%if gte_val %}{{gte_name}}{% else %}{{gt_name}}{%endif%}" class="input-small" type="text" value="{%if gte_val %}{{gte_val}}{% else %}{{gt_val}}{%endif%}" placeholder="{% trans "Enter Number" %}…"/>
+              <a class="add-on btn remove">x</a>
+            </div>
+            <div class="input-prepend input-append">
+              <span class="add-on"><</span>
+              <a class="btn add-on toggle{%if lte_val%} active{%endif%}" data-toggle="button" data-off-name="{{lt_name}}" data-on-name="{{lte_name}}">=</a>
+              <input name="{%if lte_val %}{{lte_name}}{% else %}{{lt_name}}{%endif%}" class="input-small" type="text" value="{%if lte_val %}{{lte_val}}{% else %}{{lt_val}}{%endif%}" placeholder="{% trans "Enter Number" %}…"/>
+              <a class="add-on btn remove">x</a>
+            </div>
+
+            <button type="submit" class="btn btn-success">{% trans "Apply" %}</button>
+          {% if spec.used_params %}
+            <a class="btn" href="{{remove_url}}">{% trans "Clean" %}</a>
+          {% endif %}
+          </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</li>

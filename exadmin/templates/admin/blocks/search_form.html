@@ -1,0 +1,17 @@
+{% load i18n %}
+{% if cl.search_fields %}
+<form class="navbar-search" id="changelist-search" action="" method="get">
+  <div class="input-append">
+    <ul class="dropdown-menu pull-right">
+      <li><a href="">{% trans "Search By" %} User</a></li>
+    </ul>
+    <input id="searchbar" type="text" name="{{ search_var }}" value="{{ cl.search_query }}" placeholder="Search {{cl.opts.verbose_name}}">
+    {% if cl.search_query %}
+      <a class="btn" href="{{remove_search_url}}">x</a>
+    {% endif %}
+    <button class="btn btn-primary" type="submit"><i class="icon-search icon-white"></i></button>
+    {{ search_form_params|safe }}
+  </div>
+</form>
+<script type="text/javascript">document.getElementById("searchbar").focus();</script>
+{% endif %}

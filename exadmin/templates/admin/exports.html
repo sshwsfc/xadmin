@@ -1,0 +1,48 @@
+{% load i18n %}
+<div class="btn-group export">
+  <a class="dropdown-toggle btn btn-small" data-toggle="dropdown" href="#">
+    <i class="icon-share"></i> {% trans "Export" %} <b class="caret"></b>
+  </a>
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+    {% for et in export_types %}
+      <li class="dropdown-submenu pull-left"><a><i class="icon-circle-arrow-down"></i> {% trans "Export" %} {{et.name}}</a>
+      <div class="popover left dropdown-menu">
+        <div class="arrow"></div>
+        <div class="popover-inner">
+          <h3 class="popover-title">
+            {% trans "Export" %} {{et.name}}
+          </h3>
+          <div class="popover-content">
+            <form method="get" action="">
+              {{ form_params|safe }}
+              <input type="hidden" name="export_type" value="{{et.type}}">
+              <div class="control-group">
+              <div class="controls">
+                <label class="checkbox">
+                  {% if et.type == "xls" %}
+                  <input type="checkbox" name="export_xls_header" checked="checked" value="on"> {% trans "Export with table header." %}
+                  {% endif %}
+                  {% if et.type == "csv" %}
+                  <input type="checkbox" name="export_csv_header" checked="checked" value="on"> {% trans "Export with table header." %}
+                  {% endif %}
+                  {% if et.type == "xml" %}
+                  <input type="checkbox" name="export_xml_format" checked="checked" value="on"> {% trans "Export with format." %}
+                  {% endif %}
+                  {% if et.type == "json" %}
+                  <input type="checkbox" name="export_json_format" checked="checked" value="on"> {% trans "Export with format." %}
+                  {% endif %}
+                </label>
+                <label class="checkbox">
+                  <input type="checkbox" name="all" value="on"> {% trans "Export all datas." %}
+                </label>
+                <button class="btn btn-success" type="submit">{% trans "Export" %}</button>
+              </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
