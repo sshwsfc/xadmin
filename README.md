@@ -27,7 +27,7 @@ Play Demo
 
 Demo is ready.
 
-    cd test_app
+    cd demo_app
     ./manager runserver
 
 Open http://127.0.0.1:8000/admin in your browser
