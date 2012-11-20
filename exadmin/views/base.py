@@ -52,7 +52,7 @@ class BaseAdminPlugin(object):
             self.model = admin_view.model
             self.opts = admin_view.model._meta
 
-    def init_request(self):
+    def init_request(self, *args, **kwargs):
         pass
 
 def inclusion_tag(file_name, context_class=Context, takes_context=False):

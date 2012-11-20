@@ -307,7 +307,7 @@ class ModelFormAdminView(ModelAdminView):
 
 class CreateAdminView(ModelFormAdminView):
 
-    def init_request(self):
+    def init_request(self, *args, **kwargs):
         self.org_obj = None
 
         if not self.has_add_permission():
@@ -402,7 +402,7 @@ class CreateAdminView(ModelFormAdminView):
 
 class UpdateAdminView(ModelFormAdminView):
     
-    def init_request(self, object_id):
+    def init_request(self, object_id, *args, **kwargs):
         self.org_obj = self.get_object(unquote(object_id))
 
         if not self.has_change_permission(self.org_obj):

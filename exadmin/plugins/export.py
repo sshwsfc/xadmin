@@ -23,7 +23,7 @@ class ExportPlugin(BaseAdminPlugin):
     export_mimes = {'xls': 'application/vnd.ms-excel', 'csv': 'text/csv', 'xml': 'application/xhtml+xml', 'json': 'application/json'}
     export_names = {'xls': 'Excel', 'csv': 'CSV', 'xml': 'XML', 'json': 'JSON'}
     
-    def init_request(self):
+    def init_request(self, *args, **kwargs):
         self.list_export = [f for f in self.list_export if f != 'xls' or has_xlwt]
 
     def get_results(self, context):

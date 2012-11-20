@@ -114,7 +114,7 @@ class ListAdminView(ModelAdminView):
     # Change list templates
     change_list_template = None
 
-    def init_request(self):
+    def init_request(self, *args, **kwargs):
         request = self.request
 
         self.lookup_opts = self.opts

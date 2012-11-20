@@ -31,7 +31,7 @@ class ActionPlugin(BaseAdminPlugin):
     actions_selection_counter = True
     global_actions = {'delete_selected': django_actions.delete_selected}
 
-    def init_request(self):
+    def init_request(self, *args, **kwargs):
         self.actions = self.get_actions()
         self.admin_view.delete_confirmation_template = self.delete_confirmation_template
         self.admin_view.delete_selected_confirmation_template = self.delete_selected_confirmation_template

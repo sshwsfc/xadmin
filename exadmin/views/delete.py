@@ -24,7 +24,7 @@ class DeleteAdminView(ModelAdminView):
         """
         obj.delete()
 
-    def init_request(self, object_id):
+    def init_request(self, object_id, *args, **kwargs):
         "The 'delete' admin view for this model."
         self.obj = self.get_object(unquote(object_id))
 
