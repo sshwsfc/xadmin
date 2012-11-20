@@ -1,7 +1,12 @@
 
 ==== 列表页面 ====
-details
-##  数据详情页面，可以级联显示相关内容 (定制显示哪些列，还有字段名称显示)
+quickform
+    列表页面快速添加栏, 添加form根据model定义
+acl
+    基于条件的ACL权限
+    ACL或选定用户时可以使用组概念
+
+/**** 完成部分，级联功能暂时滞后 ****/
 relate
 ##  显示相关信息的菜单，到另一个页面后再页面显示主信息，添加时预填写改信息，填写后返回该页面。(关联父类别数据如何显示是一个问题)
 editer
@@ -9,17 +14,7 @@ editer
     :: http://vitalets.github.com/bootstrap-editable/#newrecord
     :: https://github.com/toastdriven/django-tastypie
 chart
-    简单图表功能(现成的图表组件)，可以制定列显示，可以划定x轴显示，可以多列显示
-    :: http://www.highcharts.com/demo/line-ajax
-quickform
-    列表页面快速添加栏, 添加form根据model定义
-order
-#   根据列编辑排序 (在分页情况下很难做排序，可以考虑单页内排序。排序时仅安装指定列order显示，不能有其他列order by)
-acl
-    基于条件的ACL权限
-    ACL或选定用户时可以使用组概念
-
-/**** 完成部分，级联功能暂时滞后 ****/
+### 简单图表功能(现成的图表组件)，可以制定列显示，可以划定x轴显示，可以多列显示
 details
 ##  数据详情页面，可以级联显示相关内容 (定制显示哪些列，还有字段名称显示)
 ?   级联数据显示
@@ -36,6 +31,8 @@ list
 ?   级联显示列
 refresh
 ### 列表定时刷新功能
+order
+?#   根据列编辑排序 (在分页情况下很难做排序，可以考虑单页内排序。排序时仅安装指定列order显示，不能有其他列order by)
 
 ==== 编辑页面 ====
     数据添加向导功能
