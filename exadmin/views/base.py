@@ -224,8 +224,9 @@ class ModelAdminView(BaseAdminView):
         except (model.DoesNotExist, ValidationError):
             return None
 
-    def model_admin_urlname(self, name):
-        return reverse("%s:%s_%s_%s" % (self.admin_site.app_name, self.opts.app_label, self.opts.module_name, name))
+    def model_admin_urlname(self, name, *args, **kwargs):
+        return reverse("%s:%s_%s_%s" % (self.admin_site.app_name, self.opts.app_label, \
+            self.opts.module_name, name), args=args, kwargs=kwargs)
 
     def get_model_perms(self):
         """
