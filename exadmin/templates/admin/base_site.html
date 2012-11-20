@@ -33,9 +33,25 @@
     <div class="row-fluid">
       <div id="left-side" class="span2 hidden-phone">
       {% block navbar %}
-        {% if app_list %}
+        {% if nav_menu %}
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
+              {% for item in nav_menu %}
+                <li class="nav-header{% if item.selected %} active{% endif %}">
+                  {% if item.icon %}<i class="icon icon-{{item.icon}}"></i> {% endif %}
+                  {% if item.url %}
+                  <a href="{{ item.url }}" class="section">{{ item.title }}</a>
+                  {% else %}{{ item.title }}{% endif %}
+                </li>
+                {% for sitem in item.menus %}
+                <li{% if sitem.selected %} class="active"{% endif %}>
+                  {% if sitem.icon %}<i class="icon icon-{{sitem.icon}}"></i> {% endif %}
+                  {% if sitem.url %}
+                  <a href="{{ sitem.url }}">{{ sitem.title }}</a>
+                  {% else %}{{ sitem.title }}{% endif %}
+                </li>
+                {% endfor %}
+              {% endfor %}
             {% view_block 'menu-nav' %}
             </ul>
           </div><!--/.well -->

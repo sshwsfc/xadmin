@@ -4,7 +4,7 @@ from django import forms
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.core.serializers.json import DjangoJSONEncoder
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, NoReverseMatch
 from django.http import HttpResponse
 from django.template import Context, Template
 from django.utils import simplejson
@@ -14,6 +14,7 @@ from django.utils.itercompat import is_iterable
 from django.utils.safestring import mark_safe
 from django.views.generic import View
 from django.template.response import TemplateResponse
+from django.utils.text import capfirst
 
 class IncorrectLookupParameters(Exception):
     pass
@@ -174,13 +175,6 @@ class BaseAdminView(View):
         return mark_safe(''.join(
             '<input type="hidden" name="%s" value="%s"/>' % (k, v) for k,v in p.items() if v))
 
-    def message_user(self, message):
-        """
-        Send a message to the user. The default implementation
-        posts a message using the django.contrib.messages backend.
-        """
-        messages.info(self.request, message)
-
     def render_response(self, content, response_type='json'):
         if response_type == 'json':
             json = simplejson.dumps(content, cls=JSONEncoder, ensure_ascii=False)
@@ -197,7 +191,76 @@ class BaseAdminView(View):
     def get_media(self):
         return forms.Media()
 
-class ModelAdminView(BaseAdminView):
+class CommAdminView(BaseAdminView):
+    """
+    User logined base admin view, in CommAdminView, self.request.user is setup and vaild.
+    CommAdminView also get some page comm components job.
+    """
+
+    def get_model_perms(self):
+        return {
+            'add': True,
+            'change': True,
+            'delete': True,
+        }
+
+    @filter_hook
+    def get_nav_menu(self):
+        nav_menu = {}
+        user = self.user
+        site_name = self.admin_site.name
+        for model, model_admin in self.admin_site._registry.items():
+            app_label = model._meta.app_label
+            has_module_perms = user.has_module_perms(app_label)
+
+            if has_module_perms:
+                perms = self.get_model_perms()
+
+                # Check whether user has any perm for this module.
+                # If so, add the module to the model_list.
+                if True in perms.values():
+                    info = (app_label, model._meta.module_name)
+                    model_dict = {
+                        'title': capfirst(model._meta.verbose_name_plural),
+                        'perms': perms,
+                    }
+                    if perms.get('change', False):
+                        try:
+                            model_dict['url'] = reverse('admin:%s_%s_changelist' % info, current_app=site_name)
+                        except NoReverseMatch:
+                            pass
+                    if perms.get('add', False):
+                        try:
+                            model_dict['add_url'] = reverse('admin:%s_%s_add' % info, current_app=site_name)
+                        except NoReverseMatch:
+                            pass
+                    app_key = "app:%s" % app_label
+                    if app_key in nav_menu:
+                        nav_menu[app_key]['menus'].append(model_dict)
+                    else:
+                        nav_menu[app_key] = {
+                            'title': app_label.title(),
+                            #'url': reverse('admin:app_list', kwargs={'app_label': app_label}, current_app=site_name),
+                            'menus': [model_dict],
+                        }
+        return nav_menu
+
+    def get_context(self):
+        context = super(CommAdminView, self).get_context()
+        context.update({
+            'nav_menu': self.get_nav_menu().values()
+            })
+        return context
+
+    def message_user(self, message):
+        """
+        Send a message to the user. The default implementation
+        posts a message using the django.contrib.messages backend.
+        """
+        messages.info(self.request, message)
+
+
+class ModelAdminView(CommAdminView):
 
     fields = None
     exclude = None

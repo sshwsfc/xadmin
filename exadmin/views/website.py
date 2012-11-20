@@ -2,11 +2,11 @@ from django.utils.translation import ugettext as _
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.views.decorators.cache import never_cache
 
-from base import BaseAdminView
+from base import BaseAdminView, CommAdminView
 from exadmin.forms import AdminAuthenticationForm
 
 
-class IndexView(BaseAdminView):
+class IndexView(CommAdminView):
 
     @never_cache
     def get(self, request):
