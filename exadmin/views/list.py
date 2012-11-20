@@ -104,7 +104,7 @@ class ListAdminView(ModelAdminView):
     list_display = ('__str__',)
     list_display_links = ()
     list_select_related = False
-    list_per_page = 3
+    list_per_page = 50
     list_max_show_all = 200
     list_exclude = ()
     search_fields = ()
@@ -142,6 +142,35 @@ class ListAdminView(ModelAdminView):
         self.base_queryset = self.queryset()
         self.list_queryset = self.get_list_queryset()
         self.ordering_field_columns = self.get_ordering_field_columns()
+        self.paginator = self.get_paginator()
+
+        # Get the number of objects, with admin filters applied.
+        self.result_count = self.paginator.count
+
+        # Get the total number of objects, with no admin filters applied.
+        # Perform a slight optimization: Check to see whether any filters were
+        # given. If not, use paginator.hits to calculate the number of objects,
+        # because we've already done paginator.hits and the value is cached.
+        if not self.list_queryset.query.where:
+            self.full_result_count = self.result_count
+        else:
+            self.full_result_count = self.base_queryset.count()
+
+        self.can_show_all = self.result_count <= self.list_max_show_all
+        self.multi_page = self.result_count > self.list_per_page
+
+        # Get the list of objects to display on this page.
+        if (self.show_all and self.can_show_all) or not self.multi_page:
+            self.result_list = self.list_queryset._clone()
+        else:
+            try:
+                self.result_list = self.paginator.page(self.page_num+1).object_list
+            except InvalidPage:
+                if ERROR_FLAG in self.request.GET.keys():
+                    return SimpleTemplateResponse('admin/invalid_setup.html', {
+                        'title': _('Database error'),
+                    })
+                return HttpResponseRedirect(self.request.path + '?' + ERROR_FLAG + '=1')
 
     @filter_hook
     def get_list_display(self):
@@ -315,37 +344,6 @@ class ListAdminView(ModelAdminView):
         """
         Prepare the context for templates.
         """
-        request = self.request
-
-        self.paginator = self.get_paginator(self.list_queryset, self.list_per_page)
-        # Get the number of objects, with admin filters applied.
-        self.result_count = self.paginator.count
-
-        # Get the total number of objects, with no admin filters applied.
-        # Perform a slight optimization: Check to see whether any filters were
-        # given. If not, use paginator.hits to calculate the number of objects,
-        # because we've already done paginator.hits and the value is cached.
-        if not self.list_queryset.query.where:
-            self.full_result_count = self.result_count
-        else:
-            self.full_result_count = self.base_queryset.count()
-
-        self.can_show_all = self.result_count <= self.list_max_show_all
-        self.multi_page = self.result_count > self.list_per_page
-
-        # Get the list of objects to display on this page.
-        if (self.show_all and self.can_show_all) or not self.multi_page:
-            self.result_list = self.list_queryset._clone()
-        else:
-            try:
-                self.result_list = self.paginator.page(self.page_num+1).object_list
-            except InvalidPage:
-                if ERROR_FLAG in request.GET.keys():
-                    return SimpleTemplateResponse('admin/invalid_setup.html', {
-                        'title': _('Database error'),
-                    })
-                return HttpResponseRedirect(request.path + '?' + ERROR_FLAG + '=1')
-
         if self.is_popup:
             title = _('Select %s')
         else:
@@ -407,8 +405,8 @@ class ListAdminView(ModelAdminView):
         return response or self.get(request, *args, **kwargs)
 
     @filter_hook
-    def get_paginator(self, queryset, per_page, orphans=0, allow_empty_first_page=True):
-        return self.paginator(queryset, per_page, orphans, allow_empty_first_page)
+    def get_paginator(self):
+        return self.paginator(self.list_queryset, self.list_per_page, 0, True)
 
     @filter_hook
     def get_page_number(self, i):
