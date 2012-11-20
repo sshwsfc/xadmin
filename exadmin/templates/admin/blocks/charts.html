@@ -4,9 +4,19 @@
     <span class="icon">
       <i class="icon-signal"></i>
     </span>
-    <h5>Line chart</h5>
+    <h5>Charts</h5>
   </div>
   <div class="widget-content">
-    <div class="chart" data-chart-url="{{chart_url}}" style="height: 300px;"></div>
+    <ul id="chart-tab" class="nav nav-tabs">
+      {% for c in charts %}
+      <li{% if forloop.first%} class="active"{% endif %}><a href="#chart-{{c.name}}" data-toggle="tab">{{c.title}}</a></li>
+      {% endfor %}
+    </ul>
+    <div id="chart-tab-content" class="tab-content">
+      {% for c in charts %}
+      <div class="chart tab-pane{% if forloop.first%} active{% endif %}" id="chart-{{c.name}}" data-chart-url="{{c.url}}" 
+        style="height: 300px; margin:10px 40px; overflow: hidden;"></div>
+      {% endfor %}
+    </div>
   </div>
 </div>
