@@ -10,7 +10,7 @@ class IDCAdmin(object):
     
 class HostAdmin(object):
     def open_terminal(self, instance):
-        return "<a href='/run?host_id=%s&method=shell' target='_blank'>终端</a>" % instance.id;
+        return "<a href='/run?host_id=%s&method=shell' target='_blank'>终端</a>" % instance.id
     open_terminal.short_description = "终端"
     open_terminal.allow_tags = True
     open_terminal.is_column = True
@@ -34,7 +34,6 @@ class HostGroupAdmin(object):
 
     search_fields = ['name']
 
-
 class MaintainLogAdmin(object):
     list_display = ('host', 'maintain_type', 'hard_type', 'time', 'operator', 'note')
     list_display_links = ('host',)
@@ -42,7 +41,26 @@ class MaintainLogAdmin(object):
     list_filter = ['host', 'maintain_type', 'hard_type', 'time', 'operator']
     search_fields = ['note']
 
+class AccessRecordAdmin(object):
+    def avg_count(self, instance):
+        return int(instance.view_count/instance.user_count)
+    avg_count.short_description = "人均次数"
+    avg_count.allow_tags = True
+    avg_count.is_column = True
+
+    list_display = ('date', 'user_count', 'view_count', 'avg_count')
+    list_display_links = ('date',)
+
+    list_filter = ['date', 'user_count', 'view_count']
+    actions = None
+
+    data_charts = {
+        "user_count": {'title': u"日访问用户数", "x-field": "date", "y-field": ("user_count", "view_count"), "order": ('date',)},
+        "avg_count": {'title': u"日人均访问次数", "x-field": "date", "y-field": ('avg_count',), "order": ('date',)}
+    }
+
 exadmin.site.register(Host, HostAdmin)
 exadmin.site.register(HostGroup, HostGroupAdmin)
 exadmin.site.register(MaintainLog, MaintainLogAdmin)
 exadmin.site.register(IDC, IDCAdmin)
+exadmin.site.register(AccessRecord, AccessRecordAdmin)

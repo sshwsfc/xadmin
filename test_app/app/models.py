@@ -107,3 +107,15 @@ class HostGroup(models.Model):
 
     def __unicode__(self):
         return self.name
+
+class AccessRecord(models.Model):
+    date = models.DateField(u"记录日期")
+    user_count = models.IntegerField(u"访问人数")
+    view_count = models.IntegerField(u"访问次数")
+
+    class Meta:
+        verbose_name = u"访问记录"
+        verbose_name_plural = verbose_name
+
+    def __unicode__(self):
+        return "%s 访问记录" % self.date.strftime('%Y-%m-%d')
