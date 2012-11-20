@@ -9,6 +9,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse
 from django.utils import simplejson
 from django.utils.encoding import smart_unicode
+from django.db import models
 
 from exadmin.sites import site
 from exadmin.views import BaseAdminPlugin, ListAdminView
@@ -85,8 +86,20 @@ class ChartsView(ListAdminView):
                 datas[i]["data"].append((value, yv))
 
         option = {'series': {'lines': { 'show': True }, 'points': { 'show': False }},
-                'xaxis': { 'mode': "time", 'tickLength': 5 , 'timeformat': "%y/%m/%d"},
                 'grid': { 'hoverable': True, 'clickable': True }}
+        try:
+            xfield = self.opts.get_field(self.x_field)
+            if type(xfield) in (models.DateTimeField, models.DateField, models.TimeField):
+                option['xaxis'] = { 'mode': "time", 'tickLength': 5}
+                if type(xfield) is models.DateField:
+                    option['xaxis']['timeformat'] = "%y/%m/%d";
+                elif type(xfield) is models.TimeField:
+                    option['xaxis']['timeformat'] = "%H:%M:%S";
+                else:
+                    option['xaxis']['timeformat'] = "%y/%m/%d %H:%M:%S";
+        except Exception:
+            pass
+            
         option.update(self.chart.get('option', {}))
 
         content = {'data': datas, 'option': option}

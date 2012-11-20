@@ -1,9 +1,5 @@
 $(document).ready(function(){
     
-    var base_option = {series: {lines: { show: true }, points: { show: false }},
-                xaxis: { mode: "time", tickLength: 5 },
-                grid: { hoverable: true, clickable: true }};
-
     function showTooltip(x, y, contents) {
         $('<div id="chart-tooltip" class="tooltip-inner">' + contents + '</div>').css( {
             position: 'absolute',
