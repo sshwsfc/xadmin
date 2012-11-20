@@ -166,15 +166,26 @@ class AdminSite(object):
             inner = csrf_protect(inner)
         return update_wrapper(inner, view)
 
+    def _get_plugins_by_view(self, admin_view_class):
+        from exadmin.views import BaseAdminView
+        plugins = []
+        for klass in admin_view_class.mro():
+            if klass == BaseAdminView or issubclass(klass, BaseAdminView):
+                plugins.extend(self._registry_plugins.get(klass, []))
+        return plugins
+
     def _create_admin_view(self, admin_view_class):
-        plugins = self._registry_plugins.get(admin_view_class, [])
+        plugins = self._get_plugins_by_view(admin_view_class)
         return admin_view_class.as_view(admin_site=self, plugins=plugins)
+
+    def _get_merge_attrs(self, admin_class, plugin_class):
+        return dict([(name, getattr(admin_class, name)) for name in dir(admin_class) \
+                    if name[0] != '_' and hasattr(plugin_class, name)])
 
     def _create_model_plugin(self, model, admin_class):
         def merge_class(plugin_class):
             if admin_class:
-                attrs = dict([(name, getattr(admin_class, name)) for name in dir(admin_class) \
-                    if name[0] != '_' and hasattr(plugin_class, name)])
+                attrs = self._get_merge_attrs(admin_class, plugin_class)
                 if attrs:
                     plugin_class = MergeAdminMetaclass(
                         '%s%s%s' % (model._meta.app_label, model._meta.module_name, plugin_class.__name__), \
@@ -184,7 +195,7 @@ class AdminSite(object):
 
     def _create_model_admin_view(self, admin_view_class, model, admin_class):
         plugins = map(self._create_model_plugin(model, admin_class), \
-            self._registry_plugins.get(admin_view_class, []))
+            self._get_plugins_by_view(admin_view_class))
         if admin_class:
             admin_view_class = MergeAdminMetaclass(
                 '%s%s%s' % (model._meta.app_label, model._meta.module_name, admin_view_class.__name__), \
