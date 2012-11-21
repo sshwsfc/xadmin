@@ -27,7 +27,11 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
-
+try:
+    import dj_database_url
+    DATABASES['default'] =  dj_database_url.config()
+except Exception:
+    pass
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
