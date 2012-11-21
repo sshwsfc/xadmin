@@ -151,12 +151,13 @@ class AdminSite(object):
         cacheable=True.
         """
         def inner(request, *args, **kwargs):
-            # if not self.has_permission(request):
-            #     if request.path == reverse('admin:logout',
-            #                                current_app=self.name):
-            #         index_path = reverse('admin:index', current_app=self.name)
-            #         return HttpResponseRedirect(index_path)
-            #     return self.login(request)
+            if not self.has_permission(request):
+                if request.path == reverse('admin:logout',
+                                           current_app=self.name):
+                    index_path = reverse('admin:index', current_app=self.name)
+                    return HttpResponseRedirect(index_path)
+                from exadmin.views import LoginView
+                return self._create_admin_view(LoginView)(request, *args, **kwargs)
             return view(request, *args, **kwargs)
         if not cacheable:
             inner = never_cache(inner)
@@ -227,7 +228,7 @@ class AdminSite(object):
 
         # Add in each model's views.
         for model, admin_class in self._registry.iteritems():
-            view_urls = [url(path, self._create_model_admin_view(clz, model, admin_class), \
+            view_urls = [url(path, wrap(self._create_model_admin_view(clz, model, admin_class)), \
                 name=name % (model._meta.app_label, model._meta.module_name)) \
                 for path, clz, name in self._registry_modelviews]
             urlpatterns += patterns('',

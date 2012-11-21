@@ -1,5 +1,6 @@
 {% extends "admin/base.html" %}
 {% load i18n exadmin %}
+{% load url from future %}
 
 {% block title %}{{ title }} | {% trans 'Django site exadmin' %}{% endblock %}
 
@@ -16,7 +17,7 @@
         <a class="brand" href="#">{% block branding %}{% trans 'Django Exadmin' %}{% endblock %}</a>
         <div class="nav-collapse collapse">
           <ul class="nav pull-right">
-              <li><a href="">{% trans 'Log out' %}</a></li>
+              <li><a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a></li>
               {% view_block 'top-nav-btn' %}
           </ul>
           {% if user.is_active and user.is_staff %}
