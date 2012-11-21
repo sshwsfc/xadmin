@@ -1,10 +1,44 @@
-
-from tastypie.resources import ModelDeclarativeMetaclass, NamespacedModelResource
-from tastypie.authentication import SessionAuthentication
-from tastypie.authorization import DjangoAuthorization
-from tastypie.api import NamespacedApi
-from tastypie import fields
+from django.conf import settings
 from django.conf.urls import patterns
+from django.middleware.csrf import _sanitize_token, constant_time_compare
+from django.utils.http import same_origin
+from tastypie import fields
+from tastypie.api import NamespacedApi
+from tastypie.authentication import Authentication
+from tastypie.authorization import DjangoAuthorization
+from tastypie.resources import ModelDeclarativeMetaclass, NamespacedModelResource
+
+class SessionAuthentication(Authentication):
+    def is_authenticated(self, request, **kwargs):
+        if request.method in ('GET', 'HEAD', 'OPTIONS', 'TRACE'):
+            return request.user.is_authenticated()
+
+        if getattr(request, '_dont_enforce_csrf_checks', False):
+            return request.user.is_authenticated()
+
+        csrf_token = _sanitize_token(request.COOKIES.get(settings.CSRF_COOKIE_NAME, ''))
+
+        if request.is_secure():
+            referer = request.META.get('HTTP_REFERER')
+
+            if referer is None:
+                return False
+
+            good_referer = 'https://%s/' % request.get_host()
+
+            if not same_origin(referer, good_referer):
+                return False
+
+        request_csrf_token = request.META.get('HTTP_X_CSRFTOKEN', '')
+
+        if not constant_time_compare(request_csrf_token, csrf_token):
+            return False
+
+        return request.user.is_authenticated()
+
+    def get_identifier(self, request):
+        return request.user.username
+
 
 def get_api_rel_field(f):
     internal_type = f.get_internal_type()
