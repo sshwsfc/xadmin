@@ -8,6 +8,9 @@ Demo
 
 http://exadmin.herokuapp.com
 
+User: admin
+Password: admin
+
 Features
 --------
 
