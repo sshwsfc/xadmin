@@ -14,7 +14,7 @@ Password: admin
 Features
 --------
 
-* UI base on boortstrap2 and support serveal themes
+* UI base on boortstrap2 and support several themes
 * Free plugin enable.
 * New style filter, date range, number range etc.
 * Export list data with xls, csv, xml and json format.

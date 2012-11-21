@@ -188,6 +188,7 @@ class BaseAdminView(View):
     def media(self):
         return self.get_media()
 
+    @filter_hook
     def get_media(self):
         return forms.Media()
 
@@ -245,6 +246,7 @@ class CommAdminView(BaseAdminView):
                         }
         return nav_menu
 
+    @filter_hook
     def get_context(self):
         context = super(CommAdminView, self).get_context()
         context.update({

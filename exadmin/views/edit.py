@@ -13,6 +13,7 @@ from django.utils.html import escape, escapejs
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.admin import widgets
+from django.contrib.admin.templatetags.admin_static import static
 from django import forms
 
 from exadmin import helpers
@@ -304,6 +305,13 @@ class ModelFormAdminView(ModelAdminView):
         context = super(ModelFormAdminView, self).get_context()
         context.update(new_context)
         return context
+
+    @filter_hook
+    def get_media(self):
+        media = super(ModelFormAdminView, self).get_media()
+        media.add_js([static('exadmin/js/form.js')])
+        media.add_css({'screen': [static('exadmin/css/form.css')]})
+        return media
 
 class CreateAdminView(ModelFormAdminView):
 

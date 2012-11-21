@@ -129,6 +129,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     'exadmin',
+    'crispy_forms',
     'app',
 )
 
