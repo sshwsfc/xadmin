@@ -1,5 +1,5 @@
 django>=1.4
 xlwt
-django-tastypie
+django-tastypie==0.9.12
 psycopg2==2.4.5
 dj-database-url==0.2.0
