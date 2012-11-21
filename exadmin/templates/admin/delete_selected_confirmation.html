@@ -1,12 +1,11 @@
 {% extends "admin/base_site.html" %}
 {% load i18n l10n %}
 {% load url from future %}
-{% load admin_urls %}
+{% load exadmin %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
 <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> <span class="divider">/</span></li>
-<li><a href="{% url 'admin:app_list' app_label=app_label %}">{{ app_label|capfirst|escape }}</a> <span class="divider">/</span></li>
 <li><a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a> <span class="divider">/</span></li>
 <li>{% trans 'Delete multiple objects' %}</li>
 </ul>
