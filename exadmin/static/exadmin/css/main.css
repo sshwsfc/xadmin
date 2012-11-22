@@ -71,26 +71,39 @@ a { cursor: pointer;}
   content: '';
 }
 
-/* COLLAPSED FIELDSETS */
-
-fieldset.collapsed * {
-    display: none;
+.box {
+  border: 1px solid #D6D6D6;
+  box-shadow: 0 1px 3px rgba(100, 100, 100, 0.1);
+  margin-bottom: 15px;
+  border-radius: 3px 3px 0 0;
+  overflow: visible;
+  position: relative;
 }
 
-fieldset.collapsed h2, fieldset.collapsed {
-    display: block !important;
+.box .box-title {
+  padding: 10px 15px;
+  background-color: #F8F8F8;
+  background-image: -moz-linear-gradient(top, #FDFDFD, #F6F6F6);
+  background-image: -ms-linear-gradient(top, #FDFDFD, #F6F6F6);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#FDFDFD), to(#F6F6F6));
+  background-image: -webkit-linear-gradient(top, #FDFDFD, #F6F6F6);
+  background-image: -o-linear-gradient(top, #FDFDFD, #F6F6F6);
+  background-image: linear-gradient(top, #FDFDFD, #F6F6F6);
+  border-bottom: 1px solid #D6D6D6;
+  color: #555;
+  text-shadow: 0 1px 0 white;
+  font-size: 14px;
+  font-weight: bold;
 }
 
-fieldset.collapsed h2 {
-    background-image: url(../img/nav-bg.gif);
-    background-position: bottom left;
-    color: #999;
+.box .box-content{
+  background-color: white;
+  padding: 15px;
+}
+.box .box-content.nopadding{
+  padding: 0px;
 }
 
-fieldset.collapsed .collapse-toggle {
-    background: transparent;
-    display: inline !important;
-}
 /* CUSTOM FORM FIELDS */
 
 .vSelectMultipleField {
@@ -133,6 +146,32 @@ fieldset.collapsed .collapse-toggle {
     width: 5em;
 }
 
+/* form css */
+.form-horizontal .control-group {
+  border-bottom: 1px solid #EEE;
+  margin-bottom: 0px;
+  background-color: #F7F7F7;
+}
+.form-horizontal .control-label {
+  padding: 15px 0;
+  margin-bottom: 0;
+  font-weight: bold;
+}
+.form-horizontal .controls {
+  padding: 15px 0 15px 20px;
+  border-left: 1px solid #EEE;
+  background-color: white;
+}
+.asteriskField {
+  color: red;
+}
+.form-horizontal .row {
+  margin: 0px;
+}
+.form-horizontal .row .control-group{
+  display: inline-block;
+  max-width: 50%;
+}
 
 /* dropdowns */
 .dropdown-menu li.with_menu_btn > a:first-child {

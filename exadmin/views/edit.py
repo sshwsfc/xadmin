@@ -7,17 +7,16 @@ from django.db import models, transaction
 from django.forms.models import modelform_factory
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.template.response import TemplateResponse
-from django.utils.decorators import method_decorator
 from django.utils.encoding import force_unicode
 from django.utils.html import escape, escapejs
 from django.utils.translation import ugettext as _
-from django.views.decorators.csrf import csrf_protect
 from django.contrib.admin import widgets
 from django.contrib.admin.templatetags.admin_static import static
 from django import forms
 
 from exadmin import helpers
-from base import ModelAdminView, filter_hook, action_hook
+from exadmin.layout import FormHelper, Layout, Fieldset, Container, Column, LayoutObject
+from base import ModelAdminView, filter_hook, action_hook, csrf_protect_m
 
 HORIZONTAL, VERTICAL = 1, 2
 # returns the <ul> class for a given radio_admin field
@@ -42,8 +41,6 @@ FORMFIELD_FOR_DBFIELD_DEFAULTS = {
     models.FileField:       {'widget': widgets.AdminFileWidget},
 }
 
-csrf_protect_m = method_decorator(csrf_protect)
-
 class ModelFormAdminView(ModelAdminView):
 
     raw_id_fields = ()
@@ -60,6 +57,9 @@ class ModelFormAdminView(ModelAdminView):
     add_form_template = None
     change_form_template = None
 
+    form_layout = None
+
+    @filter_hook
     def formfield_for_dbfield(self, db_field, **kwargs):
         """
         Hook for specifying the form Field instance for a given database Field
@@ -167,14 +167,19 @@ class ModelFormAdminView(ModelAdminView):
 
         return db_field.formfield(**kwargs)
 
-
     @action_hook
     def prepare_form(self):
+        overrides = FORMFIELD_FOR_DBFIELD_DEFAULTS.copy()
+        overrides.update(self.formfield_overrides)
+        self.formfield_overrides = overrides
         self.model_form = self.get_model_form()
 
     @action_hook
     def instance_forms(self):
         self.form_obj = self.model_form(**self.get_form_params())
+        helper = self.get_form_helper()
+        if helper:
+            self.form_obj.helper = helper
 
     @filter_hook
     def valid_forms(self):
@@ -210,6 +215,43 @@ class ModelFormAdminView(ModelAdminView):
         }
         #defaults.update(self.kwargs)
         return modelform_factory(self.model, **defaults)
+
+    @filter_hook
+    def get_form_layout(self):
+        layout = self.form_layout
+        title = "%s %s" % (_(u'Add'), self.opts.verbose_name)
+
+        if layout is None:
+            layout = Layout(Container(
+                    Fieldset(title, *self.form_obj.fields.keys()), css_class="form-horizontal"
+                    ))
+
+        if type(layout) in (list, tuple) and len(layout) > 0:
+            if isinstance(layout[0], Column):
+                layout = Layout(Container(*layout))
+            elif isinstance(layout[0], LayoutObject):
+                layout = Layout(Container(*layout, css_class="form-horizontal"))
+            else:
+                layout = Layout(Container(Fieldset(title, *layout), css_class="form-horizontal"))
+            rendered_fields = [i[1] for i in layout.get_field_names()]
+            container = layout[0].fields
+            other_fieldset = Fieldset(_(u'Other Fields'), *[f for f in self.form_obj.fields.keys() if f not in rendered_fields])
+            if len(container) > 0 and isinstance(container[0], Column):
+                container[0].fields.append(other_fieldset)
+            else:
+                container.append(other_fieldset)
+
+        return layout
+
+    @filter_hook
+    def get_form_helper(self):
+        try:
+            helper = FormHelper()
+            helper.form_tag = False
+            helper.add_layout(self.get_form_layout())
+            return helper
+        except Exception:
+            return None
 
     @filter_hook
     def get_readonly_fields(self):

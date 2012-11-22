@@ -1,5 +1,6 @@
 import exadmin
 from models import *
+from exadmin.layout import *
 
 class IDCAdmin(object):
     list_display = ('name', 'description', 'create_time')
@@ -26,6 +27,27 @@ class HostAdmin(object):
     refresh_times = (3, 5, 10)
     show_detail_fields = ('idc',)
     editable_fields = ('name', 'idc', 'guarantee_date', 'service_type', 'description')
+
+    form_layout = (
+        Main(
+            Fieldset('Company data',
+                'name', 'idc'
+            ),
+            Fieldset('Contact details',
+                'service_type',
+                Row('brand', 'model'),
+                Row('cpu', 'core_num'),
+                Row('hard_disk', 'memory'),
+                HTML('<img src="/media/somepicture.jpg"/>'),
+                'guarantee_date'
+            ),
+        ),
+        Side(
+            Fieldset('Status data',
+                'status', 'ssh_port', 'ip'
+            ),
+        )
+    )
     
 class HostGroupAdmin(object):
     list_display = ('name', 'description')

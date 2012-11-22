@@ -15,6 +15,10 @@ from django.utils.safestring import mark_safe
 from django.views.generic import View
 from django.template.response import TemplateResponse
 from django.utils.text import capfirst
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_protect
+
+csrf_protect_m = method_decorator(csrf_protect)
 
 class IncorrectLookupParameters(Exception):
     pass

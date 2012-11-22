@@ -1,0 +1,8 @@
+<div class="box fieldset" {% if fieldset.css_id %}id="{{ fieldset.css_id }}"{% endif %} 
+    {% if fieldset.css_class or form_style %}class="{{ fieldset.css_class }} {{ form_style }}"{% endif %}
+    {{ fieldset.flat_attrs|safe }}>
+    <div class="box-title">{{ legend|safe }}</div> 
+    <div class="box-content nopadding">
+    {{ fields|safe }} 
+    </div>
+</div>
