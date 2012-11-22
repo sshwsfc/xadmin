@@ -1,0 +1,122 @@
+
+/* CUSTOM FORM FIELDS */
+
+.vSelectMultipleField {
+    vertical-align: top !important;
+}
+
+.vCheckboxField {
+    border: none;
+}
+
+.vDateField, .vTimeField {
+    margin-right: 2px;
+}
+
+.vURLField {
+    width: 30em;
+}
+
+.vLargeTextField, .vXMLLargeTextField {
+    width: 94%;
+}
+
+.flatpages-flatpage #id_content {
+    height: 40.2em;
+}
+
+.vPositiveSmallIntegerField {
+    width: 15%;
+}
+
+.vTextField {
+    width: 60%;
+    max-width: 300px;
+}
+
+.vIntegerField {
+    width: 20%;
+    max-width: 100px;
+}
+
+.vForeignKeyRawIdAdminField {
+    width: 20%;
+}
+
+select {
+  max-width: 200px;
+  width: 60%;
+}
+
+/* form css */
+.control-group {
+  border-bottom: 1px solid #EEE;
+  margin-bottom: 0px;
+  background-color: #FBFBFB;
+}
+.control-label {
+  padding: 6px 15px;
+  margin-bottom: 0;
+  font-weight: bold;
+}
+.controls {
+  padding: 10px 0 0px 15px;
+  border-left: 1px solid #EEE;
+  background-color: white;
+}
+
+.form-horizontal .control-group {
+  border-bottom: 1px solid #EEE;
+  margin-bottom: 0px;
+  background-color: #FBFBFB;
+}
+.form-horizontal .control-label {
+  padding: 15px 0;
+  margin-bottom: 0;
+  font-weight: bold;
+}
+.form-horizontal .controls {
+  padding: 15px 0 15px 20px;
+  border-left: 1px solid #EEE;
+  background-color: white;
+}
+.asteriskField {
+  color: red;
+}
+.form-horizontal .forn-row {
+  margin: 0px;
+}
+.form-horizontal .form-row .control-group{
+  display: inline-block;
+  width: 50%;
+  float: left;
+}
+.main.form-horizontal .control-label {
+  width: 140px;
+}
+.main.form-horizontal .controls {
+  margin-left: 160px;
+}
+
+@media (max-width: 480px) {
+  .form-horizontal .form-row .control-group{
+    display: block;
+    width: auto;
+    float: none;
+  }  
+  .form-horizontal .form-row.num2 .control-group,
+  .form-horizontal .form-row.num3 .control-group,
+  .main.form-horizontal .control-label{
+    width: auto;
+  }
+  .main.form-horizontal .controls {
+    margin-left: 0px;
+  }
+  .form-horizontal .control-label {
+    padding: 6px 15px;
+  }
+  .form-horizontal .controls {
+    padding: 10px 0 10px 15px;
+  }
+}
+

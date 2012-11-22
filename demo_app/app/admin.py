@@ -37,8 +37,7 @@ class HostAdmin(object):
                 'service_type',
                 Row('brand', 'model'),
                 Row('cpu', 'core_num'),
-                Row('hard_disk', 'memory'),
-                HTML('<img src="/media/somepicture.jpg"/>'),
+                Row(AppendedText('hard_disk', 'G'), AppendedText('memory', "G")),
                 'guarantee_date'
             ),
         ),

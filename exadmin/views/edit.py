@@ -229,17 +229,19 @@ class ModelFormAdminView(ModelAdminView):
         if type(layout) in (list, tuple) and len(layout) > 0:
             if isinstance(layout[0], Column):
                 layout = Layout(Container(*layout))
-            elif isinstance(layout[0], LayoutObject):
+            elif isinstance(layout[0], Fieldset):
                 layout = Layout(Container(*layout, css_class="form-horizontal"))
             else:
                 layout = Layout(Container(Fieldset(title, *layout), css_class="form-horizontal"))
             rendered_fields = [i[1] for i in layout.get_field_names()]
             container = layout[0].fields
             other_fieldset = Fieldset(_(u'Other Fields'), *[f for f in self.form_obj.fields.keys() if f not in rendered_fields])
-            if len(container) > 0 and isinstance(container[0], Column):
-                container[0].fields.append(other_fieldset)
-            else:
-                container.append(other_fieldset)
+
+            if len(other_fieldset.fields):
+                if len(container) and isinstance(container[0], Column):
+                    container[0].fields.append(other_fieldset)
+                else:
+                    container.append(other_fieldset)
 
         return layout
 

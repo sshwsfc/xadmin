@@ -95,82 +95,20 @@ a { cursor: pointer;}
   font-size: 14px;
   font-weight: bold;
 }
-
+.box .box-title .icon{
+  float: right;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  margin-right: 5px;
+  cursor: pointer;
+}
 .box .box-content{
   background-color: white;
   padding: 15px;
 }
 .box .box-content.nopadding{
   padding: 0px;
-}
-
-/* CUSTOM FORM FIELDS */
-
-.vSelectMultipleField {
-    vertical-align: top !important;
-}
-
-.vCheckboxField {
-    border: none;
-}
-
-.vDateField, .vTimeField {
-    margin-right: 2px;
-}
-
-.vURLField {
-    width: 30em;
-}
-
-.vLargeTextField, .vXMLLargeTextField {
-    width: 48em;
-}
-
-.flatpages-flatpage #id_content {
-    height: 40.2em;
-}
-
-.module table .vPositiveSmallIntegerField {
-    width: 2.2em;
-}
-
-.vTextField {
-    width: 20em;
-}
-
-.vIntegerField {
-    width: 5em;
-}
-
-.vForeignKeyRawIdAdminField {
-    width: 5em;
-}
-
-/* form css */
-.form-horizontal .control-group {
-  border-bottom: 1px solid #EEE;
-  margin-bottom: 0px;
-  background-color: #F7F7F7;
-}
-.form-horizontal .control-label {
-  padding: 15px 0;
-  margin-bottom: 0;
-  font-weight: bold;
-}
-.form-horizontal .controls {
-  padding: 15px 0 15px 20px;
-  border-left: 1px solid #EEE;
-  background-color: white;
-}
-.asteriskField {
-  color: red;
-}
-.form-horizontal .row {
-  margin: 0px;
-}
-.form-horizontal .row .control-group{
-  display: inline-block;
-  max-width: 50%;
 }
 
 /* dropdowns */
