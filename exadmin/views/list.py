@@ -1,5 +1,5 @@
-from django.contrib.admin.templatetags.admin_static import static
-from django.contrib.admin.util import quote
+
+from exadmin.util import quote
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import InvalidPage, Paginator
 from django.db import models
@@ -13,7 +13,7 @@ from django.utils.translation import ugettext as _, ugettext_lazy
 from django.views.decorators.csrf import csrf_protect
 from django.utils.html import escape, conditional_escape
 from django.utils.safestring import mark_safe
-from django.contrib.admin.util import lookup_field, display_for_field, label_for_field
+from exadmin.util import lookup_field, display_for_field, label_for_field
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.encoding import smart_unicode
 
@@ -582,7 +582,7 @@ class ListAdminView(ModelAdminView):
     @filter_hook
     def get_media(self):
         media = super(ListAdminView, self).get_media()
-        media.add_js([static('exadmin/js/list.js')])
+        media.add_js([self.static('exadmin/js/list.js')])
         return media
 
     # Blocks

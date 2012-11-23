@@ -1,7 +1,7 @@
 
 import datetime, decimal, calendar
 
-from django.contrib.admin.templatetags.admin_static import static
+
 from django.template import loader
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseNotFound
@@ -37,10 +37,10 @@ class ChartsPlugin(BaseAdminPlugin):
     # Media
     def get_media(self, media):
         if self.data_charts:
-            media.add_js([static('exadmin/js/jquery.flot.js')])
-            media.add_js([static('exadmin/js/jquery.flot.pie.js')])
-            media.add_js([static('exadmin/js/jquery.flot.resize.js')])
-            media.add_js([static('exadmin/js/charts.js')])
+            media.add_js([self.static('exadmin/js/jquery.flot.js')])
+            media.add_js([self.static('exadmin/js/jquery.flot.pie.js')])
+            media.add_js([self.static('exadmin/js/jquery.flot.resize.js')])
+            media.add_js([self.static('exadmin/js/charts.js')])
         return media
 
     # Block Views

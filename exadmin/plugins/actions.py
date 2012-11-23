@@ -1,6 +1,6 @@
 from django.contrib.admin import helpers, actions as django_actions
-from django.contrib.admin.templatetags.admin_static import static
-from django.contrib.admin.util import model_format_dict
+
+from exadmin.util import model_format_dict
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
@@ -100,7 +100,7 @@ class ActionPlugin(BaseAdminPlugin):
         """
         # If self.actions is explicitally set to None that means that we don't
         # want *any* actions enabled on this page.
-        from django.contrib.admin.views.main import IS_POPUP_VAR
+        from exadmin.views.list import IS_POPUP_VAR
         if self.actions is None or IS_POPUP_VAR in self.request.GET:
             return SortedDict()
 
@@ -186,7 +186,7 @@ class ActionPlugin(BaseAdminPlugin):
     # Media
     def get_media(self, media):
         if self.actions and self.admin_view.result_count:
-            media.add_js([static('exadmin/js/actions.js'), reverse('admin:jsi18n')])
+            media.add_js([self.static('exadmin/js/actions.js'), reverse('admin:jsi18n')])
         return media
 
     # Block Views

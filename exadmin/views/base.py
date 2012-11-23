@@ -17,6 +17,7 @@ from django.template.response import TemplateResponse
 from django.utils.text import capfirst
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
+from exadmin.util import static
 
 csrf_protect_m = method_decorator(csrf_protect)
 
@@ -59,6 +60,9 @@ class BaseAdminPlugin(object):
 
     def init_request(self, *args, **kwargs):
         pass
+        
+    def static(self, path):
+        return static(path)
 
 def inclusion_tag(file_name, context_class=Context, takes_context=False):
     def wrap(func):
@@ -187,6 +191,9 @@ class BaseAdminView(View):
 
     def template_response(self, template, context):
         return TemplateResponse(self.request, template, context, current_app=self.admin_site.name)
+
+    def static(self, path):
+        return static(path)
 
     @property
     def media(self):

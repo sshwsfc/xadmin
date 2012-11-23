@@ -1,5 +1,5 @@
 
-from django.contrib.admin.templatetags.admin_static import static
+
 from django.utils.translation import ugettext as _
 from django.utils.encoding import StrAndUnicode, force_unicode
 from django.core.urlresolvers import reverse

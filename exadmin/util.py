@@ -12,6 +12,7 @@ from django.utils.encoding import force_unicode, smart_unicode, smart_str
 from django.utils.translation import ungettext
 from django.core.urlresolvers import reverse
 from django.conf import settings
+
 if 'django.contrib.staticfiles' in settings.INSTALLED_APPS:
     from django.contrib.staticfiles.templatetags.staticfiles import static
 else:

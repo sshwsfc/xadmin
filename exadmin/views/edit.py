@@ -1,5 +1,7 @@
+import copy
+from django import forms
 
-from django.contrib.admin.util import unquote, flatten_fieldsets
+from exadmin.util import unquote, flatten_fieldsets
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
@@ -10,13 +12,11 @@ from django.template.response import TemplateResponse
 from django.utils.encoding import force_unicode
 from django.utils.html import escape, escapejs
 from django.utils.translation import ugettext as _
-from django.contrib.admin import widgets
-from django.contrib.admin.templatetags.admin_static import static
-from django import forms
+from exadmin import widgets
+from exadmin.layout import FormHelper, Layout, Fieldset, Container, Column
 
-from exadmin import helpers
-from exadmin.layout import FormHelper, Layout, Fieldset, Container, Column, LayoutObject
 from base import ModelAdminView, filter_hook, action_hook, csrf_protect_m
+
 
 HORIZONTAL, VERTICAL = 1, 2
 # returns the <ul> class for a given radio_admin field
@@ -40,6 +40,18 @@ FORMFIELD_FOR_DBFIELD_DEFAULTS = {
     models.ImageField:      {'widget': widgets.AdminFileWidget},
     models.FileField:       {'widget': widgets.AdminFileWidget},
 }
+
+class AdminErrorList(forms.util.ErrorList):
+    """
+    Stores all errors for the form/formsets in an add/change stage view.
+    """
+    def __init__(self, form, inline_formsets):
+        if form.is_bound:
+            self.extend(form.errors.values())
+            for inline_formset in inline_formsets:
+                self.extend(inline_formset.non_form_errors())
+                for errors_in_inline_form in inline_formset.errors:
+                    self.extend(errors_in_inline_form.values())
 
 class ModelFormAdminView(ModelAdminView):
 
@@ -315,23 +327,18 @@ class ModelFormAdminView(ModelAdminView):
     def get_context(self):
         form = self.form_obj
 
-        adminForm = helpers.AdminForm(form, list(self.get_fieldsets()),
-            self.get_prepopulated_fields(),
-            self.get_readonly_fields(),
-            model_admin=self)
-
-        media = self.media + adminForm.media
+        media = self.media + form.media
         ordered_objects = self.opts.get_ordered_objects()
 
         new_context = {
-            'adminform': adminForm,
+            'form': form,
             'is_popup': "_popup" in self.request.REQUEST,
             'media': media,
             'original': self.org_obj,
             'show_delete': self.org_obj is not None,
             'add': self.org_obj is None,
             'change': self.org_obj is not None,
-            'errors': helpers.AdminErrorList(form, []),
+            'errors': AdminErrorList(form, []),
             'app_label': self.opts.app_label,
             'has_add_permission': self.has_add_permission(),
             'has_change_permission': self.has_change_permission(self.org_obj),

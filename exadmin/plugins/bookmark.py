@@ -1,4 +1,4 @@
-from django.contrib.admin.templatetags.admin_static import static
+
 from django.template import loader
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
@@ -84,7 +84,7 @@ class BookmarkPlugin(BaseAdminPlugin):
 
     # Media
     def get_media(self, media):
-        media.add_js([static('exadmin/js/bookmark.js')])
+        media.add_js([self.static('exadmin/js/bookmark.js')])
         return media
 
     # Block Views

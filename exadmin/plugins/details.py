@@ -1,5 +1,5 @@
 
-from django.contrib.admin.templatetags.admin_static import static
+
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -34,7 +34,7 @@ class DetailsPlugin(BaseAdminPlugin):
     # Media
     def get_media(self, media):
         if self.show_all_rel_details or self.show_detail_fields:
-            media.add_js([static('exadmin/js/details.js')])
+            media.add_js([self.static('exadmin/js/details.js')])
         return media
 
 site.register_plugin(DetailsPlugin, ListAdminView)

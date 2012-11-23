@@ -1,5 +1,5 @@
 
-from django.contrib.admin.templatetags.admin_static import static
+
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -69,8 +69,8 @@ class EditablePlugin(BaseAdminPlugin):
     # Media
     def get_media(self, media):
         if self.editable_need_fields:
-            media.add_css({'screen': [static('exadmin/css/bootstrap-editable.css')]})
-            media.add_js([static('exadmin/js/editable.js')])
+            media.add_css({'screen': [self.static('exadmin/css/bootstrap-editable.css')]})
+            media.add_js([self.static('exadmin/js/editable.js')])
         return media
 
     # Js Block

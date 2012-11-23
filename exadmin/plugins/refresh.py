@@ -1,5 +1,5 @@
 
-from django.contrib.admin.templatetags.admin_static import static
+
 from django.template import loader
 
 from exadmin.sites import site
@@ -14,7 +14,7 @@ class RefreshPlugin(BaseAdminPlugin):
     # Media
     def get_media(self, media):
         if self.refresh_times and self.request.GET.get(REFRESH_VAR):
-            media.add_js([static('exadmin/js/refresh.js')])
+            media.add_js([self.static('exadmin/js/refresh.js')])
         return media
 
     # Block Views

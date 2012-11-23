@@ -1,8 +1,7 @@
 import operator
-from django.contrib.admin import widgets
-from django.contrib.admin.options import IncorrectLookupParameters
-from django.contrib.admin.templatetags.admin_static import static
-from django.contrib.admin.util import get_fields_from_path, lookup_needs_distinct
+from exadmin import widgets
+
+from exadmin.util import get_fields_from_path, lookup_needs_distinct
 from django.core.exceptions import SuspiciousOperation, ImproperlyConfigured
 from django.db import models
 from django.db.models.fields import FieldDoesNotExist
@@ -14,6 +13,9 @@ from django.utils.encoding import smart_str
 from exadmin.filters import manager as filter_manager, FILTER_PREFIX, SEARCH_VAR, DateFieldListFilter
 from exadmin.sites import site
 from exadmin.views import BaseAdminPlugin, ListAdminView
+
+class IncorrectLookupParameters(Exception):
+    pass
 
 class FilterPlugin(BaseAdminPlugin):
     list_filter = ()
@@ -164,11 +166,11 @@ class FilterPlugin(BaseAdminPlugin):
     # Media
     def get_media(self, media):
         if bool(filter(lambda s: isinstance(s, DateFieldListFilter), self.filter_specs)):
-            media.add_js([static('exadmin/js/date.js')])
-            media.add_js([static('exadmin/js/daterangepicker.js')])
-            media.add_js([static('exadmin/js/bootstrap-datepicker.js')])
-            media.add_css({'screen': [static('exadmin/css/daterangepicker.css')]})
-        media.add_js([static('exadmin/js/filters.js')])
+            media.add_js([self.static('exadmin/js/date.js')])
+            media.add_js([self.static('exadmin/js/daterangepicker.js')])
+            media.add_js([self.static('exadmin/js/bootstrap-datepicker.js')])
+            media.add_css({'screen': [self.static('exadmin/css/daterangepicker.css')]})
+        media.add_js([self.static('exadmin/js/filters.js')])
         return media
 
     # Block Views

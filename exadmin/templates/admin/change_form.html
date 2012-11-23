@@ -53,10 +53,10 @@
       <p class="text-error">
       {% blocktrans count counter=errors|length %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
       </p>
-      {{ adminform.form.non_field_errors }}
+      {{ form.non_field_errors }}
   {% endif %}
 
-  {% crispy adminform.form %}
+  {% crispy form %}
 
   {% block after_field_sets %}{% endblock %}
 
@@ -69,10 +69,6 @@
   {% block after_related_objects %}{% endblock %}
 
   {% block submit_buttons_bottom %}{% submit_row %}{% endblock %}
-
-  {% if adminform and add %}
-     <script type="text/javascript">document.getElementById("{{ adminform.first_field.id_for_label }}").focus();</script>
-  {% endif %}
 
 </form>
 {% endblock %}
