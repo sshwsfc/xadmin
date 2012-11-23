@@ -230,7 +230,7 @@ class ModelFormAdminView(ModelAdminView):
 
     @filter_hook
     def get_form_layout(self):
-        layout = self.form_layout
+        layout = copy.deepcopy(self.form_layout)
         title = "%s %s" % (_(u'Add'), self.opts.verbose_name)
 
         if layout is None:
@@ -360,8 +360,8 @@ class ModelFormAdminView(ModelAdminView):
     @filter_hook
     def get_media(self):
         media = super(ModelFormAdminView, self).get_media()
-        media.add_js([static('exadmin/js/form.js')])
-        media.add_css({'screen': [static('exadmin/css/form.css')]})
+        media.add_js([self.static('exadmin/js/select2.js'), self.static('exadmin/js/form.js')])
+        media.add_css({'screen': [self.static('exadmin/css/form.css'), self.static('exadmin/css/select2.css')]})
         return media
 
 class CreateAdminView(ModelFormAdminView):
