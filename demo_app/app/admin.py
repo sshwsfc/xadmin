@@ -19,6 +19,9 @@ class HostAdmin(object):
     list_display_links = ('name',)
     list_editable = ('ip',)
 
+    raw_id_fields = ('idc',)
+    radio_fields = {'system':2}
+
     search_fields = ['name', 'ip', 'description']
     list_filter = ['idc', 'guarantee_date', 'status', 'brand', 'model', 'cpu', 'core_num', 'hard_disk', 'memory', 'service_type']
 
