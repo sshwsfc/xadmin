@@ -150,7 +150,7 @@ class ModelFormAdminView(ModelAdminView):
         """
         db = kwargs.get('using')
         if db_field.name in self.raw_id_fields:
-            kwargs['widget'] = widgets.ForeignKeyRawIdWidget(db_field.rel,
+            kwargs['widget'] = widgets.ForeignKeySearchWidget(db_field.rel,
                                     self.admin_site, using=db)
         elif db_field.name in self.radio_fields:
             kwargs['widget'] = widgets.AdminRadioSelect(attrs={

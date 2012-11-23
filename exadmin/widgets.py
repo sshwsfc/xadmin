@@ -133,6 +133,30 @@ def url_params_from_lookup_dict(lookups):
         params.update(dict(items))
     return params
 
+class ForeignKeySearchWidget(forms.TextInput):
+    """
+    A Widget for displaying ForeignKeys in the "raw_id" interface rather than
+    in a <select> box.
+    """
+    def __init__(self, rel, admin_site, attrs=None, using=None):
+        self.rel = rel
+        self.admin_site = admin_site
+        self.db = using
+        super(ForeignKeySearchWidget, self).__init__(attrs)
+
+    def render(self, name, value, attrs=None):
+        from exadmin.views import api_manager
+        rel_to = self.rel.to
+        if attrs is None:
+            attrs = {}
+        resuorce = api_manager.get_resource(rel_to)
+
+        if resuorce:
+            attrs['class'] = 'fk-search-field'
+            attrs['data-search-url'] = resuorce.get_resource_list_uri()
+
+        return super(ForeignKeySearchWidget, self).render(name, value, attrs)
+
 class ForeignKeyRawIdWidget(forms.TextInput):
     """
     A Widget for displaying ForeignKeys in the "raw_id" interface rather than
