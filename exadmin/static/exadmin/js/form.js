@@ -18,4 +18,6 @@ jQuery(function() {
     });
 
     $( ".form-column" ).disableSelection();
+
+    $('.controls select').select2();
 });
