@@ -1,6 +1,39 @@
 
 /* CUSTOM FORM FIELDS */
 
+.date-field {
+  max-width: 110px;
+}
+.time-field {
+  max-width: 60px;
+}
+
+.url-field {
+    width: 30em;
+}
+
+.textarea-field {
+    width: 94%;
+}
+
+.flatpages-flatpage #id_content {
+    height: 40.2em;
+}
+
+.text-field {
+    width: 60%;
+    max-width: 300px;
+}
+
+.int-field {
+    width: 20%;
+    max-width: 100px;
+}
+
+.vPositiveSmallIntegerField {
+    width: 15%;
+}
+
 .vSelectMultipleField {
     vertical-align: top !important;
 }
@@ -9,43 +42,17 @@
     border: none;
 }
 
-.vDateField, .vTimeField {
-    margin-right: 2px;
-}
-
-.vURLField {
-    width: 30em;
-}
-
-.vLargeTextField, .vXMLLargeTextField {
-    width: 94%;
-}
-
-.flatpages-flatpage #id_content {
-    height: 40.2em;
-}
-
-.vPositiveSmallIntegerField {
-    width: 15%;
-}
-
-.vTextField {
-    width: 60%;
-    max-width: 300px;
-}
-
-.vIntegerField {
-    width: 20%;
-    max-width: 100px;
-}
-
 .vForeignKeyRawIdAdminField {
     width: 20%;
 }
 
-select {
+select, .select2-container {
   max-width: 200px;
   width: 60%;
+  margin-bottom: 10px;
+}
+.form-horizontal .select2-container{
+  margin-bottom: 0px;
 }
 
 /* form css */
@@ -83,8 +90,11 @@ select {
 .asteriskField {
   color: red;
 }
-.form-horizontal .forn-row {
+.form-horizontal .form-row {
   margin: 0px;
+}
+.form-horizontal .form-row .controls {
+  height: 30px;
 }
 .form-horizontal .form-row .control-group{
   display: inline-block;
@@ -117,6 +127,9 @@ select {
   }
   .form-horizontal .controls {
     padding: 10px 0 10px 15px;
+  }
+  .form-horizontal .form-row .controls {
+    height: auto;
   }
 }
 
