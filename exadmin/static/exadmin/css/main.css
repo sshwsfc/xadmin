@@ -110,6 +110,8 @@ a { cursor: pointer;}
 .box .box-content.nopadding{
   padding: 0px;
 }
+.ui-sortable-placeholder { border: 1px dotted #CCC; visibility: visible !important; background: #FEFEFE; }
+.ui-sortable-placeholder * { visibility: hidden; }
 
 /* dropdowns */
 .dropdown-menu li.with_menu_btn > a:first-child {
