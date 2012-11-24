@@ -52,7 +52,7 @@ class ModelFormAdminView(ModelAdminView):
     form = forms.ModelForm
     formfield_overrides = {}
     readonly_fields = ()
-    fields_style = {}
+    style_fields = {}
     prepopulated_fields = {}
 
     save_as = False
@@ -87,22 +87,13 @@ class ModelFormAdminView(ModelAdminView):
     @filter_hook
     def get_field_attrs(self, db_field):
 
-        if db_field.name in self.fields_style:
-            attrs = self.get_field_style(db_field, self.fields_style[db_field.name])
+        if db_field.name in self.style_fields:
+            attrs = self.get_field_style(db_field, self.style_fields[db_field.name])
             if attrs:
                 return attrs
 
         if db_field.choices:
-            kwargs = {}
-            if db_field.name in self.fields_style:
-                kwargs['widget'] = widgets.AdminRadioSelect(attrs={
-                    'class': self.radio_fields[db_field.name],
-                })
-                kwargs['choices'] = db_field.get_choices(
-                    include_blank = db_field.blank,
-                    blank_choice=[('', _('None'))]
-                )
-            return kwargs
+            return {}
 
         for klass in db_field.__class__.mro():
             if klass in self.formfield_overrides:

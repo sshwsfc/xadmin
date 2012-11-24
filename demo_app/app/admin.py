@@ -20,7 +20,7 @@ class HostAdmin(object):
     list_editable = ('ip',)
 
     raw_id_fields = ('idc',)
-    fields_style = {'system': "radio-inline"}
+    style_fields = {'system': "radio-inline"}
 
     search_fields = ['name', 'ip', 'description']
     list_filter = ['idc', 'guarantee_date', 'status', 'brand', 'model', 'cpu', 'core_num', 'hard_disk', 'memory', 'service_type']
@@ -56,7 +56,7 @@ class HostGroupAdmin(object):
     list_display_links = ('name',)
 
     search_fields = ['name']
-    fields_style = {'hosts': 'checkbox-inline'}
+    style_fields = {'hosts': 'checkbox-inline'}
 
 class MaintainLogAdmin(object):
     list_display = ('host', 'maintain_type', 'hard_type', 'time', 'operator', 'note')
