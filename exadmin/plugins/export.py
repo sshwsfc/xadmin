@@ -70,15 +70,21 @@ class ExportPlugin(BaseAdminPlugin):
         output.seek(0)
         return output.getvalue()
 
+    def _format_csv_text(self, t):
+        t = t.replace('"', '""').replace(',', '\,')
+        if isinstance(t, basestring):
+            t = '"%s"' % t
+        return t
+
     def get_csv_export(self, context):
         results = self.get_results(context)
         stream = []
 
         if self.request.GET.get('export_csv_header', 'off') == 'on':
-            stream.append(','.join(results[0].keys()))
+            stream.append(','.join(map(self._format_csv_text, results[0].keys())))
 
         for row in results:
-            stream.append(','.join(map(lambda c: c.replace('"', '""'), row.values())))
+            stream.append(','.join(map(self._format_csv_text, row.values())))
 
         return '\r\n'.join(stream)
 

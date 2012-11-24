@@ -115,6 +115,10 @@ class ListAdminView(ModelAdminView):
     change_list_template = None
 
     def init_request(self, *args, **kwargs):
+
+        if not self.has_change_permission():
+            raise PermissionDenied
+
         request = self.request
 
         self.lookup_opts = self.opts
@@ -138,6 +142,28 @@ class ListAdminView(ModelAdminView):
         if ERROR_FLAG in self.params:
             del self.params[ERROR_FLAG]
 
+    @filter_hook
+    def get_list_display(self):
+        """
+        Return a sequence containing the fields to be displayed on the list.
+        """
+        self.base_list_display = self.request.GET.has_key(COL_LIST_VAR) and self.request.GET[COL_LIST_VAR].split('.') or self.list_display
+        return list(self.base_list_display)
+
+    @filter_hook
+    def get_list_display_links(self):
+        """
+        Return a sequence containing the fields to be displayed as links
+        on the changelist. The list_display parameter is the list of fields
+        returned by get_list_display().
+        """
+        if self.list_display_links or not self.list_display:
+            return self.list_display_links
+        else:
+            # Use only the first item in list_display as link
+            return list(self.list_display)[:1]
+
+    def make_result_list(self):
         # Get search parameters from the query string.
         self.base_queryset = self.queryset()
         self.list_queryset = self.get_list_queryset()
@@ -173,25 +199,12 @@ class ListAdminView(ModelAdminView):
                 return HttpResponseRedirect(self.request.path + '?' + ERROR_FLAG + '=1')
 
     @filter_hook
-    def get_list_display(self):
-        """
-        Return a sequence containing the fields to be displayed on the list.
-        """
-        self.base_list_display = self.request.GET.has_key(COL_LIST_VAR) and self.request.GET[COL_LIST_VAR].split('.') or self.list_display
-        return list(self.base_list_display)
+    def get_result_list(self):
+        return self.make_result_list()
 
     @filter_hook
-    def get_list_display_links(self):
-        """
-        Return a sequence containing the fields to be displayed as links
-        on the changelist. The list_display parameter is the list of fields
-        returned by get_list_display().
-        """
-        if self.list_display_links or not self.list_display:
-            return self.list_display_links
-        else:
-            # Use only the first item in list_display as link
-            return list(self.list_display)[:1]
+    def post_result_list(self):
+        return self.make_result_list()
 
     @filter_hook
     def get_list_queryset(self):
@@ -382,13 +395,15 @@ class ListAdminView(ModelAdminView):
         """
         The 'change list' admin view for this model.
         """
-        if not self.has_change_permission():
-            raise PermissionDenied
+        response = self.get_result_list()
+        if response:
+            return response
 
         context = self.get_context()
         context.update(kwargs or {})
 
         response = self.get_response(context, *args, **kwargs)
+
         return response or TemplateResponse(request, self.change_list_template or [
             'admin/%s/%s/change_list.html' % (self.app_label, self.opts.object_name.lower()),
             'admin/%s/change_list.html' % self.app_label,
@@ -401,8 +416,7 @@ class ListAdminView(ModelAdminView):
 
     @csrf_protect_m
     def post(self, request, *args, **kwargs):
-        response = self.post_response(*args, **kwargs)
-        return response or self.get(request, *args, **kwargs)
+        return self.post_result_list() or self.post_response(*args, **kwargs) or self.get(request, *args, **kwargs)
 
     @filter_hook
     def get_paginator(self):

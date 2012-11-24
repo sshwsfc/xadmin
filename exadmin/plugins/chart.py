@@ -3,7 +3,6 @@ import datetime, decimal, calendar
 
 
 from django.template import loader
-from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseNotFound
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse
@@ -55,7 +54,13 @@ class ChartsView(ListAdminView):
 
     data_charts = {}
 
-    def init_request(self, name):
+    def get_ordering(self):
+        if self.chart.has_key('order'):
+            return self.chart['order']
+        else:
+            return super(ChartsView, self).get_ordering()
+
+    def get(self, request, name):
         if not self.data_charts.has_key(name):
             return HttpResponseNotFound()
 
@@ -65,20 +70,10 @@ class ChartsView(ListAdminView):
         y_fields = self.chart['y-field']
         self.y_fields = (y_fields,) if type(y_fields) not in (list, tuple) else y_fields
 
-        return super(ChartsView, self).init_request(name)
-
-    def get_ordering(self):
-        if self.chart.has_key('order'):
-            return self.chart['order']
-        else:
-            return super(ChartsView, self).get_ordering()
-
-    def get(self, request, name):
-        if not self.has_change_permission():
-            raise PermissionDenied
-
         datas = [{"data":[], "label": label_for_field(i, self.model, model_admin=self)} for i in self.y_fields]
 
+        self.make_result_list()
+        
         for obj in self.result_list:
             xf, attrs, value = lookup_field(self.x_field, obj, self)
             for i, yfname in enumerate(self.y_fields):
