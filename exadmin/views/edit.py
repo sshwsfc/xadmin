@@ -1,7 +1,7 @@
 import copy
 from django import forms
 
-from exadmin.util import unquote, flatten_fieldsets
+from exadmin.util import unquote
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
@@ -17,13 +17,6 @@ from exadmin.layout import FormHelper, Layout, Fieldset, Container, Column
 
 from base import ModelAdminView, filter_hook, action_hook, csrf_protect_m
 
-
-HORIZONTAL, VERTICAL = 1, 2
-# returns the <ul> class for a given radio_admin field
-get_ul_class = lambda x: 'radiolist%s' % ((x == HORIZONTAL) and ' inline' or '')
-
-# Defaults for formfield_overrides. ModelAdmin subclasses can change this
-# by adding to ModelAdmin.formfield_overrides.
 
 FORMFIELD_FOR_DBFIELD_DEFAULTS = {
     models.DateTimeField: {
@@ -56,12 +49,11 @@ class AdminErrorList(forms.util.ErrorList):
 class ModelFormAdminView(ModelAdminView):
 
     raw_id_fields = ()
-    fieldsets = None
     form = forms.ModelForm
-    radio_fields = {}
-    prepopulated_fields = {}
     formfield_overrides = {}
     readonly_fields = ()
+    fields_style = {}
+    prepopulated_fields = {}
 
     save_as = False
     save_on_top = False
@@ -70,114 +62,53 @@ class ModelFormAdminView(ModelAdminView):
     change_form_template = None
 
     form_layout = None
+    show_all_field = False
+
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        attrs = self.get_field_attrs(db_field)
+        attrs.update(kwargs)
+        return db_field.formfield(**attrs)
 
     @filter_hook
-    def formfield_for_dbfield(self, db_field, **kwargs):
-        """
-        Hook for specifying the form Field instance for a given database Field
-        instance.
+    def get_field_style(self, db_field, style):
+        if style in ('radio', 'radio-inline') and (db_field.choices or isinstance(db_field, models.ForeignKey)):
+            attrs = {'widget': widgets.AdminRadioSelect(attrs={'class': 'inline' if style == 'radio-inline' else ""})}
+            if db_field.choices:
+                attrs['choices'] = db_field.get_choices(
+                    include_blank = db_field.blank,
+                    blank_choice=[('', _('None'))]
+                )
+            return attrs
 
-        If kwargs are given, they're passed to the form Field's constructor.
-        """
+        if style in ('checkbox', 'checkbox-inline') and isinstance(db_field, models.ManyToManyField):
+            db_field.help_text = None
+            return {'widget': widgets.AdminCheckboxSelect(attrs={'class': 'inline' if style == 'checkbox-inline' else ""})}
 
-        # If the field specifies choices, we don't need to look for special
-        # admin widgets - we just need to use a select widget of some kind.
+    @filter_hook
+    def get_field_attrs(self, db_field):
+
+        if db_field.name in self.fields_style:
+            attrs = self.get_field_style(db_field, self.fields_style[db_field.name])
+            if attrs:
+                return attrs
+
         if db_field.choices:
-            return self.formfield_for_choice_field(db_field, **kwargs)
-
-        # ForeignKey or ManyToManyFields
-        if isinstance(db_field, (models.ForeignKey, models.ManyToManyField)):
-            # Combine the field kwargs with any options for formfield_overrides.
-            # Make sure the passed in **kwargs override anything in
-            # formfield_overrides because **kwargs is more specific, and should
-            # always win.
-            if db_field.__class__ in self.formfield_overrides:
-                kwargs = dict(self.formfield_overrides[db_field.__class__], **kwargs)
-
-            # Get the correct formfield.
-            if isinstance(db_field, models.ForeignKey):
-                formfield = self.formfield_for_foreignkey(db_field, **kwargs)
-            elif isinstance(db_field, models.ManyToManyField):
-                formfield = self.formfield_for_manytomany(db_field, **kwargs)
-
-            # For non-raw_id fields, wrap the widget with a wrapper that adds
-            # extra HTML -- the "add other" interface -- to the end of the
-            # rendered output. formfield can be None if it came from a
-            # OneToOneField with parent_link=True or a M2M intermediary.
-            if formfield and db_field.name not in self.raw_id_fields:
-                # related_modeladmin = self.admin_site._registry.get(
-                #                                             db_field.rel.to)
-                # can_add_related = bool(related_modeladmin and
-                #             related_modeladmin.has_add_permission())
-                can_add_related = False
-                formfield.widget = widgets.RelatedFieldWidgetWrapper(
-                            formfield.widget, db_field.rel, self.admin_site,
-                            can_add_related=can_add_related)
-
-            return formfield
-
-        # If we've got overrides for the formfield defined, use 'em. **kwargs
-        # passed to formfield_for_dbfield override the defaults.
-        for klass in db_field.__class__.mro():
-            if klass in self.formfield_overrides:
-                kwargs = dict(self.formfield_overrides[klass], **kwargs)
-                return db_field.formfield(**kwargs)
-
-        # For any other type of field, just call its formfield() method.
-        return db_field.formfield(**kwargs)
-
-    def formfield_for_choice_field(self, db_field, **kwargs):
-        """
-        Get a form Field for a database Field that has declared choices.
-        """
-        # If the field is named as a radio_field, use a RadioSelect
-        if db_field.name in self.radio_fields:
-            # Avoid stomping on custom widget/choices arguments.
-            if 'widget' not in kwargs:
+            kwargs = {}
+            if db_field.name in self.fields_style:
                 kwargs['widget'] = widgets.AdminRadioSelect(attrs={
-                    'class': get_ul_class(self.radio_fields[db_field.name]),
+                    'class': self.radio_fields[db_field.name],
                 })
-            if 'choices' not in kwargs:
                 kwargs['choices'] = db_field.get_choices(
                     include_blank = db_field.blank,
                     blank_choice=[('', _('None'))]
                 )
-        return db_field.formfield(**kwargs)
+            return kwargs
 
-    def formfield_for_foreignkey(self, db_field, **kwargs):
-        """
-        Get a form Field for a ForeignKey.
-        """
-        db = kwargs.get('using')
-        if db_field.name in self.raw_id_fields:
-            kwargs['widget'] = widgets.ForeignKeySearchWidget(db_field.rel,
-                                    self.admin_site, using=db)
-        elif db_field.name in self.radio_fields:
-            kwargs['widget'] = widgets.AdminRadioSelect(attrs={
-                'class': get_ul_class(self.radio_fields[db_field.name]),
-            })
-            kwargs['empty_label'] = db_field.blank and _('None') or None
-
-        return db_field.formfield(**kwargs)
-
-    def formfield_for_manytomany(self, db_field, **kwargs):
-        """
-        Get a form Field for a ManyToManyField.
-        """
-        # If it uses an intermediary model that isn't auto created, don't show
-        # a field in admin.
-        if not db_field.rel.through._meta.auto_created:
-            return None
-        db = kwargs.get('using')
-
-        if db_field.name in self.raw_id_fields:
-            kwargs['widget'] = widgets.ManyToManyRawIdWidget(db_field.rel,
-                                    self.admin_site, using=db)
-            kwargs['help_text'] = ''
-        elif db_field.name in (list(self.filter_vertical) + list(self.filter_horizontal)):
-            kwargs['widget'] = widgets.FilteredSelectMultiple(db_field.verbose_name, (db_field.name in self.filter_vertical))
-
-        return db_field.formfield(**kwargs)
+        for klass in db_field.__class__.mro():
+            if klass in self.formfield_overrides:
+                return self.formfield_overrides[klass]
+                
+        return {}
 
     @action_hook
     def prepare_form(self):
@@ -198,15 +129,11 @@ class ModelFormAdminView(ModelAdminView):
         return self.form_obj.is_valid()
 
     @filter_hook
-    def get_model_form(self):
+    def get_model_form(self, **kwargs):
         """
         Returns a Form class for use in the admin add view. This is used by
         add_view and change_view.
         """
-        if self.declared_fieldsets:
-            fields = flatten_fieldsets(self.declared_fieldsets)
-        else:
-            fields = None
         if self.exclude is None:
             exclude = []
         else:
@@ -221,11 +148,10 @@ class ModelFormAdminView(ModelAdminView):
         exclude = exclude or None
         defaults = {
             "form": self.form,
-            "fields": fields,
             "exclude": exclude,
             "formfield_callback": self.formfield_for_dbfield,
         }
-        #defaults.update(self.kwargs)
+        defaults.update(kwargs)
         return modelform_factory(self.model, **defaults)
 
     @filter_hook
@@ -245,15 +171,17 @@ class ModelFormAdminView(ModelAdminView):
                 layout = Layout(Container(*layout, css_class="form-horizontal"))
             else:
                 layout = Layout(Container(Fieldset(title, *layout), css_class="form-horizontal"))
-            rendered_fields = [i[1] for i in layout.get_field_names()]
-            container = layout[0].fields
-            other_fieldset = Fieldset(_(u'Other Fields'), *[f for f in self.form_obj.fields.keys() if f not in rendered_fields])
 
-            if len(other_fieldset.fields):
-                if len(container) and isinstance(container[0], Column):
-                    container[0].fields.append(other_fieldset)
-                else:
-                    container.append(other_fieldset)
+            if self.show_all_field:
+                rendered_fields = [i[1] for i in layout.get_field_names()]
+                container = layout[0].fields
+                other_fieldset = Fieldset(_(u'Other Fields'), *[f for f in self.form_obj.fields.keys() if f not in rendered_fields])
+
+                if len(other_fieldset.fields):
+                    if len(container) and isinstance(container[0], Column):
+                        container[0].fields.append(other_fieldset)
+                    else:
+                        container.append(other_fieldset)
 
         return layout
 
@@ -281,23 +209,6 @@ class ModelFormAdminView(ModelAdminView):
         """
         return self.prepopulated_fields
 
-    def _declared_fieldsets(self):
-        if self.fieldsets:
-            return self.fieldsets
-        elif self.fields:
-            return [(None, {'fields': self.fields})]
-        return None
-    declared_fieldsets = property(_declared_fieldsets)
-
-    @filter_hook
-    def get_fieldsets(self):
-        "Hook for specifying fieldsets for the add form."
-        if self.declared_fieldsets:
-            return self.declared_fieldsets
-        form = self.get_model_form()
-        fields = form.base_fields.keys() + list(self.get_readonly_fields())
-        return [(None, {'fields': fields})]
-
     @action_hook
     def save_forms(self):
         self.new_obj = self.form_obj.save(commit=False)
@@ -305,6 +216,10 @@ class ModelFormAdminView(ModelAdminView):
     @action_hook
     def save_models(self):
         self.new_obj.save()
+
+    @action_hook
+    def save_related(self):
+        self.form_obj.save_m2m()
 
     @csrf_protect_m
     def get(self, request, *args, **kwargs):
@@ -319,6 +234,7 @@ class ModelFormAdminView(ModelAdminView):
         if self.valid_forms():
             self.save_forms()
             self.save_models()
+            self.save_related()
             return self.post_response()
 
         return self.get_response()
@@ -365,6 +281,8 @@ class ModelFormAdminView(ModelAdminView):
         return media
 
 class CreateAdminView(ModelFormAdminView):
+
+    show_all_field = True
 
     def init_request(self, *args, **kwargs):
         self.org_obj = None
