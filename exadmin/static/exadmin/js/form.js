@@ -19,9 +19,8 @@ jQuery(function() {
 
     $( ".form-column" ).disableSelection();
 
-    $('.controls select').select2();
-
-    $('.fk-search-field').each(function(){
+    $('.controls select.select').select2();
+    $('.controls .select-search').each(function(){
         var $el = $(this);
         $el.select2({
             minimumInputLength: 1,
@@ -29,18 +28,17 @@ jQuery(function() {
                 url: $el.data('search-url'),
                 dataType: 'json',
                 data: function (term, page) {
-                    return {};
+                    return {
+                        '_q_' : term,
+                        '_cols': 'id.__str__'
+                    };
                 },
                 results: function (data, page) {
                     return {results: data.objects};
                 }
             },
-            initSelection : function (element, callback) {
-                callback([{id: $el.val(), text: 'qqq'}]);
-            },
-            formatResult: function(item){return item.name},
-            formatSelection: function(item){return item.name}
+            formatResult: function(item){return item['__str__']},
+            formatSelection: function(item){return item['__str__']}
         });
-        $el.select2('val', $el.val());
     })
 });

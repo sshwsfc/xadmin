@@ -3,7 +3,7 @@ from exadmin.sites import site
 from base import BaseAdminPlugin, BaseAdminView, ModelAdminView
 
 from list import ListAdminView
-from edit import CreateAdminView, UpdateAdminView
+from edit import CreateAdminView, UpdateAdminView, ModelFormAdminView
 from delete import DeleteAdminView
 from dataapi import get_urls as dataapi_get_urls, api_manager
 from website import IndexView, LoginView, LogoutView
