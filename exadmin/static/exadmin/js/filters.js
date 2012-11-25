@@ -2,24 +2,35 @@
   $('.popover.dropdown-menu input, .popover.dropdown-menu label').click(function(e){
     e.stopPropagation();
   });
-  // menber filter
-  $('.filter-number .add-on.remove').click(function(e){
-    $(this).parent().find('input[type="text"]').val('');
-  });
-
-  $('.filter-number .add-on.toggle').click(function(e){
-    var new_name = $(this).hasClass('active') ? $(this).attr('data-off-name') : $(this).attr('data-on-name');
-    $(this).parent().find('input[type="text"]').attr('name', new_name);
-  });
-
-  $('#filter-menu form').submit(function(){
-    $(this).find('input[type="text"]').each(function(e){
-      if(!$(this).val()) $(this).attr('name', '');
-    });
-    return true;
-  });
 
   $(function(){
+    $('.filters .dropdown-submenu').on('mouseover', function(e){
+      $(this).parent().find('.dropdown-submenu.open').removeClass('open');
+      $(this).addClass('open');
+    });
+
+    $(document)
+      .on('click.filterdropdown.data-api touchstart.filterdropdown.data-api', function(e){
+        $('.filters .dropdown-submenu.open').removeClass('open');
+      })
+
+    // menber filter
+    $('.filter-number .add-on.remove').click(function(e){
+      $(this).parent().find('input[type="text"]').val('');
+    });
+
+    $('.filter-number .add-on.toggle').click(function(e){
+      var new_name = $(this).hasClass('active') ? $(this).attr('data-off-name') : $(this).attr('data-on-name');
+      $(this).parent().find('input[type="text"]').attr('name', new_name);
+    });
+
+    $('#filter-menu form').submit(function(){
+      $(this).find('input[type="text"]').each(function(e){
+        if(!$(this).val()) $(this).attr('name', '');
+      });
+      return true;
+    });
+
     $('.menu-date-range .dropdown-menu form').each(function(){
       var el = $(this);
       el.find('.daterangepicker').daterangepicker({format: 'yyyy-MM-dd'}, function(startDate, endDate, availableDate){

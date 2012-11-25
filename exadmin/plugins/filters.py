@@ -10,7 +10,7 @@ from django.db.models.sql.constants import LOOKUP_SEP, QUERY_TERMS
 from django.template import loader
 from django.utils.encoding import smart_str
 
-from exadmin.filters import manager as filter_manager, FILTER_PREFIX, SEARCH_VAR, DateFieldListFilter
+from exadmin.filters import manager as filter_manager, FILTER_PREFIX, SEARCH_VAR, DateFieldListFilter, RelatedFieldSearchFilter
 from exadmin.sites import site
 from exadmin.views import BaseAdminPlugin, ListAdminView
 
@@ -170,6 +170,10 @@ class FilterPlugin(BaseAdminPlugin):
             media.add_js([self.static('exadmin/js/daterangepicker.js')])
             media.add_js([self.static('exadmin/js/bootstrap-datepicker.js')])
             media.add_css({'screen': [self.static('exadmin/css/daterangepicker.css')]})
+        if bool(filter(lambda s: isinstance(s, RelatedFieldSearchFilter), self.filter_specs)):
+            media.add_js([self.static('exadmin/js/select2.js')])
+            media.add_js([self.static('exadmin/js/form.js')])
+            media.add_css({'screen': [self.static('exadmin/css/select2.css')]})
         media.add_js([self.static('exadmin/js/filters.js')])
         return media
 

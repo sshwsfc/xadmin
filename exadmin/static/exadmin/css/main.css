@@ -115,6 +115,10 @@ a { cursor: pointer;}
   margin-right: 5px;
   cursor: pointer;
 }
+.box.no_title .box-title{
+  display: none;
+}
+
 .box .box-content{
   background-color: white;
   padding: 15px;

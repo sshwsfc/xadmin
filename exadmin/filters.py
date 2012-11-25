@@ -8,6 +8,8 @@ from django.utils import timezone
 from django.template.loader import get_template
 from django.template.context import Context
 from django.utils.safestring import mark_safe
+from django.utils.html import escape
+from django.utils.text import Truncator
 
 from exadmin.views.list import EMPTY_CHANGELIST_VALUE
 
@@ -20,6 +22,10 @@ from util import (get_model_from_relation,
 class BaseFilter(object):
     title = None
     template = 'admin/filters/list.html'
+
+    @classmethod
+    def test(cls, field, request, params, model, admin_view, field_path):
+        pass
 
     def __init__(self, request, params, model, admin_view):
         self.used_params = {}
@@ -67,20 +73,21 @@ class FieldFilterManager(object):
     _field_list_filters = []
     _take_priority_index = 0
 
-    def register(self, test, list_filter_class, take_priority=False):
+    def register(self, list_filter_class, take_priority=False):
         if take_priority:
             # This is to allow overriding the default filters for certain types
             # of fields with some custom filters. The first found in the list
             # is used in priority.
             self._field_list_filters.insert(
-                self._take_priority_index, (test, list_filter_class))
+                self._take_priority_index, list_filter_class)
             self._take_priority_index += 1
         else:
-            self._field_list_filters.append((test, list_filter_class))
+            self._field_list_filters.append(list_filter_class)
+        return list_filter_class
 
     def create(self, field, request, params, model, admin_view, field_path):
-        for test, list_filter_class in self._field_list_filters:
-            if not test(field):
+        for list_filter_class in self._field_list_filters:
+            if not list_filter_class.test(field, request, params, model, admin_view, field_path):
                 continue
             return list_filter_class(field, request, params,
                 model, admin_view, field_path=field_path)
@@ -131,8 +138,13 @@ class ListFieldFilter(FieldFilter):
         context['choices'] = list(self.choices())
         return context
 
+@manager.register
 class BooleanFieldListFilter(ListFieldFilter):
     lookup_formats = {'exact': '%s__exact', 'isnull': '%s__isnull'}
+
+    @classmethod
+    def test(cls, field, request, params, model, admin_view, field_path):
+        return isinstance(field, (models.BooleanField, models.NullBooleanField))
 
     def choices(self):
         for lookup, title in (
@@ -155,11 +167,13 @@ class BooleanFieldListFilter(ListFieldFilter):
                 'display': _('Unknown'),
             }
 
-manager.register(lambda f: isinstance(f,
-    (models.BooleanField, models.NullBooleanField)), BooleanFieldListFilter)
-
+@manager.register
 class ChoicesFieldListFilter(ListFieldFilter):
     lookup_formats = {'exact': '%s__exact'}
+
+    @classmethod
+    def test(cls, field, request, params, model, admin_view, field_path):
+        return bool(field.choices)
 
     def choices(self):
         yield {
@@ -174,20 +188,25 @@ class ChoicesFieldListFilter(ListFieldFilter):
                 'display': title,
             }
 
-manager.register(lambda f: bool(f.choices), ChoicesFieldListFilter)
-
+@manager.register
 class TextFieldListFilter(FieldFilter):
     template = 'admin/filters/char.html'
     lookup_formats = {'search':'%s__contains'}
 
-manager.register(lambda f: (isinstance(f, models.CharField) and f.max_length > 20) or isinstance(f, models.TextField), \
-    TextFieldListFilter)
+    @classmethod
+    def test(cls, field, request, params, model, admin_view, field_path):
+        return (isinstance(field, models.CharField) and field.max_length > 20) or isinstance(field, models.TextField)
 
+@manager.register
 class NumberFieldListFilter(FieldFilter):
     template = 'admin/filters/number.html'
     lookup_formats = {'equal':'%s__exact', 'lt': '%s__lt', 'gt': '%s__gt',
         'ne':'%s__ne', 'lte': '%s__lte', 'gte': '%s__gte',
     }
+
+    @classmethod
+    def test(cls, field, request, params, model, admin_view, field_path):
+        return isinstance(field, (models.DecimalField, models.FloatField, models.IntegerField))
 
     def do_filte(self, queryset):
         params = self.used_params.copy()
@@ -196,13 +215,15 @@ class NumberFieldListFilter(FieldFilter):
             queryset = queryset.exclude(**{self.field_path: params.pop(ne_key)})
         return queryset.filter(**params)
 
-manager.register(lambda f: bool(filter(lambda field_class: isinstance(f, field_class), \
-    (models.DecimalField, models.FloatField, models.IntegerField))), NumberFieldListFilter)
-
+@manager.register
 class DateFieldListFilter(ListFieldFilter):
     template = 'admin/filters/date.html'
     lookup_formats = {'since': '%s__gte', 'until': '%s__lt', 
         'year': '%s__year', 'month': '%s__month', 'day': '%s__day'}
+
+    @classmethod
+    def test(cls, field, request, params, model, admin_view, field_path):
+        return isinstance(field, models.DateField)
 
     def __init__(self, field, request, params, model, admin_view, field_path):
         self.field_generic = '%s__' % field_path
@@ -263,11 +284,57 @@ class DateFieldListFilter(ListFieldFilter):
                 'display': title,
             }
 
-manager.register(
-    lambda f: isinstance(f, models.DateField), DateFieldListFilter)
+@manager.register
+class RelatedFieldSearchFilter(FieldFilter):
+    template = 'admin/filters/fk_search.html'
+
+    @classmethod
+    def test(cls, field, request, params, model, admin_view, field_path):
+        if not (hasattr(field, 'rel') and bool(field.rel) or isinstance(field, models.related.RelatedObject)):
+            return False
+        related_modeladmin = admin_view.admin_site._registry.get(get_model_from_relation(field))
+        return related_modeladmin and getattr(related_modeladmin, 'relfield_style', None) == 'fk-ajax'
+
+    def __init__(self, field, request, params, model, model_admin, field_path):
+        other_model = get_model_from_relation(field)
+        if hasattr(field, 'rel'):
+            rel_name = field.rel.get_related_field().name
+        else:
+            rel_name = other_model._meta.pk.name
+
+        self.lookup_formats = {'exact': '%%s__%s__exact' % rel_name}
+        super(RelatedFieldSearchFilter, self).__init__(
+            field, request, params, model, model_admin, field_path)
+
+        if hasattr(field, 'verbose_name'):
+            self.lookup_title = field.verbose_name
+        else:
+            self.lookup_title = other_model._meta.verbose_name
+        self.title = self.lookup_title
+        self.search_url = model_admin.admin_urlname('%s_%s_changelist' % (other_model._meta.app_label, other_model._meta.module_name))
+        self.label = self.label_for_value(other_model, rel_name, self.lookup_exact_val) if self.lookup_exact_val else ""
+
+    def label_for_value(self, other_model, rel_name, value):
+        try:
+            obj = other_model._default_manager.get(**{rel_name: value})
+            return '%s' % escape(Truncator(obj).words(14, truncate='...'))
+        except (ValueError, other_model.DoesNotExist):
+            return ""
+
+    def get_context(self):
+        context = super(RelatedFieldSearchFilter, self).get_context()
+        context['search_url'] = self.search_url
+        context['label'] = self.label
+        return context
 
 
+@manager.register
 class RelatedFieldListFilter(ListFieldFilter):
+
+    @classmethod
+    def test(cls, field, request, params, model, admin_view, field_path):
+        return (hasattr(field, 'rel') and bool(field.rel) or isinstance(field, models.related.RelatedObject))
+
     def __init__(self, field, request, params, model, model_admin, field_path):
         other_model = get_model_from_relation(field)
         if hasattr(field, 'rel'):
@@ -324,16 +391,13 @@ class RelatedFieldListFilter(ListFieldFilter):
                 'display': EMPTY_CHANGELIST_VALUE,
             }
 
-manager.register(lambda f: (
-        hasattr(f, 'rel') and bool(f.rel) or
-        isinstance(f, models.related.RelatedObject)), RelatedFieldListFilter)
-
-
-# This should be registered last, because it's a last resort. For example,
-# if a field is eligible to use the BooleanFieldListFilter, that'd be much
-# more appropriate, and the AllValuesFieldListFilter won't get used for it.
+@manager.register
 class AllValuesFieldListFilter(ListFieldFilter):
     lookup_formats = {'exact': '%s__exact', 'isnull': '%s__isnull'}
+
+    @classmethod
+    def test(cls, field, request, params, model, admin_view, field_path):
+        return True
 
     def __init__(self, field, request, params, model, admin_view, field_path):
         parent_model, reverse_path = reverse_field_path(model, field_path)
@@ -377,4 +441,3 @@ class AllValuesFieldListFilter(ListFieldFilter):
                 'display': EMPTY_CHANGELIST_VALUE,
             }
 
-manager.register(lambda f: True, AllValuesFieldListFilter)
