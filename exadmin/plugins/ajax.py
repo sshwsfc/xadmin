@@ -20,7 +20,8 @@ class AjaxListPlugin(BaseAdminPlugin):
             enumerate(filter(lambda c:c.field_name in base_fields, r.cells))]) \
             for r in av.results()]
 
-        content = simplejson.dumps({'headers': headers, 'objects': objects}, ensure_ascii=False, indent=4)
+        content = simplejson.dumps({'headers': headers, 'objects': objects, 'total_count': av.result_count, 'has_more': av.has_more}, \
+            ensure_ascii=False, indent=4)
         response.write(content)
 
         return response

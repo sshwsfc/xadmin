@@ -199,6 +199,7 @@ class ListAdminView(ModelAdminView):
                         'title': _('Database error'),
                     })
                 return HttpResponseRedirect(self.request.path + '?' + ERROR_FLAG + '=1')
+        self.has_more = self.result_count > (self.list_per_page * self.page_num + len(self.result_list))
 
     @filter_hook
     def get_result_list(self):

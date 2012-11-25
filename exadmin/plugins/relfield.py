@@ -1,20 +1,52 @@
 
 from django.db import models
+from django.utils.html import escape
+from django.utils.text import Truncator
+from django.utils.translation import ugettext as _
 from django import forms
 from exadmin.sites import site
 from exadmin.views import BaseAdminPlugin, ModelFormAdminView
 
+class ForeignKeySearchWidget(forms.TextInput):
+
+    def __init__(self, rel, admin_view, attrs=None, using=None):
+        self.rel = rel
+        self.admin_view = admin_view
+        self.db = using
+        super(ForeignKeySearchWidget, self).__init__(attrs)
+
+    def render(self, name, value, attrs=None):
+        to_opts = self.rel.to._meta
+        if attrs is None:
+            attrs = {}
+        if "class" not in attrs:
+            attrs['class'] = 'select-search'
+        else:
+            attrs['class'] = attrs['class'] + ' select-search'
+        attrs['data-search-url'] = self.admin_view.admin_urlname('%s_%s_changelist' % (to_opts.app_label, to_opts.module_name))
+        attrs['data-placeholder'] = _('Search for a %s') % to_opts.verbose_name
+        if value:
+            attrs['data-label'] = self.label_for_value(value)
+
+        return super(ForeignKeySearchWidget, self).render(name, value, attrs)
+
+    def label_for_value(self, value):
+        key = self.rel.get_related_field().name
+        try:
+            obj = self.rel.to._default_manager.using(self.db).get(**{key: value})
+            return '%s' % escape(Truncator(obj).words(14, truncate='...'))
+        except (ValueError, self.rel.to.DoesNotExist):
+            return ""
+
 class RelateFieldPlugin(BaseAdminPlugin):
 
-    def get_field_style(self, attrs, db_field, style):
+    def get_field_style(self, attrs, db_field, style, **kwargs):
         # search able fk field
         if style == 'fk-ajax' and isinstance(db_field, models.ForeignKey):
-            to_opts = db_field.rel.to._meta
-            datas = {
-                'class': 'select-search',
-                'data-search-url': self.admin_view.admin_urlname('%s_%s_changelist' % (to_opts.app_label, to_opts.module_name))
-            }
-            return dict(attrs or {}, widget=forms.TextInput(attrs=datas))
+            if db_field.rel.to in self.admin_view.admin_site._registry:
+                db = kwargs.get('using')
+                return dict(attrs or {}, widget=ForeignKeySearchWidget(db_field.rel, self.admin_view, using=db))
+        return attrs
 
 site.register_plugin(RelateFieldPlugin, ModelFormAdminView)
 

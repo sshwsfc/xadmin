@@ -24,17 +24,21 @@ jQuery(function() {
         var $el = $(this);
         $el.select2({
             minimumInputLength: 1,
+            initSelection: function(elem, callback){
+                callback({id: elem.val(), '__str__': $el.data('label')});
+            },
             ajax: {
                 url: $el.data('search-url'),
                 dataType: 'json',
                 data: function (term, page) {
                     return {
                         '_q_' : term,
-                        '_cols': 'id.__str__'
+                        '_cols': 'id.__str__',
+                        'p': page - 1
                     };
                 },
                 results: function (data, page) {
-                    return {results: data.objects};
+                    return {results: data.objects, more: data.has_more};
                 }
             },
             formatResult: function(item){return item['__str__']},
