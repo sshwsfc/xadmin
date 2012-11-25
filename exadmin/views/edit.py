@@ -15,7 +15,7 @@ from django.utils.translation import ugettext as _
 from exadmin import widgets
 from exadmin.layout import FormHelper, Layout, Fieldset, Container, Column
 
-from base import ModelAdminView, filter_hook, action_hook, csrf_protect_m
+from base import ModelAdminView, filter_hook, csrf_protect_m
 
 
 FORMFIELD_FOR_DBFIELD_DEFAULTS = {
@@ -108,14 +108,14 @@ class ModelFormAdminView(ModelAdminView):
                 
         return {}
 
-    @action_hook
+    @filter_hook
     def prepare_form(self):
         overrides = FORMFIELD_FOR_DBFIELD_DEFAULTS.copy()
         overrides.update(self.formfield_overrides)
         self.formfield_overrides = overrides
         self.model_form = self.get_model_form()
 
-    @action_hook
+    @filter_hook
     def instance_forms(self):
         self.form_obj = self.model_form(**self.get_form_params())
         helper = self.get_form_helper()
@@ -206,15 +206,15 @@ class ModelFormAdminView(ModelAdminView):
         """
         return self.prepopulated_fields
 
-    @action_hook
+    @filter_hook
     def save_forms(self):
         self.new_obj = self.form_obj.save(commit=False)
 
-    @action_hook
+    @filter_hook
     def save_models(self):
         self.new_obj.save()
 
-    @action_hook
+    @filter_hook
     def save_related(self):
         self.form_obj.save_m2m()
 

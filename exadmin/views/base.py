@@ -24,29 +24,30 @@ csrf_protect_m = method_decorator(csrf_protect)
 class IncorrectLookupParameters(Exception):
     pass
 
+def filter_chain(filters, token, func, *args, **kwargs):
+    if token == -1:
+        return func()
+    else:
+        def _inner_method():
+            fm = filters[token]
+            return fm(func if hasattr(fm, 'callback') else func(), *args, **kwargs)
+        return filter_chain(filters, token-1, _inner_method, *args, **kwargs)
+
 def filter_hook(func):
     tag = func.__name__
     @functools.wraps(func)
     def method(self, *args, **kwargs):
-        result = func(self, *args, **kwargs)
-        if self.plugins:
-            filters = [(getattr(getattr(p, tag), 'priority', 10), getattr(p, tag)) \
-                for p in self.plugins if callable(getattr(p, tag, None))]
-            for p, filter_func in sorted(filters, key=lambda x:x[0]):
-                result = filter_func(result, *args, **kwargs)
-        return result
-    return method
 
-def action_hook(func):
-    tag = func.__name__
-    @functools.wraps(func)
-    def method(self, *args, **kwargs):
-        func(self, *args, **kwargs)
+        def _inner_method():
+            return func(self, *args, **kwargs)
+
         if self.plugins:
             filters = [(getattr(getattr(p, tag), 'priority', 10), getattr(p, tag)) \
                 for p in self.plugins if callable(getattr(p, tag, None))]
-            for p, filter_func in sorted(filters, key=lambda x:x[0]):
-                filter_func(*args, **kwargs)
+            filters = [f for p,f in sorted(filters, key=lambda x:x[0])]
+            return filter_chain(filters, len(filters)-1, _inner_method, *args, **kwargs)
+        else:
+            return _inner_method()
     return method
 
 class BaseAdminPlugin(object):
