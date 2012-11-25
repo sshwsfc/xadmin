@@ -13,6 +13,14 @@ class Row(layout.Div):
         css_class = 'form-row num%d' % len(fields)
         super(Row, self).__init__(css_class=css_class, *fields, **kwargs)
 
+class Col(layout.Column):
+
+    def __init__(self, id, *fields, **kwargs):
+        css_class = ['form-column', id, 'span%d' % kwargs.get('span', 6)]
+        if kwargs.get('horizontal'):
+            css_class.append('form-horizontal')
+        super(Col, self).__init__(css_class=' '.join(css_class), *fields, **kwargs)
+
 class Main(layout.Column):
     css_class = "form-column main span9 form-horizontal"
 

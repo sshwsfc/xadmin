@@ -72,6 +72,14 @@ select, .select2-container {
   border-left: 1px solid #EEE;
   background-color: white;
 }
+.form-horizontal.short_label .control-label,
+.form-horizontal .short_label .control-label {
+  width: 90px;
+}
+.form-horizontal.short_label .controls,
+.form-horizontal .short_label .controls {
+  margin-left: 100px;
+}
 .asteriskField {
   color: red;
 }

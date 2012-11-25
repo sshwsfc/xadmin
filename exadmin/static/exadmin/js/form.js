@@ -4,6 +4,7 @@ jQuery(function() {
         handle: '.box-title',
         forcePlaceholderSize: true,
         cursor: "move",
+        cancel: ".unsort"
     });
 
     $( ".box" )
