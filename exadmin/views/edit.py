@@ -65,12 +65,12 @@ class ModelFormAdminView(ModelAdminView):
     form_layout = None
 
     def formfield_for_dbfield(self, db_field, **kwargs):
-        attrs = self.get_field_attrs(db_field)
+        attrs = self.get_field_attrs(db_field, **kwargs)
         attrs.update(kwargs)
         return db_field.formfield(**attrs)
 
     @filter_hook
-    def get_field_style(self, db_field, style):
+    def get_field_style(self, db_field, style, **kwargs):
         if style in ('radio', 'radio-inline') and (db_field.choices or isinstance(db_field, models.ForeignKey)):
             attrs = {'widget': widgets.AdminRadioSelect(attrs={'class': 'inline' if style == 'radio-inline' else ""})}
             if db_field.choices:
@@ -85,17 +85,17 @@ class ModelFormAdminView(ModelAdminView):
                 'help_text': None}
 
     @filter_hook
-    def get_field_attrs(self, db_field):
+    def get_field_attrs(self, db_field, **kwargs):
 
         if db_field.name in self.style_fields:
-            attrs = self.get_field_style(db_field, self.style_fields[db_field.name])
+            attrs = self.get_field_style(db_field, self.style_fields[db_field.name], **kwargs)
             if attrs:
                 return attrs
 
         if hasattr(db_field, "rel") and db_field.rel:
             related_modeladmin = self.admin_site._registry.get(db_field.rel.to)
             if related_modeladmin and hasattr(related_modeladmin, 'relfield_style'):
-                attrs = self.get_field_style(db_field, related_modeladmin.relfield_style)
+                attrs = self.get_field_style(db_field, related_modeladmin.relfield_style, **kwargs)
                 if attrs:
                     return attrs
 
