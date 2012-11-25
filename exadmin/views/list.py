@@ -66,6 +66,7 @@ class ResultItem(object):
         self.field_name = field_name
         self.field = None
         self.attr = None
+        self.value = None
 
     @property
     def label(self):
@@ -553,6 +554,7 @@ class ListAdminView(ModelAdminView):
 
             item.field = f
             item.attr = attr
+            item.value = value
 
         # If list_display_links not defined, add the link tag to the first field
         if (item.row['is_display_first'] and not self.list_display_links) \
