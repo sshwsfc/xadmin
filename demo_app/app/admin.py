@@ -7,6 +7,7 @@ class IDCAdmin(object):
     list_display_links = ('name',)
 
     search_fields = ['name']
+    relfield_style = 'fk-ajax'
     
 class HostAdmin(object):
     def open_web(self, instance):

@@ -53,6 +53,7 @@ class ModelFormAdminView(ModelAdminView):
     formfield_overrides = {}
     readonly_fields = ()
     style_fields = {}
+    relfield_style = None
     prepopulated_fields = {}
 
     save_as = False
@@ -80,8 +81,8 @@ class ModelFormAdminView(ModelAdminView):
             return attrs
 
         if style in ('checkbox', 'checkbox-inline') and isinstance(db_field, models.ManyToManyField):
-            db_field.help_text = None
-            return {'widget': widgets.AdminCheckboxSelect(attrs={'class': 'inline' if style == 'checkbox-inline' else ""})}
+            return {'widget': widgets.AdminCheckboxSelect(attrs={'class': 'inline' if style == 'checkbox-inline' else ""}),
+                'help_text': None}
 
     @filter_hook
     def get_field_attrs(self, db_field):
@@ -90,6 +91,13 @@ class ModelFormAdminView(ModelAdminView):
             attrs = self.get_field_style(db_field, self.style_fields[db_field.name])
             if attrs:
                 return attrs
+
+        if hasattr(db_field, "rel") and db_field.rel:
+            related_modeladmin = self.admin_site._registry.get(db_field.rel.to)
+            if related_modeladmin and hasattr(related_modeladmin, 'relfield_style'):
+                attrs = self.get_field_style(db_field, related_modeladmin.relfield_style)
+                if attrs:
+                    return attrs
 
         if db_field.choices:
             return {}
