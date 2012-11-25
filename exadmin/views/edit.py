@@ -62,7 +62,6 @@ class ModelFormAdminView(ModelAdminView):
     change_form_template = None
 
     form_layout = None
-    show_all_field = False
 
     def formfield_for_dbfield(self, db_field, **kwargs):
         attrs = self.get_field_attrs(db_field)
@@ -163,16 +162,15 @@ class ModelFormAdminView(ModelAdminView):
             else:
                 layout = Layout(Container(Fieldset(title, *layout), css_class="form-horizontal"))
 
-            if self.show_all_field:
-                rendered_fields = [i[1] for i in layout.get_field_names()]
-                container = layout[0].fields
-                other_fieldset = Fieldset(_(u'Other Fields'), *[f for f in self.form_obj.fields.keys() if f not in rendered_fields])
+            rendered_fields = [i[1] for i in layout.get_field_names()]
+            container = layout[0].fields
+            other_fieldset = Fieldset(_(u'Other Fields'), *[f for f in self.form_obj.fields.keys() if f not in rendered_fields])
 
-                if len(other_fieldset.fields):
-                    if len(container) and isinstance(container[0], Column):
-                        container[0].fields.append(other_fieldset)
-                    else:
-                        container.append(other_fieldset)
+            if len(other_fieldset.fields):
+                if len(container) and isinstance(container[0], Column):
+                    container[0].fields.append(other_fieldset)
+                else:
+                    container.append(other_fieldset)
 
         return layout
 
@@ -272,8 +270,6 @@ class ModelFormAdminView(ModelAdminView):
         return media
 
 class CreateAdminView(ModelFormAdminView):
-
-    show_all_field = True
 
     def init_request(self, *args, **kwargs):
         self.org_obj = None
