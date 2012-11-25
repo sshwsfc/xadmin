@@ -28,7 +28,6 @@ class HostAdmin(object):
 
     list_bookmarks = [{'title': "Need Guarantee", 'query': {'status__exact': 2}, 'order': ('-guarantee_date',), 'cols': ('brand', 'guarantee_date', 'service_type')}]
 
-    refresh_times = (3, 5, 10)
     show_detail_fields = ('idc',)
     editable_fields = ('name', 'idc', 'guarantee_date', 'service_type', 'description')
 
@@ -98,6 +97,7 @@ class AccessRecordAdmin(object):
     list_filter = ['date', 'user_count', 'view_count']
     actions = None
 
+    refresh_times = (3, 5, 10)
     data_charts = {
         "user_count": {'title': u"User Report", "x-field": "date", "y-field": ("user_count", "view_count"), "order": ('date',)},
         "avg_count": {'title': u"Avg Report", "x-field": "date", "y-field": ('avg_count',), "order": ('date',)}
