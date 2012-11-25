@@ -20,7 +20,7 @@
     height: 40.2em;
 }
 
-.text-field {
+.text-field, .textinput {
     width: 60%;
     max-width: 300px;
 }
@@ -30,21 +30,6 @@
     max-width: 100px;
 }
 
-.vPositiveSmallIntegerField {
-    width: 15%;
-}
-
-.vSelectMultipleField {
-    vertical-align: top !important;
-}
-
-.vCheckboxField {
-    border: none;
-}
-
-.vForeignKeyRawIdAdminField {
-    width: 20%;
-}
 
 select, .select2-container {
   max-width: 200px;
