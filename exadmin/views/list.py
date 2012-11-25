@@ -122,6 +122,7 @@ class ListAdminView(ModelAdminView):
 
         request = self.request
 
+        self.pk_attname = self.opts.pk.attname
         self.lookup_opts = self.opts
         self.list_display = self.get_list_display()
         self.list_display_links = self.get_list_display_links()
@@ -364,7 +365,6 @@ class ListAdminView(ModelAdminView):
             title = _('Select %s to change')
             
         self.title = title % force_unicode(self.opts.verbose_name)
-        self.pk_attname = self.opts.pk.attname
 
         model_fields = [(f, f.name in self.list_display, self.get_check_field_url(f)) \
             for f in (self.opts.fields + self.get_model_method_fields()) if f.name not in self.list_exclude]
