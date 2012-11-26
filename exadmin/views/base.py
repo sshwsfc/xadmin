@@ -1,4 +1,5 @@
 import functools, datetime, decimal
+from inspect import getargspec
 
 from django import forms
 from django.contrib import messages
@@ -30,7 +31,8 @@ def filter_chain(filters, token, func, *args, **kwargs):
     else:
         def _inner_method():
             fm = filters[token]
-            return fm(func if hasattr(fm, 'callback') else func(), *args, **kwargs)
+            fargs = getargspec(fm)[0]
+            return fm(func if (len(fargs)>1 and fargs[1] == '__') else func(), *args, **kwargs)
         return filter_chain(filters, token-1, _inner_method, *args, **kwargs)
 
 def filter_hook(func):
