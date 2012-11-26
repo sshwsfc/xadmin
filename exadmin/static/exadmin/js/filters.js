@@ -5,7 +5,7 @@
 
   $(function(){
     $('.filters .dropdown-submenu').on('mouseover', function(e){
-      $(this).parent().find('.dropdown-submenu.open').removeClass('open');
+      $(this).parent().find('>.dropdown-submenu.open').removeClass('open');
       $(this).addClass('open');
     });
 
