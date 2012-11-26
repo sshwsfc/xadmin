@@ -184,13 +184,10 @@ class ModelFormAdminView(ModelAdminView):
 
     @filter_hook
     def get_form_helper(self):
-        try:
-            helper = FormHelper()
-            helper.form_tag = False
-            helper.add_layout(self.get_form_layout())
-            return helper
-        except Exception:
-            return None
+        helper = FormHelper()
+        helper.form_tag = False
+        helper.add_layout(self.get_form_layout())
+        return helper
 
     @filter_hook
     def get_readonly_fields(self):
@@ -328,7 +325,7 @@ class CreateAdminView(ModelFormAdminView):
         ], context, current_app=self.admin_site.name)
 
     @filter_hook
-    def post_response(self, post_url_continue='../%s/'):
+    def post_response(self):
         """
         Determines the HttpResponse for the add_view stage.
         """
@@ -343,17 +340,9 @@ class CreateAdminView(ModelFormAdminView):
         # the presence of keys in request.POST.
         if "_continue" in request.POST:
             self.message_user(msg + ' ' + _("You may edit it again below."))
-            if "_popup" in request.POST:
-                post_url_continue += "?_popup=1"
-            return HttpResponseRedirect(post_url_continue % pk_value)
+            return HttpResponseRedirect("../%s/" % pk_value)
 
-        if "_popup" in request.POST:
-            return HttpResponse(
-                '<!DOCTYPE html><html><head><title></title></head><body>'
-                '<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script></body></html>' % \
-                # escape() calls force_unicode.
-                (escape(pk_value), escapejs(obj)))
-        elif "_addanother" in request.POST:
+        if "_addanother" in request.POST:
             self.message_user(msg + ' ' + (_("You may add another %s below.") % force_unicode(opts.verbose_name)))
             return HttpResponseRedirect(request.path)
         else:
@@ -384,10 +373,8 @@ class UpdateAdminView(ModelFormAdminView):
             raise Http404(_('%(name)s object with primary key %(key)r does not exist.') % \
                 {'name': force_unicode(self.opts.verbose_name), 'key': escape(object_id)})
 
-        # if self.request.method == 'POST' and "_saveasnew" in self.request.POST:
-        #     return self.add_view(form_url=reverse('admin:%s_%s_add' %
-        #                             (self.opts.app_label, self.opts.module_name),
-        #                             current_app=self.admin_site.name))
+        if self.request.method == 'POST' and "_saveasnew" in self.request.POST:
+            self.org_obj = None
 
         # comm method for both get and post
         self.prepare_form()
@@ -443,10 +430,7 @@ class UpdateAdminView(ModelFormAdminView):
         msg = _('The %(name)s "%(obj)s" was changed successfully.') % {'name': force_unicode(verbose_name), 'obj': force_unicode(obj)}
         if "_continue" in request.POST:
             self.message_user(msg + ' ' + _("You may edit it again below."))
-            if "_popup" in request.REQUEST:
-                return HttpResponseRedirect(request.path + "?_popup=1")
-            else:
-                return HttpResponseRedirect(request.path)
+            return HttpResponseRedirect(request.path)
         elif "_saveasnew" in request.POST:
             msg = _('The %(name)s "%(obj)s" was added successfully. You may edit it again below.') % {'name': force_unicode(verbose_name), 'obj': obj}
             self.message_user(msg)

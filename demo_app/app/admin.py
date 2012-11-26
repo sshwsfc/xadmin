@@ -1,6 +1,11 @@
 import exadmin
 from models import *
 from exadmin.layout import *
+from exadmin.plugins.inline import StackedInline
+
+class MaintainInline(StackedInline):
+    model = MaintainLog
+    fields = ['maintain_type', 'hard_type']
 
 class IDCAdmin(object):
     list_display = ('name', 'description', 'create_time')
@@ -50,6 +55,7 @@ class HostAdmin(object):
             ),
         )
     )
+    inlines = [MaintainInline]
     
 class HostGroupAdmin(object):
     list_display = ('name', 'description')

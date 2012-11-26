@@ -9,8 +9,6 @@
 <script type="text/javascript" src="{{ jsi18nurl|default:"../../../jsi18n/" }}"></script>
 {% endblock %}
 
-{% block coltype %}{% if ordered_objects %}colMS{% else %}colM{% endif %}{% endblock %}
-
 {% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} change-form{% endblock %}
 
 {% if not is_popup %}
@@ -31,20 +29,18 @@
 
 {% block content %}
 <form {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form">{% csrf_token %}
-  {% block form_top %}{% endblock %}
+  {% view_block 'form_top' %}
   {% if is_popup %}<input type="hidden" name="_popup" value="1" />{% endif %}
   {% if save_on_top %}{% block submit_buttons_top %}{% submit_row %}{% endblock %}{% endif %}
 
   <legend>
     {% block object-tools %}
-    {% if change %}{% if not is_popup %}
+    {% if change %}
     <div class="btn-group pull-right">
-      {% block object-tools-items %}
       <a href="history/" class="btn btn-small historylink">{% trans "History" %}</a>
       {% if has_absolute_url %}<a href="../../../r/{{ content_type_id }}/{{ object_id }}/" class="btn btn-small viewsitelink">{% trans "View on site" %}</a>{% endif%}
-      {% endblock %}
     </div>
-    {% endif %}{% endif %}
+    {% endif %}
     {% endblock %}
     {% if add %}{% trans 'Add' %} {{ opts.verbose_name }}{% else %}{{ original|truncatewords:"18" }}{% endif %}
   </legend>
@@ -56,19 +52,12 @@
       {{ form.non_field_errors }}
   {% endif %}
 
+  {% view_block 'before_fieldsets' %}
+
   {% crispy form %}
 
-  {% block after_field_sets %}{% endblock %}
-
-  {% block inline_field_sets %}
-  {% for inline_admin_formset in inline_admin_formsets %}
-      {% include inline_admin_formset.opts.template %}
-  {% endfor %}
-  {% endblock %}
-
-  {% block after_related_objects %}{% endblock %}
+  {% view_block 'after_fieldsets' %}
 
   {% block submit_buttons_bottom %}{% submit_row %}{% endblock %}
-
 </form>
 {% endblock %}
