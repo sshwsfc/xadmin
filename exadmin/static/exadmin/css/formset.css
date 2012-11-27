@@ -1,0 +1,11 @@
+
+.empty-form {
+    display: none;
+}
+.formset .box-content.accordion {
+    margin: 0px;
+    padding: 5px 5px 3px; 
+}
+.formset .accordion-inner {
+    padding: 0px;
+}

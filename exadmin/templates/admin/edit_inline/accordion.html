@@ -1,0 +1,27 @@
+{% load i18n exadmin crispy_forms_tags %}
+<div class="box formset{% if formset.css_class or form_style %} {{ fieldset.css_class }} {{ form_style }}{% endif %}" id="{{ formset.css_id }}" {{ formset.flat_attrs|safe }}>
+  <div class="box-title">{{ formset.opts.verbose_name_plural|title }}</div> 
+  <div class="box-content accordion" id="{{ formset.css_id }}-accordion">
+    {{ formset.formset.management_form }}
+    {{ formset.formset.non_form_errors }}
+
+    {% for fs in formset.formset %}
+    <div class="accordion-group">
+      <div class="accordion-heading">
+        <a class="accordion-toggle" data-toggle="collapse" data-parent="#{{ formset.css_id }}-accordion" href="#{{ formset.formset.prefix }}-{{ forloop.counter0 }}"><b>{{ formset.opts.verbose_name|title }}:</b>&nbsp;<span>{% if fs.instance.pk %}{{ fs.instance }}{% else %}#{{ forloop.counter }}{% endif %}</span>
+        </a>
+      </div>
+      <div id="{{ formset.formset.prefix }}-{{ forloop.counter0 }}" class="accordion-body collapse">
+        <div class="accordion-inner">
+        {% crispy fs formset.formset.helper %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+    <div class="inline-related empty-form last-related" id="{{ formset.formset.prefix }}-empty">
+      {% crispy formset.formset.empty_form formset.formset.helper %}
+    </div>
+
+  </div>
+</div>
