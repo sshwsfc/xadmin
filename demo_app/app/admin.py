@@ -7,6 +7,7 @@ from  exadmin.plugins.inline import Inline
 class MaintainInline(object):
     model = MaintainLog
     extra = 1
+    max_num = 1
 
 class IDCAdmin(object):
     list_display = ('name', 'description', 'create_time')
@@ -42,6 +43,7 @@ class HostAdmin(object):
             Fieldset('Company data',
                 'name', 'idc'
             ),
+            Inline(MaintainLog),
             Fieldset('Contact details',
                 'service_type',
                 Row('brand', 'model'),
@@ -54,7 +56,6 @@ class HostAdmin(object):
             Fieldset('Status data',
                 'status', 'ssh_port', 'ip'
             ),
-            Inline(MaintainLog),
         )
     )
     inlines = [MaintainInline]

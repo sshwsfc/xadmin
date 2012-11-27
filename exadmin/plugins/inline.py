@@ -4,21 +4,19 @@ from django.forms.formsets import all_valid, DELETION_FIELD_NAME, ORDERING_FIELD
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
 from django.template import Context
 from django.template.loader import render_to_string
-from django.template.defaultfilters import title
 
 from exadmin.layout import FormHelper, Layout
 from exadmin.sites import site
 from exadmin.views import BaseAdminPlugin, ModelFormAdminView
-from exadmin.layout import LayoutObject, flatatt, Container, Column
+from exadmin.layout import LayoutObject, flatatt, Container, Column, Field
 
-def get_first_field(layout, clz):
-    for layout_object in layout.fields:
-        if issubclass(layout_object.__class__, clz):
-            return layout_object
-        elif hasattr(layout_object, 'get_field_names'):
-            gf = get_first_field(layout_object, clz)
-            if gf:
-                return gf
+class DeleteField(Field):
+
+    def render(self, form, form_style, context):
+        if form.instance.pk:
+            return super(DeleteField, self).render(form, form_style, context)
+        else:
+            return ""
 
 class InlineModelAdmin(ModelFormAdminView):
 
@@ -26,8 +24,6 @@ class InlineModelAdmin(ModelFormAdminView):
     formset = BaseInlineFormSet
     extra = 3
     max_num = None
-    verbose_name = None
-    verbose_name_plural = None
     can_delete = True
     fields = []
     admin_view = None
@@ -38,11 +34,6 @@ class InlineModelAdmin(ModelFormAdminView):
         self.parent_model = admin_view.model
         self.org_obj = getattr(admin_view, 'org_obj', None)
         self.model_instance = self.org_obj or admin_view.model()
-
-        if self.verbose_name is None:
-            self.verbose_name = self.opts.verbose_name
-        if self.verbose_name_plural is None:
-            self.verbose_name_plural = self.opts.verbose_name_plural
 
         return self
 
@@ -86,26 +77,24 @@ class InlineModelAdmin(ModelFormAdminView):
                     'save_as_new': "_saveasnew" in self.request.POST
                 })
         instance = formset(**attrs)
-        instance.opts = self
+        instance.view = self
 
         helper = FormHelper()
         helper.form_tag = False
 
-        if self.fields:
-            fields = copy.copy(self.fields)
+        layout = copy.deepcopy(self.form_layout)
 
-            if DELETION_FIELD_NAME not in fields and instance.can_delete:
-                fields.append(DELETION_FIELD_NAME)
-            if ORDERING_FIELD_NAME not in fields and instance.can_order:
-                fields.append(ORDERING_FIELD_NAME)
+        if layout is None:
+            layout = Layout(*instance[0].fields.keys())
+        elif type(layout) in (list, tuple) and len(layout) > 0:
+            layout = Layout(*layout)
 
-            fk = getattr(instance, "fk", None)
-            if fk:
-                fields.append(fk.name)
-            if self.has_auto_field(instance[0]):
-                fields.append(instance._pk_field.name)
-
-            helper.add_layout(Layout(*fields))
+            rendered_fields = [i[1] for i in layout.get_field_names()]
+            layout.extend([f for f in instance[0].fields.keys() if f not in rendered_fields])
+   
+        helper.add_layout(layout)
+        # replace delete field with Dynamic field, for hidden delete field when instance is NEW.
+        helper[DELETION_FIELD_NAME].wrap(DeleteField)
 
         instance.helper = helper
         return instance
@@ -148,20 +137,24 @@ class InlineModelAdmin(ModelFormAdminView):
 
 class InlineFormset(LayoutObject):
 
-    template = 'admin/edit_inline/stacked.html'
+    template = 'admin/edit_inline/accordion.html'
 
     def __init__(self, formset, **kwargs):
         self.fields = []
-        self.legend = title(formset.opts.verbose_name_plural)
         self.css_class = kwargs.pop('css_class', '')
         self.css_id = "%s-group" % formset.prefix
         # Overrides class variable with an instance level variable
-        self.template = kwargs.pop('template', self.template)
+        if formset.max_num == 1:
+            self.template = 'admin/edit_inline/one.html'
+        else:
+            self.template = kwargs.pop('template', self.template)
         self.formset = formset
+        self.model = formset.model
+        self.opts = formset.model._meta
         self.flat_attrs = flatatt(kwargs)
 
     def render(self, form, form_style, context):
-        return render_to_string(self.template, Context({'formset': self, 'legend': self.legend, 'form_style': form_style}))
+        return render_to_string(self.template, Context({'formset': self, 'form_style': form_style}))
 
 class Inline(LayoutObject):
 
@@ -171,6 +164,15 @@ class Inline(LayoutObject):
 
     def render(self, form, form_style, context):
         return ""
+
+def get_first_field(layout, clz):
+    for layout_object in layout.fields:
+        if issubclass(layout_object.__class__, clz):
+            return layout_object
+        elif hasattr(layout_object, 'get_field_names'):
+            gf = get_first_field(layout_object, clz)
+            if gf:
+                return gf
 
 def replace_inline_objects(layout, fs):
     if not fs:
@@ -243,6 +245,7 @@ class InlineFormsetPlugin(BaseAdminPlugin):
             media = media + fs.media
         if self.formsets:
             media.add_js([self.static('exadmin/js/formset.js')])
+            media.add_css({'screen': [self.static('exadmin/css/formset.css')]})
         return media
 
 site.register_plugin(InlineFormsetPlugin, ModelFormAdminView)
