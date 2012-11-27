@@ -51,7 +51,7 @@ class ModelFormAdminView(ModelAdminView):
     change_form_template = None
 
     form_layout = None
-    
+
     def __init__(self, request, *args, **kwargs):
         overrides = FORMFIELD_FOR_DBFIELD_DEFAULTS.copy()
         overrides.update(self.formfield_overrides)
@@ -108,7 +108,7 @@ class ModelFormAdminView(ModelAdminView):
 
     @filter_hook
     def instance_forms(self):
-        self.form_obj = self.model_form(**self.get_form_params())
+        self.form_obj = self.model_form(**self.get_form_datas())
         helper = self.get_form_helper()
         if helper:
             self.form_obj.helper = helper
@@ -284,7 +284,7 @@ class CreateAdminView(ModelFormAdminView):
         self.prepare_form()
 
     @filter_hook
-    def get_form_params(self):
+    def get_form_datas(self):
         # Prepare the dict of initial data from the request.
         # We have to special-case M2Ms as a list of comma-separated PKs.
         if self.request_method == 'get':
@@ -378,7 +378,7 @@ class UpdateAdminView(ModelFormAdminView):
         self.prepare_form()
 
     @filter_hook
-    def get_form_params(self):
+    def get_form_datas(self):
         params = {'instance': self.org_obj}
         if self.request_method == 'post':
             params.update({'data': self.request.POST, 'files': self.request.FILES})
