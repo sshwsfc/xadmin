@@ -1,32 +1,27 @@
+import copy
 
-from django import forms
+from django.forms.formsets import all_valid, DELETION_FIELD_NAME, ORDERING_FIELD_NAME
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
 from django.template import loader
-from django.forms.formsets import DELETION_FIELD_NAME
-
+from exadmin.layout import FormHelper, Layout
 from exadmin.sites import site
 from exadmin.views import BaseAdminPlugin, ModelFormAdminView
-from exadmin.layout import FormHelper, Layout, Fieldset, Container, Column, Row
 
 class InlineModelAdmin(ModelFormAdminView):
 
-    model = None
     fk_name = None
     formset = BaseInlineFormSet
     extra = 3
     max_num = None
-    template = None
     verbose_name = None
     verbose_name_plural = None
     can_delete = True
     fields = []
+    admin_view = None
+    template = 'admin/edit_inline/stacked.html'
 
-    def __init__(self, admin_view):
-        super(InlineModelAdmin, self).__init__(self.model, admin_view.admin_site)        
+    def init(self, admin_view):
         self.admin_view = admin_view
-        self.request = admin_view.request
-        self.request_method = admin_view.request_method
-        self.user = admin_view.user
         self.parent_model = admin_view.model
         self.org_obj = getattr(admin_view, 'org_obj', None)
         self.model_instance = self.org_obj or admin_view.model()
@@ -36,9 +31,7 @@ class InlineModelAdmin(ModelFormAdminView):
         if self.verbose_name_plural is None:
             self.verbose_name_plural = self.opts.verbose_name_plural
 
-    @property
-    def media(self):
-        return forms.Media()
+        return self
 
     def get_formset(self, **kwargs):
         """Returns a BaseInlineFormSet class for use in admin add/change views."""
@@ -60,7 +53,7 @@ class InlineModelAdmin(ModelFormAdminView):
             "formset": self.formset,
             "fk_name": self.fk_name,
             "exclude": exclude,
-            "formfield_callback": self.admin_view.formfield_for_dbfield,
+            "formfield_callback": self.formfield_for_dbfield,
             "extra": self.extra,
             "max_num": self.max_num,
             "can_delete": can_delete,
@@ -84,11 +77,33 @@ class InlineModelAdmin(ModelFormAdminView):
 
         helper = FormHelper()
         helper.form_tag = False
+
         if self.fields:
-            helper.add_layout(Layout(*self.fields + ['id', DELETION_FIELD_NAME]))
+            fields = copy.copy(self.fields)
+
+            if DELETION_FIELD_NAME not in fields and instance.can_delete:
+                fields.append(DELETION_FIELD_NAME)
+            if ORDERING_FIELD_NAME not in fields and instance.can_order:
+                fields.append(ORDERING_FIELD_NAME)
+
+            fk = getattr(instance, "fk", None)
+            if fk:
+                fields.append(fk.name)
+            if self.has_auto_field(instance[0]):
+                fields.append(instance._pk_field.name)
+
+            helper.add_layout(Layout(*fields))
 
         instance.helper = helper
         return instance
+
+    def has_auto_field(self, form):
+        if form._meta.model._meta.has_auto_field:
+            return True
+        for parent in form._meta.model._meta.get_parent_list():
+            if parent._meta.has_auto_field:
+                return True
+        return False
 
     def queryset(self):
         queryset = super(InlineModelAdmin, self).queryset()
@@ -98,10 +113,6 @@ class InlineModelAdmin(ModelFormAdminView):
 
     def has_add_permission(self):
         if self.opts.auto_created:
-            # We're checking the rights to an auto-created intermediate model,
-            # which doesn't have its own individual permissions. The user needs
-            # to have the change permission for the related model in order to
-            # be able to do anything with the intermediate model.
             return self.has_change_permission()
         return self.user.has_perm(
             self.opts.app_label + '.' + self.opts.get_add_permission())
@@ -109,8 +120,6 @@ class InlineModelAdmin(ModelFormAdminView):
     def has_change_permission(self):
         opts = self.opts
         if opts.auto_created:
-            # The model was auto-created as intermediary for a
-            # ManyToMany-relationship, find the target model
             for field in opts.fields:
                 if field.rel and field.rel.to != self.parent_model:
                     opts = field.rel.to._meta
@@ -120,19 +129,9 @@ class InlineModelAdmin(ModelFormAdminView):
 
     def has_delete_permission(self):
         if self.opts.auto_created:
-            # We're checking the rights to an auto-created intermediate model,
-            # which doesn't have its own individual permissions. The user needs
-            # to have the change permission for the related model in order to
-            # be able to do anything with the intermediate model.
             return self.has_change_permission()
         return self.user.has_perm(
             self.opts.app_label + '.' + self.opts.get_delete_permission())
-
-class StackedInline(InlineModelAdmin):
-    template = 'admin/edit_inline/stacked.html'
-
-class TabularInline(InlineModelAdmin):
-    template = 'admin/edit_inline/tabular.html'
 
 class InlineFormsetPlugin(BaseAdminPlugin):
     inlines = []
@@ -142,7 +141,7 @@ class InlineFormsetPlugin(BaseAdminPlugin):
         if not hasattr(self, '_inline_instances'):
             inline_instances = []
             for inline_class in self.inlines:
-                inline = inline_class(self.admin_view)
+                inline = self.admin_view.get_view(InlineModelAdmin, inline_class).init(self.admin_view)
                 if not (inline.has_add_permission() or
                         inline.has_change_permission() or
                         inline.has_delete_permission()):
@@ -156,9 +155,29 @@ class InlineFormsetPlugin(BaseAdminPlugin):
     def instance_forms(self, ret):
         self.formsets = [inline.instance_form() for inline in self.inline_instances]
 
+    def valid_forms(self, result):
+        return all_valid(self.formsets) and result
+
+    def save_related(self):
+        for formset in self.formsets:
+            formset.instance = self.admin_view.new_obj
+            formset.save()
+
     def get_context(self, context):
         context['inline_formsets'] = self.formsets
         return context
+
+    def get_error_list(self, errors):
+        for fs in self.formsets:
+            errors.extend(fs.non_form_errors())
+            for errors_in_inline_form in fs.errors:
+                errors.extend(errors_in_inline_form.values())
+        return errors
+
+    def get_media(self, media):
+        for fs in self.formsets:
+            media = media + fs.media
+        return media
 
     # Blocks
     def block_after_fieldsets(self, context, nodes):
