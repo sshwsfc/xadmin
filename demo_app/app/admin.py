@@ -2,8 +2,11 @@ import exadmin
 from models import *
 from exadmin.layout import *
 
+from  exadmin.plugins.inline import Inline
+
 class MaintainInline(object):
     model = MaintainLog
+    extra = 1
 
 class IDCAdmin(object):
     list_display = ('name', 'description', 'create_time')
@@ -51,6 +54,7 @@ class HostAdmin(object):
             Fieldset('Status data',
                 'status', 'ssh_port', 'ip'
             ),
+            Inline(MaintainLog),
         )
     )
     inlines = [MaintainInline]

@@ -163,6 +163,23 @@ class InlineFormset(LayoutObject):
     def render(self, form, form_style, context):
         return render_to_string(self.template, Context({'formset': self, 'legend': self.legend, 'form_style': form_style}))
 
+class Inline(LayoutObject):
+
+    def __init__(self, rel_model):
+        self.model = rel_model
+        self.fields = []
+
+    def render(self, form, form_style, context):
+        return ""
+
+def replace_inline_objects(layout, fs):
+    if not fs:
+        return
+    for i, layout_object in enumerate(layout.fields):
+        if isinstance(layout_object, Inline) and fs.has_key(layout_object.model):
+            layout.fields[i] = fs.pop(layout_object.model)
+        elif hasattr(layout_object, 'get_field_names'):
+            replace_inline_objects(layout_object, fs)
 
 class InlineFormsetPlugin(BaseAdminPlugin):
     inlines = []
@@ -206,14 +223,19 @@ class InlineFormsetPlugin(BaseAdminPlugin):
         return errors
 
     def get_form_layout(self, layout):
-        container = get_first_field(layout, Column)
-        if not container:
-            container = get_first_field(layout, Container)
-        if not container:
-            container = layout
-            
-        for fs in self.formsets:
-            container.append(InlineFormset(fs))
+        fs = dict([(f.model, InlineFormset(f)) for f in self.formsets])
+        replace_inline_objects(layout, fs)
+
+        if fs:
+            container = get_first_field(layout, Column)
+            if not container:
+                container = get_first_field(layout, Container)
+            if not container:
+                container = layout
+
+            for fs in fs.values():
+                container.append(fs)
+
         return layout
 
     def get_media(self, media):
