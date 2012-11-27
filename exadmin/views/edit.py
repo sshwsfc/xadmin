@@ -51,6 +51,12 @@ class ModelFormAdminView(ModelAdminView):
     change_form_template = None
 
     form_layout = None
+    
+    def __init__(self, request, *args, **kwargs):
+        overrides = FORMFIELD_FOR_DBFIELD_DEFAULTS.copy()
+        overrides.update(self.formfield_overrides)
+        self.formfield_overrides = overrides
+        super(ModelFormAdminView, self).__init__(request, *args, **kwargs)
 
     def formfield_for_dbfield(self, db_field, **kwargs):
         attrs = self.get_field_attrs(db_field, **kwargs)
@@ -98,9 +104,6 @@ class ModelFormAdminView(ModelAdminView):
 
     @filter_hook
     def prepare_form(self):
-        overrides = FORMFIELD_FOR_DBFIELD_DEFAULTS.copy()
-        overrides.update(self.formfield_overrides)
-        self.formfield_overrides = overrides
         self.model_form = self.get_model_form()
 
     @filter_hook
