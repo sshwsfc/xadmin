@@ -2,10 +2,23 @@ import copy
 
 from django.forms.formsets import all_valid, DELETION_FIELD_NAME, ORDERING_FIELD_NAME
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
-from django.template import loader
+from django.template import Context
+from django.template.loader import render_to_string
+from django.template.defaultfilters import title
+
 from exadmin.layout import FormHelper, Layout
 from exadmin.sites import site
 from exadmin.views import BaseAdminPlugin, ModelFormAdminView
+from exadmin.layout import LayoutObject, flatatt, Container, Column
+
+def get_first_field(layout, clz):
+    for layout_object in layout.fields:
+        if issubclass(layout_object.__class__, clz):
+            return layout_object
+        elif hasattr(layout_object, 'get_field_names'):
+            gf = get_first_field(layout_object, clz)
+            if gf:
+                return gf
 
 class InlineModelAdmin(ModelFormAdminView):
 
@@ -133,6 +146,24 @@ class InlineModelAdmin(ModelFormAdminView):
         return self.user.has_perm(
             self.opts.app_label + '.' + self.opts.get_delete_permission())
 
+class InlineFormset(LayoutObject):
+
+    template = 'admin/edit_inline/stacked.html'
+
+    def __init__(self, formset, **kwargs):
+        self.fields = []
+        self.legend = title(formset.opts.verbose_name_plural)
+        self.css_class = kwargs.pop('css_class', '')
+        self.css_id = "%s-group" % formset.prefix
+        # Overrides class variable with an instance level variable
+        self.template = kwargs.pop('template', self.template)
+        self.formset = formset
+        self.flat_attrs = flatatt(kwargs)
+
+    def render(self, form, form_style, context):
+        return render_to_string(self.template, Context({'formset': self, 'legend': self.legend, 'form_style': form_style}))
+
+
 class InlineFormsetPlugin(BaseAdminPlugin):
     inlines = []
 
@@ -174,15 +205,23 @@ class InlineFormsetPlugin(BaseAdminPlugin):
                 errors.extend(errors_in_inline_form.values())
         return errors
 
+    def get_form_layout(self, layout):
+        container = get_first_field(layout, Column)
+        if not container:
+            container = get_first_field(layout, Container)
+        if not container:
+            container = layout
+            
+        for fs in self.formsets:
+            container.append(InlineFormset(fs))
+        return layout
+
     def get_media(self, media):
         for fs in self.formsets:
             media = media + fs.media
+        if self.formsets:
+            media.add_js([self.static('exadmin/js/formset.js')])
         return media
-
-    # Blocks
-    def block_after_fieldsets(self, context, nodes):
-        for fs in context.get('inline_formsets', []):
-            nodes.append(loader.render_to_string(fs.opts.template, {'formset': fs}, context_instance=context))
 
 site.register_plugin(InlineFormsetPlugin, ModelFormAdminView)
 

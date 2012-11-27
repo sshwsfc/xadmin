@@ -109,6 +109,8 @@ class ModelFormAdminView(ModelAdminView):
     @filter_hook
     def instance_forms(self):
         self.form_obj = self.model_form(**self.get_form_datas())
+
+    def setup_forms(self):
         helper = self.get_form_helper()
         if helper:
             self.form_obj.helper = helper
@@ -146,11 +148,10 @@ class ModelFormAdminView(ModelAdminView):
     @filter_hook
     def get_form_layout(self):
         layout = copy.deepcopy(self.form_layout)
-        title = "%s %s" % (_(u'Add'), self.opts.verbose_name)
 
         if layout is None:
             layout = Layout(Container(
-                    Fieldset(title, *self.form_obj.fields.keys()), css_class="form-horizontal"
+                    Fieldset("", *self.form_obj.fields.keys(), css_class="unsort no_title"), css_class="form-horizontal"
                     ))
 
         if type(layout) in (list, tuple) and len(layout) > 0:
@@ -159,7 +160,7 @@ class ModelFormAdminView(ModelAdminView):
             elif isinstance(layout[0], Fieldset):
                 layout = Layout(Container(*layout, css_class="form-horizontal"))
             else:
-                layout = Layout(Container(Fieldset(title, *layout), css_class="form-horizontal"))
+                layout = Layout(Container(Fieldset("", *layout, css_class="unsort no_title"), css_class="form-horizontal"))
 
             rendered_fields = [i[1] for i in layout.get_field_names()]
             container = layout[0].fields
@@ -209,12 +210,15 @@ class ModelFormAdminView(ModelAdminView):
     @csrf_protect_m
     def get(self, request, *args, **kwargs):
         self.instance_forms()
+        self.setup_forms()
+        
         return self.get_response()
 
     @csrf_protect_m
     @transaction.commit_on_success
     def post(self, request, *args, **kwargs):
         self.instance_forms()
+        self.setup_forms()
 
         if self.valid_forms():
             self.save_forms()

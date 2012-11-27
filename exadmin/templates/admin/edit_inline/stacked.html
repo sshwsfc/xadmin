@@ -1,13 +1,14 @@
 {% load i18n exadmin crispy_forms_tags %}
-<div class="inline-group" id="{{ formset.prefix }}-group">
-  <h4>{{ formset.opts.verbose_name_plural|title }}</h4>
-  {{ formset.management_form }}
-  {{ formset.non_form_errors }}
-
-  {% for fs in formset %}
-  <div class="inline-related{% if forloop.last %} empty-form last-related{% endif %}" 
-    id="{{ formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% else %}empty{% endif %}">
-    {% crispy fs formset.helper %}
+<div class="box formset{% if formset.css_class or form_style %} {{ fieldset.css_class }} {{ form_style }}{% endif %}" {% if formset.css_id %}id="{{ formset.css_id }}"{% endif %} {{ formset.flat_attrs|safe }}>
+  <div class="box-title">{{ legend|safe }}</div> 
+  <div class="box-content nopadding">
+    {{ formset.formset.management_form }}
+    {{ formset.formset.non_form_errors }}
+    {% for fs in formset.formset %}
+    <div class="inline-related{% if forloop.last %} empty-form last-related{% endif %}" 
+      id="{{ formset.formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% else %}empty{% endif %}">
+      {% crispy fs formset.formset.helper %}
+    </div>
+    {% endfor %}
   </div>
-  {% endfor %}
 </div>
