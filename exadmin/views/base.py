@@ -64,21 +64,6 @@ def filter_hook(func):
             return _inner_method()
     return method
 
-class BaseAdminPlugin(object):
-
-    def __init__(self, admin_view):
-        self.admin_view = admin_view
-        self.admin_site = admin_view.admin_site
-        if hasattr(admin_view, 'model'):
-            self.model = admin_view.model
-            self.opts = admin_view.model._meta
-
-    def init_request(self, *args, **kwargs):
-        pass
-        
-    def static(self, path):
-        return static(path)
-
 def inclusion_tag(file_name, context_class=Context, takes_context=False):
     def wrap(func):
         @functools.wraps(func)
@@ -120,62 +105,13 @@ class JSONEncoder(DjangoJSONEncoder):
             except Exception:
                 return smart_unicode(o)
 
-class BaseAdminView(View):
-    """ Base Admin view, support some comm attrs."""
-
-    def __init__(self, request, *args, **kwargs):
-        self.request = request
-        self.request_method = request.method.lower()
-        self.user = request.user
-
-        self.plugins = [p(self) for p in getattr(self, "plugin_classes", [])]
-
-        self.args = args
-        self.kwargs = kwargs
-        self.init_plugin(*args, **kwargs)
-        self.init_request(*args, **kwargs)
-
-    @classonlymethod
-    def as_view(cls):
-        def view(request, *args, **kwargs):
-            self = cls(request, *args, **kwargs)
-
-            if hasattr(self, 'get') and not hasattr(self, 'head'):
-                self.head = self.get
-
-            if self.request_method in self.http_method_names:
-                handler = getattr(self, self.request_method, self.http_method_not_allowed)
-            else:
-                handler = self.http_method_not_allowed
-
-            return handler(request, *args, **kwargs)
-
-        # take name and docstring from class
-        update_wrapper(view, cls, updated=())
-        # and possible attributes set by decorators
-        # like csrf_exempt from dispatch
-        update_wrapper(view, cls.dispatch, assigned=())
-        return view
-
-    def init_request(self, *args, **kwargs):
-        pass
-
-    def init_plugin(self, *args, **kwargs):
-        for p in self.plugins:
-            p.request = self.request
-            p.user = self.user
-            p.args = self.args
-            p.kwargs = self.kwargs
-            p.init_request(*args, **kwargs)
+class BaseAdminObject(object):
 
     def get_view(self, view_class, admin_class=None):
         return self.admin_site.get_view_class(view_class, admin_class)(self.request, *self.args, **self.kwargs)
 
     def get_model_view(self, view_class, model):
         return self.get_view(view_class, self.admin_site._registry.get(model))
-
-    def get_context(self):
-        return {'admin_view': self, 'media': self.media}
 
     def admin_urlname(self, name, *args, **kwargs):
         return reverse('%s:%s' % (self.admin_site.app_name, name), args=args, kwargs=kwargs)
@@ -224,6 +160,70 @@ class BaseAdminView(View):
 
     def static(self, path):
         return static(path)
+
+class BaseAdminPlugin(BaseAdminObject):
+
+    def __init__(self, admin_view):
+        self.admin_view = admin_view
+        self.admin_site = admin_view.admin_site
+
+        if hasattr(admin_view, 'model'):
+            self.model = admin_view.model
+            self.opts = admin_view.model._meta
+
+    def init_request(self, *args, **kwargs):
+        pass
+
+class BaseAdminView(BaseAdminObject, View):
+    """ Base Admin view, support some comm attrs."""
+
+    def __init__(self, request, *args, **kwargs):
+        self.request = request
+        self.request_method = request.method.lower()
+        self.user = request.user
+
+        self.plugins = [p(self) for p in getattr(self, "plugin_classes", [])]
+
+        self.args = args
+        self.kwargs = kwargs
+        self.init_plugin(*args, **kwargs)
+        self.init_request(*args, **kwargs)
+
+    @classonlymethod
+    def as_view(cls):
+        def view(request, *args, **kwargs):
+            self = cls(request, *args, **kwargs)
+
+            if hasattr(self, 'get') and not hasattr(self, 'head'):
+                self.head = self.get
+
+            if self.request_method in self.http_method_names:
+                handler = getattr(self, self.request_method, self.http_method_not_allowed)
+            else:
+                handler = self.http_method_not_allowed
+
+            return handler(request, *args, **kwargs)
+
+        # take name and docstring from class
+        update_wrapper(view, cls, updated=())
+        # and possible attributes set by decorators
+        # like csrf_exempt from dispatch
+        update_wrapper(view, cls.dispatch, assigned=())
+        return view
+
+    def init_request(self, *args, **kwargs):
+        pass
+
+    def init_plugin(self, *args, **kwargs):
+        for p in self.plugins:
+            p.request = self.request
+            p.user = self.user
+            p.args = self.args
+            p.kwargs = self.kwargs
+            p.init_request(*args, **kwargs)
+
+    def get_context(self):
+        return {'admin_view': self, 'media': self.media}
 
     @property
     def media(self):
