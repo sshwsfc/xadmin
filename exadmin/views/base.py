@@ -1,6 +1,6 @@
 import functools, datetime, decimal
 from inspect import getargspec
-
+from functools import update_wrapper
 from django import forms
 from django.contrib import messages
 from django.core.exceptions import ValidationError
@@ -18,11 +18,15 @@ from django.template.response import TemplateResponse
 from django.utils.text import capfirst
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
+from django.utils.decorators import classonlymethod
 from exadmin.util import static
 
 csrf_protect_m = method_decorator(csrf_protect)
 
 class IncorrectLookupParameters(Exception):
+    pass
+
+class IncorrectPluginArg(Exception):
     pass
 
 def filter_chain(filters, token, func, *args, **kwargs):
@@ -32,7 +36,15 @@ def filter_chain(filters, token, func, *args, **kwargs):
         def _inner_method():
             fm = filters[token]
             fargs = getargspec(fm)[0]
-            return fm(func if (len(fargs)>1 and fargs[1] == '__') else func(), *args, **kwargs)
+            if len(fargs) == 1:
+                # Only self arg
+                result = func()
+                if result is None:
+                    return fm()
+                else:
+                    raise IncorrectPluginArg(_(u'Plugin filter method need a arg to receive parent method result.'))
+            else:
+                return fm(func if fargs[1] == '__' else func(), *args, **kwargs)
         return filter_chain(filters, token-1, _inner_method, *args, **kwargs)
 
 def filter_hook(func):
@@ -110,31 +122,40 @@ class JSONEncoder(DjangoJSONEncoder):
 
 class BaseAdminView(View):
     """ Base Admin view, support some comm attrs."""
-    admin_site = None
-    plugins = []
 
-    def __init__(self, admin_site, plugins=None, **kwargs):
-        self.admin_site = admin_site
-        if plugins:
-            self.plugins = [p(self) for p in plugins]
-        super(BaseAdminView, self).__init__(**kwargs)
-
-    def dispatch(self, request, *args, **kwargs):
-        # Try to dispatch to the right method; if a method doesn't exist,
-        # defer to the error handler. Also defer to the error handler if the
-        # request method isn't on the approved list.
-        if request.method.lower() in self.http_method_names:
-            handler = getattr(self, request.method.lower(), self.http_method_not_allowed)
-        else:
-            handler = self.http_method_not_allowed
+    def __init__(self, request, *args, **kwargs):
         self.request = request
         self.request_method = request.method.lower()
         self.user = request.user
+
+        self.plugins = [p(self) for p in getattr(self, "plugin_classes", [])]
+
         self.args = args
         self.kwargs = kwargs
         self.init_plugin(*args, **kwargs)
         self.init_request(*args, **kwargs)
-        return handler(request, *args, **kwargs)
+
+    @classonlymethod
+    def as_view(cls):
+        def view(request, *args, **kwargs):
+            self = cls(request, *args, **kwargs)
+
+            if hasattr(self, 'get') and not hasattr(self, 'head'):
+                self.head = self.get
+
+            if self.request_method in self.http_method_names:
+                handler = getattr(self, self.request_method, self.http_method_not_allowed)
+            else:
+                handler = self.http_method_not_allowed
+
+            return handler(request, *args, **kwargs)
+
+        # take name and docstring from class
+        update_wrapper(view, cls, updated=())
+        # and possible attributes set by decorators
+        # like csrf_exempt from dispatch
+        update_wrapper(view, cls.dispatch, assigned=())
+        return view
 
     def init_request(self, *args, **kwargs):
         pass
@@ -283,11 +304,10 @@ class ModelAdminView(CommAdminView):
     ordering = None
     model = None
 
-    def __init__(self, model, admin_site, plugins=None, **kwargs):
-        self.model = model
-        self.opts = model._meta
-        self.app_label = model._meta.app_label
-        super(ModelAdminView, self).__init__(admin_site, plugins, **kwargs)
+    def __init__(self, request, *args, **kwargs):
+        self.opts = self.model._meta
+        self.app_label = self.model._meta.app_label
+        super(ModelAdminView, self).__init__(request, *args, **kwargs)
 
     @filter_hook
     def get_object(self, object_id):
