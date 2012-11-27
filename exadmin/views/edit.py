@@ -153,8 +153,7 @@ class ModelFormAdminView(ModelAdminView):
             layout = Layout(Container(
                     Fieldset("", *self.form_obj.fields.keys(), css_class="unsort no_title"), css_class="form-horizontal"
                     ))
-
-        if type(layout) in (list, tuple) and len(layout) > 0:
+        elif type(layout) in (list, tuple) and len(layout) > 0:
             if isinstance(layout[0], Column):
                 layout = Layout(Container(*layout))
             elif isinstance(layout[0], Fieldset):
