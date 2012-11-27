@@ -1,19 +1,19 @@
 import copy
-from django import forms
 
-from exadmin.util import unquote
+from django import forms
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.db import models, transaction
 from django.forms.models import modelform_factory
-from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect
 from django.template.response import TemplateResponse
 from django.utils.encoding import force_unicode
-from django.utils.html import escape, escapejs
+from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from exadmin import widgets
 from exadmin.layout import FormHelper, Layout, Fieldset, Container, Column
+from exadmin.util import unquote
 
 from base import ModelAdminView, filter_hook, csrf_protect_m
 
@@ -33,18 +33,6 @@ FORMFIELD_FOR_DBFIELD_DEFAULTS = {
     models.ImageField:      {'widget': widgets.AdminFileWidget},
     models.FileField:       {'widget': widgets.AdminFileWidget},
 }
-
-class AdminErrorList(forms.util.ErrorList):
-    """
-    Stores all errors for the form/formsets in an add/change stage view.
-    """
-    def __init__(self, form, inline_formsets):
-        if form.is_bound:
-            self.extend(form.errors.values())
-            for inline_formset in inline_formsets:
-                self.extend(inline_formset.non_form_errors())
-                for errors_in_inline_form in inline_formset.errors:
-                    self.extend(errors_in_inline_form.values())
 
 class ModelFormAdminView(ModelAdminView):
 
@@ -248,7 +236,7 @@ class ModelFormAdminView(ModelAdminView):
             'show_delete': self.org_obj is not None,
             'add': self.org_obj is None,
             'change': self.org_obj is not None,
-            'errors': AdminErrorList(form, []),
+            'errors': self.get_error_list(),
             'app_label': self.opts.app_label,
             'has_add_permission': self.has_add_permission(),
             'has_change_permission': self.has_change_permission(self.org_obj),
@@ -266,6 +254,13 @@ class ModelFormAdminView(ModelAdminView):
         context = super(ModelFormAdminView, self).get_context()
         context.update(new_context)
         return context
+
+    @filter_hook
+    def get_error_list(self):
+        errors = forms.util.ErrorList()
+        if self.form_obj.is_bound:
+            errors.extend(self.form_obj.errors.values())
+        return errors
 
     @filter_hook
     def get_media(self):
