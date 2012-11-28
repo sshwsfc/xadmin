@@ -45,9 +45,9 @@
 
     $.fn.datepicker.dates['exadmin'] = $.date_local;
 
-    $(function($){
-      $('.input-append.date').datepicker({format: $.date_local.dateJSFormat, language: 'exadmin', todayBtn: true});
-      $('.input-append.time input').timepicker({showMeridian: false, showSeconds: true});
+    $.fn.exform.renders.push(function(f){
+      f.find('.input-append.date').datepicker({format: $.date_local.dateJSFormat, language: 'exadmin', todayBtn: true});
+      f.find('.input-append.time input').timepicker({showMeridian: false, showSeconds: true});
     });
 
 })(jQuery)
