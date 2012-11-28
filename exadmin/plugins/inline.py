@@ -19,6 +19,39 @@ class DeleteField(Field):
         else:
             return ""
 
+class InlineStyleManager(object):
+    inline_styles = {}
+
+    def register_style(self, name, style):
+        self.inline_styles[name] = style
+    def get_style(self, name=None):
+        return self.inline_styles.get(name)
+
+style_manager = InlineStyleManager()
+
+class InlineStyle(object):
+    template = 'admin/edit_inline/stacked.html'
+    def __init__(self, view, formset):
+        self.view = view
+        self.formset = formset
+    def update_layout(self, helper):
+        pass
+    def get_attrs(self):
+        return {}
+style_manager.register_style(None, InlineStyle)
+
+class OneInlineStyle(InlineStyle):
+    template = 'admin/edit_inline/one.html'
+style_manager.register_style("one", OneInlineStyle)
+
+class AccInlineStyle(InlineStyle):
+    template = 'admin/edit_inline/accordion.html'
+style_manager.register_style("accordion", AccInlineStyle)
+
+class TabInlineStyle(InlineStyle):
+    template = 'admin/edit_inline/tab.html'
+style_manager.register_style("tab", TabInlineStyle)
+
 class InlineModelAdmin(ModelFormAdminView):
 
     fk_name = None
@@ -28,6 +61,7 @@ class InlineModelAdmin(ModelFormAdminView):
     can_delete = True
     fields = []
     admin_view = None
+    style = None
 
     def init(self, admin_view):
         self.admin_view = admin_view
@@ -96,7 +130,12 @@ class InlineModelAdmin(ModelFormAdminView):
         # replace delete field with Dynamic field, for hidden delete field when instance is NEW.
         helper[DELETION_FIELD_NAME].wrap(DeleteField)
 
+        style = style_manager.get_style('one' if self.max_num == 1 else self.style)(self, instance)
+        style.update_layout(helper)
+
         instance.helper = helper
+        instance.style = style
+
         return instance
 
     def has_auto_field(self, form):
@@ -137,24 +176,20 @@ class InlineModelAdmin(ModelFormAdminView):
 
 class InlineFormset(LayoutObject):
 
-    template = 'admin/edit_inline/tab.html'
-
     def __init__(self, formset, **kwargs):
         self.fields = []
         self.css_class = kwargs.pop('css_class', '')
         self.css_id = "%s-group" % formset.prefix
-        # Overrides class variable with an instance level variable
-        if formset.max_num == 1:
-            self.template = 'admin/edit_inline/one.html'
-        else:
-            self.template = kwargs.pop('template', self.template)
+        self.template = formset.style.template
         self.formset = formset
         self.model = formset.model
         self.opts = formset.model._meta
         self.flat_attrs = flatatt(kwargs)
+        self.extra_attrs = formset.style.get_attrs()
 
     def render(self, form, form_style, context):
-        return render_to_string(self.template, Context({'formset': self, 'prefix': self.formset.prefix, 'form_style': form_style}))
+        return render_to_string(self.template, Context(\
+            dict({'formset': self, 'prefix': self.formset.prefix, 'form_style': form_style}, **self.extra_attrs)))
 
 class Inline(LayoutObject):
 
