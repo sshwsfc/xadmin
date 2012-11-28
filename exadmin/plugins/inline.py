@@ -28,7 +28,6 @@ class InlineModelAdmin(ModelFormAdminView):
     can_delete = True
     fields = []
     admin_view = None
-    template = 'admin/edit_inline/stacked.html'
 
     def init(self, admin_view):
         self.admin_view = admin_view
@@ -138,7 +137,7 @@ class InlineModelAdmin(ModelFormAdminView):
 
 class InlineFormset(LayoutObject):
 
-    template = 'admin/edit_inline/accordion.html'
+    template = 'admin/edit_inline/tab.html'
 
     def __init__(self, formset, **kwargs):
         self.fields = []

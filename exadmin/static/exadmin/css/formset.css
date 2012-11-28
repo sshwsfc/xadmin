@@ -12,8 +12,17 @@
 .formset .row-deleted{
     background: #fff0f0;
 }
-
-.accordion-heading .delete-row {
+.formset .accordion-heading .delete-row {
     float: right;
     margin: 8px;
+}
+.formset .nav{
+    margin-bottom: 5px;
+}
+.formset .box-content.tabs{
+    padding: 5px 0px 0px;
+}
+.formset .tabs .delete-row{
+    float: right;
+    margin: 8px 8px;
 }

@@ -1,19 +1,10 @@
-/**
- * jQuery Formset 1.1
- * @author Stanislaus Madueke (stan DOT madueke AT gmail DOT com)
- * @requires jQuery 1.2.6 or later
- *
- * Copyright (c) 2009, Stanislaus Madueke
- * All rights reserved.
- *
- * Licensed under the New BSD License
- * See: http://www.opensource.org/licenses/bsd-license.php
- */
 ;(function($) {
-    $.fn.formset = function(opts)
-    {
-        var options = $.extend({}, $.fn.formset.defaults, opts),
-            $$ = $(this),
+    $.fn.formset = function(opts){
+        var $$ = $(this);
+
+        var options = $.extend({
+            prefix: $$.data('prefix')
+        }, $.fn.formset.styles[$$.data('style')], opts),
 
             updateElementIndex = function(elem, prefix, ndx) {
                 var idRegex = new RegExp(prefix + '-(\\d+|__prefix__)-'),
@@ -29,10 +20,12 @@
             },
 
             updateRowIndex = function(row, i){
+                updateElementIndex(row, options.prefix, i);
                 row.find('input,select,textarea,label,div,a').each(function() {
                     updateElementIndex($(this), options.prefix, i);
                 });
                 row.find('.formset-num').html(i + 1);
+                row.data('row-index', i);
             },
 
             insertDeleteLink = function(row) {
@@ -56,7 +49,7 @@
                         }
                     }
                     // If a post-delete callback was provided, call it with the deleted form:
-                    if (options.removed) options.removed(row);
+                    if (options.removed) options.removed(row, $$);
                     return false;
                 });
             };
@@ -68,17 +61,21 @@
         if ($$.length) {
             var template = $('#' + options.prefix + '-empty');
             template.removeAttr('id');
+            if(template.data("replace-id")){
+                template.attr('id', template.data("replace-id"));
+                template.removeAttr('data-replace-id');
+            }
             options.formTemplate = template;
 
             $('#' + options.prefix + '-add-row').click(function() {
                 var formCount = parseInt($('#id_' + options.prefix + '-TOTAL_FORMS').val()),
                     row = options.formTemplate.clone(true).removeClass('empty-form');
                 updateRowIndex(row, formCount);
-                row.appendTo($$).show();
+                row.appendTo($$);
                 insertDeleteLink(row);
                 $('#id_' + options.prefix + '-TOTAL_FORMS').val(formCount + 1);
                 // If a post-add callback was supplied, call it with the added form:
-                if (options.added) options.added(row);
+                if (options.added) options.added(row, $$);
                 return false;
             });
         }
@@ -86,20 +83,17 @@
         return $$;
     }
 
-    /* Setup plugin defaults */
-    $.fn.formset.defaults = {
-        prefix: 'form',                  // The form prefix for your django formset
-        added: null,                     // Function called each time a new form is added
-        removed: null                    // Function called each time a form is deleted
-    };
+    $.fn.formset.styles = {
+        'tab': {
+            added: function(row, $$){
+                var new_tab = $('<li><a data-toggle="tab" href="#'+ row.attr('id') +'">#'+ (row.data('row-index') + 1) +'</a></li>');
+                $$.parent().find('.nav-tabs').append(new_tab);
+                new_tab.find('a').tab('show');
+            }
+        }
+    }
 
     $(function(){
-        $('.formset-content').each(function(){
-            var $el = $(this);
-            var prefix = $el.data('prefix');
-            $el.formset({
-                prefix: prefix
-            })
-        })
+        $('.formset-content').formset();
     });
 })(jQuery)

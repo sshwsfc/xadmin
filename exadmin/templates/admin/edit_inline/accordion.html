@@ -5,7 +5,7 @@
     {{ formset.opts.verbose_name_plural|title }}
   </div> 
   <div class="box-content accordion formset-content" id="{{ formset.css_id }}-accordion" 
-    data-prefix="{{ prefix }}">
+    data-prefix="{{ prefix }}" data-style="accordion">
     {{ formset.formset.management_form }}
     {{ formset.formset.non_form_errors }}
     {% for fs in formset.formset %}
