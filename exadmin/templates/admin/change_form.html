@@ -28,7 +28,7 @@
 {% endif %}
 
 {% block content %}
-<form {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form">{% csrf_token %}
+<form class="exform" {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form">{% csrf_token %}
   {% view_block 'form_top' %}
   {% if is_popup %}<input type="hidden" name="_popup" value="1" />{% endif %}
   {% if save_on_top %}{% block submit_buttons_top %}{% submit_row %}{% endblock %}{% endif %}
