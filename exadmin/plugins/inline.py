@@ -14,6 +14,7 @@ class DeleteField(Field):
 
     def render(self, form, form_style, context):
         if form.instance.pk:
+            self.attrs['type'] = 'hidden'
             return super(DeleteField, self).render(form, form_style, context)
         else:
             return ""
@@ -154,7 +155,7 @@ class InlineFormset(LayoutObject):
         self.flat_attrs = flatatt(kwargs)
 
     def render(self, form, form_style, context):
-        return render_to_string(self.template, Context({'formset': self, 'form_style': form_style}))
+        return render_to_string(self.template, Context({'formset': self, 'prefix': self.formset.prefix, 'form_style': form_style}))
 
 class Inline(LayoutObject):
 
