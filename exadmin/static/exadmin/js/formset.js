@@ -13,6 +13,7 @@
                 if (elem.attr('id')) elem.attr('id', elem.attr('id').replace(idRegex, replacement));
                 if (elem.attr('name')) elem.attr('name', elem.attr('name').replace(idRegex, replacement));
                 if (elem.attr('href')) elem.attr('href', elem.attr('href').replace(idRegex, replacement));
+                elem.find('.formset-num').html(ndx + 1);
             },
 
             hasChildElements = function(row) {
@@ -20,11 +21,13 @@
             },
 
             updateRowIndex = function(row, i){
+                if (options.update) options.update(row, (function(elem){
+                    updateElementIndex(elem, options.prefix, i);
+                }));
                 updateElementIndex(row, options.prefix, i);
                 row.find('input,select,textarea,label,div,a').each(function() {
                     updateElementIndex($(this), options.prefix, i);
                 });
-                row.find('.formset-num').html(i + 1);
                 row.data('row-index', i);
             },
 
@@ -32,6 +35,9 @@
                 row.find('a.delete-row').click(function() {
                     var row = $(this).parents(".formset-row"),
                         del = row.find('input[id $= "-DELETE"]');
+
+                    if (options.removed) options.removed(row, del, $$);
+
                     if (del.length) {
                         if(del.val() == 'on'){
                             row.removeClass('row-deleted');
@@ -48,8 +54,6 @@
                             updateRowIndex(forms.eq(i), i);
                         }
                     }
-                    // If a post-delete callback was provided, call it with the deleted form:
-                    if (options.removed) options.removed(row, $$);
                     return false;
                 });
             };
@@ -86,9 +90,37 @@
     $.fn.formset.styles = {
         'tab': {
             added: function(row, $$){
-                var new_tab = $('<li><a data-toggle="tab" href="#'+ row.attr('id') +'">#'+ (row.data('row-index') + 1) +'</a></li>');
+                var new_tab = $('<li><a data-toggle="tab" href="#'+ row.attr('id') +'">#<span class="formset-num">'+ (row.data('row-index') + 1) +'</span></a></li>');
                 $$.parent().find('.nav-tabs').append(new_tab);
                 new_tab.find('a').tab('show');
+            },
+            update: function(row, update){
+                var rowId = row.attr('id');
+                if(rowId){
+                    $('a[href=#'+rowId+']').each(function(){
+                        update($(this));
+                    })
+                }
+            },
+            removed: function(row, del, $$){
+                var rowId = row.attr('id');
+                if(rowId){
+                    var tab = $('a[href=#'+rowId+']');
+                    if (del.length) {
+                        if(del.val() == 'on'){
+                            tab.removeClass('row-deleted');
+                        } else {
+                            tab.addClass('row-deleted');
+                        }
+                    } else {
+                        if(tab.parent().next().length){
+                            tab.parent().next().find('a').tab('show');
+                        } else {
+                            tab.parent().prev().find('a').tab('show');
+                        }
+                        tab.parent().remove();
+                    }
+                }
             }
         }
     }

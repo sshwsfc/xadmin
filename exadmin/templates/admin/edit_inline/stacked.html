@@ -1,15 +1,34 @@
 {% load i18n exadmin crispy_forms_tags %}
 <div class="box formset{% if formset.css_class or form_style %} {{ fieldset.css_class }} {{ form_style }}{% endif %}" id="{{ formset.css_id }}" {{ formset.flat_attrs|safe }}>
-  <div class="box-title">{{ legend|safe }}</div> 
-  <div class="box-content nopadding">
-    {{ formset.formset.management_form }}
-    {{ formset.formset.non_form_errors }}
+  <div class="box-title">
+    <a class="add-row" id="{{ prefix }}-add-row"><i class="icon icon-plus"></i></a>
+    {{ formset.opts.verbose_name_plural|title }}
+  </div> 
+  {{ formset.formset.management_form }}
+  {{ formset.formset.non_form_errors }}
+  <div class="box-content nopadding formset-content" data-prefix="{{ prefix }}" data-style="stacked">
     {% for fs in formset.formset %}
-    <div class="inline-related" id="{{ formset.formset.prefix }}-{{ forloop.counter0 }}">
-      {% crispy fs formset.formset.helper %}
+    <div class="formset-row">
+      <div class="formset-heading">
+        {% if formset.formset.can_delete %}
+          <a class="delete-row pull-right"><i class="icon icon-remove"></i></a>
+        {% endif %}
+        <b>{{ formset.opts.verbose_name|title }}:</b>&nbsp;{% if fs.instance.pk %}{{ fs.instance }}{% else %}#<span class="formset-num">{{ forloop.counter }}</span>{% endif %}
+      </div>
+      <div class="formset-form">
+        {% crispy fs formset.formset.helper %}
+      </div>
     </div>
     {% endfor %}
-    <div class="inline-related empty-form last-related" id="{{ formset.formset.prefix }}-empty">
+  </div>
+  <div class="formset-row empty-form" id="{{ prefix }}-empty">
+    <div class="formset-heading">
+      {% if formset.formset.can_delete %}
+        <a class="delete-row pull-right"><i class="icon icon-remove"></i></a>
+      {% endif %}
+      <b>{{ formset.opts.verbose_name|title }}:</b>&nbsp;#<span class="formset-num"></span>
+    </div>
+    <div class="formset-form">
       {% crispy formset.formset.empty_form formset.formset.helper %}
     </div>
   </div>

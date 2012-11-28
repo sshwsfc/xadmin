@@ -1,7 +1,7 @@
 {% load i18n exadmin crispy_forms_tags %}
 <div class="box formset{% if formset.css_class or form_style %} {{ fieldset.css_class }} {{ form_style }}{% endif %}" id="{{ formset.css_id }}" {{ formset.flat_attrs|safe }}>
   <div class="box-title">
-    <a class="add-row" id="{{ prefix }}-add-row" href="javascript:void(0)"><i class="icon icon-plus"></i></a>
+    <a class="add-row" id="{{ prefix }}-add-row"><i class="icon icon-plus"></i></a>
     {{ formset.opts.verbose_name_plural|title }}
   </div> 
   <div class="box-content tabs" id="{{ formset.css_id }}-tabs">
@@ -11,7 +11,7 @@
       {% for fs in formset.formset %}
       <li{% if forloop.first%} class="active"{% endif %}>
         <a href="#{{ prefix }}-{{ forloop.counter0 }}-body" data-toggle="tab"{% if fs.instance.pk %} title="{{ fs.instance }}"{% endif %}>
-        {% if fs.instance.pk %}{{ fs.instance|truncatechars:12 }}{% else %}#{{ forloop.counter }}{% endif %}
+        {% if fs.instance.pk %}{{ fs.instance|truncatechars:12 }}{% else %}#<span class="formset-num">{{ forloop.counter }}</span>{% endif %}
       </a></li>
       {% endfor %}
     </ul>

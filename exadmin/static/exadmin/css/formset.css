@@ -2,15 +2,22 @@
 .empty-form {
     display: none;
 }
+.formset .row-deleted{
+    background: #fff0f0  !important;
+}
+.formset .formset-heading{
+    padding: 10px;
+    border-bottom: 1px solid #EEE;
+}
+.formset .row-deleted .formset-form {
+    display: none;
+}
 .formset .box-content.accordion {
     margin: 0px;
     padding: 5px 5px 3px; 
 }
 .formset .accordion-inner {
     padding: 0px;
-}
-.formset .row-deleted{
-    background: #fff0f0;
 }
 .formset .accordion-heading .delete-row {
     float: right;
