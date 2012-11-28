@@ -1,0 +1,14 @@
+{% load crispy_forms_field %}
+
+{% if field.is_hidden %}
+  {{ field }}
+{% else %}
+  <td class="field{% if field.field.name %} field-{{ field.field.name }}{% endif %}">
+  {% if field.is_readonly %}
+      <p>{{ field.contents }}</p>
+  {% else %}
+      {{ field.field.errors.as_ul }}
+      {% crispy_field field %}
+  {% endif %}
+  </td>
+{% endif %}

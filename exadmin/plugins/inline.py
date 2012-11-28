@@ -19,6 +19,9 @@ class DeleteField(Field):
         else:
             return ""
 
+class TDField(Field):
+    template = "admin/layout/td-field.html"
+
 class InlineStyleManager(object):
     inline_styles = {}
 
@@ -51,6 +54,14 @@ style_manager.register_style("accordion", AccInlineStyle)
 class TabInlineStyle(InlineStyle):
     template = 'admin/edit_inline/tab.html'
 style_manager.register_style("tab", TabInlineStyle)
+
+class TableInlineStyle(InlineStyle):
+    template = 'admin/edit_inline/tabular.html'
+    def update_layout(self, helper):
+        helper.add_layout(Layout(*[TDField(f) for f in self.formset[0].fields.keys()]))
+    def get_attrs(self):
+        return {'fields': [f for k,f in self.formset[0].fields.items() if k != DELETION_FIELD_NAME]}
+style_manager.register_style("table", TableInlineStyle)
 
 class InlineModelAdmin(ModelFormAdminView):
 
@@ -127,11 +138,11 @@ class InlineModelAdmin(ModelFormAdminView):
             layout.extend([f for f in instance[0].fields.keys() if f not in rendered_fields])
    
         helper.add_layout(layout)
-        # replace delete field with Dynamic field, for hidden delete field when instance is NEW.
-        helper[DELETION_FIELD_NAME].wrap(DeleteField)
 
         style = style_manager.get_style('one' if self.max_num == 1 else self.style)(self, instance)
         style.update_layout(helper)
+        # replace delete field with Dynamic field, for hidden delete field when instance is NEW.
+        helper[DELETION_FIELD_NAME].wrap(DeleteField)
 
         instance.helper = helper
         instance.style = style
