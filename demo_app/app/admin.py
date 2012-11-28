@@ -6,8 +6,7 @@ from  exadmin.plugins.inline import Inline
 
 class MaintainInline(object):
     model = MaintainLog
-    extra = 1
-    max_num = 1
+    extra = 4
 
 class IDCAdmin(object):
     list_display = ('name', 'description', 'create_time')

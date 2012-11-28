@@ -9,3 +9,11 @@
 .formset .accordion-inner {
     padding: 0px;
 }
+.formset .row-deleted{
+    background: #fff0f0;
+}
+
+.accordion-heading .delete-row {
+    float: right;
+    margin: 8px;
+}
