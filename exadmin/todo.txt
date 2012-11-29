@@ -38,7 +38,7 @@ order
 ### 关联数据查询，选择。使用select2
 ### autocomplete功能
 ### 日期，时间组件.
-    关联数据添加，inline formsets
+### 关联数据添加，inline formsets
     数据添加向导功能
     突出当前用户的概念，填写内容时可以指定特定字段必须为当前用户。
 
