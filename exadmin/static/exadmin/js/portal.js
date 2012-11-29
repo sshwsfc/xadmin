@@ -1,21 +1,20 @@
 jQuery(function() {
     $( ".column" ).sortable({
         connectWith: ".column",
-        handle: '.portlet-header',
+        handle: '.box-title',
         forcePlaceholderSize: true,
         cursor: "move",
+        cancel: ".unsort"
     });
 
-    $( ".portlet" )
-        .find( ".portlet-header" )
-            .prepend( "<i class='icon icon-chevron-up'></i>")
+    $( ".box" )
+        .find( ".box-title" )
+            .prepend( "<i class='icon icon-chevron-up chevron'></i>")
             .end()
-        .find( ".portlet-content" );
+        .find( ".box-content" );
 
-    $( ".portlet-header .icon" ).click(function() {
+    $( ".box-title .icon.chevron" ).click(function() {
         $( this ).toggleClass( "icon-chevron-up" ).toggleClass( "icon-chevron-down" );
-        $( this ).parents( ".portlet:first" ).find( ".portlet-content" ).toggle('fast');
+        $( this ).parents( ".box:first" ).find( ".box-content" ).toggle('fast');
     });
-
-    $( ".column" ).disableSelection();
 });

@@ -1,9 +1,31 @@
-.portlet { width: 100%; position: relative; display: block; margin: 15px 0px;
-    z-index: 0;
-    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
-    -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);}
-.portlet-header .icon { float: right; width: 20px; height: 20px; top: 50%; margin-right: 5px; cursor: pointer;}
-.portlet-content { padding: 0.4em; }
+
+.dashboard.container-fluid {
+    padding-left: 0px;
+}
+
+.box-title .icon { float: right; width: 20px; height: 20px; top: 50%; margin-left: 10px; cursor: pointer;}
+.box-title .badge { float: right; top: 50%; margin-left: 10px;}
 .ui-sortable-placeholder { border: 1px dotted #CCC; visibility: visible !important; background: #FEFEFE; }
 .ui-sortable-placeholder * { visibility: hidden; }
+
+.box .table{
+    margin-bottom: 0px;
+}
+
+.box-content.tabs {
+    padding: 5px;
+}
+
+.m-stats-item {
+    padding: 15px;
+    background-color: #08C;
+    color: white;
+    text-decoration: none !important;
+  border-radius: 5px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.075);
+}
+.m-stats-val {
+    display: block;
+    font-size: 16pt;
+    font-weight: bold;
+}
