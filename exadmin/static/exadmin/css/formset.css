@@ -36,3 +36,21 @@
 .formset .table{
     margin-bottom: 0px;
 }
+.formset .table td{
+    padding: 4px;
+}
+
+.formset .table td input,
+.formset .table td select,
+.formset .table td textarea {
+    width: 100%;
+    height: 30px;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.formset .table td .delete-row{
+    margin-top: 4px;
+    display: block;
+}
