@@ -25,11 +25,13 @@
       </div>
     {% endfor %}
     </div>
-    <div class="formset-row tab-pane empty-form" id="{{ prefix }}-empty" data-replace-id="{{ prefix }}-__prefix__-body">
+    <script type="text/x-exadmin" id="{{ prefix }}-empty">
+    <div class="formset-row tab-pane" data-replace-id="{{ prefix }}-__prefix__-body">
         {% if formset.formset.can_delete %}
           <a class="delete-row pull-right"><i class="icon icon-remove"></i></a>
         {% endif %}
       {% crispy formset.formset.empty_form formset.formset.helper %}
     </div>
+    </script>
   </div>
 </div>
