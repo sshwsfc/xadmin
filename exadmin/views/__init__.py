@@ -6,6 +6,7 @@ from list import ListAdminView
 from edit import CreateAdminView, UpdateAdminView, ModelFormAdminView
 from delete import DeleteAdminView
 from dataapi import get_urls as dataapi_get_urls, api_manager
+from dashboard import Dashboard, BaseWidget, widget_manager
 from website import IndexView, LoginView, LogoutView
 
 # admin site-wide views
