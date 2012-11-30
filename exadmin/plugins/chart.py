@@ -1,7 +1,7 @@
 
 import datetime, decimal, calendar
 
-
+from django import forms
 from django.template import loader
 from django.http import HttpResponseNotFound
 from django.core.serializers.json import DjangoJSONEncoder
@@ -9,10 +9,53 @@ from django.http import HttpResponse
 from django.utils import simplejson
 from django.utils.encoding import smart_unicode
 from django.db import models
+from django.utils.http import urlencode
+from django.utils.translation import ugettext as _
 
 from exadmin.sites import site
 from exadmin.views import BaseAdminPlugin, ListAdminView
+from exadmin.views.dashboard import ModelBaseWidget, widget_manager
 from exadmin.util import lookup_field, label_for_field
+
+class ChartWidget(ModelBaseWidget):
+    template = 'admin/widgets/chart.html'
+
+    def __init__(self, dashboard, opts):
+        self.list_params = opts.pop('params', {})
+        chart = opts.pop('chart', None)
+        super(ChartWidget, self).__init__(dashboard, opts)
+        self.charts = {}
+        self.one_chart = False
+        model_admin = self.admin_site._registry[self.model]
+        if hasattr(model_admin, 'data_charts'):
+            if chart and chart in model_admin.data_charts:
+                self.charts = {chart : model_admin.data_charts[chart]}
+                self.one_chart = True
+                if self.title is None:
+                    self.title = model_admin.data_charts[chart].get('title')
+            else:
+                self.charts = model_admin.data_charts
+                if self.title is None:
+                    self.title = _("%s Charts") % self.model._meta.verbose_name_plural
+
+    def get_chart_url(self, name, v):
+        return self.model_admin_urlname('chart', name) + "?" + urlencode(self.list_params)
+
+    def context(self, context):
+        context.update({
+            'charts': [{"name": name, "title": v['title'], 'url': self.get_chart_url(name, v)} for name,v in self.charts.items()],
+        })
+
+    # Media
+    def media(self):
+        media = forms.Media()
+        media.add_js([self.static('exadmin/js/jquery.flot.js')])
+        media.add_js([self.static('exadmin/js/jquery.flot.pie.js')])
+        media.add_js([self.static('exadmin/js/jquery.flot.resize.js')])
+        media.add_js([self.static('exadmin/js/charts.js')])
+        return media
+
+widget_manager.register('chart', ChartWidget)
 
 class JSONEncoder(DjangoJSONEncoder):
     def default(self, o):
