@@ -219,7 +219,7 @@ class AdminSite(object):
                 plugins.extend(self._registry_plugins.get(klass, []))
         return map(self.create_plugin(opts), plugins) if opts else plugins
 
-    def get_view_class(self, view_class, admin_class=None):
+    def get_view_class(self, view_class, admin_class=None, **opts):
         reg_admin_class = self._registry_avs.get(view_class)
         merges = filter(lambda x:x, [admin_class, reg_admin_class, view_class])
         new_class_name = ''.join([c.__name__ for c in merges])
@@ -227,7 +227,7 @@ class AdminSite(object):
         if not self._admin_view_cache.has_key(new_class_name):
             plugins = self.get_plugins(view_class, admin_class, reg_admin_class)
             self._admin_view_cache[new_class_name] = MergeAdminMetaclass(new_class_name, tuple(merges), \
-                {'plugin_classes': plugins, 'admin_site': self})
+                dict({'plugin_classes': plugins, 'admin_site': self}, **opts))
 
         return self._admin_view_cache[new_class_name]
 
