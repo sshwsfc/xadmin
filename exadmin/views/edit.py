@@ -271,7 +271,7 @@ class ModelFormAdminView(ModelAdminView):
     @filter_hook
     def get_media(self):
         media = super(ModelFormAdminView, self).get_media()
-        media.add_js([self.static('exadmin/js/select2.js'), self.static('exadmin/js/form.js')])
+        media.add_js([self.static('exadmin/js/select2.js'), self.static('exadmin/js/portal.js'), self.static('exadmin/js/form.js')])
         media.add_css({'screen': [self.static('exadmin/css/form.css'), self.static('exadmin/css/select2.css')]})
         return media
 
