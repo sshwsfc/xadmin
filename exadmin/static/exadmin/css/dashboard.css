@@ -16,6 +16,10 @@
     padding: 5px;
 }
 
+.box-content > form {
+  margin-bottom: 0px;
+}
+
 .m-stats-item {
     padding: 15px;
     background-color: #08C;
@@ -28,4 +32,123 @@
     display: block;
     font-size: 16pt;
     font-weight: bold;
+}
+
+/* Quick Buttons
+=================================================================== */
+
+.quick-button {
+    background-color: #08C;
+    color: white;
+    border: 1px solid #ddd;
+    margin-bottom: -1px;
+      padding: 20px 0px 0px 0px;
+    font-size: 15px;
+      -webkit-box-shadow: 0 1px 0px rgba(255, 255, 255, .8);
+       -moz-box-shadow: 0 1px 0px rgba(255, 255, 255, .8);
+            box-shadow: 0 1px 0px rgba(255, 255, 255, .8);
+      -webkit-border-radius: 5px;
+       -moz-border-radius: 5px;
+              border-radius: 5px;
+    display:block;
+    text-shadow: 0 1px 0px rgba(0, 0, 0, .6);
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.quick-button:hover {
+    text-decoration: none;
+    border-color: #a5a5a5;
+    text-shadow: 0 1px 0px rgba(0, 0, 0, 1);
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+      -webkit-box-shadow: 0px 0px 3px rgba(0,0,0,.25);
+       -moz-box-shadow: 0px 0px 3px rgba(0,0,0,.25);
+              box-shadow: 0px 0px 3px rgba(0,0,0,.25);
+}
+.quick-button:hover .notification {
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    -webkit-box-shadow: 0px 0px 3px rgba(0,0,0,.6);
+       -moz-box-shadow: 0px 0px 3px rgba(0,0,0,.6);
+              box-shadow: 0px 0px 3px rgba(0,0,0,.6);
+}
+
+.quick-button i {
+    font-size: 32px;
+}
+
+/* Quick Buttons Small
+=================================================================== */
+
+.quick-button-small {
+  border-radius: 3px;
+    border: 1px solid #ddd;
+      padding: 15px 0px 0px 0px;
+    font-size: 10px;
+      background-color: #fafafa;
+      background-image: -moz-linear-gradient(top, #fafafa, #efefef);
+      background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fafafa), to(#efefef));
+      background-image: -webkit-linear-gradient(top, #fafafa, #efefef);
+      background-image: -o-linear-gradient(top, #fafafa, #efefef);
+      background-image: linear-gradient(to bottom, #fafafa, #efefef);
+      filter: progid:dximagetransform.microsoft.gradient(startColorstr='#fafafa', endColorstr='#efefef', GradientType=0);
+      -webkit-box-shadow: 0 1px 0px rgba(255, 255, 255, .8);
+       -moz-box-shadow: 0 1px 0px rgba(255, 255, 255, .8);
+            box-shadow: 0 1px 0px rgba(255, 255, 255, .8);
+      -webkit-border-radius: 2px;
+       -moz-border-radius: 2px;
+              border-radius: 2px;
+    display:block;
+    color: #646464;
+    text-shadow: 0 1px 0px rgba(255, 255, 255, .6);
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.quick-button-small:hover {
+    text-decoration: none;
+    border-color: #a5a5a5;
+    color: #444444;
+    text-shadow: 0 1px 0px rgba(255, 255, 255, 1);
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+      -webkit-box-shadow: 0px 0px 3px rgba(0,0,0,.25);
+       -moz-box-shadow: 0px 0px 3px rgba(0,0,0,.25);
+              box-shadow: 0px 0px 3px rgba(0,0,0,.25);
+}
+.quick-button-small:hover .notification {
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    -webkit-box-shadow: 0px 0px 3px rgba(0,0,0,.6);
+       -moz-box-shadow: 0px 0px 3px rgba(0,0,0,.6);
+              box-shadow: 0px 0px 3px rgba(0,0,0,.6);
+}
+
+.quick-button-small i {
+    font-size: 20px;
 }
