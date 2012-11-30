@@ -1,8 +1,22 @@
 import exadmin
+from exadmin import views
 from models import *
 from exadmin.layout import *
 
 from  exadmin.plugins.inline import Inline
+
+class MainDashboard(object):
+    widgets = [
+        [
+            {"type": "chart", "model": "app.accessrecord", 'chart': 'user_count', 'params': {'_p_date__gte': '2013-01-08', 'p': 1, '_p_date__lt': '2013-01-29'}},
+            {"type": "list", "model": "app.host", 'params': {'o':'-guarantee_date'}},
+        ],
+        [
+            {"type": "html", "title": "Test Widget", "content": "<b> Hello World! </b>"},
+            {"type": "html", "title": "Test Widget", "content": "<b> Hello World! </b>"},
+        ]
+    ]
+exadmin.site.register(views.website.IndexView, MainDashboard)
 
 class MaintainInline(object):
     model = MaintainLog
