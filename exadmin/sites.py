@@ -76,7 +76,7 @@ class AdminSite(object):
 
     def register(self, model_or_iterable, admin_class=object, **options):
         from exadmin.views.base import BaseAdminView
-        if isinstance(model_or_iterable, (ModelBase, BaseAdminView)):
+        if isinstance(model_or_iterable, ModelBase) or issubclass(model_or_iterable, BaseAdminView):
             model_or_iterable = [model_or_iterable]
         for model in model_or_iterable:
             if isinstance(model, ModelBase):
