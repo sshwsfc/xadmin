@@ -10,10 +10,11 @@ class MainDashboard(object):
         [
             {"type": "chart", "model": "app.accessrecord", 'chart': 'user_count', 'params': {'_p_date__gte': '2013-01-08', 'p': 1, '_p_date__lt': '2013-01-29'}},
             {"type": "list", "model": "app.host", 'params': {'o':'-guarantee_date'}},
+            {"type": "html", "title": "Test Widget", "content": "<b> Hello World! </b>"},
         ],
         [
-            {"type": "html", "title": "Test Widget", "content": "<b> Hello World! </b>"},
-            {"type": "html", "title": "Test Widget", "content": "<b> Hello World! </b>"},
+            {"type": "qbutton", "title": "Quick Start", "btns": [{'model': Host}, {'model':IDC}, {'title': "Google", 'url': "http://www.google.com"}]},
+            {"type": "addform", "model": MaintainLog},
         ]
     ]
 exadmin.site.register(views.website.IndexView, MainDashboard)
