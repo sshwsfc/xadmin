@@ -1,0 +1,33 @@
+{% extends "admin/widgets/base.html" %}
+{% load i18n exadmin %}
+
+{% block title %}
+  <a href="{{page_url}}" class="pull-right"><span class="badge badge-info">{{ result_count }}</span></a>
+  {{ widget.title }}
+{% endblock title %}
+{% block content_css %}nopadding{% endblock content_css %}
+{% block content %}
+{% if results %}
+<table class="table table-hover">
+  <thead>
+    <tr>
+      {% for o in result_headers %}
+      <th>{{ o.text }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+  {% for row in results %}
+    <tr>{% for o in row %}
+      <td>
+          {{ o.text }}
+      </td>
+    {% endfor %}
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+  <p class="well">{% trans "Empty list" %}</p>
+{% endif %}
+{% endblock content %}

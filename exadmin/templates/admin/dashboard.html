@@ -1,0 +1,25 @@
+{% extends "admin/base_site.html" %}
+{% load i18n exadmin %}
+
+{% block bodyclass %}dashboard{% endblock %}
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+<div class="navbar">
+  <div class="navbar-inner">
+    <a class="brand" href="#">{{ title }}</a>
+    <div class="btn-group pull-right">
+      <a href="#" class="btn btn-primary"><i class="icon-wrench icon-white"></i> {% trans "Setup" %}</a>
+    </div>
+  </div>
+</div>
+<div class="dashboard row-fluid">
+  {% for c in columns %}
+  <div class="{{ c.0 }} column">
+    {% for widget in c.1 %}
+      {{ widget|safe }}
+    {% endfor %}
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

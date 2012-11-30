@@ -4,20 +4,13 @@ from django.views.decorators.cache import never_cache
 from django.contrib.auth.views import login
 from django.contrib.auth.views import logout
 
-from base import BaseAdminView, CommAdminView
+from base import BaseAdminView
+from dashboard import Dashboard
 from exadmin.forms import AdminAuthenticationForm
 
 
-class IndexView(CommAdminView):
-
-    @never_cache
-    def get(self, request):
-        context = self.get_context()
-        context.update({
-            'title': _('Site administration'),
-            'app_list': [],
-        })
-        return self.template_response('admin/index.html', context)
+class IndexView(Dashboard):
+    title = "Main Dashboard"
 
 class LoginView(BaseAdminView):
 

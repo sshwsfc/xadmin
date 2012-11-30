@@ -1,0 +1,21 @@
+{% load i18n exadmin %}
+{% load crispy_forms_tags %}
+<div class="box">
+  <div class="box-title">
+    {% block title %}
+      {{ widget.title }}
+    {% endblock title %}
+  </div>
+  <div class="box-content {% block content_css %}{% endblock content_css %}">
+    {% block content %}
+    {{ content|safe }}
+    {% endblock content %}
+  </div>
+  <div class="box-form">
+    {% block form %}
+    {% if form %}
+      {% crispy form %}
+    {% endif %}
+    {% endblock form %}
+  </div>
+</div>
