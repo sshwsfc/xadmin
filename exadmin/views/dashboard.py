@@ -1,15 +1,16 @@
 from django.test.client import RequestFactory
 from django.template import loader
 from django.views.decorators.cache import never_cache
-from django.utils.html import escape
 from django.core.urlresolvers import reverse
 from django import forms
 import copy
 from django.db import models
 from django.db.models.base import ModelBase
+from django.utils.translation import ugettext as _
 
 from exadmin.views.base import BaseAdminView, CommAdminView, filter_hook
 from exadmin.views.list import ListAdminView
+from exadmin.views.edit import CreateAdminView
 
 class PartialView(BaseAdminView):
     pass
@@ -113,6 +114,43 @@ class PartialBaseWidget(BaseWidget):
         req = self.get_factory().post(path, data, **extra)
         return self.setup_request(req)
 
+class QuickBtnWidget(BaseWidget):
+    description = 'Quick button Widget, quickly open any page.'
+    template = "admin/widgets/qbutton.html"
+    base_title = "Quick Buttons"
+
+    def __init__(self, dashboard, opts):
+        self.q_btns = opts.pop('btns', [])
+        super(QuickBtnWidget, self).__init__(dashboard, opts)
+
+    def get_model(self, model_or_label):
+        if isinstance(model_or_label, ModelBase):
+            return model_or_label
+        else:
+            return models.get_model(*model_or_label.lower().split('.'))
+
+    def context(self, context):
+        btns = []
+        for b in self.q_btns:
+            btn = {}
+            if b.has_key('model'):
+                model = self.get_model(b['model'])
+                btn['url'] = reverse("%s:%s_%s_%s" % (self.admin_site.app_name, model._meta.app_label, \
+                    model._meta.module_name, b.get('view', 'changelist')))
+                btn['title'] = model._meta.verbose_name
+            else:
+                btn['url'] = b['url']
+
+            if b.has_key('title'):
+                btn['title'] = b['title']
+            if b.has_key('icon'):
+                btn['icon'] = b['icon']
+            btns.append(btn)
+
+        context.update({ 'btns': btns })
+
+widget_manager.register("qbutton", QuickBtnWidget)
+
 class ListWidget(ModelBaseWidget, PartialBaseWidget):
     description = 'Any Objects list Widget.'
     template = "admin/widgets/list.html"
@@ -140,9 +178,32 @@ class ListWidget(ModelBaseWidget, PartialBaseWidget):
         context['result_count'] = list_view.result_count
         context['page_url'] = self.model_admin_urlname('changelist')
 
-        print context['results']
-
 widget_manager.register("list", ListWidget)
+
+class AddFormWidget(ModelBaseWidget, PartialBaseWidget):
+    description = 'Add any model object Widget.'
+    template = "admin/widgets/addform.html"
+
+    def __init__(self, dashboard, opts):
+        super(AddFormWidget, self).__init__(dashboard, opts)
+
+        if self.title is None:
+            self.title = _('Add %s') % self.model._meta.verbose_name
+
+        req = self.make_get_request("")
+        self.add_view = self.get_view_class(CreateAdminView, self.model, list_per_page=10)(req)
+        self.add_view.instance_forms()
+
+    def context(self, context):
+        context.update({
+            'addform': self.add_view.form_obj,
+            'model': self.model
+            })
+
+    def media(self):
+        return self.add_view.media + self.add_view.form_obj.media
+
+widget_manager.register("addform", AddFormWidget)
 
 class Dashboard(CommAdminView):
 
@@ -186,7 +247,8 @@ class Dashboard(CommAdminView):
     def get_media(self):
         media = super(Dashboard, self).get_media()
         media.add_js([self.static('exadmin/js/portal.js')])
-        media.add_css({'screen': [self.static('exadmin/css/form.css'), self.static('exadmin/css/dashboard.css')]})
+        media.add_css({'screen': [self.static('exadmin/css/form.css'), self.static('exadmin/css/dashboard.css'), \
+            'http://wbpreview.com/previews/WB0PHMG9K/css/font-awesome.css']})
         for ws in self.widgets:
             for widget in ws:
                 media = media + widget.media()
