@@ -24,3 +24,14 @@ class Bookmark(models.Model):
         
     class Meta:
         verbose_name = _('Bookmark')
+
+class UserSettings(models.Model):
+    user = models.ForeignKey(User)
+    key = models.CharField(max_length=256)
+    value = models.TextField()
+
+    def __unicode__(self):
+        return "%s %s" % (self.user, self.key)
+        
+    class Meta:
+        verbose_name = _('User Setting')
