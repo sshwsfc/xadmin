@@ -4,7 +4,22 @@ jQuery(function() {
         handle: '.box-title',
         forcePlaceholderSize: true,
         cursor: "move",
-        cancel: ".unsort"
+        cancel: ".unsort",
+        stop: function( event, ui ) {
+            var pos = [];
+            $('.column').each(function(){
+                var col = [];
+                $(this).find('.box').each(function(){
+                    col.push($(this).attr('id'));
+                });
+                pos.push(col.join(','));
+            });
+            var pos_val = pos.join('|');
+            var key = $('#_portal_key').val();
+            $.save_user_settings(key, pos_val, function(){
+                //alert('success');
+            });
+        }
     });
 
     $( ".box" )
