@@ -3,14 +3,27 @@ from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.views import login
 from django.contrib.auth.views import logout
+from django.http import HttpResponse
 
 from base import BaseAdminView
 from dashboard import Dashboard
 from exadmin.forms import AdminAuthenticationForm
+from exadmin.models import UserSettings
 
 
 class IndexView(Dashboard):
     title = "Main Dashboard"
+
+class UserSettingView(BaseAdminView):
+
+    @never_cache
+    def post(self, request):
+        key = request.POST['key']
+        val = request.POST['value']
+        us, created = UserSettings.objects.get_or_create(user=self.user, key=key)
+        us.value = val
+        us.save()
+        return HttpResponse('')
 
 class LoginView(BaseAdminView):
 

@@ -7,12 +7,14 @@ from edit import CreateAdminView, UpdateAdminView, ModelFormAdminView
 from delete import DeleteAdminView
 from dataapi import get_urls as dataapi_get_urls, api_manager
 from dashboard import Dashboard, BaseWidget, widget_manager
-from website import IndexView, LoginView, LogoutView
+from website import IndexView, LoginView, LogoutView, UserSettingView
 
 # admin site-wide views
 site.register_view(r'^$', IndexView, name='index')
 site.register_view(r'^login/$', LoginView, name='login')
 site.register_view(r'^logout/$', LogoutView, name='logout')
+
+site.register_view(r'^settings/user$', UserSettingView, name='user_settings')
 
 site.register_view(r'^api/', dataapi_get_urls, name='data_api')
 
