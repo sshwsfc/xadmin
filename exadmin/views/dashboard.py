@@ -247,8 +247,7 @@ class Dashboard(CommAdminView):
     def get_media(self):
         media = super(Dashboard, self).get_media()
         media.add_js([self.static('exadmin/js/portal.js')])
-        media.add_css({'screen': [self.static('exadmin/css/form.css'), self.static('exadmin/css/dashboard.css'), \
-            'http://wbpreview.com/previews/WB0PHMG9K/css/font-awesome.css']})
+        media.add_css({'screen': [self.static('exadmin/css/form.css'), self.static('exadmin/css/dashboard.css'), self.static('exadmin/css/font-awesome.css')]})
         for ws in self.widgets:
             for widget in ws:
                 media = media + widget.media()
