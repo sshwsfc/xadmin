@@ -8,7 +8,7 @@ from django.template.loader import render_to_string
 from exadmin.layout import FormHelper, Layout
 from exadmin.sites import site
 from exadmin.views import BaseAdminPlugin, ModelFormAdminView
-from exadmin.layout import LayoutObject, flatatt, Container, Column, Field
+from exadmin.layout import LayoutObject, flatatt, Container, Column, Field, Fieldset
 
 class DeleteField(Field):
 
@@ -185,7 +185,7 @@ class InlineModelAdmin(ModelFormAdminView):
         return self.user.has_perm(
             self.opts.app_label + '.' + self.opts.get_delete_permission())
 
-class InlineFormset(LayoutObject):
+class InlineFormset(Fieldset):
 
     def __init__(self, formset, **kwargs):
         self.fields = []
@@ -202,7 +202,7 @@ class InlineFormset(LayoutObject):
         return render_to_string(self.template, Context(\
             dict({'formset': self, 'prefix': self.formset.prefix, 'form_style': form_style}, **self.extra_attrs)))
 
-class Inline(LayoutObject):
+class Inline(Fieldset):
 
     def __init__(self, rel_model):
         self.model = rel_model
