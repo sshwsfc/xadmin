@@ -9,5 +9,10 @@
     })
   }
   $.fn.exform.renders = [];
+
+  // g-search
+  $('#g-search .dropdown-menu a').click(function(){
+      $('#g-search form').attr('action', $(this).data('action')).submit();
+  })
   
 })(jQuery)

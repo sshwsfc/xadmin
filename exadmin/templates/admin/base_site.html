@@ -15,10 +15,11 @@
           <span class="icon-bar"></span>
         </a>
         <a class="brand" href="#">{% block branding %}{% trans 'Django Exadmin' %}{% endblock %}</a>
+        {% view_block 'top_navbar' %}
         <div class="nav-collapse collapse">
           <ul class="nav pull-right">
+              {% view_block 'top_nav_btn' %}
               <li><a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a></li>
-              {% view_block 'top-nav-btn' %}
           </ul>
           {% if user.is_active and user.is_staff %}
           <p class="navbar-text pull-right">

@@ -19,6 +19,10 @@ class MainDashboard(object):
     ]
 exadmin.site.register(views.website.IndexView, MainDashboard)
 
+class GolbeSetting(object):
+    globe_search_models = [Host, IDC]
+exadmin.site.register(views.CommAdminView, GolbeSetting)
+
 class MaintainInline(object):
     model = MaintainLog
     extra = 1
