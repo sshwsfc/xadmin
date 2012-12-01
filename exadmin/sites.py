@@ -216,16 +216,24 @@ class AdminSite(object):
         opts = [oc for oc in option_classes if oc]
         for klass in admin_view_class.mro():
             if klass == BaseAdminView or issubclass(klass, BaseAdminView):
-                plugins.extend(self._registry_plugins.get(klass, []))
-        return map(self.create_plugin(opts), plugins) if opts else plugins
+                reg_class = self._registry_avs.get(klass)
+                merge_opts = opts if reg_class is None else [reg_class] + opts
+                ps = self._registry_plugins.get(klass, [])
+                plugins.extend(map(self.create_plugin(merge_opts), ps) if merge_opts else ps)
+        return plugins
 
     def get_view_class(self, view_class, admin_class=None, **opts):
-        reg_admin_class = self._registry_avs.get(view_class)
-        merges = filter(lambda x:x, [admin_class, reg_admin_class, view_class])
+        admin_classes = [admin_class]
+        for klass in view_class.mro():
+            reg_class = self._registry_avs.get(klass)
+            if reg_class:
+                admin_classes.append(reg_class)
+            admin_classes.append(klass)
+        merges = filter(lambda x:x, admin_classes)
         new_class_name = ''.join([c.__name__ for c in merges])
 
         if not self._admin_view_cache.has_key(new_class_name):
-            plugins = self.get_plugins(view_class, admin_class, reg_admin_class)
+            plugins = self.get_plugins(view_class, admin_class)
             self._admin_view_cache[new_class_name] = MergeAdminMetaclass(new_class_name, tuple(merges), \
                 dict({'plugin_classes': plugins, 'admin_site': self}, **opts))
 
