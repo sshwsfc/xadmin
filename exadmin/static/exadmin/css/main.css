@@ -258,7 +258,7 @@ a { cursor: pointer;}
   margin-bottom: 0;
 }
 
-.widget-title, .modal-header, div.dataTables_wrapper .ui-widget-header {
+.widget-title {
   background-color: #efefef;
   background-image: -webkit-gradient(linear, 0 0%, 0 100%, from(#fdfdfd), to(#eaeaea));
   background-image: -webkit-linear-gradient(top, #fdfdfd 0%, #eaeaea 100%);

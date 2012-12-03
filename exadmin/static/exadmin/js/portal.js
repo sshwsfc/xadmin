@@ -34,4 +34,6 @@ jQuery(function() {
     });
     
     $( ".column" ).disableSelection();
+
+    // for dashboard
 });
