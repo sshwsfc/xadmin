@@ -3,6 +3,12 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.utils import simplejson
+from django.core.serializers.json import DjangoJSONEncoder
+from django.db.models.base import ModelBase
+from django.utils.encoding import smart_unicode
+
+import datetime, decimal
 
 class Bookmark(models.Model):
     title = models.CharField(_(u'Title'), max_length=128)
@@ -25,10 +31,32 @@ class Bookmark(models.Model):
     class Meta:
         verbose_name = _('Bookmark')
 
+class JSONEncoder(DjangoJSONEncoder):
+    def default(self, o):
+        if isinstance(o, datetime.date):
+            return o.strftime('%Y-%m-%d')
+        elif isinstance(o, datetime.datetime):
+            return o.strftime('%Y-%m-%d %H:%M:%S')
+        elif isinstance(o, decimal.Decimal):
+            return str(o)
+        elif isinstance(o, ModelBase):
+            return '%s.%s' % (o._meta.app_label, o._meta.module_name)
+        else:
+            try:
+                return super(JSONEncoder, self).default(o)
+            except Exception:
+                return smart_unicode(o)
+
 class UserSettings(models.Model):
     user = models.ForeignKey(User)
     key = models.CharField(max_length=256)
     value = models.TextField()
+
+    def json_value(self):
+        return simplejson.loads(self.value)
+
+    def set_json(self, obj):
+        self.value = simplejson.dumps(obj, cls=JSONEncoder, ensure_ascii=False)
 
     def __unicode__(self):
         return "%s %s" % (self.user, self.key)
