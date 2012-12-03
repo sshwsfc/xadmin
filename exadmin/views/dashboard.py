@@ -1,6 +1,7 @@
 
 from random import Random
 
+from django.template.context import RequestContext
 from django.test.client import RequestFactory
 from django.template import loader
 from django.views.decorators.cache import never_cache
@@ -14,10 +15,15 @@ from django.utils.translation import ugettext as _
 from exadmin.views.base import BaseAdminView, CommAdminView, filter_hook
 from exadmin.views.list import ListAdminView
 from exadmin.views.edit import CreateAdminView
+from exadmin.layout import FormHelper
 from exadmin.models import UserSettings
 
 class PartialView(BaseAdminView):
     pass
+
+class BaseOptForm(forms.Form):
+    id = forms.CharField(_('Widget ID'), widget=forms.HiddenInput)
+    title = forms.CharField(_('Widget Title'))
 
 class BaseWidget(object):
 
@@ -26,6 +32,7 @@ class BaseWidget(object):
     can_add = False
     can_delete = True
     base_title = None
+    opt_form = BaseOptForm
 
     def __init__(self, dashboard, opts):
         self.dashboard = dashboard
@@ -37,16 +44,23 @@ class BaseWidget(object):
         self.opts = opts
 
     def __repr__(self):
-        context = {'form': self.form(), 'widget': self}
+        context = {'form': self.form(self.form_data()), 'widget': self}
         context.update(self.opts)
         self.context(context)
-        return loader.render_to_string(self.template, context)
+        return loader.render_to_string(self.template, context, context_instance=RequestContext(self.request))
 
     def context(self, context):
         pass
 
-    def form(self):
-        pass
+    def form_data(self):
+        return {'title': self.title, 'id': self.id}
+
+    def form(self, data):
+        form = self.opt_form(data)
+        helper = FormHelper()
+        helper.form_tag = False
+        form.helper = helper
+        return form
 
     def options(self):
         pass
@@ -78,10 +92,14 @@ class HtmlWidget(BaseWidget):
     description = 'Html Content Widget, can write any html content in widget.'
 widget_manager.register("html", HtmlWidget)
 
+class ModelOptForm(BaseOptForm):
+    model = forms.CharField(_('Target Model'))
+
 class ModelBaseWidget(BaseWidget):
 
     app_label = None
     model_name = None
+    opt_form = ModelOptForm
 
     def __init__(self, dashboard, opts):
         model = opts.pop('model')
@@ -93,6 +111,11 @@ class ModelBaseWidget(BaseWidget):
             self.app_label, self.model_name = model.lower().split('.')
             self.model = models.get_model(self.app_label, self.model_name)
         super(ModelBaseWidget, self).__init__(dashboard, opts)
+
+    def form_data(self):
+        data = super(ModelBaseWidget, self).form_data()
+        data['model'] = "%s.%s" % (self.app_label, self.model_name)
+        return data
 
     def model_admin_urlname(self, name, *args, **kwargs):
         return reverse("%s:%s_%s_%s" % (self.admin_site.app_name, self.app_label, \
@@ -306,6 +329,10 @@ class Dashboard(CommAdminView):
             'columns': [('span%d' % int(12/len(self.widgets)), ws) for ws in self.widgets]
         })
         return self.template_response('admin/dashboard.html', context)
+
+    @never_cache
+    def post(self, request):
+        return self.get(request)
 
     @filter_hook
     def get_media(self):
