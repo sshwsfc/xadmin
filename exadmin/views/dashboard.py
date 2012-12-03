@@ -21,51 +21,48 @@ from exadmin.models import UserSettings
 class PartialView(BaseAdminView):
     pass
 
-class BaseOptForm(forms.Form):
-    id = forms.CharField(_('Widget ID'), widget=forms.HiddenInput)
-    title = forms.CharField(_('Widget Title'))
+class WidgetDataError(Exception):
 
-class BaseWidget(object):
+    def __init__(self, widget, errors):
+        super(WidgetDataError, self).__init__(str(errors))
+        self.widget = widget
+        self.errors = errors
+
+class BaseWidget(forms.Form):
 
     template = 'admin/widgets/base.html'
     description = 'Base Widget, don\'t use it.'
-    can_add = False
-    can_delete = True
     base_title = None
-    opt_form = BaseOptForm
 
-    def __init__(self, dashboard, opts):
+    id = forms.CharField(_('Widget ID'), widget=forms.HiddenInput)
+    title = forms.CharField(_('Widget Title'))
+
+    def __init__(self, dashboard, data):
         self.dashboard = dashboard
         self.admin_site = dashboard.admin_site
         self.request = dashboard.request
         self.user = dashboard.request.user
-        self.id = opts.pop('id')
-        self.title = opts.pop('title', self.base_title)
-        self.opts = opts
+        super(BaseWidget, self).__init__(data)
+
+        if not self.is_valid():
+            raise WidgetDataError(self, self.errors)
+
+        helper = FormHelper()
+        helper.form_tag = False
+        self.helper = helper
+
+        self.id = self.cleaned_data['id']
+        self.title = self.cleaned_data.get('title', self.base_title)
 
     def __repr__(self):
-        context = {'form': self.form(self.form_data()), 'widget': self}
-        context.update(self.opts)
+        context = {'widget': self}
         self.context(context)
         return loader.render_to_string(self.template, context, context_instance=RequestContext(self.request))
 
     def context(self, context):
         pass
 
-    def form_data(self):
-        return {'title': self.title, 'id': self.id}
-
-    def form(self, data):
-        form = self.opt_form(data)
-        helper = FormHelper()
-        helper.form_tag = False
-        form.helper = helper
-        return form
-
-    def options(self):
-        pass
-
-    def update(self, datas):
+    def save(self):
         pass
 
     def static(self, path):
@@ -99,9 +96,10 @@ class ModelBaseWidget(BaseWidget):
 
     app_label = None
     model_name = None
-    opt_form = ModelOptForm
+    model = forms.CharField(_('Target Model'))
 
     def __init__(self, dashboard, opts):
+        super(ModelBaseWidget, self).__init__(dashboard, opts)
         model = opts.pop('model')
         if isinstance(model, ModelBase):
             self.model = model
@@ -332,6 +330,14 @@ class Dashboard(CommAdminView):
 
     @never_cache
     def post(self, request):
+        widget_id = request.POST['id']
+        widget = self.get_widget(widget_id)
+        form = widget.form(request.POST)
+
+        if form.is_valid():
+
+
+        widget_manager.get(widget_type)
         return self.get(request)
 
     @filter_hook
