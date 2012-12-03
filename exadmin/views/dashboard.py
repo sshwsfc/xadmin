@@ -1,3 +1,6 @@
+
+from random import Random
+
 from django.test.client import RequestFactory
 from django.template import loader
 from django.views.decorators.cache import never_cache
@@ -11,6 +14,7 @@ from django.utils.translation import ugettext as _
 from exadmin.views.base import BaseAdminView, CommAdminView, filter_hook
 from exadmin.views.list import ListAdminView
 from exadmin.views.edit import CreateAdminView
+from exadmin.models import UserSettings
 
 class PartialView(BaseAdminView):
     pass
@@ -28,6 +32,7 @@ class BaseWidget(object):
         self.admin_site = dashboard.admin_site
         self.request = dashboard.request
         self.user = dashboard.request.user
+        self.id = opts.pop('id')
         self.title = opts.pop('title', self.base_title)
         self.opts = opts
 
@@ -208,16 +213,76 @@ widget_manager.register("addform", AddFormWidget)
 class Dashboard(CommAdminView):
 
     widgets = []
-    column_num = 2
     title = "Dashboard"
+    page_id = None
+
+    def get_page_id(self):
+        return self.page_id if self.page_id else self.request.path.replace('/', '_')
+
+    def get_portal_key(self):
+        return "dashboard:%s:pos" % self.get_page_id()
+
+    def get_widget_key(self, widget_id):
+        return "dashboard:%s:%s" % (self.get_page_id(), widget_id)
+
+    def _gen_widget_id(self):
+        str = ''
+        chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789'
+        length = len(chars) - 1
+        random = Random()
+        for i in range(16):
+            str+=chars[random.randint(0, length)]
+        return str
 
     @filter_hook
-    def get_user_widgets(self):
-        pass
+    def get_widget(self, widget_id):
+        try:
+            opts = UserSettings.objects.get(user=self.user, key=self.get_widget_key(widget_id)).json_value()
+            opts['id'] = widget_id
+            return widget_manager.get(opts['type'])(self, opts)
+        except UserSettings.DoesNotExist:
+            return None
+
+    @filter_hook
+    def get_init_widget(self):
+        portal = []
+        widgets = self.widgets
+        for col in widgets:
+            portal_col = []
+            for opts in col:
+                wid = self._gen_widget_id()
+                widget = copy.copy(opts)
+                widget['id'] = wid
+
+                widget_us = UserSettings(user=self.user, key=self.get_widget_key(wid))
+                widget_us.set_json(widget)
+                widget_us.save()
+
+                portal_col.append(widget_manager.get(widget['type'])(self, widget))
+
+            portal.append(portal_col)
+
+        UserSettings(user=self.user, key="dashboard:%s:pos" % self.get_page_id(), \
+            value='|'.join([','.join([w.id for w in col]) for col in portal])).save()
+
+        return portal
 
     @filter_hook
     def get_widgets(self):
-        return self.get_user_widgets() or copy.deepcopy(self.widgets)
+        portal_pos = UserSettings.objects.filter(user=self.user, key=self.get_portal_key())
+        if len(portal_pos):
+            portal_pos = portal_pos[0]
+            widgets = []
+            for col in portal_pos.value.split('|'):
+                ws = []
+                for w in col.split(','):
+                    widget = self.get_widget(w)
+                    if widget:
+                        ws.append(widget)
+                widgets.append(ws)
+            return widgets
+        else:
+            return self.get_init_widget()
 
     @filter_hook
     def get_title(self):
@@ -234,12 +299,11 @@ class Dashboard(CommAdminView):
 
     @never_cache
     def get(self, request):
-        self.widgets = [[widget_manager.get(opts['type'])(self, opts) for opts in ws] for ws in self.get_widgets()]
-
+        self.widgets = self.get_widgets()
         context = self.get_context()
         context.update({
-            'columns': [('span%d' % int(12/self.column_num), self.widgets[i] if len(self.widgets) > i else []) \
-                for i in xrange(self.column_num)]
+            'portal_key': self.get_portal_key(),
+            'columns': [('span%d' % int(12/len(self.widgets)), ws) for ws in self.widgets]
         })
         return self.template_response('admin/dashboard.html', context)
 
