@@ -63,7 +63,7 @@ select, .select2-container {
   background-color: #FBFBFB;
 }
 .form-horizontal .control-label {
-  padding: 15px 0;
+  padding: 19px 0 0;
   margin-bottom: 0;
   font-weight: bold;
 }
