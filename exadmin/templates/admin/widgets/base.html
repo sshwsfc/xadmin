@@ -2,6 +2,7 @@
 {% load crispy_forms_tags %}
 <div class="box" id="{{ widget.id }}">
   <div class="box-title">
+    <i class='icon icon-wrench' data-toggle="modal" data-target="#{{ widget.id }}-opts-form"></i>
     {% block title %}
       {{ widget.title }}
     {% endblock title %}
@@ -11,11 +12,24 @@
     {{ content|safe }}
     {% endblock content %}
   </div>
-  <div class="box-form">
-    {% block form %}
-    {% if form %}
-      {% crispy form %}
-    {% endif %}
-    {% endblock form %}
+  <div class="modal hide fade" tabindex="-1" role="dialog" id="{{ widget.id }}-opts-form">
+    <form method="post" class="box-form form-horizontal">
+    {% csrf_token %}
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">×</button>
+      <h3>{% trans "Widget Options" %}</h3>
+    </div>
+    <div class="modal-body">
+      {% block form %}
+      {% if form %}
+        {% crispy form %}
+      {% endif %}
+      {% endblock form %}
+    </div>
+    <div class="modal-footer">
+      <button class="btn" data-dismiss="modal">{% trans "Close" %}</button>
+      <input class="btn btn-primary" type="submit" value="{% trans 'Save changes' %}"/>
+    </div>
+    </form>
   </div>
 </div>
