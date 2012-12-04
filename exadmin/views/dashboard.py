@@ -11,6 +11,7 @@ import copy
 from django.db import models
 from django.db.models.base import ModelBase
 from django.utils.translation import ugettext as _
+from django.utils.encoding import smart_unicode
 
 from exadmin.views.base import BaseAdminView, CommAdminView, filter_hook
 from exadmin.views.list import ListAdminView
@@ -18,8 +19,20 @@ from exadmin.views.edit import CreateAdminView
 from exadmin.layout import FormHelper
 from exadmin.models import UserSettings
 
-class PartialView(BaseAdminView):
-    pass
+class WidgetManager(object):
+    _widgets = None
+
+    def __init__(self):
+        self._widgets = {}
+
+    def register(self, widget_class):
+        self._widgets[widget_class.widget_type] = widget_class
+        return widget_class
+
+    def get(self, name):
+        return self._widgets[name]
+
+widget_manager = WidgetManager()
 
 class WidgetDataError(Exception):
 
@@ -35,35 +48,44 @@ class BaseWidget(forms.Form):
     base_title = None
 
     id = forms.CharField(_('Widget ID'), widget=forms.HiddenInput)
-    title = forms.CharField(_('Widget Title'))
+    title = forms.CharField(_('Widget Title'), required=False)
 
     def __init__(self, dashboard, data):
         self.dashboard = dashboard
         self.admin_site = dashboard.admin_site
         self.request = dashboard.request
         self.user = dashboard.request.user
+        self.convert(data)
         super(BaseWidget, self).__init__(data)
 
         if not self.is_valid():
-            raise WidgetDataError(self, self.errors)
+            raise WidgetDataError(self, self.errors.as_text())
 
         helper = FormHelper()
         helper.form_tag = False
         self.helper = helper
 
         self.id = self.cleaned_data['id']
-        self.title = self.cleaned_data.get('title', self.base_title)
+        self.title = self.cleaned_data['title'] or self.base_title
 
-    def __repr__(self):
-        context = {'widget': self}
+    @property
+    def widget(self):
+        context = {'widget_id': self.id, 'widget_title': self.title, 'form': self}
         self.context(context)
         return loader.render_to_string(self.template, context, context_instance=RequestContext(self.request))
 
     def context(self, context):
         pass
 
-    def save(self):
+    def convert(self, data):
         pass
+
+    def save(self):
+        value = dict([(f.name, f.value()) for f in self])
+        value['type'] = self.widget_type
+        user_widget, created = UserSettings.objects.get_or_create(user=self.user, key=self.dashboard.get_widget_key(self.id))
+        user_widget.set_json(value)
+        user_widget.save()
 
     def static(self, path):
         return self.dashboard.static(path)
@@ -71,53 +93,52 @@ class BaseWidget(forms.Form):
     def media(self):
         return forms.Media()
 
-class WidgetManager(object):
-    _widgets = None
-
-    def __init__(self):
-        self._widgets = {}
-
-    def register(self, name, widget_class):
-        self._widgets[name] = widget_class
-
-    def get(self, name):
-        return self._widgets[name]
-
-widget_manager = WidgetManager()
-
+@widget_manager.register
 class HtmlWidget(BaseWidget):
+    widget_type = 'html'
     description = 'Html Content Widget, can write any html content in widget.'
-widget_manager.register("html", HtmlWidget)
 
-class ModelOptForm(BaseOptForm):
-    model = forms.CharField(_('Target Model'))
+class ModelChoiceField(forms.ChoiceField):
+
+    def to_python(self, value):
+        if isinstance(value, ModelBase):
+            return value
+        app_label, model_name = value.lower().split('.')
+        return models.get_model(app_label, model_name)
+
+    def prepare_value(self, value):
+        if isinstance(value, ModelBase):
+            value = '%s.%s' % (value._meta.app_label, value._meta.module_name)
+        return value
+
+    def valid_value(self, value):
+        value = self.prepare_value(value)
+        for k, v in self.choices:
+            if value == smart_unicode(k):
+                return True
+        return False
 
 class ModelBaseWidget(BaseWidget):
 
     app_label = None
-    model_name = None
-    model = forms.CharField(_('Target Model'))
+    module_name = None
+    model = ModelChoiceField(_(u'Target Model'))
 
-    def __init__(self, dashboard, opts):
-        super(ModelBaseWidget, self).__init__(dashboard, opts)
-        model = opts.pop('model')
-        if isinstance(model, ModelBase):
-            self.model = model
-            self.app_label = model._meta.app_label
-            self.model_name = model._meta.module_name
-        else:
-            self.app_label, self.model_name = model.lower().split('.')
-            self.model = models.get_model(self.app_label, self.model_name)
-        super(ModelBaseWidget, self).__init__(dashboard, opts)
+    def __init__(self, dashboard, data):
+        self.base_fields['model'].choices = [('%s.%s' % (m._meta.app_label, m._meta.module_name), \
+            m._meta.verbose_name) for m, ma in dashboard.admin_site._registry.items() if self.filte_choices_model(m, ma)]
+        super(ModelBaseWidget, self).__init__(dashboard, data)
 
-    def form_data(self):
-        data = super(ModelBaseWidget, self).form_data()
-        data['model'] = "%s.%s" % (self.app_label, self.model_name)
-        return data
+        self.model = self.cleaned_data['model']
+        self.app_label = self.model._meta.app_label
+        self.module_name = self.model._meta.module_name
+
+    def filte_choices_model(self, model, modeladmin):
+        return True
 
     def model_admin_urlname(self, name, *args, **kwargs):
         return reverse("%s:%s_%s_%s" % (self.admin_site.app_name, self.app_label, \
-            self.model_name, name), args=args, kwargs=kwargs)
+            self.module_name, name), args=args, kwargs=kwargs)
 
 class PartialBaseWidget(BaseWidget):
 
@@ -140,7 +161,9 @@ class PartialBaseWidget(BaseWidget):
         req = self.get_factory().post(path, data, **extra)
         return self.setup_request(req)
 
+@widget_manager.register
 class QuickBtnWidget(BaseWidget):
+    widget_type = 'qbutton'
     description = 'Quick button Widget, quickly open any page.'
     template = "admin/widgets/qbutton.html"
     base_title = "Quick Buttons"
@@ -175,9 +198,9 @@ class QuickBtnWidget(BaseWidget):
 
         context.update({ 'btns': btns })
 
-widget_manager.register("qbutton", QuickBtnWidget)
-
+@widget_manager.register
 class ListWidget(ModelBaseWidget, PartialBaseWidget):
+    widget_type = 'list'
     description = 'Any Objects list Widget.'
     template = "admin/widgets/list.html"
 
@@ -185,7 +208,7 @@ class ListWidget(ModelBaseWidget, PartialBaseWidget):
         self.list_params = opts.pop('params', {})
         super(ListWidget, self).__init__(dashboard, opts)
 
-        if self.title is None:
+        if not self.title:
             self.title = self.model._meta.verbose_name_plural
 
     def context(self, context):
@@ -204,9 +227,9 @@ class ListWidget(ModelBaseWidget, PartialBaseWidget):
         context['result_count'] = list_view.result_count
         context['page_url'] = self.model_admin_urlname('changelist')
 
-widget_manager.register("list", ListWidget)
-
+@widget_manager.register
 class AddFormWidget(ModelBaseWidget, PartialBaseWidget):
+    widget_type = 'addform'
     description = 'Add any model object Widget.'
     template = "admin/widgets/addform.html"
 
@@ -228,8 +251,6 @@ class AddFormWidget(ModelBaseWidget, PartialBaseWidget):
 
     def media(self):
         return self.add_view.media + self.add_view.form_obj.media
-
-widget_manager.register("addform", AddFormWidget)
 
 class Dashboard(CommAdminView):
 
@@ -256,12 +277,15 @@ class Dashboard(CommAdminView):
         return str
 
     @filter_hook
-    def get_widget(self, widget_id):
+    def get_widget(self, widget_id, data=None):
         try:
             opts = UserSettings.objects.get(user=self.user, key=self.get_widget_key(widget_id)).json_value()
             opts['id'] = widget_id
-            return widget_manager.get(opts['type'])(self, opts)
+            return widget_manager.get(opts['type'])(self, data or opts)
         except UserSettings.DoesNotExist:
+            return None
+        except Exception, e:
+            print e
             return None
 
     @filter_hook
@@ -331,13 +355,9 @@ class Dashboard(CommAdminView):
     @never_cache
     def post(self, request):
         widget_id = request.POST['id']
-        widget = self.get_widget(widget_id)
-        form = widget.form(request.POST)
+        widget = self.get_widget(widget_id, request.POST.copy())
+        widget.save()
 
-        if form.is_valid():
-
-
-        widget_manager.get(widget_type)
         return self.get(request)
 
     @filter_hook
