@@ -17,7 +17,9 @@ from exadmin.views import BaseAdminPlugin, ListAdminView
 from exadmin.views.dashboard import ModelBaseWidget, widget_manager
 from exadmin.util import lookup_field, label_for_field
 
+@widget_manager.register
 class ChartWidget(ModelBaseWidget):
+    widget_type = 'chart'
     template = 'admin/widgets/chart.html'
 
     def __init__(self, dashboard, opts):
@@ -57,8 +59,6 @@ class ChartWidget(ModelBaseWidget):
         media.add_js([self.static('exadmin/js/jquery.flot.resize.js')])
         media.add_js([self.static('exadmin/js/charts.js')])
         return media
-
-widget_manager.register('chart', ChartWidget)
 
 class JSONEncoder(DjangoJSONEncoder):
     def default(self, o):
