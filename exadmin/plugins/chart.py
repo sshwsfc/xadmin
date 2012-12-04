@@ -38,6 +38,9 @@ class ChartWidget(ModelBaseWidget):
                 if self.title is None:
                     self.title = _("%s Charts") % self.model._meta.verbose_name_plural
 
+    def filte_choices_model(self, model, modeladmin):
+        return bool(getattr(modeladmin, 'data_charts', None))
+
     def get_chart_url(self, name, v):
         return self.model_admin_urlname('chart', name) + "?" + urlencode(self.list_params)
 
