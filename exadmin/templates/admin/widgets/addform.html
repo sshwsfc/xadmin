@@ -2,9 +2,6 @@
 {% load i18n exadmin %}
 {% load crispy_forms_tags %}
 
-{% block title %}
-  {{ widget.title }}
-{% endblock title %}
 {% block content_css %}nopadding form-horizontal short_label{% endblock content_css %}
 {% block content %}
 <form class="exform" method="post" id="{{ widget.model_name }}_form">{% csrf_token %}

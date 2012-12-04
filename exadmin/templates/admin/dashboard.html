@@ -17,7 +17,7 @@
   {% for c in columns %}
   <div class="{{ c.0 }} column">
     {% for widget in c.1 %}
-      {{ widget|safe }}
+      {{ widget.widget|safe }}
     {% endfor %}
   </div>
   {% endfor %}

@@ -1,9 +1,6 @@
 {% extends "admin/widgets/base.html" %}
 {% load i18n exadmin %}
 
-{% block title %}
-  {{ widget.title }}
-{% endblock title %}
 {% block content_css %}tabs{% endblock content_css %}
 {% block content %}
 {% if not widget.one_chart %}

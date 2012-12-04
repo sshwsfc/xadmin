@@ -3,7 +3,7 @@
 
 {% block title %}
   <a href="{{page_url}}" class="pull-right"><span class="badge badge-info">{{ result_count }}</span></a>
-  {{ widget.title }}
+  {{ block.super }}
 {% endblock title %}
 {% block content_css %}nopadding{% endblock content_css %}
 {% block content %}

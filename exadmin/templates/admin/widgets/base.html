@@ -1,10 +1,10 @@
 {% load i18n exadmin %}
 {% load crispy_forms_tags %}
-<div class="box" id="{{ widget.id }}">
+<div class="box" id="{{ widget_id }}">
   <div class="box-title">
-    <i class='icon icon-wrench' data-toggle="modal" data-target="#{{ widget.id }}-opts-form"></i>
+    <i class='icon icon-wrench' data-toggle="modal" data-target="#{{ widget_id }}-opts-form"></i>
     {% block title %}
-      {{ widget.title }}
+      {{ widget_title }}
     {% endblock title %}
   </div>
   <div class="box-content {% block content_css %}{% endblock content_css %}">
@@ -12,7 +12,7 @@
     {{ content|safe }}
     {% endblock content %}
   </div>
-  <div class="modal hide fade" tabindex="-1" role="dialog" id="{{ widget.id }}-opts-form">
+  <div class="modal hide fade" tabindex="-1" role="dialog" id="{{ widget_id }}-opts-form">
     <form method="post" class="box-form form-horizontal">
     {% csrf_token %}
     <div class="modal-header">
@@ -21,7 +21,7 @@
     </div>
     <div class="modal-body">
       {% block form %}
-        {% crispy widget %}
+        {% crispy form %}
       {% endblock form %}
     </div>
     <div class="modal-footer">
