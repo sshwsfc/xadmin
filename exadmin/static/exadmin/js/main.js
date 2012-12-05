@@ -26,6 +26,15 @@
       return cookieValue;
   }
 
+  // dashboard widget
+  $('.widget-form').each(function(e){
+    var el = $(this);
+    el.find('.btn-remove').click(function(){
+      el.find('input[name=_delete]').val('on');
+      return true;
+    });
+  });
+
   // g-search
   $('#g-search .dropdown-menu a').click(function(){
       $('#g-search form').attr('action', $(this).data('action')).submit();
