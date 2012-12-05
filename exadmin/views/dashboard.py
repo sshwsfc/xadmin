@@ -13,11 +13,40 @@ from django.db.models.base import ModelBase
 from django.utils.translation import ugettext as _
 from django.utils.encoding import smart_unicode
 
+from exadmin.sites import site
 from exadmin.views.base import BaseAdminView, CommAdminView, filter_hook
 from exadmin.views.list import ListAdminView
 from exadmin.views.edit import CreateAdminView
 from exadmin.layout import FormHelper
-from exadmin.models import UserSettings
+from exadmin.models import UserSettings, UserWidget
+from exadmin import widgets as exwidgets
+
+class UserWidgetAdmin(object):
+
+    list_display = ('widget_type', 'page_id')
+    list_display_links = ('widget_type',)
+
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        if db_field.name == 'widget_type':
+            return forms.ChoiceField(choices=[(w.widget_type, w.description) for w in widget_manager._widgets.values()])
+        field = super(UserWidgetAdmin, self).formfield_for_dbfield(db_field, **kwargs)
+        return field
+
+    def queryset(self):
+        return UserWidget.objects.filter(user=self.user)
+
+    def save_models(self):
+        super(UserWidgetAdmin, self).save_models()
+        if self.org_obj is None:
+            widget = self.new_obj
+            try:
+                portal_pos = UserSettings.objects.get(user=widget.user, key="dashboard:%s:pos" % widget.page_id)
+                portal_pos.value = "%s,%s" % (widget.id, portal_pos.value)
+                portal_pos.save()
+            except Exception:
+                pass
+
+site.register(UserWidget, UserWidgetAdmin)
 
 class WidgetManager(object):
     _widgets = None
@@ -47,7 +76,7 @@ class BaseWidget(forms.Form):
     description = 'Base Widget, don\'t use it.'
     base_title = None
 
-    id = forms.CharField(_('Widget ID'), widget=forms.HiddenInput)
+    id = forms.IntegerField(_('Widget ID'), widget=forms.HiddenInput)
     title = forms.CharField(_('Widget Title'), required=False)
 
     def __init__(self, dashboard, data):
@@ -82,9 +111,8 @@ class BaseWidget(forms.Form):
 
     def save(self):
         value = dict([(f.name, f.value()) for f in self])
-        value['type'] = self.widget_type
-        user_widget, created = UserSettings.objects.get_or_create(user=self.user, key=self.dashboard.get_widget_key(self.id))
-        user_widget.set_json(value)
+        user_widget = UserWidget.objects.get(id=self.id)
+        user_widget.set_value(value)
         user_widget.save()
 
     def static(self, path):
@@ -97,6 +125,11 @@ class BaseWidget(forms.Form):
 class HtmlWidget(BaseWidget):
     widget_type = 'html'
     description = 'Html Content Widget, can write any html content in widget.'
+
+    content = forms.CharField(_('Html Content'), widget=exwidgets.AdminTextareaWidget, required=False)
+
+    def context(self, context):
+        context['content'] = self.cleaned_data['content']
 
 class ModelChoiceField(forms.ChoiceField):
 
@@ -256,36 +289,22 @@ class Dashboard(CommAdminView):
 
     widgets = []
     title = "Dashboard"
-    page_id = None
 
     def get_page_id(self):
-        return self.page_id if self.page_id else self.request.path.replace('/', '_')
+        return self.request.path
 
     def get_portal_key(self):
         return "dashboard:%s:pos" % self.get_page_id()
 
-    def get_widget_key(self, widget_id):
-        return "dashboard:%s:%s" % (self.get_page_id(), widget_id)
-
-    def _gen_widget_id(self):
-        str = ''
-        chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789'
-        length = len(chars) - 1
-        random = Random()
-        for i in range(16):
-            str+=chars[random.randint(0, length)]
-        return str
-
     @filter_hook
-    def get_widget(self, widget_id, data=None):
+    def get_widget(self, widget_or_id, data=None):
         try:
-            opts = UserSettings.objects.get(user=self.user, key=self.get_widget_key(widget_id)).json_value()
-            opts['id'] = widget_id
-            return widget_manager.get(opts['type'])(self, data or opts)
-        except UserSettings.DoesNotExist:
-            return None
-        except Exception, e:
-            print e
+            if isinstance(widget_or_id, UserWidget):
+                widget = widget_or_id
+            else:
+                widget = UserWidget.objects.get(user=self.user, page_id=self.get_page_id(), id=widget_or_id)
+            return widget_manager.get(widget.widget_type)(self, data or widget.get_value())
+        except UserWidget.DoesNotExist:
             return None
 
     @filter_hook
@@ -295,20 +314,15 @@ class Dashboard(CommAdminView):
         for col in widgets:
             portal_col = []
             for opts in col:
-                wid = self._gen_widget_id()
-                widget = copy.copy(opts)
-                widget['id'] = wid
+                widget = UserWidget(user=self.user, page_id=self.get_page_id(), widget_type=opts['type'])
+                widget.set_value(opts)
+                widget.save()
 
-                widget_us = UserSettings(user=self.user, key=self.get_widget_key(wid))
-                widget_us.set_json(widget)
-                widget_us.save()
-
-                portal_col.append(widget_manager.get(widget['type'])(self, widget))
-
+                portal_col.append(self.get_widget(widget))
             portal.append(portal_col)
 
         UserSettings(user=self.user, key="dashboard:%s:pos" % self.get_page_id(), \
-            value='|'.join([','.join([w.id for w in col]) for col in portal])).save()
+            value='|'.join([','.join([str(w.id) for w in col]) for col in portal])).save()
 
         return portal
 
@@ -318,12 +332,13 @@ class Dashboard(CommAdminView):
         if len(portal_pos):
             portal_pos = portal_pos[0]
             widgets = []
+            user_widgets = dict([(uw.id, uw) for uw in UserWidget.objects.filter(user=self.user, page_id=self.get_page_id())])
             for col in portal_pos.value.split('|'):
                 ws = []
-                for w in col.split(','):
-                    widget = self.get_widget(w)
+                for wid in col.split(','):
+                    widget = user_widgets.get(int(wid))
                     if widget:
-                        ws.append(widget)
+                        ws.append(self.get_widget(widget))
                 widgets.append(ws)
             return widgets
         else:
@@ -348,15 +363,25 @@ class Dashboard(CommAdminView):
         context = self.get_context()
         context.update({
             'portal_key': self.get_portal_key(),
-            'columns': [('span%d' % int(12/len(self.widgets)), ws) for ws in self.widgets]
+            'columns': [('span%d' % int(12/len(self.widgets)), ws) for ws in self.widgets],
+            'add_widget_url': self.admin_urlname('%s_%s_add' % (UserWidget._meta.app_label, UserWidget._meta.module_name)) + \
+                "?user=%s&page_id=%s" % (self.user.id, self.get_page_id())
         })
         return self.template_response('admin/dashboard.html', context)
 
     @never_cache
     def post(self, request):
         widget_id = request.POST['id']
-        widget = self.get_widget(widget_id, request.POST.copy())
-        widget.save()
+        if request.POST.get('_delete', None) != 'on':
+            widget = self.get_widget(widget_id, request.POST.copy())
+            widget.save()
+        else:
+            try:
+                widget = UserWidget.objects.get(user=self.user, page_id=self.get_page_id(), id=widget_id)
+                widget.delete()
+                # TODO update widget layout pos
+            except UserWidget.DoesNotExist:
+                pass
 
         return self.get(request)
 

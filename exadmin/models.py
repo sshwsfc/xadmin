@@ -63,3 +63,24 @@ class UserSettings(models.Model):
         
     class Meta:
         verbose_name = _('User Setting')
+
+class UserWidget(models.Model):
+    user = models.ForeignKey(User)
+    page_id = models.CharField(_(u"Page"), max_length=256)
+    widget_type = models.CharField(_(u"Widget Type"), max_length=16)
+    value = models.TextField()
+
+    def get_value(self):
+        value = simplejson.loads(self.value)
+        value['id'] = self.id
+        value['type'] = self.widget_type
+        return value
+
+    def set_value(self, obj):
+        self.value = simplejson.dumps(obj, cls=JSONEncoder, ensure_ascii=False)
+
+    def __unicode__(self):
+        return "%s %s widget" % (self.user, self.widget_type)
+        
+    class Meta:
+        verbose_name = _('User Widget')
