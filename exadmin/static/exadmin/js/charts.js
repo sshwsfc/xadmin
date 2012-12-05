@@ -28,7 +28,6 @@ $(document).ready(function(){
                         $("#chart-tooltip").remove();
                         var x = item.series.xaxis.tickFormatter(item.datapoint[0], item.series.xaxis),
                             y = item.series.yaxis.tickFormatter(item.datapoint[1], item.series.yaxis);
-                        console.log(item);
                         
                         showTooltip(item.pageX, item.pageY,
                                     item.series.label + " : " + x + " , " + y);
