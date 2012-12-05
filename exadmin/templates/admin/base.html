@@ -1,4 +1,4 @@
-{% load url from future %}{% load exadmin %}<!DOCTYPE html>
+{% load url from future %}{% load exadmin %}{% load i18n %}<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,7 +17,6 @@
   {% block extrahead %}{% endblock %}
   {% view_block 'extrahead' %}
 </head>
-{% load i18n %}
 <body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}">
   {% block body %}
   {% endblock body %}
