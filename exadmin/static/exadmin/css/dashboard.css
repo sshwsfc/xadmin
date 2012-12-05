@@ -37,6 +37,15 @@
     font-weight: bold;
 }
 
+/* Quick Form */
+.modal.quick-form .modal-body{
+  padding: 0px;
+  max-height: none;
+}
+.modal.quick-form .modal-body form{
+  margin-bottom: 0px;
+}
+
 /* Quick Buttons
 =================================================================== */
 
