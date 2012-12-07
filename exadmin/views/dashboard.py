@@ -25,6 +25,7 @@ class UserWidgetAdmin(object):
 
     list_display = ('widget_type', 'page_id')
     list_display_links = ('widget_type',)
+    user_fields = ['user']
 
     def formfield_for_dbfield(self, db_field, **kwargs):
         if db_field.name == 'widget_type':
