@@ -47,6 +47,17 @@ class UserWidgetAdmin(object):
             except Exception:
                 pass
 
+    def delete_model(self, obj):
+        try:
+            portal_pos = UserSettings.objects.get(user=obj.user, key="dashboard:%s:pos" % obj.page_id)
+            pos = [[w for w in col.split(',') if w != str(obj.id)] for col in portal_pos.value.split('|')]
+            portal_pos.value = '|'.join([','.join(col) for col in pos])
+            portal_pos.save()
+        except Exception:
+            pass
+        super(UserWidgetAdmin, self).delete_model(obj)
+
+
 site.register(UserWidget, UserWidgetAdmin)
 
 class WidgetManager(object):
@@ -380,7 +391,13 @@ class Dashboard(CommAdminView):
             try:
                 widget = UserWidget.objects.get(user=self.user, page_id=self.get_page_id(), id=widget_id)
                 widget.delete()
-                # TODO update widget layout pos
+                try:
+                    portal_pos = UserSettings.objects.get(user=self.user, key="dashboard:%s:pos" % self.get_page_id())
+                    pos = [[w for w in col.split(',') if w != str(widget_id)] for col in portal_pos.value.split('|')]
+                    portal_pos.value = '|'.join([','.join(col) for col in pos])
+                    portal_pos.save()
+                except Exception:
+                    pass
             except UserWidget.DoesNotExist:
                 pass
 
