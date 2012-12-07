@@ -39,15 +39,14 @@ order
 ### autocomplete功能
 ### 日期，时间组件.
 ### 关联数据添加，inline formsets
+### 突出当前用户的概念，填写内容时可以指定特定字段必须为当前用户。
     数据添加向导功能
-    突出当前用户的概念，填写内容时可以指定特定字段必须为当前用户。
 
 ==== 全局功能 ====
-    图标附加
-    添加页面侧边栏, 可以管理菜单
-    user settings, 可以记录跟用户相关的系统配置，例如页面使用布局记录。
-    bookmark功能，能够收藏任意url，变成widget已经列表快速显示菜单
+### user settings, 可以记录跟用户相关的系统配置，例如页面使用布局记录。
     首页管理， widget，添加到widget功能，widget定时刷新（使用现成的widget控件）
+    图标附加
+    bookmark功能，能够收藏任意url，变成widget已经列表快速显示菜单
 
     权限增加查看权限。
     :: http://hi.baidu.com/cnydpl/item/3ce58c162bcfd2413b176e09
