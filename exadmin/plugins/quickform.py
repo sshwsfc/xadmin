@@ -11,6 +11,10 @@ class QuickFormPlugin(BaseAdminPlugin):
             self.admin_view.add_form_template = 'admin/quick_form.html'
             self.admin_view.change_form_template = 'admin/quick_form.html'
 
+    def get_context(self, context):
+        context['form_url'] = self.request.path
+        return context
+
 site.register_plugin(QuickFormPlugin, ModelFormAdminView)
 
 
