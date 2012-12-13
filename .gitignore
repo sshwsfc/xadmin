@@ -35,3 +35,5 @@ nosetests.xml
 .pydevproject
 
 .DS_Store
+.c9revisions
+.settings
