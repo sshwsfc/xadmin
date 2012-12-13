@@ -70,10 +70,9 @@ class ResultItem(object):
 
     @property
     def label(self):
-        text = mark_safe(self.text) if self.allow_tags else escape(self.text)
+        text = mark_safe(self.text) if self.allow_tags else conditional_escape(self.text)
         if force_unicode(text) == '':
             text = mark_safe('&nbsp;')
-        text = conditional_escape(text)
         for wrap in self.wraps:
             text = mark_safe(wrap % text)
         return text
