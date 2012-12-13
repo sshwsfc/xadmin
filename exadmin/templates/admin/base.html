@@ -13,7 +13,11 @@
   <link rel="stylesheet" type="text/css" href="{% static "exadmin/css/bootstrap-responsive.min.css" %}" />
   {{ media.css }}
   {% block extrastyle %}{% endblock %}
-  <script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% static "admin/" %}{% endfilter %}";</script>
+  {% url 'admin:index' as indexurl %}
+  <script type="text/javascript">
+    window.__admin_media_prefix__ = "{% filter escapejs %}{% static "exadmin/" %}{% endfilter %}";
+    window.__admin_path_prefix__ = "{% filter escapejs %}{{ indexurl }}{% endfilter %}";
+  </script>
   {% block extrahead %}{% endblock %}
   {% view_block 'extrahead' %}
 </head>
