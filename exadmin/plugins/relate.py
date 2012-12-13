@@ -21,7 +21,10 @@ class RelateMenuPlugin(BaseAdminPlugin):
             
         _related_acts = []
         for r in self.model._meta.get_all_related_objects():
+            print r
             if self.related_list and (r.get_accessor_name() not in self.related_list):
+                continue
+            if r.model not in self.admin_site._registry.keys():
                 continue
             f = r.field
             rel_name = f.rel.get_related_field().name
