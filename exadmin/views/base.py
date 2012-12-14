@@ -184,7 +184,7 @@ class BaseAdminView(BaseAdminObject, View):
         self.request_method = request.method.lower()
         self.user = request.user
 
-        self.plugins = [p(self) for p in getattr(self, "plugin_classes", [])]
+        self.base_plugins = [p(self) for p in getattr(self, "plugin_classes", [])]
 
         self.args = args
         self.kwargs = kwargs
@@ -217,12 +217,16 @@ class BaseAdminView(BaseAdminObject, View):
         pass
 
     def init_plugin(self, *args, **kwargs):
-        for p in self.plugins:
+        plugins = []
+        for p in self.base_plugins:
             p.request = self.request
             p.user = self.user
             p.args = self.args
             p.kwargs = self.kwargs
-            p.init_request(*args, **kwargs)
+            result = p.init_request(*args, **kwargs)
+            if result is not False:
+                plugins.append(p)
+        self.plugins = plugins
 
     def get_context(self):
         return {'admin_view': self, 'media': self.media}
