@@ -15,7 +15,7 @@
 {% if perms_lacking or protected %}
     {% if perms_lacking %}
         <div class="alert alert-error">{% blocktrans %}Deleting the selected {{ objects_name }} would result in deleting related objects, but your account doesn't have permission to delete the following types of objects:{% endblocktrans %}</div>
-        <ul>
+        <ul class="model_ul">
         {% for obj in perms_lacking %}
             <li>{{ obj }}</li>
         {% endfor %}
@@ -23,7 +23,7 @@
     {% endif %}
     {% if protected %}
         <div class="alert alert-error">{% blocktrans %}Deleting the selected {{ objects_name }} would require deleting the following protected related objects:{% endblocktrans %}</div>
-        <ul>
+        <ul class="model_ul">
         {% for obj in protected %}
             <li>{{ obj }}</li>
         {% endfor %}
@@ -32,7 +32,9 @@
 {% else %}
     <div class="alert alert-warning">{% blocktrans %}Are you sure you want to delete the selected {{ objects_name }}? All of the following objects and their related items will be deleted:{% endblocktrans %}</div>
     {% for deletable_object in deletable_objects %}
-        <ul>{{ deletable_object|unordered_list }}</ul>
+    <ul class="model_ul">
+        {{ deletable_object|unordered_list }}
+    </ul>
     {% endfor %}
     <form action="" method="post">{% csrf_token %}
     <div>
@@ -43,6 +45,7 @@
     <input type="hidden" name="post" value="yes" />
     <div class="well">
         <input class="btn btn-danger btn-large" type="submit" value="{% trans "Yes, I'm sure" %}" />
+        <a class="btn pull-right" onclick="javascript:history.back();" >{% trans 'Cacnel' %}</a>
     </div>
     </div>
     </form>

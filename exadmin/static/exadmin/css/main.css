@@ -149,7 +149,6 @@ a { cursor: pointer;}
           box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
 }
 
-
 /* export */
 .export .dropdown-submenu .popover{
   width: 240px;
@@ -198,6 +197,25 @@ a { cursor: pointer;}
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+}
+
+/* models list */
+ul.model_ul{
+  margin-bottom: 20px;
+}
+ul.model_ul, ul.model_ul ul{
+  padding: 0px;
+  list-style: none;
+}
+ul.model_ul li{
+  line-height: 20px;
+  margin: 8px 0px;
+}
+ul.model_ul li span {
+  background: #EEE;
+  padding: 2px 4px 3px;
+  border-radius: 4px;
+  text-shadow: 0 1px 0 #ffffff;
 }
 
 /* g-search */
