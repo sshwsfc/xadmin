@@ -19,6 +19,7 @@ from django.utils.text import capfirst
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import classonlymethod
+from django.utils.translation import ugettext as _
 from exadmin.util import static
 
 csrf_protect_m = method_decorator(csrf_protect)
