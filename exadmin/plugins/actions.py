@@ -1,40 +1,118 @@
-from django.contrib.admin import helpers, actions as django_actions
-
-from exadmin.util import model_format_dict
+from django import forms
+from django.contrib.admin import helpers
+from django.contrib.admin.util import get_deleted_objects, model_ngettext
+from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
+from django.db import router
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
+from django.template.response import TemplateResponse
 from django.utils.datastructures import SortedDict
 from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
-from django.utils.text import capfirst
 from django.utils.translation import ugettext as _, ungettext
 from exadmin.sites import site
+from exadmin.util import model_format_dict
 from exadmin.views import BaseAdminPlugin, ListAdminView
+from exadmin.views.base import filter_hook, ModelAdminView
 
+
+ACTION_CHECKBOX_NAME = '_selected_action'
+checkbox = forms.CheckboxInput({'class': 'action-select'}, lambda value: False)
 
 def action_checkbox(obj):
-    """
-    A list_display column containing a checkbox widget.
-    """
-    return helpers.checkbox.render(helpers.ACTION_CHECKBOX_NAME, force_unicode(obj.pk))
+    return checkbox.render(ACTION_CHECKBOX_NAME, force_unicode(obj.pk))
 action_checkbox.short_description = mark_safe('<input type="checkbox" id="action-toggle" />')
 action_checkbox.allow_tags = True
 
-class ActionPlugin(BaseAdminPlugin):
-    # Templates for delet action, move it to delete action class later.
+class BaseAction(ModelAdminView):
+    action_name = None
+    description = None
+
+    def init_action(self, list_view):
+        self.list_view = list_view
+        self.admin_site = list_view.admin_site
+
+    def do_action(self, queryset):
+        pass
+
+class DeleteSelectedAction(BaseAction):
+
+    action_name = "delete_selected"
+    description = _(u'Delete selected %(verbose_name_plural)s')
+
     delete_confirmation_template = None
     delete_selected_confirmation_template = None
+
+    @filter_hook
+    def delete_models(self, queryset):
+        n = queryset.count()
+        if n:
+            queryset.delete()
+            self.message_user(_("Successfully deleted %(count)d %(items)s.") % {
+                "count": n, "items": model_ngettext(self.opts, n)
+            })
+
+    def do_action(self, queryset):
+        # Check that the user has delete permission for the actual model
+        if not self.has_delete_permission():
+            raise PermissionDenied
+
+        using = router.db_for_write(self.model)
+
+        # Populate deletable_objects, a data structure of all related objects that
+        # will also be deleted.
+        deletable_objects, perms_needed, protected = get_deleted_objects(
+            queryset, self.opts, self.user, self.admin_site, using)
+
+        # The user has already confirmed the deletion.
+        # Do the deletion and return a None to display the change list view again.
+        if self.request.POST.get('post'):
+            if perms_needed:
+                raise PermissionDenied
+            self.delete_models(queryset)
+            # Return None to display the change list page again.
+            return None
+
+        if len(queryset) == 1:
+            objects_name = force_unicode(self.opts.verbose_name)
+        else:
+            objects_name = force_unicode(self.opts.verbose_name_plural)
+
+        if perms_needed or protected:
+            title = _("Cannot delete %(name)s") % {"name": objects_name}
+        else:
+            title = _("Are you sure?")
+
+        context = self.get_context()
+        context.update({
+            "title": title,
+            "objects_name": objects_name,
+            "deletable_objects": [deletable_objects],
+            'queryset': queryset,
+            "perms_lacking": perms_needed,
+            "protected": protected,
+            "opts": self.opts,
+            "app_label": self.app_label,
+            'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME,
+        })
+
+        # Display the confirmation page
+        return TemplateResponse(self.request, self.delete_selected_confirmation_template or [
+            "admin/%s/%s/delete_selected_confirmation.html" % (self.app_label, self.opts.object_name.lower()),
+            "admin/%s/delete_selected_confirmation.html" % self.app_label,
+            "admin/delete_selected_confirmation.html"
+        ], context, current_app=self.admin_site.name)
+
+class ActionPlugin(BaseAdminPlugin):
 
     # Actions
     actions = []
     actions_selection_counter = True
-    global_actions = {'delete_selected': django_actions.delete_selected}
+    global_actions = [DeleteSelectedAction]
 
     def init_request(self, *args, **kwargs):
         self.actions = self.get_actions()
-        self.admin_view.delete_confirmation_template = self.delete_confirmation_template
-        self.admin_view.delete_selected_confirmation_template = self.delete_selected_confirmation_template
 
     def get_list_display(self, list_display):
         if self.actions:
@@ -69,9 +147,9 @@ class ActionPlugin(BaseAdminPlugin):
                         "actions on them. No items have been changed.")
                 av.message_user(msg)
             else:
-                func, name, description = self.actions[action]
+                ac, name, description = self.actions[action]
                 select_across = request.POST.get('select_across', False) == '1'
-                selected = request.POST.getlist(helpers.ACTION_CHECKBOX_NAME)
+                selected = request.POST.getlist(ACTION_CHECKBOX_NAME)
 
                 if not selected and not select_across:
                     # Reminder that something needs to be selected or nothing will happen
@@ -83,7 +161,9 @@ class ActionPlugin(BaseAdminPlugin):
                     if not select_across:
                         # Perform the action only on the selected objects
                         queryset = av.list_queryset.filter(pk__in=selected)
-                    response = func(av, request, queryset)
+                    action_view = self.get_model_view(ac, av.model)
+                    action_view.init_action(av)
+                    response = action_view.do_action(queryset)
                     # Actions may return an HttpResponse, which will be used as the
                     # response from the POST. If not, we'll be a good little HTTP
                     # citizen and redirect back to the changelist page.
@@ -94,28 +174,14 @@ class ActionPlugin(BaseAdminPlugin):
         return response
 
     def get_actions(self):
-        """
-        Return a dictionary mapping the names of all actions for this
-        ModelAdmin to a tuple of (callable, name, description) for each action.
-        """
-        # If self.actions is explicitally set to None that means that we don't
-        # want *any* actions enabled on this page.
         from exadmin.views.list import IS_POPUP_VAR
         if self.actions is None or IS_POPUP_VAR in self.request.GET:
             return SortedDict()
 
-        actions = []
+        actions = [self.get_action(action) for action in self.global_actions]
 
-        # Gather actions from the admin site first
-        for (name, func) in self.global_actions.iteritems():
-            description = getattr(func, 'short_description', name.replace('_', ' '))
-            actions.append((func, name, description))
-
-        # Then gather them from the model admin and all parent classes,
-        # starting with self and working back up.
         for klass in self.admin_view.__class__.mro()[::-1]:
             class_actions = getattr(klass, 'actions', [])
-            # Avoid trying to iterate over None
             if not class_actions:
                 continue
             actions.extend([self.get_action(action) for action in class_actions])
@@ -125,8 +191,8 @@ class ActionPlugin(BaseAdminPlugin):
 
         # Convert the actions into a SortedDict keyed by name.
         actions = SortedDict([
-            (name, (func, name, desc))
-            for func, name, desc in actions
+            (name, (ac, name, desc))
+            for ac, name, desc in actions
         ])
 
         return actions
@@ -137,40 +203,15 @@ class ActionPlugin(BaseAdminPlugin):
         tuple (name, description).
         """
         choices = []
-        for func, name, description in self.actions.itervalues():
+        for ac, name, description in self.actions.itervalues():
             choice = (name, description % model_format_dict(self.opts))
             choices.append(choice)
         return choices
 
     def get_action(self, action):
-        """
-        Return a given action from a parameter, which can either be a callable,
-        or the name of a method on the ModelAdmin.  Return is a tuple of
-        (callable, name, description).
-        """
-        # If the action is a callable, just use it.
-        if callable(action):
-            func = action
-            action = action.__name__
-
-        # Next, look for a method. Grab it off self.__class__ to get an unbound
-        # method instead of a bound one; this ensures that the calling
-        # conventions are the same for functions and methods.
-        elif hasattr(self.admin_view.__class__, action):
-            func = getattr(self.admin_view.__class__, action)
-
-        # Finally, look for a named method on the admin site
-        else:
-            try:
-                func = self.admin_site.get_action(action)
-            except KeyError:
-                return None
-
-        if hasattr(func, 'short_description'):
-            description = func.short_description
-        else:
-            description = capfirst(action.replace('_', ' '))
-        return func, action, description
+        if not issubclass(action, BaseAction):
+            return None
+        return action, getattr(action, 'action_name'), getattr(action, 'description')
 
     # View Methods
     def result_header(self, item, field_name, row):
