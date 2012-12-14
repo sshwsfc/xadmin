@@ -3,81 +3,76 @@ from django import forms
 from django.template import loader
 from django.contrib.formtools.wizard.storage import get_storage
 from django.contrib.formtools.wizard.forms import ManagementForm
-from django.contrib.formtools.wizard.views import SessionWizardView as BaseWizardView, StepsHelper
+from django.contrib.formtools.wizard.views import StepsHelper
+from django.utils.datastructures import SortedDict
 from django.forms import ValidationError
 from django.forms.models import modelform_factory
-from django.utils.decorators import classonlymethod
 from exadmin.sites import site
 from exadmin.views import BaseAdminPlugin, ModelFormAdminView
 
-
-class WizardView(BaseWizardView):
-
-    admin_view = None
-    plugin = None
-
-    @classonlymethod
-    def as_view(cls, *args, **kwargs):
-        initkwargs = cls.get_initkwargs(*args, **kwargs)
-        return cls(**initkwargs)
-
-    def inti_request(self, request, *args, **kwargs):
-        # add the storage engine to the current wizardview instance
-        self.prefix = self.get_prefix(*args, **kwargs)
-        self.storage = get_storage(self.storage_name, self.prefix, request,
-            getattr(self, 'file_storage', None))
-        self.steps = StepsHelper(self)
-
-    def get_form_prefix(self, step=None, form=None):
-        if step is None:
-            step = self.steps.current
-        new = re.sub('(((?<=[a-z])[A-Z])|([A-Z](?![A-Z]|$)))', '_\\1', str(step))
-        return new.lower().strip('_').replace(' ', '')
+def normalize_name(name):
+    new = re.sub('(((?<=[a-z])[A-Z])|([A-Z](?![A-Z]|$)))', '_\\1', name)
+    return new.lower().strip('_')
 
 class WizardFormPlugin(BaseAdminPlugin):
 
     wizard_form_list = None
 
-    def _form_list(self):
-        return [(name, modelform_factory(self.model, form=forms.ModelForm, \
-            fields=fields, formfield_callback=self.admin_view.formfield_for_dbfield)) \
-            for name, fields in self.wizard_form_list]
+    storage_name = 'django.contrib.formtools.wizard.storage.session.SessionStorage'
+    form_list = None
+    initial_dict = None
+    instance_dict = None
+    condition_dict = None
 
+    def _get_form_prefix(self, step=None):
+        if step is None:
+            step = self.steps.current
+        new = re.sub('(((?<=[a-z])[A-Z])|([A-Z](?![A-Z]|$)))', '_\\1', str(step))
+        return new.lower().strip('_').replace(' ', '')
+
+    def get_form_list(self):
+        if not hasattr(self, '_form_list'):
+            init_form_list = SortedDict()
+
+            assert len(self.wizard_form_list) > 0, 'at least one form is needed'
+
+            for i, form in enumerate(self.wizard_form_list):
+                init_form_list[unicode(form[0])] = form[1]
+
+            self._form_list = init_form_list
+
+        return self._form_list
+
+    # Plugin replace methods
     def init_request(self, *args, **kwargs):
-        if self.wizard_form_list:
-            wizard_view = WizardView.as_view(form_list=self._form_list(), plugin=self, admin_view=self.admin_view)
-            wizard_view.inti_request(self.request)
-            self.storage = wizard_view.storage
-            self.steps = wizard_view.steps
-            self.wizard_view = wizard_view
-            self.wizard_goto_step = False
-        else:
-            self.wizard_view = None
+        return bool(self.wizard_form_list)
 
-    def instance_forms(self, __):
-        if not self.wizard_view:
-            return __()
+    def prepare_form(self, __):
+        # init storage and step helper
+        self.prefix = normalize_name(self.__class__.__name__)
+        self.storage = get_storage(self.storage_name, self.prefix, self.request,
+            getattr(self, 'file_storage', None))
+        self.steps = StepsHelper(self)
+        self.wizard_goto_step = False
 
         if self.request.method == 'GET':
             self.storage.reset()
             self.storage.current_step = self.steps.first
 
-            self.admin_view.form_obj = self.wizard_view.get_form()
+            self.admin_view.model_form = self.get_step_form()
         else:
             # Look for a wizard_goto_step element in the posted data which
             # contains a valid step name. If one was found, render the requested
             # form. (This makes stepping back a lot easier).
             wizard_goto_step = self.request.POST.get('wizard_goto_step', None)
-            if wizard_goto_step and wizard_goto_step in self.wizard_view.get_form_list():
+            if wizard_goto_step and wizard_goto_step in self.get_form_list():
                 self.storage.current_step = wizard_goto_step
-                self.admin_view.form_obj = self.wizard_view.get_form(
-                    data=self.storage.get_step_data(self.steps.current),
-                    files=self.storage.get_step_files(self.steps.current))
+                self.admin_view.model_form = self.get_step_form()
                 self.wizard_goto_step = True
                 return
 
             # Check if form was refreshed
-            management_form = ManagementForm(self.request.POST, prefix=self.wizard_view.prefix)
+            management_form = ManagementForm(self.request.POST, prefix=self.prefix)
             if not management_form.is_valid():
                 raise ValidationError(
                     'ManagementForm data is missing or has been tampered.')
@@ -89,26 +84,50 @@ class WizardFormPlugin(BaseAdminPlugin):
                 self.storage.current_step = form_current_step
 
             # get the form for the current step
-            self.admin_view.form_obj = self.wizard_view.get_form(data=self.request.POST, files=self.request.FILES)
+            self.admin_view.model_form = self.get_step_form()
+
+    def get_step_form(self, step=None):
+        if step is None:
+            step = self.steps.current
+        fields = self.get_form_list()[step]
+        return modelform_factory(self.model, form=forms.ModelForm, \
+            fields=fields, formfield_callback=self.admin_view.formfield_for_dbfield)
+
+    def get_step_form_obj(self, step=None):
+        if step is None:
+            step = self.steps.current
+        return self.get_step_form(step)(
+            prefix=self._get_form_prefix(step),
+            data=self.storage.get_step_data(step),
+            files=self.storage.get_step_files(step))
+
+    def get_form_datas(self, datas):
+        datas['prefix'] = self._get_form_prefix()
+        if self.request.method == 'POST' and self.wizard_goto_step:
+            datas.update({
+                'data': self.storage.get_step_data(self.steps.current),
+                'files': self.storage.get_step_files(self.steps.current)
+                })
+        return datas
 
     def valid_forms(self, __):
-        if self.wizard_view and self.wizard_goto_step:
+        if self.wizard_goto_step:
+            # goto get_response directly
             return False
         return __()
     
     def _done(self):
-        form = self.admin_view.form_obj
-        self.new_obj = form.save(commit=True)
-        #form.save_m2m()
-        self.storage.reset()
+        cleaned_data = self.get_all_cleaned_data()
+        form = modelform_factory(self.model, form=forms.ModelForm, 
+            formfield_callback=self.admin_view.formfield_for_dbfield)
+        form_obj = form(data=cleaned_data, instance=self.admin_view.org_obj)
+        self.admin_view.new_obj = form_obj.save(commit=True)
 
     def save_forms(self, __):
-        if not self.wizard_view:
-            return __()
-
         # if the form is valid, store the cleaned data and files.
-        self.storage.set_step_data(self.steps.current, self.wizard_view.process_step(self.admin_view.form_obj))
-        self.storage.set_step_files(self.steps.current, self.wizard_view.process_step_files(self.admin_view.form_obj))
+        form_obj = self.admin_view.form_obj
+        self.storage.set_step_data(self.steps.current, form_obj.data)
+        self.storage.set_step_files(self.steps.current, form_obj.files)
 
         # check if the current step is the last step
         if self.steps.current == self.steps.last:
@@ -116,48 +135,103 @@ class WizardFormPlugin(BaseAdminPlugin):
             return self._done()
 
     def save_models(self, __):
-        if not self.wizard_view:
-            return __()
+        pass
 
     def save_related(self, __):
-        if not self.wizard_view:
-            return __()
+        pass
 
     def get_response(self, response):
-        if self.wizard_view:
-            self.storage.update_response(response)
+        self.storage.update_response(response)
         return response
 
     def post_response(self, __):
-        if not self.wizard_view:
-            return __()
-
         if self.steps.current == self.steps.last:
+            self.storage.reset()
             return __()
-
-        # get the form instance based on the data from the storage backend
-        # (if available).
-        next_step = self.steps.next
-        self.admin_view.form_obj = self.wizard_view.get_form(next_step,
-            data=self.storage.get_step_data(next_step),
-            files=self.storage.get_step_files(next_step))
-
-        self.admin_view.setup_forms()
 
         # change the stored current step
-        self.storage.current_step = next_step
+        self.storage.current_step = self.steps.next
+
+        self.admin_view.form_obj = self.get_step_form_obj()
+        self.admin_view.setup_forms()
 
         return self.admin_view.get_response()
 
+    def get_all_cleaned_data(self):
+        """
+        Returns a merged dictionary of all step cleaned_data dictionaries.
+        If a step contains a `FormSet`, the key will be prefixed with formset
+        and contain a list of the formset cleaned_data dictionaries.
+        """
+        cleaned_data = {}
+        for form_key in self.get_form_list():
+            form_obj = self.get_step_form_obj(form_key)
+            if form_obj.is_valid():
+                if isinstance(form_obj.cleaned_data, (tuple, list)):
+                    cleaned_data.update({
+                        'formset-%s' % form_key: form_obj.cleaned_data
+                    })
+                else:
+                    cleaned_data.update(form_obj.cleaned_data)
+        return cleaned_data
+
+    def get_cleaned_data_for_step(self, step):
+        """
+        Returns the cleaned data for a given `step`. Before returning the
+        cleaned data, the stored values are being revalidated through the
+        form. If the data doesn't validate, None will be returned.
+        """
+        if step in self.form_list:
+            form_obj = self.get_step_form_obj(step)
+            if form_obj.is_valid():
+                return form_obj.cleaned_data
+        return None
+
+    def get_next_step(self, step=None):
+        """
+        Returns the next step after the given `step`. If no more steps are
+        available, None will be returned. If the `step` argument is None, the
+        current step will be determined automatically.
+        """
+        if step is None:
+            step = self.steps.current
+        form_list = self.get_form_list()
+        key = form_list.keyOrder.index(step) + 1
+        if len(form_list.keyOrder) > key:
+            return form_list.keyOrder[key]
+        return None
+
+    def get_prev_step(self, step=None):
+        """
+        Returns the previous step before the given `step`. If there are no
+        steps available, None will be returned. If the `step` argument is
+        None, the current step will be determined automatically.
+        """
+        if step is None:
+            step = self.steps.current
+        form_list = self.get_form_list()
+        key = form_list.keyOrder.index(step) - 1
+        if key >= 0:
+            return form_list.keyOrder[key]
+        return None
+
+    def get_step_index(self, step=None):
+        """
+        Returns the index for the given `step` name. If no step is given,
+        the current step will be used to get the index.
+        """
+        if step is None:
+            step = self.steps.current
+        return self.get_form_list().keyOrder.index(step)
+
     def block_after_fieldsets(self, context, nodes):
-        if self.wizard_view:
-            context.update(self.storage.extra_data)
-            context['wizard'] = {
-                'steps': self.steps,
-                'management_form': ManagementForm(prefix=self.wizard_view.prefix, initial={
-                    'current_step': self.steps.current,
-                }),
-            }
-            nodes.append(loader.render_to_string('admin/blocks/wizard.html', context_instance=context))
+        context.update(self.storage.extra_data)
+        context['wizard'] = {
+            'steps': self.steps,
+            'management_form': ManagementForm(prefix=self.prefix, initial={
+                'current_step': self.steps.current,
+            }),
+        }
+        nodes.append(loader.render_to_string('admin/blocks/wizard.html', context_instance=context))
 
 site.register_plugin(WizardFormPlugin, ModelFormAdminView)
