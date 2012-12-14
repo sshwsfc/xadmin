@@ -58,7 +58,7 @@ class DeleteAdminView(ModelAdminView):
         if self.perms_needed:
             raise PermissionDenied
         obj_display = force_unicode(self.obj)
-        # self.log_deletion(self.obj, obj_display)
+        
         self.delete_model(self.obj)
 
         self.message_user(_('The %(name)s "%(obj)s" was deleted successfully.') % {'name': force_unicode(self.opts.verbose_name), 'obj': force_unicode(obj_display)})
