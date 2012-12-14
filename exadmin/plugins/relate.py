@@ -1,12 +1,9 @@
-
-
-from django.utils.translation import ugettext as _
-from django.utils.encoding import StrAndUnicode, force_unicode
 from django.core.urlresolvers import reverse
-
+from django.utils.encoding import force_unicode
+from exadmin.filters import FILTER_PREFIX
 from exadmin.sites import site
 from exadmin.views import BaseAdminPlugin, ListAdminView
-from exadmin.filters import FILTER_PREFIX
+
 
 RELATE_VAR = '_relate'
 
@@ -21,7 +18,6 @@ class RelateMenuPlugin(BaseAdminPlugin):
             
         _related_acts = []
         for r in self.model._meta.get_all_related_objects():
-            print r
             if self.related_list and (r.get_accessor_name() not in self.related_list):
                 continue
             if r.model not in self.admin_site._registry.keys():
