@@ -1,6 +1,4 @@
 from django import forms
-from django.contrib.admin import helpers
-from django.contrib.admin.util import get_deleted_objects, model_ngettext
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.db import router
@@ -12,7 +10,7 @@ from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _, ungettext
 from exadmin.sites import site
-from exadmin.util import model_format_dict
+from exadmin.util import model_format_dict, get_deleted_objects, model_ngettext
 from exadmin.views import BaseAdminPlugin, ListAdminView
 from exadmin.views.base import filter_hook, ModelAdminView
 
@@ -94,7 +92,7 @@ class DeleteSelectedAction(BaseAction):
             "protected": protected,
             "opts": self.opts,
             "app_label": self.app_label,
-            'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME,
+            'action_checkbox_name': ACTION_CHECKBOX_NAME,
         })
 
         # Display the confirmation page
