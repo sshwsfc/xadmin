@@ -7,6 +7,7 @@ from django.template import loader
 from django.views.decorators.cache import never_cache
 from django.core.urlresolvers import reverse
 from django import forms
+from django.forms.forms import DeclarativeFieldsMetaclass
 import copy
 from django.db import models
 from django.db.models.base import ModelBase
@@ -27,17 +28,28 @@ class UserWidgetAdmin(object):
     list_display_links = ('widget_type',)
     user_fields = ['user']
 
+    wizard_form_list = (
+            (_(u"Widget Type"), {'fields': ('page_id', 'widget_type')}),
+            (_(u"Widget Params"), {'callback': "get_widget_params_form"})
+        )
+
     def formfield_for_dbfield(self, db_field, **kwargs):
         if db_field.name == 'widget_type':
             return forms.ChoiceField(choices=[(w.widget_type, w.description) for w in widget_manager._widgets.values()])
         field = super(UserWidgetAdmin, self).formfield_for_dbfield(db_field, **kwargs)
         return field
 
+    def get_widget_params_form(self, wizard):
+        data = wizard.get_cleaned_data_for_step("Widget Type")
+        widget_type = data['widget_type']
+        widget = widget_manager.get(widget_type)
+        return DeclarativeFieldsMetaclass("WidgetParamsForm", (forms.Form,), widget.base_fields)
+
     def queryset(self):
         return UserWidget.objects.filter(user=self.user)
 
-    def save_models(self):
-        super(UserWidgetAdmin, self).save_models()
+    def _done(self):
+        super(UserWidgetAdmin, self)._done()
         if self.org_obj is None:
             widget = self.new_obj
             try:
