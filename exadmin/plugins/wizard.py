@@ -89,15 +89,23 @@ class WizardFormPlugin(BaseAdminPlugin):
     def get_step_form(self, step=None):
         if step is None:
             step = self.steps.current
-        fields = self.get_form_list()[step]
-        return modelform_factory(self.model, form=forms.ModelForm, \
-            fields=fields, formfield_callback=self.admin_view.formfield_for_dbfield)
+        attrs = self.get_form_list()[step]
+        if attrs.get('fields', None):
+            return modelform_factory(self.model, form=forms.ModelForm, \
+                fields=attrs['fields'], formfield_callback=self.admin_view.formfield_for_dbfield)
+        if attrs.get('callback', None):
+            callback = attrs['callback']
+            if callable(callback):
+                return callback(self)
+            elif hasattr(self.admin_view, str(callback)):
+                return getattr(self.admin_view, str(callback))(self)
+        return None
 
     def get_step_form_obj(self, step=None):
         if step is None:
             step = self.steps.current
-        return self.get_step_form(step)(
-            prefix=self._get_form_prefix(step),
+        form = self.get_step_form(step)
+        return form(prefix=self._get_form_prefix(step),
             data=self.storage.get_step_data(step),
             files=self.storage.get_step_files(step))
 
@@ -181,7 +189,7 @@ class WizardFormPlugin(BaseAdminPlugin):
         cleaned data, the stored values are being revalidated through the
         form. If the data doesn't validate, None will be returned.
         """
-        if step in self.form_list:
+        if step in self.get_form_list():
             form_obj = self.get_step_form_obj(step)
             if form_obj.is_valid():
                 return form_obj.cleaned_data
