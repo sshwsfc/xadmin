@@ -34,12 +34,6 @@ class IDCAdmin(object):
 
     search_fields = ['name']
     relfield_style = 'fk-ajax'
-
-    wizard_form_list = [
-        ('Frist Form', ('name', 'description')),
-        ('Seocnd Form', ('contact', 'telphone', 'address')),
-        ('Thread Form', ('customer_id', 'create_time'))
-    ]
     
 class HostAdmin(object):
     def open_web(self, instance):
