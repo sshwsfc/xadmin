@@ -67,6 +67,9 @@ select, .select2-container {
   border-left: 1px solid #EEE;
   background-color: white;
 }
+.value .controls{
+  padding-bottom: 10px;
+}
 
 .form-horizontal .control-group {
   border-bottom: 1px solid #EEE;
@@ -82,6 +85,15 @@ select, .select2-container {
   padding: 15px 0 15px 20px;
   border-left: 1px solid #EEE;
   background-color: white;
+}
+.form-horizontal .value .control-label {
+  padding: 12px 0;
+}
+.form-horizontal .value .controls {
+  padding: 12px 0 12px 20px;
+}
+.form-horizontal .form-row .value .controls {
+  height: 20px;
 }
 .form-horizontal.short_label .control-label,
 .form-horizontal .short_label .control-label {
