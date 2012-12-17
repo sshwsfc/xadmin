@@ -1,0 +1,46 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+{% load url from future %}
+{% load exadmin %}
+{% load crispy_forms_tags %}
+
+{% block extrahead %}{{ block.super }}
+{% url 'admin:jsi18n' as jsi18nurl %}
+<script type="text/javascript" src="{{ jsi18nurl|default:"../../../jsi18n/" }}"></script>
+{% endblock %}
+
+{% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} detail{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+  <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> <span class="divider">/</span></li>
+  <li>
+    {% if has_change_permission %}
+    <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+    {% else %}{{ opts.verbose_name_plural|capfirst }}{% endif %} <span class="divider">/</span>
+  </li>
+  <li class="active">
+    {{ original|truncatewords:"18" }}
+  </li>
+</ul>
+{% endblock %}
+
+{% block content %}
+
+  <legend>
+    {% block object-tools %}
+    <div class="btn-group pull-right">
+      <a href="history/" class="btn btn-small historylink">{% trans "History" %}</a>
+    </div>
+    {% endblock %}
+    {{ original|truncatewords:"18" }}
+  </legend>
+
+  {% view_block 'before_fieldsets' %}
+
+  {% crispy form %}
+
+  {% view_block 'after_fieldsets' %}
+
+</form>
+{% endblock %}

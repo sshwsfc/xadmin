@@ -1,0 +1,6 @@
+<div id="div_{{ field.auto_id }}" class="clearfix value control-group{% if field.css_classes %} {{ field.css_classes }}{% endif %}">
+    <div class="control-label">{{ field.label|safe }}</div>
+    <div class="controls">
+        <span>{% if value %}{{ value }}{% else %}<span class="muted">Null</span>{% endif %}</span>
+    </div>
+</div>
