@@ -30,6 +30,17 @@
     max-width: 100px;
 }
 
+.form-actions.fixed{
+  position:fixed;
+  _position:absolute;
+  bottom:0px;
+  z-index:295;
+  width: 100%;
+  margin-left: -10px;
+  -webkit-box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.5);
+     -moz-box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.5);
+          box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.5);
+}
 
 select, .select2-container {
   max-width: 200px;
