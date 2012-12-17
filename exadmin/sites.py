@@ -201,12 +201,16 @@ class AdminSite(object):
         def merge_class(plugin_class):
             if option_classes:
                 attrs = {}
+                bases = [plugin_class]
                 for oc in option_classes:
                     attrs.update(self._get_merge_attrs(oc, plugin_class))
+                    meta_class = getattr(oc, plugin_class.__name__, getattr(oc, plugin_class.__name__.replace('Plugin', ''), None))
+                    if meta_class:
+                        bases.insert(0, meta_class)
                 if attrs:
                     plugin_class = MergeAdminMetaclass(
                         '%s%s' % (''.join([oc.__name__ for oc in option_classes]), plugin_class.__name__), \
-                        (plugin_class,), attrs)
+                        tuple(bases), attrs)
             return plugin_class
         return merge_class
 
