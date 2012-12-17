@@ -195,7 +195,7 @@ class AdminSite(object):
 
     def _get_merge_attrs(self, admin_class, plugin_class):
         return dict([(name, getattr(admin_class, name)) for name in dir(admin_class) \
-                    if name[0] != '_' and hasattr(plugin_class, name)])
+                    if name[0] != '_' and not callable(getattr(admin_class, name)) and hasattr(plugin_class, name)])
 
     def create_plugin(self, option_classes):
         def merge_class(plugin_class):
