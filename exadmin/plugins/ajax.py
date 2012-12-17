@@ -8,9 +8,10 @@ from django.utils.encoding import StrAndUnicode, force_unicode
 from django.utils.safestring import mark_safe
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from django.utils.datastructures import SortedDict
 
 from exadmin.sites import site
-from exadmin.views import BaseAdminPlugin, ListAdminView, ModelFormAdminView
+from exadmin.views import BaseAdminPlugin, ListAdminView, ModelFormAdminView, DetailAdminView
 
 NON_FIELD_ERRORS = '__all__'
 
@@ -62,7 +63,21 @@ class AjaxFormPlugin(BaseAdminPlugin):
 
         return self.render_response(result)
 
+class AjaxDetailPlugin(BaseAdminPlugin):
+
+    def get_response(self, __):
+        if not (self.request.is_ajax() or self.request.GET.get('_ajax')):
+            return __()
+
+        form = self.admin_view.form_obj
+        layout = form.helper.layout
+
+        result = SortedDict([(form[f].label, self.admin_view.get_field_value(f)) for p, f in layout.get_field_names()])
+
+        return self.render_response(result)
+
 site.register_plugin(AjaxListPlugin, ListAdminView)
 site.register_plugin(AjaxFormPlugin, ModelFormAdminView)
+site.register_plugin(AjaxDetailPlugin, DetailAdminView)
 
 
