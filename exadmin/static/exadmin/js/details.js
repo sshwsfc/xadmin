@@ -17,7 +17,6 @@
         e.preventDefault();
 
         var popover = this.$element.data('popover');
-        console.log(popover);
         if (popover && popover.tip().is(':visible')) {
           this.hide();
         } else {
@@ -25,7 +24,6 @@
         }
       },
       show: function () {
-          console.log('show');
         $('.popover.details-popover').hide();
 
         if (!this.$element.data('popover')) {
@@ -56,7 +54,6 @@
         $(document).on('click.details', $.proxy(this.hide, this));
       },
       hide: function () {
-        console.log('hide');
         this.$element.popover('hide');
         this.$element.removeClass('details-open');
 
