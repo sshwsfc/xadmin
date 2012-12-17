@@ -1,34 +1,21 @@
 import copy
 
 from django import forms
-from django.template import loader
-from django.core.exceptions import PermissionDenied
-from django.core.paginator import InvalidPage, Paginator
-from django.db import models
-from django.http import HttpResponseRedirect
-from django.template.response import SimpleTemplateResponse, TemplateResponse
-from django.utils.datastructures import SortedDict
-from django.utils.decorators import method_decorator
-from django.utils.encoding import force_unicode
-from django.utils.text import capfirst
-from django.utils.translation import ugettext as _, ugettext_lazy
-from django.views.decorators.csrf import csrf_protect
-from django.utils.html import escape, conditional_escape
-from django.utils.safestring import mark_safe
 from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import PermissionDenied
-from django.http import Http404
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
+from django.db import models
 from django.forms.models import modelform_factory
+from django.http import Http404
+from django.template import loader
 from django.template.response import TemplateResponse
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_unicode, smart_unicode
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
-from django.core.exceptions import ObjectDoesNotExist
-from django.utils.encoding import smart_unicode
 from exadmin.layout import FormHelper, Layout, Fieldset, Container, Column, Field
-from exadmin.util import unquote, lookup_field, display_for_field, label_for_field
+from exadmin.util import unquote, lookup_field, display_for_field
 
 from base import ModelAdminView, filter_hook, csrf_protect_m
+
 
 class ShowField(Field):
     template = "admin/layout/field_value.html"
