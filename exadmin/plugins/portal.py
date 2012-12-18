@@ -3,7 +3,7 @@ from django.template import loader
 
 from exadmin.sites import site
 from exadmin.models import UserSettings
-from exadmin.views import BaseAdminPlugin, ModelFormAdminView
+from exadmin.views import BaseAdminPlugin, ModelFormAdminView, DetailAdminView
 from exadmin.layout import Fieldset, Column
 
 class BasePortalPlugin(BaseAdminPlugin):
@@ -57,5 +57,6 @@ class ModelFormPlugin(BasePortalPlugin):
         return "<input type='hidden' id='_portal_key' value='%s' />" % self._portal_key()
 
 site.register_plugin(ModelFormPlugin, ModelFormAdminView)
+site.register_plugin(ModelFormPlugin, DetailAdminView)
 
 
