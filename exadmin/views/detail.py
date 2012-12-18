@@ -10,6 +10,7 @@ from django.template import loader
 from django.template.response import TemplateResponse
 from django.utils.encoding import force_unicode, smart_unicode
 from django.utils.html import escape
+from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from exadmin.layout import FormHelper, Layout, Fieldset, Container, Column, Field
 from exadmin.util import unquote, lookup_field, display_for_field
@@ -50,7 +51,7 @@ class DetailAdminView(ModelAdminView):
 
     @filter_hook
     def get_form_layout(self):
-        layout = copy.deepcopy(self.form_layout)
+        layout = copy.deepcopy(self.detail_layout or self.form_layout)
 
         if layout is None:
             layout = Layout(Container(
@@ -64,15 +65,16 @@ class DetailAdminView(ModelAdminView):
             else:
                 layout = Layout(Container(Fieldset("", *layout, css_class="unsort no_title"), css_class="form-horizontal"))
 
-            rendered_fields = [i[1] for i in layout.get_field_names()]
-            container = layout[0].fields
-            other_fieldset = Fieldset(_(u'Other Fields'), *[f for f in self.form_obj.fields.keys() if f not in rendered_fields])
+            if self.detail_show_all:
+                rendered_fields = [i[1] for i in layout.get_field_names()]
+                container = layout[0].fields
+                other_fieldset = Fieldset(_(u'Other Fields'), *[f for f in self.form_obj.fields.keys() if f not in rendered_fields])
 
-            if len(other_fieldset.fields):
-                if len(container) and isinstance(container[0], Column):
-                    container[0].fields.append(other_fieldset)
-                else:
-                    container.append(other_fieldset)
+                if len(other_fieldset.fields):
+                    if len(container) and isinstance(container[0], Column):
+                        container[0].fields.append(other_fieldset)
+                    else:
+                        container.append(other_fieldset)
 
         return layout
 
@@ -168,6 +170,11 @@ class DetailAdminView(ModelAdminView):
                 if isinstance(f.rel, models.ManyToOneRel):
                     field_val = getattr(self.obj, f.name)
                     return field_val
+                elif isinstance(f, models.ImageField) and value:
+                    try:
+                        return mark_safe('<img src="%s" class="field_img"/>' % getattr(self.obj, field_name).url)
+                    except Exception:
+                        return _('Image file not found.')
                 else:
                     return display_for_field(value, f)
 

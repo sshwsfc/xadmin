@@ -149,3 +149,7 @@ select, .select2-container {
   }
 }
 
+/** detail page **/
+img.field_img {
+  max-height: 100px;
+}
