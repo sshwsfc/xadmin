@@ -69,6 +69,10 @@ class AjaxDetailPlugin(BaseAdminPlugin):
         if not (self.request.is_ajax() or self.request.GET.get('_ajax')):
             return __()
 
+        if self.request.GET.get('_format') == 'html':
+            self.admin_view.detail_template = 'admin/quick_detail.html'
+            return __()
+
         form = self.admin_view.form_obj
         layout = form.helper.layout
 
