@@ -16,8 +16,6 @@
             <form method="get" action="">
               {{ form_params|safe }}
               <input type="hidden" name="export_type" value="{{et.type}}">
-              <div class="control-group">
-              <div class="controls">
                 <label class="checkbox">
                   {% if et.type == "xls" %}
                   <input type="checkbox" name="export_xls_header" checked="checked" value="on"> {% trans "Export with table header." %}
@@ -36,8 +34,6 @@
                   <input type="checkbox" name="all" value="on"> {% trans "Export all datas." %}
                 </label>
                 <button class="btn btn-success" type="submit">{% trans "Export" %}</button>
-              </div>
-              </div>
             </form>
           </div>
         </div>

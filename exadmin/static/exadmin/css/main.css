@@ -10,6 +10,9 @@ a { cursor: pointer;}
 .popover{
     width: auto;
 }
+.popover.dropdown-menu {
+  padding: 0px;
+}
 .popover.right.dropdown-menu {
   margin-top: -35px;
   margin-left: -10px;
@@ -19,6 +22,9 @@ a { cursor: pointer;}
 }
 .popover.right.dropdown-menu .arrow, .popover.left.dropdown-menu .arrow{
   top: 47px;
+}
+.popover.dropdown-menu form{
+  margin: 6px 0;
 }
 #filter-menu .filter-date .menu-choice-date .popover {
     width: 260px;

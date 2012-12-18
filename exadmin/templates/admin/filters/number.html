@@ -10,8 +10,6 @@
       <div class="popover-content">
         <form method="get" action="">
           {{ form_params|safe }}
-          <div class="control-group">
-          <div class="controls">
             <div class="input-prepend input-append">
               <span class="add-on">=</span>
               <a class="btn add-on toggle{%if ne_val%} active{%endif%}" data-toggle="button" data-off-name="{{equal_name}}" data-on-name="{{ne_name}}">!</a>
@@ -35,8 +33,6 @@
           {% if spec.used_params %}
             <a class="btn" href="{{remove_url}}">{% trans "Clean" %}</a>
           {% endif %}
-          </div>
-          </div>
         </form>
       </div>
     </div>

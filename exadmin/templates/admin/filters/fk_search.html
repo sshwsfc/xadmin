@@ -10,8 +10,6 @@
       <div class="popover-content">
         <form class="exform" method="get" action="">
           {{ form_params|safe }}
-          <div class="control-group">
-          <div class="controls">     
             <input name="{{exact_name}}" class="select-search" type="hidden" value="{{exact_val}}" 
             data-search-url="{{search_url}}" data-label="{{label}}"
             data-placeholder="{% trans "Search" %} {{title}}…"/>
@@ -20,8 +18,6 @@
           {% if spec.used_params %}
             <a class="btn" href="{{remove_url}}">{% trans "Clean" %}</a>
           {% endif %}
-          </div>
-          </div>
         </form>
       </div>
     </div>
