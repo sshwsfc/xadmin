@@ -9,7 +9,7 @@ from django.utils.datastructures import SortedDict
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_unicode
 from django.utils.text import capfirst
-from django.utils.translation import ugettext as _, ugettext_lazy
+from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
 from django.utils.html import escape, conditional_escape
 from django.utils.safestring import mark_safe
@@ -33,7 +33,7 @@ ERROR_FLAG = 'e'
 DOT = '.'
 
 # Text to display within change-list table cells if the value is blank.
-EMPTY_CHANGELIST_VALUE = ugettext_lazy('(None)')
+EMPTY_CHANGELIST_VALUE = _('None')
 
 csrf_protect_m = method_decorator(csrf_protect)
 
