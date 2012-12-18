@@ -7,7 +7,7 @@ from django.template.loader import render_to_string
 
 from exadmin.layout import FormHelper, Layout
 from exadmin.sites import site
-from exadmin.views import BaseAdminPlugin, ModelFormAdminView
+from exadmin.views import BaseAdminPlugin, ModelFormAdminView, DetailAdminView
 from exadmin.layout import LayoutObject, flatatt, Container, Column, Field, Fieldset
 
 class DeleteField(Field):
@@ -295,5 +295,6 @@ class InlineFormsetPlugin(BaseAdminPlugin):
         return media
 
 site.register_plugin(InlineFormsetPlugin, ModelFormAdminView)
+#site.register_plugin(InlineFormsetPlugin, DetailAdminView)
 
 
