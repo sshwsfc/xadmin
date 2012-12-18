@@ -56,7 +56,16 @@ class ModelFormPlugin(BasePortalPlugin):
         # put portal key and submit url to page
         return "<input type='hidden' id='_portal_key' value='%s' />" % self._portal_key()
 
+class ModelDetailPlugin(ModelFormPlugin):
+
+    def _portal_key(self):
+        return '%s_%s_detail_portal' % (self.opts.app_label, self.opts.module_name)
+
+    def block_after_fieldsets(self, context, node):
+        # put portal key and submit url to page
+        return "<input type='hidden' id='_portal_key' value='%s' />" % self._portal_key()
+
 site.register_plugin(ModelFormPlugin, ModelFormAdminView)
-site.register_plugin(ModelFormPlugin, DetailAdminView)
+site.register_plugin(ModelDetailPlugin, DetailAdminView)
 
 
