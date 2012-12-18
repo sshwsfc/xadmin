@@ -1,14 +1,43 @@
 from django.db import models
+from django import forms
+from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 from exadmin.sites import site
-from exadmin.views import BaseAdminPlugin, DetailAdminView
+from exadmin.views import BaseAdminPlugin, ModelFormAdminView, DetailAdminView
 
+class AdminImageField(forms.ImageField):
+        
+    def widget_attrs(self, widget):
+        return {'label': self.label}
+
+class AdminImageWidget(forms.FileInput):
+    """
+    A ImageField Widget that shows its current value if it has one.
+    """
+    def __init__(self, attrs={}):
+        super(AdminImageWidget, self).__init__(attrs)
+
+    def render(self, name, value, attrs=None):
+        output = []
+        if value and hasattr(value, "url"):
+            label=self.attrs.get('label', name)
+            output.append('<a href="%s" title="%s" rel="gallery"><img src="%s" class="field_img"/></a><br/>%s ' % \
+                (value.url, label, value.url, _('Change:')))
+        output.append(super(AdminImageWidget, self).render(name, value, attrs))
+        return mark_safe(u''.join(output))
 
 class ModelDetailPlugin(BaseAdminPlugin):
 
     def __init__(self, admin_view):
         super(ModelDetailPlugin, self).__init__(admin_view)
         self.include_image = False
+
+    def get_field_attrs(self, attrs, db_field, **kwargs):
+        if isinstance(db_field, models.ImageField):
+            attrs['widget'] = AdminImageWidget
+            attrs['form_class'] = AdminImageField
+            self.include_image = True
+        return attrs
 
     def get_field_result(self, result, field_name):
         if isinstance(result.field, models.ImageField):
@@ -51,5 +80,6 @@ class ModelDetailPlugin(BaseAdminPlugin):
             return "</div>"
 
 site.register_plugin(ModelDetailPlugin, DetailAdminView)
+site.register_plugin(ModelDetailPlugin, ModelFormAdminView)
 
 
