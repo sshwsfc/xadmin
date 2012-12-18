@@ -144,13 +144,13 @@ select, .select2-container {
     margin-left: 0px;
   }
   .form-horizontal .control-label {
-    padding: 6px 15px;
+    padding: 6px 15px !important;
   }
   .form-horizontal .controls {
-    padding: 10px 0 10px 15px;
+    padding: 10px 0 10px 15px !important;
   }
   .form-horizontal .form-row .controls {
-    height: auto;
+    height: auto !important;
   }
 }
 

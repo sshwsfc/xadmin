@@ -21,13 +21,12 @@
           modal = $('<div id="detail-modal" class="modal container hide fade quick-form" role="dialog"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h3>'+ 
             el.attr('title') +'</h3></div><div class="modal-body"></div>'+
             '<div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>'+
-            '<a class="btn btn-submit edit-btn">Edit</a></div></div>');
+            '<a class="btn btn-submit btn-primary edit-btn"><i class="icon-pencil"></i> Edit</a></div></div>');
           $('body').append(modal);
         }
         modal.find('.edit-btn').attr('href', this.edit_uri);
         modal.find('.modal-body').html('');
-        //$('body').modalmanager('loading');
-        modal.load(this.res_uri + '?_format=html', function(){
+        modal.find('.modal-body').load(this.res_uri + '?_format=html', function(){
           modal.modal();
         });
       }

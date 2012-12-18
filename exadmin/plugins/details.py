@@ -30,7 +30,7 @@ class DetailsPlugin(BaseAdminPlugin):
     # Media
     def get_media(self, media):
         if self.show_all_rel_details or self.show_detail_fields:
-            media.add_js([self.static('exadmin/js/details.js'), self.static('exadmin/js/bootstrap-modalmanager.js')])
+            media.add_js([self.static('exadmin/js/details.js')])
             media.add_css({'screen': [self.static('exadmin/css/bootstrap-modal.css'), self.static('exadmin/css/form.css')]})
         return media
 
