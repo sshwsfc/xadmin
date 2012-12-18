@@ -35,12 +35,12 @@ class RelateMenuPlugin(BaseAdminPlugin):
             list_url = reverse('%s:%s_%s_changelist' % (self.admin_site.app_name, label, model_name))
             add_url = reverse('%s:%s_%s_add' % (self.admin_site.app_name, label, model_name))
             link = ''.join(('<li class="with_menu_btn">',
-            '<a href="%s?%s=%s&%s=%s" title="%s"><i class="icon icon-th-list"></i> %s</a>' % (list_url, FILTER_PREFIX + lookup_name, str(instance.pk), RELATE_VAR, field_name, verbose_name, verbose_name), ' ',
-            '<a class="add_link dropdown-menu-btn" href="%s?%s=%s&%s=%s"><i class="icon icon-plus pull-right"></i></a>' % (add_url, field_name, str(instance.pk), RELATE_VAR, field_name),          
+            '<a href="%s?%s=%s&%s=%s" title="%s"><i class="icon fa-icon-th-list"></i> %s</a>' % (list_url, FILTER_PREFIX + lookup_name, str(instance.pk), RELATE_VAR, field_name, verbose_name, verbose_name), ' ',
+            '<a class="add_link dropdown-menu-btn" href="%s?%s=%s&%s=%s"><i class="icon fa-icon-plus pull-right"></i></a>' % (add_url, field_name, str(instance.pk), RELATE_VAR, field_name),          
              '</li>'))
             links.append(link)
         ul_html = '<ul class="dropdown-menu" role="menu">%s</ul>' % ''.join(links)
-        return '<div class="dropdown related_menu pull-left"><a class="relate_menu dropdown-toggle" data-toggle="dropdown"><i class="icon icon-list"></i></a>%s</div>' % ul_html
+        return '<div class="dropdown related_menu pull-left"><a class="relate_menu dropdown-toggle" data-toggle="dropdown"><i class="icon fa-icon-list"></i></a>%s</div>' % ul_html
     related_link.short_description = '&nbsp;'
     related_link.allow_tags = True
 

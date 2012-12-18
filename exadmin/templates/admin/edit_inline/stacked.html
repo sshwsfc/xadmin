@@ -1,7 +1,7 @@
 {% load i18n exadmin crispy_forms_tags %}
 <div class="box formset{% if formset.css_class or form_style %} {{ fieldset.css_class }} {{ form_style }}{% endif %}" id="{{ formset.css_id }}" {{ formset.flat_attrs|safe }}>
   <div class="box-title">
-    <a class="add-row" id="{{ prefix }}-add-row"><i class="icon icon-plus"></i></a>
+    <a class="add-row" id="{{ prefix }}-add-row"><i class="icon fa-icon-plus"></i></a>
     {{ formset.opts.verbose_name_plural|title }}
   </div> 
   {{ formset.formset.management_form }}
@@ -11,7 +11,7 @@
     <div class="formset-row">
       <div class="formset-heading">
         {% if formset.formset.can_delete %}
-          <a class="delete-row pull-right"><i class="icon icon-remove"></i></a>
+          <a class="delete-row pull-right"><i class="icon fa-icon-remove"></i></a>
         {% endif %}
         <b>{{ formset.opts.verbose_name|title }}:</b>&nbsp;{% if fs.instance.pk %}{{ fs.instance }}{% else %}#<span class="formset-num">{{ forloop.counter }}</span>{% endif %}
       </div>
@@ -25,7 +25,7 @@
   <div class="formset-row">
     <div class="formset-heading">
       {% if formset.formset.can_delete %}
-        <a class="delete-row pull-right"><i class="icon icon-remove"></i></a>
+        <a class="delete-row pull-right"><i class="icon fa-icon-remove"></i></a>
       {% endif %}
       <b>{{ formset.opts.verbose_name|title }}:</b>&nbsp;#<span class="formset-num"></span>
     </div>

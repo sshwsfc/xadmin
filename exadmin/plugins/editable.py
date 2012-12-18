@@ -39,7 +39,7 @@ class EditablePlugin(BaseAdminPlugin):
                 'url': self.get_details_url(obj)
             }
             item.wraps.insert(0, '<span class="editable-field">%s</span>')
-            item.btns.append('<a class="editable-handler" %s rel="tooltip" title="%s"><i class="icon-edit"></i></a>' \
+            item.btns.append('<a class="editable-handler" %s rel="tooltip" title="%s"><i class="fa-icon-edit"></i></a>' \
                 % (' '.join(['data-%s="%s"' % (k,v) for k,v in data_attr.items()]), _(u'Edit %s' % item.field.verbose_name)))
             if not self.editable_need_fields.has_key(field_name):
                 self.editable_need_fields[field_name] = item.field

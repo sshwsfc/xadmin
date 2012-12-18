@@ -5,13 +5,13 @@
     <input name="{{ search_name }}" class="span2" type="text">
     <div class="btn-group">
       <button class="btn dropdown-toggle btn-inverse" data-toggle="dropdown">
-        <i class="icon-search"></i>
+        <i class="fa-icon-search"></i>
         {% trans "Search" %}
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu">
       {% for m in search_models %}
-          <li><a data-action="{{m.url}}"><i class="icon-search"></i> {{m.title}}</a></li>
+          <li><a data-action="{{m.url}}"><i class="fa-icon-search"></i> {{m.title}}</a></li>
       {% endfor %}
       </ul>
     </div>
@@ -21,10 +21,10 @@
 {% if add_models %}
 <li class="dropdown g-add">
   <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-  <i class="icon-plus icon-white"></i> {% trans "Add" %} <b class="caret"></b></a>
+  <i class="fa-icon-plus fa-icon-white"></i> {% trans "Add" %} <b class="caret"></b></a>
   <ul id="g-add-menu" class="dropdown-menu" role="menu">
     {% for m in add_models %}
-        <li><a href="{{m.url}}"><i class="icon-plus"></i> {{m.title}}</a></li>
+        <li><a href="{{m.url}}"><i class="fa-icon-plus"></i> {{m.title}}</a></li>
     {% endfor %}
   </ul>
 </li>

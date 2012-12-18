@@ -1,6 +1,6 @@
 {% load i18n %}
 <li class="dropdown-submenu">
-  <a><i class="icon-{% if spec.is_used %}ok{%else%}blank{% endif %}"></i> {{ title }}</a>
+  <a><i class="fa-icon-{% if spec.is_used %}ok{%else%}blank{% endif %}"></i> {{ title }}</a>
   <div class="popover right dropdown-menu">
     <div class="arrow"></div>
     <div class="popover-inner">
@@ -17,7 +17,7 @@
             {% if search_val %}
               <a class="btn" href="{{remove_url}}">x</a>
             {% endif %}
-              <button class="btn btn-success" type="submit"><i class="icon-search icon-white"></i></button>
+              <button class="btn btn-success" type="submit"><i class="fa-icon-search fa-icon-white"></i></button>
             </div>
           </div>
           </div>

@@ -1,7 +1,7 @@
 {% load i18n exadmin crispy_forms_tags %}
 <div class="box formset{% if formset.css_class or form_style %} {{ fieldset.css_class }} {{ form_style }}{% endif %}" id="{{ formset.css_id }}" {{ formset.flat_attrs|safe }}>
   <div class="box-title">
-    <a class="add-row" id="{{ prefix }}-add-row"><i class="icon icon-plus"></i></a>
+    <a class="add-row" id="{{ prefix }}-add-row"><i class="icon fa-icon-plus"></i></a>
     {{ formset.opts.verbose_name_plural|title }}
   </div> 
   {{ formset.formset.management_form }}
@@ -12,7 +12,7 @@
      {% for field in fields %}
        {% if not field.widget.is_hidden %}
          <th{% if forloop.first %} colspan="2"{% endif %}{% if field.required %} class="required"{% endif %}>{{ field.label|capfirst }}
-         {% if field.help_text %}&nbsp;<a title="{{ field.help_text|striptags }}" /><i class="icon icon-question-sign"></i></a>{% endif %}
+         {% if field.help_text %}&nbsp;<a title="{{ field.help_text|striptags }}" /><i class="icon fa-icon-question-sign"></i></a>{% endif %}
          </th>
        {% endif %}
      {% endfor %}
@@ -23,7 +23,7 @@
         <tr class="formset-row">
           {% crispy fs formset.formset.helper %}
           {% if formset.formset.can_delete %}
-            <td><a class="delete-row"><i class="icon icon-remove"></i></a></td>
+            <td><a class="delete-row"><i class="icon fa-icon-remove"></i></a></td>
           {% endif %}
         </tr>
         {% endfor %}
@@ -34,7 +34,7 @@
     <tr class="formset-row">
       {% crispy formset.formset.empty_form formset.formset.helper %}
       {% if formset.formset.can_delete %}
-        <td><a class="delete-row"><i class="icon icon-remove"></i></a></td>
+        <td><a class="delete-row"><i class="icon fa-icon-remove"></i></a></td>
       {% endif %}
     </tr>
   </script>

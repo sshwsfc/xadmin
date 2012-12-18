@@ -1,7 +1,7 @@
 {% load i18n exadmin crispy_forms_tags %}
 <div class="box formset{% if formset.css_class or form_style %} {{ fieldset.css_class }} {{ form_style }}{% endif %}" id="{{ formset.css_id }}" {{ formset.flat_attrs|safe }}>
   <div class="box-title">
-    <a class="add-row" id="{{ prefix }}-add-row" href="javascript:void(0)"><i class="icon icon-plus"></i></a>
+    <a class="add-row" id="{{ prefix }}-add-row" href="javascript:void(0)"><i class="icon fa-icon-plus"></i></a>
     {{ formset.opts.verbose_name_plural|title }}
   </div> 
   <div class="box-content accordion formset-content" id="{{ formset.css_id }}-accordion" 
@@ -12,7 +12,7 @@
     <div class="accordion-group formset-row">
       <div class="accordion-heading">
         {% if formset.formset.can_delete %}
-          <a class="delete-row pull-right"><i class="icon icon-remove"></i></a>
+          <a class="delete-row pull-right"><i class="icon fa-icon-remove"></i></a>
         {% endif %}
         <a class="accordion-toggle" data-toggle="collapse" data-parent="#{{ formset.css_id }}-accordion" href="#{{ prefix }}-{{ forloop.counter0 }}-body"><b>{{ formset.opts.verbose_name|title }}:</b>&nbsp;{% if fs.instance.pk %}{{ fs.instance }}{% else %}#<span class="formset-num">{{ forloop.counter }}</span>{% endif %}
         </a>
@@ -29,7 +29,7 @@
   <div class="accordion-group formset-row">
     <div class="accordion-heading">
       {% if formset.formset.can_delete %}
-          <a class="delete-row pull-right"><i class="icon icon-remove"></i></a>
+          <a class="delete-row pull-right"><i class="icon fa-icon-remove"></i></a>
       {% endif %}
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#{{ formset.css_id }}-accordion" href="#{{ prefix }}-__prefix__-body">
         <b>{{ formset.opts.verbose_name|title }}:</b>&nbsp;{% if fs.instance.pk %}{{ fs.instance }}{% else %}#<span class="formset-num">{{ forloop.counter }}</span>{% endif %}

@@ -15,7 +15,7 @@ $(document).ready(function(){
 
         if($chart.data('chart-obj')) return;
 
-        $chart.html('<span class="muted"><i class="icon icon-refresh"></i> Loading chart...</span>');
+        $chart.html('<span class="muted"><i class="icon fa-icon-refresh"></i> Loading chart...</span>');
 
         $.getJSON($chart.data('chart-url'), function(data){
             var chart = $.plot($chart, data.data, data.option);

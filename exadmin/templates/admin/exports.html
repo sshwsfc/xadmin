@@ -1,11 +1,11 @@
 {% load i18n %}
 <div class="btn-group export">
   <a class="dropdown-toggle btn btn-small" data-toggle="dropdown" href="#">
-    <i class="icon-share"></i> {% trans "Export" %} <b class="caret"></b>
+    <i class="fa-icon-share"></i> {% trans "Export" %} <b class="caret"></b>
   </a>
   <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
     {% for et in export_types %}
-      <li class="dropdown-submenu pull-left"><a><i class="icon-circle-arrow-down"></i> {% trans "Export" %} {{et.name}}</a>
+      <li class="dropdown-submenu pull-left"><a><i class="fa-icon-circle-arrow-down"></i> {% trans "Export" %} {{et.name}}</a>
       <div class="popover left dropdown-menu">
         <div class="arrow"></div>
         <div class="popover-inner">

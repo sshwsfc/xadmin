@@ -468,7 +468,7 @@
         enablefocus:false, //wether to return focus on link after popover is closed. It's more functional, but focused links may look not pretty
         formTemplate:'<form class="form-inline" autocomplete="off">' + 
                        '<div class="control-group">' + 
-                       '&nbsp;<button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i></button>&nbsp;<button type="button" class="btn editable-cancel"><i class="icon-ban-circle"></i></button>' + 
+                       '&nbsp;<button type="submit" class="btn btn-primary"><i class="fa-icon-ok fa-icon-white"></i></button>&nbsp;<button type="button" class="btn editable-cancel"><i class="fa-icon-ban-circle"></i></button>' + 
                        '<span class="help-block" style="clear: both"></span>' + 
                        '</div>' + 
                        '</form>',
