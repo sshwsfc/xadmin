@@ -318,7 +318,7 @@ def admin_urlname(value, arg):
     return 'admin:%s_%s_%s' % (value.app_label, value.module_name, arg)
 
 def boolean_icon(field_val):
-    icon_url = static('admin/img/icon-%s.gif' %
+    icon_url = static('exadmin/img/icon-%s.png' %
                       {True: 'yes', False: 'no', None: 'unknown'}[field_val])
     return mark_safe(u'<img src="%s" alt="%s" />' % (icon_url, field_val))
 
