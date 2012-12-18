@@ -12,8 +12,9 @@ from django.utils.encoding import force_unicode, smart_unicode
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
+from django.utils.html import conditional_escape
 from exadmin.layout import FormHelper, Layout, Fieldset, Container, Column, Field
-from exadmin.util import unquote, lookup_field, display_for_field
+from exadmin.util import unquote, lookup_field, display_for_field, boolean_icon, label_for_field
 
 from base import ModelAdminView, filter_hook, csrf_protect_m
 
@@ -22,14 +23,36 @@ class ShowField(Field):
     template = "admin/layout/field_value.html"
 
     def __init__(self, *args, **kwargs):
-        self.admin_view = kwargs.pop('admin_view')
         super(ShowField, self).__init__(*args, **kwargs)
+        self.admin_view = kwargs.pop('admin_view')
+        self.results = [(field, self.admin_view.get_field_result(field)) for field in self.fields]
 
     def render(self, form, form_style, context):
         html = ''
-        for field in self.fields:
-            html += loader.render_to_string(self.template, {'field': form[field], 'value': self.admin_view.get_field_value(field)})
+        for field, result in self.results:
+            html += loader.render_to_string(self.template, {'field': form[field], 'result': result})
         return html
+
+class ResultField(object):
+
+    def __init__(self, field_name):
+        self.text = '&nbsp;'
+        self.wraps = []
+        self.allow_tags = False
+        self.field_name = field_name
+        self.field = None
+        self.attr = None
+        self.label = None
+        self.value = None
+
+    @property
+    def val(self):
+        text = mark_safe(self.text) if self.allow_tags else conditional_escape(self.text)
+        if force_unicode(text) == '':
+            text = mark_safe('<span class="muted">%s</span>' % _('Null'))
+        for wrap in self.wraps:
+            text = mark_safe(wrap % text)
+        return text
     
 class DetailAdminView(ModelAdminView):
 
@@ -158,25 +181,35 @@ class DetailAdminView(ModelAdminView):
         return media
 
     @filter_hook
-    def get_field_value(self, field_name):
+    def get_field_result(self, field_name):
+        item = ResultField(field_name)
+        item.label = label_for_field(field_name, self.model,
+            model_admin = self,
+            return_attr = False
+        )
         try:
             f, attr, value = lookup_field(field_name, self.obj, self)
         except (AttributeError, ObjectDoesNotExist):
-            return None
+            item.text
         else:
             if f is None:
-                return smart_unicode(value)
+                item.allow_tags = getattr(attr, 'allow_tags', False)
+                boolean = getattr(attr, 'boolean', False)
+                if boolean:
+                    item.allow_tags = True
+                    item.text = boolean_icon(value)
+                else:
+                    item.text = smart_unicode(value)
             else:
                 if isinstance(f.rel, models.ManyToOneRel):
-                    field_val = getattr(self.obj, f.name)
-                    return field_val
-                elif isinstance(f, models.ImageField) and value:
-                    try:
-                        return mark_safe('<img src="%s" class="field_img"/>' % getattr(self.obj, field_name).url)
-                    except Exception:
-                        return _('Image file not found.')
+                    item.text = getattr(self.obj, f.name)
                 else:
-                    return display_for_field(value, f)
+                    item.text = display_for_field(value, f)
+            item.field = f
+            item.attr = attr
+            item.value = value
+
+        return item
 
     @filter_hook
     def get_response(self, *args, **kwargs):
