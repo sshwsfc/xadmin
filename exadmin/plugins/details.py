@@ -31,6 +31,7 @@ class DetailsPlugin(BaseAdminPlugin):
     def get_media(self, media):
         if self.show_all_rel_details or self.show_detail_fields:
             media.add_js([self.static('exadmin/js/details.js')])
+            media.add_css({'screen': [self.static('exadmin/css/form.css')]})
         return media
 
 site.register_plugin(DetailsPlugin, ListAdminView)
