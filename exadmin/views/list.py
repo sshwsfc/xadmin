@@ -108,7 +108,7 @@ class ListAdminView(ModelAdminView):
     list_max_show_all = 200
     list_exclude = ()
     search_fields = ()
-    paginator = Paginator
+    paginator_class = Paginator
     ordering = None
 
     # Change list templates
@@ -421,7 +421,7 @@ class ListAdminView(ModelAdminView):
 
     @filter_hook
     def get_paginator(self):
-        return self.paginator(self.list_queryset, self.list_per_page, 0, True)
+        return self.paginator_class(self.list_queryset, self.list_per_page, 0, True)
 
     @filter_hook
     def get_page_number(self, i):
