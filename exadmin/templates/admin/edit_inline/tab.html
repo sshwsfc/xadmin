@@ -1,7 +1,7 @@
 {% load i18n exadmin crispy_forms_tags %}
 <div class="box formset{% if formset.css_class or form_style %} {{ fieldset.css_class }} {{ form_style }}{% endif %}" id="{{ formset.css_id }}" {{ formset.flat_attrs|safe }}>
   <div class="box-title">
-    <a class="add-row" id="{{ prefix }}-add-row"><i class="icon fa-icon-plus"></i></a>
+    <a class="add-row" id="{{ prefix }}-add-row"><i class="icon icon-plus"></i></a>
     {{ formset.opts.verbose_name_plural|title }}
   </div> 
   <div class="box-content tabs" id="{{ formset.css_id }}-tabs">
@@ -19,7 +19,7 @@
     {% for fs in formset.formset %}
       <div class="formset-row tab-pane{% if forloop.first%} active{% endif %}" id="{{ prefix }}-{{ forloop.counter0 }}-body">
         {% if formset.formset.can_delete %}
-          <a class="delete-row pull-right"><i class="icon fa-icon-remove"></i></a>
+          <a class="delete-row pull-right"><i class="icon icon-remove"></i></a>
         {% endif %}
         {% crispy fs formset.formset.helper %}
       </div>
@@ -28,7 +28,7 @@
     <script type="text/x-exadmin" id="{{ prefix }}-empty">
     <div class="formset-row tab-pane" data-replace-id="{{ prefix }}-__prefix__-body">
         {% if formset.formset.can_delete %}
-          <a class="delete-row pull-right"><i class="icon fa-icon-remove"></i></a>
+          <a class="delete-row pull-right"><i class="icon icon-remove"></i></a>
         {% endif %}
       {% crispy formset.formset.empty_form formset.formset.helper %}
     </div>

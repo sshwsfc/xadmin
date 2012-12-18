@@ -31,7 +31,7 @@
         <div class="btn-group pull-right">
           {% view_block 'object-tools' %}
           {% if has_add_permission %}
-              <a href="{{add_url}}" class="btn btn-primary"><i class="fa-icon-plus fa-icon-white"></i> {% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}</a>
+              <a href="{{add_url}}" class="btn btn-primary"><i class="icon-plus icon-white"></i> {% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}</a>
           {% endif %}
         </div>
       </div>
@@ -41,25 +41,25 @@
       {% view_block 'top_toolbar' %}
       <div class="btn-group">
         <a class="dropdown-toggle btn btn-small" data-toggle="dropdown" href="#">
-          <i class="fa-icon-list-alt"></i> {% trans "Select Columes" %} <b class="caret"></b>
+          <i class="icon-list-alt"></i> {% trans "Select Columes" %} <b class="caret"></b>
         </a>
         <ul class="dropdown-menu model_fields" role="menu" aria-labelledby="dLabel">
-          <li><a href="{{clean_select_field_url}}"><i class="fa-icon-refresh"></i> {% trans "Restore Selected" %}</a></li>
+          <li><a href="{{clean_select_field_url}}"><i class="icon-refresh"></i> {% trans "Restore Selected" %}</a></li>
           <li class="divider"></li>
           {% for f, selected, flink in model_fields %}
           <li><a href="{{flink}}">
-            {% if selected %}<i class="fa-icon-check"></i>{% else %}<i class="fa-icon-blank"></i>{% endif %}
+            {% if selected %}<i class="icon-check"></i>{% else %}<i class="icon-blank"></i>{% endif %}
             {{f.verbose_name}}</a></li>
           {% endfor %}
         </ul>
       </div>
       <div class="btn-group layout-btns" data-toggle="buttons-radio">
-        <button type="button" class="btn btn-small layout-normal active"><i class="fa-icon-th-large"></i></button>
-        <button type="button" class="btn btn-small layout-condensed"><i class="fa-icon-th"></i></button>
+        <button type="button" class="btn btn-small layout-normal active"><i class="icon-th-large"></i></button>
+        <button type="button" class="btn btn-small layout-condensed"><i class="icon-th"></i></button>
         {% view_block 'top_layout_btns' %}
       </div>
       <div class="btn-group layout-btns" data-toggle="buttons-checkbox">
-        <button type="button" class="btn btn-small layout-full"><i class="fa-icon-fullscreen"></i></button>
+        <button type="button" class="btn btn-small layout-full"><i class="icon-fullscreen"></i></button>
         {% view_block 'top_check_btns' %}
       </div>
       {% view_block 'top_btns' %}

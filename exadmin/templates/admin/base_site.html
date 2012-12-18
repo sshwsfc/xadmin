@@ -10,9 +10,9 @@
     <div class="navbar-inner">
       <div class="container-fluid">
         <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-          <span class="fa-icon-bar"></span>
-          <span class="fa-icon-bar"></span>
-          <span class="fa-icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
         </a>
         <a class="brand" href="#">{% block branding %}{% trans 'Django Exadmin' %}{% endblock %}</a>
         {% view_block 'top_navbar' %}
@@ -40,14 +40,14 @@
             <ul class="nav nav-list">
               {% for item in nav_menu %}
                 <li class="nav-header{% if item.selected %} active{% endif %}">
-                  {% if item.icon %}<i class="icon fa-icon-{{item.icon}}"></i> {% endif %}
+                  {% if item.icon %}<i class="icon icon-{{item.icon}}"></i> {% endif %}
                   {% if item.url %}
                   <a href="{{ item.url }}" class="section">{{ item.title }}</a>
                   {% else %}{{ item.title }}{% endif %}
                 </li>
                 {% for sitem in item.menus %}
                 <li{% if sitem.selected %} class="active"{% endif %}>
-                  {% if sitem.icon %}<i class="icon fa-icon-{{sitem.icon}}"></i> {% endif %}
+                  {% if sitem.icon %}<i class="icon icon-{{sitem.icon}}"></i> {% endif %}
                   {% if sitem.url %}
                   <a href="{{ sitem.url }}">{{ sitem.title }}</a>
                   {% else %}{{ sitem.title }}{% endif %}

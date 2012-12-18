@@ -68,7 +68,7 @@
           }
           html += '</dl>';
           if(this.edit_uri){
-            html += '<a href="'+ this.edit_uri +'" class="btn"><i class="fa-icon-pencil"></i> Edit</a>';
+            html += '<a href="'+ this.edit_uri +'" class="btn"><i class="icon-pencil"></i> Edit</a>';
           }
           html += '</div>';
           this.$element.attr('data-content', html);
