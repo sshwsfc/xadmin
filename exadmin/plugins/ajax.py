@@ -72,9 +72,13 @@ class AjaxDetailPlugin(BaseAdminPlugin):
         form = self.admin_view.form_obj
         layout = form.helper.layout
 
-        result = SortedDict([(form[f].label, str(self.admin_view.get_field_value(f))) for p, f in layout.get_field_names()])
+        results = []
 
-        return self.render_response(result)
+        for p, f in layout.get_field_names():
+            result = self.admin_view.get_field_result(f)
+            results.append((result.label, result.val))
+
+        return self.render_response(SortedDict(results))
 
 site.register_plugin(AjaxListPlugin, ListAdminView)
 site.register_plugin(AjaxFormPlugin, ModelFormAdminView)
