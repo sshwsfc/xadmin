@@ -28,7 +28,7 @@ class UserSettingView(BaseAdminView):
 class LoginView(BaseAdminView):
 
     @never_cache
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         context = self.get_context()
         context.update({
             'title': _('Log in'),
@@ -44,7 +44,7 @@ class LoginView(BaseAdminView):
         return login(request, **defaults)
 
     @never_cache
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         return self.get(request)
 
 class LogoutView(BaseAdminView):
@@ -52,7 +52,7 @@ class LogoutView(BaseAdminView):
     logout_template = None
 
     @never_cache
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         context = self.get_context()
         defaults = {
             'extra_context': context,
@@ -64,7 +64,7 @@ class LogoutView(BaseAdminView):
         return logout(request, **defaults)
 
     @never_cache
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         return self.get(request)
 
 
