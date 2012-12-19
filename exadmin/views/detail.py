@@ -22,28 +22,59 @@ from base import ModelAdminView, filter_hook, csrf_protect_m
 class ShowField(Field):
     template = "admin/layout/field_value.html"
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, callback, *args, **kwargs):
         super(ShowField, self).__init__(*args, **kwargs)
-        self.admin_view = kwargs.pop('admin_view')
-        self.results = [(field, self.admin_view.get_field_result(field)) for field in self.fields]
+        self.results = [(field, callback(field)) for field in self.fields]
 
     def render(self, form, form_style, context):
         html = ''
         for field, result in self.results:
-            html += loader.render_to_string(self.template, {'field': form[field], 'result': result})
+            if form.fields[field].widget != forms.HiddenInput:
+                html += loader.render_to_string(self.template, {'field': form[field], 'result': result})
         return html
 
 class ResultField(object):
 
-    def __init__(self, field_name):
+    def __init__(self, obj, field_name, admin_view=None):
         self.text = '&nbsp;'
         self.wraps = []
         self.allow_tags = False
+        self.obj = obj
+        self.admin_view = admin_view
         self.field_name = field_name
         self.field = None
         self.attr = None
         self.label = None
         self.value = None
+
+        self.init()
+
+    def init(self):
+        self.label = label_for_field(self.field_name, self.obj.__class__,
+            model_admin = self.admin_view,
+            return_attr = False
+        )
+        try:
+            f, attr, value = lookup_field(self.field_name, self.obj, self.admin_view)
+        except (AttributeError, ObjectDoesNotExist):
+            self.text
+        else:
+            if f is None:
+                self.allow_tags = getattr(attr, 'allow_tags', False)
+                boolean = getattr(attr, 'boolean', False)
+                if boolean:
+                    self.allow_tags = True
+                    self.text = boolean_icon(value)
+                else:
+                    self.text = smart_unicode(value)
+            else:
+                if isinstance(f.rel, models.ManyToOneRel):
+                    self.text = getattr(self.obj, f.name)
+                else:
+                    self.text = display_for_field(value, f)
+            self.field = f
+            self.attr = attr
+            self.value = value
 
     @property
     def val(self):
@@ -53,7 +84,16 @@ class ResultField(object):
         for wrap in self.wraps:
             text = mark_safe(wrap % text)
         return text
-    
+
+def replace_field_to_value(layout, cb):
+    for i, lo in enumerate(layout.fields):
+        if isinstance(lo, Field) or issubclass(lo.__class__, Field):
+            layout.fields[i] = ShowField(cb, *lo.fields, **lo.attrs)
+        elif isinstance(lo, basestring):
+            layout.fields[i] = ShowField(cb, lo)
+        elif hasattr(lo, 'get_field_names'):
+            replace_field_to_value(lo, cb)
+
 class DetailAdminView(ModelAdminView):
 
     form = forms.ModelForm
@@ -71,6 +111,7 @@ class DetailAdminView(ModelAdminView):
         if self.obj is None:
             raise Http404(_('%(name)s object with primary key %(key)r does not exist.') % \
                 {'name': force_unicode(self.opts.verbose_name), 'key': escape(object_id)})
+        self.org_obj = self.obj
 
     @filter_hook
     def get_form_layout(self):
@@ -129,7 +170,9 @@ class DetailAdminView(ModelAdminView):
     def get_form_helper(self):
         helper = FormHelper()
         helper.form_tag = False
-        helper.add_layout(self.get_form_layout())
+        layout = self.get_form_layout()
+        replace_field_to_value(layout, self.get_field_result)
+        helper.add_layout(layout)
         helper.filter(basestring, max_level=20).wrap(ShowField, admin_view=self)
         return helper
 
@@ -182,34 +225,7 @@ class DetailAdminView(ModelAdminView):
 
     @filter_hook
     def get_field_result(self, field_name):
-        item = ResultField(field_name)
-        item.label = label_for_field(field_name, self.model,
-            model_admin = self,
-            return_attr = False
-        )
-        try:
-            f, attr, value = lookup_field(field_name, self.obj, self)
-        except (AttributeError, ObjectDoesNotExist):
-            item.text
-        else:
-            if f is None:
-                item.allow_tags = getattr(attr, 'allow_tags', False)
-                boolean = getattr(attr, 'boolean', False)
-                if boolean:
-                    item.allow_tags = True
-                    item.text = boolean_icon(value)
-                else:
-                    item.text = smart_unicode(value)
-            else:
-                if isinstance(f.rel, models.ManyToOneRel):
-                    item.text = getattr(self.obj, f.name)
-                else:
-                    item.text = display_for_field(value, f)
-            item.field = f
-            item.attr = attr
-            item.value = value
-
-        return item
+        return ResultField(self.obj, field_name, self)
 
     @filter_hook
     def get_response(self, *args, **kwargs):

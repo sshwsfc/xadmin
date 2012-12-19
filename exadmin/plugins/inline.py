@@ -1,5 +1,7 @@
 import copy
 
+from django import forms
+from django.template import loader
 from django.forms.formsets import all_valid, DELETION_FIELD_NAME, ORDERING_FIELD_NAME
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
 from django.template import Context
@@ -9,6 +11,22 @@ from exadmin.layout import FormHelper, Layout
 from exadmin.sites import site
 from exadmin.views import BaseAdminPlugin, ModelFormAdminView, DetailAdminView
 from exadmin.layout import LayoutObject, flatatt, Container, Column, Field, Fieldset
+from exadmin.views.detail import ResultField
+
+class ShowField(Field):
+    template = "admin/layout/field_value.html"
+
+    def __init__(self, admin_view, *args, **kwargs):
+        super(ShowField, self).__init__(*args, **kwargs)
+        self.admin_view = admin_view
+
+    def render(self, form, form_style, context):
+        html = ''
+        for field in self.fields:
+            if not isinstance(form.fields[field].widget, forms.HiddenInput):
+                result = ResultField(form.instance, field, self.admin_view)
+                html += loader.render_to_string(self.template, {'field': form[field], 'result': result})
+        return html
 
 class DeleteField(Field):
 
@@ -63,6 +81,15 @@ class TableInlineStyle(InlineStyle):
         return {'fields': [f for k,f in self.formset[0].fields.items() if k != DELETION_FIELD_NAME]}
 style_manager.register_style("table", TableInlineStyle)
 
+def replace_field_to_value(layout, av):
+    for i, lo in enumerate(layout.fields):
+        if isinstance(lo, Field) or issubclass(lo.__class__, Field):
+            layout.fields[i] = ShowField(av, *lo.fields, **lo.attrs)
+        elif isinstance(lo, basestring):
+            layout.fields[i] = ShowField(av, lo)
+        elif hasattr(lo, 'get_field_names'):
+            replace_field_to_value(lo, av)
+
 class InlineModelAdmin(ModelFormAdminView):
 
     fk_name = None
@@ -110,8 +137,8 @@ class InlineModelAdmin(ModelFormAdminView):
         defaults.update(kwargs)
         return inlineformset_factory(self.parent_model, self.model, **defaults)
 
-    def instance_form(self):
-        formset = self.get_formset()
+    def instance_form(self, **kwargs):
+        formset = self.get_formset(**kwargs)
         attrs = {
             'instance': self.model_instance,
             'queryset': self.queryset()
@@ -294,7 +321,19 @@ class InlineFormsetPlugin(BaseAdminPlugin):
             media.add_css({'screen': [self.static('exadmin/css/formset.css')]})
         return media
 
+class DetailInlineFormsetPlugin(InlineFormsetPlugin):
+
+    def _get_formset_instance(self, inline):
+        formset = inline.instance_form(extra=0, max_num=0, can_delete=0)
+        formset.detail_page = True
+        replace_field_to_value(formset.helper.layout, inline)
+        return formset
+
+    def get_model_form(self, form, **kwargs):
+        self.formsets = [self._get_formset_instance(inline) for inline in self.inline_instances]
+        return form
+
 site.register_plugin(InlineFormsetPlugin, ModelFormAdminView)
-#site.register_plugin(InlineFormsetPlugin, DetailAdminView)
+site.register_plugin(DetailInlineFormsetPlugin, DetailAdminView)
 
 
