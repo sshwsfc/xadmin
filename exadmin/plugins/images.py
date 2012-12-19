@@ -41,9 +41,8 @@ class ModelDetailPlugin(BaseAdminPlugin):
 
     def get_field_result(self, result, field_name):
         if isinstance(result.field, models.ImageField):
-            obj = self.admin_view.obj
             if result.value:
-                img = getattr(obj, field_name)
+                img = getattr(result.obj, field_name)
                 result.text = mark_safe('<a href="%s" target="_blank" title="%s" rel="gallery"><img src="%s" class="field_img"/></a>' % (img.url, result.label, img.url))
                 self.include_image = True
         return result
