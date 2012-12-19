@@ -1,6 +1,7 @@
 ;(function($) {
     $.fn.formset = function(opts){
         var $$ = $(this);
+        console.log($$.length);
 
         var options = $.extend({
             prefix: $$.data('prefix')
@@ -132,6 +133,8 @@
     }
 
     $(function(){
-        $('.formset-content').formset();
+        $('.formset-content').each(function(){
+            $(this).formset();
+        });
     });
 })(jQuery)

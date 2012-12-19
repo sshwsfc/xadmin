@@ -29,6 +29,9 @@
 .formset .box-content.tabs{
     padding: 5px 0px 0px;
 }
+.formset .tabs .tab-content{
+    overflow: hidden;
+}
 .formset .tabs .delete-row{
     float: right;
     margin: 8px 8px;
