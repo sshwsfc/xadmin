@@ -20,6 +20,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import classonlymethod
 from django.utils.translation import ugettext as _
+from django.utils.datastructures import SortedDict
 from exadmin.util import static
 
 csrf_protect_m = method_decorator(csrf_protect)
@@ -255,7 +256,7 @@ class CommAdminView(BaseAdminView):
 
     @filter_hook
     def get_nav_menu(self):
-        nav_menu = {}
+        nav_menu = SortedDict()
         user = self.user
         site_name = self.admin_site.name
         for model, model_admin in self.admin_site._registry.items():
@@ -292,6 +293,8 @@ class CommAdminView(BaseAdminView):
                             #'url': reverse('admin:app_list', kwargs={'app_label': app_label}, current_app=site_name),
                             'menus': [model_dict],
                         }
+        for menu in nav_menu.values():
+            menu['menus'].sort(key=lambda x: x['title'])
         return nav_menu
 
     @filter_hook
