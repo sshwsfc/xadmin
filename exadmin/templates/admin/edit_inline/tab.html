@@ -1,12 +1,16 @@
 {% load i18n exadmin crispy_forms_tags %}
 <div class="box formset{% if formset.css_class or form_style %} {{ fieldset.css_class }} {{ form_style }}{% endif %}" id="{{ formset.css_id }}" {{ formset.flat_attrs|safe }}>
   <div class="box-title">
-    <a class="add-row" id="{{ prefix }}-add-row"><i class="icon icon-plus"></i></a>
+    {% if not formset.formset.detail_page %}
+    <a class="add-row" id="{{ prefix }}-add-row" href="javascript:void(0)"><i class="icon icon-plus"></i></a>
+    {% endif %}
     {{ formset.opts.verbose_name_plural|title }}
   </div> 
   <div class="box-content tabs" id="{{ formset.css_id }}-tabs">
+    {% if not formset.formset.detail_page %}
     {{ formset.formset.management_form }}
     {{ formset.formset.non_form_errors }}
+    {% endif %}
     <ul class="nav nav-tabs">
       {% for fs in formset.formset %}
       <li{% if forloop.first%} class="active"{% endif %}>
@@ -25,6 +29,7 @@
       </div>
     {% endfor %}
     </div>
+    {% if not formset.formset.detail_page %}
     <script type="text/x-exadmin" id="{{ prefix }}-empty">
     <div class="formset-row tab-pane" data-replace-id="{{ prefix }}-__prefix__-body">
         {% if formset.formset.can_delete %}
@@ -33,5 +38,6 @@
       {% crispy formset.formset.empty_form formset.formset.helper %}
     </div>
     </script>
+    {% endif %}
   </div>
 </div>

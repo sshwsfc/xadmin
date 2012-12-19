@@ -1,13 +1,17 @@
 {% load i18n exadmin crispy_forms_tags %}
 <div class="box formset{% if formset.css_class or form_style %} {{ fieldset.css_class }} {{ form_style }}{% endif %}" id="{{ formset.css_id }}" {{ formset.flat_attrs|safe }}>
   <div class="box-title">
+    {% if not formset.formset.detail_page %}
     <a class="add-row" id="{{ prefix }}-add-row" href="javascript:void(0)"><i class="icon icon-plus"></i></a>
+    {% endif %}
     {{ formset.opts.verbose_name_plural|title }}
   </div> 
   <div class="box-content accordion formset-content" id="{{ formset.css_id }}-accordion" 
     data-prefix="{{ prefix }}" data-style="accordion">
+    {% if not formset.formset.detail_page %}
     {{ formset.formset.management_form }}
     {{ formset.formset.non_form_errors }}
+    {% endif %}
     {% for fs in formset.formset %}
     <div class="accordion-group formset-row">
       <div class="accordion-heading">
@@ -25,6 +29,7 @@
     </div>
     {% endfor %}
   </div>
+  {% if not formset.formset.detail_page %}
   <script type="text/x-exadmin" id="{{ prefix }}-empty">
   <div class="accordion-group formset-row">
     <div class="accordion-heading">
@@ -42,4 +47,5 @@
     </div>
   </div>
   </script>
+  {% endif %}
 </div>
