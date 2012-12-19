@@ -46,9 +46,11 @@ class ModelFormPlugin(BasePortalPlugin):
             layout_pos = UserSettings.objects.get(user=self.user, key=self._portal_key()).value
             layout_cs = layout_pos.split('|')
             for i, c in enumerate(cs):
-                c.fields = [fs_map[i] for i in layout_cs[i].split(',')] if len(layout_cs) > i else []
-        except Exception, e:
-            print e
+                c.fields = [fs_map.pop(j) for j in layout_cs[i].split(',') if fs_map.has_key(j)] if len(layout_cs) > i else []
+            if fs_map and cs:
+                cs[0].fields.extend(fs_map.values())
+        except Exception:
+            pass
 
         return helper
 
