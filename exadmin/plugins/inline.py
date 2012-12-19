@@ -154,22 +154,25 @@ class InlineModelAdmin(ModelFormAdminView):
         helper = FormHelper()
         helper.form_tag = False
 
-        layout = copy.deepcopy(self.form_layout)
-
-        if layout is None:
-            layout = Layout(*instance[0].fields.keys())
-        elif type(layout) in (list, tuple) and len(layout) > 0:
-            layout = Layout(*layout)
-
-            rendered_fields = [i[1] for i in layout.get_field_names()]
-            layout.extend([f for f in instance[0].fields.keys() if f not in rendered_fields])
-   
-        helper.add_layout(layout)
-
         style = style_manager.get_style('one' if self.max_num == 1 else self.style)(self, instance)
-        style.update_layout(helper)
-        # replace delete field with Dynamic field, for hidden delete field when instance is NEW.
-        helper[DELETION_FIELD_NAME].wrap(DeleteField)
+
+        if len(instance):
+            layout = copy.deepcopy(self.form_layout)
+
+            if layout is None:
+                layout = Layout(*instance[0].fields.keys())
+            elif type(layout) in (list, tuple) and len(layout) > 0:
+                layout = Layout(*layout)
+
+                rendered_fields = [i[1] for i in layout.get_field_names()]
+                layout.extend([f for f in instance[0].fields.keys() if f not in rendered_fields])
+       
+            helper.add_layout(layout)
+
+            style.update_layout(helper)
+
+            # replace delete field with Dynamic field, for hidden delete field when instance is NEW.
+            helper[DELETION_FIELD_NAME].wrap(DeleteField)
 
         instance.helper = helper
         instance.style = style
@@ -218,7 +221,10 @@ class InlineFormset(Fieldset):
         self.fields = []
         self.css_class = kwargs.pop('css_class', '')
         self.css_id = "%s-group" % formset.prefix
-        self.template = formset.style.template
+        if len(formset):
+            self.template = formset.style.template
+        else:
+            self.template = 'admin/edit_inline/blank.html'
         self.formset = formset
         self.model = formset.model
         self.opts = formset.model._meta
@@ -326,7 +332,8 @@ class DetailInlineFormsetPlugin(InlineFormsetPlugin):
     def _get_formset_instance(self, inline):
         formset = inline.instance_form(extra=0, max_num=0, can_delete=0)
         formset.detail_page = True
-        replace_field_to_value(formset.helper.layout, inline)
+        if formset.helper.layout:
+            replace_field_to_value(formset.helper.layout, inline)
         return formset
 
     def get_model_form(self, form, **kwargs):
