@@ -27,9 +27,10 @@ from django.utils.translation import ugettext as _
 from django.utils.encoding import force_unicode
 from django.utils.formats import localize
 
+from exadmin.util import unquote, quote
 from exadmin.sites import site
 from exadmin.views import BaseAdminPlugin, ModelAdminView, ModelFormAdminView, DeleteAdminView, ListAdminView
-from exadmin.views.base import csrf_protect_m
+from exadmin.views.base import csrf_protect_m, filter_hook
 
 from reversion.models import Revision, Version, has_int_pk, VERSION_ADD, VERSION_CHANGE, VERSION_DELETE
 from reversion.revisions import default_revision_manager, RegistrationError
@@ -145,18 +146,14 @@ class ReversionPlugin(BaseAdminPlugin):
         recoverlist_url = self.admin_view.model_admin_urlname('recoverlist')
         nodes.append(mark_safe('<a class="btn btn-small" href="%s"><i class="icon-trash"></i> %s</a>' % (recoverlist_url, _(u"Recover deleted"))))
 
+    def block_object_tools(self, context, nodes):
+        obj = getattr(self.admin_view, 'org_obj', getattr(self.admin_view, 'obj', None))
+        if obj:
+            revisionlist_url = self.admin_view.model_admin_urlname('revisionlist', quote(obj.pk))
+            nodes.append(mark_safe('<a href="%s" class="btn btn-small"><i class="icon-time"></i> %s</a>' % (revisionlist_url, _(u'History'))))
+
 class BaseReversionView(ModelAdminView):
 
-    object_history_template = "reversion/object_history.html"
-    
-    change_list_template = "reversion/change_list.html"
-    
-    revision_form_template = None
-
-    recover_list_template = None
-
-    recover_form_template = None
-    
     # The revision manager instance used to manage revisions.
     revision_manager = default_revision_manager
     
@@ -183,6 +180,8 @@ class BaseReversionView(ModelAdminView):
 
 class RecoverListView(BaseReversionView):
 
+    recover_list_template = None
+    
     def get_context(self):
         context = super(RecoverListView, self).get_context()
         opts = self.opts
@@ -205,29 +204,128 @@ class RecoverListView(BaseReversionView):
             context, current_app=self.admin_site.name)
         
 class RevisionListView(BaseReversionView):
-    pass
 
-class RevisionView(BaseReversionView):
+    object_history_template = None
 
-    @csrf_protect_m
-    def get(self, request, *args, **kwargs):
-        self.instance_forms()
-        self.setup_forms()
-        
-        return self.get_response()
+    def get_context(self):
+        context = super(RevisionListView, self).get_context()
 
-    @csrf_protect_m
-    @transaction.commit_on_success
-    def post(self, request, *args, **kwargs):
-        pass
+        opts = self.opts
+        action_list = [
+            {
+                "revision": version.revision,
+                "url": self.model_admin_urlname('revision', quote(version.object_id), version.id),
+            }
+            for version
+            in self._order_version_queryset(self.revision_manager.get_for_object_reference(
+                self.model,
+                self.obj.pk,
+            ).select_related("revision__user"))
+        ]
+        context.update({
+            'title': _('Change history: %s') % force_unicode(self.obj),
+            'action_list': action_list,
+            'module_name': capfirst(force_unicode(opts.verbose_name_plural)),
+            'object': self.obj,
+            'app_label': opts.app_label,
+            "changelist_url": self.model_admin_urlname("changelist"),
+            "update_url": self.model_admin_urlname("change", self.obj.pk),
+            'opts': opts,
+        })
+        return context
 
+    def get(self, request, object_id, *args, **kwargs):
+        object_id = unquote(object_id)
+        self.obj = self.get_object(object_id)
+
+        if not self.has_change_permission(self.obj):
+            raise PermissionDenied
+
+        context = self.get_context()
+
+        return TemplateResponse(request, self.object_history_template or self.get_template_list('object_history.html'),
+            context, current_app=self.admin_site.name)
+
+class BaseRevisionView(ModelFormAdminView):
+
+    @filter_hook
+    def get_revision(self):
+        return self.version.field_dict
+
+    @filter_hook
+    def get_form_datas(self):
+        datas = {"instance": self.obj, "initial": self.get_revision()}
+        if self.request_method == 'post':
+            datas.update({'data': self.request.POST, 'files': self.request.FILES})
+        return datas
+
+class RevisionView(BaseRevisionView):
+
+    revision_form_template = None
+
+    def init_request(self, object_id, version_id):
+        self.org_obj = None
+        if not self.has_change_permission():
+            raise PermissionDenied
+
+        object_id = unquote(object_id) # Underscores in primary key get quoted to "_5F"
+        self.obj = self.get_object(object_id)
+        self.version = get_object_or_404(Version, pk=version_id, object_id=unicode(self.obj.pk))
+
+        self.prepare_form()
+
+    @filter_hook
+    def get_context(self):
+        context = super(RevisionView, self).get_context()
+        context["title"] = _("Revert %s") % force_unicode(self.model._meta.verbose_name)
+        return context
+
+    @filter_hook
+    def get_response(self):
+        context = self.get_context()
+        context.update(self.kwargs or {})
+
+        form_template = self.revision_form_template
+        return TemplateResponse(self.request, form_template or self.get_template_list('change_form.html'), \
+            context, current_app=self.admin_site.name)
+
+class RecoverView(BaseRevisionView):
+
+    recover_form_template = None
+
+    def init_request(self, version_id):
+        self.org_obj = None
+
+        if not self.has_change_permission() and not self.has_add_permission():
+            raise PermissionDenied
+
+        self.version = get_object_or_404(Version, pk=version_id)
+        self.obj = self.version.object_version.object
+
+        self.prepare_form()
+
+    @filter_hook
+    def get_context(self):
+        context = super(RevisionView, self).get_context()
+        context["title"] = _("Recover %s") % self.version.object_repr
+        return context
+
+    @filter_hook
+    def get_response(self):
+        context = self.get_context()
+        context.update(self.kwargs or {})
+
+        form_template = self.recover_form_template
+        return TemplateResponse(self.request, form_template or self.get_template_list('recover_form.html'), \
+            context, current_app=self.admin_site.name)
 
 site.register(Revision)
 site.register(Version)
 
 site.register_modelview(r'^recover/$', RecoverListView, name='%s_%s_recoverlist')
-site.register_modelview(r'^([^/]+)/history/$', RevisionListView, name='%s_%s_history')
-site.register_modelview(r'^([^/]+)/history/([^/]+)/$', RevisionView, name='%s_%s_revision')
+site.register_modelview(r'^recover/([^/]+)/$', RecoverView, name='%s_%s_recover')
+site.register_modelview(r'^([^/]+)/revision/$', RevisionListView, name='%s_%s_revisionlist')
+site.register_modelview(r'^([^/]+)/revision/([^/]+)/$', RevisionView, name='%s_%s_revision')
 
 site.register_plugin(ReversionPlugin, ListAdminView)
 site.register_plugin(ReversionPlugin, ModelFormAdminView)
