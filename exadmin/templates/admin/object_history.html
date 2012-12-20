@@ -1,43 +1,52 @@
 {% extends "admin/base_site.html" %}
 {% load i18n %}
 {% load url from future %}
-{% load admin_urls %}
+{% load exadmin %}
 
 {% block breadcrumbs %}
-<div class="breadcrumbs">
-<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
-&rsaquo; <a href="{% url 'admin:app_list' app_label=app_label %}">{{ app_label|capfirst|escape }}</a>
-&rsaquo; <a href="{% url opts|admin_urlname:'changelist' %}">{{ module_name }}</a>
-&rsaquo; <a href="{% url opts|admin_urlname:'changelist' %}{{ object.pk }}">{{ object|truncatewords:"18" }}</a>
-&rsaquo; {% trans 'History' %}
-</div>
+<ul class="breadcrumb">
+  <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> <span class="divider">/</span></li>
+  <li><a href="{{ changelist_url}}">{{opts.verbose_name_plural|capfirst}}</a> <span class="divider">/</span></li>
+  <li><a href="../update">{{ object|truncatewords:"18" }}</a> <span class="divider">/</span></li>
+  <li class="active">{% trans 'History' %}</li>
+</ul>
 {% endblock %}
 
 {% block content %}
+  <div class="navbar">
+    <div class="navbar-inner">
+      <a class="brand icon-time" href="#">{{title}}</a>
+    </div>
+  </div>
 <div id="content-main">
 <div class="module">
 
 {% if action_list %}
-    <table id="change-history">
+    <table id="change-history" class="table table-bordered table-hover">
         <thead>
-        <tr>
-            <th scope="col">{% trans 'Date/time' %}</th>
-            <th scope="col">{% trans 'User' %}</th>
-            <th scope="col">{% trans 'Action' %}</th>
-        </tr>
+            <tr>
+                <th scope="col">{% trans 'Date/time' %}</th>
+                <th scope="col">{% trans 'User' %}</th>
+                <th scope="col">{% trans 'Comment' %}</th>
+            </tr>
         </thead>
         <tbody>
-        {% for action in action_list %}
-        <tr>
-            <th scope="row">{{ action.action_time|date:"DATETIME_FORMAT" }}</th>
-            <td>{{ action.user.username }}{% if action.user.get_full_name %} ({{ action.user.get_full_name }}){% endif %}</td>
-            <td>{{ action.change_message }}</td>
-        </tr>
-        {% endfor %}
+            {% for action in action_list %}
+                <tr>
+                    <th scope="row"><a href="{{action.url}}">{{action.revision.date_created}}</a></th>
+                    <td>
+                        {% if action.revision.user %}
+                            {{action.revision.user.username}}
+                            {% if action.revision.user.first_name %} ({{action.revision.user.first_name}} {{action.revision.user.last_name}}){% endif %}
+                        {% endif %}
+                    </td>
+                    <td>{{action.revision.comment|linebreaksbr|default:""}}</td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 {% else %}
-    <p>{% trans "This object doesn't have a change history. It probably wasn't added via this admin site." %}</p>
+    <p class="well">{% trans "This object doesn't have a change history. It probably wasn't added via this admin site." %}</p>
 {% endif %}
 </div>
 </div>
