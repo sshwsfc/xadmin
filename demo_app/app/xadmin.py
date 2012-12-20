@@ -34,6 +34,7 @@ class IDCAdmin(object):
 
     search_fields = ['name']
     relfield_style = 'fk-ajax'
+    reversion_enable = True
     
 class HostAdmin(object):
     def open_web(self, instance):
