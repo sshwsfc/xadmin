@@ -37,8 +37,7 @@
     {% block object-tools %}
     {% if change %}
     <div class="btn-group pull-right">
-      <a href="history/" class="btn btn-small historylink">{% trans "History" %}</a>
-      {% if has_absolute_url %}<a href="../../../r/{{ content_type_id }}/{{ object_id }}/" class="btn btn-small viewsitelink">{% trans "View on site" %}</a>{% endif%}
+      {% view_block 'object_tools' %}
     </div>
     {% endif %}
     {% endblock %}
