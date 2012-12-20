@@ -204,11 +204,30 @@ class RecoverListView(BaseReversionView):
         return TemplateResponse(request, self.recover_list_template or self.get_template_list("recover_list.html"),
             context, current_app=self.admin_site.name)
         
+class RevisionListView(BaseReversionView):
+    pass
+
+class RevisionView(BaseReversionView):
+
+    @csrf_protect_m
+    def get(self, request, *args, **kwargs):
+        self.instance_forms()
+        self.setup_forms()
+        
+        return self.get_response()
+
+    @csrf_protect_m
+    @transaction.commit_on_success
+    def post(self, request, *args, **kwargs):
+        pass
+
 
 site.register(Revision)
 site.register(Version)
 
 site.register_modelview(r'^recover/$', RecoverListView, name='%s_%s_recoverlist')
+site.register_modelview(r'^([^/]+)/history/$', RevisionListView, name='%s_%s_history')
+site.register_modelview(r'^([^/]+)/history/([^/]+)/$', RevisionView, name='%s_%s_revision')
 
 site.register_plugin(ReversionPlugin, ListAdminView)
 site.register_plugin(ReversionPlugin, ModelFormAdminView)
