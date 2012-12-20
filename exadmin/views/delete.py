@@ -18,12 +18,6 @@ csrf_protect_m = method_decorator(csrf_protect)
 class DeleteAdminView(ModelAdminView):
     delete_confirmation_template = None
 
-    def delete_model(self, obj):
-        """
-        Given a model instance delete it from the database.
-        """
-        obj.delete()
-
     def init_request(self, object_id, *args, **kwargs):
         "The 'delete' admin view for this model."
         self.obj = self.get_object(unquote(object_id))
@@ -59,7 +53,7 @@ class DeleteAdminView(ModelAdminView):
             raise PermissionDenied
         obj_display = force_unicode(self.obj)
         
-        self.delete_model(self.obj)
+        self.delete_model()
 
         self.message_user(_('The %(name)s "%(obj)s" was deleted successfully.') % {'name': force_unicode(self.opts.verbose_name), 'obj': force_unicode(obj_display)})
 
@@ -69,6 +63,13 @@ class DeleteAdminView(ModelAdminView):
         return HttpResponseRedirect(reverse('admin:%s_%s_changelist' %
                                     (self.opts.app_label, self.opts.module_name),
                                     current_app=self.admin_site.name))
+
+    @filter_hook
+    def delete_model(self):
+        """
+        Given a model instance delete it from the database.
+        """
+        self.obj.delete()
 
     @filter_hook
     def get_context(self):        
