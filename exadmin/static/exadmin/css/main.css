@@ -364,4 +364,10 @@ ul.model_ul li span {
     border-bottom: 1px solid #CDCDCD;
 }
 
-
+/** Font Icons **/
+a[class^="icon-"]:before, a[class*=" icon-"]:before {
+  margin-right: 0.3em;
+}
+.btn[class^="icon-"]:before, .btn[class*=" icon-"]:before {
+  margin-right: 0.3em;
+}
