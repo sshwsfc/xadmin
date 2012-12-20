@@ -111,12 +111,19 @@ class ActionPlugin(BaseAdminPlugin):
 
     def init_request(self, *args, **kwargs):
         self.actions = self.get_actions()
+        return bool(self.actions)
 
     def get_list_display(self, list_display):
         if self.actions:
             list_display.insert(0, 'action_checkbox')
             self.admin_view.action_checkbox = action_checkbox
         return list_display
+
+    def get_list_display_links(self, list_display_links):
+        if self.actions:
+            if len(list_display_links) == 1 and list_display_links[0] == 'action_checkbox':
+                return list(self.admin_view.list_display[1:2])
+        return list_display_links
 
     def get_context(self, context):
         if self.actions and self.admin_view.result_count:
