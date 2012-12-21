@@ -390,7 +390,7 @@ class UpdateAdminView(ModelFormAdminView):
     @filter_hook
     def get_context(self):
         new_context = {
-            'title': _('Change %s') % force_unicode(self.opts.verbose_name),
+            'title': _('Change %s') % force_unicode(self.org_obj),
             'object_id': str(self.org_obj.pk),
         }
         context = super(UpdateAdminView, self).get_context()
