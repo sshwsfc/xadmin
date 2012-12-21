@@ -31,6 +31,7 @@ from exadmin.util import unquote, quote
 from exadmin.sites import site
 from exadmin.views import BaseAdminPlugin, ModelAdminView, ModelFormAdminView, DeleteAdminView, ListAdminView
 from exadmin.views.base import csrf_protect_m, filter_hook
+from exadmin.plugins.inline import InlineModelAdmin
 
 from reversion.models import Revision, Version, has_int_pk, VERSION_ADD, VERSION_CHANGE, VERSION_DELETE
 from reversion.revisions import default_revision_manager, RegistrationError
@@ -124,21 +125,30 @@ class ReversionPlugin(BaseAdminPlugin):
             db = self.revision_context_manager.get_db(),
         )
 
-    def save_models(self, __):
-        self.revision_context_manager.create_revision(manage_manually=True)(__)()
+    def do_post(self, __):
+        def _method():
+            self.revision_context_manager.set_user(self.user)
+            return __()
+        return _method
 
-        if self.admin_view.org_obj is None:
-            self.save_revision(self.admin_view.new_obj, VERSION_ADD, _(u"Initial version."))
-        else:
-            self.save_revision(self.admin_view.new_obj, VERSION_CHANGE, _(u"Change version."))
+    def post(self, __, request, *args, **kwargs):
+        return self.revision_context_manager.create_revision(manage_manually=False)(self.do_post(__))()
 
-    def save_related(self, __):
-        self.revision_context_manager.create_revision(manage_manually=True)(__)()
+    # def save_models(self, __):
+    #     self.revision_context_manager.create_revision(manage_manually=True)(__)()
 
-    def delete_model(self, __):
-        self.save_revision(self.admin_view.obj, VERSION_DELETE, \
-            _(u"Deleted %(verbose_name)s.") % {"verbose_name": self.opts.verbose_name})
-        self.revision_context_manager.create_revision(manage_manually=True)(__)()
+    #     if self.admin_view.org_obj is None:
+    #         self.save_revision(self.admin_view.new_obj, VERSION_ADD, _(u"Initial version."))
+    #     else:
+    #         self.save_revision(self.admin_view.new_obj, VERSION_CHANGE, _(u"Change version."))
+
+    # def save_related(self, __):
+    #     self.revision_context_manager.create_revision(manage_manually=True)(__)()
+
+    # def delete_model(self, __):
+    #     self.save_revision(self.admin_view.obj, VERSION_DELETE, \
+    #         _(u"Deleted %(verbose_name)s.") % {"verbose_name": self.opts.verbose_name})
+    #     self.revision_context_manager.create_revision(manage_manually=True)(__)()
 
 
     # Block Views
@@ -336,6 +346,16 @@ class RecoverView(BaseRevisionView):
             {"model": force_unicode(self.opts.verbose_name), "name": unicode(self.new_obj)})
         return HttpResponseRedirect(self.model_admin_urlname('change', self.new_obj.pk))
 
+# inline hack plugin
+class InlineRevisionPlugin(BaseAdminPlugin):
+
+    def instance_form(self, formset, **kwargs):
+        admin_view = self.admin_view.admin_view
+        if hasattr(admin_view, 'version'):
+            pass
+        return formset
+
+
 site.register(Revision)
 site.register(Version)
 
@@ -347,5 +367,7 @@ site.register_modelview(r'^([^/]+)/revision/([^/]+)/$', RevisionView, name='%s_%
 site.register_plugin(ReversionPlugin, ListAdminView)
 site.register_plugin(ReversionPlugin, ModelFormAdminView)
 site.register_plugin(ReversionPlugin, DeleteAdminView)
+
+site.register_plugin(InlineRevisionPlugin, InlineModelAdmin)
 
 

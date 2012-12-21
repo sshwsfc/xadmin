@@ -107,6 +107,7 @@ class InlineModelAdmin(ModelFormAdminView):
 
         return self
 
+    @filter_hook
     def get_formset(self, **kwargs):
         """Returns a BaseInlineFormSet class for use in admin add/change views."""
         if self.exclude is None:
@@ -135,6 +136,7 @@ class InlineModelAdmin(ModelFormAdminView):
         defaults.update(kwargs)
         return inlineformset_factory(self.parent_model, self.model, **defaults)
 
+    @filter_hook
     def instance_form(self, **kwargs):
         formset = self.get_formset(**kwargs)
         attrs = {
@@ -281,6 +283,7 @@ class InlineFormsetPlugin(BaseAdminPlugin):
 
     def instance_forms(self, ret):
         self.formsets = [inline.instance_form() for inline in self.inline_instances]
+        self.admin_view.formsets = self.formsets
 
     def valid_forms(self, result):
         return all_valid(self.formsets) and result
