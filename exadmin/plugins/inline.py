@@ -1,17 +1,15 @@
 import copy
 
 from django import forms
-from django.template import loader
-from django.forms.formsets import all_valid, DELETION_FIELD_NAME, ORDERING_FIELD_NAME
+from django.forms.formsets import all_valid, DELETION_FIELD_NAME
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
-from django.template import Context
+from django.template import loader, Context
 from django.template.loader import render_to_string
-
-from exadmin.layout import FormHelper, Layout
+from exadmin.layout import FormHelper, Layout, flatatt, Container, Column, Field, Fieldset
 from exadmin.sites import site
-from exadmin.views import BaseAdminPlugin, ModelFormAdminView, DetailAdminView
-from exadmin.layout import LayoutObject, flatatt, Container, Column, Field, Fieldset
+from exadmin.views import BaseAdminPlugin, ModelFormAdminView, DetailAdminView, filter_hook
 from exadmin.views.detail import ResultField
+
 
 class ShowField(Field):
     template = "admin/layout/field_value.html"
