@@ -1,3 +1,6 @@
+
+from functools import partial
+
 from django.http import HttpResponse
 from django.utils import simplejson
 from django.utils.html import escape
@@ -349,10 +352,58 @@ class RecoverView(BaseRevisionView):
 # inline hack plugin
 class InlineRevisionPlugin(BaseAdminPlugin):
 
+    def get_related_versions(self, obj, version, formset):
+        """Retreives all the related Version objects for the given FormSet."""
+        object_id = obj.pk
+        # Get the fk name.
+        try:
+            fk_name = formset.fk.name
+        except AttributeError:
+            # This is a GenericInlineFormset, or similar.
+            fk_name = formset.ct_fk_field.name
+        # Look up the revision data.
+        revision_versions = version.revision.version_set.all()
+        related_versions = dict([(related_version.object_id, related_version)
+                                 for related_version in revision_versions
+                                 if ContentType.objects.get_for_id(related_version.content_type_id).model_class() == formset.model
+                                 and unicode(related_version.field_dict[fk_name]) == unicode(object_id)])
+        return related_versions
+    
+    def _hack_inline_formset_initial(self, revision_view, formset):
+        """Hacks the given formset to contain the correct initial data."""
+        # Now we hack it to push in the data from the revision!
+        initial = []
+        related_versions = self.get_related_versions(revision_view.org_obj, revision_view.version, formset)
+        formset.related_versions = related_versions
+        for related_obj in formset.queryset:
+            if unicode(related_obj.pk) in related_versions:
+                initial.append(related_versions.pop(unicode(related_obj.pk)).field_dict)
+            else:
+                initial_data = model_to_dict(related_obj)
+                initial_data["DELETE"] = True
+                initial.append(initial_data)
+        for related_version in related_versions.values():
+            initial_row = related_version.field_dict
+            pk_name = ContentType.objects.get_for_id(related_version.content_type_id).model_class()._meta.pk.name
+            del initial_row[pk_name]
+            initial.append(initial_row)
+        # Reconstruct the forms with the new revision data.
+        formset.initial = initial
+        formset.forms = [formset._construct_form(n) for n in xrange(len(initial))]
+        # Hack the formset to force a save of everything.
+        def get_changed_data(form):
+            return [field.name for field in form.fields]
+        for form in formset.forms:
+            form.has_changed = lambda: True
+            form._get_changed_data = partial(get_changed_data, form=form)
+        def total_form_count_hack(count):
+            return lambda: count
+        formset.total_form_count = total_form_count_hack(len(initial))
+
     def instance_form(self, formset, **kwargs):
         admin_view = self.admin_view.admin_view
-        if hasattr(admin_view, 'version'):
-            pass
+        if hasattr(admin_view, 'version') and hasattr(admin_view, 'org_obj'):
+            self._hack_inline_formset_initial(admin_view, formset)
         return formset
 
 
