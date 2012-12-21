@@ -254,23 +254,30 @@ class BaseRevisionView(ModelFormAdminView):
 
     @filter_hook
     def get_form_datas(self):
-        datas = {"instance": self.obj, "initial": self.get_revision()}
+        datas = {"instance": self.org_obj, "initial": self.get_revision()}
         if self.request_method == 'post':
             datas.update({'data': self.request.POST, 'files': self.request.FILES})
         return datas
+
+    @filter_hook
+    def get_context(self):
+        context = super(BaseRevisionView, self).get_context()
+        context.update({
+            'object': self.org_obj
+            })
+        return context
 
 class RevisionView(BaseRevisionView):
 
     revision_form_template = None
 
     def init_request(self, object_id, version_id):
-        self.org_obj = None
         if not self.has_change_permission():
             raise PermissionDenied
 
         object_id = unquote(object_id) # Underscores in primary key get quoted to "_5F"
-        self.obj = self.get_object(object_id)
-        self.version = get_object_or_404(Version, pk=version_id, object_id=unicode(self.obj.pk))
+        self.org_obj = self.get_object(object_id)
+        self.version = get_object_or_404(Version, pk=version_id, object_id=unicode(self.org_obj.pk))
 
         self.prepare_form()
 
@@ -286,27 +293,31 @@ class RevisionView(BaseRevisionView):
         context.update(self.kwargs or {})
 
         form_template = self.revision_form_template
-        return TemplateResponse(self.request, form_template or self.get_template_list('change_form.html'), \
+        return TemplateResponse(self.request, form_template or self.get_template_list('revision_form.html'), \
             context, current_app=self.admin_site.name)
+
+    @filter_hook
+    def post_response(self):
+        self.message_user(_(u'The %(model)s "%(name)s" was reverted successfully. You may edit it again below.') % \
+            {"model": force_unicode(self.opts.verbose_name), "name": unicode(self.new_obj)})
+        return HttpResponseRedirect(self.model_admin_urlname('change', self.new_obj.pk))
 
 class RecoverView(BaseRevisionView):
 
     recover_form_template = None
 
     def init_request(self, version_id):
-        self.org_obj = None
-
         if not self.has_change_permission() and not self.has_add_permission():
             raise PermissionDenied
 
         self.version = get_object_or_404(Version, pk=version_id)
-        self.obj = self.version.object_version.object
+        self.org_obj = self.version.object_version.object
 
         self.prepare_form()
 
     @filter_hook
     def get_context(self):
-        context = super(RevisionView, self).get_context()
+        context = super(RecoverView, self).get_context()
         context["title"] = _("Recover %s") % self.version.object_repr
         return context
 
@@ -318,6 +329,12 @@ class RecoverView(BaseRevisionView):
         form_template = self.recover_form_template
         return TemplateResponse(self.request, form_template or self.get_template_list('recover_form.html'), \
             context, current_app=self.admin_site.name)
+
+    @filter_hook
+    def post_response(self):
+        self.message_user(_(u'The %(model)s "%(name)s" was recovered successfully. You may edit it again below.') % \
+            {"model": force_unicode(self.opts.verbose_name), "name": unicode(self.new_obj)})
+        return HttpResponseRedirect(self.model_admin_urlname('change', self.new_obj.pk))
 
 site.register(Revision)
 site.register(Version)
