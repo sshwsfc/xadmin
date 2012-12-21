@@ -1,6 +1,6 @@
 from exadmin.sites import site
 
-from base import BaseAdminPlugin, BaseAdminView, CommAdminView, ModelAdminView
+from base import BaseAdminPlugin, BaseAdminView, CommAdminView, ModelAdminView, filter_hook
 
 from list import ListAdminView
 from edit import CreateAdminView, UpdateAdminView, ModelFormAdminView
