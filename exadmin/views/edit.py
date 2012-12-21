@@ -207,6 +207,7 @@ class ModelFormAdminView(ModelAdminView):
         self.form_obj.save_m2m()
 
     @csrf_protect_m
+    @filter_hook
     def get(self, request, *args, **kwargs):
         self.instance_forms()
         self.setup_forms()
@@ -215,6 +216,7 @@ class ModelFormAdminView(ModelAdminView):
 
     @csrf_protect_m
     @transaction.commit_on_success
+    @filter_hook
     def post(self, request, *args, **kwargs):
         self.instance_forms()
         self.setup_forms()

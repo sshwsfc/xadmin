@@ -177,6 +177,7 @@ class DetailAdminView(ModelAdminView):
         return helper
 
     @csrf_protect_m
+    @filter_hook
     def get(self, request, *args, **kwargs):
         form = self.get_model_form()
         self.form_obj = form(instance=self.obj)

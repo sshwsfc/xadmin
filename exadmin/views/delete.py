@@ -36,6 +36,7 @@ class DeleteAdminView(ModelAdminView):
             [self.obj], self.opts, self.request.user, self.admin_site, using)
 
     @csrf_protect_m
+    @filter_hook
     def get(self, request, object_id):
         context = self.get_context()
         
@@ -48,6 +49,7 @@ class DeleteAdminView(ModelAdminView):
 
     @csrf_protect_m
     @transaction.commit_on_success
+    @filter_hook
     def post(self, request, object_id):
         if self.perms_needed:
             raise PermissionDenied
