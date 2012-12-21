@@ -79,6 +79,7 @@ class HostAdmin(object):
         )
     )
     inlines = [MaintainInline]
+    reversion_enable = True
     
 class HostGroupAdmin(object):
     list_display = ('name', 'description')
@@ -112,6 +113,7 @@ class MaintainLogAdmin(object):
             span=3
         )
     )
+    reversion_enable = True
 
 class AccessRecordAdmin(object):
     def avg_count(self, instance):
