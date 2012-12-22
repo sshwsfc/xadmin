@@ -305,12 +305,13 @@ class CommAdminView(BaseAdminView):
             })
         return context
 
-    def message_user(self, message):
+    def message_user(self, message, level='info'):
         """
         Send a message to the user. The default implementation
         posts a message using the django.contrib.messages backend.
         """
-        messages.info(self.request, message)
+        if hasattr(messages, level) and callable(getattr(messages, level)):
+            getattr(messages, level)(self.request, message)
 
 
 class ModelAdminView(CommAdminView):

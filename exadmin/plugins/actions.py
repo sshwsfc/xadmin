@@ -23,7 +23,7 @@ def action_checkbox(obj):
 action_checkbox.short_description = mark_safe('<input type="checkbox" id="action-toggle" />')
 action_checkbox.allow_tags = True
 
-class BaseAction(ModelAdminView):
+class BaseActionView(ModelAdminView):
     action_name = None
     description = None
 
@@ -31,10 +31,11 @@ class BaseAction(ModelAdminView):
         self.list_view = list_view
         self.admin_site = list_view.admin_site
 
+    @filter_hook
     def do_action(self, queryset):
         pass
 
-class DeleteSelectedAction(BaseAction):
+class DeleteSelectedAction(BaseActionView):
 
     action_name = "delete_selected"
     description = _(u'Delete selected %(verbose_name_plural)s')
@@ -49,8 +50,9 @@ class DeleteSelectedAction(BaseAction):
             queryset.delete()
             self.message_user(_("Successfully deleted %(count)d %(items)s.") % {
                 "count": n, "items": model_ngettext(self.opts, n)
-            })
+            }, 'success')
 
+    @filter_hook
     def do_action(self, queryset):
         # Check that the user has delete permission for the actual model
         if not self.has_delete_permission():
@@ -214,7 +216,7 @@ class ActionPlugin(BaseAdminPlugin):
         return choices
 
     def get_action(self, action):
-        if not issubclass(action, BaseAction):
+        if not issubclass(action, BaseActionView):
             return None
         return action, getattr(action, 'action_name'), getattr(action, 'description')
 

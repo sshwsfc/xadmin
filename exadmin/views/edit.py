@@ -342,14 +342,14 @@ class CreateAdminView(ModelFormAdminView):
         # Here, we distinguish between different save types by checking for
         # the presence of keys in request.POST.
         if "_continue" in request.POST:
-            self.message_user(msg + ' ' + _("You may edit it again below."))
+            self.message_user(msg + ' ' + _("You may edit it again below."), 'success')
             return HttpResponseRedirect("../%s/" % pk_value)
 
         if "_addanother" in request.POST:
-            self.message_user(msg + ' ' + (_("You may add another %s below.") % force_unicode(opts.verbose_name)))
+            self.message_user(msg + ' ' + (_("You may add another %s below.") % force_unicode(opts.verbose_name)), 'success')
             return HttpResponseRedirect(request.path)
         else:
-            self.message_user(msg)
+            self.message_user(msg, 'success')
 
             # Figure out where to redirect. If the user has change permission,
             # redirect to the change-list page for this object. Otherwise,
@@ -432,22 +432,22 @@ class UpdateAdminView(ModelFormAdminView):
 
         msg = _('The %(name)s "%(obj)s" was changed successfully.') % {'name': force_unicode(verbose_name), 'obj': force_unicode(obj)}
         if "_continue" in request.POST:
-            self.message_user(msg + ' ' + _("You may edit it again below."))
+            self.message_user(msg + ' ' + _("You may edit it again below."), 'success')
             return HttpResponseRedirect(request.path)
         elif "_saveasnew" in request.POST:
             msg = _('The %(name)s "%(obj)s" was added successfully. You may edit it again below.') % {'name': force_unicode(verbose_name), 'obj': obj}
-            self.message_user(msg)
+            self.message_user(msg, 'success')
             return HttpResponseRedirect(reverse('admin:%s_%s_change' %
                                         (opts.app_label, module_name),
                                         args=(pk_value,),
                                         current_app=self.admin_site.name))
         elif "_addanother" in request.POST:
-            self.message_user(msg + ' ' + (_("You may add another %s below.") % force_unicode(verbose_name)))
+            self.message_user(msg + ' ' + (_("You may add another %s below.") % force_unicode(verbose_name)), 'success')
             return HttpResponseRedirect(reverse('admin:%s_%s_add' %
                                         (opts.app_label, module_name),
                                         current_app=self.admin_site.name))
         else:
-            self.message_user(msg)
+            self.message_user(msg, 'success')
             # Figure out where to redirect. If the user has change permission,
             # redirect to the change-list page for this object. Otherwise,
             # redirect to the admin index.

@@ -57,7 +57,8 @@ class DeleteAdminView(ModelAdminView):
         
         self.delete_model()
 
-        self.message_user(_('The %(name)s "%(obj)s" was deleted successfully.') % {'name': force_unicode(self.opts.verbose_name), 'obj': force_unicode(obj_display)})
+        self.message_user(_('The %(name)s "%(obj)s" was deleted successfully.') % \
+            {'name': force_unicode(self.opts.verbose_name), 'obj': force_unicode(obj_display)}, 'success')
 
         if not self.has_change_permission(None):
             return HttpResponseRedirect(reverse('admin:index',
