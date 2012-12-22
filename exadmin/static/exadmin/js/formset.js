@@ -1,7 +1,6 @@
 ;(function($) {
     $.fn.formset = function(opts){
         var $$ = $(this);
-        console.log($$.length);
 
         var options = $.extend({
             prefix: $$.data('prefix')
