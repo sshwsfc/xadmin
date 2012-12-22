@@ -1,43 +1,27 @@
-
 from functools import partial
 
-from django.http import HttpResponse
-from django.utils import simplejson
-from django.utils.html import escape
-from django import forms
-from django.conf import settings
-from django.template.response import SimpleTemplateResponse, TemplateResponse
-from django.utils.html import conditional_escape
-from django.utils.encoding import StrAndUnicode, force_unicode
-from django.utils.safestring import mark_safe
-from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
-from django.utils.datastructures import SortedDict
-from django import template
-from django.db import models, transaction, connection
-from django.conf.urls.defaults import patterns, url
 from django.contrib.contenttypes.generic import GenericInlineModelAdmin, GenericRelation
 from django.contrib.contenttypes.models import ContentType
-from django.core.urlresolvers import reverse
-from django.forms.formsets import all_valid
+from django.core.exceptions import PermissionDenied
+from django.db import models
 from django.forms.models import model_to_dict
 from django.http import HttpResponseRedirect
-from django.core.exceptions import PermissionDenied
-from django.shortcuts import get_object_or_404, render_to_response
-from django.utils.html import mark_safe
+from django.shortcuts import get_object_or_404
+from django.template.response import TemplateResponse
+from django.utils.encoding import force_unicode
+from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
-from django.utils.encoding import force_unicode
-from django.utils.formats import localize
 
-from exadmin.util import unquote, quote
 from exadmin.sites import site
-from exadmin.views import BaseAdminPlugin, ModelAdminView, ModelFormAdminView, DeleteAdminView, ListAdminView
+from exadmin.util import unquote, quote, model_format_dict
+from exadmin.views import BaseAdminPlugin, ModelAdminView, CreateAdminView, UpdateAdminView, ModelFormAdminView, DeleteAdminView, ListAdminView
 from exadmin.views.base import csrf_protect_m, filter_hook
-from exadmin.plugins.inline import InlineModelAdmin
-
-from reversion.models import Revision, Version, has_int_pk, VERSION_ADD, VERSION_CHANGE, VERSION_DELETE
+from reversion.models import Revision, Version
 from reversion.revisions import default_revision_manager, RegistrationError
+
+from exadmin.plugins.inline import InlineModelAdmin
+from exadmin.plugins.actions import BaseActionView
 
 def _autoregister(admin, model, follow=None):
     """Registers a model with reversion, if required."""
@@ -131,6 +115,15 @@ class ReversionPlugin(BaseAdminPlugin):
     def do_post(self, __):
         def _method():
             self.revision_context_manager.set_user(self.user)
+            comment = ''
+            admin_view = self.admin_view
+            if isinstance(admin_view, CreateAdminView):
+                comment = _(u"Initial version.")
+            elif isinstance(admin_view, UpdateAdminView):
+                comment = _(u"Change version.")
+            elif isinstance(admin_view, DeleteAdminView):
+                comment = _(u"Deleted %(verbose_name)s.") % {"verbose_name": self.opts.verbose_name}
+            self.revision_context_manager.set_comment(comment)
             return __()
         return _method
 
@@ -312,7 +305,7 @@ class RevisionView(BaseRevisionView):
     @filter_hook
     def post_response(self):
         self.message_user(_(u'The %(model)s "%(name)s" was reverted successfully. You may edit it again below.') % \
-            {"model": force_unicode(self.opts.verbose_name), "name": unicode(self.new_obj)})
+            {"model": force_unicode(self.opts.verbose_name), "name": unicode(self.new_obj)}, 'success')
         return HttpResponseRedirect(self.model_admin_urlname('change', self.new_obj.pk))
 
 class RecoverView(BaseRevisionView):
@@ -346,7 +339,7 @@ class RecoverView(BaseRevisionView):
     @filter_hook
     def post_response(self):
         self.message_user(_(u'The %(model)s "%(name)s" was recovered successfully. You may edit it again below.') % \
-            {"model": force_unicode(self.opts.verbose_name), "name": unicode(self.new_obj)})
+            {"model": force_unicode(self.opts.verbose_name), "name": unicode(self.new_obj)}, 'success')
         return HttpResponseRedirect(self.model_admin_urlname('change', self.new_obj.pk))
 
 # inline hack plugin
@@ -406,6 +399,31 @@ class InlineRevisionPlugin(BaseAdminPlugin):
             self._hack_inline_formset_initial(admin_view, formset)
         return formset
 
+# action revision
+class ActionRevisionPlugin(BaseAdminPlugin):
+
+    revision_manager = default_revision_manager
+    reversion_enable = False
+
+    def init_request(self, *args, **kwargs):
+        return self.reversion_enable
+
+    @property
+    def revision_context_manager(self):
+        return self.revision_manager._revision_context_manager
+
+    def do_action_func(self, __):
+        def _method():
+            self.revision_context_manager.set_user(self.user)
+            action_view = self.admin_view
+            comment = action_view.description % model_format_dict(self.opts)
+
+            self.revision_context_manager.set_comment(comment)
+            return __()
+        return _method
+
+    def do_action(self, __, queryset):
+        return self.revision_context_manager.create_revision(manage_manually=False)(self.do_action_func(__))()
 
 site.register(Revision)
 site.register(Version)
@@ -420,5 +438,6 @@ site.register_plugin(ReversionPlugin, ModelFormAdminView)
 site.register_plugin(ReversionPlugin, DeleteAdminView)
 
 site.register_plugin(InlineRevisionPlugin, InlineModelAdmin)
+site.register_plugin(ActionRevisionPlugin, BaseActionView)
 
 
