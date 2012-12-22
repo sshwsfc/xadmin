@@ -158,3 +158,11 @@ select, .select2-container {
 img.field_img {
   max-height: 100px;
 }
+
+/** revision form **/
+.diff_field .control-label {
+  color: #FF8040;
+}
+.diff_field .controls{
+  background-color: #FFFF80;
+}
