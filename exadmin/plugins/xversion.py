@@ -13,8 +13,9 @@ from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 
+from exadmin.layout import Field, render_field
 from exadmin.sites import site
-from exadmin.util import unquote, quote, model_format_dict
+from exadmin.util import unquote, quote, model_format_dict, display_for_field
 from exadmin.views import BaseAdminPlugin, ModelAdminView, CreateAdminView, UpdateAdminView, ModelFormAdminView, DeleteAdminView, ListAdminView
 from exadmin.views.base import csrf_protect_m, filter_hook
 from reversion.models import Revision, Version
@@ -273,6 +274,15 @@ class BaseRevisionView(ModelFormAdminView):
             })
         return context
 
+class DiffField(Field):
+
+    def render(self, form, form_style, context):
+        html = ''
+        for field in self.fields:
+            html += ('<div class="diff_field" rel="tooltip" title="%s">%s</div>' % \
+                (_(u'Current: %s') % self.attrs.get('orgdata'), render_field(field, form, form_style, context, template=self.template, attrs=self.attrs)))
+        return html
+
 class RevisionView(BaseRevisionView):
 
     revision_form_template = None
@@ -286,6 +296,17 @@ class RevisionView(BaseRevisionView):
         self.version = get_object_or_404(Version, pk=version_id, object_id=unicode(self.org_obj.pk))
 
         self.prepare_form()
+
+    def get_form_helper(self):
+        helper = super(RevisionView, self).get_form_helper()
+        diff_fields = {}
+        version_data = self.version.field_dict
+        for f in self.opts.fields:
+            if f.value_from_object(self.org_obj) != version_data.get(f.name, None):
+                diff_fields[f.name] = display_for_field(getattr(self.org_obj, f.name), f)
+        for k,v in diff_fields.items():
+            helper[k].wrap(DiffField, orgdata=v)
+        return helper
 
     @filter_hook
     def get_context(self):
