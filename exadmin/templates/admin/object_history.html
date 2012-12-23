@@ -22,9 +22,11 @@
 <div class="module">
 
 {% if action_list %}
+  <form id="changelist-form" action="" method="post"{% view_block 'result_list_form' %}>{% csrf_token %}
     <table id="change-history" class="table table-bordered table-hover">
         <thead>
             <tr>
+                <th scope="col" colspan="2">{% trans 'Diff' %}</th>
                 <th scope="col">{% trans 'Date/time' %}</th>
                 <th scope="col">{% trans 'User' %}</th>
                 <th scope="col">{% trans 'Comment' %}</th>
@@ -33,7 +35,13 @@
         <tbody>
             {% for action in action_list %}
                 <tr>
-                    <th scope="row"><a href="{{action.url}}">{{action.revision.date_created}}</a></th>
+                    <td style="text-align:center; width: 20px;">
+                      <input type="radio" name="version_a" value="{{action.version.id}}">
+                    </td>
+                    <td style="text-align:center; width: 20px;">
+                      <input type="radio" name="version_b" value="{{action.version.id}}">
+                    </td>
+                    <td><a href="{{action.url}}">{{action.revision.date_created}}</a></td>
                     <td>
                         {% if action.revision.user %}
                             {{action.revision.user.username}}
@@ -45,6 +53,10 @@
             {% endfor %}
         </tbody>
     </table>
+    <div class="well well-small">
+      <button class="btn btn-primary">{% trans "Diff Select Versions" %}</button>
+    </div>
+  </form>
 {% else %}
     <p class="well">{% trans "This object doesn't have a change history. It probably wasn't added via this admin site." %}</p>
 {% endif %}
