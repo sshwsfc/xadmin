@@ -4,6 +4,7 @@ from django.contrib.contenttypes.generic import GenericInlineModelAdmin, Generic
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
 from django.db import models
+from django.db.models.related import RelatedObject
 from django.forms.models import model_to_dict
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -15,7 +16,7 @@ from django.utils.translation import ugettext as _
 
 from exadmin.layout import Field, render_field
 from exadmin.sites import site
-from exadmin.util import unquote, quote, model_format_dict, display_for_field
+from exadmin.util import unquote, quote, model_format_dict, display_for_field, get_model_from_relation
 from exadmin.views import BaseAdminPlugin, ModelAdminView, CreateAdminView, UpdateAdminView, ModelFormAdminView, DeleteAdminView, ListAdminView
 from exadmin.views.base import csrf_protect_m, filter_hook
 from reversion.models import Revision, Version
@@ -213,6 +214,7 @@ class RecoverListView(BaseReversionView):
 class RevisionListView(BaseReversionView):
 
     object_history_template = None
+    revision_diff_template = None
 
     def get_context(self):
         context = super(RevisionListView, self).get_context()
@@ -222,6 +224,7 @@ class RevisionListView(BaseReversionView):
             {
                 "revision": version.revision,
                 "url": self.model_admin_urlname('revision', quote(version.object_id), version.id),
+                "version": version
             }
             for version
             in self._order_version_queryset(self.revision_manager.get_for_object_reference(
@@ -248,10 +251,84 @@ class RevisionListView(BaseReversionView):
         if not self.has_change_permission(self.obj):
             raise PermissionDenied
 
+        return self.get_response()
+
+    def get_response(self):
         context = self.get_context()
 
-        return TemplateResponse(request, self.object_history_template or self.get_template_list('object_history.html'),
+        return TemplateResponse(self.request, self.object_history_template or self.get_template_list('object_history.html'),
             context, current_app=self.admin_site.name)
+
+    def post(self, request, object_id, *args, **kwargs):
+        object_id = unquote(object_id)
+        self.obj = self.get_object(object_id)
+
+        if not self.has_change_permission(self.obj):
+            raise PermissionDenied
+
+        params = self.request.POST
+        if 'version_a' not in params or 'version_b' not in params:
+            self.message_user(_(u"Must select two versions."), 'error')
+            return self.get_response()
+
+        version_a_id = params['version_a']
+        version_b_id = params['version_b']
+
+        if version_a_id == version_b_id:
+            self.message_user(_(u"Please select two different versions."), 'error')
+            return self.get_response()
+
+        version_a = get_object_or_404(Version, pk=version_a_id)
+        version_b = get_object_or_404(Version, pk=version_b_id)
+
+        diffs = []
+
+        dict_a = version_a.field_dict
+        dict_b = version_b.field_dict
+
+        for f in self.opts.fields:
+            if isinstance(f, RelatedObject):
+                label = f.opts.verbose_name
+            else:
+                label = f.verbose_name
+            # TODO get rel field value
+            value_a = dict_a.get(f.name)
+            value_b = dict_b.get(f.name)
+
+            if hasattr(f, 'rel') and bool(f.rel) or isinstance(f, models.related.RelatedObject):
+                other_model = get_model_from_relation(f)
+                qs = other_model._default_manager.get_query_set()
+
+                if hasattr(f, 'rel'):
+                    rel_name = f.rel.get_related_field().name
+                else:
+                    rel_name = other_model._meta.pk.name
+
+                try:
+                    value_a = qs.get(**{rel_name: value_a})
+                except Exception:
+                    value_a = None
+                try:
+                    value_b = qs.get(**{rel_name: value_b})
+                except Exception:
+                    value_b = None
+
+            diffs.append((label, display_for_field(value_a, f), display_for_field(value_b, f), value_a != value_b))
+
+        context = super(RevisionListView, self).get_context()
+        context.update({
+            'object': self.obj,
+            'opts': self.opts,
+            'version_a': version_a,
+            'version_b': version_b,
+            'revision_a_url': self.model_admin_urlname('revision', quote(version_a.object_id), version_a.id),
+            'revision_b_url': self.model_admin_urlname('revision', quote(version_b.object_id), version_b.id),
+            'diffs': diffs
+            })
+
+        return TemplateResponse(self.request, self.revision_diff_template or self.get_template_list('revision_diff.html'),
+            context, current_app=self.admin_site.name)
+
 
 class BaseRevisionView(ModelFormAdminView):
 
@@ -273,6 +350,12 @@ class BaseRevisionView(ModelFormAdminView):
             'object': self.org_obj
             })
         return context
+
+    @filter_hook
+    def get_media(self):
+        media = super(BaseRevisionView, self).get_media()
+        media.add_js([self.static('exadmin/js/revision.js')])
+        return media
 
 class DiffField(Field):
 
