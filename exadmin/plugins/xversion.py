@@ -44,7 +44,7 @@ def _registe_model(admin, model):
 
     if not admin.revision_manager.is_registered(model):
         inline_fields = []
-        for inline in getattr(admin, '_inlines', []):
+        for inline in getattr(admin, 'inlines', []):
             inline_model = inline.model
             if issubclass(inline, GenericInlineModelAdmin):
                 ct_field = inline.ct_field
