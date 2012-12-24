@@ -454,20 +454,20 @@ class InlineDiffField(Field):
 
     def render(self, form, form_style, context):
         html = ''
-        try:
-            instance = form.instance
-            initial = form.initial
-            opts = instance._meta
-            for field in self.fields:
-                f = opts.get_field(field)
-                f_html = render_field(field, form, form_style, context, template=self.template, attrs=self.attrs)
-                if f.value_from_object(instance) != initial.get(field, None):
-                    current_val = display_for_field(getattr(instance, field), f)
-                    html += ('<div class="diff_field" rel="tooltip" title="%s">%s</div>' % (_(u'Current: %s') % current_val, f_html))
-                else:
-                    html += f_html
-        except Exception:
+        instance = form.instance
+        if not instance.pk:
             return super(InlineDiffField, self).render(form, form_style, context)
+            
+        initial = form.initial
+        opts = instance._meta
+        for field in self.fields:
+            f = opts.get_field(field)
+            f_html = render_field(field, form, form_style, context, template=self.template, attrs=self.attrs)
+            if f.value_from_object(instance) != initial.get(field, None):
+                current_val = display_for_field(getattr(instance, field), f)
+                html += ('<div class="diff_field" rel="tooltip" title="%s">%s</div>' % (_(u'Current: %s') % current_val, f_html))
+            else:
+                html += f_html
         return html
 
 # inline hack plugin
