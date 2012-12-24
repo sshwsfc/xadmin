@@ -217,13 +217,12 @@ class InlineModelAdmin(ModelFormAdminView):
 
 class InlineFormset(Fieldset):
 
-    def __init__(self, formset, **kwargs):
+    def __init__(self, formset, allow_blank=False, **kwargs):
         self.fields = []
         self.css_class = kwargs.pop('css_class', '')
         self.css_id = "%s-group" % formset.prefix
-        if len(formset):
-            self.template = formset.style.template
-        else:
+        self.template = formset.style.template
+        if allow_blank and len(formset) == 0:
             self.template = 'admin/edit_inline/blank.html'
         self.formset = formset
         self.model = formset.model
@@ -305,7 +304,8 @@ class InlineFormsetPlugin(BaseAdminPlugin):
         return errors
 
     def get_form_layout(self, layout):
-        fs = dict([(f.model, InlineFormset(f)) for f in self.formsets])
+        allow_blank = isinstance(self.admin_view, DetailAdminView)
+        fs = dict([(f.model, InlineFormset(f, allow_blank)) for f in self.formsets])
         replace_inline_objects(layout, fs)
 
         if fs:
