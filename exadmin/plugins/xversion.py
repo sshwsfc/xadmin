@@ -123,6 +123,10 @@ class ReversionPlugin(BaseAdminPlugin):
                 comment = _(u"Initial version.")
             elif isinstance(admin_view, UpdateAdminView):
                 comment = _(u"Change version.")
+            elif isinstance(admin_view, RevisionView):
+                comment = _(u"Revert version.")
+            elif isinstance(admin_view, RecoverView):
+                comment = _(u"Rercover version.")
             elif isinstance(admin_view, DeleteAdminView):
                 comment = _(u"Deleted %(verbose_name)s.") % {"verbose_name": self.opts.verbose_name}
             self.revision_context_manager.set_comment(comment)
