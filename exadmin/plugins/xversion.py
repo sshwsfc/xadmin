@@ -450,6 +450,26 @@ class RecoverView(BaseRevisionView):
             {"model": force_unicode(self.opts.verbose_name), "name": unicode(self.new_obj)}, 'success')
         return HttpResponseRedirect(self.model_admin_urlname('change', self.new_obj.pk))
 
+class InlineDiffField(Field):
+
+    def render(self, form, form_style, context):
+        html = ''
+        try:
+            instance = form.instance
+            initial = form.initial
+            opts = instance._meta
+            for field in self.fields:
+                f = opts.get_field(field)
+                f_html = render_field(field, form, form_style, context, template=self.template, attrs=self.attrs)
+                if f.value_from_object(instance) != initial.get(field, None):
+                    current_val = display_for_field(getattr(instance, field), f)
+                    html += ('<div class="diff_field" rel="tooltip" title="%s">%s</div>' % (_(u'Current: %s') % current_val, f_html))
+                else:
+                    html += f_html
+        except Exception:
+            return super(InlineDiffField, self).render(form, form_style, context)
+        return html
+
 # inline hack plugin
 class InlineRevisionPlugin(BaseAdminPlugin):
 
@@ -500,6 +520,10 @@ class InlineRevisionPlugin(BaseAdminPlugin):
         def total_form_count_hack(count):
             return lambda: count
         formset.total_form_count = total_form_count_hack(len(initial))
+
+        if self.request.method == 'GET' and formset.helper and formset.helper.layout:
+            helper = formset.helper
+            helper.filter(basestring).wrap(InlineDiffField)
 
     def instance_form(self, formset, **kwargs):
         admin_view = self.admin_view.admin_view
