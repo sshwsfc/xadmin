@@ -54,7 +54,7 @@ def _registe_model(admin, model):
                         inline_fields.append(field.name)
                 _autoregister(admin, inline_model)
             else:
-                fk_name = inline.fk_name
+                fk_name = getattr(inline, 'fk_name', None)
                 if not fk_name:
                     for field in inline_model._meta.fields:
                         if isinstance(field, (models.ForeignKey, models.OneToOneField)) and issubclass(model, field.rel.to):
