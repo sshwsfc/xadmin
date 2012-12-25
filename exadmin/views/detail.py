@@ -197,7 +197,7 @@ class DetailAdminView(ModelAdminView):
         new_context = {
             'form': form,
             'media': media,
-            'original': self.obj,
+            'object': self.obj,
             'show_delete': self.obj is not None,
             'add': self.obj is None,
             'change': self.obj is not None,
