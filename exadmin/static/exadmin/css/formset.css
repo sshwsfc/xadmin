@@ -5,6 +5,9 @@
 .formset .row-deleted{
     background: #fff0f0  !important;
 }
+.formset .row-added {
+    background: #d1ffdd !important;
+}
 .formset .formset-heading{
     padding: 10px;
     border-bottom: 1px solid #EEE;

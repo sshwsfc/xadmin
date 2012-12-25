@@ -59,13 +59,7 @@
             };
 
         $$.find(".formset-row").each(function(i) {
-            var row = $(this);
-            insertDeleteLink(row);
-            var del = row.find('input[id $= "-DELETE"]');
-            if(del.val() == 'on' || del.val() == 'True'){
-                row.addClass('row-deleted');
-                del.val('on');
-            }
+            insertDeleteLink($(this));
         });
 
         if ($$.length) {
