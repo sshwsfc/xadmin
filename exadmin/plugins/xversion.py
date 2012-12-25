@@ -268,6 +268,19 @@ class RevisionListView(BaseReversionView):
         return TemplateResponse(self.request, self.object_history_template or self.get_template_list('object_history.html'),
             context, current_app=self.admin_site.name)
 
+    def get_version_object(self, version):
+        obj_version = version.object_version
+        obj = obj_version.object
+
+        for field_name, pks in obj_version.m2m_data.items():
+            f = self.opts.get_field(field_name)
+            if f.rel and isinstance(f.rel, models.ManyToManyRel):
+                setattr(obj, f.name, f.rel.to._default_manager.get_query_set().filter(pk__in=pks).all())
+
+        detail = self.get_model_view(DetailAdminUtil, self.model, obj)
+
+        return obj, detail
+
     def post(self, request, object_id, *args, **kwargs):
         object_id = unquote(object_id)
         self.obj = self.get_object(object_id)
@@ -292,17 +305,15 @@ class RevisionListView(BaseReversionView):
 
         diffs = []
 
-        obj_a = version_a.object_version.object
-        obj_b = version_b.object_version.object
-        detail_a = self.get_model_view(DetailAdminUtil, self.model, obj_a)
-        detail_b = self.get_model_view(DetailAdminUtil, self.model, obj_b)
+        obj_a, detail_a = self.get_version_object(version_a)
+        obj_b, detail_b = self.get_version_object(version_b)
 
         for f in self.opts.fields:
             if isinstance(f, RelatedObject):
                 label = f.opts.verbose_name
             else:
                 label = f.verbose_name
-            # TODO get rel field value
+
             value_a = f.value_from_object(obj_a)
             value_b = f.value_from_object(obj_b)
 
