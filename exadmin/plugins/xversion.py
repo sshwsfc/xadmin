@@ -1,5 +1,5 @@
 from functools import partial
-
+import cgi
 from django.contrib.contenttypes.generic import GenericInlineModelAdmin, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
@@ -17,7 +17,7 @@ from django.utils.translation import ugettext as _
 from exadmin.layout import Field, render_field
 from exadmin.sites import site
 from exadmin.util import unquote, quote, model_format_dict, display_for_field, get_model_from_relation
-from exadmin.views import BaseAdminPlugin, ModelAdminView, CreateAdminView, UpdateAdminView, ModelFormAdminView, DeleteAdminView, ListAdminView
+from exadmin.views import BaseAdminPlugin, ModelAdminView, CreateAdminView, UpdateAdminView, DetailAdminView, ModelFormAdminView, DeleteAdminView, ListAdminView
 from exadmin.views.base import csrf_protect_m, filter_hook
 from reversion.models import Revision, Version
 from reversion.revisions import default_revision_manager, RegistrationError
@@ -366,20 +366,20 @@ class DiffField(Field):
     def render(self, form, form_style, context):
         html = ''
         for field in self.fields:
-            html += ('<div class="diff_field" rel="tooltip" title="%s">%s</div>' % \
-                (_(u'Current: %s') % self.attrs.get('orgdata'), render_field(field, form, form_style, context, template=self.template, attrs=self.attrs)))
+            html += ('<div class="diff_field" rel="tooltip"><textarea style="display:none;">%s</textarea>%s</div>' % \
+                (_(u'Current: %s') % self.attrs.pop('orgdata',''), render_field(field, form, form_style, context, template=self.template, attrs=self.attrs)))
         return html
+
 
 class RevisionView(BaseRevisionView):
 
     revision_form_template = None
 
     def init_request(self, object_id, version_id):
-        if not self.has_change_permission():
-            raise PermissionDenied
+        self.detail = self.get_model_view(DetailAdminView, self.model)
+        self.detail.init_request(object_id)
 
-        object_id = unquote(object_id) # Underscores in primary key get quoted to "_5F"
-        self.org_obj = self.get_object(object_id)
+        self.org_obj = self.detail.obj
         self.version = get_object_or_404(Version, pk=version_id, object_id=unicode(self.org_obj.pk))
 
         self.prepare_form()
@@ -390,7 +390,7 @@ class RevisionView(BaseRevisionView):
         version_data = self.version.field_dict
         for f in self.opts.fields:
             if f.value_from_object(self.org_obj) != version_data.get(f.name, None):
-                diff_fields[f.name] = display_for_field(getattr(self.org_obj, f.name), f)
+                diff_fields[f.name] = self.detail.get_field_result(f.name).val
         for k,v in diff_fields.items():
             helper[k].wrap(DiffField, orgdata=v)
         return helper
