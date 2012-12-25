@@ -366,7 +366,7 @@ class DiffField(Field):
     def render(self, form, form_style, context):
         html = ''
         for field in self.fields:
-            html += ('<div class="diff_field" rel="tooltip"><textarea style="display:none;">%s</textarea>%s</div>' % \
+            html += ('<div class="diff_field" rel="tooltip"><textarea class="org-data" style="display:none;">%s</textarea>%s</div>' % \
                 (_(u'Current: %s') % self.attrs.pop('orgdata',''), render_field(field, form, form_style, context, template=self.template, attrs=self.attrs)))
         return html
 
@@ -376,9 +376,7 @@ class RevisionView(BaseRevisionView):
     revision_form_template = None
 
     def init_request(self, object_id, version_id):
-        self.detail = self.get_model_view(DetailAdminView, self.model)
-        self.detail.init_request(object_id)
-
+        self.detail = self.get_model_view(DetailAdminView, self.model, object_id)
         self.org_obj = self.detail.obj
         self.version = get_object_or_404(Version, pk=version_id, object_id=unicode(self.org_obj.pk))
 
@@ -460,12 +458,14 @@ class InlineDiffField(Field):
             
         initial = form.initial
         opts = instance._meta
+        detail = form.detail
         for field in self.fields:
             f = opts.get_field(field)
             f_html = render_field(field, form, form_style, context, template=self.template, attrs=self.attrs)
             if f.value_from_object(instance) != initial.get(field, None):
-                current_val = display_for_field(getattr(instance, field), f)
-                html += ('<div class="diff_field" rel="tooltip" title="%s">%s</div>' % (_(u'Current: %s') % current_val, f_html))
+                current_val = detail.get_field_result(f.name).val
+                html += ('<div class="diff_field" rel="tooltip"><textarea class="org-data" style="display:none;">%s</textarea>%s</div>' \
+                    % (_(u'Current: %s') % current_val, f_html))
             else:
                 html += f_html
         return html
@@ -524,6 +524,11 @@ class InlineRevisionPlugin(BaseAdminPlugin):
         if self.request.method == 'GET' and formset.helper and formset.helper.layout:
             helper = formset.helper
             helper.filter(basestring).wrap(InlineDiffField)
+            fake_admin_class = type.__new__(type, '%s%sFakeAdmin' % (self.opts.app_label, self.opts.module_name), (object, ), {'model': self.model})
+            for form in formset.forms:
+                instance = form.instance
+                if instance.pk:
+                    form.detail = self.get_view(DetailAdminView, fake_admin_class, instance.pk)
 
     def instance_form(self, formset, **kwargs):
         admin_view = self.admin_view.admin_view
