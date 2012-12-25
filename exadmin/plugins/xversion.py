@@ -213,7 +213,13 @@ class RecoverListView(BaseReversionView):
 
         return TemplateResponse(request, self.recover_list_template or self.get_template_list("recover_list.html"),
             context, current_app=self.admin_site.name)
-        
+
+class DetailAdminUtil(DetailAdminView):
+
+    def init_request(self, obj):
+        self.obj = obj
+        self.org_obj = obj
+
 class RevisionListView(BaseReversionView):
 
     object_history_template = None
@@ -286,14 +292,10 @@ class RevisionListView(BaseReversionView):
 
         diffs = []
 
-        detail_a = self.get_model_view(DetailAdminView, self.model, object_id)
-        detail_b = self.get_model_view(DetailAdminView, self.model, object_id)
-
-        dict_a = version_a.field_dict
-        dict_b = version_b.field_dict
-
-        detail_a.obj = self.model(**dict_a)
-        detail_b.obj = self.model(**dict_b)
+        obj_a = version_a.object_version.object
+        obj_b = version_b.object_version.object
+        detail_a = self.get_model_view(DetailAdminUtil, self.model, obj_a)
+        detail_b = self.get_model_view(DetailAdminUtil, self.model, obj_b)
 
         for f in self.opts.fields:
             if isinstance(f, RelatedObject):
@@ -301,26 +303,8 @@ class RevisionListView(BaseReversionView):
             else:
                 label = f.verbose_name
             # TODO get rel field value
-            value_a = dict_a.get(f.name)
-            value_b = dict_b.get(f.name)
-
-            if hasattr(f, 'rel') and bool(f.rel) or isinstance(f, models.related.RelatedObject):
-                other_model = get_model_from_relation(f)
-                qs = other_model._default_manager.get_query_set()
-
-                if hasattr(f, 'rel'):
-                    rel_name = f.rel.get_related_field().name
-                else:
-                    rel_name = other_model._meta.pk.name
-
-                try:
-                    value_a = qs.get(**{rel_name: value_a})
-                except Exception:
-                    value_a = None
-                try:
-                    value_b = qs.get(**{rel_name: value_b})
-                except Exception:
-                    value_b = None
+            value_a = f.value_from_object(obj_a)
+            value_b = f.value_from_object(obj_b)
 
             diffs.append((label, detail_a.get_field_result(f.name).val, detail_b.get_field_result(f.name).val, value_a != value_b))
 
