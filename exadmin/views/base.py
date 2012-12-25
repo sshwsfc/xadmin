@@ -109,11 +109,11 @@ class JSONEncoder(DjangoJSONEncoder):
 
 class BaseAdminObject(object):
 
-    def get_view(self, view_class, admin_class=None):
-        return self.admin_site.get_view_class(view_class, admin_class)(self.request, *self.args, **self.kwargs)
+    def get_view(self, view_class, admin_class=None, *args, **kwargs):
+        return self.admin_site.get_view_class(view_class, admin_class)(self.request, *args, **kwargs)
 
-    def get_model_view(self, view_class, model):
-        return self.get_view(view_class, self.admin_site._registry.get(model))
+    def get_model_view(self, view_class, model, *args, **kwargs):
+        return self.get_view(view_class, self.admin_site._registry.get(model), *args, **kwargs)
 
     def admin_urlname(self, name, *args, **kwargs):
         return reverse('%s:%s' % (self.admin_site.app_name, name), args=args, kwargs=kwargs)
