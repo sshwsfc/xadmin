@@ -67,6 +67,8 @@ def unquote(s):
     """
     Undo the effects of quote(). Based heavily on urllib.unquote().
     """
+    if not isinstance(s, basestring):
+        return s
     mychr = chr
     myatoi = int
     list = s.split('_')
