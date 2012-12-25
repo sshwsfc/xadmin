@@ -338,6 +338,12 @@ class RevisionListView(BaseReversionView):
         return TemplateResponse(self.request, self.revision_diff_template or self.get_template_list('revision_diff.html'),
             context, current_app=self.admin_site.name)
 
+    @filter_hook
+    def get_media(self):
+        media = super(RevisionListView, self).get_media()
+        media.add_js([self.static('exadmin/js/revision.js')])
+        media.add_css({'screen': [self.static('exadmin/css/form.css')]})
+        return media
 
 class BaseRevisionView(ModelFormAdminView):
 
