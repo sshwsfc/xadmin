@@ -1,5 +1,5 @@
 from functools import partial
-import cgi
+
 from django.contrib.contenttypes.generic import GenericInlineModelAdmin, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
@@ -13,17 +13,16 @@ from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
-
 from exadmin.layout import Field, render_field
+from exadmin.plugins.actions import BaseActionView
+from exadmin.plugins.inline import InlineModelAdmin
 from exadmin.sites import site
-from exadmin.util import unquote, quote, model_format_dict, display_for_field, get_model_from_relation
+from exadmin.util import unquote, quote, model_format_dict, get_model_from_relation
 from exadmin.views import BaseAdminPlugin, ModelAdminView, CreateAdminView, UpdateAdminView, DetailAdminView, ModelFormAdminView, DeleteAdminView, ListAdminView
 from exadmin.views.base import csrf_protect_m, filter_hook
 from reversion.models import Revision, Version
 from reversion.revisions import default_revision_manager, RegistrationError
 
-from exadmin.plugins.inline import InlineModelAdmin
-from exadmin.plugins.actions import BaseActionView
 
 def _autoregister(admin, model, follow=None):
     """Registers a model with reversion, if required."""
@@ -287,8 +286,14 @@ class RevisionListView(BaseReversionView):
 
         diffs = []
 
+        detail_a = self.get_model_view(DetailAdminView, self.model, object_id)
+        detail_b = self.get_model_view(DetailAdminView, self.model, object_id)
+
         dict_a = version_a.field_dict
         dict_b = version_b.field_dict
+
+        detail_a.obj = self.model(**dict_a)
+        detail_b.obj = self.model(**dict_b)
 
         for f in self.opts.fields:
             if isinstance(f, RelatedObject):
@@ -317,7 +322,7 @@ class RevisionListView(BaseReversionView):
                 except Exception:
                     value_b = None
 
-            diffs.append((label, display_for_field(value_a, f), display_for_field(value_b, f), value_a != value_b))
+            diffs.append((label, detail_a.get_field_result(f.name).val, detail_b.get_field_result(f.name).val, value_a != value_b))
 
         context = super(RevisionListView, self).get_context()
         context.update({
