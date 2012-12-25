@@ -426,7 +426,7 @@ class ListAdminView(ModelAdminView):
     @filter_hook
     def get_page_number(self, i):
         if i == DOT:
-            return u'... '
+            return mark_safe(u'<span class="dot-page">...</span> ')
         elif i == self.page_num:
             return mark_safe(u'<span class="this-page">%d</span> ' % (i+1))
         else:
