@@ -1,7 +1,7 @@
 jQuery(function($){
     $('.diff_field').each(function(){
         var el = $(this);
-        var textarea = el.find('textarea');
+        var textarea = el.find('textarea.org-data');
         var title = el.data('org-data') || el.attr('title');
         if(textarea.length){
             title = textarea.val();
