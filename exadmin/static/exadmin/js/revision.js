@@ -1,9 +1,14 @@
 jQuery(function($){
     $('.diff_field').each(function(){
         var el = $(this);
-        var title = el.attr('title');
+        var textarea = el.find('textarea');
+        var title = el.data('org-data') || el.attr('title');
+        if(textarea.length){
+            title = textarea.val();
+        }
         el.find('.controls').tooltip({
-            title: title
+            title: title,
+            html: true
         })
     });
 
