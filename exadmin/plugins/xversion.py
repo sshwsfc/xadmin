@@ -534,7 +534,7 @@ class InlineRevisionPlugin(BaseAdminPlugin):
             for form in formset.forms:
                 instance = form.instance
                 if instance.pk:
-                    form.detail = self.get_view(DetailAdminView, fake_admin_class, instance.pk)
+                    form.detail = self.get_view(DetailAdminUtil, fake_admin_class, instance)
 
     def instance_form(self, formset, **kwargs):
         admin_view = self.admin_view.admin_view
