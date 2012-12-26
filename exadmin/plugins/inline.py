@@ -8,7 +8,6 @@ from django.template.loader import render_to_string
 from exadmin.layout import FormHelper, Layout, flatatt, Container, Column, Field, Fieldset
 from exadmin.sites import site
 from exadmin.views import BaseAdminPlugin, ModelFormAdminView, DetailAdminView, filter_hook
-from exadmin.views.detail import ResultField
 
 
 class ShowField(Field):
@@ -20,9 +19,10 @@ class ShowField(Field):
 
     def render(self, form, form_style, context):
         html = ''
+        detail = form.detail
         for field in self.fields:
             if not isinstance(form.fields[field].widget, forms.HiddenInput):
-                result = ResultField(form.instance, field, self.admin_view)
+                result = detail.get_field_result(field)
                 html += loader.render_to_string(self.template, {'field': form[field], 'result': result})
         return html
 
@@ -328,6 +328,12 @@ class InlineFormsetPlugin(BaseAdminPlugin):
             media.add_css({'screen': [self.static('exadmin/css/formset.css')]})
         return media
 
+class DetailAdminUtil(DetailAdminView):
+
+    def init_request(self, obj):
+        self.obj = obj
+        self.org_obj = obj
+
 class DetailInlineFormsetPlugin(InlineFormsetPlugin):
 
     def _get_formset_instance(self, inline):
@@ -335,6 +341,14 @@ class DetailInlineFormsetPlugin(InlineFormsetPlugin):
         formset.detail_page = True
         if formset.helper.layout:
             replace_field_to_value(formset.helper.layout, inline)
+            model = inline.model
+            opts = model._meta
+            fake_admin_class = type.__new__(type, '%s%sFakeAdmin' % (opts.app_label, opts.module_name), (object, ), {'model': model})
+            for form in formset.forms:
+                instance = form.instance
+                if instance.pk:
+                    form.detail = self.get_view(DetailAdminUtil, fake_admin_class, instance)
+
         return formset
 
     def get_model_form(self, form, **kwargs):
