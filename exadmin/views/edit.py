@@ -10,10 +10,12 @@ from django.http import Http404, HttpResponseRedirect
 from django.template.response import TemplateResponse
 from django.utils.encoding import force_unicode
 from django.utils.html import escape
+from django.template import loader
 from django.utils.translation import ugettext as _
 from exadmin import widgets
-from exadmin.layout import FormHelper, Layout, Fieldset, Container, Column
+from exadmin.layout import FormHelper, Layout, Fieldset, Container, Column, Field
 from exadmin.util import unquote
+from exadmin.views.detail import DetailAdminUtil
 
 from base import ModelAdminView, filter_hook, csrf_protect_m
 
@@ -33,6 +35,21 @@ FORMFIELD_FOR_DBFIELD_DEFAULTS = {
     models.ImageField:      {'widget': widgets.AdminFileWidget},
     models.FileField:       {'widget': widgets.AdminFileWidget},
 }
+
+class ReadOnlyField(Field):
+    template = "admin/layout/field_value.html"
+
+    def __init__(self, detail, *args, **kwargs):
+        super(ReadOnlyField, self).__init__(*args, **kwargs)
+        self.detail = detail
+
+    def render(self, form, form_style, context):
+        html = ''
+        for field in self.fields:
+            result = self.detail.get_field_result(field)
+            field = {'auto_id': field}
+            html += loader.render_to_string(self.template, {'field': field, 'result': result})
+        return html
 
 class ModelFormAdminView(ModelAdminView):
 
@@ -148,10 +165,11 @@ class ModelFormAdminView(ModelAdminView):
     @filter_hook
     def get_form_layout(self):
         layout = copy.deepcopy(self.form_layout)
+        fields = self.form_obj.fields.keys() + list(self.get_readonly_fields())
 
         if layout is None:
             layout = Layout(Container(
-                    Fieldset("", *self.form_obj.fields.keys(), css_class="unsort no_title"), css_class="form-horizontal"
+                    Fieldset("", *fields, css_class="unsort no_title"), css_class="form-horizontal"
                     ))
         elif type(layout) in (list, tuple) and len(layout) > 0:
             if isinstance(layout[0], Column):
@@ -163,7 +181,7 @@ class ModelFormAdminView(ModelAdminView):
 
             rendered_fields = [i[1] for i in layout.get_field_names()]
             container = layout[0].fields
-            other_fieldset = Fieldset(_(u'Other Fields'), *[f for f in self.form_obj.fields.keys() if f not in rendered_fields])
+            other_fieldset = Fieldset(_(u'Other Fields'), *[f for f in fields if f not in rendered_fields])
 
             if len(other_fieldset.fields):
                 if len(container) and isinstance(container[0], Column):
@@ -178,6 +196,14 @@ class ModelFormAdminView(ModelAdminView):
         helper = FormHelper()
         helper.form_tag = False
         helper.add_layout(self.get_form_layout())
+
+        # deal with readonly fields
+        readonly_fields = self.get_readonly_fields()
+        if readonly_fields:
+            detail = self.get_model_view(DetailAdminUtil, self.model, self.form_obj.instance)
+            for field in readonly_fields:
+                helper[field].wrap(ReadOnlyField, detail)
+                
         return helper
 
     @filter_hook
