@@ -17,9 +17,10 @@ from exadmin.layout import Field, render_field
 from exadmin.plugins.actions import BaseActionView
 from exadmin.plugins.inline import InlineModelAdmin
 from exadmin.sites import site
-from exadmin.util import unquote, quote, model_format_dict, get_model_from_relation
+from exadmin.util import unquote, quote, model_format_dict
 from exadmin.views import BaseAdminPlugin, ModelAdminView, CreateAdminView, UpdateAdminView, DetailAdminView, ModelFormAdminView, DeleteAdminView, ListAdminView
 from exadmin.views.base import csrf_protect_m, filter_hook
+from exadmin.views.detail import DetailAdminUtil
 from reversion.models import Revision, Version
 from reversion.revisions import default_revision_manager, RegistrationError
 
@@ -213,12 +214,6 @@ class RecoverListView(BaseReversionView):
 
         return TemplateResponse(request, self.recover_list_template or self.get_template_list("recover_list.html"),
             context, current_app=self.admin_site.name)
-
-class DetailAdminUtil(DetailAdminView):
-
-    def init_request(self, obj):
-        self.obj = obj
-        self.org_obj = obj
 
 class RevisionListView(BaseReversionView):
 
