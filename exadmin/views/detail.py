@@ -240,6 +240,11 @@ class DetailAdminView(ModelAdminView):
         ], context, current_app=self.admin_site.name)
 
 
+class DetailAdminUtil(DetailAdminView):
+
+    def init_request(self, obj):
+        self.obj = obj
+        self.org_obj = obj
 
 
 
