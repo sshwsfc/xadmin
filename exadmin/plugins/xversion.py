@@ -4,6 +4,7 @@ from django.contrib.contenttypes.generic import GenericInlineModelAdmin, Generic
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
 from django.db import models
+from django.db.models.query import QuerySet
 from django.db.models.related import RelatedObject
 from django.forms.models import model_to_dict
 from django.http import HttpResponseRedirect
@@ -266,6 +267,7 @@ class RevisionListView(BaseReversionView):
     def get_version_object(self, version):
         obj_version = version.object_version
         obj = obj_version.object
+        obj._state.db = self.obj._state.db
 
         for field_name, pks in obj_version.m2m_data.items():
             f = self.opts.get_field(field_name)
@@ -303,7 +305,7 @@ class RevisionListView(BaseReversionView):
         obj_a, detail_a = self.get_version_object(version_a)
         obj_b, detail_b = self.get_version_object(version_b)
 
-        for f in self.opts.fields:
+        for f in (self.opts.fields + self.opts.many_to_many):
             if isinstance(f, RelatedObject):
                 label = f.opts.verbose_name
             else:
@@ -311,8 +313,19 @@ class RevisionListView(BaseReversionView):
 
             value_a = f.value_from_object(obj_a)
             value_b = f.value_from_object(obj_b)
+            is_diff = value_a != value_b
 
-            diffs.append((label, detail_a.get_field_result(f.name).val, detail_b.get_field_result(f.name).val, value_a != value_b))
+            if type(value_a) in (list, tuple) and type(value_b) in (list, tuple) \
+                and len(value_a) == len(value_b) and is_diff:
+                is_diff = False
+                for i in xrange(len(value_a)):
+                    if value_a[i] != value_a[i]:
+                        is_diff = True
+                        break;
+            if type(value_a) is QuerySet and type(value_b) is QuerySet:
+                is_diff = list(value_a) != list(value_b)
+
+            diffs.append((label, detail_a.get_field_result(f.name).val, detail_b.get_field_result(f.name).val, is_diff))
 
         context = super(RevisionListView, self).get_context()
         context.update({
