@@ -369,7 +369,7 @@ class CreateAdminView(ModelFormAdminView):
         # the presence of keys in request.POST.
         if "_continue" in request.POST:
             self.message_user(msg + ' ' + _("You may edit it again below."), 'success')
-            return HttpResponseRedirect("../%s/" % pk_value)
+            return HttpResponseRedirect(self.model_admin_urlname('change', pk_value))
 
         if "_addanother" in request.POST:
             self.message_user(msg + ' ' + (_("You may add another %s below.") % force_unicode(opts.verbose_name)), 'success')
