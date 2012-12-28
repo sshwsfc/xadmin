@@ -15,7 +15,7 @@
       <thead>
      {% for field in fields %}
        {% if not field.widget.is_hidden %}
-         <th{% if forloop.first %} colspan="2"{% endif %}{% if field.required %} class="required"{% endif %}>{{ field.label|capfirst }}
+         <th{% if field.required %} class="required"{% endif %}>{{ field.label|capfirst }}
          {% if field.help_text %}&nbsp;<a title="{{ field.help_text|striptags }}" /><i class="icon icon-question-sign"></i></a>{% endif %}
          </th>
        {% endif %}
