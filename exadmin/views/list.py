@@ -392,6 +392,7 @@ class ListAdminView(ModelAdminView):
         pass
 
     @csrf_protect_m
+    @filter_hook
     def get(self, request, *args, **kwargs):
         """
         The 'change list' admin view for this model.
@@ -416,6 +417,7 @@ class ListAdminView(ModelAdminView):
         pass
 
     @csrf_protect_m
+    @filter_hook
     def post(self, request, *args, **kwargs):
         return self.post_result_list() or self.post_response(*args, **kwargs) or self.get(request, *args, **kwargs)
 
