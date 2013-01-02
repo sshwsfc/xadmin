@@ -1,3 +1,4 @@
+sorry for the chinese.
 
 ==== 列表页面 ====
 quickform
@@ -55,11 +56,14 @@ order
 
     json admin view， 可以返回某个对象的信息，某个对象的某个字段信息，更新某个字段。
 
-==== 未完成 ====
+==== 已完成细节任务 ====
+
+3. (但是可以考虑做一个专门的detail util view) 显示详请页面，inline的数据无法使用AdminView的plugins.
+
+==== 未完成细节任务 ====
 
 1. 表单向导自定义需要优化，界面需要优化。
 2. 添加widget的表单向导未完成。
-3. (但是可以考虑做一个专门的detail util view) 显示详请页面，inline的数据无法使用AdminView的plugins.
 4. 延伸概念，view是plugin的体现，所有很多时候需要view实例来完成一些显示，所以应该创建UtilAdminView的概念，方便adminview的使用。
 5. 考虑http://www.ichartjs.com/集成
 
