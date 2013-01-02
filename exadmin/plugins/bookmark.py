@@ -11,6 +11,7 @@ from exadmin.sites import site
 from exadmin.views import ModelAdminView, BaseAdminPlugin, ListAdminView
 from exadmin.views.list import COL_LIST_VAR, ORDER_VAR
 from exadmin.filters import FILTER_PREFIX, SEARCH_VAR
+from exadmin.plugins.relate import RELATE_PREFIX
 
 from exadmin.models import Bookmark
 
@@ -29,8 +30,8 @@ class BookmarkPlugin(BaseAdminPlugin):
         bookmarks = []
 
         current_qs = '&'.join(['%s=%s' % (k,v) for k,v in sorted(\
-            filter(lambda i: bool(i[1] and (i[0] in (COL_LIST_VAR, ORDER_VAR, SEARCH_VAR) or i[0].startswith(FILTER_PREFIX))), \
-            self.request.GET.items()))])
+            filter(lambda i: bool(i[1] and (i[0] in (COL_LIST_VAR, ORDER_VAR, SEARCH_VAR) or i[0].startswith(FILTER_PREFIX) \
+                 or i[0].startswith(RELATE_PREFIX))), self.request.GET.items()))])
 
         model_info = (self.opts.app_label, self.opts.module_name)
         has_selected = False
