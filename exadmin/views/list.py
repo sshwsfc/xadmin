@@ -592,7 +592,7 @@ class ListAdminView(ModelAdminView):
 
     @filter_hook
     def url_for_result(self, result):
-        return "%s/update/" % quote(getattr(result, self.pk_attname))
+        return self.model_admin_urlname("change", getattr(result, self.pk_attname))
 
     # Media
     @filter_hook
