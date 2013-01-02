@@ -285,6 +285,22 @@ class ModelFormAdminView(ModelAdminView):
             'save_on_top': self.save_on_top,
         }
 
+        # for submit line
+        new_context.update({
+            'onclick_attrib': (self.opts.get_ordered_objects() and change
+                                and 'onclick="submitOrderForm();"' or ''),
+            'show_delete_link': (not is_popup and new_context['has_delete_permission']
+                                  and (change or new_context['show_delete'])),
+            'show_save_as_new': not is_popup and change and self.save_as,
+            'show_save_and_add_another': new_context['has_add_permission'] and
+                                not is_popup and (not self.save_as or add),
+            'show_save_and_continue': not is_popup and new_context['has_change_permission'],
+            'show_save': True
+        })
+
+        if self.org_obj and new_context['show_delete_link']:
+            new_context['delete_url'] = self.model_admin_urlname('delete', self.org_obj.pk)
+
         context = super(ModelFormAdminView, self).get_context()
         context.update(new_context)
         return context
