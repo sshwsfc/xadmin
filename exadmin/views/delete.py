@@ -53,19 +53,14 @@ class DeleteAdminView(ModelAdminView):
     def post(self, request, object_id):
         if self.perms_needed:
             raise PermissionDenied
-        obj_display = force_unicode(self.obj)
         
         self.delete_model()
 
-        self.message_user(_('The %(name)s "%(obj)s" was deleted successfully.') % \
-            {'name': force_unicode(self.opts.verbose_name), 'obj': force_unicode(obj_display)}, 'success')
-
-        if not self.has_change_permission(None):
-            return HttpResponseRedirect(reverse('admin:index',
-                                                current_app=self.admin_site.name))
-        return HttpResponseRedirect(reverse('admin:%s_%s_changelist' %
-                                    (self.opts.app_label, self.opts.module_name),
-                                    current_app=self.admin_site.name))
+        response = self.post_response()
+        if isinstance(response, basestring):
+            return HttpResponseRedirect(response)
+        else:
+            return response
 
     @filter_hook
     def delete_model(self):
@@ -98,6 +93,14 @@ class DeleteAdminView(ModelAdminView):
         context.update(new_context)
         return context
 
+    @filter_hook
+    def post_response(self):
+        obj_display = force_unicode(self.obj)
+        self.message_user(_('The %(name)s "%(obj)s" was deleted successfully.') % \
+            {'name': force_unicode(self.opts.verbose_name), 'obj': force_unicode(obj_display)}, 'success')
 
+        if not self.has_change_permission(None):
+            return self.admin_urlname('index')
+        return self.model_admin_urlname('changelist')
 
 
