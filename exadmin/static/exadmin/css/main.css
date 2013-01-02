@@ -205,6 +205,11 @@ a { cursor: pointer;}
   overflow: hidden;
 }
 
+.rel-brand {
+  font-size: .8em;
+  color: #a10000;
+}
+
 /* models list */
 ul.model_ul{
   margin-bottom: 20px;
