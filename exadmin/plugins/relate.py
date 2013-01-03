@@ -10,7 +10,6 @@ from django.db import models
 from exadmin.sites import site
 from exadmin.views import BaseAdminPlugin, ListAdminView, CreateAdminView, UpdateAdminView, DeleteAdminView
 
-RELATE_VAR = '_relate'
 RELATE_PREFIX = '_rel_'
 
 class RelateMenuPlugin(BaseAdminPlugin):
