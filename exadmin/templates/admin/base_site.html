@@ -2,7 +2,7 @@
 {% load i18n exadmin %}
 {% load url from future %}
 
-{% block title %}{{ title }} | {% trans 'Django site exadmin' %}{% endblock %}
+{% block title %}{{ title }} | {{ site_title }}{% endblock %}
 
 {% block body %}
   <!-- Header -->
@@ -14,7 +14,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </a>
-        <a class="brand" href="#">{% block branding %}{% trans 'Django Exadmin' %}{% endblock %}</a>
+        <a class="brand" href="#">{% block branding %}{{ site_title }}{% endblock %}</a>
         {% view_block 'top_navbar' %}
         <div class="nav-collapse collapse">
           <ul class="nav pull-right">
@@ -40,17 +40,15 @@
             <ul class="nav nav-list">
               {% for item in nav_menu %}
                 <li class="nav-header{% if item.selected %} active{% endif %}">
-                  {% if item.icon %}<i class="icon icon-{{item.icon}}"></i> {% endif %}
                   {% if item.url %}
-                  <a href="{{ item.url }}" class="section">{{ item.title }}</a>
-                  {% else %}{{ item.title }}{% endif %}
+                  <a href="{{ item.url }}" class="section">{% if item.icon %}<i class="icon icon-{{item.icon}}"></i>{% endif %}{{ item.title }}</a>
+                  {% else %}{% if item.icon %}<i class="icon icon-{{item.icon}}"></i>{% endif %}{{ item.title }}{% endif %}
                 </li>
                 {% for sitem in item.menus %}
                 <li{% if sitem.selected %} class="active"{% endif %}>
-                  {% if sitem.icon %}<i class="icon icon-{{sitem.icon}}"></i> {% endif %}
                   {% if sitem.url %}
-                  <a href="{{ sitem.url }}">{{ sitem.title }}</a>
-                  {% else %}{{ sitem.title }}{% endif %}
+                  <a href="{{ sitem.url }}">{% if sitem.icon %}<i class="icon icon-{{sitem.icon}}"></i>{% endif %}{{ sitem.title }}</a>
+                  {% else %}{% if item.icon %}<i class="icon icon-{{item.icon}}"></i>{% endif %}{{ sitem.title }}{% endif %}
                 </li>
                 {% endfor %}
               {% endfor %}
