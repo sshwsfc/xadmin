@@ -1,6 +1,7 @@
 import functools, datetime, decimal
 from inspect import getargspec
 from functools import update_wrapper
+import copy
 from django import forms
 from django.contrib import messages
 from django.core.exceptions import ValidationError
@@ -242,67 +243,86 @@ class BaseAdminView(BaseAdminObject, View):
         return forms.Media()
 
 class CommAdminView(BaseAdminView):
-    """
-    User logined base admin view, in CommAdminView, self.request.user is setup and vaild.
-    CommAdminView also get some page comm components job.
-    """
 
-    def get_model_perms(self):
-        return {
-            'add': True,
-            'change': True,
-            'delete': True,
-        }
+    site_title = None
+
+    def get_site_menu(self):
+        return None
+
+    def get_model_url(self, model, name, *args, **kwargs):
+        return reverse('%s:%s_%s_%s' % (self.admin_site.app_name, model._meta.app_label, model._meta.module_name, name), \
+            args=args, kwargs=kwargs, current_app=self.admin_site.name)
+
+    def get_model_perm(self, model, name):
+        return '%s.%s_%s' % (model._meta.app_label, name, model._meta.module_name)
 
     @filter_hook
     def get_nav_menu(self):
+        nav_menu = self.get_site_menu()
+        if nav_menu:
+            return nav_menu
+
         nav_menu = SortedDict()
-        user = self.user
-        site_name = self.admin_site.name
+
         for model, model_admin in self.admin_site._registry.items():
             app_label = model._meta.app_label
-            has_module_perms = user.has_module_perms(app_label)
 
-            if has_module_perms:
-                perms = self.get_model_perms()
+            model_dict = {
+                'title': unicode(capfirst(model._meta.verbose_name_plural)),
+                'url': self.get_model_url(model, "changelist"),
+                'perm': self.get_model_perm(model, 'change')
+            }
 
-                # Check whether user has any perm for this module.
-                # If so, add the module to the model_list.
-                if True in perms.values():
-                    info = (app_label, model._meta.module_name)
-                    model_dict = {
-                        'title': capfirst(model._meta.verbose_name_plural),
-                        'perms': perms,
-                    }
-                    if perms.get('change', False):
-                        try:
-                            model_dict['url'] = reverse('admin:%s_%s_changelist' % info, current_app=site_name)
-                        except NoReverseMatch:
-                            pass
-                    if perms.get('add', False):
-                        try:
-                            model_dict['add_url'] = reverse('admin:%s_%s_add' % info, current_app=site_name)
-                        except NoReverseMatch:
-                            pass
-                    app_key = "app:%s" % app_label
-                    if app_key in nav_menu:
-                        nav_menu[app_key]['menus'].append(model_dict)
-                    else:
-                        nav_menu[app_key] = {
-                            'title': app_label.title(),
-                            #'url': reverse('admin:app_list', kwargs={'app_label': app_label}, current_app=site_name),
-                            'menus': [model_dict],
-                        }
+            app_key = "app:%s" % app_label
+            if app_key in nav_menu:
+                nav_menu[app_key]['menus'].append(model_dict)
+            else:
+                nav_menu[app_key] = {
+                    'title': unicode(app_label.title()),
+                    'perm': lambda u: u.has_module_perms(app_label),
+                    'menus': [model_dict],
+                }
+
         for menu in nav_menu.values():
             menu['menus'].sort(key=lambda x: x['title'])
+
+        nav_menu = nav_menu.values()
+        nav_menu.sort(key=lambda x: x['title'])
+
         return nav_menu
 
     @filter_hook
     def get_context(self):
         context = super(CommAdminView, self).get_context()
-        context.update({
-            'nav_menu': self.get_nav_menu().values()
-            })
+
+        if self.request.session.has_key('nav_menu'):
+            nav_menu = simplejson.loads(self.request.session['nav_menu'])
+        else:
+            menus = copy.copy(self.get_nav_menu())
+
+            def check_menu_permission(item):
+                need_perm = item.pop('perm', None)
+                if need_perm is None:
+                    return True
+                elif callable(need_perm):
+                    return need_perm(self.user)
+                elif need_perm == 'super':
+                    return self.user.is_superuser
+                else:
+                    return self.user.has_perm(need_perm)
+
+            def filter_item(item):
+                if item.has_key('menus'):
+                    item['menus'] = [filter_item(i) for i in item['menus'] if check_menu_permission(i)]
+                return item
+
+            nav_menu = [filter_item(item) for item in menus if check_menu_permission(item)]
+
+            self.request.session['nav_menu'] = simplejson.dumps(nav_menu)
+            self.request.session.modified = True
+
+        context['nav_menu'] = nav_menu
+        context['site_title'] = self.site_title or _(u'Django Xadmin')
         return context
 
     def message_user(self, message, level='info'):
@@ -324,6 +344,9 @@ class ModelAdminView(CommAdminView):
     def __init__(self, request, *args, **kwargs):
         self.opts = self.model._meta
         self.app_label = self.model._meta.app_label
+        self.module_name = self.model._meta.module_name
+        self.model_info = (self.app_label, self.module_name)
+
         super(ModelAdminView, self).__init__(request, *args, **kwargs)
 
     @filter_hook
@@ -342,7 +365,7 @@ class ModelAdminView(CommAdminView):
 
     def model_admin_urlname(self, name, *args, **kwargs):
         return reverse("%s:%s_%s_%s" % (self.admin_site.app_name, self.opts.app_label, \
-            self.opts.module_name, name), args=args, kwargs=kwargs)
+            self.module_name, name), args=args, kwargs=kwargs)
 
     def get_model_perms(self):
         """
@@ -351,6 +374,7 @@ class ModelAdminView(CommAdminView):
         of those actions.
         """
         return {
+            'view': self.has_view_permission(),
             'add': self.has_add_permission(),
             'change': self.has_change_permission(),
             'delete': self.has_delete_permission(),
@@ -377,39 +401,15 @@ class ModelAdminView(CommAdminView):
         """
         return self.model._default_manager.get_query_set()
 
+    def has_view_permission(self):
+        return self.user.has_perm('%s.view_%s'% self.model_info)
+
     def has_add_permission(self):
-        """
-        Returns True if the given request has permission to add an object.
-        Can be overriden by the user in subclasses.
-        """
-        opts = self.opts
-        return self.user.has_perm(opts.app_label + '.' + opts.get_add_permission())
+        return self.user.has_perm('%s.add_%s'% self.model_info)
 
     def has_change_permission(self, obj=None):
-        """
-        Returns True if the given request has permission to change the given
-        Django model instance, the default implementation doesn't examine the
-        `obj` parameter.
-
-        Can be overriden by the user in subclasses. In such case it should
-        return True if the given request has permission to change the `obj`
-        model instance. If `obj` is None, this should return True if the given
-        request has permission to change *any* object of the given type.
-        """
-        opts = self.opts
-        return self.user.has_perm(opts.app_label + '.' + opts.get_change_permission())
+        return self.user.has_perm('%s.change_%s'% self.model_info)
 
     def has_delete_permission(self, obj=None):
-        """
-        Returns True if the given request has permission to change the given
-        Django model instance, the default implementation doesn't examine the
-        `obj` parameter.
-
-        Can be overriden by the user in subclasses. In such case it should
-        return True if the given request has permission to delete the `obj`
-        model instance. If `obj` is None, this should return True if the given
-        request has permission to delete *any* object of the given type.
-        """
-        opts = self.opts
-        return self.user.has_perm(opts.app_label + '.' + opts.get_delete_permission())
+        return self.user.has_perm('%s.delete_%s'% self.model_info)
 
