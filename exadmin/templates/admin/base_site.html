@@ -41,14 +41,14 @@
               {% for item in nav_menu %}
                 <li class="nav-header{% if item.selected %} active{% endif %}">
                   {% if item.url %}
-                  <a href="{{ item.url }}" class="section">{% if item.icon %}<i class="icon icon-{{item.icon}}"></i>{% endif %}{{ item.title }}</a>
-                  {% else %}{% if item.icon %}<i class="icon icon-{{item.icon}}"></i>{% endif %}{{ item.title }}{% endif %}
+                  <a href="{{ item.url }}" class="section">{% if item.icon %}<i class="icon icon-{{item.icon}}"></i> {% endif %}{{ item.title }}</a>
+                  {% else %}{% if item.icon %}<i class="icon icon-{{item.icon}}"></i> {% endif %}{{ item.title }}{% endif %}
                 </li>
                 {% for sitem in item.menus %}
                 <li{% if sitem.selected %} class="active"{% endif %}>
                   {% if sitem.url %}
-                  <a href="{{ sitem.url }}">{% if sitem.icon %}<i class="icon icon-{{sitem.icon}}"></i>{% endif %}{{ sitem.title }}</a>
-                  {% else %}{% if item.icon %}<i class="icon icon-{{item.icon}}"></i>{% endif %}{{ sitem.title }}{% endif %}
+                  <a href="{{ sitem.url }}">{% if sitem.icon %}<i class="icon icon-{{sitem.icon}}"></i> {% endif %}{{ sitem.title }}</a>
+                  {% else %}{% if item.icon %}<i class="icon icon-{{item.icon}}"></i> {% endif %}{{ sitem.title }}{% endif %}
                 </li>
                 {% endfor %}
               {% endfor %}
