@@ -45,7 +45,6 @@ class HostAdmin(object):
 
     list_display = ('name', 'idc', 'guarantee_date', 'service_type', 'status', 'open_web', 'description')
     list_display_links = ('name',)
-    list_editable = ('ip',)
 
     raw_id_fields = ('idc',)
     style_fields = {'system': "radio-inline"}
@@ -56,7 +55,7 @@ class HostAdmin(object):
     list_bookmarks = [{'title': "Need Guarantee", 'query': {'status__exact': 2}, 'order': ('-guarantee_date',), 'cols': ('brand', 'guarantee_date', 'service_type')}]
 
     show_detail_fields = ('idc',)
-    editable_fields = ('name', 'idc', 'guarantee_date', 'service_type', 'description')
+    list_editable = ('name', 'idc', 'guarantee_date', 'service_type', 'description')
 
     form_layout = (
         Main(

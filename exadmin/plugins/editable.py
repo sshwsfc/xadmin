@@ -12,7 +12,7 @@ from exadmin.util import label_for_field
 
 class EditablePlugin(BaseAdminPlugin):
 
-    editable_fields = []
+    list_editable = []
 
     def __init__(self, admin_view):
         super(EditablePlugin, self).__init__(admin_view)
@@ -25,7 +25,7 @@ class EditablePlugin(BaseAdminPlugin):
         return None
 
     def result_item(self, item, obj, field_name, row):
-        if self.editable_fields and item.field and item.field.editable and (field_name in self.editable_fields):
+        if self.list_editable and item.field and item.field.editable and (field_name in self.list_editable):
             val = item.field.value_to_string(obj)
             field_label = label_for_field(field_name, obj,
                 model_admin = self.admin_view,
