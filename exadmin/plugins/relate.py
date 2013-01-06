@@ -93,9 +93,9 @@ class RelateObject(object):
         if len(self.to_objs) == 1:
             to_model_name = str(self.to_objs[0])
         else:
-            to_model_name = self.to_model._meta.verbose_name
+            to_model_name = force_unicode(self.to_model._meta.verbose_name)
 
-        return mark_safe("<span class='rel-brand'>%s's</span> %s" % (to_model_name, self.opts.verbose_name))
+        return mark_safe(u"<span class='rel-brand'>%s's</span> %s" % (to_model_name, force_unicode(self.opts.verbose_name)))
         
 
 class BaseRelateDisplayPlugin(BaseAdminPlugin):
