@@ -135,7 +135,10 @@ class ListRelateDisplayPlugin(BaseRelateDisplayPlugin):
 
     def get_list_display(self, list_display):
         if not self.relate_obj.is_m2m:
-            list_display.remove(self.relate_obj.field.name)
+            try:
+                list_display.remove(self.relate_obj.field.name)
+            except Exception:
+                pass
         return list_display
 
 class EditRelateDisplayPlugin(BaseRelateDisplayPlugin):
