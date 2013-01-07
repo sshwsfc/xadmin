@@ -1,0 +1,30 @@
+{% load i18n %}
+<div class="selector select-transfer">
+    <div class="selector-available">
+        <p class="title">{% trans "Available" %} {{verbose_name}}</p>
+        <div class="input-prepend selector-filter">
+          <span class="add-on"><i class="icon-search"></i></span>
+          <input type="text" id="{{field_id}}_input">
+        </div>
+        <select multiple="multiple" id="{{field_id}}_form">
+            {{available_options|safe}}
+        </select>
+        <a class="btn selector-chooseall" title="{% trans "Click to choose all at once." %}">{% trans "Choose all" %}</a>
+    </div>
+    <ul class="selector-chooser">
+        <li>
+            <a class="btn btn-small selector-add" title="{% trans "Choose" %}"><i class="icon-plus"></i></a>
+        </li>
+        <li>
+            <a class="btn btn-small selector-remove" title="{% trans "Remove" %}"><i class="icon-minus"></i></a>
+        </li>
+    </ul>
+    <div class="selector-chosen">
+        <p class="title">{% trans "Chosen" %} {{verbose_name}}</p>
+        <select multiple="multiple" {{flatatts|safe}}>
+            {{chosen_options|safe}}
+        </select>
+        <a class="btn selector-clearall" title="{% trans "Click to remove all chosen at once." %}">{% trans "Remove all" %}</a>
+    </div>
+</div>
+<div class="clearfix"></div>

@@ -19,6 +19,7 @@ class UserAdmin(object):
     list_filter = ('is_staff', 'is_superuser', 'is_active')
     search_fields = ('username', 'first_name', 'last_name', 'email')
     ordering = ('username',)
+    style_fields = {'user_permissions': 'm2m_transfer'}
 
     def get_model_form(self, **kwargs):
         if self.org_obj is None:
