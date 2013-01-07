@@ -1,0 +1,16 @@
+{% load i18n %}
+{% load crispy_forms_field %}
+<a class="editable-handler" rel="tooltip" title="%s"><i class="icon-edit"></i>
+  <div class="popover right dropdown-menu">
+    <div class="arrow"></div>
+    <div class="popover-inner">
+      <h3 class="popover-title">{{title}}</h3>
+      <div class="popover-content">
+        <form method="get" action="" class="exform editable-inline">  
+          {% crispy_field field %}
+          <button type="submit" class="btn btn-success">{% trans "Apply" %}</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</a>

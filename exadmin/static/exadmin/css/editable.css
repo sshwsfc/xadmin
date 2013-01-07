@@ -1,0 +1,7 @@
+.editable-handler .popover{
+  width: auto;
+}
+.editable-handler .popover.right{
+  left: 40px;
+  top: -2px;
+}
