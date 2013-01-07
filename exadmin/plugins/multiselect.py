@@ -1,30 +1,16 @@
 #coding:utf-8
-import exadmin
 from itertools import chain
+
+import exadmin
 from django import forms
 from django.db.models import ManyToManyField
+from django.forms.util import flatatt
 from django.template import loader
-from django.utils.safestring import mark_safe
-
-from django.conf import settings
-from django.forms.util import flatatt, to_current_timezone
-from django.utils.datastructures import MultiValueDict, MergeDict
+from django.utils.encoding import force_unicode
 from django.utils.html import escape, conditional_escape
-from django.utils.translation import ugettext, ugettext_lazy
-from django.utils.encoding import StrAndUnicode, force_unicode
 from django.utils.safestring import mark_safe
-from django.utils import datetime_safe, formats
-from django.conf import settings
-from django.forms.util import flatatt, to_current_timezone
-from django.utils.datastructures import MultiValueDict, MergeDict
-from django.utils.html import escape, conditional_escape
-from django.utils.translation import ugettext, ugettext_lazy
-from django.utils.encoding import StrAndUnicode, force_unicode
-from django.utils.safestring import mark_safe
-from django.utils import datetime_safe, formats
-
-from exadmin.views import BaseAdminPlugin, ModelFormAdminView
 from exadmin.util import static
+from exadmin.views import BaseAdminPlugin, ModelFormAdminView
 
 
 class SelectMultipleTransfer(forms.SelectMultiple):
@@ -84,15 +70,33 @@ class SelectMultipleTransfer(forms.SelectMultiple):
         }
         return mark_safe(loader.render_to_string('admin/forms/transfer.html', context))
 
+class SelectMultipleDropdown(forms.SelectMultiple):
+
+    @property
+    def media(self):
+        return forms.Media(js=[static("exadmin/js/bootstrap-multiselect.js"), static("exadmin/js/widgets/multiselect.js")], \
+            css={'screen': [static('exadmin/css/bootstrap-multiselect.css'),]})
+
+    def render(self, name, value, attrs=None, choices=()):
+        if attrs is None:
+            attrs = {}
+        attrs['class'] = 'selectmultiple selectdropdown'
+        return super(SelectMultipleDropdown, self).render(name, value, attrs, choices)
+
 class M2MSelectPlugin(BaseAdminPlugin):
 
     def init_request(self, *args, **kwargs):
         return hasattr(self.admin_view, 'style_fields') and \
-            'm2m_transfer' in self.admin_view.style_fields.values()
+            (
+                'm2m_transfer' in self.admin_view.style_fields.values() or 
+                'm2m_dropdown' in self.admin_view.style_fields.values()
+            )
 
     def get_field_style(self, attrs, db_field, style, **kwargs):
         if style == 'm2m_transfer' and isinstance(db_field, ManyToManyField):
             return {'widget': SelectMultipleTransfer(db_field.verbose_name, False), 'help_text': ''}
+        if style == 'm2m_dropdown' and isinstance(db_field, ManyToManyField):
+            return {'widget': SelectMultipleDropdown, 'help_text': ''}
         return attrs
 
 

@@ -7,9 +7,10 @@
 .time-field {
   max-width: 60px;
 }
-.selectmultiple {
+select.selectmultiple {
   width: 70%;
   max-width: 350px;
+  height: 120px;
 }
 .url-field {
     width: 30em;
