@@ -24,3 +24,10 @@
   width: 100%;
   margin-bottom: 10px;
 }
+
+.editable form .control-group,
+.editable form .controls{
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+}
