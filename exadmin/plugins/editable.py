@@ -1,5 +1,18 @@
 
 
+from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
+from django.db import models
+from django import forms
+from django.forms.models import modelform_factory
+from django.http import Http404
+from django.template import loader
+from django.template.response import TemplateResponse
+from django.utils.encoding import force_unicode, smart_unicode
+from django.utils.html import escape
+from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext as _
+from django.utils.html import conditional_escape
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -24,6 +37,7 @@ from django.forms import model_to_dict
 from exadmin.layout import Field, render_field
 from exadmin.plugins.actions import BaseActionView
 from exadmin.plugins.inline import InlineModelAdmin
+from exadmin.plugins.ajax import JsonErrorDict
 from exadmin.sites import site
 from exadmin.util import unquote, quote, model_format_dict
 from exadmin.views import BaseAdminPlugin, ModelAdminView, CreateAdminView, UpdateAdminView, DetailAdminView, ModelFormAdminView, DeleteAdminView, ListAdminView
@@ -80,28 +94,38 @@ class EditablePlugin(BaseAdminPlugin):
             media.add_css({'screen': [self.static('exadmin/css/editable.css'),]})
         return media
 
-class EditPatchView(UpdateAdminView):
-
-    def get_form_datas(self):
-        params = {'instance': self.org_obj}
-        if self.request_method == 'post':
-            data = model_to_dict(self.org_obj)
-            data.update(self.request.POST)
-            params.update({'data': data, 'files': self.request.FILES})
-        return params
+class EditPatchView(ModelFormAdminView):
 
     @csrf_protect_m
     @transaction.commit_on_success
-    def post(self, request, *args, **kwargs):
-        self.instance_forms()
-        form = self.form_obj
+    def post(self, request, object_id):
+
+        self.org_obj = self.get_object(unquote(object_id))
+
+        if not self.has_change_permission(self.org_obj):
+            raise PermissionDenied
+
+        if self.org_obj is None:
+            raise Http404(_('%(name)s object with primary key %(key)r does not exist.') % \
+                {'name': force_unicode(self.opts.verbose_name), 'key': escape(object_id)})
+
+        fields = [f.name for f in self.opts.fields]
+        defaults = {
+            "form": forms.ModelForm,
+            "fields": [f for f in request.POST.keys() if f in fields],
+            "formfield_callback": self.formfield_for_dbfield,
+        }
+        form_class = modelform_factory(self.model, **defaults)
+        form = form_class(instance=self.org_obj, data=request.POST, files=request.FILES)
+
         result = {}
         if form.is_valid():
             form.save(commit=True)
             result['result'] = 'success'
+            result['new_data'] = form.cleaned_data
         else:
             result['result'] = 'error'
-            result['errors'] = []
+            result['errors'] = JsonErrorDict(form.errors, form).as_json()
 
         return self.render_response(result)
 
