@@ -36,7 +36,7 @@ class SelectMultipleTransfer(forms.SelectMultiple):
         attrs['class'] = ''
         if self.is_stacked:
             attrs['class'] += 'stacked'
-
+        if value is None: value = []
         final_attrs = self.build_attrs(attrs, name=name)
 
         selected_choices = set(force_unicode(v) for v in value)
