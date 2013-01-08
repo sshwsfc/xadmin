@@ -1,7 +1,26 @@
 .editable-handler .popover{
   width: auto;
 }
-.editable-handler .popover.right{
-  left: 40px;
-  top: -2px;
+.editable form{
+  margin-bottom: 0px;
+}
+.editable form .text-field, 
+.editable form .textinput {
+    width: 200px;
+}
+
+.editable form .int-field {
+    width: 150px;
+}
+.editable form .textarea-field{
+    width: 250px;
+    height: 50px;
+}
+
+.editable form select, 
+.editable form .select2-container {
+  max-width: 200px;
+  min-width: 100px;
+  width: 100%;
+  margin-bottom: 10px;
 }

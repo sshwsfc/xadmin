@@ -44,12 +44,6 @@ class EditablePlugin(BaseAdminPlugin):
             self.model_form_admins = {}
         return bool(self.list_editable)
 
-    def get_details_url(self, obj):
-        resuorce = api_manager.get_resource(obj)
-        if resuorce:
-            return resuorce.get_resource_uri(obj)
-        return None
-
     def _get_form_admin(self, obj):
         if not self.model_form_admins.has_key(obj):
             self.model_form_admins[obj] = self.get_model_view(ModelFormAdminUtil, self.model, obj)
@@ -64,10 +58,9 @@ class EditablePlugin(BaseAdminPlugin):
                 return_attr = False
             )
             data_attr = {
-                'pk': str(getattr(obj, obj._meta.pk.attname)),
                 'name': field_name,
+                'action': self.admin_view.model_admin_urlname('change', getattr(obj, obj._meta.pk.attname)),
                 'title': _(u"Enter %s") % field_label,
-                'url': self.get_details_url(obj),
                 'field': form[field_name]
             }
             item.wraps.insert(0, '<span class="editable-field">%s</span>')
@@ -76,27 +69,6 @@ class EditablePlugin(BaseAdminPlugin):
             if not self.editable_need_fields.has_key(field_name):
                 self.editable_need_fields[field_name] = item.field
         return item
-
-    def get_field_settings(self, name, field):
-        settings = {}
-        if field.choices:
-            settings['type'] = 'select'
-            settings['source'] = dict(field.get_choices(
-                    include_blank = field.blank,
-                    blank_choice=[('', _('None'))]
-                ))
-        elif isinstance(field, (models.DateField, models.DateTimeField)):
-            settings['type'] = 'date'
-        elif isinstance(field, (models.ForeignKey, models.ManyToManyField)):
-            settings['type'] = 'select'
-        elif isinstance(field, models.TextField):
-            settings['type'] = 'textarea'
-        elif isinstance(field, models.IntegerField):
-            settings['type'] = 'text'
-            settings['inputclass'] = 'input-mini'
-        else:
-            settings['type'] = 'text'
-        return settings
 
     # Media
     def get_media(self, media):
