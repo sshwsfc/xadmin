@@ -216,7 +216,7 @@
     var el = this.el;
 
     this.$tip = el.find('.popover.editable');
-    this.form = el.find('form');
+    this.$form = el.find('form');
     this.rendered_form = false;
 
     this.einit('editable', element, options );
@@ -226,17 +226,56 @@
     constructor: Editable
 
     , einit: function( type, element, options ) {
-      this.form.submit($.proxy(this.save, this));
+      this.$form.submit($.proxy(this.submit, this));
 
       this.cinit(type, element, options);
     }
     , setContent: function () {
       if(!this.rendered_form){
-        this.form.exform();
+        this.$form.exform();
         this.rendered_form = true;
       }
       this.$tip.removeClass('fade in top bottom left right')
     }
+    , submit: function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        
+        $.when(this.save())
+        .done($.proxy(function(data) {
+          if(data['result'] != 'success' && data['errors']){
+            var err_html = [];
+            for (var i = data['errors'].length - 1; i >= 0; i--) {
+              err_html.push('<span class="help-inline error"><strong>'+data['errors'][i]+'</strong></span>');
+            };
+            this.$form.find("control-group").addClass('error');
+            this.$form.find('.controls').append(err_html.join('\n'));
+
+          } else {
+            alert('ok');
+          }
+        }, this))
+        .fail($.proxy(function(xhr) {
+          this.error(typeof xhr === 'string' ? xhr : xhr.responseText || xhr.statusText || 'Unknown error!'); 
+          this.showForm();
+        }, this));
+    }
+    , save: function(newValue) {
+
+      this.$form.find('.control-group').removeClass('error');
+      this.$form.find('.controls .help-inline.error').remove();
+
+      return $.ajax({
+        data: this.$form.serialize(),
+        url: this.$form.attr('action'),
+        type: "POST",
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        beforeSend: function(xhr, settings) {
+            xhr.setRequestHeader("X-CSRFToken", $.getCookie('csrftoken'));
+        }
+      })
+    }, 
   })
 
   $.fn.editable = function ( option ) {
