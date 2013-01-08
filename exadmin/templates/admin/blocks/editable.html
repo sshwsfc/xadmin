@@ -10,7 +10,11 @@
       </h3>
       <div class="popover-content">
         <form method="post" action="{{action}}" class="">  
-          {% crispy_field field %}
+          <div class="control-group">
+            <div class="controls">
+              {% crispy_field field %}
+            </div>
+          </div>
           <button type="submit" class="btn btn-success">{% trans "Apply" %}</button>
         </form>
       </div>
