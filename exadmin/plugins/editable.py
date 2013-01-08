@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.template import loader
 from django.utils import simplejson
+from django.db import transaction
 from django.contrib.contenttypes.generic import GenericInlineModelAdmin, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
@@ -19,6 +20,7 @@ from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
+from django.forms import model_to_dict
 from exadmin.layout import Field, render_field
 from exadmin.plugins.actions import BaseActionView
 from exadmin.plugins.inline import InlineModelAdmin
@@ -59,7 +61,7 @@ class EditablePlugin(BaseAdminPlugin):
             )
             data_attr = {
                 'name': field_name,
-                'action': self.admin_view.model_admin_urlname('change', getattr(obj, obj._meta.pk.attname)),
+                'action': self.admin_view.model_admin_urlname('patch', getattr(obj, obj._meta.pk.attname)),
                 'title': _(u"Enter %s") % field_label,
                 'field': form[field_name]
             }
@@ -78,15 +80,32 @@ class EditablePlugin(BaseAdminPlugin):
             media.add_css({'screen': [self.static('exadmin/css/editable.css'),]})
         return media
 
-    # Js Block
-    def _block_extrabody(self, context, nodes):
-        if self.editable_need_fields:
-            data = {}
-            for name, field in self.editable_need_fields.items():
-                data[name] = self.get_field_settings(name, field)
-            context.update({"fields_settings": simplejson.dumps(data, ensure_ascii=False)})
-            nodes.append(loader.render_to_string('admin/blocks/editable.js.html', context_instance=context))
+class EditPatchView(UpdateAdminView):
+
+    def get_form_datas(self):
+        params = {'instance': self.org_obj}
+        if self.request_method == 'post':
+            data = model_to_dict(self.org_obj)
+            data.update(self.request.POST)
+            params.update({'data': data, 'files': self.request.FILES})
+        return params
+
+    @csrf_protect_m
+    @transaction.commit_on_success
+    def post(self, request, *args, **kwargs):
+        self.instance_forms()
+        form = self.form_obj
+        result = {}
+        if form.is_valid():
+            form.save(commit=True)
+            result['result'] = 'success'
+        else:
+            result['result'] = 'error'
+            result['errors'] = []
+
+        return self.render_response(result)
 
 site.register_plugin(EditablePlugin, ListAdminView)
+site.register_modelview(r'^(.+)/patch/$', EditPatchView, name='%s_%s_patch')
 
 
