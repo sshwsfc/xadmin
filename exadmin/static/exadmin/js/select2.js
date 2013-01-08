@@ -947,8 +947,8 @@ the specific language governing permissions and limitations under the Apache Lic
             }
 
             css = $.extend({
-                top: dropTop,
-                left: dropLeft,
+                //top: dropTop,
+                //left: dropLeft,
                 width: width
             }, evaluate(this.opts.dropdownCss));
 
@@ -1028,8 +1028,8 @@ the specific language governing permissions and limitations under the Apache Lic
 
             this.updateResults(true);
 
-            if(this.dropdown[0] !== this.body().children().last()[0]) {
-                this.dropdown.detach().appendTo(this.body());
+            if(this.dropdown[0] !== this.container.children().last()[0]) {
+                this.dropdown.detach().appendTo(this.container);
             }
 
             this.dropdown.show();
