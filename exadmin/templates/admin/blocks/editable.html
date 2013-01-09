@@ -1,5 +1,6 @@
 {% load i18n %}
 {% load crispy_forms_field %}
+
 <a class="editable-handler" rel="tooltip" title="%s" data-field="{{field.name}}"><i class="icon-edit"></i>
   <div class="popover editable">
     <div class="arrow"></div>
@@ -11,9 +12,28 @@
       <div class="popover-content">
         <form method="post" action="{{action}}" class="">  
           <div class="control-group">
-            <div class="controls">
-              {% crispy_field field %}
-            </div>
+            {% if field|css_class == "checkboxselectmultiple" %}
+                {% include 'bootstrap/layout/checkboxselectmultiple.html' %}
+            {% endif %} 
+
+            {% if field|css_class == "radioselect" %}
+                {% include 'bootstrap/layout/radioselect.html' %}
+            {% endif %}
+
+            {% if field|css_class != "checkboxselectmultiple" and field|css_class != "radioselect" %}
+                <div class="controls">
+                    {% if field|is_checkbox %}
+                        <label for="{{ field.id_for_label }}" class="checkbox {% if field.field.required %}requiredField{% endif %}">
+                            {% crispy_field field %}
+                            {{ field.label|safe }}
+                            {% include 'bootstrap/layout/help_text_and_errors.html' %}
+                        </label>
+                    {% else %}
+                        {% crispy_field field %}
+                        {% include 'bootstrap/layout/help_text_and_errors.html' %}
+                    {% endif %}
+                </div>
+            {% endif %}
           </div>
           <button type="submit" class="btn btn-success">{% trans "Apply" %}</button>
         </form>
