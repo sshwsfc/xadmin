@@ -358,8 +358,15 @@
 
       this.$mask.show();
 
+      var off_check_box = Object();
+      this.$form.find('input[type=checkbox]').each(function(){
+        if(!$(this).attr('checked')){
+          off_check_box[$(this).attr('name')] = '';
+        }
+      })
+
       return $.ajax({
-        data: this.$form.serialize(),
+        data: [this.$form.serialize(), $.param(off_check_box)].join('&'),
         url: this.$form.attr('action'),
         type: "POST",
         dataType: 'json',
