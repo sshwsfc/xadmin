@@ -1,51 +1,21 @@
-
-
-from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
-from django.db import models
 from django import forms
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
+from django.db import models, transaction
 from django.forms.models import modelform_factory
 from django.http import Http404
 from django.template import loader
-from django.template.response import TemplateResponse
 from django.utils.encoding import force_unicode, smart_unicode
-from django.utils.html import escape
+from django.utils.html import escape, conditional_escape
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
-from django.utils.html import conditional_escape
-from django.utils.translation import ugettext as _
-from django.core.urlresolvers import reverse
-from django.db import models
-from django.template import loader
-from django.utils import simplejson
-from django.db import transaction
-from django.contrib.contenttypes.generic import GenericInlineModelAdmin, GenericRelation
-from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import PermissionDenied
-from django.db import models
-from django.db.models.query import QuerySet
-from django.db.models.related import RelatedObject
-from django.forms.models import model_to_dict
-from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
-from django.template.response import TemplateResponse
-from django.utils.encoding import force_unicode
-from django.utils.safestring import mark_safe
-from django.utils.text import capfirst
-from django.utils.translation import ugettext as _
-from django.forms import model_to_dict
-from exadmin.layout import Field, render_field
-from exadmin.plugins.actions import BaseActionView
-from exadmin.plugins.inline import InlineModelAdmin
 from exadmin.plugins.ajax import JsonErrorDict
 from exadmin.sites import site
-from exadmin.util import unquote, quote, model_format_dict
-from exadmin.views import BaseAdminPlugin, ModelAdminView, CreateAdminView, UpdateAdminView, DetailAdminView, ModelFormAdminView, DeleteAdminView, ListAdminView
-from exadmin.views.base import csrf_protect_m, filter_hook
+from exadmin.util import lookup_field, display_for_field, label_for_field, unquote, boolean_icon
+from exadmin.views import BaseAdminPlugin, ModelFormAdminView, ListAdminView
+from exadmin.views.base import csrf_protect_m
 from exadmin.views.edit import ModelFormAdminUtil
-from exadmin.sites import site
-from exadmin.views import BaseAdminPlugin, ListAdminView, api_manager
-from exadmin.util import label_for_field
+from exadmin.views.list import EMPTY_CHANGELIST_VALUE
+
 
 class EditablePlugin(BaseAdminPlugin):
 
@@ -56,9 +26,10 @@ class EditablePlugin(BaseAdminPlugin):
         self.editable_need_fields = {}
 
     def init_request(self, *args, **kwargs):
-        if self.list_editable:
+        active = bool(self.request.method == 'GET' and self.list_editable)
+        if active:
             self.model_form_admins = {}
-        return bool(self.list_editable)
+        return active
 
     def _get_form_admin(self, obj):
         if not self.model_form_admins.has_key(obj):
@@ -94,7 +65,37 @@ class EditablePlugin(BaseAdminPlugin):
             media.add_css({'screen': [self.static('exadmin/css/editable.css'),]})
         return media
 
-class EditPatchView(ModelFormAdminView):
+class EditPatchView(ModelFormAdminView, ListAdminView):
+
+    def get_new_field_html(self, f):
+        result = self.result_item(self.org_obj, f, {'is_display_first': False, 'object': self.org_obj})
+        return mark_safe(result.text) if result.allow_tags else conditional_escape(result.text)
+
+    def _get_new_field_html(self, field_name):
+        try:
+            f, attr, value = lookup_field(field_name, self.org_obj, self)
+        except (AttributeError, ObjectDoesNotExist):
+            return EMPTY_CHANGELIST_VALUE
+        else:
+            allow_tags = False
+            if f is None:
+                allow_tags = getattr(attr, 'allow_tags', False)
+                boolean = getattr(attr, 'boolean', False)
+                if boolean:
+                    allow_tags = True
+                    text = boolean_icon(value)
+                else:
+                    text = smart_unicode(value)
+            else:
+                if isinstance(f.rel, models.ManyToOneRel):
+                    field_val = getattr(self.org_obj, f.name)
+                    if field_val is None:
+                        text = EMPTY_CHANGELIST_VALUE
+                    else:
+                        text = field_val
+                else:
+                    text = display_for_field(value, f)
+            return mark_safe(text) if allow_tags else conditional_escape(text)
 
     @csrf_protect_m
     @transaction.commit_on_success
@@ -109,10 +110,11 @@ class EditPatchView(ModelFormAdminView):
             raise Http404(_('%(name)s object with primary key %(key)r does not exist.') % \
                 {'name': force_unicode(self.opts.verbose_name), 'key': escape(object_id)})
 
-        fields = [f.name for f in self.opts.fields]
+        model_fields = [f.name for f in self.opts.fields]
+        fields = [f for f in request.POST.keys() if f in model_fields]
         defaults = {
             "form": forms.ModelForm,
-            "fields": [f for f in request.POST.keys() if f in fields],
+            "fields": fields,
             "formfield_callback": self.formfield_for_dbfield,
         }
         form_class = modelform_factory(self.model, **defaults)
@@ -123,6 +125,7 @@ class EditPatchView(ModelFormAdminView):
             form.save(commit=True)
             result['result'] = 'success'
             result['new_data'] = form.cleaned_data
+            result['new_html'] = dict([(f, self.get_new_field_html(f)) for f in fields])
         else:
             result['result'] = 'error'
             result['errors'] = JsonErrorDict(form.errors, form).as_json()
