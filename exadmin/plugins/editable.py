@@ -16,7 +16,6 @@ from exadmin.views.base import csrf_protect_m
 from exadmin.views.edit import ModelFormAdminUtil
 from exadmin.views.list import EMPTY_CHANGELIST_VALUE
 
-
 class EditablePlugin(BaseAdminPlugin):
 
     list_editable = []
@@ -33,7 +32,7 @@ class EditablePlugin(BaseAdminPlugin):
 
     def _get_form_admin(self, obj):
         if not self.model_form_admins.has_key(obj):
-            self.model_form_admins[obj] = self.get_model_view(ModelFormAdminUtil, self.model, obj)
+            self.model_form_admins[obj] = self.get_model_view(ModelFormAdminUtil, self.model, obj, opts={'get_readonly_fields': lambda self:[]})
         return self.model_form_admins[obj]
 
     def result_item(self, item, obj, field_name, row):
