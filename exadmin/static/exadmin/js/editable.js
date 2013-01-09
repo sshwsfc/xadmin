@@ -215,8 +215,15 @@
     this.el = $(element);
     var el = this.el;
 
+    this.$text = el.parent().parent().find('.editable-field');
+    this.field = el.data('field');
+
     this.$tip = el.find('.popover.editable');
     this.$form = el.find('form');
+    this.$mask = $('<div class="mask" style="display: none;"><div class="progress progress-striped active">'+
+      '<div class="bar" style="width: 100%;"></div>'+
+      '</div></div>');
+    el.find('.popover-content').append(this.$mask);
     this.rendered_form = false;
 
     this.einit('editable', element, options );
@@ -243,27 +250,35 @@
         
         $.when(this.save())
         .done($.proxy(function(data) {
+          this.$mask.hide();
           if(data['result'] != 'success' && data['errors']){
             var err_html = [];
             for (var i = data['errors'].length - 1; i >= 0; i--) {
-              err_html.push('<span class="help-inline error"><strong>'+data['errors'][i]+'</strong></span>');
-            };
-            this.$form.find("control-group").addClass('error');
+              var e = data['errors'][i];
+              for (var j = e['errors'].length - 1; j >= 0; j--) {
+                err_html.push('<span class="help-inline error">'+e['errors'][j]+'</span>');
+              }
+            }
+            this.$form.find(".control-group").addClass('error');
             this.$form.find('.controls').append(err_html.join('\n'));
-
           } else {
-            alert('ok');
+            this.$text.html(data['new_html'][this.field]);
+            if(this.isShown()){
+              this.clickery();
+            }
           }
         }, this))
         .fail($.proxy(function(xhr) {
-          this.error(typeof xhr === 'string' ? xhr : xhr.responseText || xhr.statusText || 'Unknown error!'); 
-          this.showForm();
+          this.$mask.hide();
+          alert(typeof xhr === 'string' ? xhr : xhr.responseText || xhr.statusText || 'Unknown error!'); 
         }, this));
     }
     , save: function(newValue) {
 
       this.$form.find('.control-group').removeClass('error');
       this.$form.find('.controls .help-inline.error').remove();
+
+      this.$mask.show();
 
       return $.ajax({
         data: this.$form.serialize(),

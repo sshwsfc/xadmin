@@ -31,3 +31,18 @@
   padding: 0px;
   border: 0px;
 }
+
+.editable .mask {
+  position: absolute;
+  left: 0px; top: 0px;
+  bottom: 0px; right: 0px;
+  padding: 20px;
+  opacity: 0.7;
+  filter: alpha(opacity=70);
+  background: #fff;
+}
+
+.editable .mask .progress{
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
