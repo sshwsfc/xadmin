@@ -1,6 +1,12 @@
 .editable-handler .popover{
   width: auto;
 }
+.editable .popover-title{
+  white-space:nowrap; 
+}
+.editable .popover-title .close {
+  margin: -4px 0px 0px 10px;
+}
 .editable form{
   margin-bottom: 0px;
 }
@@ -30,6 +36,10 @@
   margin: 0px;
   padding: 0px;
   border: 0px;
+}
+
+.editable form .controls label {
+  white-space:nowrap; 
 }
 
 .editable .mask {
