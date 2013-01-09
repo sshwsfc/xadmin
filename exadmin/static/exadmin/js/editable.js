@@ -313,6 +313,9 @@
           .offset(tp)
           .addClass(placement)
           .addClass('in')
+
+        var first = this.$form.find('input,textarea,select').first();
+        if(first) first.focus();
       }
     }
     , setContent: function () {
