@@ -38,7 +38,9 @@ class EditablePlugin(BaseAdminPlugin):
 
     def result_item(self, item, obj, field_name, row):
         if self.list_editable and item.field and item.field.editable and (field_name in self.list_editable):
+            pk = getattr(obj, obj._meta.pk.attname)
             form = self._get_form_admin(obj).form_obj
+            form.prefix = str(pk)
 
             field_label = label_for_field(field_name, obj,
                 model_admin = self.admin_view,
@@ -46,7 +48,7 @@ class EditablePlugin(BaseAdminPlugin):
             )
             data_attr = {
                 'name': field_name,
-                'action': self.admin_view.model_admin_urlname('patch', getattr(obj, obj._meta.pk.attname)),
+                'action': self.admin_view.model_admin_urlname('patch', pk),
                 'title': _(u"Enter %s") % field_label,
                 'field': form[field_name]
             }
@@ -110,8 +112,10 @@ class EditPatchView(ModelFormAdminView, ListAdminView):
             raise Http404(_('%(name)s object with primary key %(key)r does not exist.') % \
                 {'name': force_unicode(self.opts.verbose_name), 'key': escape(object_id)})
 
-        model_fields = [f.name for f in self.opts.fields]
-        fields = [f for f in request.POST.keys() if f in model_fields]
+        pk = getattr(self.org_obj, self.org_obj._meta.pk.attname)
+        model_fields = [str(pk) + '-' + f.name for f in self.opts.fields]
+        fields = [f[len(str(pk)) + 1:] for f in request.POST.keys() if f in model_fields]
+
         defaults = {
             "form": forms.ModelForm,
             "fields": fields,
@@ -119,6 +123,7 @@ class EditPatchView(ModelFormAdminView, ListAdminView):
         }
         form_class = modelform_factory(self.model, **defaults)
         form = form_class(instance=self.org_obj, data=request.POST, files=request.FILES)
+        form.prefix = str(pk)
 
         result = {}
         if form.is_valid():
