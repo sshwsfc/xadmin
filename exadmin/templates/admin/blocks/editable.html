@@ -1,7 +1,7 @@
 {% load i18n %}
 {% load crispy_forms_field %}
 
-<a class="editable-handler" rel="tooltip" title="%s" data-field="{{field.name}}"><i class="icon-edit"></i>
+<a class="editable-handler" title="%s" data-field="{{field.name}}"><i class="icon-edit"></i>
   <div class="popover editable">
     <div class="arrow"></div>
     <div class="popover-inner">
@@ -35,7 +35,7 @@
                 </div>
             {% endif %}
           </div>
-          <button type="submit" class="btn btn-success">{% trans "Apply" %}</button>
+          <button type="submit" class="btn btn-primary btn-block">{% trans "Apply" %}</button>
         </form>
       </div>
     </div>
