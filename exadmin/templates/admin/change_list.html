@@ -3,6 +3,11 @@
 {% load url from future %}
 {% load exadmin %}
 
+{% block extrahead %}{{ block.super }}
+{% url 'admin:jsi18n' as jsi18nurl %}
+<script type="text/javascript" src="{{ jsi18nurl|default:"../../../jsi18n/" }}"></script>
+{% endblock %}
+
 {% block extrastyle %}
 <style type="text/css">
   .btn-toolbar{margin-top: 0;}

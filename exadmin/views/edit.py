@@ -261,18 +261,14 @@ class ModelFormAdminView(ModelAdminView):
 
     @filter_hook
     def get_context(self):
-        form = self.form_obj
-
-        media = self.media + form.media
         ordered_objects = self.opts.get_ordered_objects()
         add = self.org_obj is None
         change = self.org_obj is not None
         is_popup = "_popup" in self.request.REQUEST
 
         new_context = {
-            'form': form,
+            'form': self.form_obj,
             'is_popup': is_popup,
-            'media': media,
             'original': self.org_obj,
             'show_delete': self.org_obj is not None,
             'add': add,
@@ -322,6 +318,7 @@ class ModelFormAdminView(ModelAdminView):
     @filter_hook
     def get_media(self):
         media = super(ModelFormAdminView, self).get_media()
+        media = media + self.form_obj.media
         media.add_js([self.static('exadmin/js/select2.js'), self.static('exadmin/js/form.js')])
         media.add_css({'screen': [self.static('exadmin/css/form.css'), self.static('exadmin/css/select2.css')]})
         return media
@@ -497,5 +494,14 @@ class UpdateAdminView(ModelFormAdminView):
             return post_url
 
 
+class ModelFormAdminUtil(ModelFormAdminView):
 
+    def init_request(self, obj):
+        self.org_obj = obj
+        self.prepare_form()
+        self.instance_forms()
+
+    @filter_hook
+    def get_form_datas(self):
+        return {'instance': self.org_obj}
 

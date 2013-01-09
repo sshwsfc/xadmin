@@ -1,0 +1,23 @@
+{% load i18n %}
+{% load crispy_forms_field %}
+<a class="editable-handler" rel="tooltip" title="%s" data-field="{{field.name}}"><i class="icon-edit"></i>
+  <div class="popover editable">
+    <div class="arrow"></div>
+    <div class="popover-inner">
+      <h3 class="popover-title">
+        <button class="close" data-dismiss="clickover">&times;</button>
+        {{title}}
+      </h3>
+      <div class="popover-content">
+        <form method="post" action="{{action}}" class="">  
+          <div class="control-group">
+            <div class="controls">
+              {% crispy_field field %}
+            </div>
+          </div>
+          <button type="submit" class="btn btn-success">{% trans "Apply" %}</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</a>
