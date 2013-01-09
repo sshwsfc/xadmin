@@ -111,7 +111,8 @@ class JSONEncoder(DjangoJSONEncoder):
 class BaseAdminObject(object):
 
     def get_view(self, view_class, admin_class=None, *args, **kwargs):
-        return self.admin_site.get_view_class(view_class, admin_class)(self.request, *args, **kwargs)
+        opts = kwargs.pop('opts', {})
+        return self.admin_site.get_view_class(view_class, admin_class, **opts)(self.request, *args, **kwargs)
 
     def get_model_view(self, view_class, model, *args, **kwargs):
         return self.get_view(view_class, self.admin_site._registry.get(model), *args, **kwargs)
