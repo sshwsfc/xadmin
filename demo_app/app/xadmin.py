@@ -56,7 +56,8 @@ class HostAdmin(object):
 
     show_detail_fields = ('idc',)
     list_editable = ('name', 'idc', 'guarantee_date', 'service_type', 'description')
-
+    save_as = True
+    
     form_layout = (
         Main(
             Fieldset('Company data',

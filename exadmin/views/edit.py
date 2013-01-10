@@ -419,9 +419,6 @@ class UpdateAdminView(ModelFormAdminView):
             raise Http404(_('%(name)s object with primary key %(key)r does not exist.') % \
                 {'name': force_unicode(self.opts.verbose_name), 'key': escape(object_id)})
 
-        if self.request.method == 'POST' and "_saveasnew" in self.request.POST:
-            self.org_obj = None
-
         # comm method for both get and post
         self.prepare_form()
 
@@ -452,6 +449,11 @@ class UpdateAdminView(ModelFormAdminView):
             "admin/%s/change_form.html" % self.opts.app_label,
             "admin/change_form.html"
         ], context, current_app=self.admin_site.name)
+
+    def post(self, request, *args, **kwargs):
+        if "_saveasnew" in self.request.POST:
+            return self.get_model_view(CreateAdminView, self.model).post(request)
+        return super(UpdateAdminView, self).post(request, *args, **kwargs)
 
     @filter_hook
     def post_response(self):
