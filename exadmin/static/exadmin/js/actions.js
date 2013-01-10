@@ -5,7 +5,8 @@
         var actionCheckboxes = $(this);
         var list_editable_changed = false;
         checker = function(checked) {
-            if (checked) {
+            console.log(checked);
+            if (checked == 'true') {
                 showQuestion();
             } else {
                 reset();
@@ -65,7 +66,7 @@
             }
         });
         $(options.allToggle).show().click(function() {
-            checker($(this).attr("checked"));
+            checker($(this).is(":checked"));
             updateCounter();
         });
         $("div.actions .question").click(function(event) {
@@ -77,7 +78,7 @@
             event.preventDefault();
             $(options.allToggle).attr("checked", false);
             clearAcross();
-            checker(0);
+            checker(false);
             updateCounter();
         });
         lastChecked = null;
