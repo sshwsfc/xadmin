@@ -22,13 +22,18 @@ class ChartWidget(ModelBaseWidget):
     widget_type = 'chart'
     template = 'admin/widgets/chart.html'
 
-    def __init__(self, dashboard, opts):
-        self.list_params = opts.pop('params', {})
-        chart = opts.pop('chart', None)
-        super(ChartWidget, self).__init__(dashboard, opts)
+    def convert(self, data):
+        self.list_params = data.pop('params', {})
+        self.chart = data.pop('chart', None)
+
+    def setup(self):
+        super(ChartWidget, self).setup()
+
         self.charts = {}
         self.one_chart = False
         model_admin = self.admin_site._registry[self.model]
+        chart = self.chart
+
         if hasattr(model_admin, 'data_charts'):
             if chart and chart in model_admin.data_charts:
                 self.charts = {chart : model_admin.data_charts[chart]}
@@ -41,7 +46,8 @@ class ChartWidget(ModelBaseWidget):
                     self.title = _("%s Charts") % self.model._meta.verbose_name_plural
 
     def filte_choices_model(self, model, modeladmin):
-        return bool(getattr(modeladmin, 'data_charts', None))
+        return bool(getattr(modeladmin, 'data_charts', None)) and \
+            super(ChartWidget, self).filte_choices_model(model, modeladmin)
 
     def get_chart_url(self, name, v):
         return self.model_admin_urlname('chart', name) + "?" + urlencode(self.list_params)
