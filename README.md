@@ -1,4 +1,4 @@
-django-exadmin
+django-exadmin [![Build Status](https://travis-ci.org/sshwsfc/django-exadmin.png?branch=master)](https://travis-ci.org/sshwsfc/django-exadmin)
 ==============
 
 New style and free plugin django admin module, UI base bootstrap2
