@@ -22,6 +22,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import classonlymethod
 from django.utils.translation import ugettext as _
 from django.utils.datastructures import SortedDict
+from django.conf import settings
 from exadmin.util import static
 
 csrf_protect_m = method_decorator(csrf_protect)
@@ -296,11 +297,11 @@ class CommAdminView(BaseAdminView):
     def get_context(self):
         context = super(CommAdminView, self).get_context()
 
-        if self.request.session.has_key('nav_menu'):
+        if not settings.DEBUG and self.request.session.has_key('nav_menu'):
             nav_menu = simplejson.loads(self.request.session['nav_menu'])
         else:
             menus = copy.copy(self.get_nav_menu())
-
+            
             def check_menu_permission(item):
                 need_perm = item.pop('perm', None)
                 if need_perm is None:
@@ -318,9 +319,11 @@ class CommAdminView(BaseAdminView):
                 return item
 
             nav_menu = [filter_item(item) for item in menus if check_menu_permission(item)]
+            nav_menu = filter(lambda i: bool(i['menus']), nav_menu)
 
-            self.request.session['nav_menu'] = simplejson.dumps(nav_menu)
-            self.request.session.modified = True
+            if not settings.DEBUG:
+                self.request.session['nav_menu'] = simplejson.dumps(nav_menu)
+                self.request.session.modified = True
 
         context['nav_menu'] = nav_menu
         context['site_title'] = self.site_title or _(u'Django Xadmin')
