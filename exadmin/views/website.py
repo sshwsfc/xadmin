@@ -12,7 +12,7 @@ from exadmin.models import UserSettings
 
 
 class IndexView(Dashboard):
-    title = "Main Dashboard"
+    title = _(u"Main Dashboard")
 
 class UserSettingView(BaseAdminView):
 
