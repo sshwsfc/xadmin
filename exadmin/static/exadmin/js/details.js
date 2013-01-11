@@ -26,7 +26,11 @@
         }
         modal.find('.edit-btn').attr('href', this.edit_uri);
         modal.find('.modal-body').html('<div class="progress progress-striped active" style="width:50%; margin: 10px auto;"><div class="bar" style="width: 100%;"></div></div>');
-        modal.find('.modal-body').load(this.res_uri + '?_format=html', function(){
+        modal.find('.modal-body').load(this.res_uri + '?_format=html', function(response, status, xhr) {
+          if (status == "error") {
+            var msg = "Sorry but there was an error: ";
+            modal.find('.modal-body').html(msg + xhr.status + " " + (typeof xhr === 'string' ? xhr : xhr.responseText || xhr.statusText || 'Unknown error!'));
+          }
         });
         modal.modal();
       }
