@@ -121,6 +121,17 @@ class BaseAdminObject(object):
     def admin_urlname(self, name, *args, **kwargs):
         return reverse('%s:%s' % (self.admin_site.app_name, name), args=args, kwargs=kwargs)
 
+    def get_model_url(self, model, name, *args, **kwargs):
+        return reverse('%s:%s_%s_%s' % (self.admin_site.app_name, model._meta.app_label, model._meta.module_name, name), \
+            args=args, kwargs=kwargs, current_app=self.admin_site.name)
+
+    def get_model_perm(self, model, name):
+        return '%s.%s_%s' % (model._meta.app_label, name, model._meta.module_name)
+
+    def has_model_perm(self, model, name, user=None):
+        user = user or self.user
+        return user.has_perm(self.get_model_perm(model, name))
+
     def get_query_string(self, new_params=None, remove=None):
         if new_params is None: new_params = {}
         if remove is None: remove = []
@@ -250,13 +261,6 @@ class CommAdminView(BaseAdminView):
 
     def get_site_menu(self):
         return None
-
-    def get_model_url(self, model, name, *args, **kwargs):
-        return reverse('%s:%s_%s_%s' % (self.admin_site.app_name, model._meta.app_label, model._meta.module_name, name), \
-            args=args, kwargs=kwargs, current_app=self.admin_site.name)
-
-    def get_model_perm(self, model, name):
-        return '%s.%s_%s' % (model._meta.app_label, name, model._meta.module_name)
 
     @filter_hook
     def get_nav_menu(self):
