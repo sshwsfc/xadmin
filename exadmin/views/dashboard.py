@@ -1,6 +1,7 @@
 
 from random import Random
 
+from django.core.exceptions import PermissionDenied
 from django.template.context import RequestContext
 from django.test.client import RequestFactory
 from django.template import loader
@@ -15,7 +16,7 @@ from django.utils.translation import ugettext as _
 from django.utils.encoding import smart_unicode
 
 from exadmin.sites import site
-from exadmin.views.base import BaseAdminView, CommAdminView, filter_hook
+from exadmin.views.base import BaseAdminView, CommAdminView, filter_hook, csrf_protect_m
 from exadmin.views.list import ListAdminView
 from exadmin.views.edit import CreateAdminView
 from exadmin.layout import FormHelper
@@ -24,7 +25,8 @@ from exadmin import widgets as exwidgets
 
 class UserWidgetAdmin(object):
 
-    list_display = ('widget_type', 'page_id')
+    list_display = ('widget_type', 'page_id', 'user')
+    list_filter = ['user', 'widget_type', 'page_id']
     list_display_links = ('widget_type',)
     user_fields = ['user']
 
@@ -45,7 +47,15 @@ class UserWidgetAdmin(object):
         widget = widget_manager.get(widget_type)
         return DeclarativeFieldsMetaclass("WidgetParamsForm", (forms.Form,), widget.base_fields)
 
+    def get_list_display(self):
+        list_display = super(UserWidgetAdmin, self).get_list_display()
+        if not self.user.is_superuser:
+            list_display.remove('user')
+        return list_display
+
     def queryset(self):
+        if self.user.is_superuser:
+            return super(UserWidgetAdmin, self).queryset()
         return UserWidget.objects.filter(user=self.user)
 
     def _done(self):
@@ -114,12 +124,18 @@ class BaseWidget(forms.Form):
         if not self.is_valid():
             raise WidgetDataError(self, self.errors.as_text())
 
+        self.setup()
+
+    def setup(self):
         helper = FormHelper()
         helper.form_tag = False
         self.helper = helper
 
         self.id = self.cleaned_data['id']
         self.title = self.cleaned_data['title'] or self.base_title
+
+        if not (self.user.is_superuser or self.has_perm()):
+            raise PermissionDenied
 
     @property
     def widget(self):
@@ -132,6 +148,9 @@ class BaseWidget(forms.Form):
 
     def convert(self, data):
         pass
+
+    def has_perm(self):
+        return False
 
     def save(self):
         value = dict([(f.name, f.value()) for f in self])
@@ -151,6 +170,9 @@ class HtmlWidget(BaseWidget):
     description = 'Html Content Widget, can write any html content in widget.'
 
     content = forms.CharField(_('Html Content'), widget=exwidgets.AdminTextareaWidget, required=False)
+
+    def has_perm(self):
+        return True
 
     def context(self, context):
         context['content'] = self.cleaned_data['content']
@@ -179,19 +201,27 @@ class ModelBaseWidget(BaseWidget):
 
     app_label = None
     module_name = None
+    model_perm = 'change'
     model = ModelChoiceField(_(u'Target Model'))
 
     def __init__(self, dashboard, data):
+        self.dashboard = dashboard
         self.base_fields['model'].choices = [('%s.%s' % (m._meta.app_label, m._meta.module_name), \
-            m._meta.verbose_name) for m, ma in dashboard.admin_site._registry.items() if self.filte_choices_model(m, ma)]
+            m._meta.verbose_name) for m, ma in self.dashboard.admin_site._registry.items() if self.filte_choices_model(m, ma)]
         super(ModelBaseWidget, self).__init__(dashboard, data)
 
+    def setup(self):
         self.model = self.cleaned_data['model']
         self.app_label = self.model._meta.app_label
         self.module_name = self.model._meta.module_name
 
+        super(ModelBaseWidget, self).setup()
+
+    def has_perm(self):
+        return self.dashboard.has_model_perm(self.model, self.model_perm)
+
     def filte_choices_model(self, model, modeladmin):
-        return True
+        return self.dashboard.has_model_perm(model, self.model_perm)
 
     def model_admin_urlname(self, name, *args, **kwargs):
         return reverse("%s:%s_%s_%s" % (self.admin_site.app_name, self.app_label, \
@@ -225,9 +255,8 @@ class QuickBtnWidget(BaseWidget):
     template = "admin/widgets/qbutton.html"
     base_title = "Quick Buttons"
 
-    def __init__(self, dashboard, opts):
-        self.q_btns = opts.pop('btns', [])
-        super(QuickBtnWidget, self).__init__(dashboard, opts)
+    def convert(self, data):
+        self.q_btns = data.pop('btns', [])
 
     def get_model(self, model_or_label):
         if isinstance(model_or_label, ModelBase):
@@ -261,16 +290,20 @@ class ListWidget(ModelBaseWidget, PartialBaseWidget):
     description = 'Any Objects list Widget.'
     template = "admin/widgets/list.html"
 
-    def __init__(self, dashboard, opts):
-        self.list_params = opts.pop('params', {})
-        super(ListWidget, self).__init__(dashboard, opts)
+    def convert(self, data):
+        self.list_params = data.pop('params', {})
+
+    def setup(self):
+        super(ListWidget, self).setup()
 
         if not self.title:
             self.title = self.model._meta.verbose_name_plural
 
-    def context(self, context):
         req = self.make_get_request("", self.list_params)
-        list_view = self.get_view_class(ListAdminView, self.model, list_per_page=10)(req)
+        self.list_view = self.get_view_class(ListAdminView, self.model, list_per_page=10)(req)
+
+    def context(self, context):
+        list_view = self.list_view
         list_view.make_result_list()
 
         base_fields = list_view.base_list_display
@@ -289,9 +322,10 @@ class AddFormWidget(ModelBaseWidget, PartialBaseWidget):
     widget_type = 'addform'
     description = 'Add any model object Widget.'
     template = "admin/widgets/addform.html"
+    model_perm = 'add'
 
-    def __init__(self, dashboard, opts):
-        super(AddFormWidget, self).__init__(dashboard, opts)
+    def setup(self):
+        super(AddFormWidget, self).setup()
 
         if self.title is None:
             self.title = _('Add %s') % self.model._meta.verbose_name
@@ -338,11 +372,14 @@ class Dashboard(CommAdminView):
         for col in widgets:
             portal_col = []
             for opts in col:
-                widget = UserWidget(user=self.user, page_id=self.get_page_id(), widget_type=opts['type'])
-                widget.set_value(opts)
-                widget.save()
-
-                portal_col.append(self.get_widget(widget))
+                try:
+                    widget = UserWidget(user=self.user, page_id=self.get_page_id(), widget_type=opts['type'])
+                    widget.set_value(opts)
+                    widget.save()
+                    portal_col.append(self.get_widget(widget))
+                except (PermissionDenied, WidgetDataError):
+                    widget.delete()
+                    continue
             portal.append(portal_col)
 
         UserSettings(user=self.user, key="dashboard:%s:pos" % self.get_page_id(), \
@@ -396,7 +433,7 @@ class Dashboard(CommAdminView):
         })
         return self.template_response('admin/dashboard.html', context)
 
-    @never_cache
+    @csrf_protect_m
     def post(self, request):
         widget_id = request.POST['id']
         if request.POST.get('_delete', None) != 'on':
