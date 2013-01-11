@@ -27,6 +27,12 @@ class BaseActionView(ModelAdminView):
     action_name = None
     description = None
 
+    model_perm = 'change'
+
+    @classmethod
+    def has_perm(cls, list_view):
+        return list_view.get_model_perms()[cls.model_perm]
+
     def init_action(self, list_view):
         self.list_view = list_view
         self.admin_site = list_view.admin_site
@@ -42,6 +48,8 @@ class DeleteSelectedAction(BaseActionView):
 
     delete_confirmation_template = None
     delete_selected_confirmation_template = None
+
+    model_perm = 'delete'
 
     @filter_hook
     def delete_models(self, queryset):
@@ -216,7 +224,7 @@ class ActionPlugin(BaseAdminPlugin):
         return choices
 
     def get_action(self, action):
-        if not issubclass(action, BaseActionView):
+        if not issubclass(action, BaseActionView) or not action.has_perm(self.admin_view):
             return None
         return action, getattr(action, 'action_name'), getattr(action, 'description')
 

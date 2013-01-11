@@ -27,23 +27,38 @@ class RelateMenuPlugin(BaseAdminPlugin):
                 continue
             if r.model not in self.admin_site._registry.keys():
                 continue
-            f = r.field
-            rel_name = f.rel.get_related_field().name
-            _related_acts.append((r.opts.app_label, r.opts.module_name, force_unicode(r.opts.verbose_name), f.name, '%s__%s__exact' % (f.name, rel_name)))
+            has_view_perm = self.has_model_perm(r.model, 'change')
+            has_add_perm = self.has_model_perm(r.model, 'add')
+            if not (has_view_perm or has_add_perm):
+                continue
+
+            _related_acts.append((r, has_view_perm, has_add_perm))
 
         self._related_acts = _related_acts
         return self._related_acts
     
     def related_link(self, instance):
         links =[]
-        for label, model_name, verbose_name, field_name, lookup_name in self.get_related_list():
-            list_url = reverse('%s:%s_%s_changelist' % (self.admin_site.app_name, label, model_name))
-            add_url = reverse('%s:%s_%s_add' % (self.admin_site.app_name, label, model_name))
+        for r, view_perm, add_perm in self.get_related_list():            
+            label = r.opts.app_label
+            model_name = r.opts.module_name
+            f = r.field
+            rel_name = f.rel.get_related_field().name
+
+            verbose_name = force_unicode(r.opts.verbose_name)
+            lookup_name = '%s__%s__exact' % (f.name, rel_name)
+
             link = ''.join(('<li class="with_menu_btn">',
+
             '<a href="%s?%s=%s" title="%s"><i class="icon icon-th-list"></i> %s</a>' % \
-                (list_url, RELATE_PREFIX + lookup_name, str(instance.pk), verbose_name, verbose_name), ' ',
+                (reverse('%s:%s_%s_changelist' % (self.admin_site.app_name, label, model_name)), \
+                    RELATE_PREFIX + lookup_name, str(instance.pk), verbose_name, verbose_name) if view_perm else \
+            '<a><span class="muted"><i class="icon icon-blank"></i> %s</span></a>' % verbose_name, 
+
             '<a class="add_link dropdown-menu-btn" href="%s?%s=%s"><i class="icon icon-plus pull-right"></i></a>' % \
-                (add_url, RELATE_PREFIX + lookup_name, str(instance.pk)),
+                (reverse('%s:%s_%s_add' % (self.admin_site.app_name, label, model_name)), \
+                    RELATE_PREFIX + lookup_name, str(instance.pk)) if add_perm else "",
+
              '</li>'))
             links.append(link)
         ul_html = '<ul class="dropdown-menu" role="menu">%s</ul>' % ''.join(links)
