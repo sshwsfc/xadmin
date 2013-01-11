@@ -281,7 +281,6 @@ class CommAdminView(BaseAdminView):
             else:
                 nav_menu[app_key] = {
                     'title': unicode(app_label.title()),
-                    'perm': lambda u: u.has_module_perms(app_label),
                     'menus': [model_dict],
                 }
 
