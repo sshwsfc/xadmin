@@ -1,11 +1,14 @@
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group, Permission
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.forms import (UserCreationForm, UserChangeForm,
     AdminPasswordChangeForm)
 from django.views.decorators.csrf import csrf_protect
+from django import forms
+
 from exadmin.sites import site
-from exadmin.layout import *
+from exadmin.layout import Main, Fieldset, Side, Row
+from exadmin.views import BaseAdminPlugin, ListAdminView, ModelFormAdminView, DetailAdminView, ModelAdminView
 
 csrf_protect_m = method_decorator(csrf_protect)
 
@@ -38,7 +41,6 @@ class UserAdmin(object):
                     ),
                     Fieldset(_('Personal info'),
                         Row('first_name', 'last_name'),
-                        Row(AppendedText('hard_disk', 'G'), AppendedText('memory', "G")),
                         'email'
                     ),
                     Fieldset(_('Permissions'),
@@ -58,4 +60,37 @@ class UserAdmin(object):
 
 site.register(Group, GroupAdmin)
 site.register(User, UserAdmin)
+site.register(Permission, object)
+
+class UserFieldPlugin(BaseAdminPlugin):
+
+    user_fields = []
+
+    def get_field_attrs(self, __, db_field, **kwargs):
+        if self.user_fields and db_field.name in self.user_fields:
+            return {'widget': forms.HiddenInput}
+        return __()
+
+    def get_form_datas(self, datas):
+        if self.user_fields and datas.has_key('data'):
+            for f in self.user_fields:
+                datas['data'][f] = self.user.id
+        return datas
+
+site.register_plugin(UserFieldPlugin, ModelFormAdminView)
+
+class ModelPermissionPlugin(BaseAdminPlugin):
+
+    user_can_access_owned_objects_only = False
+    user_owned_objects_field = 'user'
+
+    def queryset(self, qs):
+        if self.user_can_access_owned_objects_only and \
+            not self.user.is_superuser:
+            filters = {self.user_owned_objects_field: self.user}
+            qs = qs.filter(**filters)
+        return qs
+        
+
+site.register_plugin(ModelPermissionPlugin, ModelAdminView)
 
