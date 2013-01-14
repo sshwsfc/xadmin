@@ -31,21 +31,32 @@ class UserWidgetAdmin(object):
     user_fields = ['user']
 
     wizard_form_list = (
-            (_(u"Widget Type"), {'fields': ('page_id', 'widget_type')}),
-            (_(u"Widget Params"), {'callback': "get_widget_params_form"})
+            (_(u"Widget Type"), ('page_id', 'widget_type')),
+            (_(u"Widget Params"), {'callback': "get_widget_params_form", 'convert': "convert_widget_params"})
         )
 
     def formfield_for_dbfield(self, db_field, **kwargs):
         if db_field.name == 'widget_type':
             return forms.ChoiceField(choices=[(w.widget_type, w.description) for w in widget_manager._widgets.values()])
+        if db_field.name == 'page_id':
+            kwargs['widget'] = forms.HiddenInput
         field = super(UserWidgetAdmin, self).formfield_for_dbfield(db_field, **kwargs)
         return field
 
     def get_widget_params_form(self, wizard):
-        data = wizard.get_cleaned_data_for_step("Widget Type")
+        data = wizard.get_cleaned_data_for_step(wizard.steps.first)
         widget_type = data['widget_type']
         widget = widget_manager.get(widget_type)
-        return DeclarativeFieldsMetaclass("WidgetParamsForm", (forms.Form,), widget.base_fields)
+        fields = copy.deepcopy(widget.base_fields)
+        if fields.has_key('id'):
+            del fields['id']
+        return DeclarativeFieldsMetaclass("WidgetParamsForm", (forms.Form,), fields)
+
+    def convert_widget_params(self, wizard, cleaned_data, form):
+        widget = UserWidget()
+        widget.set_value(form.cleaned_data)
+        cleaned_data['value'] = widget.value
+        cleaned_data['user'] = self.user.pk
 
     def get_list_display(self):
         list_display = super(UserWidgetAdmin, self).get_list_display()
@@ -58,26 +69,16 @@ class UserWidgetAdmin(object):
             return super(UserWidgetAdmin, self).queryset()
         return UserWidget.objects.filter(user=self.user)
 
-    def _done(self):
-        super(UserWidgetAdmin, self)._done()
-        if self.org_obj is None:
-            widget = self.new_obj
-            try:
-                portal_pos = UserSettings.objects.get(user=widget.user, key="dashboard:%s:pos" % widget.page_id)
-                portal_pos.value = "%s,%s" % (widget.id, portal_pos.value)
-                portal_pos.save()
-            except Exception:
-                pass
-
-    def delete_model(self, obj):
+    def delete_model(self):
         try:
+            obj = self.obj
             portal_pos = UserSettings.objects.get(user=obj.user, key="dashboard:%s:pos" % obj.page_id)
             pos = [[w for w in col.split(',') if w != str(obj.id)] for col in portal_pos.value.split('|')]
             portal_pos.value = '|'.join([','.join(col) for col in pos])
             portal_pos.save()
         except Exception:
             pass
-        super(UserWidgetAdmin, self).delete_model(obj)
+        super(UserWidgetAdmin, self).delete_model()
 
 
 site.register(UserWidget, UserWidgetAdmin)
@@ -460,7 +461,7 @@ class Dashboard(CommAdminView):
     def get_media(self):
         media = super(Dashboard, self).get_media()
         media.add_js([self.static('exadmin/js/portal.js'), self.static('exadmin/js/dashboard.js')])
-        media.add_css({'screen': [self.static('exadmin/css/form.css'), self.static('exadmin/css/dashboard.css'), self.static('exadmin/css/font-awesome.css')]})
+        media.add_css({'screen': [self.static('exadmin/css/form.css'), self.static('exadmin/css/dashboard.css')]})
         for ws in self.widgets:
             for widget in ws:
                 media = media + widget.media()
