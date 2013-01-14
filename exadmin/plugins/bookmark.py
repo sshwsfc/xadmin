@@ -6,10 +6,13 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
+from django.forms import ModelChoiceField
+from django.http import QueryDict
 
 from exadmin.sites import site
 from exadmin.views import ModelAdminView, BaseAdminPlugin, ListAdminView
 from exadmin.views.list import COL_LIST_VAR, ORDER_VAR
+from exadmin.views.dashboard import widget_manager, BaseWidget, PartialBaseWidget
 from exadmin.filters import FILTER_PREFIX, SEARCH_VAR
 from exadmin.plugins.relate import RELATE_PREFIX
 
@@ -115,6 +118,45 @@ class BookmarkAdmin(object):
     def queryset(self):
         return Bookmark.objects.filter(user=self.user)
         
+@widget_manager.register
+class BookmarkWidget(PartialBaseWidget):
+    widget_type = 'bookmark'
+    description = 'Bookmark Widget, can show user\'s bookmark list data in widget.'
+    template = "admin/widgets/list.html"
+
+    bookmark = ModelChoiceField(label=_('Bookmark'), queryset=Bookmark.objects.all(), required=False)
+
+    def setup(self):
+        BaseWidget.setup(self)
+
+        bookmark = self.cleaned_data['bookmark']
+        model = bookmark.content_type.model_class()
+        data = QueryDict(bookmark.query)
+        self.bookmark = bookmark
+
+        if not self.title:
+            self.title = unicode(bookmark)
+
+        req = self.make_get_request("", data.items())
+        self.list_view = self.get_view_class(ListAdminView, model, list_per_page=10, list_editable=[])(req)
+
+    def has_perm(self):
+        return True
+
+    def context(self, context):
+        list_view = self.list_view
+        list_view.make_result_list()
+
+        base_fields = list_view.base_list_display
+        if len(base_fields) > 5:
+            base_fields = base_fields[0:5]
+
+        context['result_headers'] = [c for c in list_view.result_headers().cells if c.field_name in base_fields]
+        context['results'] = [[o for i,o in \
+            enumerate(filter(lambda c:c.field_name in base_fields, r.cells))] \
+            for r in list_view.results()]
+        context['result_count'] = list_view.result_count
+        context['page_url'] = self.bookmark.url
 
 site.register(Bookmark, BookmarkAdmin)
 site.register_plugin(BookmarkPlugin, ListAdminView)
