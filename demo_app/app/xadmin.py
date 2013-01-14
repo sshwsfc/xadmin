@@ -31,6 +31,11 @@ class MaintainInline(object):
 class IDCAdmin(object):
     list_display = ('name', 'description', 'create_time')
     list_display_links = ('name',)
+    wizard_form_list = [
+        ('Frist\'s Form', ('name', 'description')),
+        ('Seocnd Form', ('contact', 'telphone', 'address')),
+        ('Thread Form', ('customer_id', 'create_time'))
+    ]
 
     search_fields = ['name']
     relfield_style = 'fk-ajax'
