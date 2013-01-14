@@ -1,27 +1,68 @@
-
-from random import Random
-
-from django.core.exceptions import PermissionDenied
-from django.template.context import RequestContext
-from django.test.client import RequestFactory
-from django.template import loader
-from django.views.decorators.cache import never_cache
-from django.core.urlresolvers import reverse
-from django import forms
-from django.forms.forms import DeclarativeFieldsMetaclass
 import copy
+
+from django import forms
+from django.core.exceptions import PermissionDenied
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.base import ModelBase
+from django.forms.forms import DeclarativeFieldsMetaclass
+from django.forms.util import flatatt
+from django.template import loader
+from django.template.context import RequestContext
+from django.test.client import RequestFactory
+from django.utils.encoding import force_unicode, smart_unicode
+from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
-from django.utils.encoding import smart_unicode
-
-from exadmin.sites import site
-from exadmin.views.base import BaseAdminView, CommAdminView, filter_hook, csrf_protect_m
-from exadmin.views.list import ListAdminView
-from exadmin.views.edit import CreateAdminView
+from django.views.decorators.cache import never_cache
+from exadmin import widgets as exwidgets
 from exadmin.layout import FormHelper
 from exadmin.models import UserSettings, UserWidget
-from exadmin import widgets as exwidgets
+from exadmin.sites import site
+from exadmin.views.base import CommAdminView, filter_hook, csrf_protect_m
+from exadmin.views.edit import CreateAdminView
+from exadmin.views.list import ListAdminView
+
+
+class WidgetTypeSelect(forms.Widget):
+
+    def __init__(self, widgets, attrs=None):
+        super(WidgetTypeSelect, self).__init__(attrs)
+        self._widgets = widgets
+
+    def render(self, name, value, attrs=None):
+        if value is None: value = ''
+        final_attrs = self.build_attrs(attrs, name=name)
+        final_attrs['class'] = 'nav nav-pills nav-stacked'
+        output = [u'<ul%s>' % flatatt(final_attrs)]
+        options = self.render_options(force_unicode(value), final_attrs['id'])
+        if options:
+            output.append(options)
+        output.append(u'</ul>')
+        output.append('<input type="hidden" id="%s_input" name="%s" value="%s"/>' % \
+            (final_attrs['id'], name, force_unicode(value)))
+        return mark_safe(u'\n'.join(output))
+
+    def render_option(self, selected_choice, widget, id):
+        if widget.widget_type == selected_choice:
+            selected_html = u' class="active"'
+        else:
+            selected_html = ''
+        return (u'<li%s><a onclick="'+
+            'javascript:$(this).parent().parent().find(\'>li\').removeClass(\'active\');$(this).parent().addClass(\'active\');'+
+            '$(\'#%s_input\').attr(\'value\', \'%s\')' % (id, widget.widget_type) +
+            '"><h4><i class="%s"></i> %s</h4><p>%s</p></a></li>') % (
+            selected_html,
+            widget.widget_icon,
+            widget.widget_title or widget.widget_type,
+            widget.description)
+
+    def render_options(self, selected_choice, id):
+        # Normalize to strings.
+        output = []
+        for widget in self._widgets:
+            output.append(self.render_option(selected_choice, widget, id))
+        return u'\n'.join(output)
+
 
 class UserWidgetAdmin(object):
 
@@ -37,7 +78,9 @@ class UserWidgetAdmin(object):
 
     def formfield_for_dbfield(self, db_field, **kwargs):
         if db_field.name == 'widget_type':
-            return forms.ChoiceField(choices=[(w.widget_type, w.description) for w in widget_manager._widgets.values()])
+            widgets = widget_manager._widgets.values()
+            form_widget = WidgetTypeSelect(widgets)
+            return forms.ChoiceField(choices=[(w.widget_type, w.description) for w in widgets], widget=form_widget)
         if db_field.name == 'page_id':
             kwargs['widget'] = forms.HiddenInput
         field = super(UserWidgetAdmin, self).formfield_for_dbfield(db_field, **kwargs)
@@ -110,6 +153,8 @@ class BaseWidget(forms.Form):
 
     template = 'admin/widgets/base.html'
     description = 'Base Widget, don\'t use it.'
+    widget_title = None
+    widget_icon = 'icon-plus-sign-alt'
     base_title = None
 
     id = forms.IntegerField(_('Widget ID'), widget=forms.HiddenInput)
