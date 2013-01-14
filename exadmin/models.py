@@ -79,6 +79,17 @@ class UserWidget(models.Model):
     def set_value(self, obj):
         self.value = simplejson.dumps(obj, cls=JSONEncoder, ensure_ascii=False)
 
+    def save(self, *args, **kwargs):
+        created = self.pk is None
+        super(UserWidget, self).save(*args, **kwargs)
+        if created:
+            try:
+                portal_pos = UserSettings.objects.get(user=self.user, key="dashboard:%s:pos" % self.page_id)
+                portal_pos.value = "%s,%s" % (self.pk, portal_pos.value)
+                portal_pos.save()
+            except Exception:
+                pass
+
     def __unicode__(self):
         return "%s %s widget" % (self.user, self.widget_type)
         
