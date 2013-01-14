@@ -178,7 +178,34 @@ class HtmlWidget(BaseWidget):
     def context(self, context):
         context['content'] = self.cleaned_data['content']
 
+class ModelChoiceIterator(object):
+    def __init__(self, field):
+        self.field = field
+
+    def __iter__(self):
+        from exadmin import site as g_admin_site
+        for m, ma in g_admin_site._registry.items():
+            yield ('%s.%s' % (m._meta.app_label, m._meta.module_name), \
+            m._meta.verbose_name)
+
 class ModelChoiceField(forms.ChoiceField):
+
+    def __init__(self, required=True, widget=None, label=None, initial=None,
+                 help_text=None, *args, **kwargs):
+        # Call Field instead of ChoiceField __init__() because we don't need
+        # ChoiceField.__init__().
+        forms.Field.__init__(self, required, widget, label, initial, help_text,
+                       *args, **kwargs)
+        self.widget.choices = self.choices
+
+    def __deepcopy__(self, memo):
+        result = forms.Field.__deepcopy__(self, memo)
+        return result
+
+    def _get_choices(self):
+        return ModelChoiceIterator(self)
+
+    choices = property(_get_choices, forms.ChoiceField._set_choices)
 
     def to_python(self, value):
         if isinstance(value, ModelBase):
@@ -203,12 +230,10 @@ class ModelBaseWidget(BaseWidget):
     app_label = None
     module_name = None
     model_perm = 'change'
-    model = ModelChoiceField(_(u'Target Model'))
+    model = ModelChoiceField(label=_(u'Target Model'))
 
     def __init__(self, dashboard, data):
         self.dashboard = dashboard
-        self.base_fields['model'].choices = [('%s.%s' % (m._meta.app_label, m._meta.module_name), \
-            m._meta.verbose_name) for m, ma in self.dashboard.admin_site._registry.items() if self.filte_choices_model(m, ma)]
         super(ModelBaseWidget, self).__init__(dashboard, data)
 
     def setup(self):
@@ -402,8 +427,8 @@ class Dashboard(CommAdminView):
                         widget = user_widgets.get(int(wid))
                         if widget:
                             ws.append(self.get_widget(widget))
-                    except Exception:
-                        pass
+                    except Exception, e:
+                        print e
                 widgets.append(ws)
             return widgets
         else:
