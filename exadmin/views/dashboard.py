@@ -428,6 +428,7 @@ class Dashboard(CommAdminView):
         context.update({
             'portal_key': self.get_portal_key(),
             'columns': [('span%d' % int(12/len(self.widgets)), ws) for ws in self.widgets],
+            'has_add_widget_permission': self.has_model_perm(UserWidget, 'add'),
             'add_widget_url': self.admin_urlname('%s_%s_add' % (UserWidget._meta.app_label, UserWidget._meta.module_name)) + \
                 "?user=%s&page_id=%s" % (self.user.id, self.get_page_id())
         })
