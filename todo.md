@@ -81,11 +81,11 @@
 
 0. user settings, 可以记录跟用户相关的系统配置，例如页面使用布局记录。
 
-    首页管理， widget，添加到widget功能，widget定时刷新（使用现成的widget控件）
+    [已完成] 首页管理， widget，添加到widget功能，widget定时刷新（使用现成的widget控件）
 
     图标附加
 
-    bookmark功能，能够收藏任意url，变成widget已经列表快速显示菜单
+    [已完成] bookmark功能，能够收藏任意url，变成widget已经列表快速显示菜单
 
     权限增加查看权限。
     > http://hi.baidu.com/cnydpl/item/3ce58c162bcfd2413b176e09
