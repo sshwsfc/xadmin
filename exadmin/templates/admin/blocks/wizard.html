@@ -1,6 +1,0 @@
-{% load i18n %}
-{{ wizard.management_form }}
-{% if wizard.steps.prev %}
-<button name="wizard_goto_step" class="btn" type="submit" value="{{ wizard.steps.first }}">{% trans "first step" %}</button>
-<button name="wizard_goto_step" class="btn" type="submit" value="{{ wizard.steps.prev }}">{% trans "prev step" %}</button>
-{% endif %}
