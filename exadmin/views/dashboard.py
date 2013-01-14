@@ -54,7 +54,8 @@ class UserWidgetAdmin(object):
 
     def convert_widget_params(self, wizard, cleaned_data, form):
         widget = UserWidget()
-        widget.set_value(form.cleaned_data)
+        value = dict([(f.name, f.value()) for f in form])
+        widget.set_value(value)
         cleaned_data['value'] = widget.value
         cleaned_data['user'] = self.user.pk
 
@@ -170,7 +171,7 @@ class HtmlWidget(BaseWidget):
     widget_type = 'html'
     description = 'Html Content Widget, can write any html content in widget.'
 
-    content = forms.CharField(_('Html Content'), widget=exwidgets.AdminTextareaWidget, required=False)
+    content = forms.CharField(label=_('Html Content'), widget=exwidgets.AdminTextareaWidget, required=False)
 
     def has_perm(self):
         return True
@@ -428,7 +429,8 @@ class Dashboard(CommAdminView):
                         if widget:
                             ws.append(self.get_widget(widget))
                     except Exception, e:
-                        print e
+                        import logging
+                        logging.error(e,exc_info=True)
                 widgets.append(ws)
             return widgets
         else:
