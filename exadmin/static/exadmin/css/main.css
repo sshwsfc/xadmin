@@ -111,6 +111,7 @@ a { cursor: pointer;}
   cursor: pointer;
   font-size: 14px;
 }
+.box .box-title .badge { float: right; top: 50%; margin-left: 10px;}
 .box.no_title .box-title{
   display: none;
 }
