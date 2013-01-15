@@ -1,8 +1,7 @@
-<div class="box fieldset{% if fieldset.css_class %} {{ fieldset.css_class }}{% endif %}" {% if fieldset.css_id %}id="{{ fieldset.css_id }}"{% endif %} 
-    {% if fieldset.css_class or form_style %}class="{{ fieldset.css_class }} {{ form_style }}"{% endif %}
-    {{ fieldset.flat_attrs|safe }}>
-    <div class="box-title">{{ legend|safe }}</div> 
-    <div class="box-content nopadding">
-    {{ fields|safe }} 
-    </div>
-</div>
+{% extends "admin/box.html" %}
+{% block box_class %}fieldset{% if fieldset.css_class %} {{ fieldset.css_class }}{% endif %}{% endblock box_class %}
+{% block box_attrs %}{% if fieldset.css_id %}id="{{ fieldset.css_id }}"{% endif %} {{ fieldset.flat_attrs|safe }}{% endblock box_attrs %}
+{% block box_title %}{{ legend|safe }}{% endblock box_title %}
+{% block box_content %}
+{{ fields|safe }}
+{% endblock box_content %}

@@ -1,9 +1,9 @@
+{% extends "admin/edit_inline/base.html" %}
 {% load i18n exadmin crispy_forms_tags %}
-<div class="box formset{% if formset.css_class or form_style %} {{ fieldset.css_class }} {{ form_style }}{% endif %}" id="{{ formset.css_id }}" {{ formset.flat_attrs|safe }}>
-  <div class="box-title">{{ formset.opts.verbose_name_plural|title }}</div> 
-  <div class="box-content nopadding">
-    {{ formset.formset.management_form }}
-    {{ formset.formset.non_form_errors }}
-    {% crispy formset.formset.0 formset.formset.helper %}
-  </div>
-</div>
+
+{% block box_title %}{{ formset.opts.verbose_name_plural|title }}{% endblock box_title %}
+{% block box_content %}
+  {{ formset.formset.management_form }}
+  {{ formset.formset.non_form_errors }}
+  {% crispy formset.formset.0 formset.formset.helper %}
+{% endblock box_content %}

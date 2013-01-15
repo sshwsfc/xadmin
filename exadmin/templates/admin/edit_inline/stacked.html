@@ -1,32 +1,23 @@
+{% extends "admin/edit_inline/base.html" %}
 {% load i18n exadmin crispy_forms_tags %}
-<div class="box formset{% if formset.css_class or form_style %} {{ fieldset.css_class }} {{ form_style }}{% endif %}" id="{{ formset.css_id }}" {{ formset.flat_attrs|safe }}>
-  <div class="box-title">
-    {% if not formset.formset.detail_page %}
-    <a class="add-row" id="{{ prefix }}-add-row" href="javascript:void(0)"><i class="icon icon-plus"></i></a>
-    {% endif %}
-    {{ formset.opts.verbose_name_plural|title }}
-  </div> 
-  {% if not formset.formset.detail_page %}
-  {{ formset.formset.management_form }}
-  {{ formset.formset.non_form_errors }}
-  {% endif %}
-  <div class="box-content nopadding formset-content" data-prefix="{{ prefix }}" data-style="stacked">
-    {% for fs in formset.formset %}
-    <div class="formset-row">
-      <div class="formset-heading">
-        {% if formset.formset.can_delete %}
-          <a class="delete-row pull-right"><i class="icon icon-remove"></i></a>
-        {% endif %}
-        <b>{{ formset.opts.verbose_name|title }}:</b>&nbsp;{% if fs.instance.pk %}{{ fs.instance }}{% else %}#<span class="formset-num">{{ forloop.counter }}</span>{% endif %}
-      </div>
-      <div class="formset-form">
-        {% crispy fs formset.formset.helper %}
-      </div>
+
+{% block box_content_class %}{{ block.super }} nopadding{% endblock box_content_class %}
+
+{% block formset_form %}
+  <div class="formset-row">
+    <div class="formset-heading">
+      {% if formset.formset.can_delete %}
+        <a class="delete-row pull-right"><i class="icon icon-remove"></i></a>
+      {% endif %}
+      <b>{{ formset.opts.verbose_name|title }}:</b>&nbsp;{% if fs.instance.pk %}{{ fs.instance }}{% else %}#<span class="formset-num">{{ forloop.counter }}</span>{% endif %}
     </div>
-    {% endfor %}
+    <div class="formset-form">
+      {% crispy fs formset.formset.helper %}
+    </div>
   </div>
-  {% if not formset.formset.detail_page %}
-  <script type="text/x-exadmin" id="{{ prefix }}-empty">
+{% endblock formset_form %}
+
+{% block formset_empty %}
   <div class="formset-row">
     <div class="formset-heading">
       {% if formset.formset.can_delete %}
@@ -38,6 +29,4 @@
       {% crispy formset.formset.empty_form formset.formset.helper %}
     </div>
   </div>
-  </script>
-  {% endif %}
-</div>
+{% endblock formset_empty %}

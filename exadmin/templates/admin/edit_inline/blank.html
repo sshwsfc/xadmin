@@ -1,9 +1,7 @@
+{% extends "admin/edit_inline/base.html" %}
 {% load i18n exadmin crispy_forms_tags %}
-<div class="box formset{% if formset.css_class or form_style %} {{ fieldset.css_class }} {{ form_style }}{% endif %}" id="{{ formset.css_id }}" {{ formset.flat_attrs|safe }}>
-  <div class="box-title">
-    {{ formset.opts.verbose_name_plural|title }}
-  </div> 
-  <div class="box-content formset-content muted" data-prefix="{{ prefix }}" data-style="stacked">
-    {% trans "None" %}
-  </div>
-</div>
+
+{% block inline_style %}stacked{% endblock inline_style %}
+
+{% block box_content_class %}formset-content muted{% endblock box_content %}
+{% block box_content %}{% trans "None" %}{% endblock box_content %}
