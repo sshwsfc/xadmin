@@ -242,7 +242,7 @@ class ActionPlugin(BaseAdminPlugin):
     # Media
     def get_media(self, media):
         if self.actions and self.admin_view.result_count:
-            media.add_js([self.static('exadmin/js/actions.js'), reverse('admin:jsi18n')])
+            media.add_js([self.static('exadmin/js/actions.js')])
         return media
 
     # Block Views
