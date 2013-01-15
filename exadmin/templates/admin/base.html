@@ -2,12 +2,15 @@
 <html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="ExAdmin Project">
-  <meta name="author" content="sshwsfc@gmail.com">
+  {% block extrameta %}
+  <meta name="description" content="">
+  <meta name="author" content="">
+  {% endblock %}
   {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
   <title>{% block title %}{% endblock %}</title>
   {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}" />{% endif %}
-  <link rel="stylesheet" type="text/css" href="{% static "exadmin/css/bootstrap.css" %}" />
+  <link rel="stylesheet" type="text/css" href="{% static "exadmin/css/bootstrap.min.css" %}" />
+  <link rel="stylesheet" type="text/css" id="site-theme" href="{{site_theme}}" />
   <link rel="stylesheet" type="text/css" href="{% static "exadmin/css/font-awesome.min.css" %}" />
   <link rel="stylesheet" type="text/css" href="{% static "exadmin/css/main.css" %}" />
   <link rel="stylesheet" type="text/css" href="{% static "exadmin/css/bootstrap-responsive.min.css" %}" />
@@ -21,9 +24,8 @@
   {% block extrahead %}{% endblock %}
   {% view_block 'extrahead' %}
 </head>
-<body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}">
-  {% block body %}
-  {% endblock body %}
+<body class="{% block bodyclass %}{% endblock %}">
+  {% block body %}{% endblock body %}
   <script src="{% static "exadmin/js/jquery.js" %}" type="text/javascript"></script>
   <script src="{% static "exadmin/js/jquery-ui.js" %}" type="text/javascript"></script>
   <script src="{% static "exadmin/js/bootstrap.js" %}" type="text/javascript"></script>
