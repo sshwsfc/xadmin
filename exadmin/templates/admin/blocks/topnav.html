@@ -1,7 +1,7 @@
 {% load i18n exadmin %}
 {% if search_models %}
-  <div class="input-append" id="g-search">
-    <form method="get">
+<form method="get" class="navbar-search pull-left" id="g-search">
+  <div class="input-append">
     <input name="{{ search_name }}" class="span2" type="text">
     <div class="btn-group">
       <button class="btn dropdown-toggle" data-toggle="dropdown">
@@ -15,8 +15,8 @@
       {% endfor %}
       </ul>
     </div>
-    </form> 
   </div>
+</form> 
 {% endif %}
 {% if add_models %}
 <li class="dropdown g-add">

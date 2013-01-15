@@ -207,18 +207,9 @@ ul.model_ul li span {
 }
 
 /* g-search */
-#g-search {
-  float: left;
-  margin-top: 5px;
-  margin-left: 10px;
-}
-#g-search form{
-  margin: 0px;
-}
-#g-search input {
-}
 #g-search .btn-group{
-  margin-top: 0px;
+  margin: 0px;
+  padding: 0px;
 }
 
 /** Font Icons **/
