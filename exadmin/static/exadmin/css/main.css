@@ -1,6 +1,9 @@
 body {
-  padding-top: 60px;
   padding-bottom: 40px;
+}
+#top-nav {
+  position: relative;
+  margin-bottom: 18px;
 }
 .sidebar-nav {
   padding: 9px 0;
@@ -8,7 +11,7 @@ body {
 a { cursor: pointer;}
 
 .popover{
-    width: auto;
+  width: auto;
 }
 .popover.dropdown-menu {
   padding: 0px;
@@ -27,17 +30,17 @@ a { cursor: pointer;}
   margin: 6px 0;
 }
 #filter-menu .filter-date .menu-choice-date .popover {
-    width: 260px;
+  width: 260px;
 }
 .filter-date .menu-choice-date .choice-year {
-    width: 38px;
+  width: 38px;
 }
 .filter-date .menu-choice-date .choice-month,
 .filter-date .menu-choice-date .choice-day {
-    width: 22px;
+  width: 22px;
 }
 .filter-date .menu-choice-date button {
-    margin-top: 0px;
+  margin-top: 0px;
 }
 
 .filter-date .menu-date-range .dropdown-menu {
@@ -91,14 +94,13 @@ a { cursor: pointer;}
 
 .box {
   margin-bottom: 15px;
-  border-radius: 3px 3px 0 0;
   overflow: visible;
   position: relative;
   padding: 0px;
 }
-
 .box .box-title {
-  padding: 0px 15px;
+  padding: 10px 15px 10px;
+  margin: 0px;
 }
 .box .box-title .icon{
   float: right;
@@ -107,13 +109,14 @@ a { cursor: pointer;}
   top: 50%;
   margin-right: 5px;
   cursor: pointer;
+  font-size: 14px;
 }
 .box.no_title .box-title{
   display: none;
 }
 
 .box .box-content{
-  padding: 15px;
+  padding: 10px 15px 15px;
 }
 .box .box-content.nopadding{
   padding: 0px;
@@ -198,10 +201,9 @@ ul.model_ul li{
   margin: 8px 0px;
 }
 ul.model_ul li span {
-  background: #EEE;
-  padding: 2px 4px 3px;
-  border-radius: 4px;
-  text-shadow: 0 1px 0 #ffffff;
+  padding: 3px 6px;
+  min-width: auto;
+  min-height: auto;
 }
 
 /* g-search */
@@ -210,131 +212,13 @@ ul.model_ul li span {
   margin-top: 5px;
   margin-left: 10px;
 }
-
 #g-search form{
   margin: 0px;
 }
-
 #g-search input {
-  background: #333;
-  border: 1px solid #555;
-  color: white;
-  -webkit-box-shadow: inset 0 3px 3px rgba(0, 0, 0, 0.1);
-     -moz-box-shadow: inset 0 3px 3px rgba(0, 0, 0, 0.1);
-          box-shadow: inset 0 3px 3px rgba(0, 0, 0, 0.1);
-  height: 19px;
 }
-
 #g-search .btn-group{
-  margin-top: -1px;
-}
-
-#g-search button{
-  color: #999;
-}
-
-/* Widgets */
-.widget-box {
-    background: none repeat scroll 0 0 #F9F9F9;
-    border-top: 1px solid #CDCDCD;
-    border-left: 1px solid #CDCDCD;
-    border-right: 1px solid #CDCDCD;
-    clear: both;
-    margin-top: 16px;
-    margin-bottom: 16px;
-    position: relative;
-  -webkit-border-radius: 4px;
-     -moz-border-radius: 4px;
-          border-radius: 4px;
-}
-.widget-box.widget-calendar, .widget-box.widget-chat {
-    overflow:hidden !important;
-}
-.accordion .widget-box {
-  margin-top: -2px;
-  margin-bottom: 0;
-  border-radius: 0;
-}
-.widget-box.widget-plain {
-  background: transparent;
-  border: none;
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-.widget-title {
-  background-color: #efefef;
-  background-image: -webkit-gradient(linear, 0 0%, 0 100%, from(#fdfdfd), to(#eaeaea));
-  background-image: -webkit-linear-gradient(top, #fdfdfd 0%, #eaeaea 100%);
-    background-image: -moz-linear-gradient(top, #fdfdfd 0%, #eaeaea 100%);
-    background-image: -ms-linear-gradient(top, #fdfdfd 0%, #eaeaea 100%);
-    background-image: -o-linear-gradient(top, #fdfdfd 0%, #eaeaea 100%);
-    background-image: -linear-gradient(top, #fdfdfd 0%, #eaeaea 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fdfdfd', endColorstr='#eaeaea',GradientType=0 ); /* IE6-9 */
-    border-bottom: 1px solid #CDCDCD;
-    height: 36px;
-}
-.widget-title .nav-tabs {
-    border-bottom: 0 none;
-}
-.widget-title .nav-tabs li a {
-    border-bottom: medium none !important;
-    border-left: 1px solid #DDDDDD;
-    border-radius: 0 0 0 0;
-    border-right: 1px solid #DDDDDD;
-    border-top: medium none;
-    color: #999999;
-    margin: 0;
-    outline: medium none;
-    padding: 9px 10px 8px;
-    font-weight: bold;
-    text-shadow: 0 1px 0 #FFFFFF;
-}
-.widget-title .nav-tabs li:first-child a{
-    border-left: medium none !important;
-}
-.widget-title .nav-tabs li a:hover {
-}
-.widget-title .nav-tabs li.active a {
-    background-color: #F9F9F9 !important;
-    color: #444444;
-}
-.widget-title span.icon {
-  border-right: 1px solid #cdcdcd;
-  padding: 9px 10px 7px 11px;
-  float: left;
-  opacity: .7;
-}
-.widget-title h5 {
-    float: left;
-    font-size: 12px;
-    font-weight: bold;
-    padding: 12px;
-    line-height: 12px;
-    margin: 0;
-}
-.widget-title .buttons {
-  float: right;
-  margin: 8px 10px 0 0;
-}
-.widget-title .label {
-  padding: 3px 5px 2px;
-  float: right;
-  margin: 9px 15px 0 0;
-}
-.widget-calendar .widget-title .label {
-  margin-right: 190px;
-}
-
-.widget-content {
-  padding: 12px 15px;
-    border-bottom: 1px solid #cdcdcd;
-}
-.widget-box.widget-plain .widget-content {
-  padding: 12px 0 0;
-}
-.widget-box.collapsible .collapse.in .widget-content {
-    border-bottom: 1px solid #CDCDCD;
+  margin-top: 0px;
 }
 
 /** Font Icons **/
