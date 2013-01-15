@@ -12,7 +12,7 @@ from exadmin.plugins.ajax import JsonErrorDict
 from exadmin.sites import site
 from exadmin.util import lookup_field, display_for_field, label_for_field, unquote, boolean_icon
 from exadmin.views import BaseAdminPlugin, ModelFormAdminView, ListAdminView
-from exadmin.views.base import csrf_protect_m
+from exadmin.views.base import csrf_protect_m, filter_hook
 from exadmin.views.edit import ModelFormAdminUtil
 from exadmin.views.list import EMPTY_CHANGELIST_VALUE
 
@@ -99,6 +99,7 @@ class EditPatchView(ModelFormAdminView, ListAdminView):
                     text = display_for_field(value, f)
             return mark_safe(text) if allow_tags else conditional_escape(text)
 
+    @filter_hook
     @csrf_protect_m
     @transaction.commit_on_success
     def post(self, request, object_id):
