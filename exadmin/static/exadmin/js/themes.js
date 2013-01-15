@@ -10,12 +10,17 @@
         var $el = $(this);
         var themeHref = $el.data('css-href');
         $.save_user_settings("site-theme", themeHref, function(){
-          $('#site-theme').attr('href', themeHref);
 
-          setTimeout(function(){
-            var nav_height = $('#top-nav').height();
-            $('body').animate({'padding-top': (nav_height + 18)}, 500, 'easeOutBounce');
-          }, 500);
+          //$('<img />').load(function () {
+            $('#site-theme').attr('href', themeHref);
+
+            setTimeout(function(){
+              var nav_height = $('#top-nav').height();
+              $('body').animate({'padding-top': (nav_height + 18)}, 500, 'easeOutBounce');
+            }, 500);
+
+          //  $(this).remove();
+          //}).attr('src', themeHref);
 
           $('#g-theme-menu li').removeClass('active');
           $el.parent().addClass('active');
