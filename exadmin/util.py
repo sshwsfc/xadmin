@@ -127,7 +127,7 @@ def get_deleted_objects(objs, opts, user, admin_site, using):
             if not user.has_perm(p):
                 perms_needed.add(opts.verbose_name)
             # Display a link to the admin page.
-            return mark_safe(u'<span>%s:</span> <a href="%s">%s</a>' %
+            return mark_safe(u'<span class="label label-info">%s:</span> <a href="%s">%s</a>' %
                              (escape(capfirst(opts.verbose_name)),
                               admin_url,
                               escape(obj)))
