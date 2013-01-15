@@ -1,0 +1,59 @@
+/* form css */
+.control-group {
+  border-bottom: 1px solid #EEE;
+  background-color: #FBFBFB;
+}
+.controls {
+  border-left: 1px solid #EEE;
+  background-color: white;
+}
+.form-horizontal .control-group {
+  border-bottom: 1px solid #EEE;
+  background-color: #FBFBFB;
+}
+.form-horizontal .controls {
+  border-left: 1px solid #EEE;
+  background-color: white;
+}
+/* box css */
+.box {
+  border: 1px solid #D6D6D6;
+  box-shadow: 0 1px 3px rgba(100, 100, 100, 0.1);
+  border-radius: 0px;
+}
+.box .box-title {
+  padding: 10px 15px;
+  background-color: #F8F8F8;
+  background-image: -moz-linear-gradient(top, #FDFDFD, #F6F6F6);
+  background-image: -ms-linear-gradient(top, #FDFDFD, #F6F6F6);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#FDFDFD), to(#F6F6F6));
+  background-image: -webkit-linear-gradient(top, #FDFDFD, #F6F6F6);
+  background-image: -o-linear-gradient(top, #FDFDFD, #F6F6F6);
+  background-image: linear-gradient(top, #FDFDFD, #F6F6F6);
+  border-bottom: 1px solid #D6D6D6;
+  color: #555;
+  text-shadow: 0 1px 0 white;
+  font-size: 14px;
+  font-weight: bold;
+} 
+.box .box-content{
+  background-color: white;
+}
+.box.fieldset .box-content{
+  padding: 0px;
+}
+
+/* results table */
+.table th {
+  background-color: #FAFAFA;
+  background-image: -moz-linear-gradient(top, white, #F2F2F2);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(white), to(#F2F2F2));
+  background-image: -webkit-linear-gradient(top, white, #F2F2F2);
+  background-image: -o-linear-gradient(top, white, #F2F2F2);
+  background-image: linear-gradient(to bottom, white, #F2F2F2);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#fff2f2f2', GradientType=0);
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+}
