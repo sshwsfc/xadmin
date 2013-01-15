@@ -1,5 +1,6 @@
 {% extends "admin/base_site.html" %}
 {% load i18n exadmin %}
+{% load url from future %}
 
 {% block extrahead %}{{ block.super }}
 {% url 'admin:jsi18n' as jsi18nurl %}
