@@ -62,9 +62,7 @@ select, .select2-container {
 
 /* form css */
 .control-group {
-  border-bottom: 1px solid #EEE;
   margin-bottom: 0px;
-  background-color: #FBFBFB;
 }
 .control-label {
   padding: 6px 15px;
@@ -73,17 +71,13 @@ select, .select2-container {
 }
 .controls {
   padding: 10px 0 0px 15px;
-  border-left: 1px solid #EEE;
-  background-color: white;
 }
 .value .controls{
   padding-bottom: 10px;
 }
 
 .form-horizontal .control-group {
-  border-bottom: 1px solid #EEE;
   margin-bottom: 0px;
-  background-color: #FBFBFB;
 }
 .form-horizontal .control-label {
   padding: 19px 0 0;
@@ -92,8 +86,6 @@ select, .select2-container {
 }
 .form-horizontal .controls {
   padding: 15px 0 15px 20px;
-  border-left: 1px solid #EEE;
-  background-color: white;
 }
 .form-horizontal .value .control-label {
   padding: 12px 0;
