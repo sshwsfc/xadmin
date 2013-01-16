@@ -45,7 +45,7 @@ class WizardFormPlugin(BaseAdminPlugin):
 
     # Plugin replace methods
     def init_request(self, *args, **kwargs):
-        if args and not self.wizard_for_update:
+        if self.request.is_ajax() or not hasattr(self.request, 'session') or (args and not self.wizard_for_update):
             #update view
             return False
         return bool(self.wizard_form_list)
