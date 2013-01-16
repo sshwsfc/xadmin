@@ -46,8 +46,13 @@ class AjaxFormPlugin(BaseAdminPlugin):
     def post_response(self, __):
         if not (self.request.is_ajax() or self.request.POST.get('_ajax')):
             return __()
-
-        return self.render_response({'result': 'success'})
+        new_obj = self.admin_view.new_obj
+        return self.render_response({
+            'result': 'success', 
+            'obj_id': new_obj.pk,
+            'change_url': self.admin_view.model_admin_urlname('change', new_obj.pk),
+            'detail_url': self.admin_view.model_admin_urlname('detail', new_obj.pk)
+            })
 
     def get_response(self, __):
         if self.request.method.lower() != 'post' or not (self.request.is_ajax() or self.request.POST.get('_ajax')):
