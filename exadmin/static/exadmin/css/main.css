@@ -145,6 +145,29 @@ a { cursor: pointer;}
           box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
 }
 
+/* mask */
+.mask {
+  display: none;
+  position: absolute;
+  left: 0px;
+  top: 8px;
+  width: 100%;
+  z-index: 9999;
+  margin-top: -8px;
+  background-color: rgba(255,255,255,.5);
+  height: 100%;
+}
+.mask .progress{
+  position: absolute;
+  width: 80%;
+  top: 50%;
+  margin-top: -8px;
+  left: 10%;
+}
+.mask .progress .bar{
+  width: 100%;
+}
+
 /* export */
 .export .dropdown-submenu .popover{
   width: 240px;
