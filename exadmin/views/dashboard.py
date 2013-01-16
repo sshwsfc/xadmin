@@ -407,13 +407,20 @@ class AddFormWidget(ModelBaseWidget, PartialBaseWidget):
         self.add_view.instance_forms()
 
     def context(self, context):
+        helper = FormHelper()
+        helper.form_tag = False
+
         context.update({
             'addform': self.add_view.form_obj,
+            'addhelper': helper,
+            'addurl': self.add_view.model_admin_urlname('add'),
             'model': self.model
             })
 
     def media(self):
-        return self.add_view.media + self.add_view.form_obj.media
+        media = self.add_view.media + self.add_view.form_obj.media
+        media.add_js([self.static('exadmin/js/quick-form.js'),])
+        return media
 
 class Dashboard(CommAdminView):
 
