@@ -2,26 +2,56 @@
 ;(function($){
 
   $('form.widget-form').on('post-success', function(e, data){
-    $('.alert-success #change-link').attr('href', data['change_url']);
+    $(this).data('ajaxform').clean()
+    $('.alert-success #change-link').attr('href', data['change_url'])
     $('.alert-success').show()
   })
 
   var AjaxForm = function(element, options) {
-    var that = this;
+    var that = this
 
-    this.el = $(element);
-    var el = this.el;
+    this.el = $(element)
+    var el = this.el
 
-    this.$form = el;
-    this.$mask = $('<div class="mask"><div class="progress progress-striped active"><div class="bar"></div></div></div>');
+    this.$form = el
+    this.$mask = $('<div class="mask"><div class="progress progress-striped active"><div class="bar"></div></div></div>')
 
-    el.prepend(this.$mask);
-    el.submit($.proxy(this.submit, this));
+    el.prepend(this.$mask)
+    el.submit($.proxy(this.submit, this))
+
+    this.ainit()
   }
 
   AjaxForm.prototype = {
 
     constructor: AjaxForm
+
+    , ainit: function(){
+      this.$form.find('input, select, textarea').each(function(){
+        var el = $(this)
+        if (el.is("[type=checkbox]")) {
+          el.data('init-value', el.attr('checked'))
+        } else if (el.is("select")) {
+          el.data('init-value', el[0].selectedIndex)
+        } else {
+          el.data('init-value', el.val())
+        }
+      })
+    }
+
+    , clean: function(){
+      this.$form.find('input, select, textarea').each(function(){
+        var el = $(this)
+        if (el.is("[type=checkbox]")) {
+          el.removeAttr('checked')
+        } else if (el.is("select")) {
+          el[0].selectedIndex = el.data('init-value')||0
+          el.change()
+        } else {
+          el.val(el.data('init-value')||'')
+        }
+      })
+    }
 
     , submit: function(e) {
         e.stopPropagation();
@@ -74,11 +104,11 @@
       this.$form.find('submit, button[type=submit], input[type=submit]').addClass('disabled');
 
       var off_check_box = Object();
-      this.$form.find('input[type=checkbox]').each(function(){
-        if(!$(this).attr('checked')){
-          off_check_box[$(this).attr('name')] = '';
-        }
-      })
+      // this.$form.find('input[type=checkbox]').each(function(){
+      //   if(!$(this).attr('checked')){
+      //     off_check_box[$(this).attr('name')] = '';
+      //   }
+      // })
 
       return $.ajax({
         data: [this.$form.serialize(), $.param(off_check_box)].join('&'),
