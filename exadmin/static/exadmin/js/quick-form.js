@@ -46,17 +46,17 @@
           el.removeAttr('checked')
         } else if (el.is("select")) {
           el[0].selectedIndex = el.data('init-value')||0
-          el.change()
         } else {
           el.val(el.data('init-value')||'')
         }
+        el.change()
       })
     }
 
     , submit: function(e) {
         e.stopPropagation();
         e.preventDefault();
-        
+
         $.when(this.save())
         .done($.proxy(function(data) {
           this.$mask.hide();
