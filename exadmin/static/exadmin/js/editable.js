@@ -224,7 +224,7 @@
     el.find('.popover-content').prepend(this.$mask);
     this.rendered_form = false;
 
-    this.einit('editable', element, options );
+    this.einit('editable', el.find('>a'), options );
   }
   Editable.prototype = $.extend({}, $.fn.clickover.Constructor.prototype, {
 

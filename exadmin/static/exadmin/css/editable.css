@@ -7,6 +7,9 @@
 .editable .popover-title .close {
   margin: -4px 0px 0px 10px;
 }
+.editable form .btn-ajax{
+  display: none;
+}
 .editable form{
   margin-bottom: 0px;
 }

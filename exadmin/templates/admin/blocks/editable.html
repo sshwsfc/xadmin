@@ -1,7 +1,8 @@
 {% load i18n %}
 {% load crispy_forms_field %}
 
-<a class="editable-handler" title="%s" data-field="{{field.name}}"><i class="icon-edit"></i>
+<span class="editable-handler" data-field="{{field.name}}">
+  <a title="{{title}}"><i class="icon-edit"></i></a>
   <div class="popover editable">
     <div class="arrow"></div>
     <div class="popover-inner">
@@ -10,7 +11,7 @@
         {{title}}
       </h3>
       <div class="popover-content">
-        <form method="post" action="{{action}}" class="">  
+        <form method="post" action="{{action}}">
           <div class="control-group">
             {% if field|css_class == "checkboxselectmultiple" %}
                 {% include 'bootstrap/layout/checkboxselectmultiple.html' %}
@@ -40,4 +41,4 @@
       </div>
     </div>
   </div>
-</a>
+</span>

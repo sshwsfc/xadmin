@@ -230,6 +230,11 @@ ul.model_ul li span {
   min-height: auto;
 }
 
+/* ajax btn */
+.btn-ajax {
+  margin-left: 10px;
+}
+
 /* g-search */
 #g-search .btn-group{
   margin: 0px;
