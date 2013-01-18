@@ -174,6 +174,7 @@
         $('body').append(modal)
 
         var self = this
+        modal.find('.modal-body').html('<div class="progress progress-striped active" style="width:50%; margin: 10px auto;"><div class="bar" style="width: 100%;"></div></div>')
         modal.find('.modal-body').load(this.add_url, function(form_html, status, xhr){
           var form = $(this).find('form')
           form.addClass('quick-form')
