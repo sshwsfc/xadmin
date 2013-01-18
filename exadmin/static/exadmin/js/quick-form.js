@@ -10,15 +10,7 @@
   var AjaxForm = function(element, options) {
     var that = this
 
-    this.el = $(element)
-    var el = this.el
-
-    this.$form = el
-    this.$mask = $('<div class="mask"><div class="progress progress-striped active"><div class="bar"></div></div></div>')
-
-    el.prepend(this.$mask)
-    el.submit($.proxy(this.submit, this))
-
+    this.$form = $(element)
     this.ainit()
   }
 
@@ -27,6 +19,11 @@
     constructor: AjaxForm
 
     , ainit: function(){
+      this.$mask = $('<div class="mask"><div class="progress progress-striped active"><div class="bar"></div></div></div>')
+
+      this.$form.prepend(this.$mask)
+      this.$form.submit($.proxy(this.submit, this))
+
       this.$form.find('input, select, textarea').each(function(){
         var el = $(this)
         if (el.is("[type=checkbox]")) {
@@ -62,6 +59,7 @@
           this.$mask.hide();
 
           this.$form.find('submit, button[type=submit], input[type=submit]').removeClass('disabled');
+          this.$form.find('.alert-success').hide()
 
           if(data['result'] != 'success' && data['errors']){
             var non_fields_errors = []
@@ -142,6 +140,81 @@
     if (f.is('.quick-form')) {
       f.ajaxform()
     }
+  })
+
+  var QuickAddBtn = function(element, options) {
+    var that = this;
+
+    this.$btn = $(element)
+    this.add_url = this.$btn.attr('href')
+    this.$for_input = $('#' + this.$btn.data('for-id'))
+    this.$for_wrap = $('#' + this.$btn.data('for-id') + '_wrap_container')
+    this.refresh_url = this.$btn.data('refresh-url')
+    this.rendered_form = false
+
+    this.binit(element, options);
+  }
+
+  QuickAddBtn.prototype = {
+
+     constructor: QuickAddBtn
+
+    , binit: function(element, options){
+      this.$btn.click($.proxy(this.click, this))
+    }
+    , click: function(e) {
+      e.stopPropagation()
+      e.preventDefault()
+
+      if(!this.modal){
+        var modal = $('<div class="modal container hide fade quick-form" role="dialog"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h3>'+ 
+          this.$btn.attr('title') +'</h3></div><div class="modal-body"></div>'+
+          '<div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>'+
+          '<a class="btn btn-primary btn-submit">Add</a></div></div>')
+        $('body').append(modal)
+
+        var self = this
+        modal.find('.modal-body').load(this.add_url, function(form_html, status, xhr){
+          var form = $(this).find('form')
+          form.addClass('quick-form')
+          form.on('post-success', $.proxy(self.post, self))
+          form.exform()
+
+          modal.find('.btn-submit').click(function(){form.submit()})
+
+          self.$form = form
+        })
+        this.modal = modal
+      }
+      this.modal.modal()
+
+      return false
+    }
+    , post: function(e, data){
+      this.$form.data('ajaxform').clean()
+      var wrap = this.$for_wrap
+      $.get(this.refresh_url + data['obj_id'], function(form_html, status, xhr){
+        wrap.html($(form_html).find('#' + wrap.attr('id')).html())
+        wrap.exform()
+      })
+      this.modal.modal('hide')
+    }
+
+  }
+
+  $.fn.ajax_addbtn = function ( option ) {
+    return this.each(function () {
+      var $this = $(this), data = $this.data('ajax_addbtn');
+      if (!data) {
+          $this.data('ajax_addbtn', (data = new QuickAddBtn(this)));
+      }
+    });
+  };
+
+  $.fn.ajax_addbtn.Constructor = QuickAddBtn
+
+  $.fn.exform.renders.push(function(f){
+    f.find('a.btn-ajax').ajax_addbtn()
   })
 
 })(jQuery)
