@@ -75,6 +75,7 @@ class ModelFormAdminView(ModelAdminView):
         self.formfield_overrides = overrides
         super(ModelFormAdminView, self).__init__(request, *args, **kwargs)
 
+    @filter_hook
     def formfield_for_dbfield(self, db_field, **kwargs):
         attrs = self.get_field_attrs(db_field, **kwargs)
         attrs.update(kwargs)
