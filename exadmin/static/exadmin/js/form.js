@@ -2,7 +2,7 @@
     // add select2 render
     $.fn.exform.renders.push(
       function(f){
-        f.find('select.select').select2();
+        f.find('select:not(.select-search)').select2();
         f.find('.select-search').each(function(){
             var $el = $(this);
             $el.select2({
