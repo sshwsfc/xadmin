@@ -9,50 +9,55 @@
       $('#g-theme-menu li>a').click(function(){
         var $el = $(this);
         var themeHref = $el.data('css-href');
-        $.save_user_settings("site-theme", themeHref, function(){
 
-          var iframe = document.createElement("IFRAME");
-          iframe.style.display = 'none';
-          document.body.appendChild(iframe);
-
-          var modal = $('<div id="load-theme-modal" class="modal hide fade" role="dialog"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h3>'+ 
+        var modal = $('<div id="load-theme-modal" class="modal hide fade" role="dialog"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h3>'+ 
             'Loading theme</h3></div><div class="modal-body"><div class="progress progress-striped active" style="width:50%; margin: 10px auto;"><div class="bar" style="width: 100%;"></div></div></div></div>');
-          $('body').append(modal);
-          modal.modal();
+        $('body').append(modal);
 
-          modal.on('hidden', function(e){
-            if(iframe){
-              $(iframe).unbind('load');
+        modal.on('shown', function(){
+
+          $.save_user_settings("site-theme", themeHref, function(){
+
+            var iframe = document.createElement("IFRAME");
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+
+            modal.on('hidden', function(e){
+              if(iframe){
+                $(iframe).unbind('load');
+                iframe.parentNode.removeChild(iframe);
+                iframe = null;
+              }
+              modal.remove();
+            });
+
+            $(iframe).load(function () {
+              $('#site-theme').attr('href', themeHref);
+
+              setTimeout(function(){
+                var nav_height = $('#top-nav').height();
+                $('body').animate({'padding-top': (nav_height + 18)}, 500, 'easeOutBounce');
+              }, 500);
+
+              modal.modal('hide');
               iframe.parentNode.removeChild(iframe);
               iframe = null;
-            }
-            modal.remove();
+            })
+
+            var ifmDoc = iframe.contentDocument || iframe.contentWindow.document;
+            ifmDoc.open();
+            ifmDoc.write('<!doctype><html><head></head><body>');
+            ifmDoc.write('<link rel="stylesheet" href="'+themeHref+'" />');
+            ifmDoc.write('</body></html>');
+            ifmDoc.close();
+
+
+            $('#g-theme-menu li').removeClass('active');
+            $el.parent().addClass('active');
           });
+        })
 
-          $(iframe).load(function () {
-            $('#site-theme').attr('href', themeHref);
-
-            setTimeout(function(){
-              var nav_height = $('#top-nav').height();
-              $('body').animate({'padding-top': (nav_height + 18)}, 500, 'easeOutBounce');
-            }, 500);
-
-            modal.modal('hide');
-            iframe.parentNode.removeChild(iframe);
-            iframe = null;
-          })
-
-          var ifmDoc = iframe.contentDocument || iframe.contentWindow.document;
-          ifmDoc.open();
-          ifmDoc.write('<!doctype><html><head></head><body>');
-          ifmDoc.write('<link rel="stylesheet" href="'+themeHref+'" />');
-          ifmDoc.write('</body></html>');
-          ifmDoc.close();
-
-
-          $('#g-theme-menu li').removeClass('active');
-          $el.parent().addClass('active');
-        });
+        modal.modal();
       })
     }
   });
