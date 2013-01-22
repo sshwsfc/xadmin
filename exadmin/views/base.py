@@ -267,9 +267,16 @@ class CommAdminView(BaseAdminView):
 
     @filter_hook
     def get_nav_menu(self):
-        nav_menu = self.get_site_menu()
-        if nav_menu:
-            return nav_menu
+        site_menu = list(self.get_site_menu() or [])
+        had_urls = []
+
+        def get_url(menu, had_urls):
+            if menu.has_key('url'):
+                had_urls.append(menu['url'])
+            if menu.has_key('menus'):
+                for m in menu['menus']:
+                    get_url(m, had_urls)
+        get_url({'menus': site_menu}, had_urls)
 
         nav_menu = SortedDict()
 
@@ -279,8 +286,11 @@ class CommAdminView(BaseAdminView):
             model_dict = {
                 'title': unicode(capfirst(model._meta.verbose_name_plural)),
                 'url': self.get_model_url(model, "changelist"),
+                'icon': self.get_model_icon(model),
                 'perm': self.get_model_perm(model, 'change')
             }
+            if model_dict['url'] in had_urls:
+                continue
 
             app_key = "app:%s" % app_label
             if app_key in nav_menu:
@@ -297,7 +307,9 @@ class CommAdminView(BaseAdminView):
         nav_menu = nav_menu.values()
         nav_menu.sort(key=lambda x: x['title'])
 
-        return nav_menu
+        site_menu.extend(nav_menu)
+
+        return site_menu
 
     @filter_hook
     def get_context(self):
@@ -330,6 +342,17 @@ class CommAdminView(BaseAdminView):
             if not settings.DEBUG:
                 self.request.session['nav_menu'] = simplejson.dumps(nav_menu)
                 self.request.session.modified = True
+
+        def check_selected(menu, path):
+            selected = menu.has_key('url') and path.startswith(menu['url']) or False
+            if menu.has_key('menus'):
+                for m in menu['menus']:
+                    _s = check_selected(m, path)
+                    if _s: selected = True
+            if selected: menu['selected'] = True
+            return selected
+        for menu in nav_menu:
+            check_selected(menu, self.request.path)
 
         context['nav_menu'] = nav_menu
         context['site_title'] = self.site_title or _(u'Django Xadmin')
