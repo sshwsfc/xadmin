@@ -28,6 +28,8 @@ class ThemePlugin(BaseAdminPlugin):
                 return UserSettings.objects.get(user=self.user, key="site-theme").value
             except Exception:
                 pass
+        if self.request.COOKIES.has_key('_theme'):
+            return urllib.unquote(self.request.COOKIES['_theme'])
         return self.default_theme
 
     def get_context(self, context):

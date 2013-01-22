@@ -1,5 +1,28 @@
 (function($) {
 
+  $.setCookie = function(name, value, options){
+    options = options || {};
+    if (value === null) {
+        value = '';
+        options.expires = -1;
+    }
+    var expires = '';
+    if (options.expires && (typeof options.expires == 'number' || options.expires.toUTCString)) {
+        var date;
+        if (typeof options.expires == 'number') {
+            date = new Date();
+            date.setTime(date.getTime() + (options.expires * 24 * 60 * 60 * 1000));
+        } else {
+            date = options.expires;
+        }
+        expires = '; expires=' + date.toUTCString(); // use expires attribute, max-age is not supported by IE
+    }
+    var path = options.path ? '; path=' + options.path : '';
+    var domain = options.domain ? '; domain=' + options.domain : '';
+    var secure = options.secure ? '; secure' : '';
+    document.cookie = [name, '=', encodeURIComponent(value), expires, path, domain, secure].join('');
+  }
+
   $(function(){
     var top_nav = $('#top-nav');
     $('body').css('padding-top', $('body>.container-fluid').offset().top + 'px');
@@ -17,6 +40,7 @@
         modal.on('shown', function(){
 
           $.save_user_settings("site-theme", themeHref, function(){
+            $.setCookie('_theme', themeHref);
 
             var iframe = document.createElement("IFRAME");
             iframe.style.display = 'none';
