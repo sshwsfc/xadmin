@@ -1,5 +1,4 @@
 
-from exadmin.util import quote
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import InvalidPage, Paginator
 from django.db import models
@@ -595,7 +594,10 @@ class ListAdminView(ModelAdminView):
 
     @filter_hook
     def url_for_result(self, result):
-        return self.model_admin_urlname("change", getattr(result, self.pk_attname))
+        if self.has_change_permission(result):
+            return self.model_admin_urlname("change", getattr(result, self.pk_attname))
+        else:
+            return self.model_admin_urlname("detail", getattr(result, self.pk_attname))
 
     # Media
     @filter_hook
