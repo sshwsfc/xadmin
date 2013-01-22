@@ -21,6 +21,9 @@ exadmin.site.register(views.website.IndexView, MainDashboard)
 
 class GolbeSetting(object):
     globe_search_models = [Host, IDC]
+    globe_models_icon = {
+        Host: 'laptop', IDC: 'cloud'
+    }
 exadmin.site.register(views.CommAdminView, GolbeSetting)
 
 class MaintainInline(object):
