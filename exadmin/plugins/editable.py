@@ -40,23 +40,25 @@ class EditablePlugin(BaseAdminPlugin):
         if self.list_editable and item.field and item.field.editable and (field_name in self.list_editable):
             pk = getattr(obj, obj._meta.pk.attname)
             form = self._get_form_admin(obj).form_obj
-            form.prefix = str(pk)
 
-            field_label = label_for_field(field_name, obj,
-                model_admin = self.admin_view,
-                return_attr = False
-            )
-            data_attr = {
-                'name': field_name,
-                'action': self.admin_view.model_admin_urlname('patch', pk),
-                'title': _(u"Enter %s") % field_label,
-                'field': form[field_name]
-            }
-            item.wraps.insert(0, '<span class="editable-field">%s</span>')
-            item.btns.append(loader.render_to_string('admin/blocks/editable.html', data_attr))
+            if field_name in form.fields:
+                form.prefix = str(pk)
 
-            if not self.editable_need_fields.has_key(field_name):
-                self.editable_need_fields[field_name] = item.field
+                field_label = label_for_field(field_name, obj,
+                    model_admin = self.admin_view,
+                    return_attr = False
+                )
+                data_attr = {
+                    'name': field_name,
+                    'action': self.admin_view.model_admin_urlname('patch', pk),
+                    'title': _(u"Enter %s") % field_label,
+                    'field': form[field_name]
+                }
+                item.wraps.insert(0, '<span class="editable-field">%s</span>')
+                item.btns.append(loader.render_to_string('admin/blocks/editable.html', data_attr))
+
+                if not self.editable_need_fields.has_key(field_name):
+                    self.editable_need_fields[field_name] = item.field
         return item
 
     # Media
