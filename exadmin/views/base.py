@@ -259,6 +259,7 @@ class BaseAdminView(BaseAdminObject, View):
 class CommAdminView(BaseAdminView):
 
     site_title = None
+    globe_models_icon = {}
 
     def get_site_menu(self):
         return None
@@ -332,6 +333,13 @@ class CommAdminView(BaseAdminView):
         context['nav_menu'] = nav_menu
         context['site_title'] = self.site_title or _(u'Django Xadmin')
         return context
+
+    @filter_hook
+    def get_model_icon(self, model):
+        icon = self.globe_models_icon.get(model)
+        if icon is None and model in self.admin_site._registry:
+            icon = getattr(self.admin_site._registry[model], 'model_icon', None)
+        return icon
 
     def message_user(self, message, level='info'):
         """

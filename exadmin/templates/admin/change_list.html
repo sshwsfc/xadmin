@@ -28,7 +28,7 @@
 {% block content %}
     <div class="navbar">
       <div class="navbar-inner">
-        <a class="brand" href="#">{{brand_name}}</a>
+        <a class="brand" href="#">{% if brand_icon %}<i class="icon-{{brand_icon}}"></i> {% endif %}{{brand_name}}</a>
         <ul class="nav">
           {% view_block 'nav_menu' %}
         </ul>

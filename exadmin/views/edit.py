@@ -274,6 +274,7 @@ class ModelFormAdminView(ModelAdminView):
             'show_delete': self.org_obj is not None,
             'add': add,
             'change': change,
+            'brand_icon': self.get_model_icon(self.model),
             'errors': self.get_error_list(),
             'app_label': self.opts.app_label,
             'has_add_permission': self.has_add_permission(),

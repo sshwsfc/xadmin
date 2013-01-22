@@ -42,6 +42,7 @@
     </div>
     {% endif %}
     {% endblock %}
+    {% if brand_icon %}<i class="icon-{{brand_icon}}"><sub class="icon-{% if add%}plus{%else%}pencil{%endif%}"></sub></i> {% endif %}
     {{ title }}
   </legend>
   {% endblock %}

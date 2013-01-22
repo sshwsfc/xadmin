@@ -426,6 +426,7 @@ class Dashboard(CommAdminView):
 
     widgets = []
     title = "Dashboard"
+    icon = None
 
     def get_page_id(self):
         return self.request.path
@@ -506,6 +507,7 @@ class Dashboard(CommAdminView):
         self.widgets = self.get_widgets()
         context = self.get_context()
         context.update({
+            'icon': self.icon,
             'portal_key': self.get_portal_key(),
             'columns': [('span%d' % int(12/len(self.widgets)), ws) for ws in self.widgets],
             'has_add_widget_permission': self.has_model_perm(UserWidget, 'add'),

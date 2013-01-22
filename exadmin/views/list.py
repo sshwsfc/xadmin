@@ -379,6 +379,7 @@ class ListAdminView(ModelAdminView):
             'has_add_permission': self.has_add_permission(),
             'app_label': self.app_label,
             'brand_name': self.opts.verbose_name,
+            'brand_icon': self.get_model_icon(self.model),
             'add_url': self.model_admin_urlname('add') + ('?_popup=1' if self.is_popup else ""),
             'result_headers': self.result_headers(),
             'results': self.results()
