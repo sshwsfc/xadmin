@@ -15,6 +15,7 @@ csrf_protect_m = method_decorator(csrf_protect)
 class GroupAdmin(object):
     search_fields = ('name',)
     ordering = ('name',)
+    model_icon = 'group'
 
 class UserAdmin(object):
     change_user_password_template = None
@@ -23,6 +24,7 @@ class UserAdmin(object):
     search_fields = ('username', 'first_name', 'last_name', 'email')
     ordering = ('username',)
     style_fields = {'user_permissions': 'm2m_transfer'}
+    model_icon = 'user'
 
     def save_models(self):
         pass
