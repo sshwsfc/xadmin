@@ -131,7 +131,7 @@ class BaseAdminObject(object):
 
     def has_model_perm(self, model, name, user=None):
         user = user or self.user
-        return user.has_perm(self.get_model_perm(model, name))
+        return user.has_perm(self.get_model_perm(model, name)) or (name == 'view' and self.has_model_perm(model, 'change', user))
 
     def get_query_string(self, new_params=None, remove=None):
         if new_params is None: new_params = {}
@@ -442,8 +442,8 @@ class ModelAdminView(CommAdminView):
         """
         return self.model._default_manager.get_query_set()
 
-    def has_view_permission(self):
-        return self.user.has_perm('%s.view_%s'% self.model_info)
+    def has_view_permission(self, obj=None):
+        return self.user.has_perm('%s.view_%s'% self.model_info) or self.has_change_permission(obj)
 
     def has_add_permission(self):
         return self.user.has_perm('%s.add_%s'% self.model_info)
