@@ -26,7 +26,7 @@ class EditablePlugin(BaseAdminPlugin):
         self.editable_need_fields = {}
 
     def init_request(self, *args, **kwargs):
-        active = bool(self.request.method == 'GET' and self.list_editable)
+        active = bool(self.request.method == 'GET' and self.admin_view.has_change_permission() and self.list_editable)
         if active:
             self.model_form_admins = {}
         return active

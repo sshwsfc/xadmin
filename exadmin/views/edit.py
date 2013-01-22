@@ -278,6 +278,7 @@ class ModelFormAdminView(ModelAdminView):
             'errors': self.get_error_list(),
             'app_label': self.opts.app_label,
             'has_add_permission': self.has_add_permission(),
+            'has_view_permission': self.has_view_permission(),
             'has_change_permission': self.has_change_permission(self.org_obj),
             'has_delete_permission': self.has_delete_permission(self.org_obj),
             'has_file_field': True, # FIXME - this should check if form or formsets have a FileField,
@@ -402,7 +403,7 @@ class CreateAdminView(ModelFormAdminView):
             # Figure out where to redirect. If the user has change permission,
             # redirect to the change-list page for this object. Otherwise,
             # redirect to the admin index.
-            if self.has_change_permission(None):
+            if self.has_view_permission():
                 post_url = self.model_admin_urlname('changelist')
             else:
                 post_url = self.admin_urlname('index')
@@ -491,7 +492,7 @@ class UpdateAdminView(ModelFormAdminView):
             # Figure out where to redirect. If the user has change permission,
             # redirect to the change-list page for this object. Otherwise,
             # redirect to the admin index.
-            if self.has_change_permission(None):
+            if self.has_view_permission():
                 post_url = self.model_admin_urlname('changelist')
             else:
                 post_url = self.admin_urlname('index')

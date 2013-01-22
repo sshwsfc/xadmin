@@ -7,7 +7,7 @@
 <ul class="breadcrumb">
   <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> <span class="divider">/</span></li>
   <li>
-    {% if has_change_permission %}
+    {% if has_view_permission %}
     <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
     {% else %}{{ opts.verbose_name_plural|capfirst }}{% endif %} <span class="divider">/</span>
   </li>

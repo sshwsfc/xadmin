@@ -287,7 +287,7 @@ class CommAdminView(BaseAdminView):
                 'title': unicode(capfirst(model._meta.verbose_name_plural)),
                 'url': self.get_model_url(model, "changelist"),
                 'icon': self.get_model_icon(model),
-                'perm': self.get_model_perm(model, 'change')
+                'perm': self.get_model_perm(model, 'view')
             }
             if model_dict['url'] in had_urls:
                 continue

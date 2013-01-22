@@ -361,6 +361,7 @@ class ListWidget(ModelBaseWidget, PartialBaseWidget):
     widget_type = 'list'
     description = 'Any Objects list Widget.'
     template = "admin/widgets/list.html"
+    model_perm = 'view'
 
     def convert(self, data):
         self.list_params = data.pop('params', {})

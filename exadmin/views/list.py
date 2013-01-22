@@ -116,7 +116,7 @@ class ListAdminView(ModelAdminView):
 
     def init_request(self, *args, **kwargs):
 
-        if not self.has_change_permission():
+        if not self.has_view_permission():
             raise PermissionDenied
 
         request = self.request

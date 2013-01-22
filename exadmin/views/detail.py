@@ -105,7 +105,7 @@ class DetailAdminView(ModelAdminView):
     def init_request(self, object_id, *args, **kwargs):
         self.obj = self.get_object(unquote(object_id))
 
-        if not self.has_change_permission(self.obj):
+        if not self.has_view_permission(self.obj):
             raise PermissionDenied
 
         if self.obj is None:
@@ -203,6 +203,7 @@ class DetailAdminView(ModelAdminView):
             'change': self.obj is not None,
             'app_label': self.opts.app_label,
             'has_add_permission': self.has_add_permission(),
+            'has_view_permission': self.has_view_permission(),
             'has_change_permission': self.has_change_permission(self.obj),
             'has_delete_permission': self.has_delete_permission(self.obj),
             'has_file_field': True, # FIXME - this should check if form or formsets have a FileField,

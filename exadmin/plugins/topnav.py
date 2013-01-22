@@ -24,7 +24,7 @@ class TopNavPlugin(BaseAdminPlugin):
         for model in models:
             app_label = model._meta.app_label
 
-            if self.has_model_perm(model, "change"):
+            if self.has_model_perm(model, "view"):
                 info = (app_label, model._meta.module_name)
                 if getattr(self.admin_site._registry[model], 'search_fields', None):
                     try:

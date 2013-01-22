@@ -44,7 +44,7 @@ class RelateFieldPlugin(BaseAdminPlugin):
         # search able fk field
         if style == 'fk-ajax' and isinstance(db_field, models.ForeignKey):
             if (db_field.rel.to in self.admin_view.admin_site._registry) and \
-                self.has_model_perm(db_field.rel.to, 'change'):
+                self.has_model_perm(db_field.rel.to, 'view'):
                 db = kwargs.get('using')
                 return dict(attrs or {}, widget=ForeignKeySearchWidget(db_field.rel, self.admin_view, using=db))
         return attrs
