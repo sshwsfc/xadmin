@@ -245,6 +245,7 @@ class BaseAdminView(BaseAdminObject, View):
                 plugins.append(p)
         self.plugins = plugins
 
+    @filter_hook
     def get_context(self):
         return {'admin_view': self, 'media': self.media}
 
@@ -341,6 +342,7 @@ class CommAdminView(BaseAdminView):
             icon = getattr(self.admin_site._registry[model], 'model_icon', None)
         return icon
 
+    @filter_hook
     def message_user(self, message, level='info'):
         """
         Send a message to the user. The default implementation
