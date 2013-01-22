@@ -230,6 +230,13 @@ ul.model_ul li span {
   min-height: auto;
 }
 
+/* icon */
+*[class^="icon-"] sub,
+*[class^="icon-"] sup{
+  font-size: 0.5em;
+  margin-left: -6px;
+}
+
 /* ajax btn */
 .btn-ajax {
   margin-left: 10px;
