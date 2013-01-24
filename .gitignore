@@ -37,3 +37,5 @@ nosetests.xml
 .DS_Store
 .c9revisions
 .settings
+
+_build
