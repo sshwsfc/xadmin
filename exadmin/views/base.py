@@ -260,7 +260,36 @@ class BaseAdminPlugin(BaseAdminObject):
         pass
 
 class BaseAdminView(BaseAdminObject, View):
-    """ Base Admin view, support some comm attrs."""
+    """
+    所有 AdminView 的基类。继承于 :class:`BaseAdminObject` 和 :class:`django.views.generic.View`
+
+    该类是 xadmin 中 **最核心** 的类，所有的 AdminView 都需要继承此类。xadmin 与 Django Admin最大的区别就在于 xadmin 
+    每次请求会产生一个 AdminView 的实例，也就是基于 Class 的 view 方式。该方式在 Django 1.3 被实现，可以参看 Django 的官方文档
+    `Class-based generic views <https://docs.djangoproject.com/en/1.4/topics/class-based-views/>`_
+
+    使用 Class 的方式实现的好处显而易见。首先，每一次请求都会产生一个新的实例，这样 request 这种变量就可以保存在实例中，基类的扩展，或
+    是复写父类方法时再也不用带着 request 到处跑了，当然，除了 request 还有很多可以基于实例存储的变量。
+
+    其次，基于实例的方式非常方便的实现了插件功能，而且还能实现插件的动态加载，因为每个 AdminView 实例可以根据自身实例的属性情况来判断加载
+    哪些插件，具体信息也可以参看 :class:`BaseAdminPlugin` 的描述。
+
+    实现一个自己的 AdminView 类很简单，举例如下::
+
+        from exadmin.sites import site
+        from exadmin.views import BaseAdminView
+
+        class MyAdminView(BaseAdminView):
+
+            def get(self, request, *args, **kwargs):
+                pass
+
+        site.register_view(r'^me_test/$', MyAdminView, name='my_test')
+
+    而后您就可以在 ``me_test/`` 访问到该view了。当然exadmin同事提供了一些通用的 AdminView，分别为
+
+        * :class:`CommAdminView` : xadmin通用界面的基础View，提供了xadmin通用界面需要的一些数据(菜单等)
+        * :class:`ModelAdminView` : 核心类之一，提供了基于 Model 的 AdminView。
+    """
 
     def __init__(self, request, *args, **kwargs):
         self.request = request
@@ -276,6 +305,10 @@ class BaseAdminView(BaseAdminObject, View):
 
     @classonlymethod
     def as_view(cls):
+        """
+        复写了 :meth:`View.as_view` 方法，主要是将 :meth:`View.dispatch` 的也写到了本方法中，并且去掉了一些初始化操作，
+        因为这些初始化操作在 AdminView 的初始化方法中已经完成了，可以参看 :meth:`BaseAdminView.init_request`
+        """
         def view(request, *args, **kwargs):
             self = cls(request, *args, **kwargs)
 
@@ -289,17 +322,22 @@ class BaseAdminView(BaseAdminObject, View):
 
             return handler(request, *args, **kwargs)
 
-        # take name and docstring from class
         update_wrapper(view, cls, updated=())
-        # and possible attributes set by decorators
-        # like csrf_exempt from dispatch
         update_wrapper(view, cls.dispatch, assigned=())
         return view
 
     def init_request(self, *args, **kwargs):
+        """
+        一般用于子类复写的初始化方法，在 AdminView 实例化时调用，:class:`BaseAdminView` 的该方法不做任何操作。
+        """
         pass
 
     def init_plugin(self, *args, **kwargs):
+        """
+        AdminView 实例中插件的初始化方法，在 :meth:`BaseAdminView.init_request` 后调用。根据 AdminView 中
+        的 base_plugins 属性将插件逐一初始化，既调用 :meth:`BaseAdminPlugin.init_request` 方法，并根据返回结果判断是否加载该插件。
+        最后该方法会将初始化后的插件设置为 plugins 属性。
+        """
         plugins = []
         for p in self.base_plugins:
             p.request = self.request
@@ -308,11 +346,15 @@ class BaseAdminView(BaseAdminObject, View):
             p.kwargs = self.kwargs
             result = p.init_request(*args, **kwargs)
             if result is not False:
+                # 返回结果不为 `False` 就加载该插件
                 plugins.append(p)
         self.plugins = plugins
 
     @filter_hook
     def get_context(self):
+        """
+        返回显示页面所需的 context 对象。
+        """
         return {'admin_view': self, 'media': self.media}
 
     @property
@@ -321,11 +363,24 @@ class BaseAdminView(BaseAdminObject, View):
 
     @filter_hook
     def get_media(self):
+        """
+        取得页面所需的 Media 对象，用于生成 css 和 js 文件
+        """
         return forms.Media()
 
 class CommAdminView(BaseAdminView):
+    """
+    基于 :class:`BaseAdminView` 提供的通用 AdminView。主要是完成了一些 xadmin 页面通用内容的处理。主要有:
+
+        * 网站标题
+        * 全局的 Model 图标
+        * 网站菜单
+
+    .. autodata:: exadmin.views
+    """
 
     site_title = None
+    #: 全局的 Model 图标，可以在 OptionClass 中复写该属性
     globe_models_icon = {}
 
     def get_site_menu(self):
