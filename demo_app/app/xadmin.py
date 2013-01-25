@@ -147,3 +147,16 @@ exadmin.site.register(HostGroup, HostGroupAdmin)
 exadmin.site.register(MaintainLog, MaintainLogAdmin)
 exadmin.site.register(IDC, IDCAdmin)
 exadmin.site.register(AccessRecord, AccessRecordAdmin)
+
+# Override auth admins
+from django.contrib.auth.models import User
+from exadmin.plugins.auth import UserAdmin
+
+class DemoUserAdmin(UserAdmin):
+    def save_models(self):
+        pass
+    def delete_model(self):
+        pass
+
+exadmin.site.unregister(User)
+exadmin.site.register(User, DemoUserAdmin)
