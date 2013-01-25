@@ -52,6 +52,7 @@ def filter_chain(filters, token, func, *args, **kwargs):
 
 def filter_hook(func):
     tag = func.__name__
+    func.__doc__ = "``filter_hook``\n\n" + (func.__doc__ or "")
     @functools.wraps(func)
     def method(self, *args, **kwargs):
 
@@ -135,20 +136,44 @@ class BaseAdminObject(object):
         return self.get_view(view_class, self.admin_site._registry.get(model), *args, **kwargs)
 
     def get_admin_url(self, name, *args, **kwargs):
+        """
+        便捷方法，方便的通过 name 取得 url，会加上 AdminSite.app_name 的 url namespace
+        """
         return reverse('%s:%s' % (self.admin_site.app_name, name), args=args, kwargs=kwargs)
 
     def get_model_url(self, model, name, *args, **kwargs):
+        """
+        便捷方法，方便的通过 model, name 取得 url，会自动拼成 urlname，并会加上 AdminSite.app_name 的 url namespace
+        """
         return reverse('%s:%s_%s_%s' % (self.admin_site.app_name, model._meta.app_label, model._meta.module_name, name), \
             args=args, kwargs=kwargs, current_app=self.admin_site.name)
 
     def get_model_perm(self, model, name):
+        """
+        获取 Model 的某种权限标签，标签的格式为::
+
+            >>> view.get_model_perm(User, 'view')
+            >>> 'auth.user_view'
+        """
         return '%s.%s_%s' % (model._meta.app_label, name, model._meta.module_name)
 
     def has_model_perm(self, model, name, user=None):
+        """
+        判断当前用户是否有某个 Model 的 某种权限，例如:
+
+            >>> view.has_model_perm(User, 'view')
+            >>> True
+        """
         user = user or self.user
         return user.has_perm(self.get_model_perm(model, name)) or (name == 'view' and self.has_model_perm(model, 'change', user))
 
     def get_query_string(self, new_params=None, remove=None):
+        """
+        在当前的query_string基础上生成新的query_string
+
+        :param new_params: 要新加的参数，该参数为 dict 
+        :param remove: 要删除的参数，该参数为 list, tuple
+        """
         if new_params is None: new_params = {}
         if remove is None: remove = []
         p = dict(self.request.GET.items()).copy()
@@ -165,6 +190,12 @@ class BaseAdminObject(object):
         return '?%s' % urlencode(p)
 
     def get_form_params(self, new_params=None, remove=None):
+        """
+        将当前 request 的参数，新加或是删除后，生成 hidden input。用于放入 HTML 的 Form 中。
+
+        :param new_params: 要新加的参数，该参数为 dict 
+        :param remove: 要删除的参数，该参数为 list, tuple
+        """
         if new_params is None: new_params = {}
         if remove is None: remove = []
         p = dict(self.request.GET.items()).copy()
@@ -182,6 +213,9 @@ class BaseAdminObject(object):
             '<input type="hidden" name="%s" value="%s"/>' % (k, v) for k,v in p.items() if v))
 
     def render_response(self, content, response_type='json'):
+        """
+        便捷方法，方便生成 HttpResponse，如果 response_type 为 ``json`` 会自动转为 json 格式后输出
+        """
         if response_type == 'json':
             response = HttpResponse(mimetype="application/json; charset=UTF-8")
             json = simplejson.dumps(content, cls=JSONEncoder, ensure_ascii=False)
@@ -190,13 +224,21 @@ class BaseAdminObject(object):
         return HttpResponse(content)
 
     def template_response(self, template, context):
+        """
+        便捷方法，方便生成 TemplateResponse
+        """
         return TemplateResponse(self.request, template, context, current_app=self.admin_site.name)
 
     def static(self, path):
+        """
+        :meth:`exadmin.util.static` 的快捷方法，返回静态文件的 url。
+        """
         return static(path)
 
 class BaseAdminPlugin(BaseAdminObject):
-
+    """
+    所有 Plugin 的基类。继承于 :class:`BaseAdminObject`
+    """
     def __init__(self, admin_view):
         self.admin_view = admin_view
         self.admin_site = admin_view.admin_site
@@ -206,6 +248,15 @@ class BaseAdminPlugin(BaseAdminObject):
             self.opts = admin_view.model._meta
 
     def init_request(self, *args, **kwargs):
+        """
+        插件的初始化方法，Plugin 实例化后被调用的第一个方法。该方法主要用于初始化插件需要的属性，
+        同时判断当前请求是否需要加载该插件，例如 Ajax插件的实现方式::
+
+            def init_request(self, *args, **kwargs):
+                return bool(self.request.is_ajax() or self.request.REQUEST.get('_ajax'))
+
+        当返回值为 ``False`` 时，所属的 AdminView 实例不会加载该插件
+        """
         pass
 
 class BaseAdminView(BaseAdminObject, View):
