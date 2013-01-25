@@ -15,6 +15,7 @@ csrf_protect_m = method_decorator(csrf_protect)
 class GroupAdmin(object):
     search_fields = ('name',)
     ordering = ('name',)
+    style_fields = {'permissions': 'm2m_transfer'}
     model_icon = 'group'
 
 class UserAdmin(object):
