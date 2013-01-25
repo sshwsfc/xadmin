@@ -1,3 +1,4 @@
+# coding=utf-8
 import copy
 import functools, datetime, decimal
 from functools import update_wrapper
@@ -25,11 +26,8 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.generic import View
 from exadmin.util import static
 
-
+#: 通用的csrf_protect_m装饰器，给其他模块的 AdminView 使用
 csrf_protect_m = method_decorator(csrf_protect)
-
-class IncorrectLookupParameters(Exception):
-    pass
 
 class IncorrectPluginArg(Exception):
     pass
@@ -70,6 +68,9 @@ def filter_hook(func):
     return method
 
 def inclusion_tag(file_name, context_class=Context, takes_context=False):
+    """
+    为 AdminView 的 block views 提供的便利方法，作用等同于 :meth:`django.template.Library.inclusion_tag`
+    """
     def wrap(func):
         @functools.wraps(func)
         def method(self, context, nodes, *arg, **kwargs):
@@ -111,10 +112,18 @@ class JSONEncoder(DjangoJSONEncoder):
                 return smart_unicode(o)
 
 class BaseAdminObject(object):
+    """
+    提供给 :class:`BaseAdminView` 和 :class:`BaseAdminPlugin` 的通用基类，主要是提供了一些常用的通用方法
+    """
+    def get_view(self, view_class, option_class=None, *args, **kwargs):
+        """
+        获取 AdminViewClass 的实例。实际上就是调用 :meth:`~exadmin.sites.AdminSite.get_view_class` 方法
 
-    def get_view(self, view_class, admin_class=None, *args, **kwargs):
+        :param view_class: AdminViewClass 的类
+        :param option_class: 希望与 AdminViewClass 合并的 OptionClass
+        """
         opts = kwargs.pop('opts', {})
-        return self.admin_site.get_view_class(view_class, admin_class, **opts)(self.request, *args, **kwargs)
+        return self.admin_site.get_view_class(view_class, option_class, **opts)(self.request, *args, **kwargs)
 
     def get_model_view(self, view_class, model, *args, **kwargs):
         return self.get_view(view_class, self.admin_site._registry.get(model), *args, **kwargs)

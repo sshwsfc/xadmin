@@ -16,13 +16,13 @@ sys.setdefaultencoding( "utf-8" )
 
 class AlreadyRegistered(Exception):
     """
-    如果一个 model 已经在 :py:class:`AdminSite` 注册过，当尝试再次注册时会抛出这个异常。
+    如果一个 model 已经在 :class:`AdminSite` 注册过，当尝试再次注册时会抛出这个异常。
     """
     pass
 
 class NotRegistered(Exception):
     """
-    当一个model并未在 :py:class:`AdminSite` 注册，当调用 :py:meth:`AdminSite.unregister` 想要取消该model的注册就会抛出该异常。
+    当一个model并未在 :class:`AdminSite` 注册，当调用 :meth:`AdminSite.unregister` 想要取消该model的注册就会抛出该异常。
     """
     pass
 
@@ -119,7 +119,7 @@ class AdminSite(object):
         :param name: view对应的url name, 要包含两个%%s, 分别会替换为 app_label和module_name
 
         注册 Model Base Admin View 可以为每一个在xadmin注册的 Model 生成一个 Admin View，并且包含相关的 Model 信息。
-        具体内容可以参看 :py:class:`~exadmin.views.base.ModelAdminView`。 举例::
+        具体内容可以参看 :class:`~exadmin.views.base.ModelAdminView`。 举例::
 
             from exadmin.views import ModelAdminView
 
@@ -148,7 +148,7 @@ class AdminSite(object):
         :param admin_view_class: 注册的 Admin View 类
         :param name: view对应的url name
 
-        关于 Admin View 具体内容可以参看 :py:class:`~exadmin.views.base.BaseAdminView`。 举例::
+        关于 Admin View 具体内容可以参看 :class:`~exadmin.views.base.BaseAdminView`。 举例::
 
             from exadmin.views import BaseAdminView
 
@@ -170,7 +170,7 @@ class AdminSite(object):
         :param plugin_class: view对应的url路径
         :param admin_view_class: 该 plugin 绑定的 Admin View 类
 
-        关于 Admin Plugin 具体内容可以参看 :py:class:`~exadmin.views.base.BaseAdminPlugin`。 举例::
+        关于 Admin Plugin 具体内容可以参看 :class:`~exadmin.views.base.BaseAdminPlugin`。 举例::
 
             from exadmin.views import BaseAdminPlugin
 
@@ -198,7 +198,7 @@ class AdminSite(object):
         :param model_or_iterable: 传入 model 或是指定的 ModelOptionClass
         :param admin_class: 当 model_or_iterable 为 Model 时，该参数为 ModelAdmin；model_or_iterable 为 AdminView 时 ，该参数为 OptionClass
 
-        关于 Admin Plugin 具体内容可以参看 :py:class:`~exadmin.views.base.BaseAdminPlugin`。 举例::
+        关于 Admin Plugin 具体内容可以参看 :class:`~exadmin.views.base.BaseAdminPlugin`。 举例::
 
             from models import SomeModel
 
@@ -246,7 +246,7 @@ class AdminSite(object):
         """
         取消 Model 或 OptionClass 的注册
 
-        如果 Model 或 OptionClass 并未注册过，会抛出 :py:exc:`exadmin.sites.NotRegistered` 异常
+        如果 Model 或 OptionClass 并未注册过，会抛出 :exc:`exadmin.sites.NotRegistered` 异常
         """
         from exadmin.views.base import BaseAdminView
         if isinstance(model_or_iterable, (ModelBase, BaseAdminView)):
@@ -285,10 +285,10 @@ class AdminSite(object):
 
     def admin_view(self, view, cacheable=False):
         """
-        为当前 ``AdminSite`` 的所有 View 提供的 Decorator。主要是功能是使用 :py:meth:`AdminSite.has_permission` 
+        为当前 ``AdminSite`` 的所有 View 提供的 Decorator。主要是功能是使用 :meth:`AdminSite.has_permission` 
         方法来判断当前用户是否有权限访问该 ``AdminSite``， 如果没有，转到登陆页面
 
-        通常情况下会在 :py:meth:`AdminSite.get_urls` 方法中使用该方法
+        通常情况下会在 :meth:`AdminSite.get_urls` 方法中使用该方法
 
         :param cacheable: 默认情况下，所有的 AdminView 会通过 ``never_cache`` 标记成不做缓存，如果确实需要缓存，可以设置 cacheable=True
         """
@@ -320,16 +320,23 @@ class AdminSite(object):
                     if name[0] != '_' and not callable(getattr(option_class, name)) and hasattr(plugin_class, name)])
 
     def _create_plugin(self, option_classes):
+        """
+        返回创建插件类的方法，用于创建新的、与 OptionClass 合并过的插件类。
+        """
+        # 创建新插件类的方法
         def merge_class(plugin_class):
             if option_classes:
                 attrs = {}
                 bases = [plugin_class]
                 for oc in option_classes:
+                    # 首先根据 OptionClass 获取需要合并的属性 
                     attrs.update(self._get_merge_attrs(oc, plugin_class))
+                    # 其次查看 OptionClass 是否含有与插件类同名的 SubClass，有的话也作为 baseclass 合并。
                     meta_class = getattr(oc, plugin_class.__name__, getattr(oc, plugin_class.__name__.replace('Plugin', ''), None))
                     if meta_class:
                         bases.insert(0, meta_class)
                 if attrs:
+                    # 合并新的插件类
                     plugin_class = MergeAdminMetaclass(
                         '%s%s' % (''.join([oc.__name__ for oc in option_classes]), plugin_class.__name__), \
                         tuple(bases), attrs)
@@ -337,14 +344,25 @@ class AdminSite(object):
         return merge_class
 
     def get_plugins(self, admin_view_class, *option_classes):
+        """
+        xadmin中 **核心** 方法，用于获取 AdminViewClass 的 plugins。
+
+        获取 plugins 首先根据该 AdminViewClass 及其所有的集成类在已经注册的插件中找到相应的插件类。然后再使用第二个参数的 OptionClass 拼成插件类。
+        """
         from exadmin.views import BaseAdminView
         plugins = []
         opts = [oc for oc in option_classes if oc]
         for klass in admin_view_class.mro():
+            # 列出 AdminViewClass 所有的集成类
             if klass == BaseAdminView or issubclass(klass, BaseAdminView):
+
+                # 首先找到 AdminViewClass 相应的 OptionCalss
                 reg_class = self._registry_avs.get(klass)
                 merge_opts = opts if reg_class is None else [reg_class] + opts
+
+                # 找到该 AdminViewClass 所有注册的插件
                 ps = self._registry_plugins.get(klass, [])
+                # 如果有需要merge的 OptionClass 则使用 AdminSite._create_plugin 方法创建插件类，并且放入插件列表
                 plugins.extend(map(self._create_plugin(merge_opts), ps) if merge_opts else ps)
         return plugins
 
@@ -354,9 +372,8 @@ class AdminSite(object):
 
         创建 AdminView 和核心思想为动态生成 mix 的类，主要步骤有两步:
 
-            1. 使用已经注册的 OptionClass (见 :py:meth:`~register`) 以及参数传入的 option_class 与 view_class 动态生成类
+            1. 使用已经注册的 OptionClass (见 :meth:`~register`) 以及参数传入的 option_class 与 view_class 动态生成类
             2. 根据 view_class 及其继承类找到相应的 plugins， 作为生成的 AdminViewClass 的 plugins 属性
-
 
         """
         option_classes = [option_class]
@@ -382,7 +399,7 @@ class AdminSite(object):
 
     def create_admin_view(self, admin_view_class):
         """
-        使用 :py:meth:`~AdminSite.get_view_class` 创建 AdminView 类，并且返回 view 方法，可以用于 get_urls 方法中
+        使用 :meth:`~AdminSite.get_view_class` 创建 AdminView 类，并且返回 view 方法，可以用于 get_urls 方法中
 
         :param admin_view_class: AdminView 类
         """
@@ -390,9 +407,9 @@ class AdminSite(object):
 
     def create_model_admin_view(self, admin_view_class, model, option_class):
         """
-        使用 :py:meth:`~AdminSite.get_view_class` 创建 ModelAdminView 类，并且返回 view 方法，可以用于 get_urls 方法中
+        使用 :meth:`~AdminSite.get_view_class` 创建 ModelAdminView 类，并且返回 view 方法，可以用于 get_urls 方法中
 
-        :param admin_view_class: AdminView 类，该类应该为 :py:class:`~exadmin.views.base.ModelAdminView` 的子类
+        :param admin_view_class: AdminView 类，该类应该为 :class:`~exadmin.views.base.ModelAdminView` 的子类
         :param model: Model 类，目前该参数暂无作用
         :param option_class: Model 的 OptionClass，保存对该 Model 的相关定制
         """
@@ -403,26 +420,29 @@ class AdminSite(object):
         from exadmin.views.base import BaseAdminView
 
         if settings.DEBUG:
+            # 如果是DEBUG模式，检查依赖
             self.check_dependencies()
 
+        #: 该方法主要用来使用 AdminSite.admin_view 封装 view
         def wrap(view, cacheable=False):
             def wrapper(*args, **kwargs):
                 return self.admin_view(view, cacheable)(*args, **kwargs)
             return update_wrapper(wrapper, view)
 
-        # Admin-site-wide views.
+        # 添加 i18n_javascript view， 用于js的国际化
         urlpatterns = patterns('',
             url(r'^jsi18n/$', wrap(self.i18n_javascript, cacheable=True), name='jsi18n')
         )
 
-        # Registed admin views
+        # 添加注册的 AdminViewClass
         urlpatterns += patterns('',
             *[url(path, wrap(self.create_admin_view(clz_or_func)) if type(clz_or_func) == type and issubclass(clz_or_func, BaseAdminView) else include(clz_or_func(self)), \
                 name=name) for path, clz_or_func, name in self._registry_views]
         )
 
-        # Add in each model's views.
+        # 添加 ModelAdminViewClass
         for model, admin_class in self._registry.iteritems():
+            # 需要将所有已经注册的 Model 逐一注册 ModelAdminViewClass
             view_urls = [url(path, wrap(self.create_model_admin_view(clz, model, admin_class)), \
                 name=name % (model._meta.app_label, model._meta.module_name)) \
                 for path, clz, name in self._registry_modelviews]
@@ -435,20 +455,27 @@ class AdminSite(object):
 
     @property
     def urls(self):
+        """
+        返回 xadmin site 的urls，用于设置django的urls。该方法用于属性使用。在您的Django的 ``urls.py`` 中，使用示例如下::
+
+            from django.conf.urls import patterns, include, url
+
+            import exadmin
+            exadmin.autodiscover()
+
+            urlpatterns = patterns('',
+                url(r'', include(exadmin.site.urls)),
+            )
+
+        """
         return self.get_urls(), self.app_name, self.name
 
     def i18n_javascript(self, request):
-        """
-        Displays the i18n JavaScript that the Django admin requires.
-
-        This takes into account the USE_I18N setting. If it's set to False, the
-        generated JavaScript will be leaner and faster.
-        """
         if settings.USE_I18N:
             from django.views.i18n import javascript_catalog
         else:
             from django.views.i18n import null_javascript_catalog as javascript_catalog
         return javascript_catalog(request, packages=['django.conf', 'exadmin'])
 
-# :py:class:`AdminSite` 的单例，通常情况下可以直接使用这个 site，作为全站统一实例
+# :class:`AdminSite` 的单例，通常情况下可以直接使用这个 site，作为全站统一实例
 site = AdminSite()
