@@ -126,6 +126,12 @@ class BaseAdminObject(object):
         return self.admin_site.get_view_class(view_class, option_class, **opts)(self.request, *args, **kwargs)
 
     def get_model_view(self, view_class, model, *args, **kwargs):
+        """
+        获取 ModelAdminViewClass 的实例。首先通过 :class:`~exadmin.sites.AdminSite` 取得 model 对应的 OptionClass，然后调用 :meth:`get_view` 方法
+
+        :param view_class: ModelAdminViewClass 的类
+        :param model: 绑定的 Model 类
+        """
         return self.get_view(view_class, self.admin_site._registry.get(model), *args, **kwargs)
 
     def admin_urlname(self, name, *args, **kwargs):
