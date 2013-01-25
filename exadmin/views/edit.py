@@ -406,7 +406,7 @@ class CreateAdminView(ModelFormAdminView):
             if self.has_view_permission():
                 post_url = self.model_admin_urlname('changelist')
             else:
-                post_url = self.admin_urlname('index')
+                post_url = self.get_admin_url('index')
             return post_url
 
 
@@ -495,7 +495,7 @@ class UpdateAdminView(ModelFormAdminView):
             if self.has_view_permission():
                 post_url = self.model_admin_urlname('changelist')
             else:
-                post_url = self.admin_urlname('index')
+                post_url = self.get_admin_url('index')
             return post_url
 
 

@@ -134,7 +134,7 @@ class BaseAdminObject(object):
         """
         return self.get_view(view_class, self.admin_site._registry.get(model), *args, **kwargs)
 
-    def admin_urlname(self, name, *args, **kwargs):
+    def get_admin_url(self, name, *args, **kwargs):
         return reverse('%s:%s' % (self.admin_site.app_name, name), args=args, kwargs=kwargs)
 
     def get_model_url(self, model, name, *args, **kwargs):
