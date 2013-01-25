@@ -26,11 +26,6 @@ class UserAdmin(object):
     style_fields = {'user_permissions': 'm2m_transfer'}
     model_icon = 'user'
 
-    def save_models(self):
-        pass
-    def delete_model(self):
-        pass
-
     def get_model_form(self, **kwargs):
         if self.org_obj is None:
             self.form = UserCreationForm
