@@ -13,8 +13,11 @@
 
 import sys, os
 current_dir = os.path.realpath(os.path.dirname(__file__))
+
+sys.path.insert(0, os.path.join(current_dir))
 sys.path.insert(0, os.path.join(current_dir, '../'))
-os.environ['DJANGO_SETTINGS_MODULE'] = 'django.conf.project_template.settings'
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'django-settings'
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
