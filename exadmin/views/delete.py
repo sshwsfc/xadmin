@@ -1,19 +1,14 @@
+# coding=utf-8
 from django.core.exceptions import PermissionDenied
-from django.core.urlresolvers import reverse
 from django.db import transaction, router
 from django.http import Http404, HttpResponseRedirect
 from django.template.response import TemplateResponse
-from django.utils.decorators import method_decorator
 from django.utils.encoding import force_unicode
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
-from django.views.decorators.csrf import csrf_protect
 from exadmin.util import unquote, get_deleted_objects
 
-from base import ModelAdminView, filter_hook
-
-
-csrf_protect_m = method_decorator(csrf_protect)
+from base import ModelAdminView, filter_hook, csrf_protect_m
 
 class DeleteAdminView(ModelAdminView):
     delete_confirmation_template = None
