@@ -11,10 +11,17 @@ from exadmin.util import unquote, get_deleted_objects
 from base import ModelAdminView, filter_hook, csrf_protect_m
 
 class DeleteAdminView(ModelAdminView):
+    """
+    删除 Model 的 AdminView
+
+    **Option属性**
+
+        .. autoattribute:: delete_confirmation_template
+    """
+    #: 删除时确认删除页面的模板名称
     delete_confirmation_template = None
 
     def init_request(self, object_id, *args, **kwargs):
-        "The 'delete' admin view for this model."
         self.obj = self.get_object(unquote(object_id))
 
         if not self.has_delete_permission(self.obj):
@@ -25,8 +32,7 @@ class DeleteAdminView(ModelAdminView):
 
         using = router.db_for_write(self.model)
 
-        # Populate deleted_objects, a data structure of all related objects that
-        # will also be deleted.
+        # 生成 deleted_objects, 存有所有即将被删除的关联数据
         (self.deleted_objects, self.perms_needed, self.protected) = get_deleted_objects(
             [self.obj], self.opts, self.request.user, self.admin_site, using)
 
@@ -60,12 +66,31 @@ class DeleteAdminView(ModelAdminView):
     @filter_hook
     def delete_model(self):
         """
-        Given a model instance delete it from the database.
+        删除 ``self.obj``
         """
         self.obj.delete()
 
     @filter_hook
-    def get_context(self):        
+    def get_context(self):
+        """
+        **Context Params**:
+
+            ``title`` : 
+
+            ``title`` : 
+
+            ``object`` : 
+
+            ``deleted_objects`` : 
+
+            ``perms_lacking`` : 
+
+            ``protected`` : 
+
+            ``opts`` : 
+
+            ``app_label`` : 
+        """
         object_name = force_unicode(self.opts.verbose_name)
         app_label = self.opts.app_label
 
