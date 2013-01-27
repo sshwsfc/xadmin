@@ -30,6 +30,7 @@ from exadmin.util import static
 csrf_protect_m = method_decorator(csrf_protect)
 
 class IncorrectPluginArg(Exception):
+    """ 当插件的方法参数错误时抛出该异常 """
     pass
 
 def filter_chain(filters, token, func, *args, **kwargs):
@@ -40,28 +41,56 @@ def filter_chain(filters, token, func, *args, **kwargs):
             fm = filters[token]
             fargs = getargspec(fm)[0]
             if len(fargs) == 1:
-                # Only self arg
+                # 只有 self 一个参数，这时如果 AdminView 方法的执行结果是 None 则没有问题，否则会抛出异常
                 result = func()
                 if result is None:
                     return fm()
                 else:
                     raise IncorrectPluginArg(_(u'Plugin filter method need a arg to receive parent method result.'))
             else:
+                # 如果第一个参数为 ``__`` ，传入的参数为 func， 而非 func()
                 return fm(func if fargs[1] == '__' else func(), *args, **kwargs)
         return filter_chain(filters, token-1, _inner_method, *args, **kwargs)
 
 def filter_hook(func):
+    """
+    表明 AdminView 的方法可以被插件插入的装饰器。执行使用了该装饰器的方法时，会按照以下过程执行:
+
+        1. 首先将实例的 plugins 属性取出，取出含有同样方法名的插件
+
+        2. 按照插件方法的 ``priority`` 属性排序
+
+        3. 顺序执行插件方法，执行插件方法的规则:
+
+            * 如果插件方法没有参数，AdminView 方法的返回结果不为空则抛出异常
+
+            * 如果插件方法的第一个参数为 ``__`` ，则 AdminView 方法将作为第一个参数传入，注意，这时还未执行该方法，
+            在插件中可以通过 ``__()`` 执行，这样就可以实现插件在 AdminView 方法执行前实现一些自己的逻辑，例如::
+
+                def get_context(self, __):
+                    c = {'key': 'value'}
+                    c.update(__())
+                    return c
+
+            * 如果插件方法的第一个参数不为 ``__`` ，则执行 AdminView 方法，将结果作为第一个参数传入
+
+        4. 最终将插件顺序执行的结果返回
+
+    """
     tag = func.__name__
     func.__doc__ = "``filter_hook``\n\n" + (func.__doc__ or "")
     @functools.wraps(func)
     def method(self, *args, **kwargs):
 
+        # 将 AdminView 的方法先封装起来，方便后面执行
         def _inner_method():
             return func(self, *args, **kwargs)
 
         if self.plugins:
+            # 首先取出所有含有同名方法的插件
             filters = [(getattr(getattr(p, tag), 'priority', 10), getattr(p, tag)) \
                 for p in self.plugins if callable(getattr(p, tag, None))]
+            # 按照 ``priority`` 属性排序
             filters = [f for p,f in sorted(filters, key=lambda x:x[0])]
             return filter_chain(filters, len(filters)-1, _inner_method, *args, **kwargs)
         else:
@@ -89,6 +118,7 @@ def inclusion_tag(file_name, context_class=Context, takes_context=False):
                 'use_l10n': context.use_l10n,
                 'use_tz': context.use_tz,
             })
+            # 添加 admin_view
             new_context['admin_view'] = context['admin_view']
             csrf_token = context.get('csrf_token', None)
             if csrf_token is not None:
@@ -237,7 +267,10 @@ class BaseAdminObject(object):
 
 class BaseAdminPlugin(BaseAdminObject):
     """
-    所有 Plugin 的基类。继承于 :class:`BaseAdminObject`
+    所有 Plugin 的基类。继承于 :class:`BaseAdminObject` 。插件的注册和使用可以参看 :meth:`exadmin.sites.AdminSite.register_plugin` ，
+    插件的原理可以参看 :func:`filter_hook` :
+
+    .. autofunction:: exadmin.views.base.filter_hook
     """
     def __init__(self, admin_view):
         self.admin_view = admin_view
@@ -376,21 +409,62 @@ class CommAdminView(BaseAdminView):
         * 全局的 Model 图标
         * 网站菜单
 
-    .. autodata:: exadmin.views
+    **View属性**:
+
+        .. autoattribute:: site_title
+        .. autoattribute:: globe_models_icon
     """
 
-    site_title = None
-    #: 全局的 Model 图标，可以在 OptionClass 中复写该属性
+    site_title = None         #: 网站的标题
+    #: 全局的 Model 图标::
+    #:
+    #:     globe_models_icon = {User: 'user-icon'}
     globe_models_icon = {}
 
     def get_site_menu(self):
+        """``FAQ:如何定制系统菜单``\n
+        用于给子类复写的方法，开发者可以在子类或 OptionClass 中复写该方法，返回自己定义的网站菜单。菜单的格式为::
+
+            ({
+                "title": "菜单标题", "perm": "权限标示", 
+                "icon": "图标的 css class", "url": "菜单url", 
+                "menus": [...]    # 子菜单项
+            })
+
+        菜单项的 ``perm`` 和 ``url`` 如果是基于 Model 的，可以使用 xadmin 提供的便利方法 
+        :meth:`BaseAdminObject.get_model_perm` 和 :meth:`BaseAdminObject.get_model_url`。举例说明创建菜单::
+
+            class AdminSettings(object):
+
+                def get_site_menu(self):
+                    return (
+                        {'title': '内容管理', 'perm': self.get_model_perm(Article, 'change'), 'menus':(
+                            {'title': '游戏资料', 'icon': 'info-sign', 'url': self.get_model_url(Article, 'changelist') + '?_rel_categories__id__exact=2'},
+                            {'title': '网站文章', 'icon': 'file', 'url': self.get_model_url(Article, 'changelist') + '?_rel_categories__id__exact=1'},
+                        )},
+                        {'title': '分类管理', 'perm': self.get_model_perm(Category, 'change'), 'menus':(
+                            {'title': '主要分类', 'url': self.get_model_url(Category, 'changelist') + '?_p_parent__isnull=True'},
+                            {'title': '游戏资料', 'url': self.get_model_url(Category, 'changelist') + '?_rel_parent__id__exact=2'},
+                        )},
+                    )
+
+            site.register(CommAdminView, AdminSettings)
+
+        """
         return None
 
     @filter_hook
     def get_nav_menu(self):
+        """
+        返回网站菜单，如果 :meth:`get_site_menu` 返回的结果不是 None ，那么将把其返回结果作为菜单的第一部分，而后会补全没有出现的 Model 列表页菜单项，
+        如果 :meth:`get_site_menu` 返回为 None， 那么将自动根据 App 和 Model 生成两级的菜单。
+
+        :rtype: 格式见 :meth:`get_site_menu` 返回格式
+        """
         site_menu = list(self.get_site_menu() or [])
         had_urls = []
 
+        # 选出所有已经存在的菜单项的 URL，后期自动生成菜单时会排除这些项。
         def get_url(menu, had_urls):
             if menu.has_key('url'):
                 had_urls.append(menu['url'])
@@ -399,7 +473,7 @@ class CommAdminView(BaseAdminView):
                     get_url(m, had_urls)
         get_url({'menus': site_menu}, had_urls)
 
-        nav_menu = SortedDict()
+        nav_menu = SortedDict()    #使用有序 dict，保证每次生成的菜单顺序固定
 
         for model, model_admin in self.admin_site._registry.items():
             app_label = model._meta.app_label
@@ -411,6 +485,7 @@ class CommAdminView(BaseAdminView):
                 'perm': self.get_model_perm(model, 'view')
             }
             if model_dict['url'] in had_urls:
+                # 过如该url已经在之前的菜单项中存在，就跳过该项
                 continue
 
             app_key = "app:%s" % app_label
@@ -434,8 +509,16 @@ class CommAdminView(BaseAdminView):
 
     @filter_hook
     def get_context(self):
+        """
+        **Context Params**:
+
+            ``site_title`` : 使用 :attr:`site_title` 属性，默认为 "Django Xadmin"
+
+            ``nav_menu`` : 权限过滤后的系统菜单项，如果在非 DEBUG 模式，该项会缓存在 SESSION 中
+        """
         context = super(CommAdminView, self).get_context()
 
+        # DEBUG模式会首先尝试从SESSION中取得缓存的菜单项
         if not settings.DEBUG and self.request.session.has_key('nav_menu'):
             nav_menu = simplejson.loads(self.request.session['nav_menu'])
         else:
@@ -447,7 +530,7 @@ class CommAdminView(BaseAdminView):
                     return True
                 elif callable(need_perm):
                     return need_perm(self.user)
-                elif need_perm == 'super':
+                elif need_perm == 'super':    # perm项如果为 ``super`` 说明需要超级用户权限
                     return self.user.is_superuser
                 else:
                     return self.user.has_perm(need_perm)
@@ -458,13 +541,14 @@ class CommAdminView(BaseAdminView):
                 return item
 
             nav_menu = [filter_item(item) for item in menus if check_menu_permission(item)]
-            nav_menu = filter(lambda i: bool(i['menus']), nav_menu)
+            nav_menu = filter(lambda i: bool(i['menus']), nav_menu) # 去掉子菜单为空的一级菜单
 
             if not settings.DEBUG:
                 self.request.session['nav_menu'] = simplejson.dumps(nav_menu)
                 self.request.session.modified = True
 
         def check_selected(menu, path):
+            # 判断菜单项是否被选择，使用当前url跟菜单项url对比
             selected = menu.has_key('url') and path.startswith(menu['url']) or False
             if menu.has_key('menus'):
                 for m in menu['menus']:
@@ -481,32 +565,110 @@ class CommAdminView(BaseAdminView):
 
     @filter_hook
     def get_model_icon(self, model):
+        """
+        取得 Model 图标，Model 图标会作为 css class，一般生成 HTML 如下::
+
+            <i class="icon-model icon-{{model_icon}}"></i>
+
+        这是 Bootstrap 标准的图标格式，xadmin 目前是用了 Font Icon (Font-Awesome)，您可以制作自己的图标，具体信息可以参考
+        `如何制作自己的字体图标 <http://fortawesome.github.com/Font-Awesome/#contribute>`_
+
+        .. note::
+
+            Model 图标，目前被使用在以下几个地方，当然您也可以随时使用在自己实现的页面中:
+
+                * 系统菜单
+                * 列表页面标题中
+                * 添加、修改及删除页面的标题中
+
+        ``FAQ: 如果定义 Model 图标``
+
+        您可以在 :class:`CommAdminView` 的 OptionClass 中通过 :attr:`CommAdminView.globe_models_icon` 属性设定全局的 Model 图标。
+        或者在 Model 的 OptionClass 中设置 :attr:`model_icon` 属性。
+        """
+        # 首先从全局图标中获取
         icon = self.globe_models_icon.get(model)
         if icon is None and model in self.admin_site._registry:
+            # 如果 Model 的 OptionClass 中有 model_icon 属性，则使用该属性
             icon = getattr(self.admin_site._registry[model], 'model_icon', None)
         return icon
 
     @filter_hook
     def message_user(self, message, level='info'):
         """
-        Send a message to the user. The default implementation
-        posts a message using the django.contrib.messages backend.
+        向用户显示一个消息，这个消息会在页面生成的时候生成以下 HTML::
+
+            {% for message in messages %}
+            <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">
+              <a class="close" data-dismiss="alert" href="#">&times;</a>
+              {{ message }}
+            </div>
+            {% endfor %}
+
+        这是标准的 Bootstrap 格式。xadmin默认使用 :mod:`django.contrib.messages` 实现消息系统
+
+        :param message: 消息内容
+        :param level: 消息等级，默认为 ``info``
         """
         if hasattr(messages, level) and callable(getattr(messages, level)):
             getattr(messages, level)(self.request, message)
 
 
 class ModelAdminView(CommAdminView):
+    """
+    基于 Model 的 AdminView，该类的子类，在 AdminSite 生成 urls 时，会为每一个注册的 Model 生成一个 url 映射。
+    ModelAdminView 注册时使用 :meth:`exadmin.sites.AdminSite.register_modelview` 方法注册，具体使用实例可以参见该方法的说明，或参考实例::
 
-    fields = None
-    exclude = None
-    ordering = None
-    model = None
+        from exadmin.views import ModelAdminView
+
+        class TestModelAdminView(ModelAdminView):
+            
+            def get(self, request, obj_id):
+                pass
+
+        site.register_modelview(r'^(.+)/test/$', TestModelAdminView, name='%s_%s_test')
+
+    注册后，用户可以通过访问 ``/%(app_label)s/%(module_name)s/123/test`` 访问到该view
+
+    **Option 属性**
+
+        .. autoattribute:: fields
+        .. autoattribute:: exclude
+        .. autoattribute:: ordering
+        .. autoattribute:: model
+
+    **实例属性**
+
+        .. py:attribute:: opts
+
+            即 Model._meta
+
+        .. py:attribute:: app_label
+
+            即 Model._meta.app_label
+
+        .. py:attribute:: module_name
+
+            即 Model._meta.module_name
+
+        .. py:attribute:: model_info
+
+            即 (self.app_label, self.module_name)
+
+    """
+    fields = None    #: (list,tuple) 默认显示的字段
+    exclude = None   #: (list,tuple) 排除的字段，主要用在编辑页面
+    ordering = None  #: (dict) 获取 Model 的 queryset 时默认的排序规则
+    model = None     #: 绑定的 Model 类，在注册 Model 时，该项会自动附在 OptionClass 中，见方法 :meth:`AdminSite.register`
 
     def __init__(self, request, *args, **kwargs):
+        #: 即 Model._meta
         self.opts = self.model._meta
+        #: 即 Model._meta.app_label
         self.app_label = self.model._meta.app_label
+        #: 即 Model._meta.module_name
         self.module_name = self.model._meta.module_name
+        #: 即 (self.app_label, self.module_name)
         self.model_info = (self.app_label, self.module_name)
 
         super(ModelAdminView, self).__init__(request, *args, **kwargs)
@@ -514,9 +676,8 @@ class ModelAdminView(CommAdminView):
     @filter_hook
     def get_object(self, object_id):
         """
-        Get model object instance by object_id, used for change admin view
+        根据 object_id 获得唯一的 Model 实例，如果 pk 为 object_id 的 Model 不存在，则返回 None
         """
-        # first get base admin view property queryset, return default model queryset
         queryset = self.queryset()
         model = queryset.model
         try:
@@ -526,14 +687,16 @@ class ModelAdminView(CommAdminView):
             return None
 
     def model_admin_urlname(self, name, *args, **kwargs):
+        """
+        等同于 :meth:`BaseAdminObject.get_admin_url` ，只是无需填写 model 参数， 使用本身的 :attr:`ModelAdminView.model` 属性。
+        """
         return reverse("%s:%s_%s_%s" % (self.admin_site.app_name, self.opts.app_label, \
             self.module_name, name), args=args, kwargs=kwargs)
 
     def get_model_perms(self):
         """
-        Returns a dict of all perms for this model. This dict has the keys
-        ``add``, ``change``, and ``delete`` mapping to the True/False for each
-        of those actions.
+        返回包含 Model 所有权限的 dict。dict 的 key 值为： ``add`` ``view`` ``change`` ``delete`` ， 
+        value 为 boolean 值，表示当前用户是否具有相应的权限。
         """
         return {
             'view': self.has_view_permission(),
@@ -543,6 +706,14 @@ class ModelAdminView(CommAdminView):
         }
 
     def get_template_list(self, template_name):
+        """
+        根据 template_name 返回一个 templates 列表，生成页面是在这些列表中寻找存在的模板。这样，您就能方便的复写某些模板。列表的格式为::
+
+            "admin/%s/%s/%s" % (opts.app_label, opts.object_name.lower(), template_name),
+            "admin/%s/%s" % (opts.app_label, template_name),
+            "admin/%s" % template_name,
+
+        """
         opts = self.opts
         return (
             "admin/%s/%s/%s" % (opts.app_label, opts.object_name.lower(), template_name),
@@ -552,26 +723,41 @@ class ModelAdminView(CommAdminView):
 
     def get_ordering(self):
         """
-        Hook for specifying field ordering.
+        返回 Model 列表的 ordering， 默认就是返回 :attr:`ModelAdminView.ordering` ，子类可以复写该方法
         """
-        return self.ordering or ()  # otherwise we might try to *None, which is bad ;)
+        return self.ordering or ()
         
     def queryset(self):
         """
-        Returns a QuerySet of all model instances that can be edited by the
-        admin site. This is used by changelist_view.
+        返回 Model 的 queryset。可以使用该属性查询 Model 数据。
         """
         return self.model._default_manager.get_query_set()
 
     def has_view_permission(self, obj=None):
+        """
+        返回当前用户是否有查看权限
+
+        .. note::
+
+            目前的实现为：如果一个用户有对数据的修改权限，那么他就有对数据的查看权限。当然您可以在子类中修改这一规则
+        """
         return self.user.has_perm('%s.view_%s'% self.model_info) or self.has_change_permission(obj)
 
     def has_add_permission(self):
+        """
+        返回当前用户是否有添加权限
+        """
         return self.user.has_perm('%s.add_%s'% self.model_info)
 
     def has_change_permission(self, obj=None):
+        """
+        返回当前用户是否有修改权限
+        """
         return self.user.has_perm('%s.change_%s'% self.model_info)
 
     def has_delete_permission(self, obj=None):
+        """
+        返回当前用户是否有删除权限
+        """
         return self.user.has_perm('%s.delete_%s'% self.model_info)
 
