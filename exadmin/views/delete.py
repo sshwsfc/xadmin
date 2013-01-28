@@ -12,16 +12,25 @@ from base import ModelAdminView, filter_hook, csrf_protect_m
 
 class DeleteAdminView(ModelAdminView):
     """
-    删除 Model 的 AdminView
+    删除 Model 的 AdminView。主要用于删除数据
 
     **Option属性**
 
         .. autoattribute:: delete_confirmation_template
+
+    **实例属性**
+
+        .. attribute:: obj
+
+            即将被删除的对象
     """
     #: 删除时确认删除页面的模板名称
     delete_confirmation_template = None
 
     def init_request(self, object_id, *args, **kwargs):
+        """
+        初始化操作。根据传入的 ``object_id`` 取得要被删除的数据对象，而后进行权限判断
+        """
         self.obj = self.get_object(unquote(object_id))
 
         if not self.has_delete_permission(self.obj):
@@ -30,8 +39,7 @@ class DeleteAdminView(ModelAdminView):
         if self.obj is None:
             raise Http404(_('%(name)s object with primary key %(key)r does not exist.') % {'name': force_unicode(self.opts.verbose_name), 'key': escape(object_id)})
 
-        using = router.db_for_write(self.model)
-
+        using = router.db_for_write(self.model)    # 取得所用db
         # 生成 deleted_objects, 存有所有即将被删除的关联数据
         (self.deleted_objects, self.perms_needed, self.protected) = get_deleted_objects(
             [self.obj], self.opts, self.request.user, self.admin_site, using)
@@ -101,9 +109,11 @@ class DeleteAdminView(ModelAdminView):
 
     @filter_hook
     def post_response(self):
-        obj_display = force_unicode(self.obj)
+        """
+        删除成功后的操作。首先提示用户信息，而后根据用户权限做跳转，如果用户有列表产看权限就跳转到列表页面，否则跳到网站首页。
+        """
         self.message_user(_('The %(name)s "%(obj)s" was deleted successfully.') % \
-            {'name': force_unicode(self.opts.verbose_name), 'obj': force_unicode(obj_display)}, 'success')
+            {'name': force_unicode(self.opts.verbose_name), 'obj': force_unicode(self.obj)}, 'success')
 
         if not self.has_view_permission():
             return self.get_admin_url('index')
