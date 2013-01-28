@@ -77,7 +77,7 @@
             {% for message in messages %}
             <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">
               <a class="close" data-dismiss="alert" href="#">&times;</a>
-              {{ message }}
+              {{ message|safe }}
             </div>
             {% endfor %}
             {% endif %}
