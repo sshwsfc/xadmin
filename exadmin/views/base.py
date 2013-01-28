@@ -5,6 +5,7 @@ from functools import update_wrapper
 from inspect import getargspec
 
 from django import forms
+from django.utils.encoding import force_unicode
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ValidationError
@@ -510,7 +511,7 @@ class CommAdminView(BaseAdminView):
     @filter_hook
     def get_context(self):
         """
-        **Context Params**:
+        **Context Params** :
 
             ``site_title`` : 使用 :attr:`site_title` 属性，默认为 "Django Xadmin"
 
@@ -672,6 +673,29 @@ class ModelAdminView(CommAdminView):
         self.model_info = (self.app_label, self.module_name)
 
         super(ModelAdminView, self).__init__(request, *args, **kwargs)
+
+    @filter_hook
+    def get_context(self):
+        """
+        **Context Params** :
+
+            ``opts`` : Model 的 _meta
+
+            ``app_label`` : Model 的 app_label
+
+            ``module_name`` : Model 的 module_name
+
+            ``verbose_name`` : Model 的 verbose_name
+        """
+        new_context = {
+            "opts": self.opts,
+            "app_label": self.app_label,
+            "module_name": self.module_name,
+            "verbose_name": force_unicode(self.opts.verbose_name),
+        }
+        context = super(ModelAdminView, self).get_context()
+        context.update(new_context)
+        return context
 
     @filter_hook
     def get_object(self, object_id):
