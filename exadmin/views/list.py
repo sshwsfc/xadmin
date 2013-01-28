@@ -25,7 +25,7 @@ ERROR_FLAG = 'e'
 
 DOT = '.'
 
-# Text to display within change-list table cells if the value is blank.
+# 数据表格中的值为空时显示的值
 EMPTY_CHANGELIST_VALUE = _('None')
 
 class FakeMethodField(object):
@@ -349,7 +349,7 @@ class ListAdminView(ModelAdminView):
         """
         Prepare the context for templates.
         """
-        self.title = force_unicode(self.opts.verbose_name)
+        self.title = _('%s List') % force_unicode(self.opts.verbose_name)
 
         model_fields = [(f, f.name in self.list_display, self.get_check_field_url(f)) \
             for f in (self.opts.fields + self.get_model_method_fields()) if f.name not in self.list_exclude]
