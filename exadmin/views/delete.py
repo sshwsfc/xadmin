@@ -41,12 +41,8 @@ class DeleteAdminView(ModelAdminView):
     def get(self, request, object_id):
         context = self.get_context()
         
-        app_label = self.opts.app_label
-        return TemplateResponse(request, self.delete_confirmation_template or [
-            "admin/%s/%s/delete_confirmation.html" % (app_label, self.opts.object_name.lower()),
-            "admin/%s/delete_confirmation.html" % app_label,
-            "admin/delete_confirmation.html"
-        ], context, current_app=self.admin_site.name)
+        return TemplateResponse(request, self.delete_confirmation_template or self.get_template_list("delete_confirmation.html"), \
+            context, current_app=self.admin_site.name)
 
     @csrf_protect_m
     @transaction.commit_on_success
@@ -58,7 +54,9 @@ class DeleteAdminView(ModelAdminView):
         self.delete_model()
 
         response = self.post_response()
+
         if isinstance(response, basestring):
+            # 如果返回字符串，说明是一个url，跳转到该页面
             return HttpResponseRedirect(response)
         else:
             return response
@@ -75,39 +73,27 @@ class DeleteAdminView(ModelAdminView):
         """
         **Context Params**:
 
-            ``title`` : 
+            ``title`` : 确认删除的标题，如果您没有权限删除的话，会提示无法删除
 
-            ``title`` : 
+            ``object`` : 要被删除的对象
 
-            ``object`` : 
+            ``deleted_objects`` : 关联被删除的所有数据对象
 
-            ``deleted_objects`` : 
+            ``perms_lacking`` : 缺少的权限
 
-            ``perms_lacking`` : 
-
-            ``protected`` : 
-
-            ``opts`` : 
-
-            ``app_label`` : 
+            ``protected`` : 被保护的数据，无法被删除的数据对象
         """
-        object_name = force_unicode(self.opts.verbose_name)
-        app_label = self.opts.app_label
-
         if self.perms_needed or self.protected:
-            title = _("Cannot delete %(name)s") % {"name": object_name}
+            title = _("Cannot delete %(name)s") % {"name": force_unicode(self.opts.verbose_name)}
         else:
             title = _("Are you sure?")
 
         new_context = {
             "title": title,
-            "object_name": object_name,
             "object": self.obj,
             "deleted_objects": self.deleted_objects,
             "perms_lacking": self.perms_needed,
             "protected": self.protected,
-            "opts": self.opts,
-            "app_label": app_label,
         }
         context = super(DeleteAdminView, self).get_context()
         context.update(new_context)
