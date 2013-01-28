@@ -692,6 +692,7 @@ class ModelAdminView(CommAdminView):
             "app_label": self.app_label,
             "module_name": self.module_name,
             "verbose_name": force_unicode(self.opts.verbose_name),
+            'model_icon': self.get_model_icon(self.model),
         }
         context = super(ModelAdminView, self).get_context()
         context.update(new_context)
