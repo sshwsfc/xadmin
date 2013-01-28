@@ -710,7 +710,7 @@ class ModelAdminView(CommAdminView):
         except (model.DoesNotExist, ValidationError):
             return None
 
-    def model_admin_urlname(self, name, *args, **kwargs):
+    def model_admin_url(self, name, *args, **kwargs):
         """
         等同于 :meth:`BaseAdminObject.get_admin_url` ，只是无需填写 model 参数， 使用本身的 :attr:`ModelAdminView.model` 属性。
         """

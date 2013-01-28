@@ -50,7 +50,7 @@ class ChartWidget(ModelBaseWidget):
             super(ChartWidget, self).filte_choices_model(model, modeladmin)
 
     def get_chart_url(self, name, v):
-        return self.model_admin_urlname('chart', name) + "?" + urlencode(self.list_params)
+        return self.model_admin_url('chart', name) + "?" + urlencode(self.list_params)
 
     def context(self, context):
         context.update({
@@ -83,7 +83,7 @@ class ChartsPlugin(BaseAdminPlugin):
     data_charts = {}
 
     def get_chart_url(self, name, v):
-        return self.admin_view.model_admin_urlname('chart', name) + self.admin_view.get_query_string()
+        return self.admin_view.model_admin_url('chart', name) + self.admin_view.get_query_string()
 
     # Media
     def get_media(self, media):

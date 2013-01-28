@@ -305,7 +305,7 @@ class ModelFormAdminView(ModelAdminView):
         })
 
         if self.org_obj and new_context['show_delete_link']:
-            new_context['delete_url'] = self.model_admin_urlname('delete', self.org_obj.pk)
+            new_context['delete_url'] = self.model_admin_url('delete', self.org_obj.pk)
 
         context = super(ModelFormAdminView, self).get_context()
         context.update(new_context)
@@ -392,7 +392,7 @@ class CreateAdminView(ModelFormAdminView):
         # the presence of keys in request.POST.
         if "_continue" in request.POST:
             self.message_user(msg + ' ' + _("You may edit it again below."), 'success')
-            return self.model_admin_urlname('change', pk_value)
+            return self.model_admin_url('change', pk_value)
 
         if "_addanother" in request.POST:
             self.message_user(msg + ' ' + (_("You may add another %s below.") % force_unicode(opts.verbose_name)), 'success')
@@ -404,7 +404,7 @@ class CreateAdminView(ModelFormAdminView):
             # redirect to the change-list page for this object. Otherwise,
             # redirect to the admin index.
             if self.has_view_permission():
-                post_url = self.model_admin_urlname('changelist')
+                post_url = self.model_admin_url('changelist')
             else:
                 post_url = self.get_admin_url('index')
             return post_url
@@ -483,17 +483,17 @@ class UpdateAdminView(ModelFormAdminView):
         elif "_saveasnew" in request.POST:
             msg = _('The %(name)s "%(obj)s" was added successfully. You may edit it again below.') % {'name': force_unicode(verbose_name), 'obj': obj}
             self.message_user(msg, 'success')
-            return self.model_admin_urlname('change', pk_value)
+            return self.model_admin_url('change', pk_value)
         elif "_addanother" in request.POST:
             self.message_user(msg + ' ' + (_("You may add another %s below.") % force_unicode(verbose_name)), 'success')
-            return self.model_admin_urlname('add')
+            return self.model_admin_url('add')
         else:
             self.message_user(msg, 'success')
             # Figure out where to redirect. If the user has change permission,
             # redirect to the change-list page for this object. Otherwise,
             # redirect to the admin index.
             if self.has_view_permission():
-                post_url = self.model_admin_urlname('changelist')
+                post_url = self.model_admin_url('changelist')
             else:
                 post_url = self.get_admin_url('index')
             return post_url

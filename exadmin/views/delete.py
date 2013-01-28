@@ -107,6 +107,6 @@ class DeleteAdminView(ModelAdminView):
 
         if not self.has_view_permission():
             return self.get_admin_url('index')
-        return self.model_admin_urlname('changelist')
+        return self.model_admin_url('changelist')
 
 

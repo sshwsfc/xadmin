@@ -156,13 +156,13 @@ class ReversionPlugin(BaseAdminPlugin):
 
     # Block Views
     def block_top_toolbar(self, context, nodes):
-        recoverlist_url = self.admin_view.model_admin_urlname('recoverlist')
+        recoverlist_url = self.admin_view.model_admin_url('recoverlist')
         nodes.append(mark_safe('<a class="btn btn-small" href="%s"><i class="icon-trash"></i> %s</a>' % (recoverlist_url, _(u"Recover deleted"))))
 
     def block_object_tools(self, context, nodes):
         obj = getattr(self.admin_view, 'org_obj', getattr(self.admin_view, 'obj', None))
         if obj:
-            revisionlist_url = self.admin_view.model_admin_urlname('revisionlist', quote(obj.pk))
+            revisionlist_url = self.admin_view.model_admin_url('revisionlist', quote(obj.pk))
             nodes.append(mark_safe('<a href="%s" class="btn btn-small"><i class="icon-time"></i> %s</a>' % (revisionlist_url, _(u'History'))))
 
 class BaseReversionView(ModelAdminView):
@@ -205,7 +205,7 @@ class RecoverListView(BaseReversionView):
             "module_name": capfirst(opts.verbose_name),
             "title": _("Recover deleted %(name)s") % {"name": force_unicode(opts.verbose_name_plural)},
             "deleted": deleted,
-            "changelist_url": self.model_admin_urlname("changelist"),
+            "changelist_url": self.model_admin_url("changelist"),
         })
         return context
 
@@ -228,7 +228,7 @@ class RevisionListView(BaseReversionView):
         action_list = [
             {
                 "revision": version.revision,
-                "url": self.model_admin_urlname('revision', quote(version.object_id), version.id),
+                "url": self.model_admin_url('revision', quote(version.object_id), version.id),
                 "version": version
             }
             for version
@@ -243,8 +243,8 @@ class RevisionListView(BaseReversionView):
             'module_name': capfirst(force_unicode(opts.verbose_name_plural)),
             'object': self.obj,
             'app_label': opts.app_label,
-            "changelist_url": self.model_admin_urlname("changelist"),
-            "update_url": self.model_admin_urlname("change", self.obj.pk),
+            "changelist_url": self.model_admin_url("changelist"),
+            "update_url": self.model_admin_url("change", self.obj.pk),
             'opts': opts,
         })
         return context
@@ -333,8 +333,8 @@ class RevisionListView(BaseReversionView):
             'opts': self.opts,
             'version_a': version_a,
             'version_b': version_b,
-            'revision_a_url': self.model_admin_urlname('revision', quote(version_a.object_id), version_a.id),
-            'revision_b_url': self.model_admin_urlname('revision', quote(version_b.object_id), version_b.id),
+            'revision_a_url': self.model_admin_url('revision', quote(version_a.object_id), version_a.id),
+            'revision_b_url': self.model_admin_url('revision', quote(version_b.object_id), version_b.id),
             'diffs': diffs
             })
 
@@ -426,7 +426,7 @@ class RevisionView(BaseRevisionView):
     def post_response(self):
         self.message_user(_(u'The %(model)s "%(name)s" was reverted successfully. You may edit it again below.') % \
             {"model": force_unicode(self.opts.verbose_name), "name": unicode(self.new_obj)}, 'success')
-        return HttpResponseRedirect(self.model_admin_urlname('change', self.new_obj.pk))
+        return HttpResponseRedirect(self.model_admin_url('change', self.new_obj.pk))
 
 class RecoverView(BaseRevisionView):
 
@@ -460,7 +460,7 @@ class RecoverView(BaseRevisionView):
     def post_response(self):
         self.message_user(_(u'The %(model)s "%(name)s" was recovered successfully. You may edit it again below.') % \
             {"model": force_unicode(self.opts.verbose_name), "name": unicode(self.new_obj)}, 'success')
-        return HttpResponseRedirect(self.model_admin_urlname('change', self.new_obj.pk))
+        return HttpResponseRedirect(self.model_admin_url('change', self.new_obj.pk))
 
 class InlineDiffField(Field):
 
