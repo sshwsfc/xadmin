@@ -90,23 +90,39 @@ class ResultHeader(ResultItem):
 
 class ListAdminView(ModelAdminView):
     """
-    Display models objects view. this class has ordering and simple filter features.
-    """
-    list_display = ('__str__',)
-    list_display_links = ()
-    list_select_related = False
-    list_per_page = 50
-    list_max_show_all = 200
-    list_exclude = ()
-    search_fields = ()
-    paginator_class = Paginator
-    ordering = None
+    显示数据列表的 AdminView, 该 View 实现了基本的数据排序和分页等功能.
 
-    # Change list templates
-    change_list_template = None
+    **Option 属性**
+
+        .. autoattribute:: list_display
+        .. autoattribute:: list_display_links
+        .. autoattribute:: list_select_related
+        .. autoattribute:: list_per_page
+        .. autoattribute:: list_max_show_all
+
+        .. autoattribute:: list_exclude
+        .. autoattribute:: search_fields
+
+        .. autoattribute:: ordering
+        .. autoattribute:: object_list_template
+
+    """
+    list_display = ('__str__',)    #: 默认显示列
+    list_display_links = ()        #: 显示修改或查看数据详情连接的列
+    list_select_related = False    #: 是否提前加载关联数据, 使用 ``select_related``
+    list_per_page = 50             #: 每页显示数据的条数
+    list_max_show_all = 200        #: 每页最大显示数据的条数
+    list_exclude = ()              #: 排除显示的列, 在显示列的设置中不会出现这些被排除的列
+    search_fields = ()             #: 按照这些列搜索数据
+    paginator_class = Paginator    #: 分页类
+    ordering = None                #: 默认的数据排序
+
+    object_list_template = None    #: 显示数据的模板
 
     def init_request(self, *args, **kwargs):
-
+        """
+        初始化请求, 首先判断当前用户有无 view 权限, 而后进行一些生成数据列表所需的变量的初始化操作.
+        """
         if not self.has_view_permission():
             raise PermissionDenied
 
@@ -117,17 +133,18 @@ class ListAdminView(ModelAdminView):
         self.list_display = self.get_list_display()
         self.list_display_links = self.get_list_display_links()
 
-        # Get page number parameters from the query string.
+        # 获取当前页码
         try:
             self.page_num = int(request.GET.get(PAGE_VAR, 0))
         except ValueError:
             self.page_num = 0
 
-        # Get params from request
+        # 获取各种参数
         self.show_all = ALL_VAR in request.GET
         self.to_field = request.GET.get(TO_FIELD_VAR)
         self.params = dict(request.GET.items())
 
+        # 删除已经获取的参数, 因为后面可能要用 params 或过滤数据
         if PAGE_VAR in self.params:
             del self.params[PAGE_VAR]
         if ERROR_FLAG in self.params:
@@ -391,7 +408,7 @@ class ListAdminView(ModelAdminView):
 
         response = self.get_response(context, *args, **kwargs)
 
-        return response or TemplateResponse(request, self.change_list_template or [
+        return response or TemplateResponse(request, self.object_list_template or [
             'admin/%s/%s/change_list.html' % (self.app_label, self.opts.object_name.lower()),
             'admin/%s/change_list.html' % self.app_label,
             'admin/change_list.html'
