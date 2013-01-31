@@ -153,7 +153,13 @@ class ListAdminView(ModelAdminView):
     @filter_hook
     def get_list_display(self):
         """
-        Return a sequence containing the fields to be displayed on the list.
+        获得列表显示的列. 如果 request 中有 ``_cols`` 参数, 则使用该参数, 否则使用 :attr:`list_display`.
+
+        .. note::
+
+            该方法会赋值 :attr:`base_list_display` 属性, 保存 list_display. 如果有插件修改了该方法的返回值
+            (例如: Action 插件), 可能会增加其他列. 但是这些列可能对其他插件没有意义(例如: 导出数据插件). 那么其他插件可以使用
+            :attr:`base_list_display` 这个属性, 取得最原始的显示列.
         """
         self.base_list_display = self.request.GET.has_key(COL_LIST_VAR) and self.request.GET[COL_LIST_VAR].split('.') or self.list_display
         return list(self.base_list_display)
@@ -161,31 +167,31 @@ class ListAdminView(ModelAdminView):
     @filter_hook
     def get_list_display_links(self):
         """
-        Return a sequence containing the fields to be displayed as links
-        on the changelist. The list_display parameter is the list of fields
-        returned by get_list_display().
+        返回一组列, 这些列的数据会以链接形式显示, 连接地址可能是数据修改页面(如果有修改权限), 或是查看页面. 
+        默认情况下会使用 :attr:`list_display_links` , 如果 :attr:`list_display_links` 为空, 则返回 :attr:`list_display` 第一列.
         """
+        # 没有使用 :meth:`get_list_display` 返回的值, 因为 :meth:`get_list_display` 返回的值可能会被插件修改
         if self.list_display_links or not self.list_display:
             return self.list_display_links
         else:
-            # Use only the first item in list_display as link
             return list(self.list_display)[:1]
 
     def make_result_list(self):
-        # Get search parameters from the query string.
+        """
+        该方法负责生成数据列表及分页信息. 数据列表会赋值给属性 :attr:`result_list` , 插件可以在该方法后执行一些数据处理.
+        """
+        # 基本 queryset
         self.base_queryset = self.queryset()
+        # 排序及过滤等处理后的 queryset
         self.list_queryset = self.get_list_queryset()
         self.ordering_field_columns = self.get_ordering_field_columns()
         self.paginator = self.get_paginator()
 
-        # Get the number of objects, with admin filters applied.
+        # 获取当前据数目
         self.result_count = self.paginator.count
 
-        # Get the total number of objects, with no admin filters applied.
-        # Perform a slight optimization: Check to see whether any filters were
-        # given. If not, use paginator.hits to calculate the number of objects,
-        # because we've already done paginator.hits and the value is cached.
         if not self.list_queryset.query.where:
+            # 如果没有任何过滤条件, result_count 就是 全不数据条目
             self.full_result_count = self.result_count
         else:
             self.full_result_count = self.base_queryset.count()
@@ -193,13 +199,13 @@ class ListAdminView(ModelAdminView):
         self.can_show_all = self.result_count <= self.list_max_show_all
         self.multi_page = self.result_count > self.list_per_page
 
-        # Get the list of objects to display on this page.
         if (self.show_all and self.can_show_all) or not self.multi_page:
             self.result_list = self.list_queryset._clone()
         else:
             try:
                 self.result_list = self.paginator.page(self.page_num+1).object_list
             except InvalidPage:
+                # 分页错误, 这里的错误页面需要调整一下
                 if ERROR_FLAG in self.request.GET.keys():
                     return SimpleTemplateResponse('admin/invalid_setup.html', {
                         'title': _('Database error'),
@@ -218,14 +224,11 @@ class ListAdminView(ModelAdminView):
     @filter_hook
     def get_list_queryset(self):
         """
-        Get model queryset. The query has been filted and ordered.
+        取得 Model 的 queryset, 该 queryset 已经进行排序和过滤过. 其他插件可以在这里修改 queryset
         """
-        # First, get queryset from base class.
+        # 首先取得基本的 queryset
         queryset = self.queryset()
 
-        # Use select_related() if one of the list_display options is a field
-        # with a relationship and the provided queryset doesn't already have
-        # select_related defined.
         if not queryset.query.select_related:
             if self.list_select_related:
                 queryset = queryset.select_related()
@@ -237,13 +240,13 @@ class ListAdminView(ModelAdminView):
                         pass
                     else:
                         if isinstance(field.rel, models.ManyToOneRel):
+                            # 有关联字段显示, 则使用 ``select_related``
                             queryset = queryset.select_related()
                             break
 
-        # Then, set queryset ordering.
+        # 进行排序
         queryset = queryset.order_by(*self.get_ordering())
         
-        # Return the queryset.
         return queryset
 
     # List ordering
