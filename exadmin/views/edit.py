@@ -688,7 +688,7 @@ class ModelFormAdminUtil(ModelFormAdminView):
             form = edit_view.form_obj
 
     """
-    def init_request(self, obj):
+    def init_request(self, obj=None):
         self.org_obj = obj
         self.prepare_form()
         self.instance_forms()
