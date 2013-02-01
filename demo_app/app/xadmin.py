@@ -3,7 +3,8 @@ from exadmin import views
 from models import *
 from exadmin.layout import *
 
-from  exadmin.plugins.inline import Inline
+from exadmin.plugins.inline import Inline
+from exadmin.plugins.batch import BatchChangeAction
 
 class MainDashboard(object):
     widgets = [
@@ -43,6 +44,9 @@ class IDCAdmin(object):
     search_fields = ['name']
     relfield_style = 'fk-ajax'
     reversion_enable = True
+
+    actions = [BatchChangeAction,]
+    batch_fields = ('contact', 'create_time')
     
 class HostAdmin(object):
     def open_web(self, instance):
