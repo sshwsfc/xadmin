@@ -261,18 +261,22 @@ class ListAdminView(ModelAdminView):
     @filter_hook
     def get_ordering_field(self, field_name):
         """
-        Returns the proper model field name corresponding to the given
-        field_name to use for ordering. field_name may either be the name of a
-        proper model field or the name of a method (on the admin or model) or a
-        callable with the 'admin_order_field' attribute. Returns None if no
-        proper model field name can be matched.
+        根据参数 ``field_name`` 获取需要排序 Field 的名字. ``field_name`` 可能是 Model 的一个标准 DB Field, 
+        也有可能是可执行方法, 或是 OptionClass 及 Model 的一个属性, 这种情况下会取其 ``admin_order_field`` 属性
+        作为排序字段, 如果取不到, 则返回 ``None``. 例如::
+
+            class UserAdmin(object):
+                def my_field(self, obj):
+                    return obj.name.lower()
+                my_field.admin_order_field = 'name'
+
+
         """
         try:
             field = self.opts.get_field(field_name)
             return field.name
         except models.FieldDoesNotExist:
-            # See whether field_name is a name of a non-field
-            # that allows sorting.
+            # 在非 db field 中获取
             if callable(field_name):
                 attr = field_name
             elif hasattr(self, field_name):
