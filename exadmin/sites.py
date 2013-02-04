@@ -193,11 +193,11 @@ class AdminSite(object):
             inner = csrf_protect(inner)
         return update_wrapper(inner, view)
 
-    def _get_merge_attrs(self, admin_class, plugin_class):
-        return dict([(name, getattr(admin_class, name)) for name in dir(admin_class) \
-                    if name[0] != '_' and not callable(getattr(admin_class, name)) and hasattr(plugin_class, name)])
+    def _get_merge_attrs(self, option_class, plugin_class):
+        return dict([(name, getattr(option_class, name)) for name in dir(option_class) \
+                    if name[0] != '_' and not callable(getattr(option_class, name)) and hasattr(plugin_class, name)])
 
-    def create_plugin(self, option_classes):
+    def _create_plugin(self, option_classes):
         def merge_class(plugin_class):
             if option_classes:
                 attrs = {}
@@ -223,21 +223,21 @@ class AdminSite(object):
                 reg_class = self._registry_avs.get(klass)
                 merge_opts = opts if reg_class is None else [reg_class] + opts
                 ps = self._registry_plugins.get(klass, [])
-                plugins.extend(map(self.create_plugin(merge_opts), ps) if merge_opts else ps)
+                plugins.extend(map(self._create_plugin(merge_opts), ps) if merge_opts else ps)
         return plugins
 
-    def get_view_class(self, view_class, admin_class=None, **opts):
-        admin_classes = [admin_class]
+    def get_view_class(self, view_class, option_class=None, **opts):
+        option_classes = [option_class]
         for klass in view_class.mro():
             reg_class = self._registry_avs.get(klass)
             if reg_class:
-                admin_classes.append(reg_class)
-            admin_classes.append(klass)
-        merges = filter(lambda x:x, admin_classes)
+                option_classes.append(reg_class)
+            option_classes.append(klass)
+        merges = filter(lambda x:x, option_classes)
         new_class_name = ''.join([c.__name__ for c in merges])
 
         if not self._admin_view_cache.has_key(new_class_name):
-            plugins = self.get_plugins(view_class, admin_class)
+            plugins = self.get_plugins(view_class, option_class)
             self._admin_view_cache[new_class_name] = MergeAdminMetaclass(new_class_name, tuple(merges), \
                 dict({'plugin_classes': plugins, 'admin_site': self}, **opts))
 
@@ -246,8 +246,8 @@ class AdminSite(object):
     def create_admin_view(self, admin_view_class):
         return self.get_view_class(admin_view_class).as_view()
 
-    def create_model_admin_view(self, admin_view_class, model, admin_class):
-        return self.get_view_class(admin_view_class, admin_class).as_view()
+    def create_model_admin_view(self, admin_view_class, model, option_class):
+        return self.get_view_class(admin_view_class, option_class).as_view()
 
     def get_urls(self):
         from django.conf.urls import patterns, url, include
