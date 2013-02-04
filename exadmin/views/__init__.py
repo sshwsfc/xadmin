@@ -1,6 +1,6 @@
 from exadmin.sites import site
 
-from base import BaseAdminPlugin, BaseAdminView, CommAdminView, ModelAdminView, filter_hook
+from base import BaseAdminPlugin, BaseAdminView, CommAdminView, ModelAdminView, filter_hook, BaseAdminObject
 
 from list import ListAdminView
 from edit import CreateAdminView, UpdateAdminView, ModelFormAdminView
@@ -8,6 +8,14 @@ from delete import DeleteAdminView
 from detail import DetailAdminView
 from dashboard import Dashboard, BaseWidget, widget_manager
 from website import IndexView, LoginView, LogoutView, UserSettingView
+
+__all__ = (
+    'BaseAdminObject',
+    'BaseAdminPlugin', 'BaseAdminView', 'CommAdminView', 'ModelAdminView', 'ListAdminView',
+    'ModelFormAdminView', 'CreateAdminView', 'UpdateAdminView', 'DeleteAdminView', 'DetailAdminView',
+    'Dashboard', 'BaseWidget', 
+    'IndexView', 'LoginView', 'LogoutView'
+    )
 
 # admin site-wide views
 site.register_view(r'^$', IndexView, name='index')
