@@ -270,7 +270,6 @@ class ListAdminView(ModelAdminView):
                     return obj.name.lower()
                 my_field.admin_order_field = 'name'
 
-
         """
         try:
             field = self.opts.get_field(field_name)
@@ -345,9 +344,9 @@ class ListAdminView(ModelAdminView):
 
     def get_check_field_url(self, f):
         """
-        Return the select column menu items link.
-        We must use base_list_display, because list_display maybe changed by plugins.
+        返回 ``显示列`` 菜单项中每一项的 url. 
         """
+        # 使用 :attr:`base_list_display` 作为基础列, 因为 :attr:`list_display` 可能已经被插件修改
         fields = [fd for fd in self.base_list_display if fd != f.name]
         if len(self.base_list_display) == len(fields):
             if f.primary_key: fields.insert(0, f.name)
@@ -356,7 +355,8 @@ class ListAdminView(ModelAdminView):
 
     def get_model_method_fields(self):
         """
-        Return the fields info defined in model. use FakeMethodField class wrap method as a db field.
+        将所有 OptionClass 中含有 ``is_column=True`` 的方法, 使用 :class:`FakeMethodField` 包装成一个假
+        的 DB Field. 用于在选择显示列的功能中显示.
         """
         methods = []
         for name in dir(self):
@@ -371,10 +371,17 @@ class ListAdminView(ModelAdminView):
     @filter_hook
     def get_context(self):
         """
-        Prepare the context for templates.
+        **Context Params** :
+
+            ``model_fields`` : 用于 ``选择显示列`` 功能, 保存所有可显示的列信息
+
+            ``result_headers`` : 显示列表的头部信息, 是 :class:`ResultHeader` 列表
+
+            ``results`` : 显示列表的内容信息, 是 :class:`ResultItem` 列表
         """
         self.title = _('%s List') % force_unicode(self.opts.verbose_name)
 
+        # 获取所有可供显示的列的信息
         model_fields = [(f, f.name in self.list_display, self.get_check_field_url(f)) \
             for f in (self.opts.fields + self.get_model_method_fields()) if f.name not in self.list_exclude]
 
@@ -398,14 +405,18 @@ class ListAdminView(ModelAdminView):
 
     @filter_hook
     def get_response(self, context, *args, **kwargs):
+        """
+        在 :meth:`get_context` 之后执行. 该方法默认无返回内容, 插件可以复写该方法, 返回指定的 HttpResponse.
+        """
         pass
 
     @csrf_protect_m
     @filter_hook
     def get(self, request, *args, **kwargs):
         """
-        The 'change list' admin view for this model.
+        显示 Model 列表. 
         """
+        # 首选获取列表 result_list
         response = self.get_result_list()
         if response:
             return response
@@ -415,27 +426,38 @@ class ListAdminView(ModelAdminView):
 
         response = self.get_response(context, *args, **kwargs)
 
-        return response or TemplateResponse(request, self.object_list_template or [
-            'admin/%s/%s/change_list.html' % (self.app_label, self.opts.object_name.lower()),
-            'admin/%s/change_list.html' % self.app_label,
-            'admin/change_list.html'
-        ], context, current_app=self.admin_site.name)
+        return response or TemplateResponse(request, self.object_list_template or \
+            self.get_template_list('change_list.html'), context, current_app=self.admin_site.name)
 
     @filter_hook
     def post_response(self, *args, **kwargs):
+        """
+        列表的 POST 请求, 该方法默认无返回内容, 插件可以复写该方法, 返回指定的 HttpResponse.
+        """
         pass
 
     @csrf_protect_m
     @filter_hook
     def post(self, request, *args, **kwargs):
+        """
+        显示 Model 列表的 POST 请求, 默认跟 GET 请求返回同样的结果, 插件可以通过复写 :meth:`post_response` 方法改变 POST 请求的返回
+        """
         return self.post_result_list() or self.post_response(*args, **kwargs) or self.get(request, *args, **kwargs)
 
     @filter_hook
     def get_paginator(self):
+        """
+        返回 paginator 实例, 使用 :attr:`paginator_class` 类实例化
+        """
         return self.paginator_class(self.list_queryset, self.list_per_page, 0, True)
 
     @filter_hook
     def get_page_number(self, i):
+        """
+        返回翻页组件各页码显示的 HTML 内容. 默认使用 bootstrap 样式
+
+        :param i: 页码, 可能是 ``DOT``
+        """
         if i == DOT:
             return mark_safe(u'<span class="dot-page">...</span> ')
         elif i == self.page_num:
@@ -443,9 +465,14 @@ class ListAdminView(ModelAdminView):
         else:
             return mark_safe(u'<a href="%s"%s>%d</a> ' % (escape(self.get_query_string({PAGE_VAR: i})), (i == self.paginator.num_pages-1 and ' class="end"' or ''), i+1))
             
-    # Result List methods
     @filter_hook
     def result_header(self, field_name, row):
+        """
+        返回某一列的头信息, 一个 :class:`ResultHeader` 实例.
+
+        :param field_name: 列的名字
+        :param row: :class:`ResultHeader` 实例
+        """
         ordering_field_columns = self.ordering_field_columns
         item = ResultHeader(field_name, row)
         text, attr = label_for_field(field_name, self.model,
@@ -457,13 +484,13 @@ class ListAdminView(ModelAdminView):
         if attr and not getattr(attr, "admin_order_field", None):
             return item
 
-        # OK, it is sortable if we got this far
+        # 接下来就是处理列排序的问题了
         th_classes = ['sortable']
         order_type = ''
         new_order_type = 'desc'
         sort_priority = 0
         sorted = False
-        # Is it currently being sorted on?
+        # 判断当前列是否已经排序
         if field_name in ordering_field_columns:
             sorted = True
             order_type = ordering_field_columns.get(field_name).lower()
@@ -503,6 +530,7 @@ class ListAdminView(ModelAdminView):
         item.ascending = (order_type == "asc")
         item.sort_priority = sort_priority
 
+        # 列排序菜单的内容
         menus = [
             ('asc', o_list_asc, 'caret-up', _(u'Sort ASC')),
             ('desc', o_list_desc, 'caret-down', _(u'Sort DESC')),
@@ -510,9 +538,11 @@ class ListAdminView(ModelAdminView):
         if sorted:
             row['num_sorted_fields'] = row['num_sorted_fields'] + 1
             menus.append((None, o_list_remove, 'remove', _(u'Cancel Sort')))
+            # 排序按钮
             item.btns.append('<a class="toggle" href="%s"><i class="icon-%s"></i></a>' % (
                 self.get_query_string({ORDER_VAR: '.'.join(o_list_toggle)}), 'sort-up' if order_type == "asc" else 'sort-down'))
 
+        # 添加排序菜单项
         item.menus.extend(['<li%s><a href="%s" class="active"><i class="icon-%s"></i> %s</a></li>' % \
             ((' class="active"' if sorted and order_type==i[0] else ''), \
                 self.get_query_string({ORDER_VAR: '.'.join(i[1])}), i[2], i[3]) for i in menus])
@@ -523,7 +553,7 @@ class ListAdminView(ModelAdminView):
     @filter_hook
     def result_headers(self):
         """
-        Generates the list column headers.
+        返回列表的列头信息. 返回一个 :class:`ResultRow` 实例, 其 ``cells`` 属性包含列信息
         """
         row = ResultRow()
         row['num_sorted_fields'] = 0
@@ -533,15 +563,20 @@ class ListAdminView(ModelAdminView):
     @filter_hook
     def result_item(self, obj, field_name, row):
         """
-        Generates the actual list of data.
+        返回某一对象某一列的数据, :class:`ResultItem` 实例.
+
+        :param obj: Model 对象
+        :param field_name: 列的名字
+        :param row: :class:`ResultHeader` 实例
         """
-        item = ResultItem(field_name, row)
+        item = ResultItem(field_name, row) # 首先初始化
         try:
             f, attr, value = lookup_field(field_name, obj, self)
         except (AttributeError, ObjectDoesNotExist):
             item.text = EMPTY_CHANGELIST_VALUE
         else:
             if f is None:
+                # Model 属性或是 OptionClass 属性列
                 item.allow_tags = getattr(attr, 'allow_tags', False)
                 boolean = getattr(attr, 'boolean', False)
                 if boolean:
@@ -550,6 +585,7 @@ class ListAdminView(ModelAdminView):
                 else:
                     item.text = smart_unicode(value)
             else:
+                # 处理关联咧
                 if isinstance(f.rel, models.ManyToOneRel):
                     field_val = getattr(obj, f.name)
                     if field_val is None:
@@ -567,25 +603,22 @@ class ListAdminView(ModelAdminView):
             item.attr = attr
             item.value = value
 
-        # If list_display_links not defined, add the link tag to the first field
+        # 如果没有指定 ``list_display_links`` , 使用第一列作为内容连接列.
         if (item.row['is_display_first'] and not self.list_display_links) \
             or field_name in self.list_display_links:
             url = self.url_for_result(obj)
-            # Convert the pk to something that can be used in Javascript.
-            # Problem cases are long ints (23L) and non-ASCII strings.
-            if self.to_field:
-                attr = str(self.to_field)
-            else:
-                attr = self.opts.pk.attname
-            value = obj.serializable_value(attr)
             item.row['is_display_first'] = False
-
             item.wraps.append(u'<a href="%s">%%s</a>' % url)
 
         return item
 
     @filter_hook
     def result_row(self, obj):
+        """
+        返回列表某一行的内容信息. 返回一个 :class:`ResultRow` 实例, 其 ``cells`` 属性包含各列内容信息
+
+        :param obj: Model 对象
+        """
         row = ResultRow()
         row['is_display_first'] = True
         row['object'] = obj
@@ -594,6 +627,9 @@ class ListAdminView(ModelAdminView):
 
     @filter_hook
     def results(self):
+        """
+        返回整个列表内容信息. 返回一个 :class:`ResultRow` 的数据, 包含各行信息
+        """
         results = []
         for obj in self.result_list:
             results.append(self.result_row(obj))
@@ -601,6 +637,11 @@ class ListAdminView(ModelAdminView):
 
     @filter_hook
     def url_for_result(self, result):
+        """
+        返回列表内容连接. 如果当前用户有修改权限就返回修改页面的连接, 否则返回查看详情页面连接
+        
+        :param result: Model 对象
+        """
         if self.has_change_permission(result):
             return self.model_admin_url("change", getattr(result, self.pk_attname))
         else:
@@ -609,6 +650,9 @@ class ListAdminView(ModelAdminView):
     # Media
     @filter_hook
     def get_media(self):
+        """
+        返回列表页面的 Media, 该页面添加了 ``list.js`` 文件
+        """
         media = super(ListAdminView, self).get_media()
         media.add_js([self.static('exadmin/js/list.js')])
         return media
@@ -616,9 +660,6 @@ class ListAdminView(ModelAdminView):
     # Blocks
     @inclusion_tag('admin/pagination.html')
     def block_pagination(self, context, nodes, page_type='normal'):
-        """
-        Generates the series of links to the pages in a paginated list.
-        """
         paginator, page_num = self.paginator, self.page_num
 
         pagination_required = (not self.show_all or not self.can_show_all) and self.multi_page
