@@ -25,7 +25,6 @@ ALL_VAR = 'all'
 ORDER_VAR = 'o'
 PAGE_VAR = 'p'
 TO_FIELD_VAR = 't'
-IS_POPUP_VAR = 'pop'
 COL_LIST_VAR = '_cols'
 ERROR_FLAG = 'e'
 
@@ -133,7 +132,6 @@ class ListAdminView(ModelAdminView):
 
         # Get params from request
         self.show_all = ALL_VAR in request.GET
-        self.is_popup = IS_POPUP_VAR in request.GET
         self.to_field = request.GET.get(TO_FIELD_VAR)
         self.params = dict(request.GET.items())
 
@@ -358,12 +356,7 @@ class ListAdminView(ModelAdminView):
         """
         Prepare the context for templates.
         """
-        if self.is_popup:
-            title = _('Select %s')
-        else:
-            title = _('Select %s to change')
-            
-        self.title = title % force_unicode(self.opts.verbose_name)
+        self.title = _('%s List') % force_unicode(self.opts.verbose_name)
 
         model_fields = [(f, f.name in self.list_display, self.get_check_field_url(f)) \
             for f in (self.opts.fields + self.get_model_method_fields()) if f.name not in self.list_exclude]
@@ -371,7 +364,6 @@ class ListAdminView(ModelAdminView):
         new_context = {
             'module_name': force_unicode(self.opts.verbose_name_plural),
             'title': self.title,
-            'is_popup': self.is_popup,
             'cl': self,
             'model_fields': model_fields,
             'clean_select_field_url': self.get_query_string(remove=[COL_LIST_VAR]),
@@ -379,7 +371,7 @@ class ListAdminView(ModelAdminView):
             'app_label': self.app_label,
             'brand_name': self.opts.verbose_name,
             'brand_icon': self.get_model_icon(self.model),
-            'add_url': self.model_admin_url('add') + ('?_popup=1' if self.is_popup else ""),
+            'add_url': self.model_admin_url('add'),
             'result_headers': self.result_headers(),
             'results': self.results()
         }
@@ -562,18 +554,8 @@ class ListAdminView(ModelAdminView):
         if (item.row['is_display_first'] and not self.list_display_links) \
             or field_name in self.list_display_links:
             url = self.url_for_result(obj)
-            # Convert the pk to something that can be used in Javascript.
-            # Problem cases are long ints (23L) and non-ASCII strings.
-            if self.to_field:
-                attr = str(self.to_field)
-            else:
-                attr = self.opts.pk.attname
-            value = obj.serializable_value(attr)
-            result_id = repr(force_unicode(value))[1:]
             item.row['is_display_first'] = False
-
-            item.wraps.append(u'<a href="%s"%s>%%s</a>' % \
-                (url, (self.is_popup and ' onclick="opener.dismissRelatedLookupPopup(window, %s); return false;"' % result_id or '')))
+            item.wraps.append(u'<a href="%s">%%s</a>' % url)
 
         return item
 

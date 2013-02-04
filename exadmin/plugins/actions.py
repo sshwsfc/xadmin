@@ -189,8 +189,7 @@ class ActionPlugin(BaseAdminPlugin):
         return response
 
     def get_actions(self):
-        from exadmin.views.list import IS_POPUP_VAR
-        if self.actions is None or IS_POPUP_VAR in self.request.GET:
+        if self.actions is None:
             return SortedDict()
 
         actions = [self.get_action(action) for action in self.global_actions]
