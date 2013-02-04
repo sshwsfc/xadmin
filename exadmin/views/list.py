@@ -379,7 +379,7 @@ class ListAdminView(ModelAdminView):
             'app_label': self.app_label,
             'brand_name': self.opts.verbose_name,
             'brand_icon': self.get_model_icon(self.model),
-            'add_url': self.model_admin_urlname('add') + ('?_popup=1' if self.is_popup else ""),
+            'add_url': self.model_admin_url('add') + ('?_popup=1' if self.is_popup else ""),
             'result_headers': self.result_headers(),
             'results': self.results()
         }
@@ -595,9 +595,9 @@ class ListAdminView(ModelAdminView):
     @filter_hook
     def url_for_result(self, result):
         if self.has_change_permission(result):
-            return self.model_admin_urlname("change", getattr(result, self.pk_attname))
+            return self.model_admin_url("change", getattr(result, self.pk_attname))
         else:
-            return self.model_admin_urlname("detail", getattr(result, self.pk_attname))
+            return self.model_admin_url("detail", getattr(result, self.pk_attname))
 
     # Media
     @filter_hook

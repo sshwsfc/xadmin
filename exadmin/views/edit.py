@@ -404,9 +404,9 @@ class CreateAdminView(ModelFormAdminView):
             # redirect to the change-list page for this object. Otherwise,
             # redirect to the admin index.
             if self.has_view_permission():
-                post_url = self.model_admin_urlname('changelist')
+                post_url = self.model_admin_url('changelist')
             else:
-                post_url = self.admin_urlname('index')
+                post_url = self.get_admin_url('index')
             return post_url
 
 
@@ -486,16 +486,16 @@ class UpdateAdminView(ModelFormAdminView):
             return self.model_admin_urlname('change', pk_value)
         elif "_addanother" in request.POST:
             self.message_user(msg + ' ' + (_("You may add another %s below.") % force_unicode(verbose_name)), 'success')
-            return self.model_admin_urlname('add')
+            return self.model_admin_url('add')
         else:
             self.message_user(msg, 'success')
             # Figure out where to redirect. If the user has change permission,
             # redirect to the change-list page for this object. Otherwise,
             # redirect to the admin index.
             if self.has_view_permission():
-                post_url = self.model_admin_urlname('changelist')
+                post_url = self.model_admin_url('changelist')
             else:
-                post_url = self.admin_urlname('index')
+                post_url = self.get_admin_url('index')
             return post_url
 
 

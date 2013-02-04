@@ -51,8 +51,8 @@ class AjaxFormPlugin(BaseAjaxPlugin):
             'result': 'success', 
             'obj_id': new_obj.pk,
             'obj_repr': str(new_obj),
-            'change_url': self.admin_view.model_admin_urlname('change', new_obj.pk),
-            'detail_url': self.admin_view.model_admin_urlname('detail', new_obj.pk)
+            'change_url': self.admin_view.model_admin_url('change', new_obj.pk),
+            'detail_url': self.admin_view.model_admin_url('detail', new_obj.pk)
             })
 
     def get_response(self, __):

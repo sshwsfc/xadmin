@@ -50,7 +50,7 @@ class EditablePlugin(BaseAdminPlugin):
                 )
                 data_attr = {
                     'name': field_name,
-                    'action': self.admin_view.model_admin_urlname('patch', pk),
+                    'action': self.admin_view.model_admin_url('patch', pk),
                     'title': _(u"Enter %s") % field_label,
                     'field': form[field_name]
                 }

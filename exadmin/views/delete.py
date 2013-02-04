@@ -100,7 +100,7 @@ class DeleteAdminView(ModelAdminView):
             {'name': force_unicode(self.opts.verbose_name), 'obj': force_unicode(obj_display)}, 'success')
 
         if not self.has_view_permission():
-            return self.admin_urlname('index')
-        return self.model_admin_urlname('changelist')
+            return self.get_admin_url('index')
+        return self.model_admin_url('changelist')
 
 

@@ -164,7 +164,7 @@ class EditRelateDisplayPlugin(BaseRelateDisplayPlugin):
         return datas
 
     def post_response(self, response):
-        if isinstance(response, basestring) and response != self.admin_urlname('index'):
+        if isinstance(response, basestring) and response != self.get_admin_url('index'):
             return self._get_url(response)
         return response
 
@@ -179,7 +179,7 @@ class EditRelateDisplayPlugin(BaseRelateDisplayPlugin):
 class DeleteRelateDisplayPlugin(BaseRelateDisplayPlugin):
 
     def post_response(self, response):
-        if isinstance(response, basestring) and response != self.admin_urlname('index'):
+        if isinstance(response, basestring) and response != self.get_admin_url('index'):
             return self._get_url(response)
         return response
 

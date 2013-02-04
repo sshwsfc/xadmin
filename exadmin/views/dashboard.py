@@ -295,7 +295,7 @@ class ModelBaseWidget(BaseWidget):
     def filte_choices_model(self, model, modeladmin):
         return self.dashboard.has_model_perm(model, self.model_perm)
 
-    def model_admin_urlname(self, name, *args, **kwargs):
+    def model_admin_url(self, name, *args, **kwargs):
         return reverse("%s:%s_%s_%s" % (self.admin_site.app_name, self.app_label, \
             self.module_name, name), args=args, kwargs=kwargs)
 
@@ -388,7 +388,7 @@ class ListWidget(ModelBaseWidget, PartialBaseWidget):
             enumerate(filter(lambda c:c.field_name in base_fields, r.cells))] \
             for r in list_view.results()]
         context['result_count'] = list_view.result_count
-        context['page_url'] = self.model_admin_urlname('changelist')
+        context['page_url'] = self.model_admin_url('changelist')
 
 @widget_manager.register
 class AddFormWidget(ModelBaseWidget, PartialBaseWidget):
@@ -414,7 +414,7 @@ class AddFormWidget(ModelBaseWidget, PartialBaseWidget):
         context.update({
             'addform': self.add_view.form_obj,
             'addhelper': helper,
-            'addurl': self.add_view.model_admin_urlname('add'),
+            'addurl': self.add_view.model_admin_url('add'),
             'model': self.model
             })
 
@@ -512,7 +512,7 @@ class Dashboard(CommAdminView):
             'portal_key': self.get_portal_key(),
             'columns': [('span%d' % int(12/len(self.widgets)), ws) for ws in self.widgets],
             'has_add_widget_permission': self.has_model_perm(UserWidget, 'add'),
-            'add_widget_url': self.admin_urlname('%s_%s_add' % (UserWidget._meta.app_label, UserWidget._meta.module_name)) + \
+            'add_widget_url': self.get_admin_url('%s_%s_add' % (UserWidget._meta.app_label, UserWidget._meta.module_name)) + \
                 "?user=%s&page_id=%s" % (self.user.id, self.get_page_id())
         })
         return self.template_response('admin/dashboard.html', context)

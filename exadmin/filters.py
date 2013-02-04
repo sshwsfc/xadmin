@@ -311,7 +311,7 @@ class RelatedFieldSearchFilter(FieldFilter):
         else:
             self.lookup_title = other_model._meta.verbose_name
         self.title = self.lookup_title
-        self.search_url = model_admin.admin_urlname('%s_%s_changelist' % (other_model._meta.app_label, other_model._meta.module_name))
+        self.search_url = model_admin.get_admin_url('%s_%s_changelist' % (other_model._meta.app_label, other_model._meta.module_name))
         self.label = self.label_for_value(other_model, rel_name, self.lookup_exact_val) if self.lookup_exact_val else ""
 
     def label_for_value(self, other_model, rel_name, value):

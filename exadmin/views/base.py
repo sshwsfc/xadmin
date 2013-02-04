@@ -119,7 +119,7 @@ class BaseAdminObject(object):
     def get_model_view(self, view_class, model, *args, **kwargs):
         return self.get_view(view_class, self.admin_site._registry.get(model), *args, **kwargs)
 
-    def admin_urlname(self, name, *args, **kwargs):
+    def get_admin_url(self, name, *args, **kwargs):
         return reverse('%s:%s' % (self.admin_site.app_name, name), args=args, kwargs=kwargs)
 
     def get_model_url(self, model, name, *args, **kwargs):
@@ -404,7 +404,7 @@ class ModelAdminView(CommAdminView):
         except (model.DoesNotExist, ValidationError):
             return None
 
-    def model_admin_urlname(self, name, *args, **kwargs):
+    def model_admin_url(self, name, *args, **kwargs):
         return reverse("%s:%s_%s_%s" % (self.admin_site.app_name, self.opts.app_label, \
             self.module_name, name), args=args, kwargs=kwargs)
 
