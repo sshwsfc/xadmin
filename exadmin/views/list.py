@@ -1,24 +1,18 @@
-
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.core.paginator import InvalidPage, Paginator
 from django.db import models
 from django.http import HttpResponseRedirect
 from django.template.response import SimpleTemplateResponse, TemplateResponse
 from django.utils.datastructures import SortedDict
-from django.utils.decorators import method_decorator
-from django.utils.encoding import force_unicode
-from django.utils.text import capfirst
-from django.utils.translation import ugettext as _
-from django.views.decorators.csrf import csrf_protect
+from django.utils.encoding import force_unicode, smart_unicode
 from django.utils.html import escape, conditional_escape
 from django.utils.safestring import mark_safe
-from exadmin.util import lookup_field, display_for_field, label_for_field
-from django.core.exceptions import ObjectDoesNotExist
-from django.utils.encoding import smart_unicode
+from django.utils.text import capfirst
+from django.utils.translation import ugettext as _
 
-from exadmin.util import boolean_icon
-from base import ModelAdminView, filter_hook, inclusion_tag
+from exadmin.util import lookup_field, display_for_field, label_for_field, boolean_icon
 
+from base import ModelAdminView, filter_hook, inclusion_tag, csrf_protect_m
 
 # List settings
 ALL_VAR = 'all'
@@ -32,8 +26,6 @@ DOT = '.'
 
 # Text to display within change-list table cells if the value is blank.
 EMPTY_CHANGELIST_VALUE = _('None')
-
-csrf_protect_m = method_decorator(csrf_protect)
 
 class FakeMethodField(object):
     """
@@ -110,7 +102,7 @@ class ListAdminView(ModelAdminView):
     ordering = None
 
     # Change list templates
-    change_list_template = None
+    object_list_template = None
 
     def init_request(self, *args, **kwargs):
 
@@ -398,11 +390,8 @@ class ListAdminView(ModelAdminView):
 
         response = self.get_response(context, *args, **kwargs)
 
-        return response or TemplateResponse(request, self.change_list_template or [
-            'admin/%s/%s/change_list.html' % (self.app_label, self.opts.object_name.lower()),
-            'admin/%s/change_list.html' % self.app_label,
-            'admin/change_list.html'
-        ], context, current_app=self.admin_site.name)
+        return response or TemplateResponse(request, self.object_list_template or \
+            self.get_template_list('change_list.html'), context, current_app=self.admin_site.name)
 
     @filter_hook
     def post_response(self, *args, **kwargs):

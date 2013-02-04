@@ -3,7 +3,6 @@ import copy
 from django import forms
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
-from django.core.urlresolvers import reverse
 from django.db import models, transaction
 from django.forms.models import modelform_factory
 from django.http import Http404, HttpResponseRedirect
@@ -52,14 +51,11 @@ class ReadOnlyField(Field):
         return html
 
 class ModelFormAdminView(ModelAdminView):
-
-    raw_id_fields = ()
     form = forms.ModelForm
     formfield_overrides = {}
     readonly_fields = ()
     style_fields = {}
     relfield_style = None
-    prepopulated_fields = {}
 
     save_as = False
     save_on_top = False
@@ -215,13 +211,6 @@ class ModelFormAdminView(ModelAdminView):
         return self.readonly_fields
 
     @filter_hook
-    def get_prepopulated_fields(self):
-        """
-        Hook for specifying custom prepopulated fields.
-        """
-        return self.prepopulated_fields
-
-    @filter_hook
     def save_forms(self):
         self.new_obj = self.form_obj.save(commit=False)
 
@@ -272,18 +261,17 @@ class ModelFormAdminView(ModelAdminView):
             'show_delete': self.org_obj is not None,
             'add': add,
             'change': change,
-            'brand_icon': self.get_model_icon(self.model),
             'errors': self.get_error_list(),
-            'app_label': self.opts.app_label,
+
             'has_add_permission': self.has_add_permission(),
             'has_view_permission': self.has_view_permission(),
             'has_change_permission': self.has_change_permission(self.org_obj),
             'has_delete_permission': self.has_delete_permission(self.org_obj),
+
             'has_file_field': True, # FIXME - this should check if form or formsets have a FileField,
             'has_absolute_url': hasattr(self.model, 'get_absolute_url'),
             'ordered_objects': ordered_objects,
             'form_url': '',
-            'opts': self.opts,
             'content_type_id': ContentType.objects.get_for_model(self.model).id,
             'save_as': self.save_as,
             'save_on_top': self.save_on_top,
@@ -366,13 +354,8 @@ class CreateAdminView(ModelFormAdminView):
         context = self.get_context()
         context.update(self.kwargs or {})
 
-        form_template = self.add_form_template
-
-        return TemplateResponse(self.request, form_template or [
-            "admin/%s/%s/change_form.html" % (self.opts.app_label, self.opts.object_name.lower()),
-            "admin/%s/change_form.html" % self.opts.app_label,
-            "admin/change_form.html"
-        ], context, current_app=self.admin_site.name)
+        return TemplateResponse(self.request, self.add_form_template or self.get_template_list('change_form.html'), \
+            context, current_app=self.admin_site.name)
 
     @filter_hook
     def post_response(self):
@@ -380,20 +363,16 @@ class CreateAdminView(ModelFormAdminView):
         Determines the HttpResponse for the add_view stage.
         """
         request = self.request
-        obj = self.new_obj
 
-        opts = obj._meta
-        pk_value = obj._get_pk_val()
+        msg = _('The %(name)s "%(obj)s" was added successfully.') % {'name': force_unicode(self.opts.verbose_name), \
+            'obj': "<a href='%s'>%s</a>" % (self.model_admin_url('change', self.new_obj._get_pk_val()), force_unicode(self.new_obj))}
 
-        msg = _('The %(name)s "%(obj)s" was added successfully.') % {'name': force_unicode(opts.verbose_name), 'obj': force_unicode(obj)}
-        # Here, we distinguish between different save types by checking for
-        # the presence of keys in request.POST.
         if "_continue" in request.POST:
             self.message_user(msg + ' ' + _("You may edit it again below."), 'success')
-            return self.model_admin_urlname('change', pk_value)
+            return self.model_admin_url('change', self.new_obj._get_pk_val())
 
         if "_addanother" in request.POST:
-            self.message_user(msg + ' ' + (_("You may add another %s below.") % force_unicode(opts.verbose_name)), 'success')
+            self.message_user(msg + ' ' + (_("You may add another %s below.") % force_unicode(self.opts.verbose_name)), 'success')
             return request.path
         else:
             self.message_user(msg, 'success')
@@ -402,10 +381,9 @@ class CreateAdminView(ModelFormAdminView):
             # redirect to the change-list page for this object. Otherwise,
             # redirect to the admin index.
             if self.has_view_permission():
-                post_url = self.model_admin_url('changelist')
+                return self.model_admin_url('changelist')
             else:
-                post_url = self.get_admin_url('index')
-            return post_url
+                return self.get_admin_url('index')
 
 
 class UpdateAdminView(ModelFormAdminView):
@@ -445,11 +423,8 @@ class UpdateAdminView(ModelFormAdminView):
         context = self.get_context()
         context.update(kwargs or {})
 
-        return TemplateResponse(self.request, self.change_form_template or [
-            "admin/%s/%s/change_form.html" % (self.opts.app_label, self.opts.object_name.lower()),
-            "admin/%s/change_form.html" % self.opts.app_label,
-            "admin/change_form.html"
-        ], context, current_app=self.admin_site.name)
+        return TemplateResponse(self.request, self.change_form_template or self.get_template_list('change_form.html'), \
+            context, current_app=self.admin_site.name)
 
     def post(self, request, *args, **kwargs):
         if "_saveasnew" in self.request.POST:
@@ -478,10 +453,6 @@ class UpdateAdminView(ModelFormAdminView):
         if "_continue" in request.POST:
             self.message_user(msg + ' ' + _("You may edit it again below."), 'success')
             return request.path
-        elif "_saveasnew" in request.POST:
-            msg = _('The %(name)s "%(obj)s" was added successfully. You may edit it again below.') % {'name': force_unicode(verbose_name), 'obj': obj}
-            self.message_user(msg, 'success')
-            return self.model_admin_urlname('change', pk_value)
         elif "_addanother" in request.POST:
             self.message_user(msg + ' ' + (_("You may add another %s below.") % force_unicode(verbose_name)), 'success')
             return self.model_admin_url('add')
@@ -491,10 +462,9 @@ class UpdateAdminView(ModelFormAdminView):
             # redirect to the change-list page for this object. Otherwise,
             # redirect to the admin index.
             if self.has_view_permission():
-                post_url = self.model_admin_url('changelist')
+                return self.model_admin_url('changelist')
             else:
-                post_url = self.get_admin_url('index')
-            return post_url
+                return self.get_admin_url('index')
 
 
 class ModelFormAdminUtil(ModelFormAdminView):

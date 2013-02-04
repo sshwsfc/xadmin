@@ -189,30 +189,19 @@ class DetailAdminView(ModelAdminView):
 
     @filter_hook
     def get_context(self):
-        form = self.form_obj
-
-        media = self.media + form.media
         ordered_objects = self.opts.get_ordered_objects()
 
         new_context = {
-            'form': form,
-            'media': media,
+            'title': _('%s Detail') % force_unicode(self.opts.verbose_name),
+            'form': self.form_obj,
+
             'object': self.obj,
-            'show_delete': self.obj is not None,
-            'add': self.obj is None,
-            'change': self.obj is not None,
-            'app_label': self.opts.app_label,
-            'has_add_permission': self.has_add_permission(),
-            'has_view_permission': self.has_view_permission(),
+
             'has_change_permission': self.has_change_permission(self.obj),
             'has_delete_permission': self.has_delete_permission(self.obj),
-            'has_file_field': True, # FIXME - this should check if form or formsets have a FileField,
+
             'ordered_objects': ordered_objects,
-            'form_url': '',
-            'opts': self.opts,
             'content_type_id': ContentType.objects.get_for_model(self.model).id,
-            'title': _('%s Detail') % force_unicode(self.opts.verbose_name),
-            'object_id': str(self.obj.pk),
         }
 
         context = super(DetailAdminView, self).get_context()
@@ -222,6 +211,7 @@ class DetailAdminView(ModelAdminView):
     @filter_hook
     def get_media(self):
         media = super(DetailAdminView, self).get_media()
+        media = media + self.form_obj.media
         media.add_css({'screen': [self.static('exadmin/css/form.css')]})
         return media
 
@@ -234,11 +224,8 @@ class DetailAdminView(ModelAdminView):
         context = self.get_context()
         context.update(kwargs or {})
 
-        return TemplateResponse(self.request, self.detail_template or [
-            "admin/%s/%s/detail.html" % (self.opts.app_label, self.opts.object_name.lower()),
-            "admin/%s/detail.html" % self.opts.app_label,
-            "admin/detail.html"
-        ], context, current_app=self.admin_site.name)
+        return TemplateResponse(self.request, self.detail_template or \
+            self.get_template_list('detail.html'), context, current_app=self.admin_site.name)
 
 
 class DetailAdminUtil(DetailAdminView):
