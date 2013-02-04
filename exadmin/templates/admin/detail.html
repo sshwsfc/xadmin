@@ -29,9 +29,12 @@
 
   <legend>
     {% block object-tools %}
-    <div class="btn-group pull-right">
+    <div class="pull-right">
       {% if has_change_permission %}
-      <a href="{% url opts|admin_urlname:'change' object.pk %}" class="btn btn-small">{% trans "Edit" %}</a>
+      <a href="{% url opts|admin_urlname:'change' object.pk %}" class="btn btn-small"><i class="icon-pencil"></i>  {% trans "Edit" %}</a>
+      {% endif %}
+      {% if has_delete_permission %}
+      <a href="{% url opts|admin_urlname:'delete' object.pk %}" class="btn btn-danger btn-small"><i class="icon-remove"></i>  {% trans "Delete" %}</a>
       {% endif %}
     </div>
     {% endblock %}

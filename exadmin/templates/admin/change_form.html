@@ -37,12 +37,12 @@
   <legend>
     {% block object-tools %}
     {% if change %}
-    <div class="btn-group pull-right">
+    <div class="pull-right">
       {% view_block 'object_tools' %}
     </div>
     {% endif %}
     {% endblock %}
-    {% if brand_icon %}<i class="icon-{{brand_icon}}"><sub class="icon-{% if add%}plus{%else%}pencil{%endif%}"></sub></i> {% endif %}
+    {% if model_icon %}<i class="icon-{{model_icon}}"><sub class="icon-{% if add%}plus{%else%}pencil{%endif%}"></sub></i> {% endif %}
     {{ title }}
   </legend>
   {% endblock %}
