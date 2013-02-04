@@ -4,6 +4,7 @@ from functools import update_wrapper
 from inspect import getargspec
 
 from django import forms
+from django.utils.encoding import force_unicode
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ValidationError
@@ -28,9 +29,6 @@ from exadmin.util import static
 
 csrf_protect_m = method_decorator(csrf_protect)
 
-class IncorrectLookupParameters(Exception):
-    pass
-
 class IncorrectPluginArg(Exception):
     pass
 
@@ -54,6 +52,7 @@ def filter_chain(filters, token, func, *args, **kwargs):
 
 def filter_hook(func):
     tag = func.__name__
+    func.__doc__ = "``filter_hook``\n\n" + (func.__doc__ or "")
     @functools.wraps(func)
     def method(self, *args, **kwargs):
 
@@ -112,9 +111,9 @@ class JSONEncoder(DjangoJSONEncoder):
 
 class BaseAdminObject(object):
 
-    def get_view(self, view_class, admin_class=None, *args, **kwargs):
+    def get_view(self, view_class, option_class=None, *args, **kwargs):
         opts = kwargs.pop('opts', {})
-        return self.admin_site.get_view_class(view_class, admin_class, **opts)(self.request, *args, **kwargs)
+        return self.admin_site.get_view_class(view_class, option_class, **opts)(self.request, *args, **kwargs)
 
     def get_model_view(self, view_class, model, *args, **kwargs):
         return self.get_view(view_class, self.admin_site._registry.get(model), *args, **kwargs)
@@ -389,6 +388,19 @@ class ModelAdminView(CommAdminView):
         self.model_info = (self.app_label, self.module_name)
 
         super(ModelAdminView, self).__init__(request, *args, **kwargs)
+
+    @filter_hook
+    def get_context(self):
+        new_context = {
+            "opts": self.opts,
+            "app_label": self.app_label,
+            "module_name": self.module_name,
+            "verbose_name": force_unicode(self.opts.verbose_name),
+            'model_icon': self.get_model_icon(self.model),
+        }
+        context = super(ModelAdminView, self).get_context()
+        context.update(new_context)
+        return context
 
     @filter_hook
     def get_object(self, object_id):
