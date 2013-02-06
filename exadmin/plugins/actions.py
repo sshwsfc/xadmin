@@ -8,6 +8,11 @@ Action
 
 Action 插件在数据列表页面提供了数据选择功能, 选择后的数据可以经过 Action 做特殊的处理. 默认提供的 Action 为批量删除功能.
 
+截图
+----
+
+.. image:: /images/plugins/action.png
+
 使用
 ----
 
