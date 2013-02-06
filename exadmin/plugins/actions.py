@@ -1,6 +1,55 @@
+# coding=utf-8
+"""
+Action
+======
+
+功能
+----
+
+Action 插件在数据列表页面提供了数据选择功能, 选择后的数据可以经过 Action 做特殊的处理. 默认提供的 Action 为批量删除功能.
+
+使用
+----
+
+开发者可以设置 Model OptionClass 的 actions 属性, 该属性是一个列表, 包含您想启用的 Action 的类. 系统已经默认内置了删除数据的 Action,
+当然您可以自己制作 Action 来实现特定的功能, 制作 Action 的实例如下.
+
+    * 首先要创建一个 Action 类, 该类需要继承 BaseActionView. BaseActionView 是 :class:`~exadmin.views.ModelAdminView` 的子类::
+    
+        from exadmin.plugins.actions import BaseActionView
+
+        class MyAction(BaseActionView):
+
+            # 这里需要填写三个属性
+            action_name = "my_action"    #: 相当于这个 Action 的唯一标示, 尽量用比较针对性的名字
+            description = _(u'Test selected %(verbose_name_plural)s') #: 描述, 出现在 Action 菜单中, 可以使用 ``%(verbose_name_plural)s`` 代替 Model 的名字.
+
+            model_perm = 'change'    #: 该 Action 所需权限
+
+            # 而后实现 do_action 方法
+            def do_action(self, queryset):
+                # queryset 是包含了已经选择的数据的 queryset
+                for obj in queryset:
+                    # obj 的操作
+                    ...
+                # 返回 HttpResponse
+                return HttpResponse(...)
+
+    * 然后在 Model 的 OptionClass 中使用这个 Action::
+
+        class MyModelAdmin(object):
+
+            actions = [MyAction, ]
+
+    * 这样就完成了自己的 Action
+
+API
+---
+.. autoclass:: ActionPlugin
+
+"""
 from django import forms
 from django.core.exceptions import PermissionDenied
-from django.core.urlresolvers import reverse
 from django.db import router
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
@@ -24,6 +73,9 @@ action_checkbox.short_description = mark_safe('<input type="checkbox" id="action
 action_checkbox.allow_tags = True
 
 class BaseActionView(ModelAdminView):
+    """
+    hi
+    """
     action_name = None
     description = None
 

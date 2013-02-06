@@ -5,7 +5,7 @@ Welcome to Django Xadmin's Documentation!
 
 **不能错过的替代Django Admin的产品**.
 
-Installation & Setup
+安装 & 设置
 --------------------
 
 .. toctree::
@@ -13,6 +13,22 @@ Installation & Setup
    
    quickstart
    customization
+
+功能特性
+----------
+
+.. toctree::
+   :maxdepth: 2
+
+   feature
+
+插件
+----
+
+.. toctree::
+   :maxdepth: 2
+   
+   plugins
 
 API
 ---
@@ -23,26 +39,22 @@ API
    site_api
    views_api
 
-Help
+帮助
 ----
 
 .. toctree::
    :maxdepth: 1
    
    faq
-   bestpractice
-   thirdparty
-   troubleshooting
-   djangoissues
    releasenotes
    changelog
 
-Code
+源码
 ----
 
 https://github.com/sshwsfc/django-exadmin
 
-Website
+网站
 -------
 
 http://sshwsfc.github.com/django-exadmin
