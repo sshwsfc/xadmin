@@ -1,4 +1,50 @@
+# coding=utf-8
+"""
+图表插件
+=========
 
+功能
+----
+
+在数据列表页面, 跟列表数据生成图表. 可以指定多个数据列, 生成多个图表.
+
+截图
+----
+
+.. image:: /images/plugins/chart.png
+
+使用
+----
+
+在 Model OptionClass 中设定 ``data_charts`` 属性, 该属性为 dict 类型, key 是图表的标示名称, value 是图表的具体设置属性. 使用示例::
+
+    class RecordAdmin(object):
+        data_charts = {
+            "user_count": {'title': u"User Report", "x-field": "date", "y-field": ("user_count", "view_count"), "order": ('date',)},
+            "avg_count": {'title': u"Avg Report", "x-field": "date", "y-field": ('avg_count',), "order": ('date',)}
+        }
+
+图表的主要属性为:
+
+    ``title`` : 图表的显示名称
+
+    ``x-field`` : 图表的 X 轴数据列, 一般是日期, 时间等
+
+    ``y-field`` : 图表的 Y 轴数据列, 该项是一个 list, 可以同时设定多个列, 这样多个列的数据会在同一个图表中显示
+
+    ``order`` : 排序信息, 如果不写则使用数据列表的排序
+
+版本
+----
+
+暂无
+
+API
+---
+.. autoclass:: ChartsPlugin
+.. autoclass:: ChartsView
+
+"""
 import datetime, decimal, calendar
 
 from django import forms

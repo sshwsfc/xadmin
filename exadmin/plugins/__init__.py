@@ -1,6 +1,7 @@
 """
 .. automodule:: exadmin.plugins.actions
 .. automodule:: exadmin.plugins.filters
+.. automodule:: exadmin.plugins.chart
 .. automodule:: exadmin.plugins.bookmark
 .. automodule:: exadmin.plugins.export
 .. automodule:: exadmin.plugins.refresh

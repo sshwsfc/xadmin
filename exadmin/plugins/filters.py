@@ -1,3 +1,57 @@
+# coding=utf-8
+"""
+数据过滤器
+==========
+
+功能
+----
+
+在数据列表页面提供数据过滤功能, 包括: 模糊搜索, 数字范围搜索, 日期搜索等等
+
+截图
+----
+
+.. image:: /images/plugins/filter.png
+
+使用
+----
+
+在 Model OptionClass 中设置以下属性:
+
+    * ``list_filter`` 属性:
+
+        该属性指定可以过滤的列的名字, 系统会自动生成搜索器
+
+    * ``search_fields`` 属性:
+
+        属性指定可以通过搜索框搜索的数据列的名字, 搜索框搜索使用的是模糊查找的方式, 一般用来搜素名字等字符串字段
+
+    * ``free_query_filter`` 属性:
+
+        默认为 ``True`` , 指定是否可以自由搜索. 如果开启自有搜索, 用户可以通过 url 参数来进行特定的搜索, 例如::
+
+            http://xxx.com/xadmin/auth/user/?name__contains=tony
+
+使用过滤器的例子::
+
+    class UserAdmin(object):
+        list_filter = ('is_staff', 'is_superuser', 'is_active')
+        search_fields = ('username', 'first_name', 'last_name', 'email')
+
+版本
+----
+
+暂无
+
+制作过滤器
+-----------
+
+您也可以制作自己的过滤器, 用来进行一些特定的过滤. 过滤器需要继承 :class:`exadmin.filters.BaseFilter` 类, 
+并使用 :attr:`exadmin.filters.manager` 注册过滤器.
+
+
+
+"""
 import operator
 from exadmin import widgets
 

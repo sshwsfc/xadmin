@@ -1,4 +1,47 @@
+# coding=utf-8
+"""
+书签
+======
 
+功能
+----
+
+记录数据列表页面特定的数据过滤, 排序等结果. 添加的书签还可以在首页仪表盘中作为小组件添加
+
+截图
+----
+
+.. image:: /images/plugins/bookmark.png
+
+使用
+----
+
+在 Model OptionClass 中设定如下属性:
+
+    * ``show_bookmarks`` 属性:
+
+        设置是否开启书签功能, 默认为 ``True``
+
+    * ``list_bookmarks`` 属性:
+
+        设置默认的书签. 用户可以在列表页面添加自己的书签, 你也可以实现设定好一些书签, 使用实例如下::
+
+            class UserAdmin(object):
+                list_bookmarks = [{
+                    'title': "Female",         # 书签的名称, 显示在书签菜单中
+                    'query': {'gender': True}, # 过滤参数, 是标准的 queryset 过滤
+                    'order': ('-age'),         # 排序参数
+                    'cols': ('first_name', 'age', 'phones'),  # 显示的列
+                    'search': 'Tom'    # 搜索参数, 指定搜索的内容
+                    }, {...}
+                ]
+
+版本
+----
+
+暂无
+
+"""
 from django.template import loader
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _

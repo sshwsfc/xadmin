@@ -78,9 +78,6 @@ action_checkbox.short_description = mark_safe('<input type="checkbox" id="action
 action_checkbox.allow_tags = True
 
 class BaseActionView(ModelAdminView):
-    """
-    hi
-    """
     action_name = None
     description = None
 
