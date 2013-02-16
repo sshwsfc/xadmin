@@ -255,3 +255,8 @@ a[class^="icon-"]:before, a[class*=" icon-"]:before {
 .btn[class^="icon-"]:before, .btn[class*=" icon-"]:before {
   margin-right: 0.3em;
 }
+
+/** fix navbar input-append and input-prepend margin **/
+.navbar .input-append, .navbar .input-prepend {
+  margin-bottom: 5px;
+}
