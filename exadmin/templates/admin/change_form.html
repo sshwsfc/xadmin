@@ -11,7 +11,6 @@
 
 {% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} change-form{% endblock %}
 
-{% if not is_popup %}
 {% block breadcrumbs %}
 <ul class="breadcrumb">
   <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> <span class="divider">/</span></li>
@@ -25,12 +24,10 @@
   </li>
 </ul>
 {% endblock %}
-{% endif %}
 
 {% block content %}
 <form class="exform" {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form">{% csrf_token %}
   {% view_block 'form_top' %}
-  {% if is_popup %}<input type="hidden" name="_popup" value="1" />{% endif %}
   {% if save_on_top %}{% block submit_buttons_top %}{% include "admin/submit_line.html" %}{% endblock %}{% endif %}
 
   {% block form_legend %}
