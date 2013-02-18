@@ -18,15 +18,18 @@
         {% view_block 'top_navbar' %}
         <div class="nav-collapse collapse">
           <ul class="nav pull-right">
-              {% view_block 'top_nav_btn' %}
-              <li><a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a></li>
+            {% if user.is_active and user.is_staff %}
+              <li class="dropdown">
+                <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
+                <strong>{% trans 'Welcome,' %} {% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %}</strong> <b class="caret"></b></a>
+                <ul id="g-account-menu" class="dropdown-menu" role="menu">
+                  {% view_block 'top_account_menu' %}
+                </ul>
+              </li>
+            {% endif %}
+            {% view_block 'top_nav_btn' %}
+            <li><a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a></li>
           </ul>
-          {% if user.is_active and user.is_staff %}
-          <p class="navbar-text pull-right">
-              {% trans 'Welcome,' %}
-              <strong>{% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %}</strong>.
-          </p>
-          {% endif %}
         </div><!--/.nav-collapse -->
       </div>
     </div>
