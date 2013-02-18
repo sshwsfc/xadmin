@@ -1,14 +1,21 @@
-from django.contrib.auth.models import User, Group, Permission
-from django.utils.decorators import method_decorator
-from django.utils.translation import ugettext_lazy as _
+# coding=utf-8
+from django import forms
 from django.contrib.auth.forms import (UserCreationForm, UserChangeForm,
     AdminPasswordChangeForm)
+from django.contrib.auth.models import User, Group, Permission
+from django.core.exceptions import PermissionDenied
+from django.template.response import TemplateResponse
+from django.utils.decorators import method_decorator
+from django.http import HttpResponseRedirect
+from django.utils.html import escape
+from django.utils.translation import ugettext, ugettext_lazy as _
 from django.views.decorators.csrf import csrf_protect
-from django import forms
-
+from django.views.decorators.debug import sensitive_post_parameters
+from exadmin.layout import Fieldset, Main, Side, Row
 from exadmin.sites import site
-from exadmin.layout import Main, Fieldset, Side, Row
-from exadmin.views import BaseAdminPlugin, ListAdminView, ModelFormAdminView, DetailAdminView, ModelAdminView
+from exadmin.util import unquote
+from exadmin.views import BaseAdminPlugin, ModelFormAdminView, ModelAdminView, CommAdminView
+
 
 csrf_protect_m = method_decorator(csrf_protect)
 
@@ -97,3 +104,93 @@ class ModelPermissionPlugin(BaseAdminPlugin):
 
 site.register_plugin(ModelPermissionPlugin, ModelAdminView)
 
+class AccountMenuPlugin(BaseAdminPlugin):
+
+    def block_top_account_menu(self, context, nodes):
+        return '<li><a href="%s"><i class="icon-key"></i> %s</a></li>' % (self.get_admin_url('account_password'), ugettext('Change Password'))
+
+site.register_plugin(AccountMenuPlugin, CommAdminView)
+
+class ChangePasswordView(ModelAdminView):
+    model = User
+    change_password_form = AdminPasswordChangeForm
+    change_user_password_template = None
+
+    def get(self, request, object_id):
+        if not self.has_change_permission(request):
+            raise PermissionDenied
+        self.obj = self.get_object(unquote(object_id))
+        self.form = self.change_password_form(self.obj)
+
+        return self.get_response()
+
+    def get_media(self):
+        media = super(ChangePasswordView, self).get_media()
+        media = media + self.form.media
+        # 由于 select2 基本上在所有表单中都会出现，默认就加上 select2 吧
+        media.add_js([self.static('exadmin/js/select2.js'), self.static('exadmin/js/form.js')])
+        media.add_css({'screen': [self.static('exadmin/css/form.css'), self.static('exadmin/css/select2.css')]})
+        return media
+
+    def get_context(self):
+        context = super(ChangePasswordView, self).get_context()
+        context.update({
+            'title': _('Change password: %s') % escape(self.obj.username),
+            'form': self.form,
+            'has_delete_permission': False,
+            'has_change_permission': True,
+            'has_view_permission': True,
+            'original': self.obj,
+        })
+        return context
+
+    def get_response(self):
+        return TemplateResponse(self.request, [
+            self.change_user_password_template or
+            'admin/auth/user/change_password.html'
+        ], self.get_context(), current_app=self.admin_site.name)
+
+    @sensitive_post_parameters()
+    def post(self, request, object_id):
+        if not self.has_change_permission(request):
+            raise PermissionDenied
+        self.obj = self.get_object(unquote(object_id))
+        self.form = self.change_password_form(self.obj, request.POST)
+
+        if self.form.is_valid():
+            self.form.save()
+            self.message_user(ugettext('Password changed successfully.'), 'success')
+            return HttpResponseRedirect(self.model_admin_url('change', self.obj.pk))
+        else:
+            return self.get_response()
+
+class ChangeAccountPasswordView(ChangePasswordView):
+
+    def get(self, request):
+        self.obj = self.user
+        self.form = self.change_password_form(self.obj)
+
+        return self.get_response()
+
+    def get_context(self):
+        context = super(ChangeAccountPasswordView, self).get_context()
+        context.update({
+            'title': _('Change password'),
+            'account_view': True,
+            })
+        return context
+
+    @sensitive_post_parameters()
+    def post(self, request):
+        self.obj = self.user
+        self.form = self.change_password_form(self.obj, request.POST)
+
+        if self.form.is_valid():
+            self.form.save()
+            self.message_user(ugettext('Password changed successfully.'), 'success')
+            return HttpResponseRedirect(self.get_admin_url('index'))
+        else:
+            return self.get_response()
+
+site.register_view(r'^auth/user/(.+)/update/password/$', ChangePasswordView, name='user_change_password')
+site.register_view(r'^account/password/$', ChangeAccountPasswordView, name='account_password')
