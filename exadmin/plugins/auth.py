@@ -1,7 +1,7 @@
 # coding=utf-8
 from django import forms
 from django.contrib.auth.forms import (UserCreationForm, UserChangeForm,
-    AdminPasswordChangeForm)
+    AdminPasswordChangeForm, PasswordChangeForm)
 from django.contrib.auth.models import User, Group, Permission
 from django.core.exceptions import PermissionDenied
 from django.template.response import TemplateResponse
@@ -165,7 +165,8 @@ class ChangePasswordView(ModelAdminView):
             return self.get_response()
 
 class ChangeAccountPasswordView(ChangePasswordView):
-
+    change_password_form = PasswordChangeForm
+    
     def get(self, request):
         self.obj = self.user
         self.form = self.change_password_form(self.obj)
