@@ -3,3 +3,4 @@ xlwt
 django-reversion
 psycopg2==2.4.5
 dj-database-url==0.2.0
+raven
