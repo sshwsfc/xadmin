@@ -177,5 +177,3 @@ LOGGING = {
         # }
     }
 }
-# Set your DSN value
-SENTRY_DSN = 'https://48fb782c21b843b9ab6e34defe1c2d52:2ec3e675136b427d819c33de5824a4b6@app.getsentry.com/5636'
