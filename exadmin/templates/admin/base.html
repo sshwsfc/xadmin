@@ -10,7 +10,11 @@
   <title>{% block title %}{% endblock %}</title>
   {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}" />{% endif %}
   <link rel="stylesheet" type="text/css" href="{% static "exadmin/css/bootstrap.min.css" %}" />
+  {% if site_theme %}
   <link rel="stylesheet" type="text/css" id="site-theme" href="{{site_theme}}" />
+  {% else %}
+  <link rel="stylesheet" type="text/css" href="{% static "exadmin/css/bootstrap-exadmin.css" %}" />
+  {% endif %}
   <link rel="stylesheet" type="text/css" href="{% static "exadmin/css/font-awesome.min.css" %}" />
   <link rel="stylesheet" type="text/css" href="{% static "exadmin/css/main.css" %}" />
   <link rel="stylesheet" type="text/css" href="{% static "exadmin/css/bootstrap-responsive.min.css" %}" />

@@ -14,7 +14,7 @@ THEME_CACHE_KEY = 'exadmin_themes'
 
 class ThemePlugin(BaseAdminPlugin):
 
-    enable_themes = True
+    enable_themes = False
     # {'name': 'Blank Theme', 'description': '...', 'css': 'http://...', 'thumbnail': '...'}
     user_themes = None
     default_theme = static('exadmin/css/bootstrap-exadmin.css')
