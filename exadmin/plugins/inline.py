@@ -153,6 +153,8 @@ class InlineModelAdmin(ModelFormAdminView):
 
         helper = FormHelper()
         helper.form_tag = False
+        # override form method to prevent render csrf_token in inline forms, see template 'bootstrap/whole_uni_form.html'
+        helper.form_method = 'get'
 
         style = style_manager.get_style('one' if self.max_num == 1 else self.style)(self, instance)
 
