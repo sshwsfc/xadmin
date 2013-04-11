@@ -371,7 +371,6 @@
         url: this.$form.attr('action'),
         type: "POST",
         dataType: 'json',
-        contentType: 'application/json; charset=utf-8',
         beforeSend: function(xhr, settings) {
             xhr.setRequestHeader("X-CSRFToken", $.getCookie('csrftoken'));
         }

@@ -50,7 +50,6 @@
       success: success,
       error: error,
       dataType: 'json',
-      contentType: 'application/json; charset=utf-8',
       beforeSend: function(xhr, settings) {
           xhr.setRequestHeader("X-CSRFToken", csrftoken);
       }
