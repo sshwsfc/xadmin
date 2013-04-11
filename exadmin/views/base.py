@@ -13,7 +13,6 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.template import Context, Template
 from django.template.response import TemplateResponse
-from django.utils import simplejson
 from django.utils.datastructures import SortedDict
 from django.utils.decorators import method_decorator, classonlymethod
 from django.utils.encoding import smart_unicode
@@ -24,7 +23,7 @@ from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import View
-from exadmin.util import static
+from exadmin.util import static, json
 
 
 csrf_protect_m = method_decorator(csrf_protect)
@@ -168,8 +167,7 @@ class BaseAdminObject(object):
     def render_response(self, content, response_type='json'):
         if response_type == 'json':
             response = HttpResponse(mimetype="application/json; charset=UTF-8")
-            json = simplejson.dumps(content, cls=JSONEncoder, ensure_ascii=False)
-            response.write(json)
+            response.write(json.dumps(content, cls=JSONEncoder, ensure_ascii=False))
             return response
         return HttpResponse(content)
 
@@ -315,7 +313,7 @@ class CommAdminView(BaseAdminView):
         context = super(CommAdminView, self).get_context()
 
         if not settings.DEBUG and self.request.session.has_key('nav_menu'):
-            nav_menu = simplejson.loads(self.request.session['nav_menu'])
+            nav_menu = json.loads(self.request.session['nav_menu'])
         else:
             menus = copy.copy(self.get_nav_menu())
             
@@ -339,7 +337,7 @@ class CommAdminView(BaseAdminView):
             nav_menu = filter(lambda i: bool(i['menus']), nav_menu)
 
             if not settings.DEBUG:
-                self.request.session['nav_menu'] = simplejson.dumps(nav_menu)
+                self.request.session['nav_menu'] = json.dumps(nav_menu)
                 self.request.session.modified = True
 
         def check_selected(menu, path):

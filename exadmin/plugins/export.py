@@ -3,13 +3,13 @@ import datetime
 
 from django.http import HttpResponse
 from django.template import loader
-from django.utils import simplejson
 from django.utils.encoding import smart_unicode
 from django.utils.html import escape
 from django.utils.translation import ugettext_lazy as _
 from django.utils.xmlutils import SimplerXMLGenerator
 from exadmin.sites import site
 from exadmin.views import BaseAdminPlugin, ListAdminView
+from exadmin.util import json
 
 try:
     import xlwt
@@ -119,7 +119,7 @@ class ExportPlugin(BaseAdminPlugin):
 
     def get_json_export(self, context):
         results = self.get_results(context)
-        return simplejson.dumps({'objects': results}, ensure_ascii=False, \
+        return json.dumps({'objects': results}, ensure_ascii=False, \
             indent=(self.request.GET.get('export_json_format', 'off') == 'on') and 4 or None)
 
     def get_response(self, response, context, *args, **kwargs):

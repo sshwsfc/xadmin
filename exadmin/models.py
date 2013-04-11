@@ -3,13 +3,14 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.utils import simplejson
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models.base import ModelBase
 from django.utils.encoding import smart_unicode
 
 from django.db.models.signals import post_syncdb
 from django.contrib.auth.models import Permission
+
+from exadmin.util import json
  
 import datetime, decimal
 
@@ -78,10 +79,10 @@ class UserSettings(models.Model):
     value = models.TextField()
 
     def json_value(self):
-        return simplejson.loads(self.value)
+        return json.loads(self.value)
 
     def set_json(self, obj):
-        self.value = simplejson.dumps(obj, cls=JSONEncoder, ensure_ascii=False)
+        self.value = json.dumps(obj, cls=JSONEncoder, ensure_ascii=False)
 
     def __unicode__(self):
         return "%s %s" % (self.user, self.key)
@@ -96,13 +97,13 @@ class UserWidget(models.Model):
     value = models.TextField()
 
     def get_value(self):
-        value = simplejson.loads(self.value)
+        value = json.loads(self.value)
         value['id'] = self.id
         value['type'] = self.widget_type
         return value
 
     def set_value(self, obj):
-        self.value = simplejson.dumps(obj, cls=JSONEncoder, ensure_ascii=False)
+        self.value = json.dumps(obj, cls=JSONEncoder, ensure_ascii=False)
 
     def save(self, *args, **kwargs):
         created = self.pk is None

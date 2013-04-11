@@ -6,7 +6,6 @@ from django.template import loader
 from django.http import HttpResponseNotFound
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse
-from django.utils import simplejson
 from django.utils.encoding import smart_unicode
 from django.db import models
 from django.utils.http import urlencode
@@ -15,7 +14,7 @@ from django.utils.translation import ugettext as _
 from exadmin.sites import site
 from exadmin.views import BaseAdminPlugin, ListAdminView
 from exadmin.views.dashboard import ModelBaseWidget, widget_manager
-from exadmin.util import lookup_field, label_for_field
+from exadmin.util import lookup_field, label_for_field, json
 
 @widget_manager.register
 class ChartWidget(ModelBaseWidget):
@@ -150,9 +149,9 @@ class ChartsView(ListAdminView):
         option.update(self.chart.get('option', {}))
 
         content = {'data': datas, 'option': option}
-        json = simplejson.dumps(content, cls=JSONEncoder, ensure_ascii=False)
+        result = json.dumps(content, cls=JSONEncoder, ensure_ascii=False)
 
-        return HttpResponse(json)
+        return HttpResponse(result)
 
 site.register_plugin(ChartsPlugin, ListAdminView)
 site.register_modelview(r'^chart/(.+)/$', ChartsView, name='%s_%s_chart')

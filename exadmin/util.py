@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.sql.constants import LOOKUP_SEP
+from django.db.models.sql.query import LOOKUP_SEP
 from django.db.models.deletion import Collector
 from django.db.models.related import RelatedObject
 from django.forms.forms import pretty_name
@@ -17,6 +17,11 @@ if 'django.contrib.staticfiles' in settings.INSTALLED_APPS:
     from django.contrib.staticfiles.templatetags.staticfiles import static
 else:
     from django.templatetags.static import static
+
+try:
+    import json
+except ImportError:
+    from django.utils import simplejson as json
 
 def lookup_needs_distinct(opts, lookup_path):
     """
