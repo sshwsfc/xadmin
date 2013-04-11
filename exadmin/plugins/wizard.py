@@ -265,7 +265,7 @@ class WizardFormPlugin(BaseAdminPlugin):
         return self.get_form_list().keyOrder.index(step)
 
     def block_before_fieldsets(self, context, nodes):
-        context.update(self.storage.extra_data)
+        context.update(dict(self.storage.extra_data))
         context['wizard'] = {
             'steps': self.steps,
             'management_form': ManagementForm(prefix=self.prefix, initial={
@@ -275,7 +275,7 @@ class WizardFormPlugin(BaseAdminPlugin):
         nodes.append(loader.render_to_string('admin/blocks/wizard_nav.html', context_instance=context))
 
     def block_submit_line(self, context, nodes):
-        context.update(self.storage.extra_data)
+        context.update(dict(self.storage.extra_data))
         context['wizard'] = {
             'steps': self.steps
         }
