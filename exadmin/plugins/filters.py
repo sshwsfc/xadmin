@@ -6,7 +6,7 @@ from django.core.exceptions import SuspiciousOperation, ImproperlyConfigured
 from django.db import models
 from django.db.models.fields import FieldDoesNotExist
 from django.db.models.related import RelatedObject
-from django.db.models.sql.constants import LOOKUP_SEP, QUERY_TERMS
+from django.db.models.sql.query import LOOKUP_SEP, QUERY_TERMS
 from django.template import loader
 from django.utils.encoding import smart_str
 

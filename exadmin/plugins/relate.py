@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django.utils.encoding import force_unicode
 from django.utils.encoding import smart_str
 from django.utils.safestring import mark_safe
-from django.db.models.sql.constants import LOOKUP_SEP
+from django.db.models.sql.query import LOOKUP_SEP
 from django.db.models.related import RelatedObject
 from django.db import models
 
