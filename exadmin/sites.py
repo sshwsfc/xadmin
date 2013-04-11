@@ -20,7 +20,7 @@ class NotRegistered(Exception):
 
 class MergeAdminMetaclass(type):
     def __new__(cls, name, bases, attrs):
-        return type.__new__(cls, name, bases, attrs)
+        return type.__new__(cls, str(name), bases, attrs)
 
 class AdminSite(object):
 
@@ -94,8 +94,9 @@ class AdminSite(object):
                     # the created class appears to "live" in the wrong place,
                     # which causes issues later on.
                     options['__module__'] = __name__
+                name = "%s%sAdmin" % (model._meta.app_label, model._meta.module_name)
 
-                admin_class = type("%s%sAdmin" % (model._meta.app_label, model._meta.module_name), (admin_class,), options or {})
+                admin_class = type(str("%s%sAdmin" % (model._meta.app_label, model._meta.module_name)), (admin_class,), options or {})
                 admin_class.model = model
 
                 self._registry[model] = admin_class
@@ -104,7 +105,7 @@ class AdminSite(object):
                     raise AlreadyRegistered('The admin_view_class %s is already registered' % model.__name__)
                 if options:
                     options['__module__'] = __name__
-                    admin_class = type("%sAdmin" % model.__name__, (admin_class,), options)
+                    admin_class = type(str("%sAdmin" % model.__name__), (admin_class,), options)
 
                 # Instantiate the admin class to save in the registry
                 self._registry_avs[model] = admin_class

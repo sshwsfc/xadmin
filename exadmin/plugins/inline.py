@@ -346,7 +346,7 @@ class DetailInlineFormsetPlugin(InlineFormsetPlugin):
             replace_field_to_value(formset.helper.layout, inline)
             model = inline.model
             opts = model._meta
-            fake_admin_class = type.__new__(type, '%s%sFakeAdmin' % (opts.app_label, opts.module_name), (object, ), {'model': model})
+            fake_admin_class = type(str('%s%sFakeAdmin' % (opts.app_label, opts.module_name)), (object, ), {'model': model})
             for form in formset.forms:
                 instance = form.instance
                 if instance.pk:
