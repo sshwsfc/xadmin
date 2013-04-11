@@ -38,7 +38,7 @@ class IDCAdmin(object):
     wizard_form_list = [
         ('Frist\'s Form', ('name', 'description')),
         ('Seocnd Form', ('contact', 'telphone', 'address')),
-        ('Thread Form', ('customer_id', 'create_time'))
+        ('Thread Form', ('customer_id',))
     ]
 
     search_fields = ['name']
