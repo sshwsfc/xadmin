@@ -69,8 +69,8 @@ class ResultItem(object):
 
     @property
     def tagattrs(self):
-        return '%s%s' % ((self.tag_attrs and ' '.join(self.tag_attrs) or ''),\
-            (self.classes and ' class="%s"' % ' '.join(self.classes) or ''))
+        return mark_safe('%s%s' % ((self.tag_attrs and ' '.join(self.tag_attrs) or ''),\
+            (self.classes and (' class="%s"' % ' '.join(self.classes)) or '')))
 
 class ResultHeader(ResultItem):
 

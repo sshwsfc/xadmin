@@ -109,7 +109,7 @@
       </thead>
       <tbody>
       {% for row in results %}
-        <tr class="{% cycle 'row1' 'row2' %}">{% for o in row.cells %}
+        <tr class="{% cycle 'row1' 'row2' %}{% if row.css_class %} {{row.css_class}}{%endif%}">{% for o in row.cells %}
           <td {{o.tagattrs}}>
             {% if o.btns %}
               <div class="btn-group pull-right">
