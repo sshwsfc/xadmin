@@ -20,6 +20,10 @@ class MainDashboard(object):
     ]
 xadmin.site.register(views.website.IndexView, MainDashboard)
 
+class BaseSetting(object):
+    enable_themes = True
+xadmin.site.register(views.BaseAdminView, BaseSetting)
+
 class GolbeSetting(object):
     globe_search_models = [Host, IDC]
     globe_models_icon = {
