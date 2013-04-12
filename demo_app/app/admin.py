@@ -22,7 +22,7 @@ xadmin.site.register(views.website.IndexView, MainDashboard)
 
 class BaseSetting(object):
     enable_themes = True
-xadmin.site.register(views.BaseAdminView, BaseSetting)
+#xadmin.site.register(views.BaseAdminView, BaseSetting)
 
 class GolbeSetting(object):
     globe_search_models = [Host, IDC]
@@ -74,6 +74,8 @@ class HostAdmin(object):
     list_editable = ('name', 'idc', 'guarantee_date', 'service_type', 'description')
     save_as = True
     
+    aggregate_fields = {"guarantee_date": "min"}
+
     form_layout = (
         Main(
             Fieldset('Company data',
@@ -143,6 +145,7 @@ class AccessRecordAdmin(object):
 
     list_filter = ['date', 'user_count', 'view_count']
     actions = None
+    aggregate_fields = {"user_count": "sum", 'view_count': "sum"}
 
     refresh_times = (3, 5, 10)
     data_charts = {
