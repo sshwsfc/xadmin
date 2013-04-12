@@ -29,6 +29,8 @@ class GolbeSetting(object):
     globe_models_icon = {
         Host: 'laptop', IDC: 'cloud'
     }
+    enable_themes = True
+xadmin.site.register(views.BaseAdminView, GolbeSetting)
 xadmin.site.register(views.CommAdminView, GolbeSetting)
 
 class MaintainInline(object):
