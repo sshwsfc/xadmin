@@ -23,6 +23,7 @@ Features
 * Full CRUD methods.
 * Extend full django-admin features.
 
+
 Screenshots
 -----------
 
@@ -35,6 +36,14 @@ Screenshots
 ![Export Data](https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/doc/images/plugins/export.png)
 
 ![Edit inline](https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/doc/images/plugins/editable.png)
+
+
+Documentation
+--------
+
+* English (coming soon)
+* [Chinese](https://xadmin.readthedocs.org/en/latest/index.html)
+
 
 Get Started
 -----------
