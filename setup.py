@@ -1,12 +1,12 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='django-exadmin',
+    name='django-xadmin',
     version='0.1.0',
     description='New style and free plugin django admin module, UI base bootstrap2.',
     author='TM (sshwsfc)',
     author_email='sshwsfc@gmail.com',
-    url='http://github.com/sshwsfc/django-exadmin',
+    url='http://github.com/sshwsfc/django-xadmin',
     download_url='',
     packages=find_packages(),
     include_package_data=True,

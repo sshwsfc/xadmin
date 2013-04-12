@@ -1,0 +1,65 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+{% load url from future %}
+{% load xadmin %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+  <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> <span class="divider">/</span></li>
+  <li><a href="{% url opts|admin_urlname:'changelist' %}">{{opts.verbose_name_plural|capfirst}}</a> <span class="divider">/</span></li>
+  <li><a href="{% url opts|admin_urlname:'change' object.pk %}">{{ object|truncatewords:"18" }}</a> <span class="divider">/</span></li>
+  <li class="active">{% trans 'History' %}</li>
+</ul>
+{% endblock %}
+
+{% block content %}
+  <div class="navbar">
+    <div class="navbar-inner">
+      <a class="brand icon-time" href="#">{{title}}</a>
+    </div>
+  </div>
+<div id="content-main">
+<div class="module">
+
+{% if action_list %}
+  <form id="changelist-form" action="" method="post"{% view_block 'result_list_form' %}>{% csrf_token %}
+    <table id="change-history" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th scope="col" colspan="2">{% trans 'Diff' %}</th>
+                <th scope="col">{% trans 'Date/time' %}</th>
+                <th scope="col">{% trans 'User' %}</th>
+                <th scope="col">{% trans 'Comment' %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for action in action_list %}
+                <tr>
+                    <td style="text-align:center; width: 20px;">
+                      <input type="radio" name="version_a" value="{{action.version.id}}">
+                    </td>
+                    <td style="text-align:center; width: 20px;">
+                      <input type="radio" name="version_b" value="{{action.version.id}}">
+                    </td>
+                    <td><a href="{{action.url}}">{{action.revision.date_created}}</a></td>
+                    <td>
+                        {% if action.revision.user %}
+                            {{action.revision.user.username}}
+                            {% if action.revision.user.first_name %} ({{action.revision.user.first_name}} {{action.revision.user.last_name}}){% endif %}
+                        {% endif %}
+                    </td>
+                    <td>{{action.revision.comment|linebreaksbr|default:""}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="well well-small">
+      <button class="btn btn-primary">{% trans "Diff Select Versions" %}</button>
+    </div>
+  </form>
+{% else %}
+    <p class="well">{% trans "This object doesn't have a change history. It probably wasn't added via this admin site." %}</p>
+{% endif %}
+</div>
+</div>
+{% endblock %}

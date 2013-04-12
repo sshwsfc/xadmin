@@ -1,4 +1,4 @@
-django-exadmin [![Build Status](https://travis-ci.org/sshwsfc/django-exadmin.png?branch=master)](https://travis-ci.org/sshwsfc/django-exadmin)
+django-xadmin [![Build Status](https://travis-ci.org/sshwsfc/django-xadmin.png?branch=master)](https://travis-ci.org/sshwsfc/django-xadmin)
 ==============
 
 Drop-in replacement of Django admin comes with lots of goodies, fully extensible with plugin support, pretty UI based on Twitter Bootstrap.
@@ -6,7 +6,7 @@ Drop-in replacement of Django admin comes with lots of goodies, fully extensible
 Live Demo
 ----
 
-http://exadmin.herokuapp.com
+http://x-admin.herokuapp.com
 
 * User: admin
 * Password: admin
