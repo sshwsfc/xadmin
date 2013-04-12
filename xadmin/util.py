@@ -1,3 +1,7 @@
+
+import datetime
+import decimal
+
 from django.db import models
 from django.db.models.sql.query import LOOKUP_SEP
 from django.db.models.deletion import Collector
@@ -7,7 +11,6 @@ from django.utils import formats
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
-from django.utils import timezone
 from django.utils.encoding import force_unicode, smart_unicode, smart_str
 from django.utils.translation import ungettext
 from django.core.urlresolvers import reverse
@@ -22,6 +25,11 @@ try:
     import json
 except ImportError:
     from django.utils import simplejson as json
+
+try:
+    from django.utils.timezone import template_localtime as tz_localtime
+except ImportError:
+    from django.utils.timezone import localtime as tz_localtime
 
 def lookup_needs_distinct(opts, lookup_path):
     """
@@ -341,8 +349,8 @@ def display_for_field(value, field):
     elif value is None:
         return EMPTY_CHANGELIST_VALUE
     elif isinstance(field, models.DateTimeField):
-        return formats.localize(timezone.localtime(value))
-    elif isinstance(field, models.DateField) or isinstance(field, models.TimeField):
+        return formats.localize(tz_localtime(value))
+    elif isinstance(field, (models.DateField, models.TimeField)):
         return formats.localize(value)
     elif isinstance(field, models.DecimalField):
         return formats.number_format(value, field.decimal_places)
@@ -353,6 +361,21 @@ def display_for_field(value, field):
     else:
         return smart_unicode(value)
 
+def display_for_value(value, boolean=False):
+    from xadmin.views.list import EMPTY_CHANGELIST_VALUE
+
+    if boolean:
+        return boolean_icon(value)
+    elif value is None:
+        return EMPTY_CHANGELIST_VALUE
+    elif isinstance(value, datetime.datetime):
+        return formats.localize(tz_localtime(value))
+    elif isinstance(value, (datetime.date, datetime.time)):
+        return formats.localize(value)
+    elif isinstance(value, (decimal.Decimal, float)):
+        return formats.number_format(value)
+    else:
+        return smart_unicode(value)
 
 class NotRelationField(Exception):
     pass
