@@ -52,12 +52,12 @@ API
 源码
 ----
 
-https://github.com/sshwsfc/django-exadmin
+https://github.com/sshwsfc/django-xadmin
 
 网站
 -------
 
-http://sshwsfc.github.com/django-exadmin
+http://sshwsfc.github.com/django-xadmin
 
 Versions and Compatibility
 --------------------------

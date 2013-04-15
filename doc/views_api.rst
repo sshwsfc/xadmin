@@ -1,5 +1,5 @@
 Views
 =====
 
-.. automodule:: exadmin.views
+.. automodule:: xadmin.views
    :members:

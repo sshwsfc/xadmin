@@ -119,9 +119,9 @@ class AdminSite(object):
         :param name: view对应的url name, 要包含两个%%s, 分别会替换为 app_label和module_name
 
         注册 Model Base Admin View 可以为每一个在xadmin注册的 Model 生成一个 Admin View，并且包含相关的 Model 信息。
-        具体内容可以参看 :class:`~exadmin.views.base.ModelAdminView`。 举例::
+        具体内容可以参看 :class:`~xadmin.views.base.ModelAdminView`。 举例::
 
-            from exadmin.views import ModelAdminView
+            from xadmin.views import ModelAdminView
 
             class TestModelAdminView(ModelAdminView):
                 
@@ -148,9 +148,9 @@ class AdminSite(object):
         :param admin_view_class: 注册的 Admin View 类
         :param name: view对应的url name
 
-        关于 Admin View 具体内容可以参看 :class:`~exadmin.views.base.BaseAdminView`。 举例::
+        关于 Admin View 具体内容可以参看 :class:`~xadmin.views.base.BaseAdminView`。 举例::
 
-            from exadmin.views import BaseAdminView
+            from xadmin.views import BaseAdminView
 
             class TestAdminView(BaseAdminView):
                 
@@ -170,9 +170,9 @@ class AdminSite(object):
         :param plugin_class: view对应的url路径
         :param admin_view_class: 该 plugin 绑定的 Admin View 类
 
-        关于 Admin Plugin 具体内容可以参看 :class:`~exadmin.views.base.BaseAdminPlugin`。 举例::
+        关于 Admin Plugin 具体内容可以参看 :class:`~xadmin.views.base.BaseAdminPlugin`。 举例::
 
-            from exadmin.views import BaseAdminPlugin
+            from xadmin.views import BaseAdminPlugin
 
             class TestAdminPlugin(BaseAdminPlugin):
                 
@@ -198,7 +198,7 @@ class AdminSite(object):
         :param model_or_iterable: 传入 model 或是指定的 ModelOptionClass
         :param admin_class: 当 model_or_iterable 为 Model 时，该参数为 ModelAdmin；model_or_iterable 为 AdminView 时 ，该参数为 OptionClass
 
-        关于 Admin Plugin 具体内容可以参看 :class:`~exadmin.views.base.BaseAdminPlugin`。 举例::
+        关于 Admin Plugin 具体内容可以参看 :class:`~xadmin.views.base.BaseAdminPlugin`。 举例::
 
             from models import SomeModel
 
@@ -247,7 +247,7 @@ class AdminSite(object):
         """
         取消 Model 或 OptionClass 的注册
 
-        如果 Model 或 OptionClass 并未注册过，会抛出 :exc:`exadmin.sites.NotRegistered` 异常
+        如果 Model 或 OptionClass 并未注册过，会抛出 :exc:`xadmin.sites.NotRegistered` 异常
         """
         from xadmin.views.base import BaseAdminView
         if isinstance(model_or_iterable, (ModelBase, BaseAdminView)):
@@ -410,7 +410,7 @@ class AdminSite(object):
         """
         使用 :meth:`~AdminSite.get_view_class` 创建 ModelAdminView 类，并且返回 view 方法，可以用于 get_urls 方法中
 
-        :param admin_view_class: AdminView 类，该类应该为 :class:`~exadmin.views.base.ModelAdminView` 的子类
+        :param admin_view_class: AdminView 类，该类应该为 :class:`~xadmin.views.base.ModelAdminView` 的子类
         :param model: Model 类，目前该参数暂无作用
         :param option_class: Model 的 OptionClass，保存对该 Model 的相关定制
         """
@@ -461,11 +461,11 @@ class AdminSite(object):
 
             from django.conf.urls import patterns, include, url
 
-            import exadmin
-            exadmin.autodiscover()
+            import xadmin
+            xadmin.autodiscover()
 
             urlpatterns = patterns('',
-                url(r'', include(exadmin.site.urls)),
+                url(r'', include(xadmin.site.urls)),
             )
 
         """

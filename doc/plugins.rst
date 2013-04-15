@@ -11,7 +11,7 @@
 内置插件
 ---------
 
-.. automodule:: exadmin.plugins
+.. automodule:: xadmin.plugins
 
 插件制作
 --------

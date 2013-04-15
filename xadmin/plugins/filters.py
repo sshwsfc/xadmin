@@ -46,8 +46,8 @@
 制作过滤器
 -----------
 
-您也可以制作自己的过滤器, 用来进行一些特定的过滤. 过滤器需要继承 :class:`exadmin.filters.BaseFilter` 类, 
-并使用 :attr:`exadmin.filters.manager` 注册过滤器.
+您也可以制作自己的过滤器, 用来进行一些特定的过滤. 过滤器需要继承 :class:`xadmin.filters.BaseFilter` 类, 
+并使用 :attr:`xadmin.filters.manager` 注册过滤器.
 
 
 

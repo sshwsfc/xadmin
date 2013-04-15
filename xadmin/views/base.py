@@ -148,7 +148,7 @@ class BaseAdminObject(object):
     """
     def get_view(self, view_class, option_class=None, *args, **kwargs):
         """
-        获取 AdminViewClass 的实例。实际上就是调用 :meth:`~exadmin.sites.AdminSite.get_view_class` 方法
+        获取 AdminViewClass 的实例。实际上就是调用 :meth:`~xadmin.sites.AdminSite.get_view_class` 方法
 
         :param view_class: AdminViewClass 的类
         :param option_class: 希望与 AdminViewClass 合并的 OptionClass
@@ -158,7 +158,7 @@ class BaseAdminObject(object):
 
     def get_model_view(self, view_class, model, *args, **kwargs):
         """
-        获取 ModelAdminViewClass 的实例。首先通过 :class:`~exadmin.sites.AdminSite` 取得 model 对应的 OptionClass，然后调用 :meth:`get_view` 方法
+        获取 ModelAdminViewClass 的实例。首先通过 :class:`~xadmin.sites.AdminSite` 取得 model 对应的 OptionClass，然后调用 :meth:`get_view` 方法
 
         :param view_class: ModelAdminViewClass 的类
         :param model: 绑定的 Model 类
@@ -260,16 +260,16 @@ class BaseAdminObject(object):
 
     def static(self, path):
         """
-        :meth:`exadmin.util.static` 的快捷方法，返回静态文件的 url。
+        :meth:`xadmin.util.static` 的快捷方法，返回静态文件的 url。
         """
         return static(path)
 
 class BaseAdminPlugin(BaseAdminObject):
     """
-    所有 Plugin 的基类。继承于 :class:`BaseAdminObject` 。插件的注册和使用可以参看 :meth:`exadmin.sites.AdminSite.register_plugin` ，
+    所有 Plugin 的基类。继承于 :class:`BaseAdminObject` 。插件的注册和使用可以参看 :meth:`xadmin.sites.AdminSite.register_plugin` ，
     插件的原理可以参看 :func:`filter_hook` :
 
-    .. autofunction:: exadmin.views.base.filter_hook
+    .. autofunction:: xadmin.views.base.filter_hook
     """
     def __init__(self, admin_view):
         self.admin_view = admin_view
@@ -307,8 +307,8 @@ class BaseAdminView(BaseAdminObject, View):
 
     实现一个自己的 AdminView 类很简单，举例如下::
 
-        from exadmin.sites import site
-        from exadmin.views import BaseAdminView
+        from xadmin.sites import site
+        from xadmin.views import BaseAdminView
 
         class MyAdminView(BaseAdminView):
 
@@ -317,7 +317,7 @@ class BaseAdminView(BaseAdminObject, View):
 
         site.register_view(r'^me_test/$', MyAdminView, name='my_test')
 
-    而后您就可以在 ``me_test/`` 访问到该view了。当然exadmin同事提供了一些通用的 AdminView，分别为
+    而后您就可以在 ``me_test/`` 访问到该view了。当然xadmin同事提供了一些通用的 AdminView，分别为
 
         * :class:`CommAdminView` : xadmin通用界面的基础View，提供了xadmin通用界面需要的一些数据(菜单等)
         * :class:`ModelAdminView` : 核心类之一，提供了基于 Model 的 AdminView。
@@ -616,9 +616,9 @@ class CommAdminView(BaseAdminView):
 class ModelAdminView(CommAdminView):
     """
     基于 Model 的 AdminView，该类的子类，在 AdminSite 生成 urls 时，会为每一个注册的 Model 生成一个 url 映射。
-    ModelAdminView 注册时使用 :meth:`exadmin.sites.AdminSite.register_modelview` 方法注册，具体使用实例可以参见该方法的说明，或参考实例::
+    ModelAdminView 注册时使用 :meth:`xadmin.sites.AdminSite.register_modelview` 方法注册，具体使用实例可以参见该方法的说明，或参考实例::
 
-        from exadmin.views import ModelAdminView
+        from xadmin.views import ModelAdminView
 
         class TestModelAdminView(ModelAdminView):
             
@@ -732,9 +732,9 @@ class ModelAdminView(CommAdminView):
         """
         根据 template_name 返回一个 templates 列表，生成页面是在这些列表中寻找存在的模板。这样，您就能方便的复写某些模板。列表的格式为::
 
-            "admin/%s/%s/%s" % (opts.app_label, opts.object_name.lower(), template_name),
-            "admin/%s/%s" % (opts.app_label, template_name),
-            "admin/%s" % template_name,
+            "xadmin/%s/%s/%s" % (opts.app_label, opts.object_name.lower(), template_name),
+            "xadmin/%s/%s" % (opts.app_label, template_name),
+            "xadmin/%s" % template_name,
 
         """
         opts = self.opts

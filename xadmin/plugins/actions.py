@@ -19,9 +19,9 @@ Action 插件在数据列表页面提供了数据选择功能, 选择后的数�
 开发者可以设置 Model OptionClass 的 actions 属性, 该属性是一个列表, 包含您想启用的 Action 的类. 系统已经默认内置了删除数据的 Action,
 当然您可以自己制作 Action 来实现特定的功能, 制作 Action 的实例如下.
 
-    * 首先要创建一个 Action 类, 该类需要继承 BaseActionView. BaseActionView 是 :class:`~exadmin.views.ModelAdminView` 的子类::
+    * 首先要创建一个 Action 类, 该类需要继承 BaseActionView. BaseActionView 是 :class:`~xadmin.views.ModelAdminView` 的子类::
     
-        from exadmin.plugins.actions import BaseActionView
+        from xadmin.plugins.actions import BaseActionView
 
         class MyAction(BaseActionView):
 

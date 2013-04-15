@@ -98,7 +98,7 @@ def replace_field_to_value(layout, cb):
 class DetailAdminView(ModelAdminView):
     """
     显示 Model 详细信息的 AdminView. 该 View 页面只能用来查看数据内容, 不能用来修改数据.
-    该 View 显示各字段的布局跟 :class:`exadmin.views.edit.ModelFormAdminView` 一致.
+    该 View 显示各字段的布局跟 :class:`xadmin.views.edit.ModelFormAdminView` 一致.
 
     **Option属性**
 
@@ -116,7 +116,7 @@ class DetailAdminView(ModelAdminView):
     form = forms.ModelForm
     #: 详情页面的 Layout 对象，是一个标准的 Crispy Form Layout 对象。使用 Layout 可以方便的定义整个页面的结构。
     #  有关 Crispy Form 可以参考其文档 `Crispy Form 文档 <http://django-crispy-forms.readthedocs.org/en/latest/layouts.html>`_
-    #  使用实例可以参看 :attr:`exadmin.views.edit.ModelFormAdminView.form_layout`
+    #  使用实例可以参看 :attr:`xadmin.views.edit.ModelFormAdminView.form_layout`
     detail_layout = None
     #: 是否显示所有字段的内容, 默认为 ``True`` . 如果为 ``True`` 则会显示 Layout 中没有列出的字段, 否则会隐藏这些字段
     detail_show_all = True
@@ -189,7 +189,7 @@ class DetailAdminView(ModelAdminView):
         else:
             exclude = list(self.exclude)
         if self.exclude is None and hasattr(self.form, '_meta') and self.form._meta.exclude:
-            # 如果 :attr:`~exadmin.views.base.ModelAdminView.exclude` 是 None，并且 form 的 Meta.exclude 不为空，
+            # 如果 :attr:`~xadmin.views.base.ModelAdminView.exclude` 是 None，并且 form 的 Meta.exclude 不为空，
             # 则使用 form 的 Meta.exclude
             exclude.extend(self.form._meta.exclude)
         # 如果 exclude 是空列表，那么就设为 None

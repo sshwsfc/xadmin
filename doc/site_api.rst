@@ -1,5 +1,5 @@
 AdminSite
 =========
 
-.. automodule:: exadmin.sites
+.. automodule:: xadmin.sites
    :members:

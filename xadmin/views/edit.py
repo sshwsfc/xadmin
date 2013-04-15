@@ -38,13 +38,13 @@ FORMFIELD_FOR_DBFIELD_DEFAULTS = {
 
 class ReadOnlyField(Field):
     """
-    crispy Field，使用 :class:`~exadmin.views.detail.DetailAdminView` 仅显示该字段的内容，不能编辑。
+    crispy Field，使用 :class:`~xadmin.views.detail.DetailAdminView` 仅显示该字段的内容，不能编辑。
     """
     template = "xadmin/layout/field_value.html"
 
     def __init__(self, detail, *args, **kwargs):
         super(ReadOnlyField, self).__init__(*args, **kwargs)
-        self.detail = detail #： 数据对象对应的 :class:`~exadmin.views.detail.DetailAdminView` 对象
+        self.detail = detail #： 数据对象对应的 :class:`~xadmin.views.detail.DetailAdminView` 对象
 
     def render(self, form, form_style, context):
         html = ''
@@ -111,7 +111,7 @@ class ModelFormAdminView(ModelAdminView):
     有关 Crispy Form 可以参考其文档 `Crispy Form 文档 <http://django-crispy-forms.readthedocs.org/en/latest/layouts.html>`_
     设置 form_layout 的示例::
 
-        from exadmin.layout import Main, Side, Fieldset, Row, AppendedText
+        from xadmin.layout import Main, Side, Fieldset, Row, AppendedText
 
         class AtricleAdmin(object):
             form_layout = (
@@ -249,7 +249,7 @@ class ModelFormAdminView(ModelAdminView):
             exclude = list(self.exclude)
         exclude.extend(self.get_readonly_fields())
         if self.exclude is None and hasattr(self.form, '_meta') and self.form._meta.exclude:
-            # 如果 :attr:`~exadmin.views.base.ModelAdminView.exclude` 是 None，并且 form 的 Meta.exclude 不为空，
+            # 如果 :attr:`~xadmin.views.base.ModelAdminView.exclude` 是 None，并且 form 的 Meta.exclude 不为空，
             # 则使用 form 的 Meta.exclude
             exclude.extend(self.form._meta.exclude)
         # 如果 exclude 是空列表，那么就设为 None
@@ -316,7 +316,7 @@ class ModelFormAdminView(ModelAdminView):
         # 处理只读字段
         readonly_fields = self.get_readonly_fields()
         if readonly_fields:
-            # 使用 :class:`exadmin.views.detail.DetailAdminUtil` 来显示只读字段的内容
+            # 使用 :class:`xadmin.views.detail.DetailAdminUtil` 来显示只读字段的内容
             detail = self.get_model_view(DetailAdminUtil, self.model, self.form_obj.instance)
             for field in readonly_fields:
                 # 替换只读字段

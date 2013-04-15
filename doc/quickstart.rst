@@ -44,7 +44,7 @@ For using |xadmin|, `Django 1.4 <http://www.djangoproject.com>`_ needs to be ins
     INSTALLED_APPS = (
         ...
 
-        'exadmin',
+        'xadmin',
         'crispy_forms',
         'reversion',
 
@@ -53,15 +53,15 @@ For using |xadmin|, `Django 1.4 <http://www.djangoproject.com>`_ needs to be ins
 
 然后添加 URL-patterns 以及 ``autodiscover`` 操作::
 
-    import exadmin
-    exadmin.autodiscover()
+    import xadmin
+    xadmin.autodiscover()
 
     # version模块自动注册需要版本控制的 Model
-    from exadmin.plugins import xversion
+    from xadmin.plugins import xversion
     xversion.registe_models()
 
     urlpatterns = patterns('',
-        url(r'xadmin/', include(exadmin.site.urls)),
+        url(r'xadmin/', include(xadmin.site.urls)),
     )
 
 收集 media 文件::

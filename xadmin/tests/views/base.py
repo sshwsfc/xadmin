@@ -12,7 +12,7 @@ class BaseViewTest(TestCase):
     def testView(self):
         c = self.get_client()
         response = c.get('/')
-        self.assertTemplateUsed(response, 'admin/dashboard.html')
+        self.assertTemplateUsed(response, 'xadmin/dashboard.html')
 
     def testBaseContext(self):
         context = self.get_test_view().get_context()
