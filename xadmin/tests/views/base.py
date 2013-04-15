@@ -1,6 +1,6 @@
-from exadmin.tests.base import TestCase
+from xadmin.tests.base import TestCase
 
-from exadmin.views.base import BaseAdminView
+from xadmin.views.base import BaseAdminView
 
 class BaseViewTest(TestCase):
 

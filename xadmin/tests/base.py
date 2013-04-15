@@ -4,8 +4,8 @@ from django.test.client import RequestFactory
 
 from django.contrib.auth.models import User
 
-from exadmin.tests.models import ModelA
-from exadmin.sites import site
+from xadmin.tests.models import ModelA
+from xadmin.sites import site
 
 class ExRequestFactory(RequestFactory):
 
