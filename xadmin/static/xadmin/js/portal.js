@@ -4,7 +4,7 @@ jQuery(function() {
         handle: '.box-title',
         forcePlaceholderSize: true,
         cursor: "move",
-        cancel: ".unsort",
+        cancel: ".unsort, .tab-content",
         stop: function( event, ui ) {
             var pos = [];
             $('.column').each(function(){
