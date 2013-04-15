@@ -36,7 +36,6 @@ class AggregationPlugin(BaseAdminPlugin):
                     item.text = display_for_field(obj[key], f)
                     item.wraps.append('%%s<span class="aggregate_title label label-info">%s</span>' % AGGREGATE_TITLE[agg_method])
                     item.classes.append(agg_method)
-                    print item.classes
             except FieldDoesNotExist:
                 item.text = ""
 
