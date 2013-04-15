@@ -78,16 +78,23 @@ class HostAdmin(object):
 
     form_layout = (
         Main(
-            Fieldset('Company data',
-                'name', 'idc'
-            ),
-            Inline(MaintainLog),
-            Fieldset('Contact details',
-                'service_type',
-                Row('brand', 'model'),
-                Row('cpu', 'core_num'),
-                Row(AppendedText('hard_disk', 'G'), AppendedText('memory', "G")),
-                'guarantee_date'
+            TabHolder(
+                Tab('Comm Fiels',
+                    Fieldset('Company data',
+                        'name', 'idc',
+                        description="some comm fields, required"
+                    ),
+                    Inline(MaintainLog),
+                ),
+                Tab('Extend Fiedls',
+                    Fieldset('Contact details',
+                        'service_type',
+                        Row('brand', 'model'),
+                        Row('cpu', 'core_num'),
+                        Row(AppendedText('hard_disk', 'G'), AppendedText('memory', "G")),
+                        'guarantee_date'
+                    ),
+                ),
             ),
         ),
         Side(
