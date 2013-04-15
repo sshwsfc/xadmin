@@ -30,7 +30,7 @@
         })
       });
     $(function() {
-        $('.exform').exform();
+        $('.exform:not(.rended)').exform();
         var action_bar = $('.form-actions');
         if(action_bar.length){
             var height=action_bar[0].offsetTop + action_bar.outerHeight();

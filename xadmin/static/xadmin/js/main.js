@@ -3,9 +3,11 @@
 
   $.fn.exform = function(){
     this.each(function () {
+      var form = $(this);
       for (var i = $.fn.exform.renders.length - 1; i >= 0; i--) {
-        $.fn.exform.renders[i]($(this))
+        $.fn.exform.renders[i](form)
       };
+      form.addClass('rended');
     })
   }
   $.fn.exform.renders = [];
