@@ -11,7 +11,7 @@ from xadmin.views import BaseAdminPlugin, ModelFormAdminView, DetailAdminView, f
 
 
 class ShowField(Field):
-    template = "admin/layout/field_value.html"
+    template = "xadmin/layout/field_value.html"
 
     def __init__(self, admin_view, *args, **kwargs):
         super(ShowField, self).__init__(*args, **kwargs)
@@ -36,7 +36,7 @@ class DeleteField(Field):
             return ""
 
 class TDField(Field):
-    template = "admin/layout/td-field.html"
+    template = "xadmin/layout/td-field.html"
 
 class InlineStyleManager(object):
     inline_styles = {}
@@ -49,7 +49,7 @@ class InlineStyleManager(object):
 style_manager = InlineStyleManager()
 
 class InlineStyle(object):
-    template = 'admin/edit_inline/stacked.html'
+    template = 'xadmin/edit_inline/stacked.html'
     def __init__(self, view, formset):
         self.view = view
         self.formset = formset
@@ -60,19 +60,19 @@ class InlineStyle(object):
 style_manager.register_style(None, InlineStyle)
 
 class OneInlineStyle(InlineStyle):
-    template = 'admin/edit_inline/one.html'
+    template = 'xadmin/edit_inline/one.html'
 style_manager.register_style("one", OneInlineStyle)
 
 class AccInlineStyle(InlineStyle):
-    template = 'admin/edit_inline/accordion.html'
+    template = 'xadmin/edit_inline/accordion.html'
 style_manager.register_style("accordion", AccInlineStyle)
 
 class TabInlineStyle(InlineStyle):
-    template = 'admin/edit_inline/tab.html'
+    template = 'xadmin/edit_inline/tab.html'
 style_manager.register_style("tab", TabInlineStyle)
 
 class TableInlineStyle(InlineStyle):
-    template = 'admin/edit_inline/tabular.html'
+    template = 'xadmin/edit_inline/tabular.html'
     def update_layout(self, helper):
         helper.add_layout(Layout(*[TDField(f) for f in self.formset[0].fields.keys()]))
     def get_attrs(self):
@@ -225,7 +225,7 @@ class InlineFormset(Fieldset):
         self.css_id = "%s-group" % formset.prefix
         self.template = formset.style.template
         if allow_blank and len(formset) == 0:
-            self.template = 'admin/edit_inline/blank.html'
+            self.template = 'xadmin/edit_inline/blank.html'
         self.formset = formset
         self.model = formset.model
         self.opts = formset.model._meta

@@ -147,7 +147,7 @@ class ChangePasswordView(ModelAdminView):
     def get_response(self):
         return TemplateResponse(self.request, [
             self.change_user_password_template or
-            'admin/auth/user/change_password.html'
+            'xadmin/auth/user/change_password.html'
         ], self.get_context(), current_app=self.admin_site.name)
 
     @sensitive_post_parameters()

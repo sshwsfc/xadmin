@@ -21,7 +21,7 @@ from util import (get_model_from_relation,
 
 class BaseFilter(object):
     title = None
-    template = 'admin/filters/list.html'
+    template = 'xadmin/filters/list.html'
 
     @classmethod
     def test(cls, field, request, params, model, admin_view, field_path):
@@ -131,7 +131,7 @@ class FieldFilter(BaseFilter):
         return queryset.filter(**self.used_params)
 
 class ListFieldFilter(FieldFilter):
-    template = 'admin/filters/list.html'
+    template = 'xadmin/filters/list.html'
 
     def get_context(self):
         context = super(ListFieldFilter, self).get_context()
@@ -190,7 +190,7 @@ class ChoicesFieldListFilter(ListFieldFilter):
 
 @manager.register
 class TextFieldListFilter(FieldFilter):
-    template = 'admin/filters/char.html'
+    template = 'xadmin/filters/char.html'
     lookup_formats = {'search':'%s__contains'}
 
     @classmethod
@@ -199,7 +199,7 @@ class TextFieldListFilter(FieldFilter):
 
 @manager.register
 class NumberFieldListFilter(FieldFilter):
-    template = 'admin/filters/number.html'
+    template = 'xadmin/filters/number.html'
     lookup_formats = {'equal':'%s__exact', 'lt': '%s__lt', 'gt': '%s__gt',
         'ne':'%s__ne', 'lte': '%s__lte', 'gte': '%s__gte',
     }
@@ -217,7 +217,7 @@ class NumberFieldListFilter(FieldFilter):
 
 @manager.register
 class DateFieldListFilter(ListFieldFilter):
-    template = 'admin/filters/date.html'
+    template = 'xadmin/filters/date.html'
     lookup_formats = {'since': '%s__gte', 'until': '%s__lt', 
         'year': '%s__year', 'month': '%s__month', 'day': '%s__day'}
 
@@ -286,7 +286,7 @@ class DateFieldListFilter(ListFieldFilter):
 
 @manager.register
 class RelatedFieldSearchFilter(FieldFilter):
-    template = 'admin/filters/fk_search.html'
+    template = 'xadmin/filters/fk_search.html'
 
     @classmethod
     def test(cls, field, request, params, model, admin_view, field_path):

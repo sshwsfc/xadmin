@@ -6,7 +6,7 @@ from crispy_forms.utils import render_field, flatatt
 from crispy_forms import layout
 
 class Fieldset(layout.Fieldset):
-    template = "admin/fieldset.html"
+    template = "xadmin/fieldset.html"
 
     def __init__(self, legend, *fields, **kwargs):
         self.description = kwargs.pop('description', None)

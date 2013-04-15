@@ -20,7 +20,7 @@ from base import ModelAdminView, filter_hook, csrf_protect_m
 
 
 class ShowField(Field):
-    template = "admin/layout/field_value.html"
+    template = "xadmin/layout/field_value.html"
 
     def __init__(self, callback, *args, **kwargs):
         super(ShowField, self).__init__(*args, **kwargs)

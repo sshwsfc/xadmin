@@ -68,7 +68,7 @@ class SelectMultipleTransfer(forms.SelectMultiple):
             'available_options': u'\n'.join(available_output),
             'chosen_options': u'\n'.join(chosen_output),
         }
-        return mark_safe(loader.render_to_string('admin/forms/transfer.html', context))
+        return mark_safe(loader.render_to_string('xadmin/forms/transfer.html', context))
 
 class SelectMultipleDropdown(forms.SelectMultiple):
 

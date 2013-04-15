@@ -1,0 +1,50 @@
+{% extends "xadmin/base_site.html" %}
+{% load i18n %}
+{% load url from future %}
+{% load xadmin %}
+{% load crispy_forms_tags %}
+
+{% block extrahead %}{{ block.super }}
+{% url 'admin:jsi18n' as jsi18nurl %}
+<script type="text/javascript" src="{{ jsi18nurl|default:"../../../jsi18n/" }}"></script>
+{% endblock %}
+
+{% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} detail{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+  <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> <span class="divider">/</span></li>
+  <li>
+    {% if has_view_permission %}
+    <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+    {% else %}{{ opts.verbose_name_plural|capfirst }}{% endif %} <span class="divider">/</span>
+  </li>
+  <li class="active">
+    {{ object|truncatewords:"18" }}
+  </li>
+</ul>
+{% endblock %}
+
+{% block content %}
+
+  <legend>
+    {% block object-tools %}
+    <div class="pull-right">
+      {% if has_change_permission %}
+      <a href="{% url opts|admin_urlname:'change' object.pk %}" class="btn btn-small"><i class="icon-pencil"></i>  {% trans "Edit" %}</a>
+      {% endif %}
+      {% if has_delete_permission %}
+      <a href="{% url opts|admin_urlname:'delete' object.pk %}" class="btn btn-danger btn-small"><i class="icon-remove"></i>  {% trans "Delete" %}</a>
+      {% endif %}
+    </div>
+    {% endblock %}
+    {{ object|truncatewords:"18" }}
+  </legend>
+
+  {% view_block 'before_fieldsets' %}
+
+  {% crispy form %}
+
+  {% view_block 'after_fieldsets' %}
+
+{% endblock %}

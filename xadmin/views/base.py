@@ -434,9 +434,9 @@ class ModelAdminView(CommAdminView):
     def get_template_list(self, template_name):
         opts = self.opts
         return (
-            "admin/%s/%s/%s" % (opts.app_label, opts.object_name.lower(), template_name),
-            "admin/%s/%s" % (opts.app_label, template_name),
-            "admin/%s" % template_name,
+            "xadmin/%s/%s/%s" % (opts.app_label, opts.object_name.lower(), template_name),
+            "xadmin/%s/%s" % (opts.app_label, template_name),
+            "xadmin/%s" % template_name,
         )
 
     def get_ordering(self):

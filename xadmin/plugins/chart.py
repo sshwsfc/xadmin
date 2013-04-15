@@ -19,7 +19,7 @@ from xadmin.util import lookup_field, label_for_field, json
 @widget_manager.register
 class ChartWidget(ModelBaseWidget):
     widget_type = 'chart'
-    template = 'admin/widgets/chart.html'
+    template = 'xadmin/widgets/chart.html'
 
     def convert(self, data):
         self.list_params = data.pop('params', {})
@@ -99,7 +99,7 @@ class ChartsPlugin(BaseAdminPlugin):
             context.update({
                 'charts': [{"name": name, "title": v['title'], 'url': self.get_chart_url(name, v)} for name,v in self.data_charts.items()],
             })
-            nodes.append(loader.render_to_string('admin/blocks/charts.html', context_instance=context))
+            nodes.append(loader.render_to_string('xadmin/blocks/charts.html', context_instance=context))
 
 class ChartsView(ListAdminView):
 

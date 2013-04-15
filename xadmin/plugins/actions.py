@@ -107,9 +107,9 @@ class DeleteSelectedAction(BaseActionView):
 
         # Display the confirmation page
         return TemplateResponse(self.request, self.delete_selected_confirmation_template or [
-            "admin/%s/%s/delete_selected_confirmation.html" % (self.app_label, self.opts.object_name.lower()),
-            "admin/%s/delete_selected_confirmation.html" % self.app_label,
-            "admin/delete_selected_confirmation.html"
+            "xadmin/%s/%s/delete_selected_confirmation.html" % (self.app_label, self.opts.object_name.lower()),
+            "xadmin/%s/delete_selected_confirmation.html" % self.app_label,
+            "xadmin/delete_selected_confirmation.html"
         ], context, current_app=self.admin_site.name)
 
 class ActionPlugin(BaseAdminPlugin):
@@ -247,7 +247,7 @@ class ActionPlugin(BaseAdminPlugin):
     # Block Views
     def block_results_bottom(self, context, nodes):
         if self.actions and self.admin_view.result_count:
-            nodes.append(loader.render_to_string('admin/actions.html', context_instance=context))
+            nodes.append(loader.render_to_string('xadmin/actions.html', context_instance=context))
 
 
 site.register_plugin(ActionPlugin, ListAdminView)

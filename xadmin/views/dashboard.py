@@ -151,7 +151,7 @@ class WidgetDataError(Exception):
 
 class BaseWidget(forms.Form):
 
-    template = 'admin/widgets/base.html'
+    template = 'xadmin/widgets/base.html'
     description = 'Base Widget, don\'t use it.'
     widget_title = None
     widget_icon = 'icon-plus-sign-alt'
@@ -324,7 +324,7 @@ class PartialBaseWidget(BaseWidget):
 class QuickBtnWidget(BaseWidget):
     widget_type = 'qbutton'
     description = 'Quick button Widget, quickly open any page.'
-    template = "admin/widgets/qbutton.html"
+    template = "xadmin/widgets/qbutton.html"
     base_title = "Quick Buttons"
 
     def convert(self, data):
@@ -360,7 +360,7 @@ class QuickBtnWidget(BaseWidget):
 class ListWidget(ModelBaseWidget, PartialBaseWidget):
     widget_type = 'list'
     description = 'Any Objects list Widget.'
-    template = "admin/widgets/list.html"
+    template = "xadmin/widgets/list.html"
     model_perm = 'view'
 
     def convert(self, data):
@@ -394,7 +394,7 @@ class ListWidget(ModelBaseWidget, PartialBaseWidget):
 class AddFormWidget(ModelBaseWidget, PartialBaseWidget):
     widget_type = 'addform'
     description = 'Add any model object Widget.'
-    template = "admin/widgets/addform.html"
+    template = "xadmin/widgets/addform.html"
     model_perm = 'add'
 
     def setup(self):
@@ -515,7 +515,7 @@ class Dashboard(CommAdminView):
             'add_widget_url': self.get_admin_url('%s_%s_add' % (UserWidget._meta.app_label, UserWidget._meta.module_name)) + \
                 "?user=%s&page_id=%s" % (self.user.id, self.get_page_id())
         })
-        return self.template_response('admin/dashboard.html', context)
+        return self.template_response('xadmin/dashboard.html', context)
 
     @csrf_protect_m
     def post(self, request):

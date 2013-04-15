@@ -34,7 +34,7 @@ else:
 
 static = register.simple_tag(static)
 
-@register.inclusion_tag('admin/submit_line.html', takes_context=True)
+@register.inclusion_tag('xadmin/submit_line.html', takes_context=True)
 def submit_row(context):
     """
     Displays the row of buttons for delete and save.

@@ -55,7 +55,7 @@ class EditablePlugin(BaseAdminPlugin):
                     'field': form[field_name]
                 }
                 item.wraps.insert(0, '<span class="editable-field">%s</span>')
-                item.btns.append(loader.render_to_string('admin/blocks/editable.html', data_attr))
+                item.btns.append(loader.render_to_string('xadmin/blocks/editable.html', data_attr))
 
                 if not self.editable_need_fields.has_key(field_name):
                     self.editable_need_fields[field_name] = item.field

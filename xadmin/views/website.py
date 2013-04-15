@@ -40,7 +40,7 @@ class LoginView(BaseAdminView):
             'extra_context': context,
             'current_app': self.admin_site.name,
             'authentication_form': AdminAuthenticationForm,
-            'template_name': 'admin/login.html',
+            'template_name': 'xadmin/login.html',
         }
         return login(request, **defaults)
 

@@ -1,0 +1,20 @@
+{% extends "xadmin/index.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+  <li>
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> <span class="divider">/</span>
+  </li>
+{% for app in app_list %}
+  <li class="active">
+    <span>{% blocktrans with app.name as name %}{{ name }}{% endblocktrans %}</span>
+  </li>
+{% endfor %}
+</ul>
+{% endblock %}
+{% endif %}
+
+{% block sidebar %}{% endblock %}

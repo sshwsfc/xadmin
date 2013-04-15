@@ -1,0 +1,79 @@
+{% extends "xadmin/base.html" %}
+{% load i18n xadmin %}
+{% load url from future %}
+
+{% block extrastyle %}{{ block.super }}
+<style type="text/css">
+  body {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #f5f5f5;
+  }
+
+  .form-signin {
+    max-width: 300px;
+    padding: 19px 29px 29px;
+    margin: 0 auto 20px;
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    -webkit-border-radius: 5px;
+       -moz-border-radius: 5px;
+            border-radius: 5px;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+       -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+            box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  }
+  .form-signin .form-signin-heading,
+  .form-signin .checkbox {
+    margin-bottom: 10px;
+  }
+  .form-signin input[type="text"],
+  .form-signin input[type="password"] {
+    font-size: 16px;
+    height: auto;
+    margin-bottom: 15px;
+    padding: 7px 9px;
+  }
+
+</style>
+{% endblock %}
+
+{% block bodyclass %}login{% endblock %}
+
+{% block body %}
+<div class="container">
+
+  <form action="" method="post" id="login-form" class="form-signin">{% csrf_token %}
+    <h2 class="form-signin-heading">{% trans "Please Login" %}</h2>
+    {% if form.errors and not form.non_field_errors and not form.this_is_the_login_form.errors %}
+    <p class="text-error">
+    {% blocktrans count counter=form.errors.items|length %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
+    </p>
+    {% endif %}
+
+    {% if form.non_field_errors or form.this_is_the_login_form.errors %}
+    {% for error in form.non_field_errors|add:form.this_is_the_login_form.errors %}
+    <p class="text-error">{{ error }}</p>
+    {% endfor %}
+    {% endif %}
+    {% if not form.this_is_the_login_form.errors %}<p class="text-error">{{ form.username.errors }}</p>{% endif %}
+    <label for="id_username" class="required">{% trans 'Username:' %}</label> {{ form.username }}
+    {% if not form.this_is_the_login_form.errors %}<p class="text-error">{{ form.password.errors }}</p>{% endif %}
+    <label for="id_password" class="required">{% trans 'Password:' %}</label> {{ form.password }}
+    <input type="hidden" name="this_is_the_login_form" value="1" />
+    <input type="hidden" name="next" value="{{ next }}" />
+    <button class="btn btn-large btn-primary" type="submit">{% trans 'log in' %}</button>
+    {% url 'admin_password_reset' as password_reset_url %}
+    {% if password_reset_url %}
+    <div class="password-reset-link">
+      <a href="{{ password_reset_url }}">{% trans 'Forgotten your password or username?' %}</a>
+    </div>
+    {% endif %}
+  </form>
+
+</div> <!-- /container -->
+
+<script type="text/javascript">
+document.getElementById('id_username').focus()
+</script>
+{% endblock %}

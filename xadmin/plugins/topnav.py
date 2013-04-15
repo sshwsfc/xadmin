@@ -35,7 +35,7 @@ class TopNavPlugin(BaseAdminPlugin):
                             })
                     except NoReverseMatch:
                         pass
-        nodes.append(loader.render_to_string('admin/blocks/topnav.html', {'search_models': search_models, 'search_name': SEARCH_VAR}))
+        nodes.append(loader.render_to_string('xadmin/blocks/topnav.html', {'search_models': search_models, 'search_name': SEARCH_VAR}))
 
     def block_top_nav_btn(self, context, nodes):
 
@@ -57,7 +57,7 @@ class TopNavPlugin(BaseAdminPlugin):
                         })
                 except NoReverseMatch:
                     pass
-        nodes.append(loader.render_to_string('admin/blocks/topnav.html', {'add_models': add_models}))
+        nodes.append(loader.render_to_string('xadmin/blocks/topnav.html', {'add_models': add_models}))
 
 
 site.register_plugin(TopNavPlugin, CommAdminView)

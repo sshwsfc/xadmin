@@ -94,7 +94,7 @@ class BookmarkPlugin(BaseAdminPlugin):
     # Block Views
     def block_nav_menu(self, context, nodes):
         if self.show_bookmarks:
-            nodes.insert(0, loader.render_to_string('admin/bookmarks.html', context_instance=context))
+            nodes.insert(0, loader.render_to_string('xadmin/bookmarks.html', context_instance=context))
 
 class BookmarkView(ModelAdminView):
 
@@ -122,7 +122,7 @@ class BookmarkAdmin(object):
 class BookmarkWidget(PartialBaseWidget):
     widget_type = 'bookmark'
     description = 'Bookmark Widget, can show user\'s bookmark list data in widget.'
-    template = "admin/widgets/list.html"
+    template = "xadmin/widgets/list.html"
 
     bookmark = ModelChoiceField(label=_('Bookmark'), queryset=Bookmark.objects.all(), required=False)
 

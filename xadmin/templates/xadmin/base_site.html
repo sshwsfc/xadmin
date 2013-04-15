@@ -1,0 +1,104 @@
+{% extends "xadmin/base.html" %}
+{% load i18n xadmin %}
+{% load url from future %}
+
+{% block title %}{{ title }} | {{ site_title }}{% endblock %}
+
+{% block body %}
+  <!-- Header -->
+  <div id="top-nav" class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container-fluid">
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </a>
+        <a class="brand" href="#">{% block branding %}{{ site_title }}{% endblock %}</a>
+        {% view_block 'top_navbar' %}
+        <div class="nav-collapse collapse">
+          <ul class="nav pull-right">
+            {% if user.is_active and user.is_staff %}
+              <li class="dropdown">
+                <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
+                <strong>{% trans 'Welcome,' %} {% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %}</strong> <b class="caret"></b></a>
+                <ul id="g-account-menu" class="dropdown-menu" role="menu">
+                  {% view_block 'top_account_menu' %}
+                </ul>
+              </li>
+            {% endif %}
+            {% view_block 'top_nav_btn' %}
+            <li><a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+  </div>
+  <div id="body-content" class="container-fluid">
+    <div class="row-fluid">
+      <div id="left-side" class="span2 hidden-phone">
+      {% block navbar %}
+        {% if nav_menu %}
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              {% for item in nav_menu %}
+                <li class="nav-header{% if item.selected %} active{% endif %}">
+                  {% if item.url %}
+                  <a href="{{ item.url }}" class="section">{% if item.icon %}<i class="icon icon-{{item.icon}}"></i> {% endif %}{{ item.title }}</a>
+                  {% else %}{% if item.icon %}<i class="icon icon-{{item.icon}}"></i> {% endif %}{{ item.title }}{% endif %}
+                </li>
+                {% for sitem in item.menus %}
+                <li{% if sitem.selected %} class="active"{% endif %}>
+                  {% if sitem.url %}
+                  <a href="{{ sitem.url }}">{% if sitem.icon %}<i class="icon icon-{{sitem.icon}}"></i> {% endif %}{{ sitem.title }}</a>
+                  {% else %}{% if item.icon %}<i class="icon icon-{{item.icon}}"></i> {% endif %}{{ sitem.title }}{% endif %}
+                </li>
+                {% endfor %}
+              {% endfor %}
+            {% view_block 'menu-nav' %}
+            </ul>
+          </div><!--/.well -->
+        {% else %}
+          <div class="well">
+            <p>{% trans "You don't have permission to edit anything." %}</p>
+          </div>
+        {% endif %}
+      {% endblock %}
+      </div><!--/span-->
+
+      <div id="content-block" class="span10">
+
+        {% block breadcrumbs %}
+        <ul class="breadcrumb">
+        <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> <li>
+        {% if title %} &rsaquo; {{ title }}{% endif %}
+        </ul>
+        {% endblock %}
+
+        {% block messages %}
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">
+              <a class="close" data-dismiss="alert" href="#">&times;</a>
+              {{ message|safe }}
+            </div>
+            {% endfor %}
+            {% endif %}
+        {% endblock messages %}
+
+        {% block content %}
+        {{ content }}
+        {% endblock %}
+
+      </div><!--/span-->
+    </div><!--/row-->
+
+    {% block footer %}
+      <hr>
+      <footer>
+        <p>&copy; my-company.inc 2013</p>
+      </footer>
+    {% endblock %}
+
+  </div><!--/.fluid-container-->
+{% endblock body %}
