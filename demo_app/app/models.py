@@ -9,7 +9,7 @@ class IDC(models.Model):
     address = models.CharField(max_length=128)
     customer_id = models.CharField(max_length=128)
     
-    create_time = models.DateField()
+    create_time = models.DateField(auto_now=True)
 
     def __unicode__(self):
         return self.name

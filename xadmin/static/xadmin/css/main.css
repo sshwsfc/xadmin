@@ -1,0 +1,262 @@
+body {
+  padding-bottom: 40px;
+}
+#top-nav {
+  position: relative;
+  margin-bottom: 18px;
+}
+.sidebar-nav {
+  padding: 9px 0;
+}
+a { cursor: pointer;}
+
+.popover{
+  width: auto;
+}
+.popover.dropdown-menu {
+  padding: 0px;
+}
+.popover.right.dropdown-menu {
+  margin-top: -35px;
+  margin-left: -10px;
+}
+.popover.left.dropdown-menu {
+  margin-top: -35px;
+}
+.popover.right.dropdown-menu .arrow, .popover.left.dropdown-menu .arrow{
+  top: 47px;
+}
+.popover.dropdown-menu form{
+  margin: 6px 0;
+}
+#filter-menu .filter-date .menu-choice-date .popover {
+  width: 260px;
+}
+.filter-date .menu-choice-date .choice-year {
+  width: 38px;
+}
+.filter-date .menu-choice-date .choice-month,
+.filter-date .menu-choice-date .choice-day {
+  width: 22px;
+}
+.filter-date .menu-choice-date button {
+  margin-top: 0px;
+}
+
+.filter-date .menu-date-range .dropdown-menu {
+  width: 605px;
+  left: 10px;
+  top: 30px;
+}
+.filter-date .menu-date-range .ranges{
+  margin: 10px;
+  width: 115px;
+  float: left;
+}
+.filter-date .menu-date-range .daterangepicker{
+  float: right;
+}
+
+.filter-date .menu-date-range .dropdown-menu:before {
+  position: absolute;
+  top: -7px;
+  left: 9px;
+  display: inline-block;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid #ccc;
+  border-left: 7px solid transparent;
+  border-bottom-color: rgba(0, 0, 0, 0.2);
+  content: '';
+}
+
+.filter-date .menu-date-range .dropdown-menu:after {
+  position: absolute;
+  top: -6px;
+  left: 10px;
+  display: inline-block;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid #fff;
+  border-left: 6px solid transparent;
+  content: '';
+}
+
+.filter-fk-search .select-search{
+  min-width: 160px;
+}
+
+.filters .dropdown-submenu:hover > .dropdown-menu {
+  display: none;
+}
+
+.filters .dropdown-submenu.open > .dropdown-menu {
+  display: block;
+}
+
+.box {
+  margin-bottom: 15px;
+  overflow: visible;
+  position: relative;
+  padding: 0px;
+}
+.box .box-title {
+  padding: 10px 15px 10px;
+  margin: 0px;
+}
+.box .box-title .icon{
+  float: right;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  margin-right: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.box .box-title .badge { float: right; top: 50%; margin-left: 10px;}
+.box.no_title .box-title{
+  display: none;
+}
+
+.box .box-content{
+  padding: 10px 15px 15px;
+}
+.box .box-content.nopadding{
+  padding: 0px;
+}
+.ui-sortable-placeholder { border: 1px dotted #CCC; visibility: visible !important; }
+.ui-sortable-placeholder * { visibility: hidden; }
+
+/* dropdowns */
+.dropdown-menu li.with_menu_btn > a:first-child {
+  padding-right: 35px;
+}
+.dropdown-menu .dropdown-menu-btn {
+  float: right;
+  margin-top: -26px;
+  height: 20px;
+  padding: 3px 5px;
+  margin-right: 7px;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+}
+.dropdown-menu .dropdown-menu-btn:hover {
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+     -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+}
+
+/* mask */
+.mask {
+  display: none;
+  position: absolute;
+  left: 0px;
+  top: 8px;
+  width: 100%;
+  z-index: 9999;
+  margin-top: -8px;
+  background-color: rgba(255,255,255,.5);
+  height: 100%;
+}
+.mask .progress{
+  position: absolute;
+  width: 80%;
+  top: 50%;
+  margin-top: -8px;
+  left: 10%;
+}
+.mask .progress .bar{
+  width: 100%;
+}
+
+/* export */
+.export .dropdown-submenu .popover{
+  width: 240px;
+  margin-left: -80px;
+}
+
+/* results table */
+.table th {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.table td .btn-group {
+  font-size: 13px;
+}
+
+/* details dl */
+.data-details dl.dl-horizontal dt{
+  width: 80px;
+}
+.data-details dl.dl-horizontal dd{
+  margin-left: 90px;
+}
+.data-details .btn{
+  float: right;
+  margin-bottom: 10px;
+}
+
+/* related menu */
+.dropdown.related_menu .dropdown-menu {
+  left: -180px;
+  width: 200px;
+}
+.dropdown.related_menu .dropdown-menu > li > a {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.rel-brand {
+  font-size: .8em;
+  color: #a10000;
+}
+
+/* models list */
+ul.model_ul{
+  margin-bottom: 20px;
+}
+ul.model_ul, ul.model_ul ul{
+  padding: 0px;
+  list-style: none;
+}
+ul.model_ul li{
+  line-height: 20px;
+  margin: 8px 0px;
+}
+ul.model_ul li span {
+  padding: 3px 6px;
+  min-width: auto;
+  min-height: auto;
+}
+
+/* icon */
+*[class^="icon-"] sub,
+*[class^="icon-"] sup{
+  font-size: 0.5em;
+  margin-left: -6px;
+}
+
+/* ajax btn */
+.btn-ajax {
+  margin-left: 10px;
+}
+
+/* g-search */
+#g-search .btn-group{
+  margin: 0px;
+  padding: 0px;
+}
+
+/** Font Icons **/
+a[class^="icon-"]:before, a[class*=" icon-"]:before {
+  margin-right: 0.3em;
+}
+.btn[class^="icon-"]:before, .btn[class*=" icon-"]:before {
+  margin-right: 0.3em;
+}
+
+/** fix navbar input-append and input-prepend margin **/
+.navbar .input-append, .navbar .input-prepend {
+  margin-bottom: 5px;
+}

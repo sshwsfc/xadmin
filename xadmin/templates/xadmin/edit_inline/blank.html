@@ -1,0 +1,7 @@
+{% extends "xadmin/edit_inline/base.html" %}
+{% load i18n xadmin crispy_forms_tags %}
+
+{% block inline_style %}stacked{% endblock inline_style %}
+
+{% block box_content_class %}formset-content muted{% endblock box_content_class %}
+{% block box_content %}{% trans "None" %}{% endblock box_content %}

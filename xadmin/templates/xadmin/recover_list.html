@@ -1,0 +1,46 @@
+{% extends "xadmin/base_site.html" %}
+{% load i18n %}
+{% load url from future %}
+{% load xadmin %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+  <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> <span class="divider">/</span></li>
+  <li><a href="{{changelist_url}}">{{opts.verbose_name_plural|capfirst}}</a> <span class="divider">/</span></li>
+  <li class="active">{% blocktrans with opts.verbose_name_plural|escape as name %}Recover deleted {{name}}{% endblocktrans %}</li>
+</ul>
+{% endblock %}
+
+{% block content %}
+    <div class="navbar">
+      <div class="navbar-inner">
+        <a class="brand icon-trash" href="#">{{title}}</a>
+      </div>
+    </div>
+    <div id="content-main">
+        <p>{% blocktrans %}Choose a date from the list below to recover a deleted version of an object.{% endblocktrans %}</p>
+        <div class="module">
+            {% if deleted %}
+                <table id="change-history" class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">{% trans 'Date/time' %}</th>
+                        <th scope="col">{{opts.verbose_name|capfirst}}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for deletion in deleted %}
+                            <tr>
+                                <th scope="row"><a href="{{deletion.pk}}/">{{deletion.revision.date_created}}</a></th>
+                                <td>{{deletion.object_repr}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="well">{% trans "There are no deleted objects to recover." %}</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
