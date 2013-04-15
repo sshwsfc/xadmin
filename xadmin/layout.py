@@ -8,6 +8,10 @@ from crispy_forms import layout
 class Fieldset(layout.Fieldset):
     template = "admin/fieldset.html"
 
+    def __init__(self, legend, *fields, **kwargs):
+        self.description = kwargs.pop('description', None)
+        super(Fieldset, self).__init__(legend, *fields, **kwargs)
+
 class Row(layout.Div):
 
     def __init__(self, *fields, **kwargs):
