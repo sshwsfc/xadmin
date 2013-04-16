@@ -1,30 +1,29 @@
 # coding=utf-8
 """
-数据刷新
-========
-
+列表定时刷新
+============
+ 
 功能
 ----
-
-该插件在数据列表页面提供了数据导出功能, 可以导出 Excel, CSV, XML, json 格式.
-
+ 
+该插件在数据列表页面提供了定时刷新功能, 对于需要实时刷新列表页面查看即时数据的情况非常有用.
+ 
 截图
 ----
-
-.. image:: /images/plugins/export.png
-
+ 
+.. image:: /images/plugins/refresh.png
+ 
 使用
 ----
-
-.. note:: 如果想要导出 Excel 数据, 需要安装 `xlwt <http://pypi.python.org/pypi/xlwt>`_.
-
-默认情况下, xadmin 会提供 Excel, CSV, XML, json 四种格式的数据导出. 您可以通过设置 OptionClass 的 ``list_export`` 属性来指定使用
-哪些导出格式 (四种各使用分别用 ``xls``, ``csv``, ``xml``, ``json`` 表示), 或是将 ``list_export`` 设置为 ``None`` 来禁用数据导出功能. 示例如下::
-
+ 
+使用数据刷新插件非常简单, 设置 OptionClass 的 ``refresh_times`` 属性即可. ``refresh_times`` 属性是存有刷新时间的数组. xadmin 默认不开启该插件.
+示例如下::
+ 
     class MyModelAdmin(object):
-
-        list_export = ('xls', xml', 'json')
-
+        
+        # 这会显示一个下拉列表, 用户可以选择3秒或5秒刷新一次页面.
+        refresh_times = (3, 5)
+ 
 """
 from django.template import loader
 
