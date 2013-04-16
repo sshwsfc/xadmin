@@ -233,8 +233,7 @@ class InlineFormset(Fieldset):
         self.extra_attrs = formset.style.get_attrs()
 
     def render(self, form, form_style, context):
-        return render_to_string(self.template, Context(\
-            dict({'formset': self, 'prefix': self.formset.prefix, 'form_style': form_style}, **self.extra_attrs)), \
+        return render_to_string(self.template, dict({'formset': self, 'prefix': self.formset.prefix, 'form_style': form_style}, **self.extra_attrs), \
             context_instance=context)
 
 class Inline(Fieldset):
