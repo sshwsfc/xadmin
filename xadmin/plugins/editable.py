@@ -1,3 +1,28 @@
+# coding=utf-8
+"""
+数据即时编辑
+============
+
+功能
+----
+
+该插件可以在列表页中即时编辑某字段的值, 使用 Ajax 技术, 无需提交或刷新页面即可完成数据的修改, 对于需要频繁修改的字段(如: 状态)相当有用.
+
+截图
+----
+
+.. image:: /images/plugins/editable.png
+
+使用
+----
+
+使用该插件主要设置 OptionClass 的 ``list_editable`` 属性. ``list_editable`` 属性设置哪些字段需要即时修改功能. 示例如下::
+
+    class MyModelAdmin(object):
+        
+        list_editable = ['price', 'status', ...]
+
+"""
 from django import forms
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.db import models, transaction

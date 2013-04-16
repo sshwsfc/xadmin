@@ -1,5 +1,29 @@
+# coding=utf-8
+"""
+显示数据详情
+============
 
+功能
+----
 
+该插件可以在列表页中显示相关字段的详细信息, 使用 Ajax 在列表页中显示.
+
+截图
+----
+
+.. image:: /images/plugins/details.png
+
+使用
+----
+
+使用该插件主要设置 OptionClass 的 ``show_detail_fields``, ``show_all_rel_details`` 两个属性. ``show_detail_fields`` 属性设置哪些字段要显示详细信息, 
+``show_all_rel_details`` 属性设置时候自动显示所有关联字段的详细信息, 该属性默认为 ``True``. 示例如下::
+
+    class MyModelAdmin(object):
+        
+        show_detail_fields = ['group', 'father', ...]
+
+"""
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.db import models
