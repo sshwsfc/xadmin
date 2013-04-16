@@ -94,7 +94,6 @@ class AdminSite(object):
                     # the created class appears to "live" in the wrong place,
                     # which causes issues later on.
                     options['__module__'] = __name__
-                name = "%s%sAdmin" % (model._meta.app_label, model._meta.module_name)
 
                 admin_class = type(str("%s%sAdmin" % (model._meta.app_label, model._meta.module_name)), (admin_class,), options or {})
                 admin_class.model = model
