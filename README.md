@@ -45,27 +45,6 @@ Documentation
 * [Chinese](https://xadmin.readthedocs.org/en/latest/index.html)
 
 
-Screenshots
------------
-
-![Actions](https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/doc/images/plugins/action.png)
-
-![Filter](https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/doc/images/plugins/filter.png)
-
-![Chart](https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/doc/images/plugins/chart.png)
-
-![Export Data](https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/doc/images/plugins/export.png)
-
-![Edit inline](https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/doc/images/plugins/editable.png)
-
-
-Documentation
---------
-
-* English (coming soon)
-* [Chinese](https://xadmin.readthedocs.org/en/latest/index.html)
-
-
 Get Started
 -----------
 
