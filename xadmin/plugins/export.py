@@ -31,7 +31,7 @@ class ExportPlugin(BaseAdminPlugin):
         rows = context['results']
 
         return [dict([(headers[i].text, escape(str(o.text))) for i,o in \
-            enumerate(filter(lambda c:c.export, r.cells))]) \
+            enumerate(filter(lambda c:getattr(c,'export',False), r.cells))]) \
             for r in rows]
 
     def get_xls_export(self, context):
