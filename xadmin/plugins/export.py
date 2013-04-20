@@ -3,7 +3,7 @@ import datetime
 
 from django.http import HttpResponse
 from django.template import loader
-from django.utils.encoding import smart_unicode
+from django.utils.encoding import force_unicode, smart_unicode
 from django.utils.html import escape
 from django.utils.translation import ugettext_lazy as _
 from django.utils.xmlutils import SimplerXMLGenerator
@@ -30,7 +30,7 @@ class ExportPlugin(BaseAdminPlugin):
         headers = [c for c in context['result_headers'].cells if c.export]
         rows = context['results']
 
-        return [dict([(headers[i].text, escape(str(o.text))) for i,o in \
+        return [dict([(force_unicode(headers[i].text), escape(str(o.text))) for i,o in \
             enumerate(filter(lambda c:getattr(c,'export',False), r.cells))]) \
             for r in rows]
 
@@ -41,7 +41,7 @@ class ExportPlugin(BaseAdminPlugin):
 
         model_name = self.opts.verbose_name
         book = xlwt.Workbook(encoding='utf8')
-        sheet = book.add_sheet(_(u'Sheet') + " " + model_name)
+        sheet = book.add_sheet(u"%s %s" % (_(u'Sheet'), force_unicode(model_name)))
         styles = {'datetime': xlwt.easyxf(num_format_str='yyyy-mm-dd hh:mm:ss'),
                   'date': xlwt.easyxf(num_format_str='yyyy-mm-dd'),
                   'time': xlwt.easyxf(num_format_str='hh:mm:ss'),
@@ -139,14 +139,14 @@ class ExportPlugin(BaseAdminPlugin):
     def result_header(self, item, field_name, row):
         if self.request.GET.get('_do_') == 'export':
             item.export = True
-            if item.attr and not getattr(item.attr, 'allow_export', False):
+            if item.attr and field_name != '__str__' and not getattr(item.attr, 'allow_export', False):
                 item.export = False
         return item
 
     def result_item(self, item, obj, field_name, row):
         if self.request.GET.get('_do_') == 'export':
             item.export = True
-            if item.field is None and not getattr(item.attr, 'allow_export', False):
+            if item.field is None and field_name != '__str__' and not getattr(item.attr, 'allow_export', False):
                 item.export = False
         return item
 
