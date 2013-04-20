@@ -6,7 +6,7 @@ Drop-in replacement of Django admin comes with lots of goodies, fully extensible
 Live Demo
 ----
 
-http://x-admin.herokuapp.com
+http://demo.xadmin.io
 
 * User: admin
 * Password: admin
