@@ -12,7 +12,7 @@ from django.utils.html import escape
 from django.template import loader
 from django.utils.translation import ugettext as _
 from xadmin import widgets
-from xadmin.layout import FormHelper, Layout, Fieldset, Container, Column, Field
+from xadmin.layout import FormHelper, Layout, Fieldset, TabHolder, Container, Column, Field
 from xadmin.util import unquote
 from xadmin.views.detail import DetailAdminUtil
 
@@ -171,7 +171,7 @@ class ModelFormAdminView(ModelAdminView):
         elif type(layout) in (list, tuple) and len(layout) > 0:
             if isinstance(layout[0], Column):
                 layout = Layout(Container(*layout))
-            elif isinstance(layout[0], Fieldset):
+            elif isinstance(layout[0], (Fieldset, TabHolder)):
                 layout = Layout(Container(*layout, css_class="form-horizontal"))
             else:
                 layout = Layout(Container(Fieldset("", *layout, css_class="unsort no_title"), css_class="form-horizontal"))
