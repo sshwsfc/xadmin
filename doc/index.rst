@@ -29,6 +29,7 @@ Welcome to Django Xadmin's Documentation!
    :maxdepth: 2
    
    plugins
+   make_plugin
 
 API
 ---
