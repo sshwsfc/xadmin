@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.template import loader
 from django.utils.encoding import force_unicode, smart_unicode
 from django.utils.html import escape
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from django.utils.xmlutils import SimplerXMLGenerator
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
