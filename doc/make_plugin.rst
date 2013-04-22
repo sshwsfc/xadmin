@@ -27,7 +27,7 @@
 
 当将插件注册到 |xadmin| 后， |xadmin| 在创建 ``AdminView`` 实例的时候会将该插件放入实例的 :attr:`plugins` 属性。当 ``AdminView`` 在处理请求
 时，会首先逐个调用 :attr:`plugins` 中插件的 :meth:`~xadmin.views.BaseAdminPlugin.init_request` 方法，插件在该方法中一般进行初始化的操作并且返回一个 Boolean 值告诉 ``AdminView``
-是否需要加载该插件。当 :meth:`~xadmin.views.BaseAdminPlugin.init_request` 方法返回值为 ``False`` 时，``AdminView`` 不会加载该插件。实例如下::
+是否需要加载该插件。当 :meth:`~xadmin.views.BaseAdminPlugin.init_request` 方法返回值为 ``False`` 时， ``AdminView`` 不会加载该插件。实例如下::
     
     class HelloWorldPlugin(BaseAdminPlugin):
         say_hello = False
@@ -35,7 +35,7 @@
         def init_request(self, *args, **kwargs):
             return bool(self.say_hello)
 
-在以上实例中，插件根据自身的 ``say_hello`` 属性来决定是否让自己被加载。您可能会迷惑，``say_hello`` 属性看起来一直会是 ``False`` 呀，那样这个插件不是永远不会被加载？
+在以上实例中，插件根据自身的 ``say_hello`` 属性来决定是否让自己被加载。您可能会迷惑， ``say_hello`` 属性看起来一直会是 ``False`` 呀，那样这个插件不是永远不会被加载？
 其实 |xadmin| 在创建插件实例的时候会将 ``OptionClass`` 的同名属性替换插件的属性。这样，在不同的 ``OptionClass`` 下会有不同的插件结果，实例如下::
     
     class SomeModelAdmin(object):
@@ -156,7 +156,7 @@
 插件开发
 ---------
 
-了解了插件的运行原理后我们就可以开发自己的插件了。首先我们需要了解插件类中的实用方法。因为插件是继承 :class:`~xadmin.views.BaseAdminPlugin` 类，而该类继承自
+了解了插件的运行原理后我们就可以开发自己的插件了。首先我们需要了解插件类中的实用方法。因为插件是继承 :class:`~xadmin.views.BaseAdminPlugin` 类，而该类继承自 
 :class:`~xadmin.views.BaseAdminObject`，所以这两个类的方法都可以在插件中使用。
 
 |xadmin| 在创建插件时会自动注入以下属性到插件实例中:
@@ -200,7 +200,7 @@
     
     * :class:`~xadmin.views.DetailAdminView` : Model 详情页面 View。
 
-选择好目标 ``AdminView`` 后就要在自己的插件中编写方法来修改或增强这些 ``AdminView``。其中每个 ``AdminView`` 可以
+选择好目标 ``AdminView`` 后就要在自己的插件中编写方法来修改或增强这些 ``AdminView`` 。其中每个 ``AdminView`` 可以
 拦截的方法及其介绍请参看各 ``AdminView`` 的文档。
 
 插件规范
