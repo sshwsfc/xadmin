@@ -32,8 +32,8 @@ class AdminTimeWidget(forms.TimeInput):
 
     @property
     def media(self):
-        return forms.Media(js=[static('xadmin/js/bootstrap-timepicker.js'), static("xadmin//js/widgets/datetime.js")],
-            css={'screen': [static('xadmin/css/timepicker.css')]})
+        return forms.Media(js=[static('xadmin/js/bootstrap-timepicker.min.js'), static("xadmin//js/widgets/datetime.js")],
+            css={'screen': [static('xadmin/css/bootstrap-timepicker.min.css')]})
 
     def __init__(self, attrs=None, format=None):
         final_attrs = {'class': 'time-field', 'size': '8'}

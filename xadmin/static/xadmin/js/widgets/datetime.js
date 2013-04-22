@@ -48,7 +48,7 @@
     $.fn.exform.renders.push(function(f){
       f.find('.input-append.date').datepicker({format: $.date_local.dateJSFormat, language: 'xadmin', todayBtn: true, autoclose: true});
       if($.fn.timepicker){
-        f.find('.input-append.time input').timepicker({showMeridian: false, showSeconds: true});
+        f.find('.input-append.time input').timepicker({showMeridian: false, showSeconds: true, defaultTime: false});
       }
     });
 
