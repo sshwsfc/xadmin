@@ -46,9 +46,27 @@
     $.fn.datepicker.dates['xadmin'] = $.date_local;
 
     $.fn.exform.renders.push(function(f){
-      f.find('.input-append.date').datepicker({format: $.date_local.dateJSFormat, language: 'xadmin', todayBtn: true, autoclose: true});
+      f.find('.input-append.date').each(function(e){
+        var dp = $(this).datepicker({format: $.date_local.dateJSFormat, language: 'xadmin', todayBtn: true, autoclose: true})
+          .data('datepicker');
+        $(this).find('button').click(function(e){
+          dp.setDate(new Date());
+          dp.update();
+        })
+      })
       if($.fn.timepicker){
-        f.find('.input-append.time input').timepicker({showMeridian: false, showSeconds: true, defaultTime: false});
+        f.find('.input-append.time').each(function(e){
+          var tp = $(this).find('input').timepicker({
+            minuteStep: 1,
+            showSeconds: true,
+            showMeridian: false,
+            defaultTime: "value",
+          }).data('timepicker');
+          $(this).find('button').click(function(e){
+            tp.setDefaultTime('current');
+            tp.update();
+          })
+        })
       }
     });
 
