@@ -1,16 +1,18 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(
     name='django-xadmin',
     version='0.1.0',
-    description='New style and free plugin django admin module, UI base bootstrap2.',
-    author='TM (sshwsfc)',
+    description='Drop-in replacement of Django admin comes with lots of goodies, fully extensible with plugin support, pretty UI based on Twitter Bootstrap.',
+    long_description=open('README.md').read(),
+    author='sshwsfc',
     author_email='sshwsfc@gmail.com',
-    url='http://github.com/sshwsfc/django-xadmin',
+    url='http://xadmin.io',
     download_url='',
-    packages=find_packages(),
+    packages=['xadmin'],
     include_package_data=True,
     zip_safe=False,
+    keywords=['admin', 'django', 'xadmin', 'bootstrap'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
@@ -18,7 +20,12 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
+        "Programming Language :: JavaScript",
         'Programming Language :: Python',
-        'Framework :: Django',
+        "Programming Language :: Python :: 2.6",
+        "Programming Language :: Python :: 2.7",
+        "Topic :: Internet :: WWW/HTTP",
+        "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+        "Topic :: Software Development :: Libraries :: Python Modules",
     ]
 )
