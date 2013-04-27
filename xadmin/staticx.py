@@ -14,7 +14,8 @@ statics = {
     },
     'jquery': {
         "js": {
-            #...
+            'dev': 'xadmin/vendor/jquery/jquery.js',
+            'production': 'xadmin/vendor/jquery/jquery.min.js',
         }
     }
 }
