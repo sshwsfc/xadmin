@@ -32,22 +32,27 @@ except ImportError:
     from django.utils.timezone import localtime as tz_localtime
 
 
-def xstatic(tag):
+def xstatic(*tags):
     from staticx import statics
     node = statics
-    for p in tag.split('.'):
-        node = node[p]
-    mode = 'dev'
-    if not settings.DEBUG:
-        mode = getattr(settings, 'STATIC_USE_CDN', False) and 'cdn' or 'production'
-
-    if mode == 'cdn' and not node.has_key(mode):
-        mode = 'production'
-    if mode == 'production' and not node.has_key(mode):
+    
+    fs = []
+    for tag in tags:
+        for p in tag.split('.'):
+            node = node[p]
         mode = 'dev'
-    files = node[mode]
-    files = type(files) in (list, tuple) and files or [files,]
-    return [f.startswith('http://') and f or static(f) for f in files]
+        if not settings.DEBUG:
+            mode = getattr(settings, 'STATIC_USE_CDN', False) and 'cdn' or 'production'
+    
+        if mode == 'cdn' and not node.has_key(mode):
+            mode = 'production'
+        if mode == 'production' and not node.has_key(mode):
+            mode = 'dev'
+        files = node[mode]
+        files = type(files) in (list, tuple) and files or [files,]
+        fs.extend(files)
+        
+    return [f.startswith('http://') and f or static(f) for f in fs]
 
 def lookup_needs_distinct(opts, lookup_path):
     """

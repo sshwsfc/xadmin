@@ -31,14 +31,15 @@ def admin_urlname(value, arg):
 static = register.simple_tag(static)
 
 @register.simple_tag
-def xstatic(tag):
-    file_type = tag.split('.')[-1]
-    files = util_xstatic(tag)
+def xstatic(*tags):
     media = Media()
-    if file_type == 'js':
-        media.add_js(files)
-    elif file_type == 'css':
-        media.add_css({'screen': files})
+    for tag in tags:
+        file_type = tag.split('.')[-1]
+        files = util_xstatic(tag)
+        if file_type == 'js':
+            media.add_js(files)
+        elif file_type == 'css':
+            media.add_css({'screen': files})
     return media.render()
 
 @register.inclusion_tag('xadmin/submit_line.html', takes_context=True)
