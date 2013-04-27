@@ -9,13 +9,12 @@
   {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
   <title>{% block title %}{% endblock %}</title>
   {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "xadmin/css/rtl.css" %}{% endblock %}" />{% endif %}
-  {% xstatic 'bootstrap.css' %}
+  {% xstatic 'bootstrap.css' 'font-awesome.css' %}
   {% if site_theme %}
   <link rel="stylesheet" type="text/css" id="site-theme" href="{{site_theme}}" />
   {% else %}
   <link rel="stylesheet" type="text/css" href="{% static "xadmin/css/bootstrap-xadmin.css" %}" />
   {% endif %}
-  <link rel="stylesheet" type="text/css" href="{% static "xadmin/components/font-awesome/css/font-awesome.min.css" %}" />
   <link rel="stylesheet" type="text/css" href="{% static "xadmin/css/main.css" %}" />
   {{ media.css }}
   {% block extrastyle %}{% endblock %}
@@ -29,9 +28,7 @@
 </head>
 <body class="{% block bodyclass %}{% endblock %}">
   {% block body %}{% endblock body %}
-  {% xstatic 'jquery.js' %}
-  <script src="{% static "xadmin/js/jquery-ui.js" %}" type="text/javascript"></script>
-  {% xstatic 'bootstrap.js' %}
+  {% xstatic 'jquery.js' 'jquery.ui.js' 'bootstrap.js' %}
   <script src="{% static "xadmin/js/main.js" %}" type="text/javascript"></script>
   {{ media.js }}
   {% block extrabody %}{% endblock %}
