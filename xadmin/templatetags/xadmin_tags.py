@@ -1,5 +1,6 @@
 from django.template import Library
-from django.conf import settings
+from django.forms import Media
+from xadmin.util import static, xstatic as util_xstatic
 
 register = Library()
 
@@ -27,12 +28,18 @@ def view_block(context, block_name, *args, **kwargs):
 def admin_urlname(value, arg):
     return 'admin:%s_%s_%s' % (value.app_label, value.module_name, arg)
 
-if 'django.contrib.staticfiles' in settings.INSTALLED_APPS:
-    from django.contrib.staticfiles.templatetags.staticfiles import static
-else:
-    from django.templatetags.static import static
-
 static = register.simple_tag(static)
+
+@register.simple_tag
+def xstatic(tag):
+    file_type = tag.split('.')[-1]
+    files = util_xstatic(tag)
+    media = Media()
+    if file_type == 'js':
+        media.add_js(files)
+    elif file_type == 'css':
+        media.add_css({'screen': files})
+    return media.render()
 
 @register.inclusion_tag('xadmin/submit_line.html', takes_context=True)
 def submit_row(context):
