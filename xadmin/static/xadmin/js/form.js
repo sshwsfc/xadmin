@@ -1,7 +1,7 @@
 ;(function($){
     // add select2 render
-    $.fn.exform.renders.push(
-      function(f){
+    $.fn.exform.renders.push(function(f){
+      if($.fn.select2){
         f.find('select:not(.select-search):not([multiple=multiple])').select2();
         f.find('.select-search').each(function(){
             var $el = $(this);
@@ -28,7 +28,7 @@
                 formatSelection: function(item){return item['__str__']}
             });
         })
-      });
+      }});
     $(function() {
         $('.exform:not(.rended)').exform();
         var action_bar = $('.form-actions');

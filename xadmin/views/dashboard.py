@@ -66,6 +66,7 @@ class WidgetTypeSelect(forms.Widget):
 
 class UserWidgetAdmin(object):
 
+    model_icon = 'dashboard'
     list_display = ('widget_type', 'page_id', 'user')
     list_filter = ['user', 'widget_type', 'page_id']
     list_display_links = ('widget_type',)
@@ -207,6 +208,9 @@ class BaseWidget(forms.Form):
 
     def static(self, path):
         return self.dashboard.static(path)
+
+    def vendor(self, *tags):
+        return self.dashboard.vendor(*tags)
 
     def media(self):
         return forms.Media()

@@ -68,9 +68,12 @@ class UserAdmin(object):
             )
         return super(UserAdmin, self).get_form_layout()
 
+class PermissionAdmin(object):
+    model_icon = 'lock'
+
 site.register(Group, GroupAdmin)
 site.register(User, UserAdmin)
-site.register(Permission, object)
+site.register(Permission, PermissionAdmin)
 
 class UserFieldPlugin(BaseAdminPlugin):
 
@@ -127,9 +130,8 @@ class ChangePasswordView(ModelAdminView):
     def get_media(self):
         media = super(ChangePasswordView, self).get_media()
         media = media + self.form.media
-        # 由于 select2 基本上在所有表单中都会出现，默认就加上 select2 吧
-        media.add_js([self.static('xadmin/js/select2.js'), self.static('xadmin/js/form.js')])
-        media.add_css({'screen': [self.static('xadmin/css/form.css'), self.static('xadmin/css/select2.css')]})
+        media.add_js([self.static('xadmin/js/form.js')])
+        media.add_css({'screen': [self.static('xadmin/css/select2.css')]})
         return media
 
     def get_context(self):

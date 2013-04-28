@@ -33,6 +33,8 @@ FORMFIELD_FOR_DBFIELD_DEFAULTS = {
     models.CharField:       {'widget': widgets.AdminTextInputWidget},
     models.ImageField:      {'widget': widgets.AdminFileWidget},
     models.FileField:       {'widget': widgets.AdminFileWidget},
+    models.ForeignKey:      {'widget': widgets.AdminSelectWidget},
+    models.OneToOneField:   {'widget': widgets.AdminSelectWidget},
 }
 
 class ReadOnlyField(Field):
@@ -108,7 +110,7 @@ class ModelFormAdminView(ModelAdminView):
                     return attrs
 
         if db_field.choices:
-            return {}
+            return {'widget': widgets.AdminSelectWidget}
 
         for klass in db_field.__class__.mro():
             if klass in self.formfield_overrides:
@@ -308,8 +310,8 @@ class ModelFormAdminView(ModelAdminView):
     def get_media(self):
         media = super(ModelFormAdminView, self).get_media()
         media = media + self.form_obj.media
-        media.add_js([self.static('xadmin/js/select2.js'), self.static('xadmin/js/form.js')])
-        media.add_css({'screen': [self.static('xadmin/css/form.css'), self.static('xadmin/css/select2.css')]})
+        media.add_js([self.static('xadmin/js/form.js')])
+        media.add_css({'screen': [self.static('xadmin/css/form.css')]})
         return media
 
 class CreateAdminView(ModelFormAdminView):

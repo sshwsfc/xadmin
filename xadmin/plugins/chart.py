@@ -58,12 +58,7 @@ class ChartWidget(ModelBaseWidget):
 
     # Media
     def media(self):
-        media = forms.Media()
-        media.add_js([self.static('xadmin/js/jquery.flot.js')])
-        media.add_js([self.static('xadmin/js/jquery.flot.pie.js')])
-        media.add_js([self.static('xadmin/js/jquery.flot.resize.js')])
-        media.add_js([self.static('xadmin/js/charts.js')])
-        return media
+        return self.vendor('flot.js')
 
 class JSONEncoder(DjangoJSONEncoder):
     def default(self, o):
@@ -81,25 +76,22 @@ class ChartsPlugin(BaseAdminPlugin):
 
     data_charts = {}
 
+    def init_request(self, *args, **kwargs):
+        return bool(self.data_charts)
+
     def get_chart_url(self, name, v):
         return self.admin_view.model_admin_url('chart', name) + self.admin_view.get_query_string()
 
     # Media
     def get_media(self, media):
-        if self.data_charts:
-            media.add_js([self.static('xadmin/js/jquery.flot.js')])
-            media.add_js([self.static('xadmin/js/jquery.flot.pie.js')])
-            media.add_js([self.static('xadmin/js/jquery.flot.resize.js')])
-            media.add_js([self.static('xadmin/js/charts.js')])
-        return media
+        return media + self.vendor('flot.js')
 
     # Block Views
     def block_results_top(self, context, nodes):
-        if self.data_charts:
-            context.update({
-                'charts': [{"name": name, "title": v['title'], 'url': self.get_chart_url(name, v)} for name,v in self.data_charts.items()],
-            })
-            nodes.append(loader.render_to_string('xadmin/blocks/charts.html', context_instance=context))
+        context.update({
+            'charts': [{"name": name, "title": v['title'], 'url': self.get_chart_url(name, v)} for name,v in self.data_charts.items()],
+        })
+        nodes.append(loader.render_to_string('xadmin/blocks/charts.html', context_instance=context))
 
 class ChartsView(ListAdminView):
 
