@@ -46,6 +46,12 @@ class AdminTimeWidget(forms.TimeInput):
         return mark_safe('<div class="input-append time">%s<span class="add-on"><i class="icon-time">'
             '</i></span><button class="btn" type="button">%s</button></div>' % (input_html, _(u'Now')))
 
+class AdminSelectWidget(forms.Select):
+
+    @property
+    def media(self):
+        return vendor('select2.js', 'select2.css')
+
 class AdminSplitDateTime(forms.SplitDateTimeWidget):
     """
     A SplitDateTime Widget that has some admin-specific styling.

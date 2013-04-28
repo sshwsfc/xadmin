@@ -83,8 +83,7 @@ class BatchChangeAction(BaseActionView):
     def get_media(self):
         media = super(BatchChangeAction, self).get_media()
         media = media + self.form_obj.media
-        # 由于 select2 基本上在所有表单中都会出现，默认就加上 select2 吧
-        media.add_js([self.static('xadmin/js/select2.js'), self.static('xadmin/js/form.js')])
-        media.add_css({'screen': [self.static('xadmin/css/form.css'), self.static('xadmin/css/select2.css')]})
+        media.add_js([self.static('xadmin/js/form.js')])
+        media.add_css({'screen': [self.static('xadmin/css/form.css')]})
         return media
 
