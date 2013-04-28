@@ -47,11 +47,12 @@
 
     $.fn.exform.renders.push(function(f){
       f.find('.input-append.date').each(function(e){
-        var dp = $(this).datepicker({format: $.date_local.dateJSFormat, language: 'xadmin', todayBtn: true, autoclose: true})
+        var dp = $(this).datepicker({format: $.date_local.dateJSFormat, language: 'xadmin', todayBtn: "linked", autoclose: true})
           .data('datepicker');
         $(this).find('button').click(function(e){
-          dp.setDate(new Date());
-          dp.update();
+          //dp.setDate(new Date());
+          dp.update(new Date());
+          dp.hide();
         })
       })
       if($.fn.timepicker){
@@ -63,6 +64,7 @@
             defaultTime: "value",
           }).data('timepicker');
           $(this).find('button').click(function(e){
+            tp.$element.val("");
             tp.setDefaultTime('current');
             tp.update();
           })
