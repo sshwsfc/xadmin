@@ -15,6 +15,8 @@ from django.utils.encoding import force_unicode, smart_unicode, smart_str
 from django.utils.translation import ungettext
 from django.core.urlresolvers import reverse
 from django.conf import settings
+from django.forms import Media
+from django.utils.translation import get_language
 
 if 'django.contrib.staticfiles' in settings.INSTALLED_APPS:
     from django.contrib.staticfiles.templatetags.staticfiles import static
@@ -30,6 +32,42 @@ try:
     from django.utils.timezone import template_localtime as tz_localtime
 except ImportError:
     from django.utils.timezone import localtime as tz_localtime
+
+
+def xstatic(*tags):
+    from staticx import statics
+    node = statics
+    
+    fs = []
+    lang = get_language()
+    
+    for tag in tags:
+        for p in tag.split('.'):
+            node = node[p]
+        mode = 'dev'
+        if not settings.DEBUG:
+            mode = getattr(settings, 'STATIC_USE_CDN', False) and 'cdn' or 'production'
+    
+        if mode == 'cdn' and not node.has_key(mode):
+            mode = 'production'
+        if mode == 'production' and not node.has_key(mode):
+            mode = 'dev'
+        files = node[mode]
+        files = type(files) in (list, tuple) and files or [files,]
+        fs.extend(files)
+        
+    return [f.startswith('http://') and f or static(f) for f in fs]
+
+def vendor(*tags):
+    media = Media()
+    for tag in tags:
+        file_type = tag.split('.')[-1]
+        files = xstatic(tag)
+        if file_type == 'js':
+            media.add_js(files)
+        elif file_type == 'css':
+            media.add_css({'screen': files})
+    return media
 
 def lookup_needs_distinct(opts, lookup_path):
     """

@@ -576,8 +576,12 @@ class ActionRevisionPlugin(BaseAdminPlugin):
     def do_action(self, __, queryset):
         return self.revision_context_manager.create_revision(manage_manually=False)(self.do_action_func(__))()
 
-site.register(Revision)
-site.register(Version)
+class ReversionAdmin(object):
+    model_icon = 'exchange'
+class VersionAdmin(object):
+    model_icon = 'file'
+site.register(Revision, ReversionAdmin)
+site.register(Version, VersionAdmin)
 
 site.register_modelview(r'^recover/$', RecoverListView, name='%s_%s_recoverlist')
 site.register_modelview(r'^recover/([^/]+)/$', RecoverView, name='%s_%s_recover')

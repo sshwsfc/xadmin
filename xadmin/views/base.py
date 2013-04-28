@@ -23,7 +23,7 @@ from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import View
-from xadmin.util import static, json
+from xadmin.util import static, json, vendor
 
 
 csrf_protect_m = method_decorator(csrf_protect)
@@ -176,6 +176,9 @@ class BaseAdminObject(object):
 
     def static(self, path):
         return static(path)
+
+    def vendor(self, *tags):
+        return vendor(*tags)
 
 class BaseAdminPlugin(BaseAdminObject):
 

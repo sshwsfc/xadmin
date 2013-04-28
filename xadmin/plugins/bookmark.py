@@ -112,6 +112,7 @@ class BookmarkView(ModelAdminView):
 
 class BookmarkAdmin(object):
 
+    model_icon = 'book'
     list_display = ('title', 'url_name', 'query')
     list_display_links = ('title',)
 

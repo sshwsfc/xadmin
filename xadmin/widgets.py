@@ -9,15 +9,14 @@ from django.utils.safestring import mark_safe
 from django.utils.html import conditional_escape
 from django.utils.translation import ugettext as _
 
-from util import static
+from util import vendor
 
 
 class AdminDateWidget(forms.DateInput):
 
     @property
     def media(self):
-        return forms.Media(js=[static('xadmin/js/bootstrap-datepicker.js'), static("xadmin/js/widgets/datetime.js")],
-            css={'screen': [static('xadmin/css/datepicker.css')]})
+        return vendor('datepicker.js', 'datepicker.css')
 
     def __init__(self, attrs=None, format=None):
         final_attrs = {'class': 'date-field', 'size': '10'}
@@ -27,15 +26,14 @@ class AdminDateWidget(forms.DateInput):
 
     def render(self, name, value, attrs=None):
         input_html = super(AdminDateWidget, self).render(name, value, attrs)
-        return mark_safe('<div class="input-append date">%s<span class="add-on"><i class="icon-calendar"></i></span>'
+        return mark_safe('<div class="input-append date bootstrap-datepicker">%s<span class="add-on"><i class="icon-calendar"></i></span>'
             '<button class="btn" type="button">%s</button></div>' % (input_html, _(u'Today')))
 
 class AdminTimeWidget(forms.TimeInput):
 
     @property
     def media(self):
-        return forms.Media(js=[static('xadmin/js/bootstrap-timepicker.js'), static("xadmin/js/widgets/datetime.js")],
-            css={'screen': [static('xadmin/css/timepicker.css')]})
+        return vendor('timepicker.js', 'timepicker.css')
 
     def __init__(self, attrs=None, format=None):
         final_attrs = {'class': 'time-field', 'size': '8'}
@@ -45,8 +43,14 @@ class AdminTimeWidget(forms.TimeInput):
 
     def render(self, name, value, attrs=None):
         input_html = super(AdminTimeWidget, self).render(name, value, attrs)
-        return mark_safe('<div class="input-append time">%s<span class="add-on"><i class="icon-time">'
+        return mark_safe('<div class="input-append time bootstrap-timepicker">%s<span class="add-on"><i class="icon-time">'
             '</i></span><button class="btn" type="button">%s</button></div>' % (input_html, _(u'Now')))
+
+class AdminSelectWidget(forms.Select):
+
+    @property
+    def media(self):
+        return vendor('select2.js', 'select2.css')
 
 class AdminSplitDateTime(forms.SplitDateTimeWidget):
     """
