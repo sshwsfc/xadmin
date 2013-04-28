@@ -9,15 +9,14 @@ from django.utils.safestring import mark_safe
 from django.utils.html import conditional_escape
 from django.utils.translation import ugettext as _
 
-from util import static
+from util import vendor
 
 
 class AdminDateWidget(forms.DateInput):
 
     @property
     def media(self):
-        return forms.Media(js=[static('xadmin/js/bootstrap-datepicker.js'), static("xadmin/js/widgets/datetime.js")],
-            css={'screen': [static('xadmin/css/datepicker.css')]})
+        return vendor('datepicker.js', 'datepicker.css')
 
     def __init__(self, attrs=None, format=None):
         final_attrs = {'class': 'date-field', 'size': '10'}
@@ -34,8 +33,7 @@ class AdminTimeWidget(forms.TimeInput):
 
     @property
     def media(self):
-        return forms.Media(js=[static('xadmin/js/bootstrap-timepicker.js'), static("xadmin/js/widgets/datetime.js")],
-            css={'screen': [static('xadmin/css/timepicker.css')]})
+        return vendor('timepicker.js', 'timepicker.css')
 
     def __init__(self, attrs=None, format=None):
         final_attrs = {'class': 'time-field', 'size': '8'}

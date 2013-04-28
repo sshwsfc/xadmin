@@ -209,6 +209,9 @@ class BaseWidget(forms.Form):
     def static(self, path):
         return self.dashboard.static(path)
 
+    def vendor(self, *tags):
+        return self.dashboard.vendor(*tags)
+
     def media(self):
         return forms.Media()
 

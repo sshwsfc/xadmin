@@ -166,14 +166,13 @@ class FilterPlugin(BaseAdminPlugin):
     # Media
     def get_media(self, media):
         if bool(filter(lambda s: isinstance(s, DateFieldListFilter), self.filter_specs)):
+            media = media + self.vendor('datepicker.js')
             media.add_js([self.static('xadmin/js/date.js')])
             media.add_js([self.static('xadmin/js/daterangepicker.js')])
-            media.add_js([self.static('xadmin/js/bootstrap-datepicker.js')])
             media.add_css({'screen': [self.static('xadmin/css/daterangepicker.css')]})
         if bool(filter(lambda s: isinstance(s, RelatedFieldSearchFilter), self.filter_specs)):
-            media.add_js([self.static('xadmin/js/select2.js')])
+            media = media + self.vendor('select2.js', 'select2.css')
             media.add_js([self.static('xadmin/js/form.js')])
-            media.add_css({'screen': [self.static('xadmin/css/select2.css')]})
         media.add_js([self.static('xadmin/js/filters.js')])
         return media
 

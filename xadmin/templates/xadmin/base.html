@@ -9,7 +9,7 @@
   {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
   <title>{% block title %}{% endblock %}</title>
   {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "xadmin/css/rtl.css" %}{% endblock %}" />{% endif %}
-  {% xstatic 'bootstrap.css' 'font-awesome.css' %}
+  {% vendor 'bootstrap.css' 'font-awesome.css' %}
   {% if site_theme %}
   <link rel="stylesheet" type="text/css" id="site-theme" href="{{site_theme}}" />
   {% else %}
@@ -28,7 +28,7 @@
 </head>
 <body class="{% block bodyclass %}{% endblock %}">
   {% block body %}{% endblock body %}
-  {% xstatic 'jquery.js' 'jquery.ui.js' 'bootstrap.js' %}
+  {% vendor 'jquery.js' 'jquery.ui.js' 'bootstrap.js' %}
   <script src="{% static "xadmin/js/main.js" %}" type="text/javascript"></script>
   {{ media.js }}
   {% block extrabody %}{% endblock %}

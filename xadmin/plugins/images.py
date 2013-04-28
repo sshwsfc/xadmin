@@ -50,8 +50,7 @@ class ModelDetailPlugin(BaseAdminPlugin):
     # Media
     def get_media(self, media):
         if self.include_image:
-            media.add_js([self.static('xadmin/js/load-image.min.js'), self.static('xadmin/js/bootstrap-image-gallery.min.js')])
-            media.add_css({'screen': [self.static('xadmin/css/bootstrap-image-gallery.min.css')]})
+            media = media + self.vendor('image-gallery.js', 'image-gallery.css')
         return media
 
     def block_before_fieldsets(self, context, node):
