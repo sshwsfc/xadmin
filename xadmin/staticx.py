@@ -33,7 +33,7 @@ statics = {
             'production': 'xadmin/vendor/bootstrap-timepicker/css/bootstrap-timepicker.min.css',
         },
         "js": {
-            'dev': 'xadmin/vendor/bootstrap-timepicker/js/bootstrap-timepicker.js',
+            'dev': ['xadmin/vendor/bootstrap-timepicker/js/bootstrap-timepicker.js', 'xadmin/js/widgets/datetime.js'],
             'production': 'xadmin/vendor/bootstrap-timepicker/js/bootstrap-timepicker.min.js',
         }
     },
@@ -42,12 +42,13 @@ statics = {
             'dev': 'xadmin/vendor/bootstrap-datepicker/css/datepicker.css'
         },
         "js": {
-            'dev': 'xadmin/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js',
+            'dev': ['xadmin/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js', 'xadmin/js/widgets/datetime.js'],
         }
     },
     "flot": {
         "js": {
-            'dev': 'xadmin/vendor/flot/js/jquery.flot.js',
+            'dev': ['xadmin/vendor/flot/jquery.flot.js', 'xadmin/vendor/flot/jquery.flot.pie.js', 'xadmin/vendor/flot/jquery.flot.time.js', 
+                'xadmin/vendor/flot/jquery.flot.resize.js', 'xadmin/js/charts.js']
         }
     },
     "image-gallery": {
