@@ -68,9 +68,12 @@ class UserAdmin(object):
             )
         return super(UserAdmin, self).get_form_layout()
 
+class PermissionAdmin(object):
+    model_icon = 'lock'
+
 site.register(Group, GroupAdmin)
 site.register(User, UserAdmin)
-site.register(Permission, object)
+site.register(Permission, PermissionAdmin)
 
 class UserFieldPlugin(BaseAdminPlugin):
 
