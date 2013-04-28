@@ -70,4 +70,12 @@ statics = {
             'production': 'xadmin/vendor/select2/select2.min.js',
         }
     },
+    "multiselect": {
+        "css": {
+            'dev': 'xadmin/vendor/bootstrap-multiselect/css/bootstrap-multiselect.css',
+        },
+        "js": {
+            'dev': ['xadmin/vendor/bootstrap-multiselect/js/bootstrap-multiselect.js', 'xadmin/js/widgets/multiselect.js'],
+        }
+    },
 }

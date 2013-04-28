@@ -9,7 +9,7 @@ from django.template import loader
 from django.utils.encoding import force_unicode
 from django.utils.html import escape, conditional_escape
 from django.utils.safestring import mark_safe
-from xadmin.util import static
+from xadmin.util import static, vendor
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView
 
 
@@ -74,8 +74,7 @@ class SelectMultipleDropdown(forms.SelectMultiple):
 
     @property
     def media(self):
-        return forms.Media(js=[static("xadmin//js/bootstrap-multiselect.js"), static("xadmin//js/widgets/multiselect.js")], \
-            css={'screen': [static('xadmin/css/bootstrap-multiselect.css'),]})
+        return vendor('multiselect.js', 'multiselect.css')
 
     def render(self, name, value, attrs=None, choices=()):
         if attrs is None:
