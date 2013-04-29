@@ -33,15 +33,31 @@
 
     $('.menu-date-range .dropdown-menu form').each(function(){
       var el = $(this);
-      el.find('.daterangepicker').daterangepicker({format: 'yyyy-MM-dd'}, function(startDate, endDate, availableDate){
-        el.find('.start_input').val(startDate);
-        el.find('.end_input').val(endDate);
-        if(availableDate){
+      var start_date = el.find('.calendar.date-start').datepicker({format: $.date_local.dateJSFormat, language: 'xadmin'});
+      var end_date = el.find('.calendar.date-end').datepicker({format: $.date_local.dateJSFormat, language: 'xadmin'});
+      
+      var checkAvailable = function(){
+        if(start_date.data('datepicker').getDate().valueOf() <= end_date.data('datepicker').getDate().valueOf()){
           el.find('button[type=submit]').removeAttr('disabled');
         } else {
           el.find('button[type=submit]').attr('disabled', 'disabled');
         }
+      }
+      
+      start_date.on('changeDate', function(ev){
+          var startdate = start_date.data('date');
+          el.find('.start_input').val(startdate);
+          end_date.data('datepicker').setStartDate(startdate);
+          checkAvailable();
       });
+      end_date.on('changeDate', function(ev){
+          var enddate = end_date.data('date');
+          el.find('.end_input').val(enddate);
+          start_date.data('datepicker').setEndDate(enddate);
+          checkAvailable();
+      });
+      
+      checkAvailable();
     });
   });
 

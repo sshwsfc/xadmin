@@ -27,7 +27,6 @@
     <li class="dropdown-submenu menu-date-range"><a>{% trans "Date Range" %}</a>
       <div class="dropdown-menu">
         <form method="get" action="">
-          <div class="daterangepicker"></div>
           <div class="ranges">
             <fieldset class="range_inputs">
               <legend>{% trans "Select Date" %}</legend>
@@ -38,6 +37,8 @@
               <button type="submit" class="btn btn-success">{% trans "Apply" %}</button>
             </fieldset>
           </div>
+          <div class="calendar date-start pull-left" data-date="{{since_val}}"></div>
+          <div class="calendar date-end pull-left" data-date="{{until_val}}"></div>
           {{ form_params|safe }}
         </form>
       </div>
