@@ -29,7 +29,7 @@
 <body class="{% block bodyclass %}{% endblock %}">
   {% block body %}{% endblock body %}
   {% vendor 'jquery.js' 'jquery-ui-sortable.js' 'bootstrap.js' %}
-  <script src="{% static "xadmin/js/main.js" %}" type="text/javascript"></script>
+  <script src="{% static "xadmin/js/xadmin.main.js" %}" type="text/javascript"></script>
   {{ media.js }}
   {% block extrabody %}{% endblock %}
   {% view_block 'extrabody' %}
