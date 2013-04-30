@@ -8,7 +8,7 @@ from django.template.response import TemplateResponse
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect
 from django.utils.html import escape
-from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from xadmin.layout import Fieldset, Main, Side, Row
@@ -110,7 +110,7 @@ site.register_plugin(ModelPermissionPlugin, ModelAdminView)
 class AccountMenuPlugin(BaseAdminPlugin):
 
     def block_top_account_menu(self, context, nodes):
-        return '<li><a href="%s"><i class="icon-key"></i> %s</a></li>' % (self.get_admin_url('account_password'), ugettext('Change Password'))
+        return '<li><a href="%s"><i class="icon-key"></i> %s</a></li>' % (self.get_admin_url('account_password'), _('Change Password'))
 
 site.register_plugin(AccountMenuPlugin, CommAdminView)
 
@@ -159,7 +159,7 @@ class ChangePasswordView(ModelAdminView):
 
         if self.form.is_valid():
             self.form.save()
-            self.message_user(ugettext('Password changed successfully.'), 'success')
+            self.message_user(_('Password changed successfully.'), 'success')
             return HttpResponseRedirect(self.model_admin_url('change', self.obj.pk))
         else:
             return self.get_response()
@@ -188,7 +188,7 @@ class ChangeAccountPasswordView(ChangePasswordView):
 
         if self.form.is_valid():
             self.form.save()
-            self.message_user(ugettext('Password changed successfully.'), 'success')
+            self.message_user(_('Password changed successfully.'), 'success')
             return HttpResponseRedirect(self.get_admin_url('index'))
         else:
             return self.get_response()

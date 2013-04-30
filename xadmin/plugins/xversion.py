@@ -287,14 +287,14 @@ class RevisionListView(BaseReversionView):
 
         params = self.request.POST
         if 'version_a' not in params or 'version_b' not in params:
-            self.message_user(_(u"Must select two versions."), 'error')
+            self.message_user(_("Must select two versions."), 'error')
             return self.get_response()
 
         version_a_id = params['version_a']
         version_b_id = params['version_b']
 
         if version_a_id == version_b_id:
-            self.message_user(_(u"Please select two different versions."), 'error')
+            self.message_user(_("Please select two different versions."), 'error')
             return self.get_response()
 
         version_a = get_object_or_404(Version, pk=version_a_id)
@@ -376,7 +376,7 @@ class DiffField(Field):
         html = ''
         for field in self.fields:
             html += ('<div class="diff_field" rel="tooltip"><textarea class="org-data" style="display:none;">%s</textarea>%s</div>' % \
-                (_(u'Current: %s') % self.attrs.pop('orgdata',''), render_field(field, form, form_style, context, template=self.template, attrs=self.attrs)))
+                (_('Current: %s') % self.attrs.pop('orgdata',''), render_field(field, form, form_style, context, template=self.template, attrs=self.attrs)))
         return html
 
 
@@ -419,7 +419,7 @@ class RevisionView(BaseRevisionView):
 
     @filter_hook
     def post_response(self):
-        self.message_user(_(u'The %(model)s "%(name)s" was reverted successfully. You may edit it again below.') % \
+        self.message_user(_('The %(model)s "%(name)s" was reverted successfully. You may edit it again below.') % \
             {"model": force_unicode(self.opts.verbose_name), "name": unicode(self.new_obj)}, 'success')
         return HttpResponseRedirect(self.model_admin_url('change', self.new_obj.pk))
 
@@ -453,7 +453,7 @@ class RecoverView(BaseRevisionView):
 
     @filter_hook
     def post_response(self):
-        self.message_user(_(u'The %(model)s "%(name)s" was recovered successfully. You may edit it again below.') % \
+        self.message_user(_('The %(model)s "%(name)s" was recovered successfully. You may edit it again below.') % \
             {"model": force_unicode(self.opts.verbose_name), "name": unicode(self.new_obj)}, 'success')
         return HttpResponseRedirect(self.model_admin_url('change', self.new_obj.pk))
 
@@ -474,7 +474,7 @@ class InlineDiffField(Field):
             if f.value_from_object(instance) != initial.get(field, None):
                 current_val = detail.get_field_result(f.name).val
                 html += ('<div class="diff_field" rel="tooltip"><textarea class="org-data" style="display:none;">%s</textarea>%s</div>' \
-                    % (_(u'Current: %s') % current_val, f_html))
+                    % (_('Current: %s') % current_val, f_html))
             else:
                 html += f_html
         return html

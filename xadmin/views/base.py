@@ -44,7 +44,7 @@ def filter_chain(filters, token, func, *args, **kwargs):
                 if result is None:
                     return fm()
                 else:
-                    raise IncorrectPluginArg(_(u'Plugin filter method need a arg to receive parent method result.'))
+                    raise IncorrectPluginArg(u'Plugin filter method need a arg to receive parent method result.')
             else:
                 return fm(func if fargs[1] == '__' else func(), *args, **kwargs)
         return filter_chain(filters, token-1, _inner_method, *args, **kwargs)

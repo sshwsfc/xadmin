@@ -218,7 +218,7 @@ class BaseWidget(forms.Form):
 @widget_manager.register
 class HtmlWidget(BaseWidget):
     widget_type = 'html'
-    description = 'Html Content Widget, can write any html content in widget.'
+    description = _(u'Html Content Widget, can write any html content in widget.')
 
     content = forms.CharField(label=_('Html Content'), widget=exwidgets.AdminTextareaWidget, required=False)
 
@@ -327,9 +327,9 @@ class PartialBaseWidget(BaseWidget):
 @widget_manager.register
 class QuickBtnWidget(BaseWidget):
     widget_type = 'qbutton'
-    description = 'Quick button Widget, quickly open any page.'
+    description = _(u'Quick button Widget, quickly open any page.')
     template = "xadmin/widgets/qbutton.html"
-    base_title = "Quick Buttons"
+    base_title = _(u"Quick Buttons")
 
     def convert(self, data):
         self.q_btns = data.pop('btns', [])
@@ -363,7 +363,7 @@ class QuickBtnWidget(BaseWidget):
 @widget_manager.register
 class ListWidget(ModelBaseWidget, PartialBaseWidget):
     widget_type = 'list'
-    description = 'Any Objects list Widget.'
+    description = _(u'Any Objects list Widget.')
     template = "xadmin/widgets/list.html"
     model_perm = 'view'
 
@@ -397,7 +397,7 @@ class ListWidget(ModelBaseWidget, PartialBaseWidget):
 @widget_manager.register
 class AddFormWidget(ModelBaseWidget, PartialBaseWidget):
     widget_type = 'addform'
-    description = 'Add any model object Widget.'
+    description = _(u'Add any model object Widget.')
     template = "xadmin/widgets/addform.html"
     model_perm = 'add'
 
@@ -428,7 +428,7 @@ class AddFormWidget(ModelBaseWidget, PartialBaseWidget):
 class Dashboard(CommAdminView):
 
     widgets = []
-    title = "Dashboard"
+    title = _(u"Dashboard")
     icon = None
 
     def get_page_id(self):

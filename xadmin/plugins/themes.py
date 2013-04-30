@@ -43,7 +43,7 @@ class ThemePlugin(BaseAdminPlugin):
     # Block Views
     def block_top_nav_btn(self, context, nodes):
 
-        themes = [{'name': _(u"Default"), 'description': _(u"default bootstrap theme"), 'css': self.default_theme}]
+        themes = [{'name': _(u"Default Theme"), 'description': _(u"default bootstrap theme"), 'css': self.default_theme}]
         select_css = context.get('site_theme', self.default_theme)
 
         if self.user_themes:

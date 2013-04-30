@@ -121,7 +121,7 @@ class BookmarkAdmin(object):
 @widget_manager.register
 class BookmarkWidget(PartialBaseWidget):
     widget_type = 'bookmark'
-    description = 'Bookmark Widget, can show user\'s bookmark list data in widget.'
+    description = _('Bookmark Widget, can show user\'s bookmark list data in widget.')
     template = "xadmin/widgets/list.html"
 
     bookmark = ModelChoiceField(label=_('Bookmark'), queryset=Bookmark.objects.all(), required=False)
