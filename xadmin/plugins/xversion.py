@@ -213,7 +213,7 @@ class RecoverListView(BaseReversionView):
     def get(self, request, *args, **kwargs):
         context = self.get_context()
 
-        return TemplateResponse(request, self.recover_list_template or self.get_template_list("recover_list.html"),
+        return TemplateResponse(request, self.recover_list_template or self.get_template_list("views/recover_list.html"),
             context, current_app=self.admin_site.name)
 
 class RevisionListView(BaseReversionView):
@@ -261,8 +261,8 @@ class RevisionListView(BaseReversionView):
     def get_response(self):
         context = self.get_context()
 
-        return TemplateResponse(self.request, self.object_history_template or self.get_template_list('object_history.html'),
-            context, current_app=self.admin_site.name)
+        return TemplateResponse(self.request, self.object_history_template or \
+            self.get_template_list('views/model_history.html'), context, current_app=self.admin_site.name)
 
     def get_version_object(self, version):
         obj_version = version.object_version
@@ -338,7 +338,7 @@ class RevisionListView(BaseReversionView):
             'diffs': diffs
             })
 
-        return TemplateResponse(self.request, self.revision_diff_template or self.get_template_list('revision_diff.html'),
+        return TemplateResponse(self.request, self.revision_diff_template or self.get_template_list('views/revision_diff.html'),
             context, current_app=self.admin_site.name)
 
     @filter_hook
@@ -414,7 +414,7 @@ class RevisionView(BaseRevisionView):
         context.update(self.kwargs or {})
 
         form_template = self.revision_form_template
-        return TemplateResponse(self.request, form_template or self.get_template_list('revision_form.html'), \
+        return TemplateResponse(self.request, form_template or self.get_template_list('views/revision_form.html'), \
             context, current_app=self.admin_site.name)
 
     @filter_hook
@@ -448,7 +448,7 @@ class RecoverView(BaseRevisionView):
         context.update(self.kwargs or {})
 
         form_template = self.recover_form_template
-        return TemplateResponse(self.request, form_template or self.get_template_list('recover_form.html'), \
+        return TemplateResponse(self.request, form_template or self.get_template_list('views/recover_form.html'), \
             context, current_app=self.admin_site.name)
 
     @filter_hook

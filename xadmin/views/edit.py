@@ -353,7 +353,7 @@ class CreateAdminView(ModelFormAdminView):
         context = self.get_context()
         context.update(self.kwargs or {})
 
-        return TemplateResponse(self.request, self.add_form_template or self.get_template_list('change_form.html'), \
+        return TemplateResponse(self.request, self.add_form_template or self.get_template_list('views/model_form.html'), \
             context, current_app=self.admin_site.name)
 
     @filter_hook
@@ -422,7 +422,7 @@ class UpdateAdminView(ModelFormAdminView):
         context = self.get_context()
         context.update(kwargs or {})
 
-        return TemplateResponse(self.request, self.change_form_template or self.get_template_list('change_form.html'), \
+        return TemplateResponse(self.request, self.change_form_template or self.get_template_list('views/model_form.html'), \
             context, current_app=self.admin_site.name)
 
     def post(self, request, *args, **kwargs):

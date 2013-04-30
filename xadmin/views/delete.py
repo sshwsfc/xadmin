@@ -35,8 +35,8 @@ class DeleteAdminView(ModelAdminView):
     def get(self, request, object_id):
         context = self.get_context()
         
-        return TemplateResponse(request, self.delete_confirmation_template or self.get_template_list("delete_confirmation.html"), \
-            context, current_app=self.admin_site.name)
+        return TemplateResponse(request, self.delete_confirmation_template or \
+            self.get_template_list("views/model_delete_confirm.html"), context, current_app=self.admin_site.name)
 
     @csrf_protect_m
     @transaction.commit_on_success

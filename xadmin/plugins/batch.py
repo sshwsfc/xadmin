@@ -77,7 +77,7 @@ class BatchChangeAction(BaseActionView):
         })
 
         return TemplateResponse(self.request, self.batch_change_form_template or \
-            self.get_template_list('batch_change_form.html'), context, current_app=self.admin_site.name)
+            self.get_template_list('views/batch_change_form.html'), context, current_app=self.admin_site.name)
 
     @filter_hook
     def get_media(self):

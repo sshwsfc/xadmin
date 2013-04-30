@@ -174,11 +174,11 @@ class FilterPlugin(BaseAdminPlugin):
     # Block Views
     def block_nav_menu(self, context, nodes):
         if self.has_filters:
-            nodes.append(loader.render_to_string('xadmin/filters.html', context_instance=context))
+            nodes.append(loader.render_to_string('xadmin/blocks/model_list.nav_menu.filters.html', context_instance=context))
 
     def block_nav_form(self, context, nodes):
         if self.search_fields:
-            nodes.append(loader.render_to_string('xadmin/blocks/search_form.html', \
+            nodes.append(loader.render_to_string('xadmin/blocks/model_list.nav_form.search_form.html', \
                 {'search_var': SEARCH_VAR, 
                 'remove_search_url': self.admin_view.get_query_string(remove=[SEARCH_VAR]),
                 'search_form_params': self.admin_view.get_form_params(remove=[SEARCH_VAR])}, \

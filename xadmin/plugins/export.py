@@ -156,7 +156,7 @@ class ExportPlugin(BaseAdminPlugin):
                 'form_params': self.admin_view.get_form_params({'_do_': 'export'}, ('export_type',)),
                 'export_types': [{'type': et, 'name': self.export_names[et]} for et in self.list_export],
             })
-            nodes.append(loader.render_to_string('xadmin/exports.html', context_instance=context))
+            nodes.append(loader.render_to_string('xadmin/blocks/model_list.top_toolbar.exports.html', context_instance=context))
 
 
 site.register_plugin(ExportPlugin, ListAdminView)

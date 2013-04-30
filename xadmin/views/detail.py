@@ -225,7 +225,7 @@ class DetailAdminView(ModelAdminView):
         context.update(kwargs or {})
 
         return TemplateResponse(self.request, self.detail_template or \
-            self.get_template_list('detail.html'), context, current_app=self.admin_site.name)
+            self.get_template_list('views/model_detail.html'), context, current_app=self.admin_site.name)
 
 
 class DetailAdminUtil(DetailAdminView):

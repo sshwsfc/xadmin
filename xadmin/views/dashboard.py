@@ -517,7 +517,7 @@ class Dashboard(CommAdminView):
             'add_widget_url': self.get_admin_url('%s_%s_add' % (UserWidget._meta.app_label, UserWidget._meta.module_name)) + \
                 "?user=%s&page_id=%s" % (self.user.id, self.get_page_id())
         })
-        return self.template_response('xadmin/dashboard.html', context)
+        return self.template_response('xadmin/views/dashboard.html', context)
 
     @csrf_protect_m
     def post(self, request):

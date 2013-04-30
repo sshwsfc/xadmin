@@ -28,7 +28,7 @@
 {% block content %}
 <form class="exform" {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form">{% csrf_token %}
   {% view_block 'form_top' %}
-  {% if save_on_top %}{% block submit_buttons_top %}{% include "xadmin/submit_line.html" %}{% endblock %}{% endif %}
+  {% if save_on_top %}{% block submit_buttons_top %}{% include "xadmin/includes/submit_line.html" %}{% endblock %}{% endif %}
 
   {% block form_legend %}
   <legend>
@@ -57,6 +57,6 @@
 
   {% view_block 'after_fieldsets' %}
 
-  {% block submit_buttons_bottom %}{% include "xadmin/submit_line.html" %}{% endblock %}
+  {% block submit_buttons_bottom %}{% include "xadmin/includes/submit_line.html" %}{% endblock %}
 </form>
 {% endblock %}
