@@ -16,7 +16,7 @@ class ThemePlugin(BaseAdminPlugin):
     enable_themes = False
     # {'name': 'Blank Theme', 'description': '...', 'css': 'http://...', 'thumbnail': '...'}
     user_themes = None
-    default_theme = static('xadmin/css/bootstrap-xadmin.css')
+    default_theme = static('xadmin/css/themes/bootstrap-xadmin.css')
 
     def init_request(self, *args, **kwargs):
         return self.enable_themes

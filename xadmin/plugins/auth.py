@@ -131,7 +131,6 @@ class ChangePasswordView(ModelAdminView):
         media = super(ChangePasswordView, self).get_media()
         media = media + self.form.media
         media.add_js([self.static('xadmin/js/form.js')])
-        media.add_css({'screen': [self.static('xadmin/css/select2.css')]})
         return media
 
     def get_context(self):

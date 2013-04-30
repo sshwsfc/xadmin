@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "dependencies": {
     "jquery": ">=1.8.3",
+    "jquery-ui": ">=1.10.0",
     "bootstrap": "http://twitter.github.io/bootstrap/assets/bootstrap.zip",
     "bootstrap-timepicker": ">=0.2.3",
     "bootstrap-datepicker": ">=1.0.0",

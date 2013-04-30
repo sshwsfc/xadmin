@@ -547,7 +547,7 @@ class Dashboard(CommAdminView):
     def get_media(self):
         media = super(Dashboard, self).get_media()
         media.add_js([self.static('xadmin/js/portal.js'), self.static('xadmin/js/dashboard.js')])
-        media.add_css({'screen': [self.static('xadmin/css/form.css'), self.static('xadmin/css/dashboard.css')]})
+        media.add_css({'screen': [self.static('xadmin/css/xadmin.form.css'), self.static('xadmin/css/xadmin.dashboard.css')]})
         for ws in self.widgets:
             for widget in ws:
                 media = media + widget.media()

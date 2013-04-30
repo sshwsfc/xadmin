@@ -13,9 +13,9 @@
   {% if site_theme %}
   <link rel="stylesheet" type="text/css" id="site-theme" href="{{site_theme}}" />
   {% else %}
-  <link rel="stylesheet" type="text/css" href="{% static "xadmin/css/bootstrap-xadmin.css" %}" />
+  <link rel="stylesheet" type="text/css" href="{% static "xadmin/css/themes/bootstrap-xadmin.css" %}" />
   {% endif %}
-  <link rel="stylesheet" type="text/css" href="{% static "xadmin/css/main.css" %}" />
+  <link rel="stylesheet" type="text/css" href="{% static "xadmin/css/xadmin.main.css" %}" />
   {{ media.css }}
   {% block extrastyle %}{% endblock %}
   {% url 'admin:index' as indexurl %}
@@ -28,7 +28,7 @@
 </head>
 <body class="{% block bodyclass %}{% endblock %}">
   {% block body %}{% endblock body %}
-  {% vendor 'jquery.js' 'jquery.ui.js' 'bootstrap.js' %}
+  {% vendor 'jquery.js' 'jquery-ui-sortable.js' 'bootstrap.js' %}
   <script src="{% static "xadmin/js/main.js" %}" type="text/javascript"></script>
   {{ media.js }}
   {% block extrabody %}{% endblock %}

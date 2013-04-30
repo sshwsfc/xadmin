@@ -345,7 +345,7 @@ class RevisionListView(BaseReversionView):
     def get_media(self):
         media = super(RevisionListView, self).get_media()
         media.add_js([self.static('xadmin/js/revision.js')])
-        media.add_css({'screen': [self.static('xadmin/css/form.css')]})
+        media.add_css({'screen': [self.static('xadmin/css/xadmin.form.css')]})
         return media
 
 class BaseRevisionView(ModelFormAdminView):

@@ -58,7 +58,7 @@ class AggregationPlugin(BaseAdminPlugin):
 
     # Media
     def get_media(self, media):
-        media.add_css({'screen': [self.static('xadmin/css/aggregation.css'),]})
+        media.add_css({'screen': [self.static('xadmin/css/xadmin.plugin.aggregation.css'),]})
         return media
 
 
