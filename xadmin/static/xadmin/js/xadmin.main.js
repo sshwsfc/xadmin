@@ -51,7 +51,6 @@
       data: {'key': key, 'value': value},
       success: success,
       error: error,
-      dataType: 'json',
       beforeSend: function(xhr, settings) {
           xhr.setRequestHeader("X-CSRFToken", csrftoken);
       }

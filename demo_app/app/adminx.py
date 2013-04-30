@@ -22,6 +22,7 @@ xadmin.site.register(views.website.IndexView, MainDashboard)
 
 class BaseSetting(object):
     enable_themes = True
+    use_bootswatch = True
 xadmin.site.register(views.BaseAdminView, BaseSetting)
 
 class GolbeSetting(object):

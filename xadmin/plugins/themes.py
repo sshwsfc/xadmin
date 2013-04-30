@@ -16,6 +16,7 @@ class ThemePlugin(BaseAdminPlugin):
     enable_themes = False
     # {'name': 'Blank Theme', 'description': '...', 'css': 'http://...', 'thumbnail': '...'}
     user_themes = None
+    use_bootswatch = False
     default_theme = static('xadmin/css/themes/bootstrap-xadmin.css')
 
     def init_request(self, *args, **kwargs):
@@ -48,21 +49,22 @@ class ThemePlugin(BaseAdminPlugin):
         if self.user_themes:
             themes.extend(self.user_themes)
 
-        ex_themes = cache.get(THEME_CACHE_KEY)
-        if ex_themes:
-            themes.extend(json.loads(ex_themes))
-        else:
-            ex_themes = []
-            try:
-                watch_themes = json.loads(urllib.urlopen('http://api.bootswatch.com/').read())['themes']
-                ex_themes.extend([\
-                    {'name': t['name'], 'description': t['description'], 'css': t['css-min'], 'thumbnail': t['thumbnail']} \
-                    for t in watch_themes])
-            except Exception:
-                pass
+        if self.use_bootswatch:
+            ex_themes = cache.get(THEME_CACHE_KEY)
+            if ex_themes:
+                themes.extend(json.loads(ex_themes))
+            else:
+                ex_themes = []
+                try:
+                    watch_themes = json.loads(urllib.urlopen('http://api.bootswatch.com/').read())['themes']
+                    ex_themes.extend([\
+                        {'name': t['name'], 'description': t['description'], 'css': t['css-min'], 'thumbnail': t['thumbnail']} \
+                        for t in watch_themes])
+                except Exception:
+                    pass
 
-            cache.set(THEME_CACHE_KEY, json.dumps(ex_themes), 24*3600)
-            themes.extend(ex_themes)
+                cache.set(THEME_CACHE_KEY, json.dumps(ex_themes), 24*3600)
+                themes.extend(ex_themes)
 
         nodes.append(loader.render_to_string('xadmin/blocks/toptheme.html', {'themes': themes, 'select_css': select_css}))
 
