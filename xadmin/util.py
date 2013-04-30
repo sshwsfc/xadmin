@@ -35,8 +35,8 @@ except ImportError:
 
 
 def xstatic(*tags):
-    from staticx import statics
-    node = statics
+    from vendors import vendors
+    node = vendors
     
     fs = []
     lang = get_language()
