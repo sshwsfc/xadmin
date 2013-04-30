@@ -1,6 +1,6 @@
 {% load i18n %}
 <li class="dropdown-submenu filter-number">
-  <a><i class="icon-{% if spec.is_used %}ok{%else%}blank{% endif %}"></i> {{ title }}</a>
+  <a><i class="icon-filter {% if spec.is_used %}text-success{%else%}muted{% endif %}"></i> {{ title }}</a>
   <div class="popover right dropdown-menu">
     <div class="arrow"></div>
     <div class="popover-inner">
