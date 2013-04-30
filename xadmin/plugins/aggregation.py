@@ -53,7 +53,8 @@ class AggregationPlugin(BaseAdminPlugin):
         return row
 
     def results(self, rows):
-        rows.append(self._get_aggregate_row())
+        if rows:
+            rows.append(self._get_aggregate_row())
         return rows
 
     # Media
