@@ -84,7 +84,7 @@ class ChartsPlugin(BaseAdminPlugin):
 
     # Media
     def get_media(self, media):
-        return media + self.vendor('flot.js')
+        return media + self.vendor('flot.js', 'xadmin.plugin.charts.js')
 
     # Block Views
     def block_results_top(self, context, nodes):
