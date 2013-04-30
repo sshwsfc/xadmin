@@ -55,7 +55,7 @@ class Bookmark(models.Model):
         return self.title
         
     class Meta:
-        verbose_name = _('Bookmark')
+        verbose_name = _(u'Bookmark')
 
 class JSONEncoder(DjangoJSONEncoder):
     def default(self, o):
@@ -75,8 +75,8 @@ class JSONEncoder(DjangoJSONEncoder):
 
 class UserSettings(models.Model):
     user = models.ForeignKey(User)
-    key = models.CharField(max_length=256)
-    value = models.TextField()
+    key = models.CharField(_('Settings Key'), max_length=256)
+    value = models.TextField(_('Settings Content'))
 
     def json_value(self):
         return json.loads(self.value)
@@ -88,13 +88,13 @@ class UserSettings(models.Model):
         return "%s %s" % (self.user, self.key)
         
     class Meta:
-        verbose_name = _('User Setting')
+        verbose_name = _(u'User Setting')
 
 class UserWidget(models.Model):
     user = models.ForeignKey(User)
     page_id = models.CharField(_(u"Page"), max_length=256)
     widget_type = models.CharField(_(u"Widget Type"), max_length=16)
-    value = models.TextField()
+    value = models.TextField(_(u"Widget Params"))
 
     def get_value(self):
         value = json.loads(self.value)
@@ -120,4 +120,4 @@ class UserWidget(models.Model):
         return "%s %s widget" % (self.user, self.widget_type)
         
     class Meta:
-        verbose_name = _('User Widget')
+        verbose_name = _(u'User Widget')
