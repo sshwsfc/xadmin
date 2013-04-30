@@ -64,9 +64,8 @@ class EditablePlugin(BaseAdminPlugin):
     # Media
     def get_media(self, media):
         if self.editable_need_fields:
-            media = media + self.model_form_admins.values()[0].media
-            media.add_js([self.static('xadmin/js/editable.js')])
-            media.add_css({'screen': [self.static('xadmin/css/xadmin.widget.editable.css'),]})
+            media = media + self.model_form_admins.values()[0].media + \
+                self.vendor('xadmin.plugin.editable.js', 'xadmin.widget.editable.css')
         return media
 
 class EditPatchView(ModelFormAdminView, ListAdminView):

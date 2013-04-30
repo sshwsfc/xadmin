@@ -326,8 +326,7 @@ class InlineFormsetPlugin(BaseAdminPlugin):
         for fs in self.formsets:
             media = media + fs.media
         if self.formsets:
-            media.add_js([self.static('xadmin/js/formset.js')])
-            media.add_css({'screen': [self.static('xadmin/css/xadmin.formset.css')]})
+            media = media + self.vendor('xadmin.plugin.formset.js', 'xadmin.plugin.formset.css')
         return media
 
 class DetailAdminUtil(DetailAdminView):

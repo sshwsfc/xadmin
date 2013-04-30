@@ -38,7 +38,7 @@ statics = {
             'production': 'xadmin/vendor/bootstrap-timepicker/css/bootstrap-timepicker.min.css',
         },
         "js": {
-            'dev': ['xadmin/vendor/bootstrap-timepicker/js/bootstrap-timepicker.js', 'xadmin/js/widgets/datetime.js'],
+            'dev': 'xadmin/vendor/bootstrap-timepicker/js/bootstrap-timepicker.js',
             'production': 'xadmin/vendor/bootstrap-timepicker/js/bootstrap-timepicker.min.js',
         }
     },
@@ -47,13 +47,13 @@ statics = {
             'dev': 'xadmin/vendor/bootstrap-datepicker/css/datepicker.css'
         },
         "js": {
-            'dev': ['xadmin/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js', 'xadmin/js/widgets/datetime.js'],
+            'dev': 'xadmin/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js',
         }
     },
     "flot": {
         "js": {
             'dev': ['xadmin/vendor/flot/jquery.flot.js', 'xadmin/vendor/flot/jquery.flot.pie.js', 'xadmin/vendor/flot/jquery.flot.time.js', 
-                'xadmin/vendor/flot/jquery.flot.resize.js', 'xadmin/js/charts.js']
+                'xadmin/vendor/flot/jquery.flot.resize.js']
         }
     },
     "image-gallery": {
@@ -80,7 +80,7 @@ statics = {
             'dev': 'xadmin/vendor/bootstrap-multiselect/css/bootstrap-multiselect.css',
         },
         "js": {
-            'dev': ['xadmin/vendor/bootstrap-multiselect/js/bootstrap-multiselect.js', 'xadmin/js/widgets/multiselect.js'],
+            'dev': 'xadmin/vendor/bootstrap-multiselect/js/bootstrap-multiselect.js',
         }
     },
 }

@@ -168,10 +168,8 @@ class FilterPlugin(BaseAdminPlugin):
         if bool(filter(lambda s: isinstance(s, DateFieldListFilter), self.filter_specs)):
             media = media + self.vendor('datepicker.css', 'datepicker.js')
         if bool(filter(lambda s: isinstance(s, RelatedFieldSearchFilter), self.filter_specs)):
-            media = media + self.vendor('select2.js', 'select2.css')
-            media.add_js([self.static('xadmin/js/form.js')])
-        media.add_js([self.static('xadmin/js/filters.js')])
-        return media
+            media = media + self.vendor('select2.js', 'select2.css', 'xadmin.widget.select.js')
+        return media + self.vendor('xadmin.plugin.filters.js')
 
     # Block Views
     def block_nav_menu(self, context, nodes):

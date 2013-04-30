@@ -5,7 +5,7 @@ from django.utils.translation import ugettext as _
 from django.forms.models import modelform_factory
 import copy
 from xadmin.sites import site
-from xadmin.util import get_model_from_relation, static
+from xadmin.util import get_model_from_relation, vendor
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView
 
 class QuickFormPlugin(BaseAdminPlugin):
@@ -56,9 +56,7 @@ class RelatedFieldWidgetWrapper(forms.Widget):
 
     @property
     def media(self):
-        media = self.widget.media
-        media.add_js([static('xadmin/js/quick-form.js'),])
-        media.add_css({'screen': [static('xadmin/css/bootstrap-modal.css')]})
+        media = self.widget.media + vendor('xadmin.plugin.quick-form.js', 'xadmin.modal.css')
         return media
 
     def render(self, name, value, *args, **kwargs):

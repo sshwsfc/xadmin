@@ -573,9 +573,7 @@ class ListAdminView(ModelAdminView):
     # Media
     @filter_hook
     def get_media(self):
-        media = super(ListAdminView, self).get_media()
-        media.add_js([self.static('xadmin/js/list.js')])
-        return media
+        return super(ListAdminView, self).get_media() + self.vendor('xadmin.page.list.js')
 
     # Blocks
     @inclusion_tag('xadmin/pagination.html')

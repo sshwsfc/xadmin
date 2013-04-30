@@ -40,7 +40,7 @@ class RefreshPlugin(BaseAdminPlugin):
     # Media
     def get_media(self, media):
         if self.refresh_times and self.request.GET.get(REFRESH_VAR):
-            media.add_js([self.static('xadmin/js/refresh.js')])
+            media = media + self.vendor('xadmin.plugin.refresh.js')
         return media
 
     # Block Views

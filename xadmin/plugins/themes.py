@@ -37,8 +37,7 @@ class ThemePlugin(BaseAdminPlugin):
 
     # Media
     def get_media(self, media):
-        media.add_js([self.static('xadmin/js/themes.js')])
-        return media
+        return media + self.vendor('xadmin.plugin.themes.js')
 
     # Block Views
     def block_top_nav_btn(self, context, nodes):

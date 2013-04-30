@@ -9,7 +9,7 @@ from django.template import loader
 from django.utils.encoding import force_unicode
 from django.utils.html import escape, conditional_escape
 from django.utils.safestring import mark_safe
-from xadmin.util import static, vendor
+from xadmin.util import vendor
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView
 
 
@@ -17,8 +17,7 @@ class SelectMultipleTransfer(forms.SelectMultiple):
 
     @property
     def media(self):
-        return forms.Media(js=[static("xadmin/js/widgets/select-transfer.js"),], \
-            css={'screen': [static('xadmin/css/xadmin.widget.select-transfer.css'),]})
+        return vendor('xadmin.widget.select-transfer.js', 'xadmin.widget.select-transfer.css')
 
     def __init__(self, verbose_name, is_stacked, attrs=None, choices=()):
         self.verbose_name = verbose_name
@@ -74,7 +73,7 @@ class SelectMultipleDropdown(forms.SelectMultiple):
 
     @property
     def media(self):
-        return vendor('multiselect.js', 'multiselect.css')
+        return vendor('multiselect.js', 'multiselect.css', 'xadmin.widget.multiselect.js')
 
     def render(self, name, value, attrs=None, choices=()):
         if attrs is None:

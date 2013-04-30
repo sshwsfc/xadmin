@@ -82,8 +82,6 @@ class BatchChangeAction(BaseActionView):
     @filter_hook
     def get_media(self):
         media = super(BatchChangeAction, self).get_media()
-        media = media + self.form_obj.media
-        media.add_js([self.static('xadmin/js/form.js')])
-        media.add_css({'screen': [self.static('xadmin/css/xadmin.form.css')]})
+        media = media + self.form_obj.media + self.vendor('xadmin.page.form.js', 'xadmin.form.css')
         return media
 

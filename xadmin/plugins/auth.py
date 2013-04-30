@@ -130,7 +130,6 @@ class ChangePasswordView(ModelAdminView):
     def get_media(self):
         media = super(ChangePasswordView, self).get_media()
         media = media + self.form.media
-        media.add_js([self.static('xadmin/js/form.js')])
         return media
 
     def get_context(self):

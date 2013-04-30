@@ -88,8 +88,7 @@ class BookmarkPlugin(BaseAdminPlugin):
 
     # Media
     def get_media(self, media):
-        media.add_js([self.static('xadmin/js/bookmark.js')])
-        return media
+        return media + self.vendor('xadmin.plugin.bookmark.js')
 
     # Block Views
     def block_nav_menu(self, context, nodes):

@@ -423,9 +423,7 @@ class AddFormWidget(ModelBaseWidget, PartialBaseWidget):
             })
 
     def media(self):
-        media = self.add_view.media + self.add_view.form_obj.media
-        media.add_js([self.static('xadmin/js/quick-form.js'),])
-        return media
+        return self.add_view.media + self.add_view.form_obj.media + self.vendor('xadmin.plugin.quick-form.js')
 
 class Dashboard(CommAdminView):
 
@@ -545,9 +543,8 @@ class Dashboard(CommAdminView):
 
     @filter_hook
     def get_media(self):
-        media = super(Dashboard, self).get_media()
-        media.add_js([self.static('xadmin/js/portal.js'), self.static('xadmin/js/dashboard.js')])
-        media.add_css({'screen': [self.static('xadmin/css/xadmin.form.css'), self.static('xadmin/css/xadmin.dashboard.css')]})
+        media = super(Dashboard, self).get_media() + \
+            self.vendor('xadmin.plugin.portal.js', 'xadmin.page.dashboard.js', 'xadmin.page.dashboard.css')
         for ws in self.widgets:
             for widget in ws:
                 media = media + widget.media()

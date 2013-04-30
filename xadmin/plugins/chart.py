@@ -58,7 +58,7 @@ class ChartWidget(ModelBaseWidget):
 
     # Media
     def media(self):
-        return self.vendor('flot.js')
+        return self.vendor('flot.js', 'xadmin.plugin.charts.js')
 
 class JSONEncoder(DjangoJSONEncoder):
     def default(self, o):

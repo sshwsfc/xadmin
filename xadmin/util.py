@@ -42,17 +42,32 @@ def xstatic(*tags):
     lang = get_language()
     
     for tag in tags:
-        for p in tag.split('.'):
-            node = node[p]
-        mode = 'dev'
-        if not settings.DEBUG:
-            mode = getattr(settings, 'STATIC_USE_CDN', False) and 'cdn' or 'production'
-    
-        if mode == 'cdn' and not node.has_key(mode):
-            mode = 'production'
-        if mode == 'production' and not node.has_key(mode):
+        try:
+            for p in tag.split('.'):
+                node = node[p]
+        except Exception, e:
+            if tag.startswith('xadmin'):
+                file_type = tag.split('.')[-1]
+                if file_type in ('css', 'js'):
+                    node = "xadmin/%s/%s" % (file_type, tag)
+                else:
+                    raise e
+            else:
+                raise e
+
+        if type(node) in (str, unicode):
+            files = node
+        else:
             mode = 'dev'
-        files = node[mode]
+            if not settings.DEBUG:
+                mode = getattr(settings, 'STATIC_USE_CDN', False) and 'cdn' or 'production'
+        
+            if mode == 'cdn' and not node.has_key(mode):
+                mode = 'production'
+            if mode == 'production' and not node.has_key(mode):
+                mode = 'dev'
+            files = node[mode]
+
         files = type(files) in (list, tuple) and files or [files,]
         fs.extend(files)
         
