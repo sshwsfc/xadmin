@@ -9,7 +9,7 @@ from xadmin.plugins.batch import BatchChangeAction
 class MainDashboard(object):
     widgets = [
         [
-            {"type": "html", "title": "Test Widget", "content": "<h3> Welcome to Xadmin! </h3>"},
+            {"type": "html", "title": "Test Widget", "content": "<h3> Welcome to Xadmin! </h3><p>Join Online Group: <br/>QQ Qun : 282936295</p>"},
             {"type": "chart", "model": "app.accessrecord", 'chart': 'user_count', 'params': {'_p_date__gte': '2013-01-08', 'p': 1, '_p_date__lt': '2013-01-29'}},
             {"type": "list", "model": "app.host", 'params': {'o':'-guarantee_date'}},
         ],
@@ -22,6 +22,7 @@ xadmin.site.register(views.website.IndexView, MainDashboard)
 
 class BaseSetting(object):
     enable_themes = True
+    use_bootswatch = True
 xadmin.site.register(views.BaseAdminView, BaseSetting)
 
 class GolbeSetting(object):

@@ -651,11 +651,9 @@ class ListAdminView(ModelAdminView):
     @filter_hook
     def get_media(self):
         """
-        返回列表页面的 Media, 该页面添加了 ``list.js`` 文件
+        返回列表页面的 Media, 该页面添加了 ``xadmin.page.list.js`` 文件
         """
-        media = super(ListAdminView, self).get_media()
-        media.add_js([self.static('xadmin/js/list.js')])
-        return media
+        return super(ListAdminView, self).get_media() + self.vendor('xadmin.page.list.js')
 
     # Blocks
     @inclusion_tag('xadmin/pagination.html')

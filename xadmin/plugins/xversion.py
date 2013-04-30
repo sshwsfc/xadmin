@@ -343,10 +343,7 @@ class RevisionListView(BaseReversionView):
 
     @filter_hook
     def get_media(self):
-        media = super(RevisionListView, self).get_media()
-        media.add_js([self.static('xadmin/js/revision.js')])
-        media.add_css({'screen': [self.static('xadmin/css/form.css')]})
-        return media
+        return super(RevisionListView, self).get_media() + self.vendor('xadmin.plugin.revision.js', 'xadmin.form.css')
 
 class BaseRevisionView(ModelFormAdminView):
 
@@ -371,9 +368,7 @@ class BaseRevisionView(ModelFormAdminView):
 
     @filter_hook
     def get_media(self):
-        media = super(BaseRevisionView, self).get_media()
-        media.add_js([self.static('xadmin/js/revision.js')])
-        return media
+        return super(BaseRevisionView, self).get_media() + self.vendor('xadmin.plugin.revision.js')
 
 class DiffField(Field):
 
@@ -576,8 +571,12 @@ class ActionRevisionPlugin(BaseAdminPlugin):
     def do_action(self, __, queryset):
         return self.revision_context_manager.create_revision(manage_manually=False)(self.do_action_func(__))()
 
-site.register(Revision)
-site.register(Version)
+class ReversionAdmin(object):
+    model_icon = 'exchange'
+class VersionAdmin(object):
+    model_icon = 'file'
+site.register(Revision, ReversionAdmin)
+site.register(Version, VersionAdmin)
 
 site.register_modelview(r'^recover/$', RecoverListView, name='%s_%s_recoverlist')
 site.register_modelview(r'^recover/([^/]+)/$', RecoverView, name='%s_%s_recover')

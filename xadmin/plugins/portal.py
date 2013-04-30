@@ -10,8 +10,7 @@ class BasePortalPlugin(BaseAdminPlugin):
 
     # Media
     def get_media(self, media):
-        media.add_js([self.static('xadmin/js/portal.js')])
-        return media
+        return media + self.vendor('xadmin.plugin.portal.js')
 
 def get_layout_objects(layout, clz, objects):
     for i, layout_object in enumerate(layout.fields):

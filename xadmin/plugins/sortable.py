@@ -14,7 +14,7 @@ class SortablePlugin(BaseAdminPlugin):
     # Media
     def get_media(self, media):
         if self.sortable_fields and self.request.GET.get(SORTBY_VAR):
-            media.add_js([self.static('xadmin/js/sortable.js')])
+            media = media + self.vendor('xadmin.plugin.sortable.js')
         return media
 
     # Block Views

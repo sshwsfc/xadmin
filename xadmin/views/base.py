@@ -24,7 +24,7 @@ from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import View
-from xadmin.util import static, json
+from xadmin.util import static, json, vendor
 
 #: 通用的csrf_protect_m装饰器，给其他模块的 AdminView 使用
 csrf_protect_m = method_decorator(csrf_protect)
@@ -263,6 +263,9 @@ class BaseAdminObject(object):
         :meth:`xadmin.util.static` 的快捷方法，返回静态文件的 url。
         """
         return static(path)
+
+    def vendor(self, *tags):
+        return vendor(*tags)
 
 class BaseAdminPlugin(BaseAdminObject):
     """

@@ -13,7 +13,7 @@ from django.utils.html import escape
 from django.template import loader
 from django.utils.translation import ugettext as _
 from xadmin import widgets
-from xadmin.layout import FormHelper, Layout, Fieldset, Container, Column, Field
+from xadmin.layout import FormHelper, Layout, Fieldset, TabHolder, Container, Column, Field
 from xadmin.util import unquote
 from xadmin.views.detail import DetailAdminUtil
 
@@ -34,6 +34,8 @@ FORMFIELD_FOR_DBFIELD_DEFAULTS = {
     models.CharField:       {'widget': widgets.AdminTextInputWidget},
     models.ImageField:      {'widget': widgets.AdminFileWidget},
     models.FileField:       {'widget': widgets.AdminFileWidget},
+    models.ForeignKey:      {'widget': widgets.AdminSelectWidget},
+    models.OneToOneField:   {'widget': widgets.AdminSelectWidget},
 }
 
 class ReadOnlyField(Field):
@@ -200,7 +202,7 @@ class ModelFormAdminView(ModelAdminView):
                     return attrs
 
         if db_field.choices:
-            return {}
+            return {'widget': widgets.AdminSelectWidget}
 
         for klass in db_field.__class__.mro():
             # 根据 DB Field 的类，获取 Field 属性
@@ -284,7 +286,6 @@ class ModelFormAdminView(ModelAdminView):
                 # 如果列表第一项是 Column ， 那么用 Container 包装
                 layout = Layout(Container(*layout))
             elif isinstance(layout[0], Fieldset):
-                # 如果列表第一项是 Fieldset ， 那么用 Container 包装
                 layout = Layout(Container(*layout, css_class="form-horizontal"))
             else:
                 # 那么用 Container > Fieldset 包装
@@ -488,12 +489,8 @@ class ModelFormAdminView(ModelAdminView):
 
     @filter_hook
     def get_media(self):
-        media = super(ModelFormAdminView, self).get_media()
-        media = media + self.form_obj.media
-        # 由于 select2 基本上在所有表单中都会出现，默认就加上 select2 吧
-        media.add_js([self.static('xadmin/js/select2.js'), self.static('xadmin/js/form.js')])
-        media.add_css({'screen': [self.static('xadmin/css/form.css'), self.static('xadmin/css/select2.css')]})
-        return media
+        return super(ModelFormAdminView, self).get_media() + self.form_obj.media + \
+            self.vendor('xadmin.page.form.js', 'xadmin.form.css')
 
 class CreateAdminView(ModelFormAdminView):
     """

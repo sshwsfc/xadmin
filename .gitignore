@@ -39,3 +39,4 @@ nosetests.xml
 .settings
 
 _build
+xadmin/static/xadmin/components/
