@@ -11,6 +11,9 @@
     })
   }
   $.fn.exform.renders = [];
+  $(function() {
+    $('.exform:not(.rended)').exform();
+  });
 
   $.getCookie = function(name) {
       var cookieValue = null;
