@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-30 23:11+0800\n"
+"POT-Creation-Date: 2013-05-01 20:04+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -88,32 +88,44 @@ msgstr ""
 msgid "Bookmark"
 msgstr ""
 
-#: models.py:78
-msgid "Settings Key"
+#: models.py:59
+msgid "Bookmarks"
 msgstr ""
 
 #: models.py:79
+msgid "Settings Key"
+msgstr ""
+
+#: models.py:80
 msgid "Settings Content"
 msgstr ""
 
-#: models.py:91
+#: models.py:92
 msgid "User Setting"
 msgstr ""
 
-#: models.py:95
+#: models.py:93
+msgid "User Settings"
+msgstr ""
+
+#: models.py:97
 msgid "Page"
 msgstr ""
 
-#: models.py:96 views/dashboard.py:76
+#: models.py:98 views/dashboard.py:76
 msgid "Widget Type"
 msgstr ""
 
-#: models.py:97 views/dashboard.py:77
+#: models.py:99 views/dashboard.py:77
 msgid "Widget Params"
 msgstr ""
 
-#: models.py:123
+#: models.py:125
 msgid "User Widget"
+msgstr ""
+
+#: models.py:126
+msgid "User Widgets"
 msgstr ""
 
 #: widgets.py:47
