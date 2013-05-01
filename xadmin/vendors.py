@@ -1,5 +1,5 @@
 
-statics = {
+vendors = {
     "bootstrap": {
         'js': {
             'dev': 'xadmin/vendor/bootstrap/bootstrap.js',

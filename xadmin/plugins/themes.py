@@ -43,7 +43,7 @@ class ThemePlugin(BaseAdminPlugin):
     # Block Views
     def block_top_nav_btn(self, context, nodes):
 
-        themes = [{'name': _(u"Default"), 'description': _(u"default bootstrap theme"), 'css': self.default_theme}]
+        themes = [{'name': _(u"Default Theme"), 'description': _(u"default bootstrap theme"), 'css': self.default_theme}]
         select_css = context.get('site_theme', self.default_theme)
 
         if self.user_themes:
@@ -66,7 +66,7 @@ class ThemePlugin(BaseAdminPlugin):
                 cache.set(THEME_CACHE_KEY, json.dumps(ex_themes), 24*3600)
                 themes.extend(ex_themes)
 
-        nodes.append(loader.render_to_string('xadmin/blocks/toptheme.html', {'themes': themes, 'select_css': select_css}))
+        nodes.append(loader.render_to_string('xadmin/blocks/comm.top.theme.html', {'themes': themes, 'select_css': select_css}))
 
 
 site.register_plugin(ThemePlugin, BaseAdminView)

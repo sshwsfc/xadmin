@@ -5,6 +5,7 @@ from django.utils.encoding import smart_str
 from django.utils.safestring import mark_safe
 from django.db.models.sql.query import LOOKUP_SEP
 from django.db.models.related import RelatedObject
+from django.utils.translation import ugettext as _
 from django.db import models
 
 from xadmin.sites import site
@@ -62,7 +63,7 @@ class RelateMenuPlugin(BaseAdminPlugin):
              '</li>'))
             links.append(link)
         ul_html = '<ul class="dropdown-menu" role="menu">%s</ul>' % ''.join(links)
-        return '<div class="dropdown related_menu pull-left"><a class="relate_menu dropdown-toggle" data-toggle="dropdown"><i class="icon icon-list"></i></a>%s</div>' % ul_html
+        return '<div class="dropdown related_menu pull-left"><a title="%s" class="relate_menu dropdown-toggle" data-toggle="dropdown"><i class="icon icon-list"></i></a>%s</div>' % (_('Related Objects'), ul_html)
     related_link.short_description = '&nbsp;'
     related_link.allow_tags = True
 

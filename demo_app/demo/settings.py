@@ -5,6 +5,7 @@ import os.path
 
 reload(sys)
 sys.setdefaultencoding('utf-8') 
+gettext = lambda s: s
 
 PROJECT_ROOT = os.path.join(os.path.realpath(os.path.dirname(__file__)), os.pardir)
 
@@ -45,6 +46,11 @@ TIME_ZONE = 'America/Chicago'
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
+
+LANGUAGES = (
+    ('en', gettext('English')),
+    ('zh_CN', gettext('Chinese')),
+)
 
 SITE_ID = 1
 

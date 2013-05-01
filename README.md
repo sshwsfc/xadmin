@@ -65,3 +65,7 @@ cd demo_app
 
 Open http://127.0.0.1:8000 in your browser
 
+Help
+----
+
+Help Translate : http://trans.xadmin.io

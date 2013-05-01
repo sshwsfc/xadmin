@@ -65,7 +65,7 @@ class AjaxDetailPlugin(BaseAjaxPlugin):
 
     def get_response(self, __):
         if self.request.GET.get('_format') == 'html':
-            self.admin_view.detail_template = 'xadmin/quick_detail.html'
+            self.admin_view.detail_template = 'xadmin/views/quick_detail.html'
             return __()
 
         form = self.admin_view.form_obj

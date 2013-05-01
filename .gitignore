@@ -37,6 +37,6 @@ nosetests.xml
 .DS_Store
 .c9revisions
 .settings
-
+.tx
 _build
 xadmin/static/xadmin/components/

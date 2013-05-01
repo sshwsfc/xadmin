@@ -47,7 +47,6 @@ API
 """
 import datetime, decimal, calendar
 
-from django import forms
 from django.template import loader
 from django.http import HttpResponseNotFound
 from django.core.serializers.json import DjangoJSONEncoder
@@ -55,7 +54,7 @@ from django.http import HttpResponse
 from django.utils.encoding import smart_unicode
 from django.db import models
 from django.utils.http import urlencode
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _, ugettext
 
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
@@ -65,6 +64,7 @@ from xadmin.util import lookup_field, label_for_field, json
 @widget_manager.register
 class ChartWidget(ModelBaseWidget):
     widget_type = 'chart'
+    description = _('Show models simple chart.')
     template = 'xadmin/widgets/chart.html'
 
     def convert(self, data):
@@ -88,7 +88,7 @@ class ChartWidget(ModelBaseWidget):
             else:
                 self.charts = model_admin.data_charts
                 if self.title is None:
-                    self.title = _("%s Charts") % self.model._meta.verbose_name_plural
+                    self.title = ugettext("%s Charts") % self.model._meta.verbose_name_plural
 
     def filte_choices_model(self, model, modeladmin):
         return bool(getattr(modeladmin, 'data_charts', None)) and \
@@ -130,14 +130,14 @@ class ChartsPlugin(BaseAdminPlugin):
 
     # Media
     def get_media(self, media):
-        return media + self.vendor('flot.js')
+        return media + self.vendor('flot.js', 'xadmin.plugin.charts.js')
 
     # Block Views
     def block_results_top(self, context, nodes):
         context.update({
             'charts': [{"name": name, "title": v['title'], 'url': self.get_chart_url(name, v)} for name,v in self.data_charts.items()],
         })
-        nodes.append(loader.render_to_string('xadmin/blocks/charts.html', context_instance=context))
+        nodes.append(loader.render_to_string('xadmin/blocks/model_list.results_top.charts.html', context_instance=context))
 
 class ChartsView(ListAdminView):
 

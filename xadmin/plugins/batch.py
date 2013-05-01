@@ -3,7 +3,7 @@ from django.core.exceptions import PermissionDenied
 from django.forms.models import modelform_factory
 from django.template.response import TemplateResponse
 from django.utils.encoding import force_unicode
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, ugettext_lazy
 from xadmin.layout import FormHelper, Layout, Fieldset, Container
 from xadmin.plugins.actions import BaseActionView, ACTION_CHECKBOX_NAME
 from xadmin.util import model_ngettext
@@ -14,7 +14,7 @@ from xadmin.views.edit import ModelFormAdminView
 class BatchChangeAction(BaseActionView):
 
     action_name = "change_selected"
-    description = _(u'Batch Change selected %(verbose_name_plural)s')
+    description = ugettext_lazy(u'Batch Change selected %(verbose_name_plural)s')
 
     batch_change_form_template = None
 
@@ -77,7 +77,7 @@ class BatchChangeAction(BaseActionView):
         })
 
         return TemplateResponse(self.request, self.batch_change_form_template or \
-            self.get_template_list('batch_change_form.html'), context, current_app=self.admin_site.name)
+            self.get_template_list('views/batch_change_form.html'), context, current_app=self.admin_site.name)
 
     @filter_hook
     def get_media(self):

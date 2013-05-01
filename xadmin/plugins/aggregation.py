@@ -1,4 +1,5 @@
 from django.db.models import FieldDoesNotExist, Avg, Max, Min, Count, Sum
+from django.utils.translation import ugettext as _
 
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
@@ -10,7 +11,7 @@ AGGREGATE_METHODS = {
     'min': Min, 'max': Max, 'avg': Avg, 'sum': Sum, 'count': Count
 }
 AGGREGATE_TITLE = {
-    'min': 'Min', 'max': 'Max', 'avg': 'Avg', 'sum': 'Sum', 'count': 'Count'
+    'min': _('Min'), 'max': _('Max'), 'avg': _('Avg'), 'sum': _('Sum'), 'count': _('Count')
 }
 
 class AggregationPlugin(BaseAdminPlugin):
@@ -53,7 +54,8 @@ class AggregationPlugin(BaseAdminPlugin):
         return row
 
     def results(self, rows):
-        rows.append(self._get_aggregate_row())
+        if rows:
+            rows.append(self._get_aggregate_row())
         return rows
 
     # Media

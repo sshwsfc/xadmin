@@ -5,9 +5,9 @@ class="btn"
 {% else %}
 class="btn disabled" disabled="disabled" 
 {% endif %}
-type="submit" value="{{ wizard.steps.step0|add:"-1" }}">&larr; {% trans "prev step" %}</button>
+type="submit" value="{{ wizard.steps.step0|add:"-1" }}">&larr; {% trans "Prev step" %}</button>
 {% if wizard.steps.last != wizard.steps.current %}
-<button name="_save" type="submit" class="btn btn-primary">{% trans "next step" %} &rarr;</button>
+<button name="_save" type="submit" class="btn btn-primary">{% trans "Next step" %} &rarr;</button>
 {% else %}
 <button name="_save" type="submit" class="btn btn-primary">{% trans "Save" %}</button>
 {% endif %}
