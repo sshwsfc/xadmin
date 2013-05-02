@@ -301,6 +301,12 @@ class CommAdminView(BaseAdminView):
                     'menus': [model_dict],
                 }
 
+            app_menu = nav_menu[app_key]
+            if not app_menu.has_key('first_icon') and model_dict.get('icon'):
+                app_menu['first_icon'] = model_dict['icon']
+            if not app_menu.has_key('first_url') and model_dict.get('url'):
+                app_menu['first_url'] = model_dict['url']
+
         for menu in nav_menu.values():
             menu['menus'].sort(key=lambda x: x['title'])
 
