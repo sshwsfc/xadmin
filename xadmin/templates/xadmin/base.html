@@ -15,7 +15,7 @@
   {% else %}
   <link rel="stylesheet" type="text/css" href="{% static "xadmin/css/themes/bootstrap-xadmin.css" %}" />
   {% endif %}
-  {% vendor 'font-awesome.css' 'xadmin.main.css' %}
+  {% vendor 'font-awesome.css' 'xadmin.main.css' 'xadmin.responsive.css' %}
   {{ media.css }}
   {% block extrastyle %}{% endblock %}
   {% url 'admin:index' as indexurl %}

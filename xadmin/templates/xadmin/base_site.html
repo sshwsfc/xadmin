@@ -9,14 +9,13 @@
   <div id="top-nav" class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar-inner">
       <div class="container-fluid">
-        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </a>
         <a class="brand" href="#">{% block branding %}{{ site_title }}{% endblock %}</a>
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-menu.nav-collapse">
+          <span class="icon-list"></span>
+        </a>
         {% view_block 'top_navbar' %}
-        <div class="nav-collapse collapse">
+
+        <div class="nav-menu nav-collapse collapse">
           <ul class="nav pull-right">
             {% if user.is_active and user.is_staff %}
               <li class="dropdown">
@@ -27,10 +26,10 @@
                 </ul>
               </li>
             {% endif %}
-            {% view_block 'top_nav_btn' %}
             <li><a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a></li>
           </ul>
-        </div><!--/.nav-collapse -->
+        </div>
+        {% view_block 'top_navmenu' %}
       </div>
     </div>
   </div>
@@ -40,20 +39,41 @@
       {% block navbar %}
         {% if nav_menu %}
           <div class="well sidebar-nav">
-            <ul class="nav nav-list">
+            <ul class="nav nav-list hidden-tablet">
               {% for item in nav_menu %}
-                <li class="nav-header{% if item.selected %} active{% endif %}">
-                  {% if item.url %}
-                  <a href="{{ item.url }}" class="section">{% if item.icon %}<i class="icon icon-{{item.icon}}"></i> {% endif %}{{ item.title }}</a>
-                  {% else %}{% if item.icon %}<i class="icon icon-{{item.icon}}"></i> {% endif %}{{ item.title }}{% endif %}
+                <li class="nav-header {% if item.selected %} active{% endif %}">
+                  {% if item.url %}<a href="{{ item.url }}" class="section">{% endif %}
+                  {% if item.icon %}<i class="icon-{{item.icon}}"></i>{% endif %}{{ item.title }}
+                  {% if item.url %}</a>{% endif %}
                 </li>
                 {% for sitem in item.menus %}
                 <li{% if sitem.selected %} class="active"{% endif %}>
-                  {% if sitem.url %}
-                  <a href="{{ sitem.url }}">{% if sitem.icon %}<i class="icon icon-{{sitem.icon}}"></i> {% endif %}{{ sitem.title }}</a>
-                  {% else %}{% if item.icon %}<i class="icon icon-{{item.icon}}"></i> {% endif %}{{ sitem.title }}{% endif %}
+                  {% if sitem.url %}<a href="{{ sitem.url }}">{% endif %}
+                  {% if sitem.icon %}<i class="icon-{{sitem.icon}}"></i>{%else%}<i class="icon-exclamation-sign"></i>{% endif %}
+                  {{ sitem.title }}</span>{% if sitem.url %}</a>{% endif %}
                 </li>
                 {% endfor %}
+              {% endfor %}
+            {% view_block 'menu-nav' %}
+            </ul>
+            <ul class="nav nav-list visible-tablet">
+              {% for item in nav_menu %}
+                <li class="app_menu dropdown-submenu {% if item.selected %} active{% endif %}">
+                  <a href="#" class="section">
+                    {% if item.icon %}<i class="icon-{{item.icon}}"></i>
+                    {% elif item.first_icon %}<i class="icon-{{item.first_icon}}"></i>
+                    {%else%}<i class="icon-exclamation-sign"></i>{% endif %}
+                  </a><hr/>
+                  <ul class="dropdown-menu">
+                    {% for sitem in item.menus %}
+                    <li{% if sitem.selected %} class="active"{% endif %}>
+                      {% if sitem.url %}<a href="{{ sitem.url }}">{% endif %}
+                      {% if sitem.icon %}<i class="icon-{{sitem.icon}}"></i>{%else%}<i class="icon-exclamation-sign"></i>{% endif %}
+                      {{ sitem.title }}</span>{% if sitem.url %}</a>{% endif %}
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </li>
               {% endfor %}
             {% view_block 'menu-nav' %}
             </ul>

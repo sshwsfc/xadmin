@@ -41,7 +41,7 @@ class ThemePlugin(BaseAdminPlugin):
         return media + self.vendor('xadmin.plugin.themes.js')
 
     # Block Views
-    def block_top_nav_btn(self, context, nodes):
+    def block_top_navmenu(self, context, nodes):
 
         themes = [{'name': _(u"Default Theme"), 'description': _(u"default bootstrap theme"), 'css': self.default_theme}]
         select_css = context.get('site_theme', self.default_theme)
