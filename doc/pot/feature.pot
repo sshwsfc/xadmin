@@ -1,0 +1,113 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2013, sshwsfc
+# This file is distributed under the same license as the Django Xadmin package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Django Xadmin 1.0.0a3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-05-01 21:34\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../feature.rst:6
+# 55c6d61485a340918bd16549bed234cb
+msgid "Xadmin 的功能特性"
+msgstr ""
+
+#: ../feature.rst:9
+# 30b6e9ee20bb4be48c0f80a84180c6f2
+msgid "兼容 Django Admin"
+msgstr ""
+
+#: ../feature.rst:12
+# 5e2fc7756c29463895a677c1c7bb90ba
+msgid "使用 Bootstrap 作为 UI 框架"
+msgstr ""
+
+#: ../feature.rst:15
+# e18b6a32b0d34fc983c4be502e7eec39
+msgid "编辑页面灵活布局"
+msgstr ""
+
+#: ../feature.rst:18
+# 551d035dddfa41d09e302575c2c67031
+msgid "主页面仪表盘及小部件"
+msgstr ""
+
+#: ../feature.rst:21
+# 48a7cf5c83b1435ea34fb2080257cac3
+msgid "Font Icon 以及 Model Icon"
+msgstr ""
+
+#: ../feature.rst:24
+# 864121978b734b6581204d72ab8da38d
+msgid "即时编辑"
+msgstr ""
+
+#: ../feature.rst:27
+# c8cf683d5a374f14974760447484a7e4
+msgid "图表功能"
+msgstr ""
+
+#: ../feature.rst:30
+# 9baf895d8b3a4c9cbcfbbb9598e81a14
+msgid "关联信息菜单"
+msgstr ""
+
+#: ../feature.rst:33
+# 8ad532c143b34214b8e0541acb8c1757
+msgid "数据版本管理"
+msgstr ""
+
+#: ../feature.rst:36
+# 37d0330403d7424fb7451877b2edf1f5
+msgid "数据详情页面"
+msgstr ""
+
+#: ../feature.rst:39
+# 1b11245d54f048a880abda599f01c194
+msgid "数据查看权限"
+msgstr ""
+
+#: ../feature.rst:42
+# d2c4429200ad4582a73d823689ef46be
+msgid "过滤器强化"
+msgstr ""
+
+#: ../feature.rst:45
+# 7c500be23fa640d1b250ae55f7ddfab1
+msgid "书签功能"
+msgstr ""
+
+#: ../feature.rst:48
+# 4d6a1a1f28c041f19f9f914e61e449c7
+msgid "数据导出"
+msgstr ""
+
+#: ../feature.rst:51
+# 68c8dce5a01d47d083ae4951e8441fda
+msgid "Autocomplete"
+msgstr ""
+
+#: ../feature.rst:54
+# e357b1fc2cc24262a3b9ba353e2d3cb9
+msgid "Inline 数据编辑"
+msgstr ""
+
+#: ../feature.rst:57
+# 8120143461b84e3ab0fb90f1a2fad9bf
+msgid "数据添加向导"
+msgstr ""
+
+#: ../feature.rst:60
+# 5a03581d2a874396ba94a503527b2f74
+msgid "强大的插件机制"
+msgstr ""
+

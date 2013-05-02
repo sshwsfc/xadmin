@@ -1,0 +1,98 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2013, sshwsfc
+# This file is distributed under the same license as the Django Xadmin package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Django Xadmin 1.0.0a3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-05-01 21:34\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../index.rst:4
+# 9a77722b247e40ef99a0b47d20bbd655
+msgid "Welcome to Django Xadmin's Documentation!"
+msgstr ""
+
+#: ../index.rst:6
+# 12128249bfc5468b8db09ee12e0abbca
+msgid "**不能错过的替代Django Admin的产品**."
+msgstr ""
+
+#: ../index.rst:9
+# 22b942ac859d4efd95d9646ca323c92f
+msgid "安装 & 设置"
+msgstr ""
+
+#: ../index.rst:18
+# 6c45c4afaee8417fb2d1d163ac48a596
+msgid "功能特性"
+msgstr ""
+
+#: ../index.rst:26
+# d09590a09d324366872747307d9f068d
+msgid "插件"
+msgstr ""
+
+#: ../index.rst:35
+# d79c8d6a0b01428d9d00909aeb73e904
+msgid "API"
+msgstr ""
+
+#: ../index.rst:44
+# 4a8a2921928e46cb9b82dd0335a2a50d
+msgid "帮助"
+msgstr ""
+
+#: ../index.rst:54
+# 41cc7d1fd44d4d248964553196436719
+msgid "源码"
+msgstr ""
+
+#: ../index.rst:56
+# c3b53d8053fb4763bd871006067ac375
+msgid "https://github.com/sshwsfc/django-xadmin"
+msgstr ""
+
+#: ../index.rst:59
+# d5197d0fa806443fb4eddc8cc7348a8c
+msgid "网站"
+msgstr ""
+
+#: ../index.rst:61
+# 6e20a4d09df04bd7844ee9c34ea65116
+msgid "http://sshwsfc.github.com/django-xadmin"
+msgstr ""
+
+#: ../index.rst:64
+# 6d2d0f922837445a9533881e9ce7922f
+msgid "Versions and Compatibility"
+msgstr ""
+
+#: ../index.rst:67
+# 94c9300d6807422a99c78db8fcac886d
+msgid "Indices and tables"
+msgstr ""
+
+#: ../index.rst:69
+# 27c55a6176064e6a806ddbf890889f00
+msgid ":ref:`genindex`"
+msgstr ""
+
+#: ../index.rst:70
+# b270cfea2c6d4e2ca5df989fead1124b
+msgid ":ref:`modindex`"
+msgstr ""
+
+#: ../index.rst:71
+# 0d5a713cdd9b45aba59f6d7716e6dfc5
+msgid ":ref:`search`"
+msgstr ""
+

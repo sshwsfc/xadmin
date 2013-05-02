@@ -1,0 +1,51 @@
+[main]
+host = https://www.transifex.com
+
+[xadmin-docs.index]
+file_filter = locale/<lang>/LC_MESSAGES/index.po
+source_file = pot/index.pot
+source_lang = zh_CN
+type = PO
+
+[xadmin-docs.customization]
+file_filter = locale/<lang>/LC_MESSAGES/customization.po
+source_file = pot/customization.pot
+source_lang = zh_CN
+type = PO
+
+[xadmin-docs.faq]
+file_filter = locale/<lang>/LC_MESSAGES/faq.po
+source_file = pot/faq.pot
+source_lang = zh_CN
+type = PO
+
+[xadmin-docs.feature]
+file_filter = locale/<lang>/LC_MESSAGES/feature.po
+source_file = pot/feature.pot
+source_lang = zh_CN
+type = PO
+
+[xadmin-docs.quickstart]
+file_filter = locale/<lang>/LC_MESSAGES/quickstart.po
+source_file = pot/quickstart.pot
+source_lang = zh_CN
+type = PO
+
+[xadmin-docs.plugins]
+file_filter = locale/<lang>/LC_MESSAGES/plugins.po
+source_file = pot/plugins.pot
+source_lang = zh_CN
+type = PO
+
+[xadmin-docs.site_api]
+file_filter = locale/<lang>/LC_MESSAGES/site_api.po
+source_file = pot/site_api.pot
+source_lang = zh_CN
+type = PO
+
+[xadmin-docs.views_api]
+file_filter = locale/<lang>/LC_MESSAGES/views_api.po
+source_file = pot/views_api.pot
+source_lang = zh_CN
+type = PO
+

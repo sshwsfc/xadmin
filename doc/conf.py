@@ -173,6 +173,11 @@ html_static_path = ['_static']
 htmlhelp_basename = 'DjangoXadmindoc'
 
 
+# -- Option for internationalization -------------------------------------------
+
+language = 'zh_CN'
+locale_dirs = ['locale/']
+
 # -- Options for LaTeX output --------------------------------------------------
 
 latex_elements = {
