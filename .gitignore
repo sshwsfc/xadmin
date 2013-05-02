@@ -27,7 +27,7 @@ pip-log.txt
 nosetests.xml
 
 # Translations
-*.mo
+#*.mo
 
 # Mr Developer
 .mr.developer.cfg
