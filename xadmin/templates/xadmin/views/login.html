@@ -1,6 +1,7 @@
 {% extends "xadmin/base.html" %}
 {% load i18n xadmin_tags %}
 {% load url from future %}
+{% load crispy_forms_tags %}
 
 {% block extrastyle %}{{ block.super }}
 <style type="text/css">
@@ -9,7 +10,6 @@
     padding-bottom: 40px;
     background-color: #f5f5f5;
   }
-
   .form-signin {
     max-width: 300px;
     padding: 19px 29px 29px;
@@ -27,6 +27,13 @@
   .form-signin .checkbox {
     margin-bottom: 10px;
   }
+  .form-signin .control-group{
+    background-color: transparent;
+    border: none;
+  }
+  .form-signin label {
+    font-size: 16px;
+  }
   .form-signin input[type="text"],
   .form-signin input[type="password"] {
     font-size: 16px;
@@ -35,6 +42,15 @@
     padding: 7px 9px;
   }
 
+  .form-signin .alert-block{
+    padding: 0px;
+  }
+  .form-signin .alert-block ul{
+    margin: 10px 15px;
+  }
+  .form-signin .alert-block ul li{
+    list-style-type: none;
+  }
 </style>
 {% endblock %}
 
@@ -44,22 +60,8 @@
 <div class="container">
 
   <form action="" method="post" id="login-form" class="form-signin">{% csrf_token %}
-    <h2 class="form-signin-heading">{% trans "Please Login" %}</h2>
-    {% if form.errors and not form.non_field_errors and not form.this_is_the_login_form.errors %}
-    <p class="text-error">
-    {% blocktrans count counter=form.errors.items|length %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
-    </p>
-    {% endif %}
-
-    {% if form.non_field_errors or form.this_is_the_login_form.errors %}
-    {% for error in form.non_field_errors|add:form.this_is_the_login_form.errors %}
-    <p class="text-error">{{ error }}</p>
-    {% endfor %}
-    {% endif %}
-    {% if not form.this_is_the_login_form.errors %}<p class="text-error">{{ form.username.errors }}</p>{% endif %}
-    <label for="id_username" class="required">{% trans 'Username:' %}</label> {{ form.username }}
-    {% if not form.this_is_the_login_form.errors %}<p class="text-error">{{ form.password.errors }}</p>{% endif %}
-    <label for="id_password" class="required">{% trans 'Password:' %}</label> {{ form.password }}
+    <h2 class="form-signin-heading">{% if title %}{{title}}{% else %}{% trans "Please Login" %}{% endif %}</h2>
+    {% crispy form helper %}
     <input type="hidden" name="this_is_the_login_form" value="1" />
     <input type="hidden" name="next" value="{{ next }}" />
     <button class="btn btn-large btn-primary" type="submit">{% trans 'log in' %}</button>
