@@ -16,7 +16,8 @@
     <a class="brand" href="#">{% if icon %}<i class="icon-{{icon}}"></i>{%endif%} {{ title }}</a>
     <div class="btn-group pull-right">
       {% if has_add_widget_permission %}
-      <a title="{% trans "Add Widget" %}" href="{{ add_widget_url }}" class="btn btn-primary"><i class="icon-plus icon-white"></i> {% trans "Add Widget" %}</a>
+      <a title="{% trans "Add Widget" %}" href="{{ add_widget_url }}" class="btn btn-primary">
+        <i class="icon-plus icon-white"></i> <span class="hidden-phone">{% trans "Add Widget" %}</span></a>
       {% endif %}
     </div>
   </div>

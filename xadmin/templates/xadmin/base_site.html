@@ -10,11 +10,10 @@
     <div class="navbar-inner">
       <div class="container-fluid">
         <a class="brand" href="#">{% block branding %}{{ site_title }}{% endblock %}</a>
-        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-menu.nav-collapse">
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-menu.nav-collapse,.nav-list.nav-collapse">
           <span class="icon-list"></span>
         </a>
         {% view_block 'top_navbar' %}
-
         <div class="nav-menu nav-collapse collapse">
           <ul class="nav pull-right">
             {% if user.is_active and user.is_staff %}
@@ -35,11 +34,11 @@
   </div>
   <div id="body-content" class="container-fluid">
     <div class="row-fluid">
-      <div id="left-side" class="span2 hidden-phone">
+      <div id="left-side" class="span2 ">
       {% block navbar %}
         {% if nav_menu %}
           <div class="well sidebar-nav">
-            <ul class="nav nav-list hidden-tablet">
+            <ul class="nav nav-list hidden-tablet nav-menu nav-collapse collapse">
               {% for item in nav_menu %}
                 <li class="nav-header {% if item.selected %} active{% endif %}">
                   {% if item.url %}<a href="{{ item.url }}" class="section">{% endif %}
@@ -56,7 +55,7 @@
               {% endfor %}
             {% view_block 'menu-nav' %}
             </ul>
-            <ul class="nav nav-list visible-tablet">
+            <ul class="nav nav-list visible-tablet hidden-phone">
               {% for item in nav_menu %}
                 <li class="app_menu dropdown-submenu {% if item.selected %} active{% endif %}">
                   <a href="#" class="section">

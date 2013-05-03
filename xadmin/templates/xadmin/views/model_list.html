@@ -28,7 +28,7 @@
 {% block content %}
     <div class="navbar">
       <div class="navbar-inner">
-        <a class="brand" href="#">{% if brand_icon %}<i class="icon-{{brand_icon}}"></i> {% endif %}{{brand_name}}</a>
+        <a class="brand hidden-phone" href="#">{% if brand_icon %}<i class="icon-{{brand_icon}}"></i> {% endif %}{{brand_name}}</a>
         <ul class="nav">
           {% view_block 'nav_menu' %}
         </ul>
@@ -36,7 +36,8 @@
         <div class="btn-group pull-right">
           {% view_block 'object-tools' %}
           {% if has_add_permission %}
-              <a href="{{add_url}}" class="btn btn-primary"><i class="icon-plus icon-white"></i> {% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}</a>
+              <a href="{{add_url}}" class="btn btn-primary"><i class="icon-plus icon-white"></i> 
+              <span class="hidden-phone">{% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}</span></a>
           {% endif %}
         </div>
       </div>
@@ -46,7 +47,7 @@
       {% view_block 'top_toolbar' %}
       <div class="btn-group">
         <a class="dropdown-toggle btn btn-small" data-toggle="dropdown" href="#">
-          <i class="icon-list-alt"></i> {% trans "Select Columes" %} <b class="caret"></b>
+          <i class="icon-list-alt"></i> <span class="hidden-phone">{% trans "Select Columes" %} <b class="caret"></b></span>
         </a>
         <ul class="dropdown-menu model_fields" role="menu" aria-labelledby="dLabel">
           <li><a href="{{clean_select_field_url}}"><i class="icon-refresh"></i> {% trans "Restore Selected" %}</a></li>
@@ -58,12 +59,12 @@
           {% endfor %}
         </ul>
       </div>
-      <div class="btn-group layout-btns" data-toggle="buttons-radio">
+      <div class="btn-group layout-btns hidden-phone" data-toggle="buttons-radio">
         <button type="button" class="btn btn-small layout-normal active"><i class="icon-th-large"></i></button>
         <button type="button" class="btn btn-small layout-condensed"><i class="icon-th"></i></button>
         {% view_block 'top_layout_btns' %}
       </div>
-      <div class="btn-group layout-btns" data-toggle="buttons-checkbox">
+      <div class="btn-group layout-btns hidden-phone" data-toggle="buttons-checkbox">
         <button type="button" class="btn btn-small layout-full"><i class="icon-fullscreen"></i></button>
         {% view_block 'top_check_btns' %}
       </div>

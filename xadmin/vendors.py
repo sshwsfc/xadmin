@@ -7,10 +7,14 @@ vendors = {
             'cdn': 'http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js'
         },
         'css': {
-            'dev': ['xadmin/vendor/bootstrap/bootstrap.css', 'xadmin/vendor/bootstrap/bootstrap-responsive.css'],
-            'production': ['xadmin/vendor/bootstrap/bootstrap.css', 'xadmin/vendor/bootstrap/bootstrap-responsive.css'],
+            'dev': 'xadmin/vendor/bootstrap/bootstrap.css',
+            'production': 'xadmin/vendor/bootstrap/bootstrap.css',
             'cdn': 'http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css'
-        }
+        },
+        'responsive': {'css':{
+                'dev': 'xadmin/vendor/bootstrap/bootstrap-responsive.css',
+                'production': 'xadmin/vendor/bootstrap/bootstrap-responsive.css'
+            }}
     },
     'jquery': {
         "js": {

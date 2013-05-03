@@ -29,3 +29,10 @@
 
   }
 }
+
+@media (max-width: 767px) {
+  #content-block .navbar .brand {
+    padding-right: 0px;
+    padding-left: 0px;
+  }
+}
