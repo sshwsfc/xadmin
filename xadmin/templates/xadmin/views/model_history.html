@@ -5,18 +5,16 @@
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
-  <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> <span class="divider">/</span></li>
-  <li><a href="{% url opts|admin_urlname:'changelist' %}">{{opts.verbose_name_plural|capfirst}}</a> <span class="divider">/</span></li>
-  <li><a href="{% url opts|admin_urlname:'change' object.pk %}">{{ object|truncatewords:"18" }}</a> <span class="divider">/</span></li>
+  <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
+  <li><a href="{% url opts|admin_urlname:'changelist' %}">{{opts.verbose_name_plural|capfirst}}</a></li>
+  <li><a href="{% url opts|admin_urlname:'change' object.pk %}">{{ object|truncatewords:"18" }}</a></li>
   <li class="active">{% trans 'History' %}</li>
 </ul>
 {% endblock %}
 
 {% block content %}
   <div class="navbar">
-    <div class="navbar-inner">
-      <a class="brand icon-time" href="#">{{title}}</a>
-    </div>
+    <a class="navbar-brand icon-time" href="#">{{title}}</a>
   </div>
 <div id="content-main">
 <div class="module">

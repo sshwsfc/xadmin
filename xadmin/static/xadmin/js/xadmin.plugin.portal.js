@@ -1,7 +1,7 @@
 jQuery(function() {
     $( ".column" ).sortable({
         connectWith: ".column",
-        handle: '.box-title',
+        handle: '.panel-heading',
         forcePlaceholderSize: true,
         cursor: "move",
         cancel: ".unsort, .tab-content",
@@ -9,7 +9,7 @@ jQuery(function() {
             var pos = [];
             $('.column').each(function(){
                 var col = [];
-                $(this).find('.box').each(function(){
+                $(this).find('.panel').each(function(){
                     col.push($(this).attr('id'));
                 });
                 pos.push(col.join(','));
@@ -22,15 +22,15 @@ jQuery(function() {
         }
     });
 
-    $( ".box" )
-        .find( ".box-title" )
+    $( ".panel" )
+        .find( ".panel-heading" )
             .prepend( "<i class='icon icon-chevron-up chevron'></i>")
             .end()
-        .find( ".box-content" );
+        .find( ".panel-content" );
 
-    $( ".box-title .icon.chevron" ).click(function() {
+    $( ".panel-heading .icon.chevron" ).click(function() {
         $( this ).toggleClass( "icon-chevron-up" ).toggleClass( "icon-chevron-down" );
-        $( this ).parents( ".box:first" ).find( ".box-content" ).toggle('fast');
+        $( this ).parents( ".panel:first" ).find( ".panel-content" ).toggle('fast');
     });
     
     $( ".column" ).disableSelection();

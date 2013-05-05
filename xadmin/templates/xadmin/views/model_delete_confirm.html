@@ -5,9 +5,9 @@
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
-<li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> <span class="divider">/</span></li>
-<li><a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst|escape }}</a> <span class="divider">/</span></li>
-<li><a href="{% url opts|admin_urlname:'changelist' %}{{ object.pk }}/update">{{ object|truncatewords:"18" }}</a> <span class="divider">/</span></li>
+<li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
+<li><a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst|escape }}</a></li>
+<li><a href="{% url opts|admin_urlname:'changelist' %}{{ object.pk }}/update">{{ object|truncatewords:"18" }}</a></li>
 <li>{% trans 'Delete' %}</li>
 </ul>
 {% endblock %}

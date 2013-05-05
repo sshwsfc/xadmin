@@ -6,39 +6,31 @@
 
 {% block body %}
   <!-- Header -->
-  <div id="top-nav" class="navbar navbar-inverse navbar-fixed-top">
-    <div class="navbar-inner">
-      <div class="container-fluid">
-        <a class="brand" href="#">{% block branding %}{{ site_title }}{% endblock %}</a>
-        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-menu.nav-collapse,.nav-list.nav-collapse">
-          <span class="icon-list"></span>
-        </a>
-        {% view_block 'top_navbar' %}
-        <div class="nav-menu nav-collapse collapse">
-          <ul class="nav pull-right">
-            {% if user.is_active and user.is_staff %}
-              <li class="dropdown">
-                <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-                <strong>{% trans 'Welcome,' %} {% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %}</strong> <b class="caret"></b></a>
-                <ul id="g-account-menu" class="dropdown-menu" role="menu">
-                  {% view_block 'top_account_menu' %}
-                </ul>
-              </li>
-            {% endif %}
-            <li><a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a></li>
-          </ul>
-        </div>
-        {% view_block 'top_navmenu' %}
-      </div>
+  <div id="top-nav" class="navbar navbar-inverse navbar-static-top">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+      <span class="icon-list"></span>
+    </button>
+    <a class="navbar-brand" href="#">{% block branding %}{{ site_title }}{% endblock %}</a>
+    <div class="nav-collapse collapse navbar-responsive-collapse">
+      <ul class="nav navbar-nav pull-right">
+        {% if user.is_active and user.is_staff %}
+          <li class="dropdown">
+            <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
+            <strong>{% trans 'Welcome,' %} {% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %}</strong> <span class="caret"></span></a>
+            <ul id="g-account-menu" class="dropdown-menu" role="menu">
+              {% view_block 'top_account_menu' %}
+            </ul>
+          </li>
+        {% endif %}
+        <li><a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a></li>
+      </ul>
     </div>
   </div>
-  <div id="body-content" class="container-fluid">
-    <div class="row-fluid">
-      <div id="left-side" class="span2 ">
-      {% block navbar %}
+  <div id="body-content">
+    <div id="left-side" class="col col-lg-2">
+        {% block navbar %}
         {% if nav_menu %}
-          <div class="well sidebar-nav">
-            <ul class="nav nav-list hidden-tablet nav-menu nav-collapse collapse">
+            <ul class="well nav nav-pills nav-stacked">
               {% for item in nav_menu %}
                 <li class="nav-header {% if item.selected %} active{% endif %}">
                   {% if item.url %}<a href="{{ item.url }}" class="section">{% endif %}
@@ -55,38 +47,15 @@
               {% endfor %}
             {% view_block 'menu-nav' %}
             </ul>
-            <ul class="nav nav-list visible-tablet hidden-phone">
-              {% for item in nav_menu %}
-                <li class="app_menu dropdown-submenu {% if item.selected %} active{% endif %}">
-                  <a href="#" class="section">
-                    {% if item.icon %}<i class="icon-{{item.icon}}"></i>
-                    {% elif item.first_icon %}<i class="icon-{{item.first_icon}}"></i>
-                    {%else%}<i class="icon-exclamation-sign"></i>{% endif %}
-                  </a><hr/>
-                  <ul class="dropdown-menu">
-                    {% for sitem in item.menus %}
-                    <li{% if sitem.selected %} class="active"{% endif %}>
-                      {% if sitem.url %}<a href="{{ sitem.url }}">{% endif %}
-                      {% if sitem.icon %}<i class="icon-{{sitem.icon}}"></i>{%else%}<i class="icon-exclamation-sign"></i>{% endif %}
-                      {{ sitem.title }}</span>{% if sitem.url %}</a>{% endif %}
-                    </li>
-                    {% endfor %}
-                  </ul>
-                </li>
-              {% endfor %}
-            {% view_block 'menu-nav' %}
-            </ul>
-          </div><!--/.well -->
         {% else %}
           <div class="well">
             <p>{% trans "You don't have permission to edit anything." %}</p>
           </div>
         {% endif %}
       {% endblock %}
-      </div><!--/span-->
 
-      <div id="content-block" class="span10">
-
+    </div>
+    <div id="content-block" class="col col-lg-10">
         {% block breadcrumbs %}
         <ul class="breadcrumb">
         <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> <li>
@@ -108,16 +77,14 @@
         {% block content %}
         {{ content }}
         {% endblock %}
-
-      </div><!--/span-->
-    </div><!--/row-->
+    </div>
 
     {% block footer %}
-      <hr>
-      <footer>
+      <hr/>
+      <footer class="text-center">
         <p>&copy; my-company.inc 2013</p>
       </footer>
     {% endblock %}
 
-  </div><!--/.fluid-container-->
+  </div>
 {% endblock body %}

@@ -12,19 +12,17 @@
 
 {% block content %}
 <div class="navbar">
-  <div class="navbar-inner">
-    <a class="brand" href="#">{% if icon %}<i class="icon-{{icon}}"></i>{%endif%} {{ title }}</a>
-    <div class="btn-group pull-right">
-      {% if has_add_widget_permission %}
-      <a title="{% trans "Add Widget" %}" href="{{ add_widget_url }}" class="btn btn-primary">
-        <i class="icon-plus icon-white"></i> <span class="hidden-phone">{% trans "Add Widget" %}</span></a>
-      {% endif %}
-    </div>
+  <a class="navbar-brand" href="#">{% if icon %}<i class="icon-{{icon}}"></i>{%endif%} {{ title }}</a>
+  <div class="btn-group pull-right">
+    {% if has_add_widget_permission %}
+    <a title="{% trans "Add Widget" %}" href="{{ add_widget_url }}" class="btn btn-primary navbar-btn">
+      <i class="icon-plus icon-white"></i> {% trans "Add Widget" %}</a>
+    {% endif %}
   </div>
 </div>
-<div class="dashboard row-fluid">
+<div class="dashboard row">
   {% for c in columns %}
-  <div class="{{ c.0 }} column">
+  <div class="col {{ c.0 }} column">
     {% for widget in c.1 %}
       {{ widget.widget|safe }}
     {% endfor %}

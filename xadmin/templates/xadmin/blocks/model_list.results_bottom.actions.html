@@ -7,7 +7,7 @@
     <i class="icon-wrench icon-white"></i> 
     <span class="action-counter">{{ selection_note }}</span>
     <span class="all">{{ selection_note_all }}</span>
-    <b class="caret"></b></a>
+    <span class="caret"></span></a>
     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
       {% for name, descr in action_choices %}
         <li><a onclick="$.do_action('{{name}}');"><i class="icon-remove"></i> {{descr}}</a></li>

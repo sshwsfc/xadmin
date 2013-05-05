@@ -1,13 +1,4 @@
-body {
-  padding-bottom: 40px;
-}
-#top-nav {
-  position: relative;
-  margin-bottom: 18px;
-}
-.sidebar-nav {
-  padding: 9px 0;
-}
+
 a { cursor: pointer;}
 
 .popover{
@@ -92,34 +83,19 @@ a { cursor: pointer;}
   display: block;
 }
 
-.box {
-  margin-bottom: 15px;
-  overflow: visible;
-  position: relative;
-  padding: 0px;
-}
-.box .box-title {
-  padding: 10px 15px 10px;
-  margin: 0px;
-}
-.box .box-title .icon{
+.panel .panel-heading .icon{
   float: right;
-  width: 20px;
-  height: 20px;
   top: 50%;
   margin-right: 5px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
 }
-.box .box-title .badge { float: right; top: 50%; margin-left: 10px;}
-.box.no_title .box-title{
+.panel .panel-heading .badge { float: right; top: 50%; margin-left: 10px;}
+.panel.no_title .panel-heading{
   display: none;
 }
 
-.box .box-content{
-  padding: 10px 15px 15px;
-}
-.box .box-content.nopadding{
+.panel.nopadding{
   padding: 0px;
 }
 .ui-sortable-placeholder { border: 1px dotted #CCC; visibility: visible !important; }
@@ -212,6 +188,11 @@ a { cursor: pointer;}
   color: #a10000;
 }
 
+/* list overflow */
+.x-scroll {
+  overflow-x: auto;
+}
+
 /* models list */
 ul.model_ul{
   margin-bottom: 20px;
@@ -260,3 +241,8 @@ a[class^="icon-"]:before, a[class*=" icon-"]:before {
 .navbar .input-append, .navbar .input-prepend {
   margin-bottom: 5px;
 }
+
+/** import for bp3.0 */
+.pagination.pagination-inline{margin-top: 0px; margin-bottom: 10px;}
+
+

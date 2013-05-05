@@ -21,16 +21,16 @@ class Row(layout.Div):
 class Col(layout.Column):
 
     def __init__(self, id, *fields, **kwargs):
-        css_class = ['column', 'form-column', id, 'span%d' % kwargs.get('span', 6)]
+        css_class = ['column', 'form-column', id, 'col col-lg-%d' % kwargs.get('span', 6)]
         if kwargs.get('horizontal'):
             css_class.append('form-horizontal')
         super(Col, self).__init__(css_class=' '.join(css_class), *fields, **kwargs)
 
 class Main(layout.Column):
-    css_class = "column form-column main span9 form-horizontal"
+    css_class = "column form-column main col col-lg-9 form-horizontal"
 
 class Side(layout.Column):
-    css_class = "column form-column sidebar span3"
+    css_class = "column form-column sidebar col col-lg-3"
 
 class Container(layout.Div):
-    css_class = "form-container row-fluid"
+    css_class = "form-container row clearfix"

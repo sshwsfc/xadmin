@@ -46,7 +46,7 @@
     $.fn.datepicker.dates['xadmin'] = $.date_local;
 
     $.fn.exform.renders.push(function(f){
-      f.find('.input-append.date').each(function(e){
+      f.find('.input-group.date input').each(function(e){
         var dp = $(this).datepicker({format: $.date_local.dateJSFormat, language: 'xadmin', todayBtn: "linked", autoclose: true})
           .data('datepicker');
         $(this).find('button').click(function(e){
@@ -56,7 +56,7 @@
         })
       })
       if($.fn.timepicker){
-        f.find('.input-append.time').each(function(e){
+        f.find('.input-group.time').each(function(e){
           var tp = $(this).find('input').timepicker({
             minuteStep: 1,
             showSeconds: true,

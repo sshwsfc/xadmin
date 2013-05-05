@@ -5,19 +5,17 @@
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
-  <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> <span class="divider">/</span></li>
-  <li><a href="{% url opts|admin_urlname:'changelist' %}">{{opts.verbose_name_plural|capfirst}}</a> <span class="divider">/</span></li>
-  <li><a href="{% url opts|admin_urlname:'change' object.pk %}">{{ object|truncatewords:"18" }}</a> <span class="divider">/</span></li>
-  <li><a href="{% url opts|admin_urlname:'revisionlist' object.pk %}">{% trans 'History' %}</a> <span class="divider">/</span></li>
+  <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
+  <li><a href="{% url opts|admin_urlname:'changelist' %}">{{opts.verbose_name_plural|capfirst}}</a></li>
+  <li><a href="{% url opts|admin_urlname:'change' object.pk %}">{{ object|truncatewords:"18" }}</a></li>
+  <li><a href="{% url opts|admin_urlname:'revisionlist' object.pk %}">{% trans 'History' %}</a></li>
   <li class="active">{% blocktrans with opts.verbose_name as verbose_name %}Diff {{verbose_name}}{% endblocktrans %}</li>
 </ul>
 {% endblock %}
 
 {% block content %}
 <div class="navbar">
-  <div class="navbar-inner">
-    <a class="brand icon-time" href="#">{% blocktrans with opts.verbose_name as verbose_name %}Diff {{verbose_name}}{% endblocktrans %}</a>
-  </div>
+  <a class="navbar-brand icon-time" href="#">{% blocktrans with opts.verbose_name as verbose_name %}Diff {{verbose_name}}{% endblocktrans %}</a>
 </div>
 <div id="content-main">
 <div class="module">

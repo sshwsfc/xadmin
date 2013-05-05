@@ -1,11 +1,18 @@
 
 /* CUSTOM FORM FIELDS */
 
-.date-field {
-  max-width: 110px;
+.input-group.date {
+  width: 230px;
 }
-.time-field {
-  max-width: 60px;
+.input-group.time {
+  width: 165px;
+}
+.controls .datetime > .input-group {
+  float: left;
+  margin-right: 5px;
+}
+.controls .datetime > .input-group:last-child {
+  margin-right: 0px;
 }
 select.selectmultiple {
   width: 70%;
@@ -15,25 +22,23 @@ select.selectmultiple {
 .url-field {
     width: 30em;
 }
-
 .textarea-field {
     width: 94%;
 }
-
 .flatpages-flatpage #id_content {
     height: 40.2em;
 }
-
 .text-field, .textinput {
     width: 60%;
     max-width: 300px;
 }
-
 .int-field {
     width: 30%;
     max-width: 100px;
 }
-
+.select2-container .select2-choice {
+  height: 31px;
+}
 .form-actions.fixed{
   position:fixed;
   _position:absolute;
@@ -59,43 +64,6 @@ select, .select2-container {
 .form-horizontal .select2-container{
   margin-bottom: 0px;
 }
-
-/* form css */
-.control-group {
-  margin-bottom: 0px;
-}
-.control-label {
-  padding: 6px 15px;
-  margin-bottom: 0;
-  font-weight: bold;
-}
-.controls {
-  padding: 10px 0 0px 15px;
-}
-.value .controls{
-  padding-bottom: 10px;
-}
-
-.form-horizontal .control-group {
-  margin-bottom: 0px;
-}
-.form-horizontal .control-label {
-  padding: 19px 0 0;
-  margin-bottom: 0;
-  font-weight: bold;
-}
-.form-horizontal .controls {
-  padding: 15px 0 15px 20px;
-}
-.form-horizontal .value .control-label {
-  padding: 12px 0;
-}
-.form-horizontal .value .controls {
-  padding: 12px 0 12px 20px;
-}
-.form-horizontal .form-row .value .controls {
-  height: 20px;
-}
 .form-horizontal.short_label .control-label,
 .form-horizontal .short_label .control-label {
   width: 90px;
@@ -107,6 +75,7 @@ select, .select2-container {
 .asteriskField {
   color: red;
 }
+
 .form-horizontal .form-row {
   margin: 0px;
 }
@@ -118,35 +87,14 @@ select, .select2-container {
   width: 50%;
   float: left;
 }
-.main.form-horizontal .control-label {
-  width: 140px;
-}
-.main.form-horizontal .controls {
-  margin-left: 160px;
+.form-horizontal .form-row::before, .form-horizontal .form-row::after{
+  display: table;
+  content: " ";
 }
 
-@media (max-width: 480px) {
-  .form-horizontal .form-row .control-group{
-    display: block;
-    width: auto;
-    float: none;
-  }  
-  .form-horizontal .form-row.num2 .control-group,
-  .form-horizontal .form-row.num3 .control-group,
-  .main.form-horizontal .control-label{
-    width: auto;
-  }
-  .main.form-horizontal .controls {
-    margin-left: 0px;
-  }
-  .form-horizontal .control-label {
-    padding: 6px 15px !important;
-  }
-  .form-horizontal .controls {
-    padding: 10px 0 10px 15px !important;
-  }
-  .form-horizontal .form-row .controls {
-    height: auto !important;
+@media (min-width: 767px) {
+  .form-horizontal .panel-content:not(.formset-content){
+    margin: 15px -15px -15px;
   }
 }
 
@@ -161,4 +109,9 @@ img.field_img {
 }
 .diff_field .controls{
   background-color: #FCF8E3;
+}
+
+/** tabs **/
+.nav.nav-tabs {
+  margin-bottom: 15px;
 }

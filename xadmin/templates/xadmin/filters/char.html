@@ -10,12 +10,14 @@
       <div class="popover-content">
         <form method="get" action="">
           {{ form_params|safe }}
-            <div class="input-append">
+            <div class="input-group">
               <input name="{{search_name}}" class="input-medium" type="text" value="{{search_val}}" placeholder="{% trans "Enter" %} {{title}}…"/>
-            {% if search_val %}
-              <a class="btn" href="{{remove_url}}">x</a>
-            {% endif %}
-              <button class="btn btn-success" type="submit"><i class="icon-search icon-white"></i></button>
+              <span class="input-group-btn">
+              {% if search_val %}
+                <a class="btn" href="{{remove_url}}">x</a>
+              {% endif %}
+                <button class="btn btn-success" type="submit"><i class="icon-search icon-white"></i></button>
+              </span>
             </div>
         </form>
       </div>

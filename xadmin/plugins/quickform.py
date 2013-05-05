@@ -56,7 +56,7 @@ class RelatedFieldWidgetWrapper(forms.Widget):
 
     @property
     def media(self):
-        media = self.widget.media + vendor('xadmin.plugin.quick-form.js', 'xadmin.modal.css')
+        media = self.widget.media + vendor('xadmin.plugin.quick-form.js')
         return media
 
     def render(self, name, value, *args, **kwargs):

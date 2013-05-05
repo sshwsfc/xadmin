@@ -30,7 +30,7 @@ class DetailsPlugin(BaseAdminPlugin):
     # Media
     def get_media(self, media):
         if self.show_all_rel_details or self.show_detail_fields:
-            media = media + self.vendor('xadmin.plugin.details.js', 'xadmin.modal.css', 'xadmin.form.css')
+            media = media + self.vendor('xadmin.plugin.details.js', 'xadmin.form.css')
         return media
 
 site.register_plugin(DetailsPlugin, ListAdminView)

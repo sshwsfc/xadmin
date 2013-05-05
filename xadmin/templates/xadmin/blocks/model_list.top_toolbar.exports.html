@@ -1,7 +1,7 @@
 {% load i18n %}
 <div class="btn-group export">
   <a class="dropdown-toggle btn btn-small" data-toggle="dropdown" href="#">
-    <i class="icon-share"></i> <span class="hidden-phone">{% trans "Export" %} <b class="caret"></b></span>
+    <i class="icon-share"></i> {% trans "Export" %} <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
     {% for et in export_types %}

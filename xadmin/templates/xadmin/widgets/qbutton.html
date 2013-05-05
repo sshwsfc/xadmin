@@ -2,9 +2,9 @@
 {% load i18n xadmin_tags %}
 
 {% block content %}
-  <div class="row-fluid">
+  <div class="btn-group btn-group-justified">
     {% for btn in btns %}
-    <a href="{{ btn.url }}" class="btn btn-primary btn-quick span3">
+    <a href="{{ btn.url }}" class="btn btn-primary btn-quick">
       <i class="icon-leaf"></i>
       <p>{{ btn.title }}</p>
     </a>

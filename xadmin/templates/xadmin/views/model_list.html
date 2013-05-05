@@ -16,38 +16,34 @@
 {% endblock %}
 {% block bodyclass %}change-list{% endblock %}
 
-{% if not is_popup %}
 {% block breadcrumbs %}
 <ul class="breadcrumb">
-  <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> <span class="divider">/</span></li>
+  <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
   <li class="active">{{ cl.opts.verbose_name_plural|capfirst }}</li>
 </ul>
 {% endblock %}
-{% endif %}
 
 {% block content %}
     <div class="navbar">
-      <div class="navbar-inner">
-        <a class="brand hidden-phone" href="#">{% if brand_icon %}<i class="icon-{{brand_icon}}"></i> {% endif %}{{brand_name}}</a>
-        <ul class="nav">
+        <a class="navbar-brand" href="#">{% if brand_icon %}<i class="icon-{{brand_icon}}"></i> {% endif %}{{brand_name}}</a>
+        <ul class="nav navbar-nav">
           {% view_block 'nav_menu' %}
         </ul>
           {% view_block 'nav_form' %}
-        <div class="btn-group pull-right">
+        <div class="btn-group navbar-btn pull-right">
           {% view_block 'object-tools' %}
           {% if has_add_permission %}
               <a href="{{add_url}}" class="btn btn-primary"><i class="icon-plus icon-white"></i> 
-              <span class="hidden-phone">{% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}</span></a>
+              {% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}</a>
           {% endif %}
         </div>
-      </div>
     </div>
 
     <div class="btn-toolbar pull-right">
       {% view_block 'top_toolbar' %}
       <div class="btn-group">
         <a class="dropdown-toggle btn btn-small" data-toggle="dropdown" href="#">
-          <i class="icon-list-alt"></i> <span class="hidden-phone">{% trans "Select Columes" %} <b class="caret"></b></span>
+          <i class="icon-list-alt"></i> {% trans "Select Columes" %} <span class="caret"></span>
         </a>
         <ul class="dropdown-menu model_fields" role="menu" aria-labelledby="dLabel">
           <li><a href="{{clean_select_field_url}}"><i class="icon-refresh"></i> {% trans "Restore Selected" %}</a></li>
@@ -59,21 +55,21 @@
           {% endfor %}
         </ul>
       </div>
-      <div class="btn-group layout-btns hidden-phone" data-toggle="buttons-radio">
+      <div class="btn-group layout-btns" data-toggle="buttons-radio">
         <button type="button" class="btn btn-small layout-normal active"><i class="icon-th-large"></i></button>
         <button type="button" class="btn btn-small layout-condensed"><i class="icon-th"></i></button>
         {% view_block 'top_layout_btns' %}
       </div>
-      <div class="btn-group layout-btns hidden-phone" data-toggle="buttons-checkbox">
+      <div class="btn-group layout-btns" data-toggle="buttons-checkbox">
         <button type="button" class="btn btn-small layout-full"><i class="icon-fullscreen"></i></button>
         {% view_block 'top_check_btns' %}
       </div>
       {% view_block 'top_btns' %}
     </div>
 
-    <div class="pagination pagination-small pagination-left">
+    <ul class="pagination pagination-small pagination-left pagination-inline">
       {% view_block 'pagination' 'small' %}
-    </div>
+    </ul>
     
     <form id="changelist-form" action="" method="post"{% view_block 'result_list_form' %}>{% csrf_token %}
     {% view_block 'results_top' %}
@@ -146,8 +142,8 @@
     {% view_block 'results_bottom' %}
     </form>
 
-    <div class="pagination pagination-centered">
+    <ul class="pagination pagination-centered">
       {% view_block 'pagination' %}
-    </div>
+    </ul>
 
 {% endblock %}
