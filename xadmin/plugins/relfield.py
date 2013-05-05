@@ -6,6 +6,7 @@ from django.utils.translation import ugettext as _
 from django import forms
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView
+from xadmin.util import vendor
 
 class ForeignKeySearchWidget(forms.TextInput):
 
@@ -37,6 +38,10 @@ class ForeignKeySearchWidget(forms.TextInput):
             return '%s' % escape(Truncator(obj).words(14, truncate='...'))
         except (ValueError, self.rel.to.DoesNotExist):
             return ""
+            
+    @property
+    def media(self):
+        return vendor('select2.js', 'select2.css', 'xadmin.widget.select.js')
 
 class RelateFieldPlugin(BaseAdminPlugin):
 
