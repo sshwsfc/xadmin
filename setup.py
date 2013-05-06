@@ -6,18 +6,19 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-xadmin',
-    version='0.1.0',
+    version='0.1.0-dev',
     description='Drop-in replacement of Django admin comes with lots of goodies, fully extensible with plugin support, pretty UI based on Twitter Bootstrap.',
     long_description=open('README.md').read(),
     author='sshwsfc',
     author_email='sshwsfc@gmail.com',
-    url='http://xadmin.io',
+    url='http://www.xadmin.io',
+    download_url='http://github.com/sshwsfc/django-xadmin/archive/master.zip',
     packages=['xadmin', 'xadmin.plugins', 'xadmin.templatetags', 'xadmin.tests', 'xadmin.views'],
     include_package_data=True,
     zip_safe=False,
     keywords=['admin', 'django', 'xadmin', 'bootstrap'],
     classifiers=[
-        'Development Status :: 1 - Alpha',
+        'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
         'Framework :: Django',
         'Intended Audience :: Developers',

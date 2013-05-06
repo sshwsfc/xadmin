@@ -38,17 +38,28 @@ Screenshots
 ![Edit inline](https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/doc/images/plugins/editable.png)
 
 
+Get Started
+-----------
+
+**Install**
+
+Xadmin is best installed via PyPI. To install the latest version, run:
+
+```bash
+pip install django-xadmin
+```
+
+or Install form github source:
+
+```bash
+pip install git+git://github.com/sshwsfc/django-xadmin.git
+```
+
 Documentation
 --------
 
 * English (coming soon)
 * [Chinese](https://xadmin.readthedocs.org/en/latest/index.html)
-
-
-Get Started
------------
-
-Coming soon.
 
 Online Group
 --------------
@@ -63,7 +74,7 @@ cd demo_app
 ./manage.py runserver
 ```
 
-Open http://127.0.0.1:8000 in your browser
+Open http://127.0.0.1:8000 in your browser, the admin user password is ``admin``
 
 Help
 ----
