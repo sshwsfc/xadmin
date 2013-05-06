@@ -1,15 +1,18 @@
-from setuptools import setup
+#!/usr/bin/env python
+from setuptools import setup, find_packages
+
+#version_tuple = __import__('xadmin').VERSION
+#version = ".".join([str(v) for v in version_tuple])
 
 setup(
     name='django-xadmin',
-    version='0.1.1',
+    version='0.1.0',
     description='Drop-in replacement of Django admin comes with lots of goodies, fully extensible with plugin support, pretty UI based on Twitter Bootstrap.',
     long_description=open('README.md').read(),
     author='sshwsfc',
     author_email='sshwsfc@gmail.com',
     url='http://xadmin.io',
-    download_url='',
-    packages=['xadmin'],
+    packages=['xadmin', 'xadmin.plugins', 'xadmin.templatetags', 'xadmin.tests', 'xadmin.views'],
     include_package_data=True,
     zip_safe=False,
     keywords=['admin', 'django', 'xadmin', 'bootstrap'],
