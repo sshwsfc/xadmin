@@ -200,11 +200,11 @@ def get_deleted_objects(objs, opts, user, admin_site, using):
         else:
             # Don't display link to edit, because it either has no
             # admin or is edited inline.
-            return u'%s: %s' % (capfirst(opts.verbose_name),
-                                force_unicode(obj))
+            return mark_safe(u'<span class="label label-info">%s:</span> %s' %
+                             (escape(capfirst(opts.verbose_name)),
+                              escape(obj)))
 
     to_delete = collector.nested(format_callback)
-
     protected = [format_callback(obj) for obj in collector.protected]
 
     return to_delete, perms_needed, protected
