@@ -57,11 +57,13 @@
       })
       if($.fn.timepicker){
         f.find('.input-append.time').each(function(e){
-          var tp = $(this).find('input').timepicker({
+          var el = $(this).find('input');
+          var value = el.val();
+          var tp = el.timepicker({
             minuteStep: 1,
             showSeconds: true,
             showMeridian: false,
-            defaultTime: "value",
+            defaultTime: false,
           }).data('timepicker');
           $(this).find('button').click(function(e){
             tp.$element.val("");
