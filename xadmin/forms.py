@@ -7,14 +7,16 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy, ugettext as _
 
 ERROR_MESSAGE = ugettext_lazy("Please enter the correct username and password "
-        "for a staff account. Note that both fields are case-sensitive.")
+                              "for a staff account. Note that both fields are case-sensitive.")
+
 
 class AdminAuthenticationForm(AuthenticationForm):
     """
     A custom authentication form used in the admin app.
 
     """
-    this_is_the_login_form = forms.BooleanField(widget=forms.HiddenInput, initial=1,
+    this_is_the_login_form = forms.BooleanField(
+        widget=forms.HiddenInput, initial=1,
         error_messages={'required': ugettext_lazy("Please log in again, because your session has expired.")})
 
     def clean(self):
@@ -23,7 +25,8 @@ class AdminAuthenticationForm(AuthenticationForm):
         message = ERROR_MESSAGE
 
         if username and password:
-            self.user_cache = authenticate(username=username, password=password)
+            self.user_cache = authenticate(
+                username=username, password=password)
             if self.user_cache is None:
                 if u'@' in username:
                     # Mistakenly entered e-mail address instead of username? Look it up.

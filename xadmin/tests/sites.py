@@ -6,8 +6,10 @@ from xadmin.views import BaseAdminView, BaseAdminPlugin, ModelAdminView, filter_
 
 from models import ModelA
 
+
 class ModelAAdmin(object):
     pass
+
 
 class TestAdminView(BaseAdminView):
     site_title = "TEST TITLE"
@@ -19,18 +21,22 @@ class TestAdminView(BaseAdminView):
     def get(self, request):
         return HttpResponse(self.site_title)
 
+
 class TestOption(object):
     site_title = "TEST PROJECT"
+
 
 class TestPlugin(BaseAdminPlugin):
 
     def get_title(self, title):
         return "%s PLUGIN" % title
 
+
 class TestModelAdminView(ModelAdminView):
-    
+
     def get(self, request, obj_id):
         return HttpResponse(str(obj_id))
+
 
 class AdminSiteTest(TestCase):
 
@@ -79,10 +85,10 @@ class AdminSiteTest(TestCase):
 
         site.register(ModelA, ModelAAdmin)
         site.register_view(r"^test/$", TestAdminView, 'test')
-        site.register_modelview(r'^(.+)/test/$', TestModelAdminView, name='%s_%s_test')
+        site.register_modelview(
+            r'^(.+)/test/$', TestModelAdminView, name='%s_%s_test')
 
         urls, app_name, namespace = site.urls
 
         self.assertEqual(app_name, 'test_app')
         self.assertEqual(namespace, 'test')
-

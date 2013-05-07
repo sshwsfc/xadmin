@@ -18,10 +18,13 @@ from xadmin.views.base import filter_hook, ModelAdminView
 ACTION_CHECKBOX_NAME = '_selected_action'
 checkbox = forms.CheckboxInput({'class': 'action-select'}, lambda value: False)
 
+
 def action_checkbox(obj):
     return checkbox.render(ACTION_CHECKBOX_NAME, force_unicode(obj.pk))
-action_checkbox.short_description = mark_safe('<input type="checkbox" id="action-toggle" />')
+action_checkbox.short_description = mark_safe(
+    '<input type="checkbox" id="action-toggle" />')
 action_checkbox.allow_tags = True
+
 
 class BaseActionView(ModelAdminView):
     action_name = None
@@ -40,6 +43,7 @@ class BaseActionView(ModelAdminView):
     @filter_hook
     def do_action(self, queryset):
         pass
+
 
 class DeleteSelectedAction(BaseActionView):
 
@@ -106,8 +110,9 @@ class DeleteSelectedAction(BaseActionView):
         })
 
         # Display the confirmation page
-        return TemplateResponse(self.request, self.delete_selected_confirmation_template or \
-            self.get_template_list('views/model_delete_selected_confirm.html'), context, current_app=self.admin_site.name)
+        return TemplateResponse(self.request, self.delete_selected_confirmation_template or
+                                self.get_template_list('views/model_delete_selected_confirm.html'), context, current_app=self.admin_site.name)
+
 
 class ActionPlugin(BaseAdminPlugin):
 
@@ -136,7 +141,7 @@ class ActionPlugin(BaseAdminPlugin):
         if self.actions and self.admin_view.result_count:
             av = self.admin_view
             selection_note_all = ungettext('%(total_count)s selected',
-                'All %(total_count)s selected', av.result_count)
+                                           'All %(total_count)s selected', av.result_count)
 
             new_context = {
                 'selection_note': _('0 of %(cnt)s selected') % {'cnt': len(av.result_list)},
@@ -154,7 +159,7 @@ class ActionPlugin(BaseAdminPlugin):
         if self.actions and 'action' in request.POST and '_save' not in request.POST:
             action = request.POST['action']
 
-            if not self.actions.has_key(action):
+            if action not in self.actions:
                 msg = _("Items must be selected in order to perform "
                         "actions on them. No items have been changed.")
                 av.message_user(msg)
@@ -195,7 +200,8 @@ class ActionPlugin(BaseAdminPlugin):
             class_actions = getattr(klass, 'actions', [])
             if not class_actions:
                 continue
-            actions.extend([self.get_action(action) for action in class_actions])
+            actions.extend(
+                [self.get_action(action) for action in class_actions])
 
         # get_action might have returned None, so filter any of those out.
         actions = filter(None, actions)
@@ -248,4 +254,3 @@ class ActionPlugin(BaseAdminPlugin):
 
 
 site.register_plugin(ActionPlugin, ListAdminView)
-

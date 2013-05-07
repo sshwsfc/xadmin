@@ -1,3 +1,24 @@
 
-import actions, filters, bookmark, export, refresh, sortable, details, editable, relate, chart, ajax, relfield, inline, topnav
-import portal, quickform, wizard, images, xversion, auth, multiselect, themes, aggregation
+import actions
+import filters
+import bookmark
+import export
+import refresh
+import sortable
+import details
+import editable
+import relate
+import chart
+import ajax
+import relfield
+import inline
+import topnav
+import portal
+import quickform
+import wizard
+import images
+import xversion
+import auth
+import multiselect
+import themes
+import aggregation

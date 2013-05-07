@@ -16,16 +16,19 @@ class IndexView(Dashboard):
     title = _("Main Dashboard")
     icon = "dashboard"
 
+
 class UserSettingView(BaseAdminView):
 
     @never_cache
     def post(self, request):
         key = request.POST['key']
         val = request.POST['value']
-        us, created = UserSettings.objects.get_or_create(user=self.user, key=key)
+        us, created = UserSettings.objects.get_or_create(
+            user=self.user, key=key)
         us.value = val
         us.save()
         return HttpResponse('')
+
 
 class LoginView(BaseAdminView):
 
@@ -61,6 +64,7 @@ class LoginView(BaseAdminView):
     def post(self, request, *args, **kwargs):
         return self.get(request)
 
+
 class LogoutView(BaseAdminView):
 
     logout_template = None
@@ -68,7 +72,7 @@ class LogoutView(BaseAdminView):
     @filter_hook
     def update_params(self, defaults):
         pass
-        
+
     @never_cache
     def get(self, request, *args, **kwargs):
         context = self.get_context()
@@ -85,6 +89,3 @@ class LogoutView(BaseAdminView):
     @never_cache
     def post(self, request, *args, **kwargs):
         return self.get(request)
-
-
-        
