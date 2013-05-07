@@ -17,31 +17,36 @@ try:
 except:
     has_xlwt = False
 
+
 class ExportPlugin(BaseAdminPlugin):
 
     list_export = ('xls', 'csv', 'xml', 'json')
-    export_mimes = {'xls': 'application/vnd.ms-excel', 'csv': 'text/csv', 'xml': 'application/xhtml+xml', 'json': 'application/json'}
+    export_mimes = {'xls': 'application/vnd.ms-excel', 'csv': 'text/csv',
+                    'xml': 'application/xhtml+xml', 'json': 'application/json'}
     export_names = {'xls': 'Excel', 'csv': 'CSV', 'xml': 'XML', 'json': 'JSON'}
-    
+
     def init_request(self, *args, **kwargs):
-        self.list_export = [f for f in self.list_export if f != 'xls' or has_xlwt]
+        self.list_export = [
+            f for f in self.list_export if f != 'xls' or has_xlwt]
 
     def get_results(self, context):
         headers = [c for c in context['result_headers'].cells if c.export]
         rows = context['results']
 
-        return [dict([(force_unicode(headers[i].text), escape(str(o.text))) for i,o in \
-            enumerate(filter(lambda c:getattr(c,'export',False), r.cells))]) \
-            for r in rows]
+        return [dict([(force_unicode(headers[i].text), escape(str(o.text))) for i, o in
+                      enumerate(filter(lambda c:getattr(c, 'export', False), r.cells))])
+                for r in rows]
 
     def get_xls_export(self, context):
         results = self.get_results(context)
         output = StringIO.StringIO()
-        export_header = (self.request.GET.get('export_xls_header', 'off') == 'on')
+        export_header = (
+            self.request.GET.get('export_xls_header', 'off') == 'on')
 
         model_name = self.opts.verbose_name
         book = xlwt.Workbook(encoding='utf8')
-        sheet = book.add_sheet(u"%s %s" % (_(u'Sheet'), force_unicode(model_name)))
+        sheet = book.add_sheet(
+            u"%s %s" % (_(u'Sheet'), force_unicode(model_name)))
         styles = {'datetime': xlwt.easyxf(num_format_str='yyyy-mm-dd hh:mm:ss'),
                   'date': xlwt.easyxf(num_format_str='yyyy-mm-dd'),
                   'time': xlwt.easyxf(num_format_str='hh:mm:ss'),
@@ -81,7 +86,8 @@ class ExportPlugin(BaseAdminPlugin):
         stream = []
 
         if self.request.GET.get('export_csv_header', 'off') == 'on':
-            stream.append(','.join(map(self._format_csv_text, results[0].keys())))
+            stream.append(
+                ','.join(map(self._format_csv_text, results[0].keys())))
 
         for row in results:
             stream.append(','.join(map(self._format_csv_text, row.values())))
@@ -105,33 +111,35 @@ class ExportPlugin(BaseAdminPlugin):
     def get_xml_export(self, context):
         results = self.get_results(context)
         stream = StringIO.StringIO()
-        
+
         xml = SimplerXMLGenerator(stream, "utf-8")
         xml.startDocument()
         xml.startElement("objects", {})
-        
+
         self._to_xml(xml, results)
-        
+
         xml.endElement("objects")
         xml.endDocument()
-        
+
         return stream.getvalue().split('\n')[1]
 
     def get_json_export(self, context):
         results = self.get_results(context)
-        return json.dumps({'objects': results}, ensure_ascii=False, \
-            indent=(self.request.GET.get('export_json_format', 'off') == 'on') and 4 or None)
+        return json.dumps({'objects': results}, ensure_ascii=False,
+                          indent=(self.request.GET.get('export_json_format', 'off') == 'on') and 4 or None)
 
     def get_response(self, response, context, *args, **kwargs):
         if self.request.GET.get('_do_') != 'export':
             return response
 
         file_type = self.request.GET.get('export_type', 'csv')
-        response = HttpResponse(mimetype="%s; charset=UTF-8" % self.export_mimes[file_type])
-        
+        response = HttpResponse(
+            mimetype="%s; charset=UTF-8" % self.export_mimes[file_type])
+
         file_name = self.opts.verbose_name.replace(' ', '_')
-        response['Content-Disposition'] = ('attachment; filename=%s.%s' % (file_name, file_type)).encode('utf-8')
-        
+        response['Content-Disposition'] = ('attachment; filename=%s.%s' % (
+            file_name, file_type)).encode('utf-8')
+
         response.write(getattr(self, 'get_%s_export' % file_type)(context))
         return response
 
@@ -160,5 +168,3 @@ class ExportPlugin(BaseAdminPlugin):
 
 
 site.register_plugin(ExportPlugin, ListAdminView)
-
-

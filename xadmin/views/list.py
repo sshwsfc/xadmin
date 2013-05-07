@@ -27,6 +27,7 @@ DOT = '.'
 # Text to display within change-list table cells if the value is blank.
 EMPTY_CHANGELIST_VALUE = _('None')
 
+
 class FakeMethodField(object):
     """
     This class used when a column is an model function, wrap function as a fake field to display in select columns.
@@ -37,8 +38,10 @@ class FakeMethodField(object):
         self.verbose_name = verbose_name
         self.primary_key = False
 
+
 class ResultRow(dict):
     pass
+
 
 class ResultItem(object):
 
@@ -60,7 +63,8 @@ class ResultItem(object):
 
     @property
     def label(self):
-        text = mark_safe(self.text) if self.allow_tags else conditional_escape(self.text)
+        text = mark_safe(
+            self.text) if self.allow_tags else conditional_escape(self.text)
         if force_unicode(text) == '':
             text = mark_safe('&nbsp;')
         for wrap in self.wraps:
@@ -69,8 +73,10 @@ class ResultItem(object):
 
     @property
     def tagattrs(self):
-        return mark_safe('%s%s' % ((self.tag_attrs and ' '.join(self.tag_attrs) or ''),\
+        return mark_safe(
+            '%s%s' % ((self.tag_attrs and ' '.join(self.tag_attrs) or ''),
             (self.classes and (' class="%s"' % ' '.join(self.classes)) or '')))
+
 
 class ResultHeader(ResultItem):
 
@@ -86,6 +92,7 @@ class ResultHeader(ResultItem):
         self.url_primary = None
         self.url_remove = None
         self.url_toggle = None
+
 
 class ListAdminView(ModelAdminView):
     """
@@ -137,7 +144,7 @@ class ListAdminView(ModelAdminView):
         """
         Return a sequence containing the fields to be displayed on the list.
         """
-        self.base_list_display = self.request.GET.has_key(COL_LIST_VAR) and self.request.GET[COL_LIST_VAR].split('.') or self.list_display
+        self.base_list_display = COL_LIST_VAR in self.request.GET and self.request.GET[COL_LIST_VAR].split('.') or self.list_display
         return list(self.base_list_display)
 
     @filter_hook
@@ -180,14 +187,16 @@ class ListAdminView(ModelAdminView):
             self.result_list = self.list_queryset._clone()
         else:
             try:
-                self.result_list = self.paginator.page(self.page_num+1).object_list
+                self.result_list = self.paginator.page(
+                    self.page_num + 1).object_list
             except InvalidPage:
                 if ERROR_FLAG in self.request.GET.keys():
                     return SimpleTemplateResponse('xadmin/views/invalid_setup.html', {
                         'title': _('Database error'),
                     })
                 return HttpResponseRedirect(self.request.path + '?' + ERROR_FLAG + '=1')
-        self.has_more = self.result_count > (self.list_per_page * self.page_num + len(self.result_list))
+        self.has_more = self.result_count > (
+            self.list_per_page * self.page_num + len(self.result_list))
 
     @filter_hook
     def get_result_list(self):
@@ -224,7 +233,7 @@ class ListAdminView(ModelAdminView):
 
         # Then, set queryset ordering.
         queryset = queryset.order_by(*self.get_ordering())
-        
+
         # Return the queryset.
         return queryset
 
@@ -270,12 +279,15 @@ class ListAdminView(ModelAdminView):
         order is guaranteed by ensuring the primary key is used as the last
         ordering field.
         """
-        ordering = list(super(ListAdminView, self).get_ordering() or self._get_default_ordering())
+        ordering = list(super(ListAdminView, self).get_ordering()
+                        or self._get_default_ordering())
         if ORDER_VAR in self.params and self.params[ORDER_VAR]:
             # Clear ordering and used params
-            ordering = [pfx + self.get_ordering_field(field_name) for n, pfx, field_name in \
-                map(lambda p: p.rpartition('-'), self.params[ORDER_VAR].split('.')) \
-                    if self.get_ordering_field(field_name)]
+            ordering = [pfx + self.get_ordering_field(field_name) for n, pfx, field_name in
+                        map(
+                        lambda p: p.rpartition('-'),
+                        self.params[ORDER_VAR].split('.'))
+                        if self.get_ordering_field(field_name)]
 
         # Ensure that the primary key is systematically present in the list of
         # ordering fields so we can guarantee a deterministic order across all
@@ -325,8 +337,10 @@ class ListAdminView(ModelAdminView):
         """
         fields = [fd for fd in self.base_list_display if fd != f.name]
         if len(self.base_list_display) == len(fields):
-            if f.primary_key: fields.insert(0, f.name)
-            else: fields.append(f.name)
+            if f.primary_key:
+                fields.insert(0, f.name)
+            else:
+                fields.append(f.name)
         return self.get_query_string({COL_LIST_VAR: '.'.join(fields)})
 
     def get_model_method_fields(self):
@@ -340,8 +354,8 @@ class ListAdminView(ModelAdminView):
                     methods.append((name, getattr(self, name)))
             except:
                 pass
-        return [FakeMethodField(name, getattr(method, 'short_description', capfirst(name.replace('_', ' ')))) \
-            for name, method in methods]
+        return [FakeMethodField(name, getattr(method, 'short_description', capfirst(name.replace('_', ' '))))
+                for name, method in methods]
 
     @filter_hook
     def get_context(self):
@@ -350,8 +364,8 @@ class ListAdminView(ModelAdminView):
         """
         self.title = _('%s List') % force_unicode(self.opts.verbose_name)
 
-        model_fields = [(f, f.name in self.list_display, self.get_check_field_url(f)) \
-            for f in (self.opts.fields + self.get_model_method_fields()) if f.name not in self.list_exclude]
+        model_fields = [(f, f.name in self.list_display, self.get_check_field_url(f))
+                        for f in (self.opts.fields + self.get_model_method_fields()) if f.name not in self.list_exclude]
 
         new_context = {
             'module_name': force_unicode(self.opts.verbose_name_plural),
@@ -390,8 +404,8 @@ class ListAdminView(ModelAdminView):
 
         response = self.get_response(context, *args, **kwargs)
 
-        return response or TemplateResponse(request, self.object_list_template or \
-            self.get_template_list('views/model_list.html'), context, current_app=self.admin_site.name)
+        return response or TemplateResponse(request, self.object_list_template or
+                                            self.get_template_list('views/model_list.html'), context, current_app=self.admin_site.name)
 
     @filter_hook
     def post_response(self, *args, **kwargs):
@@ -411,19 +425,19 @@ class ListAdminView(ModelAdminView):
         if i == DOT:
             return mark_safe(u'<span class="dot-page">...</span> ')
         elif i == self.page_num:
-            return mark_safe(u'<span class="this-page">%d</span> ' % (i+1))
+            return mark_safe(u'<span class="this-page">%d</span> ' % (i + 1))
         else:
-            return mark_safe(u'<a href="%s"%s>%d</a> ' % (escape(self.get_query_string({PAGE_VAR: i})), (i == self.paginator.num_pages-1 and ' class="end"' or ''), i+1))
-            
+            return mark_safe(u'<a href="%s"%s>%d</a> ' % (escape(self.get_query_string({PAGE_VAR: i})), (i == self.paginator.num_pages - 1 and ' class="end"' or ''), i + 1))
+
     # Result List methods
     @filter_hook
     def result_header(self, field_name, row):
         ordering_field_columns = self.ordering_field_columns
         item = ResultHeader(field_name, row)
         text, attr = label_for_field(field_name, self.model,
-            model_admin = self,
-            return_attr = True
-        )
+                                     model_admin=self,
+                                     return_attr=True
+                                     )
         item.text = text
         item.attr = attr
         if attr and not getattr(attr, "admin_order_field", None):
@@ -444,19 +458,19 @@ class ListAdminView(ModelAdminView):
             new_order_type = {'asc': 'desc', 'desc': 'asc'}[order_type]
 
         # build new ordering param
-        o_list_asc = [] # URL for making this field the primary sort
-        o_list_desc = [] # URL for making this field the primary sort
-        o_list_remove  = [] # URL for removing this field from sort
-        o_list_toggle  = [] # URL for toggling order type for this field
+        o_list_asc = []  # URL for making this field the primary sort
+        o_list_desc = []  # URL for making this field the primary sort
+        o_list_remove = []  # URL for removing this field from sort
+        o_list_toggle = []  # URL for toggling order type for this field
         make_qs_param = lambda t, n: ('-' if t == 'desc' else '') + str(n)
 
         for j, ot in ordering_field_columns.items():
-            if j == field_name: # Same column
+            if j == field_name:  # Same column
                 param = make_qs_param(new_order_type, j)
                 # We want clicking on this header to bring the ordering to the
                 # front
                 o_list_asc.insert(0, j)
-                o_list_desc.insert(0, '-'+j)
+                o_list_desc.insert(0, '-' + j)
                 o_list_toggle.append(param)
                 # o_list_remove - omit
             else:
@@ -468,7 +482,7 @@ class ListAdminView(ModelAdminView):
 
         if field_name not in ordering_field_columns:
             o_list_asc.insert(0, field_name)
-            o_list_desc.insert(0, '-'+field_name)
+            o_list_desc.insert(0, '-' + field_name)
 
         item.sorted = sorted
         item.sortable = True
@@ -485,9 +499,11 @@ class ListAdminView(ModelAdminView):
             item.btns.append('<a class="toggle" href="%s"><i class="icon-%s"></i></a>' % (
                 self.get_query_string({ORDER_VAR: '.'.join(o_list_toggle)}), 'sort-up' if order_type == "asc" else 'sort-down'))
 
-        item.menus.extend(['<li%s><a href="%s" class="active"><i class="icon-%s"></i> %s</a></li>' % \
-            ((' class="active"' if sorted and order_type==i[0] else ''), \
-                self.get_query_string({ORDER_VAR: '.'.join(i[1])}), i[2], i[3]) for i in menus])
+        item.menus.extend(['<li%s><a href="%s" class="active"><i class="icon-%s"></i> %s</a></li>' %
+                         (
+                             (' class="active"' if sorted and order_type == i[
+                              0] else ''),
+                           self.get_query_string({ORDER_VAR: '.'.join(i[1])}), i[2], i[3]) for i in menus])
         item.classes.extend(th_classes)
 
         return item
@@ -499,7 +515,8 @@ class ListAdminView(ModelAdminView):
         """
         row = ResultRow()
         row['num_sorted_fields'] = 0
-        row.cells = [self.result_header(field_name, row) for field_name in self.list_display]
+        row.cells = [self.result_header(
+            field_name, row) for field_name in self.list_display]
         return row
 
     @filter_hook
@@ -531,8 +548,8 @@ class ListAdminView(ModelAdminView):
                 else:
                     item.text = display_for_field(value, f)
                 if isinstance(f, models.DateField)\
-                or isinstance(f, models.TimeField)\
-                or isinstance(f, models.ForeignKey):
+                    or isinstance(f, models.TimeField)\
+                        or isinstance(f, models.ForeignKey):
                     item.classes.append('nowrap')
 
             item.field = f
@@ -541,7 +558,7 @@ class ListAdminView(ModelAdminView):
 
         # If list_display_links not defined, add the link tag to the first field
         if (item.row['is_display_first'] and not self.list_display_links) \
-            or field_name in self.list_display_links:
+                or field_name in self.list_display_links:
             url = self.url_for_result(obj)
             item.row['is_display_first'] = False
             item.wraps.append(u'<a href="%s">%%s</a>' % url)
@@ -553,7 +570,8 @@ class ListAdminView(ModelAdminView):
         row = ResultRow()
         row['is_display_first'] = True
         row['object'] = obj
-        row.cells = [self.result_item(obj, field_name, row) for field_name in self.list_display]
+        row.cells = [self.result_item(
+            obj, field_name, row) for field_name in self.list_display]
         return row
 
     @filter_hook
@@ -583,7 +601,8 @@ class ListAdminView(ModelAdminView):
         """
         paginator, page_num = self.paginator, self.page_num
 
-        pagination_required = (not self.show_all or not self.can_show_all) and self.multi_page
+        pagination_required = (
+            not self.show_all or not self.can_show_all) and self.multi_page
         if not pagination_required:
             page_range = []
         else:
@@ -602,13 +621,16 @@ class ListAdminView(ModelAdminView):
                 if page_num > (ON_EACH_SIDE + ON_ENDS):
                     page_range.extend(range(0, ON_EACH_SIDE - 1))
                     page_range.append(DOT)
-                    page_range.extend(range(page_num - ON_EACH_SIDE, page_num + 1))
+                    page_range.extend(
+                        range(page_num - ON_EACH_SIDE, page_num + 1))
                 else:
                     page_range.extend(range(0, page_num + 1))
                 if page_num < (paginator.num_pages - ON_EACH_SIDE - ON_ENDS - 1):
-                    page_range.extend(range(page_num + 1, page_num + ON_EACH_SIDE + 1))
+                    page_range.extend(
+                        range(page_num + 1, page_num + ON_EACH_SIDE + 1))
                     page_range.append(DOT)
-                    page_range.extend(range(paginator.num_pages - ON_ENDS, paginator.num_pages))
+                    page_range.extend(range(
+                        paginator.num_pages - ON_ENDS, paginator.num_pages))
                 else:
                     page_range.extend(range(page_num + 1, paginator.num_pages))
 
@@ -621,5 +643,3 @@ class ListAdminView(ModelAdminView):
             'ALL_VAR': ALL_VAR,
             '1': 1,
         }
-        
-

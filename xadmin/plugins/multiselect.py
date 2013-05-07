@@ -35,7 +35,8 @@ class SelectMultipleTransfer(forms.SelectMultiple):
         attrs['class'] = ''
         if self.is_stacked:
             attrs['class'] += 'stacked'
-        if value is None: value = []
+        if value is None:
+            value = []
         final_attrs = self.build_attrs(attrs, name=name)
 
         selected_choices = set(force_unicode(v) for v in value)
@@ -44,16 +45,19 @@ class SelectMultipleTransfer(forms.SelectMultiple):
 
         for option_value, option_label in chain(self.choices, choices):
             if isinstance(option_label, (list, tuple)):
-                available_output.append(u'<optgroup label="%s">' % escape(force_unicode(option_value)))
+                available_output.append(u'<optgroup label="%s">' %
+                                        escape(force_unicode(option_value)))
                 for option in option_label:
-                    output, selected = self.render_opt(selected_choices, *option)
+                    output, selected = self.render_opt(
+                        selected_choices, *option)
                     if selected:
                         chosen_output.append(output)
                     else:
                         available_output.append(output)
                 available_output.append(u'</optgroup>')
             else:
-                output, selected = self.render_opt(selected_choices, option_value, option_label)
+                output, selected = self.render_opt(
+                    selected_choices, option_value, option_label)
                 if selected:
                     chosen_output.append(output)
                 else:
@@ -69,6 +73,7 @@ class SelectMultipleTransfer(forms.SelectMultiple):
         }
         return mark_safe(loader.render_to_string('xadmin/forms/transfer.html', context))
 
+
 class SelectMultipleDropdown(forms.SelectMultiple):
 
     @property
@@ -81,12 +86,13 @@ class SelectMultipleDropdown(forms.SelectMultiple):
         attrs['class'] = 'selectmultiple selectdropdown'
         return super(SelectMultipleDropdown, self).render(name, value, attrs, choices)
 
+
 class M2MSelectPlugin(BaseAdminPlugin):
 
     def init_request(self, *args, **kwargs):
         return hasattr(self.admin_view, 'style_fields') and \
             (
-                'm2m_transfer' in self.admin_view.style_fields.values() or 
+                'm2m_transfer' in self.admin_view.style_fields.values() or
                 'm2m_dropdown' in self.admin_view.style_fields.values()
             )
 

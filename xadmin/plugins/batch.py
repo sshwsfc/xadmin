@@ -14,7 +14,8 @@ from xadmin.views.edit import ModelFormAdminView
 class BatchChangeAction(BaseActionView):
 
     action_name = "change_selected"
-    description = ugettext_lazy(u'Batch Change selected %(verbose_name_plural)s')
+    description = ugettext_lazy(
+        u'Batch Change selected %(verbose_name_plural)s')
 
     batch_change_form_template = None
 
@@ -48,14 +49,15 @@ class BatchChangeAction(BaseActionView):
         form_class = self.get_change_form()
 
         if self.request.POST.get('post'):
-            self.form_obj = form_class(data=self.request.POST, files=self.request.FILES)
+            self.form_obj = form_class(
+                data=self.request.POST, files=self.request.FILES)
 
             return None
         else:
             self.form_obj = form_class()
 
         helper = FormHelper()
-        helper.form_tag = False # 默认不需要 crispy 生成 form_tag
+        helper.form_tag = False  # 默认不需要 crispy 生成 form_tag
         helper.add_layout(Layout(Container(
             Fieldset("", *self.form_obj.fields.keys(), css_class="unsort no_title"), css_class="form-horizontal"
         )))
@@ -76,12 +78,12 @@ class BatchChangeAction(BaseActionView):
             'action_checkbox_name': ACTION_CHECKBOX_NAME,
         })
 
-        return TemplateResponse(self.request, self.batch_change_form_template or \
-            self.get_template_list('views/batch_change_form.html'), context, current_app=self.admin_site.name)
+        return TemplateResponse(self.request, self.batch_change_form_template or
+                                self.get_template_list('views/batch_change_form.html'), context, current_app=self.admin_site.name)
 
     @filter_hook
     def get_media(self):
         media = super(BatchChangeAction, self).get_media()
-        media = media + self.form_obj.media + self.vendor('xadmin.page.form.js', 'xadmin.form.css')
+        media = media + self.form_obj.media + self.vendor(
+            'xadmin.page.form.js', 'xadmin.form.css')
         return media
-
