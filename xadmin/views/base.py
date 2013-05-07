@@ -261,6 +261,7 @@ class CommAdminView(BaseAdminView):
 
     site_title = None
     globe_models_icon = {}
+    default_model_icon = 'caret-right'
 
     def get_site_menu(self):
         return None
@@ -302,7 +303,8 @@ class CommAdminView(BaseAdminView):
                 }
 
             app_menu = nav_menu[app_key]
-            if not app_menu.has_key('first_icon') and model_dict.get('icon'):
+            if (not app_menu.has_key('first_icon') or \
+                app_menu['first_icon'] == self.default_model_icon) and model_dict.get('icon'):
                 app_menu['first_icon'] = model_dict['icon']
             if not app_menu.has_key('first_url') and model_dict.get('url'):
                 app_menu['first_url'] = model_dict['url']
@@ -368,7 +370,7 @@ class CommAdminView(BaseAdminView):
     def get_model_icon(self, model):
         icon = self.globe_models_icon.get(model)
         if icon is None and model in self.admin_site._registry:
-            icon = getattr(self.admin_site._registry[model], 'model_icon', None)
+            icon = getattr(self.admin_site._registry[model], 'model_icon', self.default_model_icon)
         return icon
 
     @filter_hook

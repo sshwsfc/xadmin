@@ -49,7 +49,7 @@
                 {% for sitem in item.menus %}
                 <li{% if sitem.selected %} class="active"{% endif %}>
                   {% if sitem.url %}<a href="{{ sitem.url }}">{% endif %}
-                  {% if sitem.icon %}<i class="icon-{{sitem.icon}}"></i>{%else%}<i class="icon-exclamation-sign"></i>{% endif %}
+                  {% if sitem.icon %}<i class="icon-{{sitem.icon}}"></i>{% endif %}
                   {{ sitem.title }}</span>{% if sitem.url %}</a>{% endif %}
                 </li>
                 {% endfor %}
@@ -68,7 +68,7 @@
                     {% for sitem in item.menus %}
                     <li{% if sitem.selected %} class="active"{% endif %}>
                       {% if sitem.url %}<a href="{{ sitem.url }}">{% endif %}
-                      {% if sitem.icon %}<i class="icon-{{sitem.icon}}"></i>{%else%}<i class="icon-exclamation-sign"></i>{% endif %}
+                      {% if sitem.icon %}<i class="icon-{{sitem.icon}}"></i>{% endif %}
                       {{ sitem.title }}</span>{% if sitem.url %}</a>{% endif %}
                     </li>
                     {% endfor %}
