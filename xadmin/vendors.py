@@ -18,6 +18,12 @@ vendors = {
             'production': 'xadmin/vendor/jquery/jquery.min.js',
         }
     },
+    'jquery-ui-effect': {
+        "js": {
+            'dev': 'xadmin/vendor/jquery-ui/jquery.ui.effect.js',
+            'production': 'xadmin/vendor/jquery-ui/jquery.ui.effect.min.js'
+        }
+    },
     'jquery-ui-sortable': {
         "js": {
             'dev': ['xadmin/vendor/jquery-ui/jquery.ui.core.js','xadmin/vendor/jquery-ui/jquery.ui.widget.js',

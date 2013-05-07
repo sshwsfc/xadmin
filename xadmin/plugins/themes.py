@@ -38,7 +38,7 @@ class ThemePlugin(BaseAdminPlugin):
 
     # Media
     def get_media(self, media):
-        return media + self.vendor('xadmin.plugin.themes.js')
+        return media + self.vendor('jquery-ui-effect.js', 'xadmin.plugin.themes.js')
 
     # Block Views
     def block_top_navmenu(self, context, nodes):
