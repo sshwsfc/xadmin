@@ -53,6 +53,7 @@ For using |xadmin|, `Django 1.4 <http://www.djangoproject.com>`_ needs to be ins
 
 然后添加 URL-patterns 以及 ``autodiscover`` 操作::
 
+    # -*- coding: utf-8 -*-
     import xadmin
     xadmin.autodiscover()
 
