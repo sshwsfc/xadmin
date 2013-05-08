@@ -27,15 +27,15 @@ Features
 Screenshots
 -----------
 
-![Actions](https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/doc/images/plugins/action.png)
+![Actions](https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/docs/images/plugins/action.png)
 
-![Filter](https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/doc/images/plugins/filter.png)
+![Filter](https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/docs/images/plugins/filter.png)
 
-![Chart](https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/doc/images/plugins/chart.png)
+![Chart](https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/docs/images/plugins/chart.png)
 
-![Export Data](https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/doc/images/plugins/export.png)
+![Export Data](https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/docs/images/plugins/export.png)
 
-![Edit inline](https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/doc/images/plugins/editable.png)
+![Edit inline](https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/docs/images/plugins/editable.png)
 
 
 Get Started
