@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class IDC(models.Model):
     name = models.CharField(max_length=64)
     description = models.TextField()
@@ -8,12 +9,12 @@ class IDC(models.Model):
     telphone = models.CharField(max_length=32)
     address = models.CharField(max_length=128)
     customer_id = models.CharField(max_length=128)
-    
+
     create_time = models.DateField(auto_now=True)
 
     def __unicode__(self):
         return self.name
-        
+
     class Meta:
         verbose_name = u"IDC"
         verbose_name_plural = verbose_name
@@ -35,6 +36,8 @@ SERVICE_TYPES = (
     ('email', u"Email"),
     ('mix', u"Mix"),
 )
+
+
 class Host(models.Model):
 
     idc = models.ForeignKey(IDC)
@@ -47,16 +50,16 @@ class Host(models.Model):
     ssh_port = models.IntegerField(blank=True, null=True)
     status = models.SmallIntegerField(choices=SERVER_STATUS)
 
-    brand = models.CharField(max_length=64, choices=[(i,i) for i in (u"DELL", u"HP", u"Other")])
+    brand = models.CharField(max_length=64, choices=[(i, i) for i in (u"DELL", u"HP", u"Other")])
     model = models.CharField(max_length=64)
     cpu = models.CharField(max_length=64)
-    core_num = models.SmallIntegerField(choices=[(i*2, "%s Cores" % (i*2)) for i in range(1,15)])
+    core_num = models.SmallIntegerField(choices=[(i * 2, "%s Cores" % (i * 2)) for i in range(1, 15)])
     hard_disk = models.IntegerField()
     memory = models.IntegerField()
 
-    system = models.CharField(u"System OS", max_length=32, choices=[(i,i) for i in (u"CentOS", u"FreeBSD", u"Ubuntu")])
+    system = models.CharField(u"System OS", max_length=32, choices=[(i, i) for i in (u"CentOS", u"FreeBSD", u"Ubuntu")])
     system_version = models.CharField(max_length=32)
-    system_arch = models.CharField(max_length=32, choices=[(i,i) for i in (u"x86_64", u"i386")])
+    system_arch = models.CharField(max_length=32, choices=[(i, i) for i in (u"x86_64", u"i386")])
 
     create_time = models.DateField()
     guarantee_date = models.DateField()
@@ -65,10 +68,11 @@ class Host(models.Model):
 
     def __unicode__(self):
         return self.name
-        
+
     class Meta:
         verbose_name = u"Host"
         verbose_name_plural = verbose_name
+
 
 class MaintainLog(models.Model):
     host = models.ForeignKey(Host)
@@ -79,18 +83,20 @@ class MaintainLog(models.Model):
     note = models.TextField()
 
     def __unicode__(self):
-        return '%s maintain-log [%s] %s %s' % (self.host.name, self.time.strftime('%Y-%m-%d %H:%M:%S'), \
-            self.maintain_type, self.hard_type)
-        
+        return '%s maintain-log [%s] %s %s' % (self.host.name, self.time.strftime('%Y-%m-%d %H:%M:%S'),
+                                               self.maintain_type, self.hard_type)
+
     class Meta:
         verbose_name = u"Maintain Log"
         verbose_name_plural = verbose_name
+
 
 class HostGroup(models.Model):
 
     name = models.CharField(max_length=32)
     description = models.TextField()
-    hosts = models.ManyToManyField(Host, verbose_name=u'Hosts', blank=True, related_name='groups')
+    hosts = models.ManyToManyField(
+        Host, verbose_name=u'Hosts', blank=True, related_name='groups')
 
     class Meta:
         verbose_name = u"Host Group"
@@ -98,6 +104,7 @@ class HostGroup(models.Model):
 
     def __unicode__(self):
         return self.name
+
 
 class AccessRecord(models.Model):
     date = models.DateField()

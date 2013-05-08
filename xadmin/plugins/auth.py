@@ -1,7 +1,7 @@
 # coding=utf-8
 from django import forms
 from django.contrib.auth.forms import (UserCreationForm, UserChangeForm,
-    AdminPasswordChangeForm, PasswordChangeForm)
+                                       AdminPasswordChangeForm, PasswordChangeForm)
 from django.contrib.auth.models import User, Group, Permission
 from django.core.exceptions import PermissionDenied
 from django.template.response import TemplateResponse
@@ -19,11 +19,13 @@ from xadmin.views import BaseAdminPlugin, ModelFormAdminView, ModelAdminView, Co
 
 csrf_protect_m = method_decorator(csrf_protect)
 
+
 class GroupAdmin(object):
     search_fields = ('name',)
     ordering = ('name',)
     style_fields = {'permissions': 'm2m_transfer'}
     model_icon = 'group'
+
 
 class UserAdmin(object):
     change_user_password_template = None
@@ -46,27 +48,28 @@ class UserAdmin(object):
             self.form_layout = (
                 Main(
                     Fieldset('',
-                        'username', 'password',
-                        css_class='unsort no_title'
-                    ),
+                             'username', 'password',
+                             css_class='unsort no_title'
+                             ),
                     Fieldset(_('Personal info'),
-                        Row('first_name', 'last_name'),
-                        'email'
-                    ),
+                             Row('first_name', 'last_name'),
+                             'email'
+                             ),
                     Fieldset(_('Permissions'),
-                        'groups', 'user_permissions'
-                    ),
+                             'groups', 'user_permissions'
+                             ),
                     Fieldset(_('Important dates'),
-                        'last_login', 'date_joined'
-                    ),
+                             'last_login', 'date_joined'
+                             ),
                 ),
                 Side(
                     Fieldset(_('Status'),
-                        'is_active', 'is_staff', 'is_superuser',
-                    ),
+                             'is_active', 'is_staff', 'is_superuser',
+                             ),
                 )
             )
         return super(UserAdmin, self).get_form_layout()
+
 
 class PermissionAdmin(object):
     model_icon = 'lock'
@@ -74,6 +77,7 @@ class PermissionAdmin(object):
 site.register(Group, GroupAdmin)
 site.register(User, UserAdmin)
 site.register(Permission, PermissionAdmin)
+
 
 class UserFieldPlugin(BaseAdminPlugin):
 
@@ -85,12 +89,13 @@ class UserFieldPlugin(BaseAdminPlugin):
         return __()
 
     def get_form_datas(self, datas):
-        if self.user_fields and datas.has_key('data'):
+        if self.user_fields and 'data' in datas:
             for f in self.user_fields:
                 datas['data'][f] = self.user.id
         return datas
 
 site.register_plugin(UserFieldPlugin, ModelFormAdminView)
+
 
 class ModelPermissionPlugin(BaseAdminPlugin):
 
@@ -99,13 +104,14 @@ class ModelPermissionPlugin(BaseAdminPlugin):
 
     def queryset(self, qs):
         if self.user_can_access_owned_objects_only and \
-            not self.user.is_superuser:
+                not self.user.is_superuser:
             filters = {self.user_owned_objects_field: self.user}
             qs = qs.filter(**filters)
         return qs
-        
+
 
 site.register_plugin(ModelPermissionPlugin, ModelAdminView)
+
 
 class AccountMenuPlugin(BaseAdminPlugin):
 
@@ -113,6 +119,7 @@ class AccountMenuPlugin(BaseAdminPlugin):
         return '<li><a href="%s"><i class="icon-key"></i> %s</a></li>' % (self.get_admin_url('account_password'), _('Change Password'))
 
 site.register_plugin(AccountMenuPlugin, CommAdminView)
+
 
 class ChangePasswordView(ModelAdminView):
     model = User
@@ -164,9 +171,10 @@ class ChangePasswordView(ModelAdminView):
         else:
             return self.get_response()
 
+
 class ChangeAccountPasswordView(ChangePasswordView):
     change_password_form = PasswordChangeForm
-    
+
     def get(self, request):
         self.obj = self.user
         self.form = self.change_password_form(self.obj)
@@ -178,7 +186,7 @@ class ChangeAccountPasswordView(ChangePasswordView):
         context.update({
             'title': _('Change password'),
             'account_view': True,
-            })
+        })
         return context
 
     @sensitive_post_parameters()
@@ -193,5 +201,7 @@ class ChangeAccountPasswordView(ChangePasswordView):
         else:
             return self.get_response()
 
-site.register_view(r'^auth/user/(.+)/update/password/$', ChangePasswordView, name='user_change_password')
-site.register_view(r'^account/password/$', ChangeAccountPasswordView, name='account_password')
+site.register_view(r'^auth/user/(.+)/update/password/$',
+                   ChangePasswordView, name='user_change_password')
+site.register_view(r'^account/password/$', ChangeAccountPasswordView,
+                   name='account_password')

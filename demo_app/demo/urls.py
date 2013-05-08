@@ -8,5 +8,5 @@ from xadmin.plugins import xversion
 xversion.registe_models()
 
 urlpatterns = patterns('',
-    url(r'', include(xadmin.site.urls)),
-)
+                       url(r'', include(xadmin.site.urls)),
+                       )

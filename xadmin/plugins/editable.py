@@ -32,8 +32,9 @@ class EditablePlugin(BaseAdminPlugin):
         return active
 
     def _get_form_admin(self, obj):
-        if not self.model_form_admins.has_key(obj):
-            self.model_form_admins[obj] = self.get_model_view(ModelFormAdminUtil, self.model, obj)
+        if obj not in self.model_form_admins:
+            self.model_form_admins[obj] = self.get_model_view(
+                ModelFormAdminUtil, self.model, obj)
         return self.model_form_admins[obj]
 
     def result_item(self, item, obj, field_name, row):
@@ -45,9 +46,9 @@ class EditablePlugin(BaseAdminPlugin):
                 form.prefix = str(pk)
 
                 field_label = label_for_field(field_name, obj,
-                    model_admin = self.admin_view,
-                    return_attr = False
-                )
+                                              model_admin=self.admin_view,
+                                              return_attr=False
+                                              )
                 data_attr = {
                     'name': field_name,
                     'action': self.admin_view.model_admin_url('patch', pk),
@@ -55,9 +56,10 @@ class EditablePlugin(BaseAdminPlugin):
                     'field': form[field_name]
                 }
                 item.wraps.insert(0, '<span class="editable-field">%s</span>')
-                item.btns.append(loader.render_to_string('xadmin/blocks/editable.html', data_attr))
+                item.btns.append(loader.render_to_string(
+                    'xadmin/blocks/editable.html', data_attr))
 
-                if not self.editable_need_fields.has_key(field_name):
+                if field_name not in self.editable_need_fields:
                     self.editable_need_fields[field_name] = item.field
         return item
 
@@ -65,13 +67,16 @@ class EditablePlugin(BaseAdminPlugin):
     def get_media(self, media):
         if self.editable_need_fields:
             media = media + self.model_form_admins.values()[0].media + \
-                self.vendor('xadmin.plugin.editable.js', 'xadmin.widget.editable.css')
+                self.vendor(
+                    'xadmin.plugin.editable.js', 'xadmin.widget.editable.css')
         return media
+
 
 class EditPatchView(ModelFormAdminView, ListAdminView):
 
     def get_new_field_html(self, f):
-        result = self.result_item(self.org_obj, f, {'is_display_first': False, 'object': self.org_obj})
+        result = self.result_item(self.org_obj, f, {'is_display_first':
+                                  False, 'object': self.org_obj})
         return mark_safe(result.text) if result.allow_tags else conditional_escape(result.text)
 
     def _get_new_field_html(self, field_name):
@@ -111,12 +116,13 @@ class EditPatchView(ModelFormAdminView, ListAdminView):
             raise PermissionDenied
 
         if self.org_obj is None:
-            raise Http404(_('%(name)s object with primary key %(key)r does not exist.') % \
-                {'name': force_unicode(self.opts.verbose_name), 'key': escape(object_id)})
+            raise Http404(_('%(name)s object with primary key %(key)r does not exist.') %
+                          {'name': force_unicode(self.opts.verbose_name), 'key': escape(object_id)})
 
         pk = getattr(self.org_obj, self.org_obj._meta.pk.attname)
         model_fields = [str(pk) + '-' + f.name for f in self.opts.fields]
-        fields = [f[len(str(pk)) + 1:] for f in request.POST.keys() if f in model_fields]
+        fields = [f[len(
+            str(pk)) + 1:] for f in request.POST.keys() if f in model_fields]
 
         defaults = {
             "form": forms.ModelForm,
@@ -124,7 +130,8 @@ class EditPatchView(ModelFormAdminView, ListAdminView):
             "formfield_callback": self.formfield_for_dbfield,
         }
         form_class = modelform_factory(self.model, **defaults)
-        form = form_class(instance=self.org_obj, data=request.POST, files=request.FILES)
+        form = form_class(
+            instance=self.org_obj, data=request.POST, files=request.FILES)
         form.prefix = str(pk)
 
         result = {}
@@ -132,7 +139,8 @@ class EditPatchView(ModelFormAdminView, ListAdminView):
             form.save(commit=True)
             result['result'] = 'success'
             result['new_data'] = form.cleaned_data
-            result['new_html'] = dict([(f, self.get_new_field_html(f)) for f in fields])
+            result['new_html'] = dict(
+                [(f, self.get_new_field_html(f)) for f in fields])
         else:
             result['result'] = 'error'
             result['errors'] = JsonErrorDict(form.errors, form).as_json()
@@ -141,5 +149,3 @@ class EditPatchView(ModelFormAdminView, ListAdminView):
 
 site.register_plugin(EditablePlugin, ListAdminView)
 site.register_modelview(r'^(.+)/patch/$', EditPatchView, name='%s_%s_patch')
-
-
