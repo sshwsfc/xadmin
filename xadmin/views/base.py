@@ -282,7 +282,7 @@ class CommAdminView(BaseAdminView):
 
     site_title = None
     globe_models_icon = {}
-    default_model_icon = 'caret-right'
+    default_model_icon = None
 
     def get_site_menu(self):
         return None
