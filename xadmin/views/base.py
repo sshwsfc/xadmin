@@ -214,6 +214,8 @@ class BaseAdminPlugin(BaseAdminObject):
 class BaseAdminView(BaseAdminObject, View):
     """ Base Admin view, support some comm attrs."""
 
+    base_template = 'xadmin/base.html'
+
     def __init__(self, request, *args, **kwargs):
         self.request = request
         self.request_method = request.method.lower()
@@ -267,7 +269,7 @@ class BaseAdminView(BaseAdminObject, View):
 
     @filter_hook
     def get_context(self):
-        return {'admin_view': self, 'media': self.media}
+        return {'admin_view': self, 'media': self.media, 'base_template': self.base_template}
 
     @property
     def media(self):
@@ -279,6 +281,8 @@ class BaseAdminView(BaseAdminObject, View):
 
 
 class CommAdminView(BaseAdminView):
+
+    base_template = 'xadmin/base_site.html'
 
     site_title = None
     globe_models_icon = {}
@@ -389,6 +393,7 @@ class CommAdminView(BaseAdminView):
 
         context['nav_menu'] = nav_menu
         context['site_title'] = self.site_title or _(u'Django Xadmin')
+
         return context
 
     @filter_hook
