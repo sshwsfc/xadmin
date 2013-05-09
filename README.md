@@ -67,7 +67,7 @@ Install Requires
     (For object history and reversion feature, please select right version by your django, 
     see [changelog](https://github.com/etianen/django-reversion/blob/master/CHANGELOG.markdown) )
 
-* [xlwt](http://www.python-excel.org/) (for export xls files, option)
+* [xlwt](http://www.python-excel.org/) (For export xls files, option)
 
 Documentation
 --------
