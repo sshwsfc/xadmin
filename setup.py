@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-xadmin',
-    version='0.1.0-dev',
+    version='0.1.10-dev',
     description='Drop-in replacement of Django admin comes with lots of goodies, fully extensible with plugin support, pretty UI based on Twitter Bootstrap.',
     long_description=open('README.md').read(),
     author='sshwsfc',
@@ -23,7 +23,7 @@ setup(
         'django-crispy-forms>=1.2.3',
         'django-reversion',
     ],
-    zip_safe=False,
+    zip_safe=True,
     keywords=['admin', 'django', 'xadmin', 'bootstrap'],
     classifiers=[
         'Development Status :: 4 - Beta',
