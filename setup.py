@@ -16,6 +16,13 @@ setup(
     packages=['xadmin', 'xadmin.plugins', 'xadmin.templatetags',
         'xadmin.tests', 'xadmin.views'],
     include_package_data=True,
+    install_requires=[
+        'setuptools',
+        'django>=1.4',
+        'xlwt',
+        'django-crispy-forms>=1.2.3',
+        'django-reversion',
+    ],
     zip_safe=False,
     keywords=['admin', 'django', 'xadmin', 'bootstrap'],
     classifiers=[

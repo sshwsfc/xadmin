@@ -55,6 +55,20 @@ or Install form github source:
 pip install git+git://github.com/sshwsfc/django-xadmin.git
 ```
 
+Install Requires
+----------------
+
+* [django>=1.4](http://djangoproject.com)
+
+* [django-crispy-forms>=1.2.3](http://django-crispy-forms.rtfd.org)
+    (For xadmin crispy forms)
+
+* [django-reversion](https://github.com/etianen/django-reversion)
+    (For object history and reversion feature, please select right version by your django, 
+    see [changelog](https://github.com/etianen/django-reversion/blob/master/CHANGELOG.markdown) )
+
+* [xlwt](http://www.python-excel.org/) (For export xls files, option)
+
 Documentation
 --------
 
