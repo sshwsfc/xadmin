@@ -120,7 +120,7 @@ class ModelFormAdminView(ModelAdminView):
 
         for klass in db_field.__class__.mro():
             if klass in self.formfield_overrides:
-                return self.formfield_overrides[klass]
+                return self.formfield_overrides[klass].copy()
 
         return {}
 
