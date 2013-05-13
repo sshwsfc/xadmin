@@ -547,25 +547,26 @@ class Dashboard(CommAdminView):
 
     @csrf_protect_m
     def post(self, request):
-        widget_id = request.POST['id']
-        if request.POST.get('_delete', None) != 'on':
-            widget = self.get_widget(widget_id, request.POST.copy())
-            widget.save()
-        else:
-            try:
-                widget = UserWidget.objects.get(
-                    user=self.user, page_id=self.get_page_id(), id=widget_id)
-                widget.delete()
+        if 'id' in request.POST:
+            widget_id = request.POST['id']
+            if request.POST.get('_delete', None) != 'on':
+                widget = self.get_widget(widget_id, request.POST.copy())
+                widget.save()
+            else:
                 try:
-                    portal_pos = UserSettings.objects.get(user=self.user, key="dashboard:%s:pos" % self.get_page_id())
-                    pos = [[w for w in col.split(',') if w != str(
-                        widget_id)] for col in portal_pos.value.split('|')]
-                    portal_pos.value = '|'.join([','.join(col) for col in pos])
-                    portal_pos.save()
-                except Exception:
+                    widget = UserWidget.objects.get(
+                        user=self.user, page_id=self.get_page_id(), id=widget_id)
+                    widget.delete()
+                    try:
+                        portal_pos = UserSettings.objects.get(user=self.user, key="dashboard:%s:pos" % self.get_page_id())
+                        pos = [[w for w in col.split(',') if w != str(
+                            widget_id)] for col in portal_pos.value.split('|')]
+                        portal_pos.value = '|'.join([','.join(col) for col in pos])
+                        portal_pos.save()
+                    except Exception:
+                        pass
+                except UserWidget.DoesNotExist:
                     pass
-            except UserWidget.DoesNotExist:
-                pass
 
         return self.get(request)
 
