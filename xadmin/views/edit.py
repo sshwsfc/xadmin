@@ -79,8 +79,7 @@ class ModelFormAdminView(ModelAdminView):
     @filter_hook
     def formfield_for_dbfield(self, db_field, **kwargs):
         attrs = self.get_field_attrs(db_field, **kwargs)
-        attrs.update(kwargs)
-        return db_field.formfield(**attrs)
+        return db_field.formfield(**dict(attrs, **kwargs))
 
     @filter_hook
     def get_field_style(self, db_field, style, **kwargs):
