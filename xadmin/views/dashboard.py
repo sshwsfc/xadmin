@@ -84,7 +84,7 @@ class UserWidgetAdmin(object):
             widgets = widget_manager._widgets.values()
             form_widget = WidgetTypeSelect(widgets)
             return forms.ChoiceField(choices=[(w.widget_type, w.description) for w in widgets], widget=form_widget)
-        if db_field.name == 'page_id':
+        if 'page_id' in self.request.GET and db_field.name == 'page_id':
             kwargs['widget'] = forms.HiddenInput
         field = super(
             UserWidgetAdmin, self).formfield_for_dbfield(db_field, **kwargs)
