@@ -367,6 +367,7 @@ class QuickBtnWidget(BaseWidget):
                 btn['url'] = reverse("%s:%s_%s_%s" % (self.admin_site.app_name, model._meta.app_label,
                                                       model._meta.module_name, b.get('view', 'changelist')))
                 btn['title'] = model._meta.verbose_name
+                btn['icon'] = self.dashboard.get_model_icon(model)
             else:
                 btn['url'] = b['url']
 
