@@ -5,10 +5,12 @@ from django.utils.safestring import mark_safe
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView, DetailAdminView
 
+
 class AdminImageField(forms.ImageField):
-        
+
     def widget_attrs(self, widget):
         return {'label': self.label}
+
 
 class AdminImageWidget(forms.FileInput):
     """
@@ -20,11 +22,12 @@ class AdminImageWidget(forms.FileInput):
     def render(self, name, value, attrs=None):
         output = []
         if value and hasattr(value, "url"):
-            label=self.attrs.get('label', name)
-            output.append('<a href="%s" target="_blank" title="%s" rel="gallery"><img src="%s" class="field_img"/></a><br/>%s ' % \
-                (value.url, label, value.url, _('Change:')))
+            label = self.attrs.get('label', name)
+            output.append('<a href="%s" target="_blank" title="%s" rel="gallery"><img src="%s" class="field_img"/></a><br/>%s ' %
+                         (value.url, label, value.url, _('Change:')))
         output.append(super(AdminImageWidget, self).render(name, value, attrs))
         return mark_safe(u''.join(output))
+
 
 class ModelDetailPlugin(BaseAdminPlugin):
 
@@ -50,7 +53,8 @@ class ModelDetailPlugin(BaseAdminPlugin):
     # Media
     def get_media(self, media):
         if self.include_image:
-            media = media + self.vendor('image-gallery.js', 'image-gallery.css')
+            media = media + self.vendor('image-gallery.js',
+                                        'image-gallery.css')
         return media
 
     def block_before_fieldsets(self, context, node):
@@ -79,5 +83,3 @@ class ModelDetailPlugin(BaseAdminPlugin):
 
 site.register_plugin(ModelDetailPlugin, DetailAdminView)
 site.register_plugin(ModelDetailPlugin, ModelFormAdminView)
-
-

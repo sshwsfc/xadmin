@@ -8,6 +8,7 @@ from xadmin.sites import site
 from xadmin.util import get_model_from_relation, vendor
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView
 
+
 class QuickFormPlugin(BaseAdminPlugin):
 
     def init_request(self, *args, **kwargs):
@@ -30,6 +31,7 @@ class QuickFormPlugin(BaseAdminPlugin):
     def get_context(self, context):
         context['form_url'] = self.request.path
         return context
+
 
 class RelatedFieldWidgetWrapper(forms.Widget):
     """
@@ -56,16 +58,19 @@ class RelatedFieldWidgetWrapper(forms.Widget):
 
     @property
     def media(self):
-        media = self.widget.media + vendor('xadmin.plugin.quick-form.js', 'xadmin.modal.css')
+        media = self.widget.media + vendor(
+            'xadmin.plugin.quick-form.js', 'xadmin.modal.css')
         return media
 
     def render(self, name, value, *args, **kwargs):
         self.widget.choices = self.choices
-        output = ['<span id="id_%s_wrap_container">' % name, self.widget.render(name, value, *args, **kwargs), '</span>']
+        output = ['<span id="id_%s_wrap_container">' % name,
+                  self.widget.render(name, value, *args, **kwargs), '</span>']
         if self.add_url:
             output.append(u'<a href="%s" title="%s" class="btn btn-primary btn-small btn-ajax" data-for-id="id_%s" data-refresh-url="%s"><i class="icon-plus"></i></a>'
-                          % (self.add_url, (_('Add Other %s') % self.rel.to._meta.verbose_name), name, 
-                              "%s?_field=%s&%s=" % (self.rel_add_url, name, name) ))
+                          % (
+                              self.add_url, (_('Add Other %s') % self.rel.to._meta.verbose_name), name,
+                              "%s?_field=%s&%s=" % (self.rel_add_url, name, name)))
         return mark_safe(u''.join(output))
 
     def build_attrs(self, extra_attrs=None, **kwargs):
@@ -82,6 +87,7 @@ class RelatedFieldWidgetWrapper(forms.Widget):
     def id_for_label(self, id_):
         return self.widget.id_for_label(id_)
 
+
 class QuickAddBtnPlugin(BaseAdminPlugin):
 
     # def init_request(self, *args, **kwargs):
@@ -93,10 +99,8 @@ class QuickAddBtnPlugin(BaseAdminPlugin):
             if rel_model in self.admin_site._registry and self.has_model_perm(rel_model, 'add'):
                 add_url = self.get_model_url(rel_model, 'add')
                 formfield.widget = RelatedFieldWidgetWrapper(
-                            formfield.widget, db_field.rel, add_url, self.get_model_url(self.model, 'add'))
+                    formfield.widget, db_field.rel, add_url, self.get_model_url(self.model, 'add'))
         return formfield
 
 site.register_plugin(QuickFormPlugin, ModelFormAdminView)
 site.register_plugin(QuickAddBtnPlugin, ModelFormAdminView)
-
-

@@ -2,5 +2,3 @@ django>=1.4
 xlwt
 django-crispy-forms>=1.2.3
 django-reversion
-psycopg2==2.4.5
-dj-database-url==0.2.0

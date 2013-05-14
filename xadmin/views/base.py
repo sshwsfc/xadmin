@@ -1,6 +1,8 @@
 # coding=utf-8
 import copy
-import functools, datetime, decimal
+import functools
+import datetime
+import decimal
 from functools import update_wrapper
 from inspect import getargspec
 
@@ -29,9 +31,11 @@ from xadmin.util import static, json, vendor
 #: 通用的csrf_protect_m装饰器，给其他模块的 AdminView 使用
 csrf_protect_m = method_decorator(csrf_protect)
 
+
 class IncorrectPluginArg(Exception):
     """ 当插件的方法参数错误时抛出该异常 """
     pass
+
 
 def filter_chain(filters, token, func, *args, **kwargs):
     if token == -1:
@@ -50,7 +54,8 @@ def filter_chain(filters, token, func, *args, **kwargs):
             else:
                 # 如果第一个参数为 ``__`` ，传入的参数为 func， 而非 func()
                 return fm(func if fargs[1] == '__' else func(), *args, **kwargs)
-        return filter_chain(filters, token-1, _inner_method, *args, **kwargs)
+        return filter_chain(filters, token - 1, _inner_method, *args, **kwargs)
+
 
 def filter_hook(func):
     """
@@ -79,6 +84,7 @@ def filter_hook(func):
     """
     tag = func.__name__
     func.__doc__ = "``filter_hook``\n\n" + (func.__doc__ or "")
+
     @functools.wraps(func)
     def method(self, *args, **kwargs):
 
@@ -88,14 +94,15 @@ def filter_hook(func):
 
         if self.plugins:
             # 首先取出所有含有同名方法的插件
-            filters = [(getattr(getattr(p, tag), 'priority', 10), getattr(p, tag)) \
-                for p in self.plugins if callable(getattr(p, tag, None))]
+            filters = [(getattr(getattr(p, tag), 'priority', 10), getattr(p, tag))
+                       for p in self.plugins if callable(getattr(p, tag, None))]
             # 按照 ``priority`` 属性排序
-            filters = [f for p,f in sorted(filters, key=lambda x:x[0])]
-            return filter_chain(filters, len(filters)-1, _inner_method, *args, **kwargs)
+            filters = [f for p, f in sorted(filters, key=lambda x:x[0])]
+            return filter_chain(filters, len(filters) - 1, _inner_method, *args, **kwargs)
         else:
             return _inner_method()
     return method
+
 
 def inclusion_tag(file_name, context_class=Context, takes_context=False):
     """
@@ -104,7 +111,7 @@ def inclusion_tag(file_name, context_class=Context, takes_context=False):
     def wrap(func):
         @functools.wraps(func)
         def method(self, context, nodes, *arg, **kwargs):
-            _dict  = func(self, context, nodes, *arg, **kwargs)
+            _dict = func(self, context, nodes, *arg, **kwargs)
             from django.template.loader import get_template, select_template
             if isinstance(file_name, Template):
                 t = file_name
@@ -128,6 +135,7 @@ def inclusion_tag(file_name, context_class=Context, takes_context=False):
         return method
     return wrap
 
+
 class JSONEncoder(DjangoJSONEncoder):
     def default(self, o):
         if isinstance(o, datetime.date):
@@ -141,6 +149,7 @@ class JSONEncoder(DjangoJSONEncoder):
                 return super(JSONEncoder, self).default(o)
             except Exception:
                 return smart_unicode(o)
+
 
 class BaseAdminObject(object):
     """
@@ -175,7 +184,9 @@ class BaseAdminObject(object):
         """
         便捷方法，方便的通过 model, name 取得 url，会自动拼成 urlname，并会加上 AdminSite.app_name 的 url namespace
         """
-        return reverse('%s:%s_%s_%s' % (self.admin_site.app_name, model._meta.app_label, model._meta.module_name, name), \
+        return reverse(
+            '%s:%s_%s_%s' % (self.admin_site.app_name, model._meta.app_label,
+                             model._meta.module_name, name),
             args=args, kwargs=kwargs, current_app=self.admin_site.name)
 
     def get_model_perm(self, model, name):
@@ -204,8 +215,10 @@ class BaseAdminObject(object):
         :param new_params: 要新加的参数，该参数为 dict 
         :param remove: 要删除的参数，该参数为 list, tuple
         """
-        if new_params is None: new_params = {}
-        if remove is None: remove = []
+        if new_params is None:
+            new_params = {}
+        if remove is None:
+            remove = []
         p = dict(self.request.GET.items()).copy()
         for r in remove:
             for k in p.keys():
@@ -226,8 +239,10 @@ class BaseAdminObject(object):
         :param new_params: 要新加的参数，该参数为 dict 
         :param remove: 要删除的参数，该参数为 list, tuple
         """
-        if new_params is None: new_params = {}
-        if remove is None: remove = []
+        if new_params is None:
+            new_params = {}
+        if remove is None:
+            remove = []
         p = dict(self.request.GET.items()).copy()
         for r in remove:
             for k in p.keys():
@@ -240,7 +255,7 @@ class BaseAdminObject(object):
             else:
                 p[k] = v
         return mark_safe(''.join(
-            '<input type="hidden" name="%s" value="%s"/>' % (k, v) for k,v in p.items() if v))
+            '<input type="hidden" name="%s" value="%s"/>' % (k, v) for k, v in p.items() if v))
 
     def render_response(self, content, response_type='json'):
         """
@@ -248,7 +263,8 @@ class BaseAdminObject(object):
         """
         if response_type == 'json':
             response = HttpResponse(mimetype="application/json; charset=UTF-8")
-            response.write(json.dumps(content, cls=JSONEncoder, ensure_ascii=False))
+            response.write(
+                json.dumps(content, cls=JSONEncoder, ensure_ascii=False))
             return response
         return HttpResponse(content)
 
@@ -266,6 +282,7 @@ class BaseAdminObject(object):
 
     def vendor(self, *tags):
         return vendor(*tags)
+
 
 class BaseAdminPlugin(BaseAdminObject):
     """
@@ -293,6 +310,7 @@ class BaseAdminPlugin(BaseAdminObject):
         当返回值为 ``False`` 时，所属的 AdminView 实例不会加载该插件
         """
         pass
+
 
 class BaseAdminView(BaseAdminObject, View):
     """
@@ -326,12 +344,15 @@ class BaseAdminView(BaseAdminObject, View):
         * :class:`ModelAdminView` : 核心类之一，提供了基于 Model 的 AdminView。
     """
 
+    base_template = 'xadmin/base.html'
+
     def __init__(self, request, *args, **kwargs):
         self.request = request
         self.request_method = request.method.lower()
         self.user = request.user
 
-        self.base_plugins = [p(self) for p in getattr(self, "plugin_classes", [])]
+        self.base_plugins = [p(self) for p in getattr(self,
+                                                      "plugin_classes", [])]
 
         self.args = args
         self.kwargs = kwargs
@@ -351,7 +372,8 @@ class BaseAdminView(BaseAdminObject, View):
                 self.head = self.get
 
             if self.request_method in self.http_method_names:
-                handler = getattr(self, self.request_method, self.http_method_not_allowed)
+                handler = getattr(
+                    self, self.request_method, self.http_method_not_allowed)
             else:
                 handler = self.http_method_not_allowed
 
@@ -390,7 +412,7 @@ class BaseAdminView(BaseAdminObject, View):
         """
         返回显示页面所需的 context 对象。
         """
-        return {'admin_view': self, 'media': self.media}
+        return {'admin_view': self, 'media': self.media, 'base_template': self.base_template}
 
     @property
     def media(self):
@@ -403,6 +425,7 @@ class BaseAdminView(BaseAdminObject, View):
         """
         return forms.Media()
 
+
 class CommAdminView(BaseAdminView):
     """
     基于 :class:`BaseAdminView` 提供的通用 AdminView。主要是完成了一些 xadmin 页面通用内容的处理。主要有:
@@ -410,18 +433,22 @@ class CommAdminView(BaseAdminView):
         * 网站标题
         * 全局的 Model 图标
         * 网站菜单
-
+ 
     **View属性**:
-
+ 
         .. autoattribute:: site_title
         .. autoattribute:: globe_models_icon
+        .. autoattribute:: base_template
+        .. autoattribute:: default_model_icon
     """
-
+    
+    base_template = 'xadmin/base_site.html'    #: View模板继承的基础模板
     site_title = None         #: 网站的标题
     #: 全局的 Model 图标::
     #:
     #:     globe_models_icon = {User: 'user-icon'}
     globe_models_icon = {}
+    default_model_icon = None    #: 默认的 Model 图标
 
     def get_site_menu(self):
         """``FAQ:如何定制系统菜单``\n
@@ -468,9 +495,9 @@ class CommAdminView(BaseAdminView):
 
         # 选出所有已经存在的菜单项的 URL，后期自动生成菜单时会排除这些项。
         def get_url(menu, had_urls):
-            if menu.has_key('url'):
+            if 'url' in menu:
                 had_urls.append(menu['url'])
-            if menu.has_key('menus'):
+            if 'menus' in menu:
                 for m in menu['menus']:
                     get_url(m, had_urls)
         get_url({'menus': site_menu}, had_urls)
@@ -499,6 +526,13 @@ class CommAdminView(BaseAdminView):
                     'menus': [model_dict],
                 }
 
+            app_menu = nav_menu[app_key]
+            if ('first_icon' not in app_menu or
+                    app_menu['first_icon'] == self.default_model_icon) and model_dict.get('icon'):
+                app_menu['first_icon'] = model_dict['icon']
+            if 'first_url' not in app_menu and model_dict.get('url'):
+                app_menu['first_url'] = model_dict['url']
+
         for menu in nav_menu.values():
             menu['menus'].sort(key=lambda x: x['title'])
 
@@ -521,11 +555,11 @@ class CommAdminView(BaseAdminView):
         context = super(CommAdminView, self).get_context()
 
         # DEBUG模式会首先尝试从SESSION中取得缓存的菜单项
-        if not settings.DEBUG and self.request.session.has_key('nav_menu'):
+        if not settings.DEBUG and 'nav_menu' in self.request.session:
             nav_menu = json.loads(self.request.session['nav_menu'])
         else:
             menus = copy.copy(self.get_nav_menu())
-            
+
             def check_menu_permission(item):
                 need_perm = item.pop('perm', None)
                 if need_perm is None:
@@ -538,11 +572,13 @@ class CommAdminView(BaseAdminView):
                     return self.user.has_perm(need_perm)
 
             def filter_item(item):
-                if item.has_key('menus'):
-                    item['menus'] = [filter_item(i) for i in item['menus'] if check_menu_permission(i)]
+                if 'menus' in item:
+                    item['menus'] = [filter_item(
+                        i) for i in item['menus'] if check_menu_permission(i)]
                 return item
 
-            nav_menu = [filter_item(item) for item in menus if check_menu_permission(item)]
+            nav_menu = [filter_item(
+                item) for item in menus if check_menu_permission(item)]
             nav_menu = filter(lambda i: bool(i['menus']), nav_menu) # 去掉子菜单为空的一级菜单
 
             if not settings.DEBUG:
@@ -551,18 +587,21 @@ class CommAdminView(BaseAdminView):
 
         def check_selected(menu, path):
             # 判断菜单项是否被选择，使用当前url跟菜单项url对比
-            selected = menu.has_key('url') and path.startswith(menu['url']) or False
-            if menu.has_key('menus'):
+            selected = 'url' in menu and path.startswith(menu['url']) or False
+            if 'menus' in menu:
                 for m in menu['menus']:
                     _s = check_selected(m, path)
-                    if _s: selected = True
-            if selected: menu['selected'] = True
+                    if _s:
+                        selected = True
+            if selected:
+                menu['selected'] = True
             return selected
         for menu in nav_menu:
             check_selected(menu, self.request.path)
 
         context['nav_menu'] = nav_menu
         context['site_title'] = self.site_title or _(u'Django Xadmin')
+
         return context
 
     @filter_hook
@@ -592,7 +631,8 @@ class CommAdminView(BaseAdminView):
         icon = self.globe_models_icon.get(model)
         if icon is None and model in self.admin_site._registry:
             # 如果 Model 的 OptionClass 中有 model_icon 属性，则使用该属性
-            icon = getattr(self.admin_site._registry[model], 'model_icon', None)
+            icon = getattr(self.admin_site._registry[model],
+                           'model_icon', self.default_model_icon)
         return icon
 
     @filter_hook
@@ -716,7 +756,8 @@ class ModelAdminView(CommAdminView):
         """
         等同于 :meth:`BaseAdminObject.get_admin_url` ，只是无需填写 model 参数， 使用本身的 :attr:`ModelAdminView.model` 属性。
         """
-        return reverse("%s:%s_%s_%s" % (self.admin_site.app_name, self.opts.app_label, \
+        return reverse(
+            "%s:%s_%s_%s" % (self.admin_site.app_name, self.opts.app_label,
             self.module_name, name), args=args, kwargs=kwargs)
 
     def get_model_perms(self):
@@ -742,7 +783,8 @@ class ModelAdminView(CommAdminView):
         """
         opts = self.opts
         return (
-            "xadmin/%s/%s/%s" % (opts.app_label, opts.object_name.lower(), template_name),
+            "xadmin/%s/%s/%s" % (
+                opts.app_label, opts.object_name.lower(), template_name),
             "xadmin/%s/%s" % (opts.app_label, template_name),
             "xadmin/%s" % template_name,
         )
@@ -767,23 +809,23 @@ class ModelAdminView(CommAdminView):
 
             目前的实现为：如果一个用户有对数据的修改权限，那么他就有对数据的查看权限。当然您可以在子类中修改这一规则
         """
-        return self.user.has_perm('%s.view_%s'% self.model_info) or self.has_change_permission(obj)
+        return self.user.has_perm('%s.view_%s' % self.model_info) or self.has_change_permission(obj)
 
     def has_add_permission(self):
         """
         返回当前用户是否有添加权限
         """
-        return self.user.has_perm('%s.add_%s'% self.model_info)
+        return self.user.has_perm('%s.add_%s' % self.model_info)
 
     def has_change_permission(self, obj=None):
         """
         返回当前用户是否有修改权限
         """
-        return self.user.has_perm('%s.change_%s'% self.model_info)
+        return self.user.has_perm('%s.change_%s' % self.model_info)
 
     def has_delete_permission(self, obj=None):
         """
         返回当前用户是否有删除权限
         """
-        return self.user.has_perm('%s.delete_%s'% self.model_info)
+        return self.user.has_perm('%s.delete_%s' % self.model_info)
 

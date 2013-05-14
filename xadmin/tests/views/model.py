@@ -1,5 +1,6 @@
 from xadmin.tests.base import TestCase
 
+
 class DeleteTest(TestCase):
 
     def test_delete(self):

@@ -25,18 +25,19 @@ FORMFIELD_FOR_DBFIELD_DEFAULTS = {
         'form_class': forms.SplitDateTimeField,
         'widget': widgets.AdminSplitDateTime
     },
-    models.DateField:       {'widget': widgets.AdminDateWidget},
-    models.TimeField:       {'widget': widgets.AdminTimeWidget},
-    models.TextField:       {'widget': widgets.AdminTextareaWidget},
-    models.URLField:        {'widget': widgets.AdminURLFieldWidget},
-    models.IntegerField:    {'widget': widgets.AdminIntegerFieldWidget},
+    models.DateField: {'widget': widgets.AdminDateWidget},
+    models.TimeField: {'widget': widgets.AdminTimeWidget},
+    models.TextField: {'widget': widgets.AdminTextareaWidget},
+    models.URLField: {'widget': widgets.AdminURLFieldWidget},
+    models.IntegerField: {'widget': widgets.AdminIntegerFieldWidget},
     models.BigIntegerField: {'widget': widgets.AdminIntegerFieldWidget},
-    models.CharField:       {'widget': widgets.AdminTextInputWidget},
-    models.ImageField:      {'widget': widgets.AdminFileWidget},
-    models.FileField:       {'widget': widgets.AdminFileWidget},
-    models.ForeignKey:      {'widget': widgets.AdminSelectWidget},
-    models.OneToOneField:   {'widget': widgets.AdminSelectWidget},
+    models.CharField: {'widget': widgets.AdminTextInputWidget},
+    models.ImageField: {'widget': widgets.AdminFileWidget},
+    models.FileField: {'widget': widgets.AdminFileWidget},
+    models.ForeignKey: {'widget': widgets.AdminSelectWidget},
+    models.OneToOneField: {'widget': widgets.AdminSelectWidget},
 }
+
 
 class ReadOnlyField(Field):
     """
@@ -53,8 +54,10 @@ class ReadOnlyField(Field):
         for field in self.fields:
             result = self.detail.get_field_result(field)
             field = {'auto_id': field}    #: 设置 field id
-            html += loader.render_to_string(self.template, {'field': field, 'result': result})
+            html += loader.render_to_string(
+                self.template, {'field': field, 'result': result})
         return html
+
 
 class ModelFormAdminView(ModelAdminView):
     """
@@ -153,8 +156,7 @@ class ModelFormAdminView(ModelAdminView):
         :param db_field: Model 的 DB Field
         """
         attrs = self.get_field_attrs(db_field, **kwargs)
-        attrs.update(kwargs)
-        return db_field.formfield(**attrs)
+        return db_field.formfield(**dict(attrs, **kwargs))
 
     @filter_hook
     def get_field_style(self, db_field, style, **kwargs):
@@ -167,10 +169,11 @@ class ModelFormAdminView(ModelAdminView):
         """
         if style in ('radio', 'radio-inline') and (db_field.choices or isinstance(db_field, models.ForeignKey)):
             # fk 字段生成 radio 表单控件
-            attrs = {'widget': widgets.AdminRadioSelect(attrs={'class': 'inline' if style == 'radio-inline' else ""})}
+            attrs = {'widget': widgets.AdminRadioSelect(
+                attrs={'class': 'inline' if style == 'radio-inline' else ""})}
             if db_field.choices:
                 attrs['choices'] = db_field.get_choices(
-                    include_blank = db_field.blank,
+                    include_blank=db_field.blank,
                     blank_choice=[('', _('None'))]
                 )
             return attrs
@@ -178,7 +181,7 @@ class ModelFormAdminView(ModelAdminView):
         if style in ('checkbox', 'checkbox-inline') and isinstance(db_field, models.ManyToManyField):
             # m2m 字段生成 checkbox 表单控件
             return {'widget': widgets.AdminCheckboxSelect(attrs={'class': 'inline' if style == 'checkbox-inline' else ""}),
-                'help_text': None}
+                    'help_text': None}
 
     @filter_hook
     def get_field_attrs(self, db_field, **kwargs):
@@ -189,7 +192,8 @@ class ModelFormAdminView(ModelAdminView):
         """
         if db_field.name in self.style_fields:
             # 如果设置了 Field Style，则返回 Style 的属性
-            attrs = self.get_field_style(db_field, self.style_fields[db_field.name], **kwargs)
+            attrs = self.get_field_style(
+                db_field, self.style_fields[db_field.name], **kwargs)
             if attrs:
                 return attrs
 
@@ -197,7 +201,8 @@ class ModelFormAdminView(ModelAdminView):
             related_modeladmin = self.admin_site._registry.get(db_field.rel.to)
             # 如果字段是关联字段，并且关联字段的 ModelAdmin 设置了 :attr:`relfield_style` 属性，则使用该值作为 Field Style
             if related_modeladmin and hasattr(related_modeladmin, 'relfield_style'):
-                attrs = self.get_field_style(db_field, related_modeladmin.relfield_style, **kwargs)
+                attrs = self.get_field_style(
+                    db_field, related_modeladmin.relfield_style, **kwargs)
                 if attrs:
                     return attrs
 
@@ -207,8 +212,8 @@ class ModelFormAdminView(ModelAdminView):
         for klass in db_field.__class__.mro():
             # 根据 DB Field 的类，获取 Field 属性
             if klass in self.formfield_overrides:
-                return self.formfield_overrides[klass]
-                
+                return self.formfield_overrides[klass].copy()
+
         return {}
 
     @filter_hook
@@ -278,15 +283,16 @@ class ModelFormAdminView(ModelAdminView):
         if layout is None:
             # 默认的 Layout 方式
             layout = Layout(Container(
-                    Fieldset("", *fields, css_class="unsort no_title"), css_class="form-horizontal"
-                    ))
+                Fieldset("", *fields, css_class="unsort no_title"), css_class="form-horizontal"
+            ))
         elif type(layout) in (list, tuple) and len(layout) > 0:
             # 如果设置的 layout 是一个列表，那么按以下方法生成
             if isinstance(layout[0], Column):
                 # 如果列表第一项是 Column ， 那么用 Container 包装
                 layout = Layout(Container(*layout))
-            elif isinstance(layout[0], Fieldset):
-                layout = Layout(Container(*layout, css_class="form-horizontal"))
+            elif isinstance(layout[0], (Fieldset, TabHolder)):
+                layout = Layout(
+                    Container(*layout, css_class="form-horizontal"))
             else:
                 # 那么用 Container > Fieldset 包装
                 layout = Layout(Container(Fieldset("", *layout, css_class="unsort no_title"), css_class="form-horizontal"))
@@ -318,11 +324,12 @@ class ModelFormAdminView(ModelAdminView):
         readonly_fields = self.get_readonly_fields()
         if readonly_fields:
             # 使用 :class:`xadmin.views.detail.DetailAdminUtil` 来显示只读字段的内容
-            detail = self.get_model_view(DetailAdminUtil, self.model, self.form_obj.instance)
+            detail = self.get_model_view(
+                DetailAdminUtil, self.model, self.form_obj.instance)
             for field in readonly_fields:
                 # 替换只读字段
                 helper[field].wrap(ReadOnlyField, detail)
-                
+
         return helper
 
     @filter_hook
@@ -371,7 +378,7 @@ class ModelFormAdminView(ModelAdminView):
         """
         self.instance_forms()
         self.setup_forms()
-        
+
         return self.get_response()
 
     @csrf_protect_m
@@ -448,7 +455,7 @@ class ModelFormAdminView(ModelAdminView):
             'has_change_permission': self.has_change_permission(self.org_obj),
             'has_delete_permission': self.has_delete_permission(self.org_obj),
 
-            'has_file_field': True, # FIXME - this should check if form or formsets have a FileField,
+            'has_file_field': True,  # FIXME - this should check if form or formsets have a FileField,
             'has_absolute_url': hasattr(self.model, 'get_absolute_url'),
             'ordered_objects': ordered_objects,
             'form_url': '',
@@ -460,9 +467,9 @@ class ModelFormAdminView(ModelAdminView):
         # for submit line
         new_context.update({
             'onclick_attrib': (self.opts.get_ordered_objects() and change
-                                and 'onclick="submitOrderForm();"' or ''),
+                               and 'onclick="submitOrderForm();"' or ''),
             'show_delete_link': (new_context['has_delete_permission']
-                                  and (change or new_context['show_delete'])),
+                                 and (change or new_context['show_delete'])),
             'show_save_as_new': change and self.save_as,
             'show_save_and_add_another': new_context['has_add_permission'] and
                                 (not self.save_as or add),
@@ -471,7 +478,8 @@ class ModelFormAdminView(ModelAdminView):
         })
 
         if self.org_obj and new_context['show_delete_link']:
-            new_context['delete_url'] = self.model_admin_url('delete', self.org_obj.pk)
+            new_context['delete_url'] = self.model_admin_url(
+                'delete', self.org_obj.pk)
 
         context = super(ModelFormAdminView, self).get_context()
         context.update(new_context)
@@ -491,6 +499,7 @@ class ModelFormAdminView(ModelAdminView):
     def get_media(self):
         return super(ModelFormAdminView, self).get_media() + self.form_obj.media + \
             self.vendor('xadmin.page.form.js', 'xadmin.form.css')
+
 
 class CreateAdminView(ModelFormAdminView):
     """
@@ -520,7 +529,7 @@ class CreateAdminView(ModelFormAdminView):
                 if isinstance(f, models.ManyToManyField):
                     # 如果是多对多的字段，则使用逗号分割
                     initial[k] = initial[k].split(",")
-            return {'initial':initial}
+            return {'initial': initial}
         else:
             return {'data': self.request.POST, 'files': self.request.FILES}
 
@@ -546,7 +555,9 @@ class CreateAdminView(ModelFormAdminView):
         context = self.get_context()
         context.update(self.kwargs or {})
 
-        return TemplateResponse(self.request, self.add_form_template or self.get_template_list('views/model_form.html'), \
+        return TemplateResponse(
+            self.request, self.add_form_template or self.get_template_list(
+                'views/model_form.html'),
             context, current_app=self.admin_site.name)
 
     @filter_hook
@@ -556,12 +567,14 @@ class CreateAdminView(ModelFormAdminView):
         """
         request = self.request
 
-        msg = _('The %(name)s "%(obj)s" was added successfully.') % {'name': force_unicode(self.opts.verbose_name), \
-            'obj': "<a href='%s'>%s</a>" % (self.model_admin_url('change', self.new_obj._get_pk_val()), force_unicode(self.new_obj))}
+        msg = _(
+            'The %(name)s "%(obj)s" was added successfully.') % {'name': force_unicode(self.opts.verbose_name),
+                                                                 'obj': "<a href='%s'>%s</a>" % (self.model_admin_url('change', self.new_obj._get_pk_val()), force_unicode(self.new_obj))}
 
         # 根据 ``request.POST`` 的参数跳转到不同的页面
         if "_continue" in request.POST:
-            self.message_user(msg + ' ' + _("You may edit it again below."), 'success')
+            self.message_user(
+                msg + ' ' + _("You may edit it again below."), 'success')
             # 继续编辑
             return self.model_admin_url('change', self.new_obj._get_pk_val())
 
@@ -590,8 +603,8 @@ class UpdateAdminView(ModelFormAdminView):
             raise PermissionDenied
 
         if self.org_obj is None:
-            raise Http404(_('%(name)s object with primary key %(key)r does not exist.') % \
-                {'name': force_unicode(self.opts.verbose_name), 'key': escape(object_id)})
+            raise Http404(_('%(name)s object with primary key %(key)r does not exist.') %
+                          {'name': force_unicode(self.opts.verbose_name), 'key': escape(object_id)})
 
         # comm method for both get and post
         self.prepare_form()
@@ -603,7 +616,8 @@ class UpdateAdminView(ModelFormAdminView):
         """
         params = {'instance': self.org_obj}
         if self.request_method == 'post':
-            params.update({'data': self.request.POST, 'files': self.request.FILES})
+            params.update(
+                {'data': self.request.POST, 'files': self.request.FILES})
         return params
 
     @filter_hook
@@ -628,7 +642,9 @@ class UpdateAdminView(ModelFormAdminView):
         context = self.get_context()
         context.update(kwargs or {})
 
-        return TemplateResponse(self.request, self.change_form_template or self.get_template_list('views/model_form.html'), \
+        return TemplateResponse(
+            self.request, self.change_form_template or self.get_template_list(
+                'views/model_form.html'),
             context, current_app=self.admin_site.name)
 
     def post(self, request, *args, **kwargs):
@@ -654,15 +670,17 @@ class UpdateAdminView(ModelFormAdminView):
 
         pk_value = obj._get_pk_val()
 
-        msg = _('The %(name)s "%(obj)s" was changed successfully.') % {'name': force_unicode(verbose_name), \
+        msg = _('The %(name)s "%(obj)s" was changed successfully.') % {'name': force_unicode(verbose_name),
             'obj': "<a href='%s'>%s</a>" % (self.model_admin_url('change', pk_value), force_unicode(obj))}
 
         if "_continue" in request.POST:
-            self.message_user(msg + ' ' + _("You may edit it again below."), 'success')
+            self.message_user(
+                msg + ' ' + _("You may edit it again below."), 'success')
             # 返回原页面继续编辑
             return request.path
         elif "_addanother" in request.POST:
-            self.message_user(msg + ' ' + (_("You may add another %s below.") % force_unicode(verbose_name)), 'success')
+            self.message_user(msg + ' ' + (_("You may add another %s below.") 
+                             % force_unicode(verbose_name)), 'success')
             # 跳转到添加页面
             return self.model_admin_url('add')
         else:
@@ -692,4 +710,3 @@ class ModelFormAdminUtil(ModelFormAdminView):
     @filter_hook
     def get_form_datas(self):
         return {'instance': self.org_obj}
-

@@ -31,8 +31,10 @@ class ShowField(Field):
         html = ''
         for field, result in self.results:
             if form.fields[field].widget != forms.HiddenInput:
-                html += loader.render_to_string(self.template, {'field': form[field], 'result': result})
+                html += loader.render_to_string(
+                    self.template, {'field': form[field], 'result': result})
         return html
+
 
 class ResultField(object):
 
@@ -52,11 +54,12 @@ class ResultField(object):
 
     def init(self):
         self.label = label_for_field(self.field_name, self.obj.__class__,
-            model_admin = self.admin_view,
-            return_attr = False
-        )
+                                     model_admin=self.admin_view,
+                                     return_attr=False
+                                     )
         try:
-            f, attr, value = lookup_field(self.field_name, self.obj, self.admin_view)
+            f, attr, value = lookup_field(
+                self.field_name, self.obj, self.admin_view)
         except (AttributeError, ObjectDoesNotExist):
             self.text
         else:
@@ -79,12 +82,14 @@ class ResultField(object):
 
     @property
     def val(self):
-        text = mark_safe(self.text) if self.allow_tags else conditional_escape(self.text)
+        text = mark_safe(
+            self.text) if self.allow_tags else conditional_escape(self.text)
         if force_unicode(text) == '':
             text = mark_safe('<span class="muted">%s</span>' % _('Null'))
         for wrap in self.wraps:
             text = mark_safe(wrap % text)
         return text
+
 
 def replace_field_to_value(layout, cb):
     for i, lo in enumerate(layout.fields):
@@ -94,6 +99,7 @@ def replace_field_to_value(layout, cb):
             layout.fields[i] = ShowField(cb, lo)
         elif hasattr(lo, 'get_field_names'):
             replace_field_to_value(lo, cb)
+
 
 class DetailAdminView(ModelAdminView):
     """
@@ -135,8 +141,8 @@ class DetailAdminView(ModelAdminView):
             raise PermissionDenied
 
         if self.obj is None:
-            raise Http404(_('%(name)s object with primary key %(key)r does not exist.') % \
-                {'name': force_unicode(self.opts.verbose_name), 'key': escape(object_id)})
+            raise Http404(_('%(name)s object with primary key %(key)r does not exist.') %
+                          {'name': force_unicode(self.opts.verbose_name), 'key': escape(object_id)})
         self.org_obj = self.obj
 
     @filter_hook
@@ -151,8 +157,8 @@ class DetailAdminView(ModelAdminView):
 
         if layout is None:
             layout = Layout(Container(
-                    Fieldset("", *self.form_obj.fields.keys(), css_class="unsort no_title"), css_class="form-horizontal"
-                    ))
+                Fieldset("", *self.form_obj.fields.keys(), css_class="unsort no_title"), css_class="form-horizontal"
+            ))
         elif type(layout) in (list, tuple) and len(layout) > 0:
             # 如果设置的 layout 是一个列表，那么按以下方法生成
             if isinstance(layout[0], Column):
@@ -160,7 +166,8 @@ class DetailAdminView(ModelAdminView):
                 layout = Layout(Container(*layout))
             elif isinstance(layout[0], Fieldset):
                 # 如果列表第一项是 Fieldset ， 那么用 Container 包装
-                layout = Layout(Container(*layout, css_class="form-horizontal"))
+                layout = Layout(
+                    Container(*layout, css_class="form-horizontal"))
             else:
                 # 那么用 Container > Fieldset 包装
                 layout = Layout(Container(Fieldset("", *layout, css_class="unsort no_title"), css_class="form-horizontal"))
@@ -212,7 +219,8 @@ class DetailAdminView(ModelAdminView):
         # 替换所有的字段为 ShowField
         replace_field_to_value(layout, self.get_field_result)
         helper.add_layout(layout)
-        helper.filter(basestring, max_level=20).wrap(ShowField, admin_view=self)
+        helper.filter(
+            basestring, max_level=20).wrap(ShowField, admin_view=self)
         return helper
 
     @csrf_protect_m
@@ -223,7 +231,7 @@ class DetailAdminView(ModelAdminView):
         helper = self.get_form_helper()
         if helper:
             self.form_obj.helper = helper
-        
+
         return self.get_response()
 
     @filter_hook
@@ -279,8 +287,8 @@ class DetailAdminView(ModelAdminView):
         context = self.get_context()
         context.update(kwargs or {})
 
-        return TemplateResponse(self.request, self.detail_template or \
-            self.get_template_list('views/model_detail.html'), context, current_app=self.admin_site.name)
+        return TemplateResponse(self.request, self.detail_template or
+                                self.get_template_list('views/model_detail.html'), context, current_app=self.admin_site.name)
 
 
 class DetailAdminUtil(DetailAdminView):
@@ -295,6 +303,3 @@ class DetailAdminUtil(DetailAdminView):
     def init_request(self, obj):
         self.obj = obj
         self.org_obj = obj
-
-
-

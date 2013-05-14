@@ -11,19 +11,21 @@ from django.db.models.signals import post_syncdb
 from django.contrib.auth.models import Permission
 
 from xadmin.util import json
- 
-import datetime, decimal
+
+import datetime
+import decimal
+
 
 def add_view_permissions(sender, **kwargs):
     """
-    This syncdb hooks takes care of adding a view permission too all our 
+    This syncdb hooks takes care of adding a view permission too all our
     content types.
     """
     # for each of our content types
     for content_type in ContentType.objects.all():
         # build our permission slug
         codename = "view_%s" % content_type.model
- 
+
         # if it doesn't exist..
         if not Permission.objects.filter(content_type=content_type, codename=codename):
             # add it
@@ -31,7 +33,7 @@ def add_view_permissions(sender, **kwargs):
                                       codename=codename,
                                       name="Can view %s" % content_type.name)
             #print "Added view permission for %s" % content_type.name
- 
+
 # check for all our view permissions after a syncdb
 post_syncdb.connect(add_view_permissions)
 
@@ -53,10 +55,11 @@ class Bookmark(models.Model):
 
     def __unicode__(self):
         return self.title
-        
+
     class Meta:
         verbose_name = _(u'Bookmark')
         verbose_name_plural = _('Bookmarks')
+
 
 class JSONEncoder(DjangoJSONEncoder):
     def default(self, o):
@@ -74,6 +77,7 @@ class JSONEncoder(DjangoJSONEncoder):
             except Exception:
                 return smart_unicode(o)
 
+
 class UserSettings(models.Model):
     user = models.ForeignKey(User)
     key = models.CharField(_('Settings Key'), max_length=256)
@@ -87,10 +91,11 @@ class UserSettings(models.Model):
 
     def __unicode__(self):
         return "%s %s" % (self.user, self.key)
-        
+
     class Meta:
         verbose_name = _(u'User Setting')
         verbose_name_plural = _('User Settings')
+
 
 class UserWidget(models.Model):
     user = models.ForeignKey(User)
@@ -112,7 +117,8 @@ class UserWidget(models.Model):
         super(UserWidget, self).save(*args, **kwargs)
         if created:
             try:
-                portal_pos = UserSettings.objects.get(user=self.user, key="dashboard:%s:pos" % self.page_id)
+                portal_pos = UserSettings.objects.get(
+                    user=self.user, key="dashboard:%s:pos" % self.page_id)
                 portal_pos.value = "%s,%s" % (self.pk, portal_pos.value)
                 portal_pos.save()
             except Exception:
@@ -120,7 +126,7 @@ class UserWidget(models.Model):
 
     def __unicode__(self):
         return "%s %s widget" % (self.user, self.widget_type)
-        
+
     class Meta:
         verbose_name = _(u'User Widget')
         verbose_name_plural = _('User Widgets')
