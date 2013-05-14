@@ -13,8 +13,7 @@ setup(
     author_email='sshwsfc@gmail.com',
     url='http://www.xadmin.io',
     download_url='http://github.com/sshwsfc/django-xadmin/archive/master.zip',
-    packages=['xadmin', 'xadmin.plugins', 'xadmin.templatetags',
-        'xadmin.tests', 'xadmin.views'],
+    packages=['xadmin', 'xadmin.plugins', 'xadmin.templatetags', 'xadmin.views'],
     include_package_data=True,
     install_requires=[
         'setuptools',
