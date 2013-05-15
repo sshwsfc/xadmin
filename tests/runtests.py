@@ -29,7 +29,7 @@ def get_test_modules():
     for f in os.listdir(RUNTESTS_DIR):
         if (f.startswith('__init__') or
             f.startswith('.') or
-            f.startswith('sql')):
+            f.startswith('sql') or not os.path.isdir(os.path.join(RUNTESTS_DIR, f))):
             continue
         modules.append(f)
     return modules

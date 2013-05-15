@@ -1,8 +1,6 @@
-from django.test import TestCase
 from django.http import HttpResponse
-from django.contrib.auth.models import User
-from django.test.client import RequestFactory
 
+from xtests.base import BaseTest
 from xadmin.sites import AdminSite
 from xadmin.views import BaseAdminView, BaseAdminPlugin, ModelAdminView, filter_hook
 
@@ -40,19 +38,7 @@ class TestModelAdminView(ModelAdminView):
         return HttpResponse(str(obj_id))
 
 
-class AdminSiteTest(TestCase):
-
-    def setUp(self):
-        # Every test needs access to the request factory.
-        self.factory = RequestFactory()
-
-    def _create_superuser(self, username):
-        return User.objects.create(username=username, is_superuser=True)
-
-    def _mocked_authenticated_request(self, url, user):
-        request = self.factory.get(url)
-        request.user = user
-        return request
+class AdminSiteTest(BaseTest):
 
     def get_site(self):
         return AdminSite('test', 'test_app')
@@ -90,8 +76,7 @@ class AdminSiteTest(TestCase):
         c = site.get_view_class(TestAdminView)
         self.assertIn(TestPlugin, c.plugin_classes)
 
-        admin = self._create_superuser('admin')
-        cv = c(self._mocked_authenticated_request('test/', admin))
+        cv = c(self._mocked_request('test/'))
 
         self.assertEqual(cv.get_title(), "TEST TITLE PLUGIN")
 
