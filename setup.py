@@ -8,11 +8,11 @@ setup(
     name='django-xadmin',
     version='0.1.12-dev',
     description='Drop-in replacement of Django admin comes with lots of goodies, fully extensible with plugin support, pretty UI based on Twitter Bootstrap.',
-    long_description=open('README.md').read(),
+    long_description=open('README.rst').read(),
     author='sshwsfc',
     author_email='sshwsfc@gmail.com',
     url='http://www.xadmin.io',
-    download_url='http://github.com/sshwsfc/django-xadmin/archive/master.zip',
+    download_url='http://github.com/sshwsfc/django-xadmin/archive/0.1.12.dev.zip',
     packages=['xadmin', 'xadmin.plugins', 'xadmin.templatetags', 'xadmin.views'],
     include_package_data=True,
     install_requires=[
