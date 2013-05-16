@@ -25,8 +25,8 @@
 
   $(function(){
     var top_nav = $('#top-nav');
-    $('body').css('padding-top', $('body>.container-fluid').offset().top + 'px');
-    top_nav.css('position', 'fixed');
+    // $('body').css('padding-top', $('body>.container-fluid').offset().top + 'px');
+    // top_nav.css('position', 'fixed');
 
     if($("#g-theme-menu")){
       $('#g-theme-menu li>a').click(function(){
