@@ -47,7 +47,8 @@ Screenshots
 Get Started
 -----------
 
-**Install**
+Install
+^^^^^^^
 
 Xadmin is best installed via PyPI. To install the latest version, run:
 
