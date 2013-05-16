@@ -7,6 +7,7 @@ from xadmin.views import BaseAdminPlugin, ListAdminView
 
 SORTBY_VAR = '_sort_by'
 
+
 class SortablePlugin(BaseAdminPlugin):
 
     sortable_fields = ['sort']
@@ -36,5 +37,3 @@ class SortablePlugin(BaseAdminPlugin):
 
 
 site.register_plugin(SortablePlugin, ListAdminView)
-
-

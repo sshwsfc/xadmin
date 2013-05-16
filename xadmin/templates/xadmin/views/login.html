@@ -1,4 +1,4 @@
-{% extends "xadmin/base.html" %}
+{% extends base_template %}
 {% load i18n xadmin_tags %}
 {% load url from future %}
 {% load crispy_forms_tags %}
@@ -40,6 +40,8 @@
     height: auto;
     margin-bottom: 15px;
     padding: 7px 9px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .form-signin .alert-block{
@@ -59,18 +61,27 @@
 {% block body %}
 <div class="container">
 
-  <form action="" method="post" id="login-form" class="form-signin">{% csrf_token %}
-    <h2 class="form-signin-heading">{% if title %}{{title}}{% else %}{% trans "Please Login" %}{% endif %}</h2>
-    {% crispy form helper %}
-    <input type="hidden" name="this_is_the_login_form" value="1" />
-    <input type="hidden" name="next" value="{{ next }}" />
-    <button class="btn btn-large btn-primary" type="submit">{% trans 'log in' %}</button>
-    {% url 'admin_password_reset' as password_reset_url %}
-    {% if password_reset_url %}
-    <div class="password-reset-link">
-      <a href="{{ password_reset_url }}">{% trans 'Forgotten your password or username?' %}</a>
-    </div>
-    {% endif %}
+  <form action="" method="post" id="login-form" class="form-signin">
+    {% csrf_token %}
+    {% block login_form %}
+      {% block login_heading %}
+      <h2 class="form-signin-heading">{% if title %}{{title}}{% else %}{% trans "Please Login" %}{% endif %}</h2>
+      {% endblock %}
+
+      {% crispy form helper %}
+
+      <input type="hidden" name="this_is_the_login_form" value="1" />
+      <input type="hidden" name="next" value="{{ next }}" />
+
+      <button class="btn btn-large btn-primary btn-block" type="submit">{% trans 'log in' %}</button>
+
+      {% url 'admin_password_reset' as password_reset_url %}
+      {% if password_reset_url %}
+      <div class="password-reset-link">
+        <a href="{{ password_reset_url }}">{% trans 'Forgotten your password or username?' %}</a>
+      </div>
+      {% endif %}
+    {% endblock %}
   </form>
 
 </div> <!-- /container -->

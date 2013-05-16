@@ -1,13 +1,15 @@
-from xadmin.tests.base import TestCase
 from django.http import HttpResponse
 
+from xtests.base import BaseTest
 from xadmin.sites import AdminSite
 from xadmin.views import BaseAdminView, BaseAdminPlugin, ModelAdminView, filter_hook
 
 from models import ModelA
 
+
 class ModelAAdmin(object):
     pass
+
 
 class TestAdminView(BaseAdminView):
     site_title = "TEST TITLE"
@@ -19,20 +21,24 @@ class TestAdminView(BaseAdminView):
     def get(self, request):
         return HttpResponse(self.site_title)
 
+
 class TestOption(object):
     site_title = "TEST PROJECT"
+
 
 class TestPlugin(BaseAdminPlugin):
 
     def get_title(self, title):
         return "%s PLUGIN" % title
 
+
 class TestModelAdminView(ModelAdminView):
-    
+
     def get(self, request, obj_id):
         return HttpResponse(str(obj_id))
 
-class AdminSiteTest(TestCase):
+
+class AdminSiteTest(BaseTest):
 
     def get_site(self):
         return AdminSite('test', 'test_app')
@@ -70,7 +76,7 @@ class AdminSiteTest(TestCase):
         c = site.get_view_class(TestAdminView)
         self.assertIn(TestPlugin, c.plugin_classes)
 
-        cv = c(self.get_factory().get('test/'))
+        cv = c(self._mocked_request('test/'))
 
         self.assertEqual(cv.get_title(), "TEST TITLE PLUGIN")
 
@@ -79,10 +85,10 @@ class AdminSiteTest(TestCase):
 
         site.register(ModelA, ModelAAdmin)
         site.register_view(r"^test/$", TestAdminView, 'test')
-        site.register_modelview(r'^(.+)/test/$', TestModelAdminView, name='%s_%s_test')
+        site.register_modelview(
+            r'^(.+)/test/$', TestModelAdminView, name='%s_%s_test')
 
         urls, app_name, namespace = site.urls
 
         self.assertEqual(app_name, 'test_app')
         self.assertEqual(namespace, 'test')
-

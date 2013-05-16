@@ -4,8 +4,8 @@
 {% block content %}
   <div class="btn-group btn-group-justified">
     {% for btn in btns %}
-    <a href="{{ btn.url }}" class="btn btn-primary btn-quick">
-      <i class="icon-leaf"></i>
+    <a href="{{ btn.url }}" class="btn btn-primary btn-quick col col-lg-3">
+      <i class="icon-{% if btn.icon %}{{btn.icon}}{%else%}leaf{% endif %}"></i>
       <p>{{ btn.title }}</p>
     </a>
     {% endfor %}

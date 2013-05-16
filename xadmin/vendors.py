@@ -22,12 +22,18 @@ vendors = {
             'production': 'xadmin/vendor/jquery/jquery.min.js',
         }
     },
+    'jquery-ui-effect': {
+        "js": {
+            'dev': 'xadmin/vendor/jquery-ui/jquery.ui.effect.js',
+            'production': 'xadmin/vendor/jquery-ui/jquery.ui.effect.min.js'
+        }
+    },
     'jquery-ui-sortable': {
         "js": {
-            'dev': ['xadmin/vendor/jquery-ui/jquery.ui.core.js','xadmin/vendor/jquery-ui/jquery.ui.widget.js',
-                'xadmin/vendor/jquery-ui/jquery.ui.mouse.js','xadmin/vendor/jquery-ui/jquery.ui.sortable.js'],
-            'production': ['xadmin/vendor/jquery-ui/jquery.ui.core.min.js','xadmin/vendor/jquery-ui/jquery.ui.widget.min.js',
-                'xadmin/vendor/jquery-ui/jquery.ui.mouse.min.js','xadmin/vendor/jquery-ui/jquery.ui.sortable.min.js']
+            'dev': ['xadmin/vendor/jquery-ui/jquery.ui.core.js', 'xadmin/vendor/jquery-ui/jquery.ui.widget.js',
+                    'xadmin/vendor/jquery-ui/jquery.ui.mouse.js', 'xadmin/vendor/jquery-ui/jquery.ui.sortable.js'],
+            'production': ['xadmin/vendor/jquery-ui/jquery.ui.core.min.js', 'xadmin/vendor/jquery-ui/jquery.ui.widget.min.js',
+                           'xadmin/vendor/jquery-ui/jquery.ui.mouse.min.js', 'xadmin/vendor/jquery-ui/jquery.ui.sortable.min.js']
         }
     },
     "font-awesome": {
@@ -56,8 +62,8 @@ vendors = {
     },
     "flot": {
         "js": {
-            'dev': ['xadmin/vendor/flot/jquery.flot.js', 'xadmin/vendor/flot/jquery.flot.pie.js', 'xadmin/vendor/flot/jquery.flot.time.js', 
-                'xadmin/vendor/flot/jquery.flot.resize.js']
+            'dev': ['xadmin/vendor/flot/jquery.flot.js', 'xadmin/vendor/flot/jquery.flot.pie.js', 'xadmin/vendor/flot/jquery.flot.time.js',
+                    'xadmin/vendor/flot/jquery.flot.resize.js']
         }
     },
     "image-gallery": {

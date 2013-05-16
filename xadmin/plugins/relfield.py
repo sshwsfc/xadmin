@@ -6,6 +6,8 @@ from django.utils.translation import ugettext as _
 from django import forms
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView
+from xadmin.util import vendor
+
 
 class ForeignKeySearchWidget(forms.TextInput):
 
@@ -23,7 +25,8 @@ class ForeignKeySearchWidget(forms.TextInput):
             attrs['class'] = 'select-search'
         else:
             attrs['class'] = attrs['class'] + ' select-search'
-        attrs['data-search-url'] = self.admin_view.get_admin_url('%s_%s_changelist' % (to_opts.app_label, to_opts.module_name))
+        attrs['data-search-url'] = self.admin_view.get_admin_url(
+            '%s_%s_changelist' % (to_opts.app_label, to_opts.module_name))
         attrs['data-placeholder'] = _('Search %s') % to_opts.verbose_name
         if value:
             attrs['data-label'] = self.label_for_value(value)
@@ -33,10 +36,16 @@ class ForeignKeySearchWidget(forms.TextInput):
     def label_for_value(self, value):
         key = self.rel.get_related_field().name
         try:
-            obj = self.rel.to._default_manager.using(self.db).get(**{key: value})
+            obj = self.rel.to._default_manager.using(
+                self.db).get(**{key: value})
             return '%s' % escape(Truncator(obj).words(14, truncate='...'))
         except (ValueError, self.rel.to.DoesNotExist):
             return ""
+
+    @property
+    def media(self):
+        return vendor('select2.js', 'select2.css', 'xadmin.widget.select.js')
+
 
 class RelateFieldPlugin(BaseAdminPlugin):
 
@@ -44,11 +53,9 @@ class RelateFieldPlugin(BaseAdminPlugin):
         # search able fk field
         if style == 'fk-ajax' and isinstance(db_field, models.ForeignKey):
             if (db_field.rel.to in self.admin_view.admin_site._registry) and \
-                self.has_model_perm(db_field.rel.to, 'view'):
+                    self.has_model_perm(db_field.rel.to, 'view'):
                 db = kwargs.get('using')
                 return dict(attrs or {}, widget=ForeignKeySearchWidget(db_field.rel, self.admin_view, using=db))
         return attrs
 
 site.register_plugin(RelateFieldPlugin, ModelFormAdminView)
-
-

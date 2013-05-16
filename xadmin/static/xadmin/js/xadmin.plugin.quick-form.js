@@ -194,7 +194,7 @@
       this.$form.data('ajaxform').clean()
       var wrap = this.$for_wrap
       $.get(this.refresh_url + data['obj_id'], function(form_html, status, xhr){
-        wrap.html($(form_html).find('#' + wrap.attr('id')).html())
+        wrap.html($('<body>' + form_html + '</body>').find('#' + wrap.attr('id')).html())
         wrap.exform()
       })
       this.modal.modal('hide')

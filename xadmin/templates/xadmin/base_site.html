@@ -1,4 +1,4 @@
-{% extends "xadmin/base.html" %}
+{% extends 'xadmin/base.html' %}
 {% load i18n xadmin_tags %}
 {% load url from future %}
 
@@ -47,6 +47,7 @@
               {% endfor %}
             {% view_block 'menu-nav' %}
             </ul>
+          </div><!--/.well -->
         {% else %}
           <div class="well">
             <p>{% trans "You don't have permission to edit anything." %}</p>

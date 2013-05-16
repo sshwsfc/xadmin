@@ -6,6 +6,7 @@ from xadmin.views import BaseAdminPlugin, ListAdminView
 
 REFRESH_VAR = '_refresh'
 
+
 class RefreshPlugin(BaseAdminPlugin):
 
     refresh_times = []
@@ -34,5 +35,3 @@ class RefreshPlugin(BaseAdminPlugin):
 
 
 site.register_plugin(RefreshPlugin, ListAdminView)
-
-
