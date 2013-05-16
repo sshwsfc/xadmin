@@ -10,7 +10,14 @@
 {% block bodyclass %}dashboard{% endblock %}
 {% block breadcrumbs %}{% endblock %}
 
+{% if is_mob %}
+{% block branding %}
+  {% if icon %}<i class="icon-{{icon}}"></i>{%endif%} {{ title }}
+{% endblock branding %}
+{% endif %}
+
 {% block content %}
+{% if not is_mob %}
 <div class="navbar">
   <a class="navbar-brand" href="#">{% if icon %}<i class="icon-{{icon}}"></i>{%endif%} {{ title }}</a>
   <div class="btn-group pull-right">
@@ -20,9 +27,10 @@
     {% endif %}
   </div>
 </div>
+{% endif %}
 <div class="dashboard row">
   {% for c in columns %}
-  <div class="col {{ c.0 }} column">
+  <div class="{% if not is_mob %}col {% endif %}{{ c.0 }} column">
     {% for widget in c.1 %}
       {{ widget.widget|safe }}
     {% endfor %}

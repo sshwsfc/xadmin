@@ -1,0 +1,87 @@
+{% extends 'xadmin/base.html' %}
+{% load i18n xadmin_tags %}
+{% load url from future %}
+
+{% block title %}{{ title }} | {{ site_title }}{% endblock %}
+
+{% block body %}
+  <!-- Header -->
+  <div id="top-nav" class="navbar navbar-inverse navbar-fixed-top">
+    <button type="button" class="navbar-toggle" style="left: 10px; right: auto;" data-toggle="collapse" data-target=".navbar-responsive-collapse.menus">
+      <span class="icon-list"></span>
+    </button>
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse.settings">
+      <span class="icon-cog"></span>
+    </button>
+    <a class="navbar-brand" href="#" data-toggle="collapse" data-target=".navbar-responsive-collapse.menus">{% block branding %}{{ title }}{% endblock %}</a>
+    <div class="nav-collapse collapse navbar-responsive-collapse settings">
+      <ul class="nav navbar-nav">
+        {% if user.is_active and user.is_staff %}
+          <li class="dropdown">
+            <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
+            <strong>{% trans 'Welcome,' %} {% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %}</strong> <span class="caret"></span></a>
+            <ul id="g-account-menu" class="dropdown-menu" role="menu">
+              {% view_block 'top_account_menu' %}
+            </ul>
+          </li>
+        {% endif %}
+        <li><a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a></li>
+      </ul>
+    </div>
+    <div class="nav-collapse collapse navbar-responsive-collapse menus">
+      {% block navbar %}
+        {% if nav_menu %}
+          <ul class="nav nav-pills nav-stacked">
+            {% for item in nav_menu %}
+              <li class="nav-header {% if item.selected %} active{% endif %}">
+                {% if item.url %}<a href="{{ item.url }}" class="section">{% endif %}
+                {% if item.icon %}<i class="icon-{{item.icon}}"></i>{% endif %}{{ item.title }}
+                {% if item.url %}</a>{% endif %}
+              </li>
+              {% for sitem in item.menus %}
+              <li{% if sitem.selected %} class="active"{% endif %}>
+                {% if sitem.url %}<a href="{{ sitem.url }}">{% endif %}
+                {% if sitem.icon %}<i class="icon-{{sitem.icon}}"></i>{%else%}<i class="icon-exclamation-sign"></i>{% endif %}
+                {{ sitem.title }}</span>{% if sitem.url %}</a>{% endif %}
+              </li>
+              {% endfor %}
+            {% endfor %}
+          {% view_block 'menu-nav' %}
+          </ul>
+        {% else %}
+          <div class="well">
+            <p>{% trans "You don't have permission to edit anything." %}</p>
+          </div>
+        {% endif %}
+      {% endblock %}
+    </div>
+
+  </div>
+  <div id="body-content" style="margin-top: 50px; padding-top: 15px;">
+    <div style="display:none;">
+      {% block breadcrumbs %}
+      <ul class="breadcrumb">
+      <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> <li>
+      {% if title %} &rsaquo; {{ title }}{% endif %}
+      </ul>
+      {% endblock %}
+    </div>
+    {% block messages %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">
+          <a class="close" data-dismiss="alert" href="#">&times;</a>
+          {{ message|safe }}
+        </div>
+        {% endfor %}
+        {% endif %}
+    {% endblock messages %}
+
+    {% block content %}
+    {{ content }}
+    {% endblock %}
+
+    {% block footer %}
+    {% endblock %}
+  </div>
+{% endblock body %}
