@@ -2,9 +2,10 @@ from django import forms
 
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.models import User
 
 from django.utils.translation import ugettext_lazy, ugettext as _
+
+from xadmin.util import User
 
 ERROR_MESSAGE = ugettext_lazy("Please enter the correct username and password "
                               "for a staff account. Note that both fields are case-sensitive.")

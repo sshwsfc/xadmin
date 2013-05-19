@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models.base import ModelBase
@@ -10,7 +9,7 @@ from django.utils.encoding import smart_unicode
 from django.db.models.signals import post_syncdb
 from django.contrib.auth.models import Permission
 
-from xadmin.util import json
+from xadmin.util import json, User
 
 import datetime
 import decimal
