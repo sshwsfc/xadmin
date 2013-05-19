@@ -59,7 +59,7 @@
     <div id="content-block" class="col col-lg-10">
         {% block breadcrumbs %}
         <ul class="breadcrumb">
-        <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> <li>
+        <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a><li>
         {% if title %} &rsaquo; {{ title }}{% endif %}
         </ul>
         {% endblock %}
