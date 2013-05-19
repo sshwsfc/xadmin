@@ -2,7 +2,7 @@
 from django import forms
 from django.contrib.auth.forms import (UserCreationForm, UserChangeForm,
                                        AdminPasswordChangeForm, PasswordChangeForm)
-from django.contrib.auth.models import User, Group, Permission
+from django.contrib.auth.models import Group, Permission
 from django.core.exceptions import PermissionDenied
 from django.template.response import TemplateResponse
 from django.utils.decorators import method_decorator
@@ -13,7 +13,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from xadmin.layout import Fieldset, Main, Side, Row
 from xadmin.sites import site
-from xadmin.util import unquote
+from xadmin.util import unquote, User
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView, ModelAdminView, CommAdminView
 
 

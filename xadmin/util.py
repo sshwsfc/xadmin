@@ -33,6 +33,8 @@ try:
 except ImportError:
     from django.utils.timezone import localtime as tz_localtime
 
+from django.contrib.auth.models import User as DefaultUser
+User = getattr(settings, 'AUTH_USER_MODEL', DefaultUser)
 
 def xstatic(*tags):
     from vendors import vendors
