@@ -25,26 +25,21 @@
 </ul>
 {% endblock %}
 
+{% block nav_title %}
+  {% if model_icon %}<i class="icon-{{model_icon}}"></i> {% endif %}{{ object|truncatewords:"18" }}
+{% endblock %}
+
+{% block nav_btns %}
+  {% if has_change_permission %}
+  <a href="{% url opts|admin_urlname:'change' object.pk %}" class="btn"><i class="icon-pencil"></i> <span>{% trans "Edit" %}</span></a>
+  {% endif %}
+  {% if has_delete_permission %}
+  <a href="{% url opts|admin_urlname:'delete' object.pk %}" class="btn btn-danger"><i class="icon-trash"></i> <span>{% trans "Delete" %}</span></a>
+  {% endif %}
+{% endblock %}
+
 {% block content %}
-
-  <legend>
-    {% block object-tools %}
-    <div class="pull-right">
-      {% if has_change_permission %}
-      <a href="{% url opts|admin_urlname:'change' object.pk %}" class="btn btn-small"><i class="icon-pencil"></i>  {% trans "Edit" %}</a>
-      {% endif %}
-      {% if has_delete_permission %}
-      <a href="{% url opts|admin_urlname:'delete' object.pk %}" class="btn btn-danger btn-small"><i class="icon-remove"></i>  {% trans "Delete" %}</a>
-      {% endif %}
-    </div>
-    {% endblock %}
-    {{ object|truncatewords:"18" }}
-  </legend>
-
   {% view_block 'before_fieldsets' %}
-
   {% crispy form %}
-
   {% view_block 'after_fieldsets' %}
-
 {% endblock %}

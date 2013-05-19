@@ -160,6 +160,10 @@ a { cursor: pointer;}
   font-size: 13px;
 }
 
+.content-toolbar {
+  margin-bottom: 10px;
+}
+
 /* details dl */
 .data-details dl.dl-horizontal dt{
   width: 80px;
@@ -191,6 +195,14 @@ a { cursor: pointer;}
 /* list overflow */
 .x-scroll {
   overflow-x: auto;
+}
+
+/* nav sitemenu */
+.nav-sitemenu {
+  padding: 10px;
+}
+.nav-sitemenu li a {
+  padding: 6px 10px;
 }
 
 /* models list */
@@ -240,6 +252,13 @@ a[class^="icon-"]:before, a[class*=" icon-"]:before {
 /** fix navbar input-append and input-prepend margin **/
 .navbar .input-append, .navbar .input-prepend {
   margin-bottom: 5px;
+}
+.navbar .navbar-brand {
+  max-width: 400px;
+}
+.navbar-btns {
+  margin-top: 8px;
+  float: right;
 }
 
 /** import for bp3.0 */

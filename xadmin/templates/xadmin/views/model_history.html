@@ -12,52 +12,50 @@
 </ul>
 {% endblock %}
 
-{% block content %}
-  <div class="navbar">
-    <a class="navbar-brand icon-time" href="#">{{title}}</a>
-  </div>
-<div id="content-main">
-<div class="module">
+{% block nav_title %}
+  <i class="icon-time"></i> {{title}}
+{% endblock %}
 
+{% block content %}
+<div class="module">
 {% if action_list %}
   <form id="changelist-form" action="" method="post"{% view_block 'result_list_form' %}>{% csrf_token %}
-    <table id="change-history" class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th scope="col" colspan="2">{% trans 'Diff' %}</th>
-                <th scope="col">{% trans 'Date/time' %}</th>
-                <th scope="col">{% trans 'User' %}</th>
-                <th scope="col">{% trans 'Comment' %}</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for action in action_list %}
-                <tr>
-                    <td style="text-align:center; width: 20px;">
-                      <input type="radio" name="version_a" value="{{action.version.id}}">
-                    </td>
-                    <td style="text-align:center; width: 20px;">
-                      <input type="radio" name="version_b" value="{{action.version.id}}">
-                    </td>
-                    <td><a href="{{action.url}}">{{action.revision.date_created}}</a></td>
-                    <td>
-                        {% if action.revision.user %}
-                            {{action.revision.user.username}}
-                            {% if action.revision.user.first_name %} ({{action.revision.user.first_name}} {{action.revision.user.last_name}}){% endif %}
-                        {% endif %}
-                    </td>
-                    <td>{{action.revision.comment|linebreaksbr|default:""}}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <div class="well well-small">
-      <button class="btn btn-primary">{% trans "Diff Select Versions" %}</button>
-    </div>
+  <table id="change-history" class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th scope="col" colspan="2">{% trans 'Diff' %}</th>
+        <th scope="col">{% trans 'Date/time' %}</th>
+        <th scope="col">{% trans 'User' %}</th>
+        <th scope="col">{% trans 'Comment' %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for action in action_list %}
+        <tr>
+          <td style="text-align:center; width: 20px;">
+            <input type="radio" name="version_a" value="{{action.version.id}}">
+          </td>
+          <td style="text-align:center; width: 20px;">
+            <input type="radio" name="version_b" value="{{action.version.id}}">
+          </td>
+          <td><a href="{{action.url}}">{{action.revision.date_created}}</a></td>
+          <td>
+            {% if action.revision.user %}
+              {{action.revision.user.username}}
+              {% if action.revision.user.first_name %} ({{action.revision.user.first_name}} {{action.revision.user.last_name}}){% endif %}
+            {% endif %}
+          </td>
+          <td>{{action.revision.comment|linebreaksbr|default:""}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="form-actions">
+    <button class="btn btn-primary">{% trans "Diff Select Versions" %}</button>
+  </div>
   </form>
 {% else %}
-    <p class="well">{% trans "This object doesn't have a change history. It probably wasn't added via this admin site." %}</p>
+  <p class="well">{% trans "This object doesn't have a change history. It probably wasn't added via this admin site." %}</p>
 {% endif %}
-</div>
 </div>
 {% endblock %}

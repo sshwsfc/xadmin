@@ -1,8 +1,8 @@
 {% load i18n %}
-<div class="well well-small actions btn-toolbar hidden">
+<div class="form-actions">
   <input type="hidden" id="action" name="action" value=""/>
   <input type="hidden" id="select-across" name="select_across" value=""/>
-  <div class="btn-group">
+  <div class="btn-group{%if is_mob%} dropup{%endif%}">
     <a class="dropdown-toggle btn btn-success" data-toggle="dropdown" href="#">
     <i class="icon-wrench icon-white"></i> 
     <span class="action-counter">{{ selection_note }}</span>

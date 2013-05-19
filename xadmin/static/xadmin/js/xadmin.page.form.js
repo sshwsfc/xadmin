@@ -15,10 +15,10 @@
             $(window).bind('resize', function(e){
                 var rate = $(window).height() / $(window).width();
                 var action_bar = $('.form-actions');
-                if(rate < 1.2){
-                    action_bar.css('left', '-1000px');
+                if(rate < 1){
+                    action_bar.css('display', 'none');
                 } else {
-                    action_bar.css('left', '0px');
+                    action_bar.css('display', 'block');
                 }
             });
         }

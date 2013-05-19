@@ -25,24 +25,13 @@
 </ul>
 {% endblock %}
 
+{% block nav_title %}{% if model_icon %}<i class="icon-{{model_icon}}"><sub class="icon-{% if add%}plus{%else%}pencil{%endif%}"></sub></i> {% endif %}
+{{ title }}{% endblock %}
+
 {% block content %}
 <form class="exform" {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form">{% csrf_token %}
   {% view_block 'form_top' %}
-  {% if save_on_top %}{% block submit_buttons_top %}{% include "xadmin/includes/submit_line.html" %}{% endblock %}{% endif %}
-
-  {% block form_legend %}
-  <legend>
-    {% block object-tools %}
-    {% if change %}
-    <div class="pull-right">
-      {% view_block 'object_tools' %}
-    </div>
-    {% endif %}
-    {% endblock %}
-    {% if model_icon %}<i class="icon-{{model_icon}}"><sub class="icon-{% if add%}plus{%else%}pencil{%endif%}"></sub></i> {% endif %}
-    {{ title }}
-  </legend>
-  {% endblock %}
+  {% if save_on_top and not is_mob %}{% block submit_buttons_top %}{% include "xadmin/includes/submit_line.html" %}{% endblock %}{% endif %}
 
   {% if errors %}
       <div class="alert alert-danger">

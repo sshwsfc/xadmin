@@ -26,66 +26,92 @@
       </ul>
     </div>
   </div>
-  <div id="body-content">
-    <div id="left-side" class="col col-lg-2">
+
+  <div id="body-content" class="clearfix">
+    <div id="left-side" class="col col-lg-2 nav-collapse collapse navbar-responsive-collapse">
         {% block navbar %}
         {% if nav_menu %}
-            <ul class="well nav nav-pills nav-stacked">
-              {% for item in nav_menu %}
-                <li class="nav-header {% if item.selected %} active{% endif %}">
-                  {% if item.url %}<a href="{{ item.url }}" class="section">{% endif %}
-                  {% if item.icon %}<i class="icon-{{item.icon}}"></i>{% endif %}{{ item.title }}
-                  {% if item.url %}</a>{% endif %}
-                </li>
-                {% for sitem in item.menus %}
-                <li{% if sitem.selected %} class="active"{% endif %}>
-                  {% if sitem.url %}<a href="{{ sitem.url }}">{% endif %}
-                  {% if sitem.icon %}<i class="icon-{{sitem.icon}}"></i>{%else%}<i class="icon-exclamation-sign"></i>{% endif %}
-                  {{ sitem.title }}</span>{% if sitem.url %}</a>{% endif %}
-                </li>
-                {% endfor %}
+          <ul class="well nav nav-pills nav-stacked nav-sitemenu">
+            <li class="visible-phone">
+              <a href="{% url 'admin:index' %}"><i class="icon-fixed-width icon-home"></i> {% trans 'Home' %}</a>
+            </li>
+            {% for item in nav_menu %}
+              <li class="nav-header {% if item.selected %} active{% endif %}">
+                {% if item.url %}<a href="{{ item.url }}" class="section">{% endif %}
+                {% if item.icon %}<i class="icon-fixed-width icon-{{item.icon}}"></i>{% endif %}{{ item.title }}
+                {% if item.url %}</a>{% endif %}
+              </li>
+              {% for sitem in item.menus %}
+              <li{% if sitem.selected %} class="active"{% endif %}>
+                {% if sitem.url %}<a href="{{ sitem.url }}">{% endif %}
+                {% if sitem.icon %}<i class="icon-fixed-width icon-{{sitem.icon}}"></i>{%else%}<i class="icon-fixed-width icon-exclamation-sign"></i>{% endif %}
+                {{ sitem.title }}</span>{% if sitem.url %}</a>{% endif %}
+              </li>
               {% endfor %}
-            {% view_block 'menu-nav' %}
-            </ul>
-          </div><!--/.well -->
+            {% endfor %}
+          {% view_block 'menu-nav' %}
+          </ul>
         {% else %}
           <div class="well">
             <p>{% trans "You don't have permission to edit anything." %}</p>
           </div>
         {% endif %}
       {% endblock %}
-
     </div>
+
     <div id="content-block" class="col col-lg-10">
-        {% block breadcrumbs %}
-        <ul class="breadcrumb">
-        <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a><li>
-        {% if title %} &rsaquo; {{ title }}{% endif %}
-        </ul>
-        {% endblock %}
+      {% block breadcrumbs %}
+      <ul class="breadcrumb">
+      <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a><li>
+      {% if title %} &rsaquo; {{ title }}{% endif %}
+      </ul>
+      {% endblock %}
 
-        {% block messages %}
-            {% if messages %}
-            {% for message in messages %}
-            <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">
-              <a class="close" data-dismiss="alert" href="#">&times;</a>
-              {{ message|safe }}
-            </div>
-            {% endfor %}
-            {% endif %}
-        {% endblock messages %}
-
-        {% block content %}
-        {{ content }}
+      {% block content-nav %}
+      <div class="navbar content-navbar{% if is_mob %} navbar-inverse navbar-fixed-top{% endif %}">
+        {% block nav_left %}
+        <button type="button" class="navbar-toggle nav-back" onclick="javascript: history.back();"><i class="icon-arrow-left"></i></button>
         {% endblock %}
+        <a class="navbar-brand" data-toggle="collapse" data-target=".content-navbar .nav-collapse">
+          {% block nav_title %}{% endblock %}
+        </a>
+        <div class="nav-collapse collapse navbar-responsive-collapse">
+          <ul class="nav navbar-nav">
+            {% view_block 'nav_menu' %}
+          </ul>
+          {% view_block 'nav_form' %}
+        </div>
+        <div class="navbar-btns">
+          {% view_block 'nav_btns' %}
+          {% block nav_btns %}{% endblock %}
+        </div>
+      </div>
+      {% endblock %}
+
+      {% block messages %}
+      {% if messages %}
+        {% for message in messages %}
+        <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">
+          <a class="close" data-dismiss="alert" href="#">&times;</a>
+          {{ message|safe }}
+        </div>
+        {% endfor %}
+      {% endif %}
+      {% endblock messages %}
+
+      {% block content %}
+      {{ content }}
+      {% endblock %}
     </div>
-
-    {% block footer %}
-      <hr/>
-      <footer class="text-center">
-        <p>&copy; my-company.inc 2013</p>
-      </footer>
-    {% endblock %}
-
   </div>
+
+  {% block footer %}
+  <div id="footer" class="clearfix">
+    <hr/>
+    <footer class="text-center">
+      <p>&copy; my-company.inc 2013</p>
+    </footer>
+  </div>
+  {% endblock %}
+
 {% endblock body %}

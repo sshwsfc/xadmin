@@ -12,6 +12,8 @@
 </ul>
 {% endblock %}
 
+{% block nav_title %}{{title}}{% endblock %}
+
 {% block content %}
 {% if perms_lacking or protected %}
     {% if perms_lacking %}

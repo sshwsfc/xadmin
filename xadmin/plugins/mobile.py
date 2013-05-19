@@ -15,13 +15,13 @@ class MobilePlugin(BaseAdminPlugin):
         return self._test_mobile()
 
     def get_context(self, context):
-        context['base_template'] = 'xadmin/base_mobile.html'
+        #context['base_template'] = 'xadmin/base_mobile.html'
         context['is_mob'] = True
         return context
 
     # Media
-    def get_media(self, media):
-        return media + self.vendor('xadmin.mobile.css', )
+    # def get_media(self, media):
+    #     return media + self.vendor('xadmin.mobile.css', )
 
     def block_extrahead(self, context, nodes):
         nodes.append('<script>window.__admin_ismobile__ = true;</script>')

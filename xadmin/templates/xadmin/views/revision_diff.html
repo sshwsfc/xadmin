@@ -13,35 +13,34 @@
 </ul>
 {% endblock %}
 
+{% block nav_title %}
+  <i class="icon-time"></i> {% blocktrans with opts.verbose_name as verbose_name %}Diff {{verbose_name}}{% endblocktrans %}
+{% endblock %}
+
 {% block content %}
-<div class="navbar">
-  <a class="navbar-brand icon-time" href="#">{% blocktrans with opts.verbose_name as verbose_name %}Diff {{verbose_name}}{% endblocktrans %}</a>
-</div>
-<div id="content-main">
 <div class="module">
   <table id="change-diff" class="table table-bordered table-hover">
-      <thead>
-          <tr>
-              <th scope="col">{% trans 'Field' %}</th>
-              <th scope="col">{% trans 'Version A' %}</th>
-              <th scope="col">{% trans 'Version B' %}</th>
-          </tr>
-      </thead>
-      <tbody>
-          {% for label, value_a, value_b, diff in diffs %}
-              <tr{%if diff%} class="diff-row warning"{% endif %}>
-                  <th scope="row">{{ label }}</th>
-                  <td class="version-a{%if not diff%} muted{% endif %}">{{value_a}}</td>
-                  <td class="version-b{%if not diff%} muted{% endif %}">{{value_b}}</td>
-              </tr>
-          {% endfor %}
-              <tr>
-                  <th scope="row">{% trans "Revert to" %}</th>
-                  <td><a class="btn" href="{{revision_a_url}}"><i class="icon-undo"></i> {% trans 'Revert' %}</a></td>
-                  <td><a class="btn" href="{{revision_b_url}}"><i class="icon-undo"></i> {% trans 'Revert' %}</a></td>
-              </tr>
-      </tbody>
+    <thead>
+      <tr>
+        <th scope="col">{% trans 'Field' %}</th>
+        <th scope="col">{% trans 'Version A' %}</th>
+        <th scope="col">{% trans 'Version B' %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for label, value_a, value_b, diff in diffs %}
+        <tr{%if diff%} class="diff-row warning"{% endif %}>
+          <th scope="row">{{ label }}</th>
+          <td class="version-a{%if not diff%} muted{% endif %}">{{value_a}}</td>
+          <td class="version-b{%if not diff%} muted{% endif %}">{{value_b}}</td>
+        </tr>
+      {% endfor %}
+        <tr>
+          <th scope="row">{% trans "Revert to" %}</th>
+          <td><a class="btn" href="{{revision_a_url}}"><i class="icon-undo"></i> {% trans 'Revert' %}</a></td>
+          <td><a class="btn" href="{{revision_b_url}}"><i class="icon-undo"></i> {% trans 'Revert' %}</a></td>
+        </tr>
+    </tbody>
   </table>
-</div>
 </div>
 {% endblock %}

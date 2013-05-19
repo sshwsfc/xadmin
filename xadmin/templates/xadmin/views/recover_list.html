@@ -11,34 +11,33 @@
 </ul>
 {% endblock %}
 
+{% block nav_title %}
+  <i class="icon-trash"></i> {{title}}
+{% endblock %}
+
 {% block content %}
-    <div class="navbar">
-      <a class="navbar-brand icon-trash" href="#">{{title}}</a>
-    </div>
-    <div id="content-main">
-        <p>{% blocktrans %}Choose a date from the list below to recover a deleted version of an object.{% endblocktrans %}</p>
-        <div class="module">
-            {% if deleted %}
-                <table id="change-history" class="table table-bordered table-hover">
-                    <thead>
-                    <tr>
-                        <th scope="col">{% trans 'Date/time' %}</th>
-                        <th scope="col">{{opts.verbose_name|capfirst}}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        {% for deletion in deleted %}
-                            <tr>
-                                <th scope="row"><a href="{{deletion.pk}}/">{{deletion.revision.date_created}}</a></th>
-                                <td>{{deletion.object_repr}}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <p class="well">{% trans "There are no deleted objects to recover." %}</p>
-            {% endif %}
-        </div>
-    </div>
+  <div class="alert alert-info">{% blocktrans %}Choose a date from the list below to recover a deleted version of an object.{% endblocktrans %}</div>
+  <div class="module">
+    {% if deleted %}
+      <table id="change-history" class="table table-bordered table-hover">
+        <thead>
+        <tr>
+          <th scope="col">{% trans 'Date/time' %}</th>
+          <th scope="col">{{opts.verbose_name|capfirst}}</th>
+        </tr>
+        </thead>
+        <tbody>
+          {% for deletion in deleted %}
+            <tr>
+              <th scope="row"><a href="{{deletion.pk}}/">{{deletion.revision.date_created}}</a></th>
+              <td>{{deletion.object_repr}}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="well">{% trans "There are no deleted objects to recover." %}</p>
+    {% endif %}
+  </div>
 {% endblock %}
 

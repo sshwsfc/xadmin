@@ -2,9 +2,9 @@
 {% load i18n xadmin_tags %}
 
 {% block content %}
-  <div class="btn-group btn-group-justified">
+  <div class="btn-toolbar">
     {% for btn in btns %}
-    <a href="{{ btn.url }}" class="btn btn-primary btn-quick col col-lg-3">
+    <a href="{{ btn.url }}" class="btn btn-primary btn-quick col col-lg-3 col-sm-3">
       <i class="icon-{% if btn.icon %}{{btn.icon}}{%else%}leaf{% endif %}"></i>
       <p>{{ btn.title }}</p>
     </a>

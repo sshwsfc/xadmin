@@ -23,127 +23,126 @@
 </ul>
 {% endblock %}
 
+{% block nav_title %}{% if brand_icon %}<i class="icon-{{brand_icon}}"></i> {% endif %}{{brand_name}}{% endblock %}
+
+{% block nav_left %}
+<button type="button" class="navbar-toggle nav-back" data-toggle="collapse" data-target="#left-side">
+  <i class="icon-list"></i>
+</button>
+{% endblock %}
+
+{% block nav_btns %}
+  {% if has_add_permission %}
+    <a href="{{add_url}}" class="btn btn-primary"><i class="icon-plus icon-white"></i> 
+    <span>{% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}</span></a>
+  {% endif %}
+{% endblock nav_btns %}
+
 {% block content %}
-    <div class="navbar">
-        <a class="navbar-brand" href="#">{% if brand_icon %}<i class="icon-{{brand_icon}}"></i> {% endif %}{{brand_name}}</a>
-        <ul class="nav navbar-nav">
-          {% view_block 'nav_menu' %}
-        </ul>
-          {% view_block 'nav_form' %}
-        <div class="btn-group navbar-btn pull-right">
-          {% view_block 'object-tools' %}
-          {% if has_add_permission %}
-              <a href="{{add_url}}" class="btn btn-primary"><i class="icon-plus icon-white"></i> 
-              {% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}</a>
+  <div class="content-toolbar btn-toolbar pull-right clearfix">
+    {% view_block 'top_toolbar' %}
+    <div class="btn-group">
+      <a class="dropdown-toggle btn btn-small" data-toggle="dropdown" href="#">
+        <i class="icon-list-alt"></i> {% trans "Columes" %} <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu model_fields pull-right" role="menu" aria-labelledby="dLabel">
+        <li><a href="{{clean_select_field_url}}"><i class="icon-refresh"></i> {% trans "Restore Selected" %}</a></li>
+        <li class="divider"></li>
+        {% for f, selected, flink in model_fields %}
+        <li><a href="{{flink}}">
+          {% if selected %}<i class="icon-check"></i>{% else %}<i class="icon-blank"></i>{% endif %}
+          {{f.verbose_name}}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="btn-group layout-btns" data-toggle="buttons-radio">
+      <button type="button" class="btn btn-small layout-normal active"><i class="icon-th-large"></i></button>
+      <button type="button" class="btn btn-small layout-condensed"><i class="icon-th"></i></button>
+      {% view_block 'top_layout_btns' %}
+    </div>
+    <div class="btn-group layout-btns" data-toggle="buttons-checkbox">
+      <button type="button" class="btn btn-small layout-full"><i class="icon-fullscreen"></i></button>
+      {% view_block 'top_check_btns' %}
+    </div>
+    {% view_block 'top_btns' %}
+  </div>
+
+  <ul class="pagination pagination-small pagination-left pagination-inline">
+    {% view_block 'pagination' 'small' %}
+  </ul>
+  
+  <form id="changelist-form" action="" method="post"{% view_block 'result_list_form' %}>{% csrf_token %}
+  {% view_block 'results_top' %}
+  <div class="results">
+  {% if results %}
+  <table class="table table-bordered table-striped table-hover">
+    <thead>
+      <tr>{% for o in result_headers.cells %}
+        <th {{o.tagattrs}}>
+          {% if o.btns %}
+            <div class="pull-right">
+              {% for b in o.btns %}
+                {{b|safe}}
+              {% endfor %}
+            </div>
           {% endif %}
-        </div>
-    </div>
-
-    <div class="btn-toolbar pull-right">
-      {% view_block 'top_toolbar' %}
-      <div class="btn-group">
-        <a class="dropdown-toggle btn btn-small" data-toggle="dropdown" href="#">
-          <i class="icon-list-alt"></i> {% trans "Select Columes" %} <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu model_fields" role="menu" aria-labelledby="dLabel">
-          <li><a href="{{clean_select_field_url}}"><i class="icon-refresh"></i> {% trans "Restore Selected" %}</a></li>
-          <li class="divider"></li>
-          {% for f, selected, flink in model_fields %}
-          <li><a href="{{flink}}">
-            {% if selected %}<i class="icon-check"></i>{% else %}<i class="icon-blank"></i>{% endif %}
-            {{f.verbose_name}}</a></li>
-          {% endfor %}
-        </ul>
-      </div>
-      <div class="btn-group layout-btns" data-toggle="buttons-radio">
-        <button type="button" class="btn btn-small layout-normal active"><i class="icon-th-large"></i></button>
-        <button type="button" class="btn btn-small layout-condensed"><i class="icon-th"></i></button>
-        {% view_block 'top_layout_btns' %}
-      </div>
-      <div class="btn-group layout-btns" data-toggle="buttons-checkbox">
-        <button type="button" class="btn btn-small layout-full"><i class="icon-fullscreen"></i></button>
-        {% view_block 'top_check_btns' %}
-      </div>
-      {% view_block 'top_btns' %}
-    </div>
-
-    <ul class="pagination pagination-small pagination-left pagination-inline">
-      {% view_block 'pagination' 'small' %}
-    </ul>
-    
-    <form id="changelist-form" action="" method="post"{% view_block 'result_list_form' %}>{% csrf_token %}
-    {% view_block 'results_top' %}
-    <div class="results">
-    {% if results %}
-    <table class="table table-bordered table-striped table-hover">
-      <thead>
-        <tr>{% for o in result_headers.cells %}
-          <th {{o.tagattrs}}>
-            {% if o.btns %}
-              <div class="pull-right">
-                {% for b in o.btns %}
-                  {{b|safe}}
+          {% if o.menus %}
+            <div class="dropdown pull-left">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                {{ o.label }}
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                {% for m in o.menus %}
+                  {{m|safe}}
                 {% endfor %}
-              </div>
-            {% endif %}
-            {% if o.menus %}
-              <div class="dropdown pull-left">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                  {{ o.label }}
-                </a>
-                <ul class="dropdown-menu" role="menu">
-                  {% for m in o.menus %}
-                    {{m|safe}}
-                  {% endfor %}
-                </ul>
-              </div>
-            {% else %}
-              {{ o.label }}
-            {% endif %}
-          </th>{% endfor %}
-        </tr>
-        {% view_block 'result_head' %}
-      </thead>
-      <tbody>
-      {% for row in results %}
-        <tr class="{% cycle 'row1' 'row2' %}{% if row.css_class %} {{row.css_class}}{%endif%}">{% for o in row.cells %}
-          <td {{o.tagattrs}}>
-            {% if o.btns %}
-              <div class="btn-group pull-right">
-                {% for b in o.btns %}
-                  {{b|safe}}
+              </ul>
+            </div>
+          {% else %}
+            {{ o.label }}
+          {% endif %}
+        </th>{% endfor %}
+      </tr>
+      {% view_block 'result_head' %}
+    </thead>
+    <tbody>
+    {% for row in results %}
+      <tr class="{% cycle 'row1' 'row2' %}{% if row.css_class %} {{row.css_class}}{%endif%}">{% for o in row.cells %}
+        <td {{o.tagattrs}}>
+          {% if o.btns %}
+            <div class="btn-group pull-right">
+              {% for b in o.btns %}
+                {{b|safe}}
+              {% endfor %}
+            </div>
+          {% endif %}
+          {% if o.menus %}
+            <div class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                {{ o.label }}
+              </a>
+              <ul class="dropdown-menu">
+                {% for m in o.menus %}
+                  {{m|safe}}
                 {% endfor %}
-              </div>
-            {% endif %}
-            {% if o.menus %}
-              <div class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                  {{ o.label }}
-                </a>
-                <ul class="dropdown-menu">
-                  {% for m in o.menus %}
-                    {{m|safe}}
-                  {% endfor %}
-                </ul>
-              </div>
-            {% else %}
-              {{ o.label }}
-            {% endif %}
-          </td>
-        {% endfor %}</tr>
-        {% view_block 'result_row' row %}
-      {% endfor %}
-      </tbody>
-    </table>
-    {% else %}
-      <p class="well">{% trans "Empty list" %}</p>
-    {% endif %}
-    </div>
-    {% view_block 'results_bottom' %}
-    </form>
+              </ul>
+            </div>
+          {% else %}
+            {{ o.label }}
+          {% endif %}
+        </td>
+      {% endfor %}</tr>
+      {% view_block 'result_row' row %}
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <p class="well">{% trans "Empty list" %}</p>
+  {% endif %}
+  </div>
+  {% view_block 'results_bottom' %}
+  </form>
 
-    <ul class="pagination pagination-centered">
-      {% view_block 'pagination' %}
-    </ul>
-
+  <ul class="pagination pagination-centered">
+    {% view_block 'pagination' %}
+  </ul>
 {% endblock %}
