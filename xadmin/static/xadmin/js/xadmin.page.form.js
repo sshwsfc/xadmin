@@ -11,6 +11,17 @@
             window.onscroll=onchange;
             onchange();
         }
+        if(window.__admin_ismobile__){
+            $(window).bind('resize', function(e){
+                var rate = $(window).height() / $(window).width();
+                var action_bar = $('.form-actions');
+                if(rate < 1.2){
+                    action_bar.css('left', '-1000px');
+                } else {
+                    action_bar.css('left', '0px');
+                }
+            });
+        }
     });
 })(jQuery)
 

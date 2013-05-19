@@ -1,12 +1,6 @@
 
 /* CUSTOM FORM FIELDS */
 
-.input-group.date {
-  width: 230px;
-}
-.input-group.time {
-  width: 165px;
-}
 .controls .datetime > .input-group {
   float: left;
   margin-right: 5px;
@@ -14,53 +8,10 @@
 .controls .datetime > .input-group:last-child {
   margin-right: 0px;
 }
-select.selectmultiple {
-  width: 70%;
-  max-width: 350px;
-  height: 120px;
-}
-.url-field {
-    width: 30em;
-}
-.textarea-field {
-    width: 94%;
-}
 .flatpages-flatpage #id_content {
     height: 40.2em;
 }
-.text-field, .textinput {
-    width: 60%;
-    max-width: 300px;
-}
-.int-field {
-    width: 30%;
-    max-width: 100px;
-}
-.select2-container .select2-choice {
-  height: 31px;
-}
-.form-actions.fixed{
-  position:fixed;
-  _position:absolute;
-  bottom:0px;
-  z-index:295;
-  margin-left: -10px;
-  -webkit-box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.5);
-     -moz-box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.5);
-          box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.5);
-  right: 10px;
-}
 
-.form-actions.fixed .pull-right{
-  float: none;
-  margin-left: 20px;
-}
-
-select, .select2-container {
-  max-width: 200px;
-  width: 60%;
-  margin-bottom: 10px;
-}
 .form-horizontal .select2-container{
   margin-bottom: 0px;
 }
@@ -76,25 +27,99 @@ select, .select2-container {
   color: red;
 }
 
-.form-horizontal .form-row {
-  margin: 0px;
-}
-.form-horizontal .form-row .controls {
-  height: 30px;
-}
-.form-horizontal .form-row .control-group{
-  display: inline-block;
-  width: 50%;
-  float: left;
-}
-.form-horizontal .form-row::before, .form-horizontal .form-row::after{
-  display: table;
-  content: " ";
-}
-
-@media (min-width: 767px) {
+@media (min-width: 768px) {
   .form-horizontal .panel-content:not(.formset-content){
     margin: 15px -15px -15px;
+  }
+
+  .input-group.date {
+    width: 230px;
+  }
+  .input-group.time {
+    width: 165px;
+  }
+  select.selectmultiple {
+    width: 70%;
+    max-width: 350px;
+    height: 120px;
+  }
+  .url-field {
+      width: 30em;
+  }
+  .textarea-field {
+      width: 94%;
+  }
+  .text-field, .textinput {
+      width: 60%;
+      max-width: 300px;
+  }
+  .int-field {
+      width: 30%;
+      max-width: 100px;
+  }
+  .select2-container .select2-choice {
+    height: 31px;
+  }
+  select, .select2-container {
+    max-width: 200px;
+    width: 60%;
+    margin-bottom: 10px;
+  }
+  .form-actions.fixed{
+    position:fixed;
+    _position:absolute;
+    bottom:0px;
+    z-index:295;
+    margin-left: -10px;
+    -webkit-box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.5);
+       -moz-box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.5);
+            box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.5);
+    right: 10px;
+  }
+
+  .form-actions.fixed .pull-right{
+    float: none;
+    margin-left: 20px;
+  }
+
+  .form-horizontal .form-row {
+    margin: 0px;
+  }
+  .form-horizontal .form-row .controls {
+    height: 30px;
+  }
+  .form-horizontal .form-row .control-group{
+    display: inline-block;
+    width: 50%;
+    float: left;
+  }
+  .form-horizontal .form-row::before, .form-horizontal .form-row::after{
+    display: table;
+    content: " ";
+  }    
+}
+@media (max-width: 767px) {
+  .control-group {
+    margin: 10px 0;
+  }
+  .select2-container {
+    width: 100%;
+  }
+  .select2-container .select2-choice {
+    height: 32px;
+  }
+  .form-actions .save-group.col-sm-10 {
+    padding-left: 10px;
+  }
+  .form-actions button.default {
+    width: 88%;
+  }
+  .form-actions button.more {
+    width: 12%;
+  }
+  .btn-toolbar.top-toolbar {
+    margin: 0 10px 10px;
+    text-align: right;
   }
 }
 

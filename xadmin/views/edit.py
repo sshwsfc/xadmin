@@ -12,7 +12,7 @@ from django.utils.html import escape
 from django.template import loader
 from django.utils.translation import ugettext as _
 from xadmin import widgets
-from xadmin.layout import FormHelper, Layout, Fieldset, TabHolder, Container, Column, Field
+from xadmin.layout import FormHelper, Layout, Fieldset, TabHolder, Container, Column, Col, Field
 from xadmin.util import unquote
 from xadmin.views.detail import DetailAdminUtil
 
@@ -172,17 +172,18 @@ class ModelFormAdminView(ModelAdminView):
         fields = self.form_obj.fields.keys() + list(self.get_readonly_fields())
 
         if layout is None:
-            layout = Layout(Container(
-                Fieldset("", *fields, css_class="unsort no_title"), css_class="form-horizontal"
+            layout = Layout(Container(Col('full', 
+                Fieldset("", *fields, css_class="unsort no_title"), horizontal=True, span=12)
             ))
         elif type(layout) in (list, tuple) and len(layout) > 0:
             if isinstance(layout[0], Column):
-                layout = Layout(Container(*layout))
+                fs = layout
             elif isinstance(layout[0], (Fieldset, TabHolder)):
-                layout = Layout(
-                    Container(*layout, css_class="form-horizontal"))
+                fs = (Col('full', *layout, horizontal=True, span=12),)
             else:
-                layout = Layout(Container(Fieldset("", *layout, css_class="unsort no_title"), css_class="form-horizontal"))
+                fs = (Col('full', Fieldset("", *layout, css_class="unsort no_title"), horizontal=True, span=12),)
+
+            layout = Layout(Container(*fs))
 
             rendered_fields = [i[1] for i in layout.get_field_names()]
             container = layout[0].fields

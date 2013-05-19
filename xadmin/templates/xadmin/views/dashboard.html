@@ -30,7 +30,7 @@
 {% endif %}
 <div class="dashboard row">
   {% for c in columns %}
-  <div class="{% if not is_mob %}col {% endif %}{{ c.0 }} column">
+  <div class="col {{ c.0 }} column">
     {% for widget in c.1 %}
       {{ widget.widget|safe }}
     {% endfor %}

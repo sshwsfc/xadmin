@@ -7,14 +7,14 @@
 {% block body %}
   <!-- Header -->
   <div id="top-nav" class="navbar navbar-inverse navbar-fixed-top">
-    <button type="button" class="navbar-toggle" style="left: 10px; right: auto;" data-toggle="collapse" data-target=".navbar-responsive-collapse.menus">
-      <span class="icon-list"></span>
+    <button type="button" class="navbar-toggle" style="left: 10px; right: auto;" data-toggle="collapse" data-target=".nav-collapse.menus">
+      <i class="icon-list"></i>
     </button>
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse.settings">
-      <span class="icon-cog"></span>
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse.settings">
+      <i class="icon-cog"></i>
     </button>
-    <a class="navbar-brand" href="#" data-toggle="collapse" data-target=".navbar-responsive-collapse.menus">{% block branding %}{{ title }}{% endblock %}</a>
-    <div class="nav-collapse collapse navbar-responsive-collapse settings">
+    <a class="navbar-brand" data-toggle="collapse" data-target=".nav-collapse.breadcrumbs">{% block branding %}{{ title }}{% endblock %} <i class="icon-caret-down"></i></a>
+    <div class="nav-collapse collapse settings">
       <ul class="nav navbar-nav">
         {% if user.is_active and user.is_staff %}
           <li class="dropdown">
@@ -28,7 +28,7 @@
         <li><a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a></li>
       </ul>
     </div>
-    <div class="nav-collapse collapse navbar-responsive-collapse menus">
+    <div class="nav-collapse collapse menus">
       {% block navbar %}
         {% if nav_menu %}
           <ul class="nav nav-pills nav-stacked">
@@ -56,9 +56,7 @@
       {% endblock %}
     </div>
 
-  </div>
-  <div id="body-content" style="margin-top: 50px; padding-top: 15px;">
-    <div style="display:none;">
+    <div class="nav-collapse collapse breadcrumbs">
       {% block breadcrumbs %}
       <ul class="breadcrumb">
       <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> <li>
@@ -66,6 +64,9 @@
       </ul>
       {% endblock %}
     </div>
+
+  </div>
+  <div id="body-content">
     {% block messages %}
         {% if messages %}
         {% for message in messages %}

@@ -1,0 +1,59 @@
+#body-content {
+    margin-top: 50px; 
+    padding-top: 10px;
+}
+
+#top-nav .breadcrumb {
+    margin-top: 20px;
+}
+.navbar-brand {
+    max-width: 300px;
+}
+
+.panel-content.nopadding {
+    margin: -15px;
+}
+
+.panel-content.nopadding .table {
+    margin-bottom: 0;
+}
+
+.col {
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.form-actions {
+    margin-bottom: 0px;
+    padding: 10px;
+    position:fixed;
+    bottom:0px;
+    z-index:295;
+    width: 100%;
+}
+.form-actions .more-btns input:first-child{
+    margin-top: 10px;
+}
+.alert {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+.change-form #body-content {
+    padding-bottom: 60px;
+}
+
+.model_ul {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.navbar-inverse .navbar-toggle{
+    color: white;
+    top: 7px;
+    padding: 7px 12px;
+}
+.navbar.content-navbar {
+    height: 50px;
+    margin-top: -10px;
+    text-align: right;
+}
+
