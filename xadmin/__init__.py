@@ -14,6 +14,8 @@ def autodiscover():
     from django.utils.importlib import import_module
     from django.utils.module_loading import module_has_submodule
 
+    setattr(settings, 'CRISPY_TEMPLATE_PACK', 'bootstrap3')
+
     from xadmin import views
     from xadmin import plugins
 

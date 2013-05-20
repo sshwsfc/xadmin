@@ -1,0 +1,10 @@
+{% if formset.non_form_errors %}
+    <div class="alert alert-block alert-danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {% if formset_error_title %}<h4>{{ formset_error_title }}</h4>{% endif %}
+        <ul>
+            {{ formset.non_form_errors|unordered_list }}
+        </ul>
+    </div>
+{% endif %}
+
