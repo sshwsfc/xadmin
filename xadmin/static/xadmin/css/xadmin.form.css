@@ -30,7 +30,6 @@
   select, .select2-container {
     max-width: 200px;
     width: 60%;
-    margin-bottom: 10px;
   }
   .form-actions.fixed{
     position:fixed;
