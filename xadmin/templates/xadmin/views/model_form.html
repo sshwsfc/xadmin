@@ -31,7 +31,6 @@
 {% block content %}
 <form class="exform" {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form">{% csrf_token %}
   {% view_block 'form_top' %}
-  {% if save_on_top and not is_mob %}{% block submit_buttons_top %}{% include "xadmin/includes/submit_line.html" %}{% endblock %}{% endif %}
 
   {% if errors %}
       <div class="alert alert-danger">
