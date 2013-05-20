@@ -32,7 +32,7 @@
         {% block navbar %}
         {% if nav_menu %}
           <ul class="well nav nav-pills nav-stacked nav-sitemenu">
-            <li class="visible-phone">
+            <li>
               <a href="{% url 'admin:index' %}"><i class="icon-fixed-width icon-home"></i> {% trans 'Home' %}</a>
             </li>
             {% for item in nav_menu %}
@@ -68,7 +68,10 @@
       {% endblock %}
 
       {% block content-nav %}
-      <div class="navbar content-navbar{% if is_mob %} navbar-inverse navbar-fixed-top{% endif %}">
+      <div class="navbar content-navbar" data-toggle="breakpoint"
+       data-class-sm="navbar content-navbar navbar-inverse navbar-fixed-top"
+       data-class-md="navbar content-navbar"
+       data-class-lg="navbar content-navbar">
         {% block nav_left %}
         <button type="button" class="navbar-toggle nav-back" onclick="javascript: history.back();"><i class="icon-arrow-left"></i></button>
         {% endblock %}
