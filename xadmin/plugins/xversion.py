@@ -163,7 +163,7 @@ class ReversionPlugin(BaseAdminPlugin):
     # Block Views
     def block_top_toolbar(self, context, nodes):
         recoverlist_url = self.admin_view.model_admin_url('recoverlist')
-        nodes.append(mark_safe('<div class="btn-group"><a class="btn btn-small" href="%s"><i class="icon-trash"></i> %s</a></div>' % (recoverlist_url, _(u"Recover"))))
+        nodes.append(mark_safe('<div class="btn-group"><a class="btn btn-default btn-small" href="%s"><i class="icon-trash"></i> %s</a></div>' % (recoverlist_url, _(u"Recover"))))
 
     def block_nav_btns(self, context, nodes):
         obj = getattr(

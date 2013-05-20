@@ -9,14 +9,14 @@
         <select multiple="multiple" id="{{field_id}}_form">
             {{available_options|safe}}
         </select>
-        <a class="btn selector-chooseall" title="{% trans "Click to choose all at once." %}">{% trans "Choose all" %}</a>
+        <a class="btn btn-default selector-chooseall" title="{% trans "Click to choose all at once." %}">{% trans "Choose all" %}</a>
     </div>
     <ul class="selector-chooser">
         <li>
-            <a class="btn btn-small selector-add" title="{% trans "Choose" %}"><i class="icon-plus"></i></a>
+            <a class="btn btn-default btn-small selector-add" title="{% trans "Choose" %}"><i class="icon-plus"></i></a>
         </li>
         <li>
-            <a class="btn btn-small selector-remove" title="{% trans "Remove" %}"><i class="icon-minus"></i></a>
+            <a class="btn btn-default btn-small selector-remove" title="{% trans "Remove" %}"><i class="icon-minus"></i></a>
         </li>
     </ul>
     <div class="selector-chosen">
@@ -24,7 +24,7 @@
         <select multiple="multiple" {{flatatts|safe}}>
             {{chosen_options|safe}}
         </select>
-        <a class="btn selector-clearall" title="{% trans "Click to remove all chosen at once." %}">{% trans "Remove all" %}</a>
+        <a class="btn btn-default selector-clearall" title="{% trans "Click to remove all chosen at once." %}">{% trans "Remove all" %}</a>
     </div>
 </div>
 <div class="clearfix"></div>

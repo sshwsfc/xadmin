@@ -5,7 +5,9 @@
   <a href="{{page_url}}" class="pull-right"><span class="badge badge-info">{{ result_count }}</span></a>
   {{ block.super }}
 {% endblock title %}
+
 {% block box_content_class %}nopadding x-scroll{% endblock box_content_class %}
+
 {% block content %}
 {% if results %}
 <table class="table table-hover table-striped">

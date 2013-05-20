@@ -95,8 +95,8 @@ a { cursor: pointer;}
   display: none;
 }
 
-.panel.nopadding{
-  padding: 0px;
+.panel .nopadding{
+  margin: -15px;
 }
 .ui-sortable-placeholder { border: 1px dotted #CCC; visibility: visible !important; }
 .ui-sortable-placeholder * { visibility: hidden; }

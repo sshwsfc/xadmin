@@ -2,7 +2,8 @@
 {% load i18n xadmin_tags %}
 {% load crispy_forms_tags %}
 
-{% block box_content_class %}nopadding form-horizontal short_label{% endblock box_content_class %}
+{% block box_content_class %}form-horizontal short_label{% endblock box_content_class %}
+
 {% block content %}
 <form class="exform quick-form widget-form" action="{{addurl}}" method="post" id="{{ widget.model_name }}_form">{% csrf_token %}
   {% crispy addform addhelper %}

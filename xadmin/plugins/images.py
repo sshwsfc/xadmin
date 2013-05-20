@@ -72,7 +72,7 @@ class ModelDetailPlugin(BaseAdminPlugin):
                         <a class="btn btn-primary modal-next">%s <i class="icon-arrow-right icon-white"></i></a>
                         <a class="btn btn-info modal-prev"><i class="icon-arrow-left icon-white"></i> %s</a>
                         <a class="btn btn-success modal-play modal-slideshow" data-slideshow="5000"><i class="icon-play icon-white"></i> %s</a>
-                        <a class="btn modal-download" target="_blank"><i class="icon-download"></i> %s</a>
+                        <a class="btn btn-default modal-download" target="_blank"><i class="icon-download"></i> %s</a>
                     </div>
                 </div>
             """ % (_('Next'), _('Previous'), _('Slideshow'), _('Download'))

@@ -27,7 +27,7 @@
     </div>
   </div>
 
-  <div id="body-content" class="clearfix">
+  <div id="body-content" class="row">
     <div id="left-side" class="col col-lg-2 nav-collapse collapse navbar-responsive-collapse">
         {% block navbar %}
         {% if nav_menu %}
@@ -81,7 +81,7 @@
           </ul>
           {% view_block 'nav_form' %}
         </div>
-        <div class="navbar-btns">
+        <div class="navbar-btn pull-right">
           {% view_block 'nav_btns' %}
           {% block nav_btns %}{% endblock %}
         </div>

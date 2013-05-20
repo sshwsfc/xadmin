@@ -34,6 +34,7 @@
 
   {% if errors %}
       <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
       {% blocktrans count counter=errors|length %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
       </div>
       {{ form.non_field_errors }}

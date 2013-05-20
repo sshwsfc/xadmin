@@ -1,9 +1,9 @@
 {% load i18n %}
 <button id="wizard_goto_step" name="wizard_goto_step" 
 {% if wizard.steps.prev %}
-class="btn"
+class="btn btn-default"
 {% else %}
-class="btn disabled" disabled="disabled" 
+class="btn btn-default disabled" disabled="disabled" 
 {% endif %}
 type="submit" value="{{ wizard.steps.step0|add:"-1" }}">&larr; {% trans "Prev step" %}</button>
 {% if wizard.steps.last != wizard.steps.current %}
