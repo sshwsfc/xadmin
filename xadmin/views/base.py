@@ -288,6 +288,11 @@ class CommAdminView(BaseAdminView):
     globe_models_icon = {}
     default_model_icon = None
 
+    def __init__(self, request, *args, **kwargs):
+        super(CommAdminView, self).__init__(request, *args, **kwargs)
+        if hasattr(settings,'XADMIN'):
+            self.site_title = settings.XADMIN.get('admin_title', self.site_title)
+
     def get_site_menu(self):
         return None
 

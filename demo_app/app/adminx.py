@@ -1,5 +1,6 @@
 import xadmin
 from xadmin import views
+from xadmin.plugins import topnav
 from models import *
 from xadmin.layout import *
 
@@ -34,6 +35,8 @@ class GolbeSetting(object):
     globe_models_icon = {
         Host: 'laptop', IDC: 'cloud'
     }
+    site_title = 'smu'
+
 xadmin.site.register(views.CommAdminView, GolbeSetting)
 
 
