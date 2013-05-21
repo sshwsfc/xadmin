@@ -160,7 +160,6 @@ a { cursor: pointer;}
   font-size: 13px;
 }
 
-.content-toolbar {
 .content-toolbar, .steps-nav {
   margin-bottom: 10px;
 }
