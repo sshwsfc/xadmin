@@ -500,21 +500,24 @@ class Dashboard(CommAdminView):
     def get_widgets(self):
         portal_pos = UserSettings.objects.filter(
             user=self.user, key=self.get_portal_key())
-        if len(portal_pos) and portal_pos[0].value:
+        if len(portal_pos):
             portal_pos = portal_pos[0].value
             widgets = []
-            user_widgets = dict([(uw.id, uw) for uw in UserWidget.objects.filter(user=self.user, page_id=self.get_page_id())])
-            for col in portal_pos.split('|'):
-                ws = []
-                for wid in col.split(','):
-                    try:
-                        widget = user_widgets.get(int(wid))
-                        if widget:
-                            ws.append(self.get_widget(widget))
-                    except Exception, e:
-                        import logging
-                        logging.error(e, exc_info=True)
-                widgets.append(ws)
+            
+            if portal_pos:
+                user_widgets = dict([(uw.id, uw) for uw in UserWidget.objects.filter(user=self.user, page_id=self.get_page_id())])
+                for col in portal_pos.split('|'):
+                    ws = []
+                    for wid in col.split(','):
+                        try:
+                            widget = user_widgets.get(int(wid))
+                            if widget:
+                                ws.append(self.get_widget(widget))
+                        except Exception, e:
+                            import logging
+                            logging.error(e, exc_info=True)
+                    widgets.append(ws)
+
             return widgets
         else:
             return self.get_init_widget()
