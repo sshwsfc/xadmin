@@ -85,9 +85,8 @@ class ExportPlugin(BaseAdminPlugin):
         results = self.get_results(context)
         stream = []
 
-        if self.request.GET.get('export_csv_header', 'off') == 'on':
-            stream.append(
-                ','.join(map(self._format_csv_text, results[0].keys())))
+        if len(results) and self.request.GET.get('export_csv_header', 'off') == 'on':
+            stream.append(','.join(map(self._format_csv_text, results[0].keys())))
 
         for row in results:
             stream.append(','.join(map(self._format_csv_text, row.values())))

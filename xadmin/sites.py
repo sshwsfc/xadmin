@@ -320,4 +320,7 @@ class AdminSite(object):
 
 # This global object represents the default admin site, for the common case.
 # You can instantiate AdminSite in your own code to create a custom admin site.
-site = AdminSite()
+if  hasattr(settings, 'XADMIN') and settings.XADMIN.get('admin_site_class'):
+    site = settings.XADMIN.get('admin_site_class')()
+else:
+    site = AdminSite()
