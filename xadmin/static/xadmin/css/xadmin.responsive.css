@@ -37,6 +37,7 @@
   .form-actions .hidden-sm{
     display: inline-block !important;
   }
+  .show-sm { display:  none;}
 }
 
 @media (max-width: 767px) {
