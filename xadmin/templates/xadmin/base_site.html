@@ -7,11 +7,11 @@
 {% block body %}
   <!-- Header -->
   <div id="top-nav" class="navbar navbar-inverse navbar-static-top">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#top-nav .nav-collapse">
       <span class="icon-list"></span>
     </button>
     <a class="navbar-brand" href="#">{% block branding %}{{ site_title }}{% endblock %}</a>
-    <div class="nav-collapse collapse navbar-responsive-collapse">
+    <div class="nav-collapse collapse">
       <ul class="nav navbar-nav pull-right">
         {% if user.is_active and user.is_staff %}
           <li class="dropdown">
@@ -28,7 +28,7 @@
   </div>
 
   <div id="body-content" class="row">
-    <div id="left-side" class="col col-lg-2 nav-collapse collapse navbar-responsive-collapse">
+    <div id="left-side" class="col col-lg-2 nav-collapse collapse">
         {% block navbar %}
         {% if nav_menu %}
           <ul class="well nav nav-pills nav-stacked nav-sitemenu">
@@ -78,7 +78,7 @@
         <a class="navbar-brand" data-toggle="collapse" data-target=".content-navbar .nav-collapse">
           {% block nav_title %}{% endblock %}
         </a>
-        <div class="nav-collapse collapse navbar-responsive-collapse">
+        <div class="nav-collapse collapse">
           <ul class="nav navbar-nav">
             {% view_block 'nav_menu' %}
           </ul>
