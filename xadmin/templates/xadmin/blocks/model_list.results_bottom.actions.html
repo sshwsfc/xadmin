@@ -6,7 +6,7 @@
     <a class="dropdown-toggle btn btn-success" data-toggle="dropdown" href="#">
     <i class="icon-wrench icon-white"></i> 
     <span class="action-counter">{{ selection_note }}</span>
-    <span class="all">{{ selection_note_all }}</span>
+    <span class="all" style="display: none;">{{ selection_note_all }}</span>
     <span class="caret"></span></a>
     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
       {% for name, descr in action_choices %}
@@ -16,8 +16,8 @@
   </div>
   {% if actions_selection_counter %}
       {% if cl.result_count != cl.result_list|length %}
-      <a class="question btn btn-default" href="javascript:;" title="{% trans "Click here to select the objects across all pages" %}">{% blocktrans with cl.result_count as total_count %}Select all {{ total_count }} {{ module_name }}{% endblocktrans %}</a>
-      <a class="clear btn btn-default" href="javascript:;">{% trans "Clear selection" %}</a>
+      <a class="question btn btn-default" href="javascript:;" style="display: none;" title="{% trans "Click here to select the objects across all pages" %}">{% blocktrans with cl.result_count as total_count %}Select all {{ total_count }} {{ module_name }}{% endblocktrans %}</a>
+      <a class="clear btn btn-default" href="javascript:;" style="display: none;">{% trans "Clear selection" %}</a>
       {% endif %}
       <script type="text/javascript">var _actions_icnt="{{ cl.result_list|length|default:"0" }}";</script>
   {% endif %}
