@@ -171,7 +171,7 @@ class ReversionPlugin(BaseAdminPlugin):
         if obj:
             revisionlist_url = self.admin_view.model_admin_url(
                 'revisionlist', quote(obj.pk))
-            nodes.append(mark_safe('<a href="%s" class="btn"><i class="icon-time"></i> <span>%s</span></a>' % (revisionlist_url, _(u'History'))))
+            nodes.append(mark_safe('<a href="%s" class="btn btn-default"><i class="icon-time"></i> <span>%s</span></a>' % (revisionlist_url, _(u'History'))))
 
 
 class BaseReversionView(ModelAdminView):
