@@ -2,12 +2,14 @@
 {% load i18n xadmin_tags %}
 
 {% block content %}
-  <div class="btn-toolbar">
+  <div class="row" style="margin-bottom: -10px;">
     {% for btn in btns %}
-    <a href="{{ btn.url }}" class="btn btn-primary btn-quick col col-lg-3 col-sm-3">
+    <div class="col col-lg-3 col-sm-6" style="margin-bottom: 10px;">
+    <a href="{{ btn.url }}" class="btn btn-primary btn-quick">
       <i class="icon-{% if btn.icon %}{{btn.icon}}{%else%}leaf{% endif %}"></i>
       <p>{{ btn.title }}</p>
     </a>
+    </div>
     {% endfor %}
   </div>
 {% endblock content %}
