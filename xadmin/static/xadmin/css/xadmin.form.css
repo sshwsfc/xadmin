@@ -74,15 +74,6 @@
   .select2-container .select2-choice {
     height: 32px;
   }
-  .form-actions .save-group.col-sm-10 {
-    padding-left: 10px;
-  }
-  .form-actions button.default {
-    width: 88%;
-  }
-  .form-actions button.more {
-    width: 12%;
-  }
   .btn-toolbar.top-toolbar {
     margin: 0 10px 10px;
     text-align: right;
