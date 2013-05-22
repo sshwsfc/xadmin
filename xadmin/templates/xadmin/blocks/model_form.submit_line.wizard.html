@@ -1,13 +1,16 @@
 {% load i18n %}
 <button id="wizard_goto_step" name="wizard_goto_step" 
 {% if wizard.steps.prev %}
-class="btn btn-default"
+class="btn btn-default col-sm col-sm-2"
 {% else %}
-class="btn btn-default disabled" disabled="disabled" 
+class="btn btn-default disabled col-sm col-sm-2" disabled="disabled" 
 {% endif %}
-type="submit" value="{{ wizard.steps.step0|add:"-1" }}">&larr; {% trans "Prev step" %}</button>
+type="submit" value="{{ wizard.steps.step0|add:"-1" }}">&larr;<span> {% trans "Prev step" %}</span></button>
+
+<div class='btn-group col-sm col-sm-10'>
 {% if wizard.steps.last != wizard.steps.current %}
 <button name="_save" type="submit" class="btn btn-primary">{% trans "Next step" %} &rarr;</button>
 {% else %}
 <button name="_save" type="submit" class="btn btn-primary">{% trans "Save" %}</button>
 {% endif %}
+</div>
