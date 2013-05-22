@@ -32,6 +32,9 @@
 {% endblock %}
 
 {% block nav_btns %}
+    <a class="btn btn-default" data-toggle="collapse" data-target=".content-navbar .nav-collapse">
+      <i class="icon-filter icon-white"></i>
+    </a>
   {% if has_add_permission %}
     <a href="{{add_url}}" class="btn btn-primary"><i class="icon-plus icon-white"></i> 
     <span>{% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}</span></a>
