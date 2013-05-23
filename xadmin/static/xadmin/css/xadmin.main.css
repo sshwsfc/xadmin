@@ -108,8 +108,8 @@ a { cursor: pointer;}
 .dropdown-menu .dropdown-menu-btn {
   float: right;
   margin-top: -26px;
-  height: 20px;
-  padding: 3px 5px;
+  height: 26px;
+  padding: 6px 8px 6px 5px;
   margin-right: 7px;
   -webkit-border-radius: 4px;
      -moz-border-radius: 4px;
@@ -150,6 +150,11 @@ a { cursor: pointer;}
   margin-left: -80px;
 }
 
+/* search form */
+.input-group.search-group{
+  max-width: 200px;
+}
+
 /* results table */
 .table th {
   white-space: nowrap;
@@ -178,7 +183,6 @@ a { cursor: pointer;}
 
 /* related menu */
 .dropdown.related_menu .dropdown-menu {
-  left: -180px;
   width: 200px;
 }
 .dropdown.related_menu .dropdown-menu > li > a {
@@ -263,5 +267,6 @@ a[class^="icon-"]:before, a[class*=" icon-"]:before {
 
 /** import for bp3.0 */
 .pagination.pagination-inline{margin-top: 0px; margin-bottom: 10px;}
-
+.modal { overflow-y: auto;}
+.dropdown {position: relative;}
 

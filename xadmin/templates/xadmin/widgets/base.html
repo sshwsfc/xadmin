@@ -18,10 +18,10 @@
 {% endblock box_content %}
 
 {% block box_extra %}
-<div class="modal" tabindex="-1" role="dialog" id="{{ widget_id }}-opts-form">
+<div class="modal fade" tabindex="-1" role="dialog" id="{{ widget_id }}-opts-form">
   <div class="modal-dialog">
     <div class="modal-content">
-    <form method="post" class="box-form form-horizontal widget-form">
+    <form method="post" class="box-form form-horizontal short_label widget-form">
     {% csrf_token %}
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>

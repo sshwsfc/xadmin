@@ -63,13 +63,14 @@ class RelatedFieldWidgetWrapper(forms.Widget):
 
     def render(self, name, value, *args, **kwargs):
         self.widget.choices = self.choices
-        output = ['<span id="id_%s_wrap_container">' % name,
-                  self.widget.render(name, value, *args, **kwargs), '</span>']
+        output = []
         if self.add_url:
-            output.append(u'<a href="%s" title="%s" class="btn btn-primary btn-small btn-ajax" data-for-id="id_%s" data-refresh-url="%s"><i class="icon-plus"></i></a>'
+            output.append(u'<a href="%s" title="%s" class="btn btn-primary btn-small btn-ajax pull-right" data-for-id="id_%s" data-refresh-url="%s"><i class="icon-plus"></i></a>'
                           % (
                               self.add_url, (_('Add Other %s') % self.rel.to._meta.verbose_name), name,
                               "%s?_field=%s&%s=" % (self.rel_add_url, name, name)))
+        output.extend(['<div class="control-wrap" id="id_%s_wrap_container">' % name,
+                  self.widget.render(name, value, *args, **kwargs), '</div>'])
         return mark_safe(u''.join(output))
 
     def build_attrs(self, extra_attrs=None, **kwargs):

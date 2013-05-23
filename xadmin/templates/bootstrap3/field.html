@@ -4,31 +4,34 @@
 	{{ field }}
 {% else %}
 	<div id="div_{{ field.auto_id }}" class="control-group row{% if wrapper_class %} {{ wrapper_class }}{% endif %}{% if form_show_errors%}{% if field.errors %} has-error{% endif %}{% endif %}{% if field.css_classes %} {{ field.css_classes }}{% endif %}">
+
 		{% if field.label and not field|is_checkbox %}
-			<label for="{{ field.id_for_label }}" class="control-label col col-lg-2 {% if field.field.required %}requiredField{% endif %}">
-				{{ field.label|safe }}{% if field.field.required %}<span class="asteriskField">*</span>{% endif %}
+			<label for="{{ field.id_for_label }}" class="control-label">
+				{{ field.label|safe }}{% if field.field.required %}<span class="asterisk_field">*</span>{% endif %}
 			</label>
 		{% endif %}
 
         {% if field|css_class == "checkboxselectmultiple" %}
-            {% include 'bootstrap/layout/checkboxselectmultiple.html' %}
+            {% include 'bootstrap3/layout/checkboxselectmultiple.html' %}
         {% endif %}
 
         {% if field|css_class == "radioselect" %}
-            {% include 'bootstrap/layout/radioselect.html' %}
+            {% include 'bootstrap3/layout/radioselect.html' %}
         {% endif %}
 
         {% if field|css_class != "checkboxselectmultiple" and field|css_class != "radioselect" %}
-            <div class="controls col col-lg-10">
+            <div class="controls">
                 {% if field|is_checkbox %}
                     <label for="{{ field.id_for_label }}" class="checkbox {% if field.field.required %}requiredField{% endif %}">
                         {% crispy_field field %}
                         {{ field.label|safe }}
-                        {% include 'bootstrap/layout/help_text_and_errors.html' %}
+                        {% include 'bootstrap3/layout/help_text_and_errors.html' %}
                     </label>
                 {% else %}
+                    {% block normal_field %}
                     {% crispy_field field %}
-                    {% include 'bootstrap/layout/help_text_and_errors.html' %}
+                    {% endblock normal_field %}
+                    {% include 'bootstrap3/layout/help_text_and_errors.html' %}
                 {% endif %}
             </div>
         {% endif %}

@@ -11,7 +11,7 @@
       </a>
     </div>
     <div class="accordion-body collapse" id="{{ prefix }}-{{ forloop.counter0 }}-body">
-      <div class="accordion-inner">
+      <div class="accordion-inner formset-form">
       {% crispy fs formset.formset.helper %}
       </div>
     </div>
@@ -28,7 +28,7 @@
       </a>
     </div>
     <div class="accordion-body collapse" id="{{ prefix }}-__prefix__-body">
-      <div class="accordion-inner">
+      <div class="accordion-inner formset-form">
       {% crispy formset.formset.empty_form formset.formset.helper %}
       </div>
     </div>

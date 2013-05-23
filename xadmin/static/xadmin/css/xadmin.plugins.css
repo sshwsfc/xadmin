@@ -2,3 +2,11 @@
 .action-checkbox-column {
     width: 14px;
 }
+
+/** Detail **/
+@media (min-width: 768px) {
+.detail-modal.modal .modal-dialog{
+    width: 90%;
+    margin-left: -45%;
+}
+}

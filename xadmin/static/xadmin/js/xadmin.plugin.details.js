@@ -15,13 +15,14 @@
       click: function(e){
         e.stopPropagation();
         e.preventDefault();
-        var modal = $('#detail-modal');
+        var modal = $('#detail-modal-id');
         var el = this.$element;
         if(!modal.length){
-          modal = $('<div id="detail-modal" class="modal container hide fade quick-form" role="dialog"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h3>'+ 
-            el.attr('title') +'</h3></div><div class="modal-body"></div>'+
-            '<div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>'+
-            '<a class="btn btn-submit btn-primary edit-btn"><i class="icon-pencil"></i> Edit</a></div></div>');
+          modal = $('<div id="detail-modal-id" class="modal fade quick-form detail-modal" role="dialog"><div class="modal-dialog"><div class="modal-content">'+
+            '<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title">'+ 
+            el.attr('title') +'</h4></div><div class="modal-body"></div>'+
+            '<div class="modal-footer"><button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>'+
+            '<a class="btn btn-submit btn-primary edit-btn"><i class="icon-pencil"></i> Edit</a></div></div></div></div>');
           $('body').append(modal);
         }
         modal.find('.edit-btn').attr('href', this.edit_uri);

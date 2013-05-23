@@ -14,9 +14,6 @@
 .box-content > form, form.box-form {
   margin-bottom: 0px;
 }
-.box-form .modal-body{
-  padding: 0px;
-}
 
 /* Quick Form */
 .modal.quick-form .modal-body{

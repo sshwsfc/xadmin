@@ -63,7 +63,7 @@
             minuteStep: 1,
             showSeconds: true,
             showMeridian: false,
-            defaultTime: false,
+            defaultTime: false
           }).data('timepicker');
           $(this).find('button').click(function(e){
             tp.$element.val("");

@@ -70,7 +70,7 @@ class RelateMenuPlugin(BaseAdminPlugin):
             links.append(link)
         ul_html = '<ul class="dropdown-menu" role="menu">%s</ul>' % ''.join(
             links)
-        return '<div class="dropdown related_menu pull-left"><a title="%s" class="relate_menu dropdown-toggle" data-toggle="dropdown"><i class="icon icon-list"></i></a>%s</div>' % (_('Related Objects'), ul_html)
+        return '<div class="dropdown related_menu pull-right"><a title="%s" class="relate_menu dropdown-toggle" data-toggle="dropdown"><i class="icon icon-list"></i></a>%s</div>' % (_('Related Objects'), ul_html)
     related_link.short_description = '&nbsp;'
     related_link.allow_tags = True
 
