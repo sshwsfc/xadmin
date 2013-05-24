@@ -30,6 +30,7 @@
 
 {% block content %}
 <form class="exform" {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form">{% csrf_token %}
+  {% block form_top %}{% endblock %}
   {% view_block 'form_top' %}
 
   {% if errors %}

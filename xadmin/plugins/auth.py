@@ -11,7 +11,7 @@ from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
-from xadmin.layout import Fieldset, Main, Side, Row
+from xadmin.layout import Fieldset, Main, Side, Row, FormHelper
 from xadmin.sites import site
 from xadmin.util import unquote, User
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView, ModelAdminView, CommAdminView
@@ -136,11 +136,14 @@ class ChangePasswordView(ModelAdminView):
 
     def get_media(self):
         media = super(ChangePasswordView, self).get_media()
-        media = media + self.form.media
+        media = media + self.vendor('xadmin.form.css') + self.form.media
         return media
 
     def get_context(self):
         context = super(ChangePasswordView, self).get_context()
+        helper = FormHelper()
+        helper.form_tag = False
+        self.form.helper = helper
         context.update({
             'title': _('Change password: %s') % escape(self.obj.username),
             'form': self.form,
