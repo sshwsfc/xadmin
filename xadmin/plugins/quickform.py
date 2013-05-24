@@ -90,8 +90,8 @@ class RelatedFieldWidgetWrapper(forms.Widget):
 
 class QuickAddBtnPlugin(BaseAdminPlugin):
 
-    # def init_request(self, *args, **kwargs):
-    #     return not self.request.is_ajax()
+    def init_request(self, *args, **kwargs):
+        return not self.request.is_ajax()
 
     def formfield_for_dbfield(self, formfield, db_field, **kwargs):
         if self.model in self.admin_site._registry and isinstance(db_field, (models.ForeignKey, models.ManyToManyField)):
