@@ -86,11 +86,12 @@ a { cursor: pointer;}
 .panel .panel-heading .icon{
   float: right;
   top: 50%;
-  margin-right: 5px;
+  margin-left: 10px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 15px;
+  margin-top: 5px;
 }
-.panel .panel-heading .badge { float: right; top: 50%; margin-left: 10px;}
+.panel .panel-heading .badge { float: right; top: 50%; margin-top: 4px; margin-left: 10px;}
 .panel.no_title .panel-heading{
   display: none;
 }
@@ -130,8 +131,9 @@ a { cursor: pointer;}
   width: 100%;
   z-index: 9999;
   margin-top: -8px;
-  background-color: rgba(255,255,255,.5);
+  background-color: rgba(255,255,255,.6);
   height: 100%;
+  padding-top: 24px;
 }
 .mask .progress{
   position: absolute;

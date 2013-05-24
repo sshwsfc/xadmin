@@ -1,12 +1,18 @@
 /** Action **/
 .action-checkbox-column {
-    width: 14px;
+  width: 14px;
 }
-
+.quick-form.modal .modal-body{
+  padding: 15px 0;
+}
 /** Detail **/
 @media (min-width: 768px) {
-.detail-modal.modal .modal-dialog{
-    width: 90%;
-    margin-left: -45%;
-}
+  .detail-modal.modal .modal-dialog{
+    width: 86%;
+    margin-left: -43%;
+  }
+  .quick-form.modal .modal-dialog{
+    width: 86%;
+    margin-left: -43%;
+  }
 }

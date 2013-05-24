@@ -3,6 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block box_attrs %}id="{{ widget_id }}"{% endblock box_attrs %}
+{% block box_class %}widget{% endblock box_class %}
 
 {% block box_title %}
   <i class='icon icon-wrench pull-right' data-toggle="modal" data-target="#{{ widget_id }}-opts-form"></i>
@@ -18,28 +19,26 @@
 {% endblock box_content %}
 
 {% block box_extra %}
-<div class="modal fade" tabindex="-1" role="dialog" id="{{ widget_id }}-opts-form">
-  <div class="modal-dialog">
-    <div class="modal-content">
-    <form method="post" class="box-form form-horizontal short_label widget-form">
-    {% csrf_token %}
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-      <h4 class="modal-title">{% trans "Widget Options" %}</h4>
-    </div>
-    <div class="modal-body">
-      {% block form %}
-        {% crispy form %}
-      {% endblock form %}
-      <input type="hidden" name="_delete"/>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-danger pull-left btn-remove">{% trans "Remove" %}</button>
-      <button class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
-      <input class="btn btn-primary" type="submit" value="{% trans 'Save changes' %}"/>
-    </div>
-    </form>
-    </div>
+<div class="modal fade widget_options" tabindex="-1" role="dialog" id="{{ widget_id }}-opts-form">
+  <div class="modal-content">
+  <form method="post" class="box-form form-horizontal short_label widget-form">
+  {% csrf_token %}
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">{% trans "Widget Options" %}</h4>
+  </div>
+  <div class="modal-body">
+    {% block form %}
+      {% crispy form %}
+    {% endblock form %}
+    <input type="hidden" name="_delete"/>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-danger pull-left btn-remove">{% trans "Remove" %}</button>
+    <button class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
+    <input class="btn btn-primary" type="submit" value="{% trans 'Save changes' %}"/>
+  </div>
+  </form>
   </div>
   </div>
 {% endblock box_extra %}

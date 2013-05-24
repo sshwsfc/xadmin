@@ -220,7 +220,7 @@
 
     this.$tip = el.find('.popover.editable');
     this.$form = el.find('form');
-    this.$mask = $('<div class="mask"><div class="progress progress-striped active"><div class="bar"></div></div></div>');
+    this.$mask = $('<div class="mask"><h2 style="text-align:center;"><i class="icon-spinner icon-spin icon-large"></i></h2></div>');
     el.find('.popover-content').prepend(this.$mask);
     this.rendered_form = false;
 

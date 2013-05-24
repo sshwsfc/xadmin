@@ -27,7 +27,7 @@ class AdminDateWidget(forms.DateInput):
     def render(self, name, value, attrs=None):
         input_html = super(AdminDateWidget, self).render(name, value, attrs)
         return mark_safe('<div class="input-group date bootstrap-datepicker"><span class="input-group-addon"><i class="icon-calendar"></i></span>%s'
-                         '<span class="input-group-btn"><button class="btn" type="button">%s</button></span></div>' % (input_html, _(u'Today')))
+                         '<span class="input-group-btn"><button class="btn btn-default" type="button">%s</button></span></div>' % (input_html, _(u'Today')))
 
 class AdminTimeWidget(forms.TimeInput):
 
@@ -44,7 +44,7 @@ class AdminTimeWidget(forms.TimeInput):
     def render(self, name, value, attrs=None):
         input_html = super(AdminTimeWidget, self).render(name, value, attrs)
         return mark_safe('<div class="input-group time bootstrap-timepicker"><span class="input-group-addon"><i class="icon-time">'
-                         '</i></span>%s<span class="input-group-btn"><button class="btn" type="button">%s</button></span></div>' % (input_html, _(u'Now')))
+                         '</i></span>%s<span class="input-group-btn"><button class="btn btn-default" type="button">%s</button></span></div>' % (input_html, _(u'Now')))
 
 class AdminSelectWidget(forms.Select):
 

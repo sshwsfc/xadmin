@@ -22,12 +22,6 @@ jQuery(function() {
         }
     });
 
-    $( ".panel" )
-        .find( ".panel-heading" )
-            .prepend( "<i class='icon icon-chevron-up chevron'></i>")
-            .end()
-        .find( ".panel-content" );
-
     $( ".panel-heading .icon.chevron" ).click(function() {
         $( this ).toggleClass( "icon-chevron-up" ).toggleClass( "icon-chevron-down" );
         $( this ).parents( ".panel:first" ).find( ".panel-content" ).toggle('fast');

@@ -15,13 +15,12 @@
   margin-bottom: 0px;
 }
 
-/* Quick Form */
-.modal.quick-form .modal-body{
-  padding: 0px;
-  max-height: none;
+.widget {
+  position: relative;
 }
-.modal.quick-form .modal-body form{
-  margin-bottom: 0px;
+.widget_options {
+  overflow: visible;
+  position: absolute;
 }
 
 /* Quick Buttons
