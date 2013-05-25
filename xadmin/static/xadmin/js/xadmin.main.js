@@ -47,6 +47,16 @@
       $(this).addClass('open');
     });
   }
+
+  //.nav-content bar nav-menu
+  $('.content-navbar .navbar-nav > li').click(function(e){
+    if($(e.target).is('[data-toggle=dropdown], .dropdown-backdrop')){
+      $(this).find('>.dropdown-menu').css('max-height', $(window).height()-120);
+      $(this).parent().find('>li').toggleClass('hidden-sm', !$(this).hasClass('open') && !$(e.target).is('.dropdown-backdrop'));
+      $(this).removeClass('hidden-sm');
+    }
+  })
+
   // dashboard widget
   $('.widget-form').each(function(e){
     var el = $(this);
