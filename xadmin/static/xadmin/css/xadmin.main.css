@@ -35,7 +35,7 @@ a { cursor: pointer;}
 }
 
 .filter-date .menu-choice-date .input-group-addon {
-  width: 40px;
+  width: 50px;
   text-align: right;
 }
 .filter-date .menu-date-range .ranges .btn{
