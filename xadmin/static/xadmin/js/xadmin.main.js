@@ -1,5 +1,4 @@
 ;(function($){
-  $('body').on('touchstart.dropdown', '.dropdown-menu', function (e) { e.stopPropagation(); });
 
   $.fn.exform = function(){
     this.each(function () {
@@ -31,6 +30,23 @@
       return cookieValue;
   }
 
+  //dropdown submenu plugin
+  $(document)
+    .on('click.xdropdown.data-api touchstart.xdropdown.data-api', '.dropdown-submenu', function (e) { e.stopPropagation(); })
+    .on('click.xdropdown.data-api', function(e){
+      $('.dropdown-submenu.open').removeClass('open');
+    });
+
+  if ('ontouchstart' in document.documentElement) {
+    $('.dropdown-submenu a').on('click.xdropdown.data-api', function(e){
+      $(this).parent().toggleClass('open');
+    });
+  } else{
+    $('.dropdown-submenu').on('click.xdropdown.data-api mouseover.xdropdown.data-api', function(e){
+      $(this).parent().find('>.dropdown-submenu.open').removeClass('open');
+      $(this).addClass('open');
+    });
+  }
   // dashboard widget
   $('.widget-form').each(function(e){
     var el = $(this);

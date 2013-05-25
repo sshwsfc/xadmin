@@ -1,18 +1,6 @@
 (function($) {
-  $('.popover.dropdown-menu input, .popover.dropdown-menu label').click(function(e){
-    e.stopPropagation();
-  });
-
+   
   $(function(){
-    $('.filters .dropdown-submenu').on('mouseover', function(e){
-      $(this).parent().find('>.dropdown-submenu.open').removeClass('open');
-      $(this).addClass('open');
-    });
-
-    $(document)
-      .on('click.filterdropdown.data-api touchstart.filterdropdown.data-api', function(e){
-        $('.filters .dropdown-submenu.open').removeClass('open');
-      })
 
     // menber filter
     $('.filter-number .add-on.remove').click(function(e){

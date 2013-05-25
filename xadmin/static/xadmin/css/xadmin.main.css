@@ -272,3 +272,9 @@ a[class^="icon-"]:before, a[class*=" icon-"]:before {
 .modal { overflow-y: auto;}
 .dropdown {position: relative;}
 
+.dropdown-submenu:hover > .dropdown-menu {
+  display: none;
+}
+.dropdown-submenu.open > .dropdown-menu {
+  display: block;
+}
