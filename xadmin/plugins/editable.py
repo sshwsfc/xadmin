@@ -49,15 +49,16 @@ class EditablePlugin(BaseAdminPlugin):
                                               model_admin=self.admin_view,
                                               return_attr=False
                                               )
-                data_attr = {
-                    'name': field_name,
-                    'action': self.admin_view.model_admin_url('patch', pk),
-                    'title': _(u"Enter %s") % field_label,
-                    'field': form[field_name]
-                }
+
                 item.wraps.insert(0, '<span class="editable-field">%s</span>')
-                item.btns.append(loader.render_to_string(
-                    'xadmin/blocks/editable.html', data_attr))
+                item.btns.append((
+                    '<a class="editable-handler" title="%s" data-editable-field="%s" data-editable-action="%s" data-editable-loadurl="%s">'+
+                    '<i class="icon-edit"></i></a>') %
+                     (_(u"Enter %s") % field_label, field_name, self.admin_view.model_admin_url('patch', pk),
+                     self.admin_view.model_admin_url('change', pk) + '?_field=' + field_name))
+
+                # item.btns.append(loader.render_to_string(
+                #     'xadmin/blocks/editable.html', data_attr))
 
                 if field_name not in self.editable_need_fields:
                     self.editable_need_fields[field_name] = item.field
@@ -73,6 +74,16 @@ class EditablePlugin(BaseAdminPlugin):
 
 
 class EditPatchView(ModelFormAdminView, ListAdminView):
+
+    def init_request(self, object_id, *args, **kwargs):
+        self.org_obj = self.get_object(unquote(object_id))
+
+        if not self.has_change_permission(self.org_obj):
+            raise PermissionDenied
+
+        if self.org_obj is None:
+            raise Http404(_('%(name)s object with primary key %(key)r does not exist.') %
+                          {'name': force_unicode(self.opts.verbose_name), 'key': escape(object_id)})
 
     def get_new_field_html(self, f):
         result = self.result_item(self.org_obj, f, {'is_display_first':
@@ -106,24 +117,22 @@ class EditPatchView(ModelFormAdminView, ListAdminView):
             return mark_safe(text) if allow_tags else conditional_escape(text)
 
     @filter_hook
+    def get(self, request, object_id):
+        fields = [f for f in request.GET['fields'].split(',') if f in self.opts.fields]
+        defaults = {
+            "form": forms.ModelForm,
+            "fields": fields,
+            "formfield_callback": self.formfield_for_dbfield,
+        }
+        form_class = modelform_factory(self.model, **defaults)
+        form = form_class(instance=self.org_obj)
+
+
+    @filter_hook
     @csrf_protect_m
     @transaction.commit_on_success
     def post(self, request, object_id):
-
-        self.org_obj = self.get_object(unquote(object_id))
-
-        if not self.has_change_permission(self.org_obj):
-            raise PermissionDenied
-
-        if self.org_obj is None:
-            raise Http404(_('%(name)s object with primary key %(key)r does not exist.') %
-                          {'name': force_unicode(self.opts.verbose_name), 'key': escape(object_id)})
-
-        pk = getattr(self.org_obj, self.org_obj._meta.pk.attname)
-        model_fields = [str(pk) + '-' + f.name for f in self.opts.fields]
-        fields = [f[len(
-            str(pk)) + 1:] for f in request.POST.keys() if f in model_fields]
-
+        fields = [f for f in request.POST.keys() if f in self.opts.fields]
         defaults = {
             "form": forms.ModelForm,
             "fields": fields,
@@ -132,7 +141,6 @@ class EditPatchView(ModelFormAdminView, ListAdminView):
         form_class = modelform_factory(self.model, **defaults)
         form = form_class(
             instance=self.org_obj, data=request.POST, files=request.FILES)
-        form.prefix = str(pk)
 
         result = {}
         if form.is_valid():
