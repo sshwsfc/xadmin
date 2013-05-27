@@ -49,10 +49,8 @@
       f.find('.input-group.date input').each(function(e){
         var dp = $(this).datepicker({format: $.date_local.dateJSFormat, language: 'xadmin', todayBtn: "linked", autoclose: true})
           .data('datepicker');
-        $(this).find('button').click(function(e){
-          //dp.setDate(new Date());
+        $(this).parent().find('button').click(function(e){
           dp.update(new Date());
-          dp.hide();
         })
       })
       if($.fn.timepicker){
