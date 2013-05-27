@@ -47,7 +47,17 @@
       $(this).addClass('open');
     });
   }
-
+  
+  //toggle class button
+  $('body').on('click.xa.togglebtn.data-api', '[data-toggle=class]', function (e) {
+    var $this  = $(this), href
+    var target = $this.attr('data-target')
+        || e.preventDefault()
+        || (href = $this.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') //strip for ie7
+    var className = $this.attr('data-class-name')
+    $(target).toggleClass(className)
+  })
+  
   //.nav-content bar nav-menu
   $('.content-navbar .navbar-nav > li')
     .on('shown.bs.dropdown', function(e){

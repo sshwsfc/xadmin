@@ -66,6 +66,10 @@
   margin-top: 50px; 
   padding-top: 10px;
 }
+#body-content.show_menu{
+  width: 100%;
+  overflow-x: hidden;
+}
 #top-nav, #footer, .breadcrumb {
   display: none;
 }
@@ -79,11 +83,18 @@
   padding: 0px;
   top: 50px;
   left: 0px;
-  right: 0px;
   bottom: 0px;
   background: #FFF;
   z-index: 999;
   overflow: auto;
+  display: none;
+  width: 70%;
+}
+#body-content.show_menu #left-side {
+  display: block;
+}
+#body-content.show_menu #content-block{
+  margin-left: 70%;
 }
 #left-side .well {
   border: 0px;
