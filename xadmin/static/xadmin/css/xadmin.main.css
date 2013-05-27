@@ -1,6 +1,10 @@
 
 a { cursor: pointer;}
 
+#body-content {
+  margin-top: 65px; 
+}
+
 .popover{
   width: auto;
 }

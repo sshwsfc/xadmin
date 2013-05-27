@@ -6,7 +6,7 @@
 
 {% block body %}
   <!-- Header -->
-  <div id="top-nav" class="navbar navbar-inverse navbar-static-top">
+  <div id="top-nav" class="navbar navbar-inverse navbar-fixed-top">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#top-nav .nav-collapse">
       <span class="icon-list"></span>
     </button>
@@ -101,7 +101,7 @@
         {% block nav_left %}
         <button type="button" class="navbar-toggle nav-back" onclick="javascript: history.back();"><i class="icon-arrow-left"></i></button>
         {% endblock %}
-        <a class="navbar-brand" data-toggle="collapse" data-target=".content-navbar .nav-collapse">
+        <a class="navbar-brand" data-toggle="collapse" data-target="#top-nav .nav-collapse">
           {% block nav_title %}{% endblock %}
         </a>
         <div class="nav-collapse collapse">
