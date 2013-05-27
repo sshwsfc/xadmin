@@ -44,7 +44,9 @@
 .editable form .control-group {
   margin-bottom: 10px;
 }
-
+.editable form .control-label{
+  display: none;
+}
 .editable form .controls label {
   white-space:nowrap; 
 }

@@ -1,9 +1,9 @@
 from django import forms
+from django import template
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.db import models, transaction
 from django.forms.models import modelform_factory
-from django.http import Http404
-from django.template import loader
+from django.http import Http404, HttpResponse
 from django.utils.encoding import force_unicode, smart_unicode
 from django.utils.html import escape, conditional_escape
 from django.utils.safestring import mark_safe
@@ -15,6 +15,7 @@ from xadmin.views import BaseAdminPlugin, ModelFormAdminView, ListAdminView
 from xadmin.views.base import csrf_protect_m, filter_hook
 from xadmin.views.edit import ModelFormAdminUtil
 from xadmin.views.list import EMPTY_CHANGELIST_VALUE
+from xadmin.layout import FormHelper
 
 
 class EditablePlugin(BaseAdminPlugin):
@@ -28,46 +29,31 @@ class EditablePlugin(BaseAdminPlugin):
     def init_request(self, *args, **kwargs):
         active = bool(self.request.method == 'GET' and self.admin_view.has_change_permission() and self.list_editable)
         if active:
-            self.model_form_admins = {}
+            self.model_form = self.get_model_view(ModelFormAdminUtil, self.model).form_obj
         return active
 
-    def _get_form_admin(self, obj):
-        if obj not in self.model_form_admins:
-            self.model_form_admins[obj] = self.get_model_view(
-                ModelFormAdminUtil, self.model, obj)
-        return self.model_form_admins[obj]
-
     def result_item(self, item, obj, field_name, row):
-        if self.list_editable and item.field and item.field.editable and (field_name in self.list_editable):
+        if self.list_editable and item.field and item.field.editable and (field_name in self.list_editable):            
             pk = getattr(obj, obj._meta.pk.attname)
-            form = self._get_form_admin(obj).form_obj
+            field_label = label_for_field(field_name, obj,
+                                          model_admin=self.admin_view,
+                                          return_attr=False
+                                          )
 
-            if field_name in form.fields:
-                form.prefix = str(pk)
+            item.wraps.insert(0, '<span class="editable-field">%s</span>')
+            item.btns.append((
+                '<a class="editable-handler" title="%s" data-editable-field="%s" data-editable-loadurl="%s">'+
+                '<i class="icon-edit"></i></a>') %
+                 (_(u"Enter %s") % field_label, field_name, self.admin_view.model_admin_url('patch', pk) + '?fields=' + field_name))
 
-                field_label = label_for_field(field_name, obj,
-                                              model_admin=self.admin_view,
-                                              return_attr=False
-                                              )
-
-                item.wraps.insert(0, '<span class="editable-field">%s</span>')
-                item.btns.append((
-                    '<a class="editable-handler" title="%s" data-editable-field="%s" data-editable-action="%s" data-editable-loadurl="%s">'+
-                    '<i class="icon-edit"></i></a>') %
-                     (_(u"Enter %s") % field_label, field_name, self.admin_view.model_admin_url('patch', pk),
-                     self.admin_view.model_admin_url('change', pk) + '?_field=' + field_name))
-
-                # item.btns.append(loader.render_to_string(
-                #     'xadmin/blocks/editable.html', data_attr))
-
-                if field_name not in self.editable_need_fields:
-                    self.editable_need_fields[field_name] = item.field
+            if field_name not in self.editable_need_fields:
+                self.editable_need_fields[field_name] = item.field
         return item
 
     # Media
     def get_media(self, media):
         if self.editable_need_fields:
-            media = media + self.model_form_admins.values()[0].media + \
+            media = media + self.model_form.media + \
                 self.vendor(
                     'xadmin.plugin.editable.js', 'xadmin.widget.editable.css')
         return media
@@ -77,6 +63,9 @@ class EditPatchView(ModelFormAdminView, ListAdminView):
 
     def init_request(self, object_id, *args, **kwargs):
         self.org_obj = self.get_object(unquote(object_id))
+
+        # For list view get new field display html
+        self.pk_attname = self.opts.pk.attname
 
         if not self.has_change_permission(self.org_obj):
             raise PermissionDenied
@@ -118,7 +107,8 @@ class EditPatchView(ModelFormAdminView, ListAdminView):
 
     @filter_hook
     def get(self, request, object_id):
-        fields = [f for f in request.GET['fields'].split(',') if f in self.opts.fields]
+        model_fields = [f.name for f in self.opts.fields]
+        fields = [f for f in request.GET['fields'].split(',') if f in model_fields]
         defaults = {
             "form": forms.ModelForm,
             "fields": fields,
@@ -127,12 +117,24 @@ class EditPatchView(ModelFormAdminView, ListAdminView):
         form_class = modelform_factory(self.model, **defaults)
         form = form_class(instance=self.org_obj)
 
+        helper = FormHelper()
+        helper.form_tag = False
+        form.helper = helper
+
+        s = '{% load i18n crispy_forms_tags %}<form method="post" action="{{action_url}}">{% crispy form %}'+ \
+            '<button type="submit" class="btn btn-success btn-block btn-small">{% trans "Apply" %}</button></form>'
+        t = template.Template(s)
+        c = template.Context({'form':form, 'action_url': self.model_admin_url('patch', self.org_obj.pk)})
+
+        return HttpResponse(t.render(c))
+
 
     @filter_hook
     @csrf_protect_m
     @transaction.commit_on_success
     def post(self, request, object_id):
-        fields = [f for f in request.POST.keys() if f in self.opts.fields]
+        model_fields = [f.name for f in self.opts.fields]
+        fields = [f for f in request.POST.keys() if f in model_fields]
         defaults = {
             "form": forms.ModelForm,
             "fields": fields,
