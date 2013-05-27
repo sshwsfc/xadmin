@@ -45,9 +45,9 @@ class ReadOnlyField(Field):
     """
     template = "xadmin/layout/field_value.html"
 
-    def __init__(self, detail, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
+        self.detail = kwargs.pop('detail')
         super(ReadOnlyField, self).__init__(*args, **kwargs)
-        self.detail = detail #： 数据对象对应的 :class:`~xadmin.views.detail.DetailAdminView` 对象
 
     def render(self, form, form_style, context):
         html = ''
@@ -328,7 +328,7 @@ class ModelFormAdminView(ModelAdminView):
                 DetailAdminUtil, self.model, self.form_obj.instance)
             for field in readonly_fields:
                 # 替换只读字段
-                helper[field].wrap(ReadOnlyField, detail)
+                helper[field].wrap(ReadOnlyField, detail=detail)
 
         return helper
 

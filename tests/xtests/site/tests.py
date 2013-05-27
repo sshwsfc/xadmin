@@ -1,6 +1,6 @@
-from xadmin.tests.base import TestCase
 from django.http import HttpResponse
 
+from xtests.base import BaseTest
 from xadmin.sites import AdminSite
 from xadmin.views import BaseAdminView, BaseAdminPlugin, ModelAdminView, filter_hook
 
@@ -38,7 +38,7 @@ class TestModelAdminView(ModelAdminView):
         return HttpResponse(str(obj_id))
 
 
-class AdminSiteTest(TestCase):
+class AdminSiteTest(BaseTest):
 
     def get_site(self):
         return AdminSite('test', 'test_app')
@@ -76,7 +76,7 @@ class AdminSiteTest(TestCase):
         c = site.get_view_class(TestAdminView)
         self.assertIn(TestPlugin, c.plugin_classes)
 
-        cv = c(self.get_factory().get('test/'))
+        cv = c(self._mocked_request('test/'))
 
         self.assertEqual(cv.get_title(), "TEST TITLE PLUGIN")
 

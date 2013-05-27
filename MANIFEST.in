@@ -6,5 +6,3 @@ recursive-include xadmin/static/xadmin/css *
 recursive-include xadmin/static/xadmin/js *
 recursive-include xadmin/static/xadmin/vendor *
 recursive-include xadmin/templates *
-recursive-exclude * __pycache__
-recursive-exclude * *.py[co]
