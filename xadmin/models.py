@@ -9,7 +9,7 @@ from django.utils.encoding import smart_unicode
 from django.db.models.signals import post_syncdb
 from django.contrib.auth.models import Permission
 
-from xadmin.util import json, User
+from xadmin.util import json, AUTH_USER_MODEL
 
 import datetime
 import decimal
@@ -39,7 +39,7 @@ post_syncdb.connect(add_view_permissions)
 
 class Bookmark(models.Model):
     title = models.CharField(_(u'Title'), max_length=128)
-    user = models.ForeignKey(User, blank=True, null=True)
+    user = models.ForeignKey(AUTH_USER_MODEL, blank=True, null=True)
     url_name = models.CharField(_(u'Url Name'), max_length=64)
     content_type = models.ForeignKey(ContentType)
     query = models.CharField(_(u'Query String'), max_length=1000, blank=True)
@@ -78,7 +78,7 @@ class JSONEncoder(DjangoJSONEncoder):
 
 
 class UserSettings(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(AUTH_USER_MODEL)
     key = models.CharField(_('Settings Key'), max_length=256)
     value = models.TextField(_('Settings Content'))
 
@@ -97,7 +97,7 @@ class UserSettings(models.Model):
 
 
 class UserWidget(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(AUTH_USER_MODEL)
     page_id = models.CharField(_(u"Page"), max_length=256)
     widget_type = models.CharField(_(u"Widget Type"), max_length=16)
     value = models.TextField(_(u"Widget Params"))

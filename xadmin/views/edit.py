@@ -78,6 +78,11 @@ class ModelFormAdminView(ModelAdminView):
 
     @filter_hook
     def formfield_for_dbfield(self, db_field, **kwargs):
+        # If it uses an intermediary model that isn't auto created, don't show
+        # a field in admin.
+        if isinstance(db_field, models.ManyToManyField) and not db_field.rel.through._meta.auto_created:
+            return None
+            
         attrs = self.get_field_attrs(db_field, **kwargs)
         return db_field.formfield(**dict(attrs, **kwargs))
 
