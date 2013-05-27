@@ -10,6 +10,8 @@
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#top-nav .nav-collapse">
       <span class="icon-list"></span>
     </button>
+    {% view_block 'top_navbar' %}
+
     <a class="navbar-brand" href="#">{% block branding %}{{ site_title }}{% endblock %}</a>
     <div class="nav-collapse collapse">
       <ul class="nav navbar-nav pull-right">
@@ -24,6 +26,7 @@
         {% endif %}
         <li><a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a></li>
       </ul>
+      {% view_block 'top_navmenu' %}
     </div>
   </div>
 

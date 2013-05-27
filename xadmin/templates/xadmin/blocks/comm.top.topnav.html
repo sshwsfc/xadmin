@@ -1,46 +1,35 @@
 {% load i18n xadmin_tags %}
 {% if top_navbar %}
-<a class="btn btn-navbar" data-toggle="collapse" data-target=".search-menu.nav-collapse">
-  <span class="icon-search"></span>
-</a>
-<a class="btn btn-navbar" data-toggle="collapse" data-target=".add-menu.nav-collapse">
-  <span class="icon-plus"></span>
-</a>
+
 {% else %}
 {% if search_models %}
-<div class="search-menu nav-collapse collapse">
-  <form method="get" class="navbar-search pull-left" id="g-search">
-    <div class="input-append">
-      <input name="{{ search_name }}" class="span2" type="text">
-      <div class="btn-group">
-        <button class="btn dropdown-toggle" data-toggle="dropdown">
-          <i class="icon-search"></i>
-          {% trans "Search" %}
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-        {% for m in search_models %}
-            <li><a data-action="{{m.url}}"><i class="icon-search"></i> {{m.title}}</a></li>
-        {% endfor %}
-        </ul>
-      </div>
-    </div>
-  </form> 
-</div>
+<form method="get" class="top-search-form navbar-form pull-left" id="g-search">
+  <div class="input-group">
+    <input name="{{ search_name }}" class="span2" type="text">
+    <span class="input-group-btn">
+      <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <i class="icon-search"></i> {% trans "Search" %} <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+      {% for m in search_models %}
+          <li><a data-action="{{m.url}}"><i class="icon-search"></i> {{m.title}}</a></li>
+      {% endfor %}
+      </ul>
+    </span>
+  </div>
+</form>
 {% endif %}
 {% if add_models %}
-<div class="add-menu nav-collapse collapse">
-  <ul class="nav pull-right">
-    <li class="dropdown g-add">
-      <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-      <i class="icon-plus icon-white"></i> {% trans "Add" %} <span class="caret"></span></a>
-      <ul id="g-add-menu" class="dropdown-menu" role="menu">
-        {% for m in add_models %}
-            <li><a href="{{m.url}}"><i class="icon-plus"></i> {{m.title}}</a></li>
-        {% endfor %}
-      </ul>
-    </li>
-  </ul>
-</div>
+<ul class="add-menu nav navbar-nav pull-right">
+  <li class="dropdown g-add">
+    <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
+    <i class="icon-plus icon-white"></i> {% trans "Add" %} <span class="caret"></span></a>
+    <ul id="g-add-menu" class="dropdown-menu" role="menu">
+      {% for m in add_models %}
+          <li><a href="{{m.url}}"><i class="icon-plus"></i> {{m.title}}</a></li>
+      {% endfor %}
+    </ul>
+  </li>
+</ul>
 {% endif %}
 {% endif %}

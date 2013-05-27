@@ -68,6 +68,13 @@ a { cursor: pointer;}
     border-left: 6px solid transparent;
     content: '';
   }
+  .top-search-form {
+    margin-top: 6px;
+    margin-bottom: 0px;
+  }
+  .top-search-form .input-group {
+    max-width: 300px;
+  }
 }
 @media (max-width: 767px) {
   .filter-date .menu-date-range .datepicker-inline{
