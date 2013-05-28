@@ -24,6 +24,7 @@ def action_checkbox(obj):
 action_checkbox.short_description = mark_safe(
     '<input type="checkbox" id="action-toggle" />')
 action_checkbox.allow_tags = True
+action_checkbox.allow_export = False
 
 
 class BaseActionView(ModelAdminView):
