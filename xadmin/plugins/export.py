@@ -157,14 +157,14 @@ class ExportPlugin(BaseAdminPlugin):
     def result_header(self, item, field_name, row):
         if self.request.GET.get('_do_') == 'export':
             item.export = True
-            if item.attr and field_name != '__str__' and not getattr(item.attr, 'allow_export', False):
+            if item.attr and field_name != '__str__' and not getattr(item.attr, 'allow_export', True):
                 item.export = False
         return item
 
     def result_item(self, item, obj, field_name, row):
         if self.request.GET.get('_do_') == 'export':
             item.export = True
-            if item.field is None and field_name != '__str__' and not getattr(item.attr, 'allow_export', False):
+            if item.field is None and field_name != '__str__' and not getattr(item.attr, 'allow_export', True):
                 item.export = False
         return item
 
