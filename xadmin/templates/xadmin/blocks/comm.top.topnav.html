@@ -1,7 +1,4 @@
 {% load i18n xadmin_tags %}
-{% if top_navbar %}
-
-{% else %}
 {% if search_models %}
 <form method="get" class="top-search-form navbar-form pull-left" id="g-search">
   <div class="input-group">
@@ -20,16 +17,13 @@
 </form>
 {% endif %}
 {% if add_models %}
-<ul class="add-menu nav navbar-nav pull-right">
-  <li class="dropdown g-add">
-    <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-    <i class="icon-plus icon-white"></i> {% trans "Add" %} <span class="caret"></span></a>
-    <ul id="g-add-menu" class="dropdown-menu" role="menu">
-      {% for m in add_models %}
-          <li><a href="{{m.url}}"><i class="icon-plus"></i> {{m.title}}</a></li>
-      {% endfor %}
-    </ul>
-  </li>
-</ul>
-{% endif %}
+<li class="dropdown g-add">
+  <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
+  <i class="icon-plus icon-white"></i> {% trans "Add" %} <span class="caret"></span></a>
+  <ul id="g-add-menu" class="dropdown-menu" role="menu">
+    {% for m in add_models %}
+        <li><a href="{{m.url}}"><i class="icon-plus"></i> {{m.title}}</a></li>
+    {% endfor %}
+  </ul>
+</li>
 {% endif %}

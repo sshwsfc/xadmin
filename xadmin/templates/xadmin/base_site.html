@@ -6,15 +6,14 @@
 
 {% block body %}
   <!-- Header -->
-  <div id="top-nav" class="navbar navbar-inverse navbar-fixed-top">
+  <div id="top-nav" class="navbar navbar-sm navbar-inverse navbar-fixed-top">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#top-nav .nav-collapse">
       <span class="icon-list"></span>
     </button>
-    {% view_block 'top_navbar' %}
-
     <a class="navbar-brand" href="#">{% block branding %}{{ site_title }}{% endblock %}</a>
     <div class="nav-collapse collapse">
       <ul class="nav navbar-nav pull-right">
+        {% view_block 'top_navmenu' %}
         {% if user.is_active and user.is_staff %}
           <li class="dropdown">
             <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
@@ -26,7 +25,7 @@
         {% endif %}
         <li><a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a></li>
       </ul>
-      {% view_block 'top_navmenu' %}
+      {% view_block 'top_navbar' %}
     </div>
   </div>
 
@@ -94,7 +93,7 @@
       {% endblock %}
 
       {% block content-nav %}
-      <div class="navbar content-navbar" data-toggle="breakpoint"
+      <div class="navbar content-navbar navbar-sm" data-toggle="breakpoint"
         data-class-sm="navbar content-navbar navbar-inverse"
         data-class-md="navbar content-navbar"
         data-class-lg="navbar content-navbar">
