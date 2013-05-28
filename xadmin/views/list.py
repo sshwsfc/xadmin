@@ -350,7 +350,7 @@ class ListAdminView(ModelAdminView):
         methods = []
         for name in dir(self):
             try:
-                if getattr(getattr(self, name), 'is_column', False):
+                if getattr(getattr(self, name), 'is_column', True) and name in getattr(self, 'list_display', []):
                     methods.append((name, getattr(self, name)))
             except:
                 pass

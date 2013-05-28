@@ -31,9 +31,19 @@ class ExportPlugin(BaseAdminPlugin):
 
     def get_results(self, context):
         headers = [c for c in context['result_headers'].cells if c.export]
-        rows = context['results']
+        if self.request.GET.get('all', 'off') == 'on':
+            from xadmin.plugins.filters import FilterPlugin
+            for plugin in self.admin_view.plugins:
+                if isinstance(plugin, FilterPlugin):
+                    queryset = plugin.get_list_queryset(self.admin_view.queryset())
+                    break
+            else:
+                queryset = self.admin_view.queryset()
+            rows = [self.admin_view.result_row(obj) for obj in queryset]
+        else:
+            rows = context['results']
 
-        return [dict([(force_unicode(headers[i].text), escape(str(o.text))) for i, o in
+        return [dict([(force_unicode(headers[i].text), escape(str(o.value))) for i, o in
                       enumerate(filter(lambda c:getattr(c, 'export', False), r.cells))])
                 for r in rows]
 
@@ -147,14 +157,14 @@ class ExportPlugin(BaseAdminPlugin):
     def result_header(self, item, field_name, row):
         if self.request.GET.get('_do_') == 'export':
             item.export = True
-            if item.attr and field_name != '__str__' and not getattr(item.attr, 'allow_export', False):
+            if item.attr and field_name != '__str__' and not getattr(item.attr, 'allow_export', True):
                 item.export = False
         return item
 
     def result_item(self, item, obj, field_name, row):
         if self.request.GET.get('_do_') == 'export':
             item.export = True
-            if item.field is None and field_name != '__str__' and not getattr(item.attr, 'allow_export', False):
+            if item.field is None and field_name != '__str__' and not getattr(item.attr, 'allow_export', True):
                 item.export = False
         return item
 
