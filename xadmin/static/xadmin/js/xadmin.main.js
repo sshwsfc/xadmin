@@ -59,7 +59,7 @@
   })
   
   //.nav-content bar nav-menu
-  $('.content-navbar .navbar-nav > li')
+  $('.navbar-sm .navbar-nav > li')
     .on('shown.bs.dropdown', function(e){
       $(this).find('>.dropdown-menu').css('max-height', $(window).height()-120);
       $(this).parent().find('>li').addClass('hidden-sm');

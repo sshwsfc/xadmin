@@ -70,12 +70,11 @@
   width: 100%;
   overflow-x: hidden;
 }
-#top-nav, #footer, .breadcrumb {
+#footer, .breadcrumb {
   display: none;
 }
-
-#top-nav .breadcrumb {
-  margin-top: 20px;
+#top-nav .navbar-nav {
+  float: none;
 }
 #left-side {
   min-height: 0px;

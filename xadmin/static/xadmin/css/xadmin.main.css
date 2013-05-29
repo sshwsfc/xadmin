@@ -1,6 +1,10 @@
 
 a { cursor: pointer;}
 
+#body-content {
+  margin-top: 65px; 
+}
+
 .popover{
   width: auto;
 }
@@ -67,6 +71,13 @@ a { cursor: pointer;}
     border-bottom: 6px solid #fff;
     border-left: 6px solid transparent;
     content: '';
+  }
+  .top-search-form {
+    margin-top: 6px;
+    margin-bottom: 0px;
+  }
+  .top-search-form .input-group {
+    max-width: 300px;
   }
 }
 @media (max-width: 767px) {
