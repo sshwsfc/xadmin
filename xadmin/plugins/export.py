@@ -7,6 +7,7 @@ from django.utils.encoding import force_unicode, smart_unicode
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.xmlutils import SimplerXMLGenerator
+from django.db.models import BooleanField, NullBooleanField
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
 from xadmin.util import json
@@ -43,9 +44,18 @@ class ExportPlugin(BaseAdminPlugin):
         else:
             rows = context['results']
 
-        return [dict([(force_unicode(headers[i].text), escape(str(o.value))) for i, o in
-                      enumerate(filter(lambda c:getattr(c, 'export', False), r.cells))])
-                for r in rows]
+        new_rows = []
+        for r in rows:
+            d = {}
+            for i, o in enumerate(filter(lambda c:getattr(c, 'export', False), r.cells)):
+                if (o.field is None and getattr(o.attr, 'boolean', False)) or \
+                   (o.field and isinstance(o.field, (BooleanField, NullBooleanField))):
+                        value = o.value
+                else:
+                        value = escape(str(o.text))
+                d[force_unicode(headers[i].text)] = value
+            new_rows.append(d)
+        return new_rows
 
     def get_xls_export(self, context):
         results = self.get_results(context)
@@ -86,6 +96,8 @@ class ExportPlugin(BaseAdminPlugin):
         return output.getvalue()
 
     def _format_csv_text(self, t):
+        if isinstance(t, bool):
+            return _('Yes') if t else _('No')
         t = t.replace('"', '""').replace(',', '\,')
         if isinstance(t, basestring):
             t = '"%s"' % t
