@@ -7,10 +7,10 @@
 
 {% if show_save %}
   <div class="btn-group clearfix visible-sm save-group col-sm {% if show_delete_link %}col-sm-10{%else%}col-sm-12{% endif %}">
-  <button type="submit" class="default btn btn-primary col-sm col-sm-10" name="_save" {{ onclick_attrib }}/><i class="icon-save"></i> {% trans 'Save' %}</button>
+  <button type="submit" class="default btn btn-primary col-sm col-sm-10" name="_save" data-loading-text="{% trans "Saving.." %}" {{ onclick_attrib }}/><i class="icon-save"></i> {% trans 'Save' %}</button>
   <button type="button" class="more btn btn-primary col-sm col-sm-2" data-toggle="collapse" data-target=".collapse.more-btns"><i class="icon-ellipsis-vertical"></i></button>
   </div>
-  <button type="submit" class="default btn btn-primary hidden-sm" name="_save" {{ onclick_attrib }}/><i class="icon-save"></i> {% trans 'Save' %}</button>
+  <button type="submit" class="default btn btn-primary hidden-sm" name="_save" data-loading-text="{% trans "Saving.." %}" {{ onclick_attrib }}/><i class="icon-save"></i> {% trans 'Save' %}</button>
 {% endif %}
 
 <div class="nav-collapse collapse more-btns">

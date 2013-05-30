@@ -58,6 +58,16 @@
     $(target).toggleClass(className)
   })
   
+  // loading btn
+  $('.btn.btn-loading,.btn[type=submit]')
+    .click(function () {
+      var btn = $(this)
+      btn.button('loading')
+      setTimeout(function () {
+        btn.button('reset')
+      }, 4000)
+    })
+
   //.nav-content bar nav-menu
   $('.navbar-sm .navbar-nav > li')
     .on('shown.bs.dropdown', function(e){
