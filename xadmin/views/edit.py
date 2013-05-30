@@ -155,6 +155,10 @@ class ModelFormAdminView(ModelAdminView):
 
         :param db_field: Model 的 DB Field
         """
+        # 如果使用了非自动生成的 intermediary model 则不显示该字段
+        if isinstance(db_field, models.ManyToManyField) and not db_field.rel.through._meta.auto_created:
+            return None
+            
         attrs = self.get_field_attrs(db_field, **kwargs)
         return db_field.formfield(**dict(attrs, **kwargs))
 
