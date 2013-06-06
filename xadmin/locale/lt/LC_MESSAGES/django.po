@@ -297,8 +297,8 @@ msgstr "Parsiųsti"
 
 #: plugins/quickform.py:72
 #, python-format
-msgid "Add Other %s"
-msgstr "Pridėti kitą %s"
+msgid "Create New %s"
+msgstr "Sukurti Naują %s"
 
 #: plugins/relate.py:73
 msgid "Related Objects"
@@ -701,7 +701,7 @@ msgstr "Ieškoti"
 #: templates/xadmin/blocks/comm.top.topnav.html:36
 #: templates/xadmin/views/model_form.html:23
 msgid "Add"
-msgstr "Pridėti"
+msgstr "Sukurti"
 
 #: templates/xadmin/blocks/model_form.submit_line.wizard.html:8
 msgid "Prev step"
@@ -868,7 +868,7 @@ msgstr "Pagal %(filter_title)s "
 
 #: templates/xadmin/forms/transfer.html:4
 msgid "Available"
-msgstr ""
+msgstr "Galimi"
 
 #: templates/xadmin/forms/transfer.html:12
 msgid "Click to choose all at once."
@@ -889,7 +889,7 @@ msgstr "Pašalinti"
 
 #: templates/xadmin/forms/transfer.html:23
 msgid "Chosen"
-msgstr "Pasirinkta"
+msgstr "Pasirinkti"
 
 #: templates/xadmin/forms/transfer.html:27
 msgid "Click to remove all chosen at once."
