@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-06 11:06+0300\n"
+"POT-Creation-Date: 2013-06-06 11:18+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1066,11 +1066,11 @@ msgid "Add %(name)s"
 msgstr "Pridėti %(name)s"
 
 #: templates/xadmin/views/model_list.html:49
-msgid "Select Columes"
-msgstr "Rodytu stulpelius"
+msgid "Display Columns"
+msgstr "Rodyti Stulpelius"
 
 #: templates/xadmin/views/model_list.html:52
-msgid "Restore Selected"
+msgid "Restore Default"
 msgstr "Atstatyti Numatytuosius"
 
 #: templates/xadmin/views/model_list.html:142
@@ -1264,3 +1264,6 @@ msgstr "Atšaukti rikiavimą"
 #: views/website.py:16
 msgid "Main Dashboard"
 msgstr "Pagrindinis Valdymo Pultas"
+
+#~ msgid "Select Columes"
+#~ msgstr "Rodytu stulpelius"
