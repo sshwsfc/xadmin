@@ -5,7 +5,7 @@
     <ul class="dropdown-menu pull-right">
       <li><a href="">{% trans "Search By" %} User</a></li>
     </ul>
-    <input id="searchbar" type="text" name="{{ search_var }}" value="{{ cl.search_query }}" placeholder="Search {{cl.opts.verbose_name}}">
+    <input id="searchbar" type="text" name="{{ search_var }}" value="{{ cl.search_query }}" placeholder="{% trans "Search" %} {{cl.opts.verbose_name}}">
     {% if cl.search_query %}
       <a class="btn" href="{{remove_search_url}}">x</a>
     {% endif %}
