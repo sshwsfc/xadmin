@@ -2,6 +2,7 @@
 import datetime
 import decimal
 
+import django
 from django.db import models
 from django.db.models.sql.query import LOOKUP_SEP
 from django.db.models.deletion import Collector
@@ -33,7 +34,10 @@ try:
 except ImportError:
     from django.utils.timezone import localtime as tz_localtime
 
-AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
+if django.VERSION[1] > 4:
+    AUTH_USER_MODEL = django.contrib.auth.get_user_model()
+else:
+    AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 try:
     from django.contrib.auth import get_user_model
