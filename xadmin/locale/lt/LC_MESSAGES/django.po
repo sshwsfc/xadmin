@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-06 11:18+0300\n"
+"POT-Creation-Date: 2013-06-06 17:15+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -801,8 +801,8 @@ msgstr "Išvalyti Filtrus"
 
 #: templates/xadmin/blocks/model_list.top_toolbar.refresh.html:14
 #, python-format
-msgid "Per %(t)s seconds"
-msgstr ""
+msgid "Every %(t)s seconds"
+msgstr "Kas %(t)s sekundės"
 
 #: templates/xadmin/edit_inline/blank.html:7 views/edit.py:97 views/list.py:28
 msgid "None"
