@@ -105,6 +105,9 @@ class AdminSite(object):
 
                 admin_class = type(str("%s%sAdmin" % (model._meta.app_label, model._meta.module_name)), (admin_class,), options or {})
                 admin_class.model = model
+                admin_class.order = 999999
+                if 'order' in options:
+                    admin_class.order = options['order']
 
                 self._registry[model] = admin_class
             else:

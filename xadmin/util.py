@@ -544,3 +544,17 @@ def get_limit_choices_to_from_path(model, path):
         return limit_choices_to  # already a Q
     else:
         return models.Q(**limit_choices_to)  # convert dict to Q
+
+def sortkeypicker(keynames):
+    negate = set()
+    for i, k in enumerate(keynames):
+        if k[:1] == '-':
+            keynames[i] = k[1:]
+            negate.add(k[1:])
+    def getit(adict):
+        composite = [adict[k] for k in keynames]
+        for i, (k, v) in enumerate(zip(keynames, composite)):
+            if k in negate:
+                composite[i] = -v
+        return composite
+    return getit
