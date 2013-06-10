@@ -40,3 +40,4 @@ nosetests.xml
 xadmin/static/xadmin/components/
 
 .idea
+*~

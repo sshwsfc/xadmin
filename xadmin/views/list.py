@@ -367,6 +367,9 @@ class ListAdminView(ModelAdminView):
         model_fields = [(f, f.name in self.list_display, self.get_check_field_url(f))
                         for f in (self.opts.fields + self.get_model_method_fields()) if f.name not in self.list_exclude]
 
+        for f, selected, flink in model_fields:
+            print f
+
         new_context = {
             'module_name': force_unicode(self.opts.verbose_name_plural),
             'title': self.title,
