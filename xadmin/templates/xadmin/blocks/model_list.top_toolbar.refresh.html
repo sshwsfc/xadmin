@@ -11,7 +11,7 @@
     {% for r in refresh_times %}
       <li{% if r.selected %} class="active"{% endif %}>
       <a href="{{r.url}}"><i class="icon-time"></i> 
-        {% blocktrans with r.time as t %}Per {{ t }} seconds{% endblocktrans %}</a></li>
+        {% blocktrans with r.time as t %}Every {{ t }} seconds{% endblocktrans %}</a></li>
     {% endfor %}
   </ul>
 </div>
