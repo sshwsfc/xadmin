@@ -1,3 +1,4 @@
+import json
 import django
 from django.db import models
 from django.conf import settings
@@ -10,8 +11,6 @@ from django.utils.encoding import smart_unicode
 
 from django.db.models.signals import post_syncdb
 from django.contrib.auth.models import Permission
-
-from util import json
 
 import datetime
 import decimal
