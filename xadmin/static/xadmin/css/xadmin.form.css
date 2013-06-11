@@ -107,6 +107,11 @@ select, .select2-container {
 .asteriskField {
   color: red;
 }
+.form-row:after{
+    content: "";
+    display: table;
+    clear:both;
+}
 .form-horizontal .form-row {
   margin: 0px;
 }
