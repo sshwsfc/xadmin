@@ -34,11 +34,6 @@ try:
 except ImportError:
     from django.utils.timezone import localtime as tz_localtime
 
-if django.VERSION[1] > 4:
-    AUTH_USER_MODEL = django.contrib.auth.get_user_model()
-else:
-    AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
-
 try:
     from django.contrib.auth import get_user_model
     User = get_user_model()
