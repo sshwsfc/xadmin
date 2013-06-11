@@ -9,7 +9,7 @@ from django.utils.encoding import smart_unicode
 from django.db.models.signals import post_syncdb
 from django.contrib.auth.models import Permission
 
-from xadmin.util import json, AUTH_USER_MODEL
+from util import json, AUTH_USER_MODEL
 
 import datetime
 import decimal

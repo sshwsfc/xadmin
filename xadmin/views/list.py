@@ -559,7 +559,7 @@ class ListAdminView(ModelAdminView):
         # If list_display_links not defined, add the link tag to the first field
         if (item.row['is_display_first'] and not self.list_display_links) \
                 or field_name in self.list_display_links:
-            url = self.url_for_result(obj).replace('%', '%%')
+            url = self.url_for_result(obj)
             item.row['is_display_first'] = False
             item.wraps.append(u'<a href="%s">%%s</a>' % url)
 
