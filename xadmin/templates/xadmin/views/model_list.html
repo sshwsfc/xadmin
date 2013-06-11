@@ -46,10 +46,10 @@
       {% view_block 'top_toolbar' %}
       <div class="btn-group">
         <a class="dropdown-toggle btn btn-small" data-toggle="dropdown" href="#">
-          <i class="icon-list-alt"></i> {% trans "Select Columes" %} <b class="caret"></b>
+          <i class="icon-list-alt"></i> {% trans "Display Columns" %} <b class="caret"></b>
         </a>
         <ul class="dropdown-menu model_fields" role="menu" aria-labelledby="dLabel">
-          <li><a href="{{clean_select_field_url}}"><i class="icon-refresh"></i> {% trans "Restore Selected" %}</a></li>
+          <li><a href="{{clean_select_field_url}}"><i class="icon-refresh"></i> {% trans "Restore Default" %}</a></li>
           <li class="divider"></li>
           {% for f, selected, flink in model_fields %}
           <li><a href="{{flink}}">

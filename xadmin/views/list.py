@@ -375,7 +375,7 @@ class ListAdminView(ModelAdminView):
             'clean_select_field_url': self.get_query_string(remove=[COL_LIST_VAR]),
             'has_add_permission': self.has_add_permission(),
             'app_label': self.app_label,
-            'brand_name': self.opts.verbose_name,
+            'brand_name': self.opts.verbose_name_plural,
             'brand_icon': self.get_model_icon(self.model),
             'add_url': self.model_admin_url('add'),
             'result_headers': self.result_headers(),

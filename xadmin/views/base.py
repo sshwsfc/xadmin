@@ -25,7 +25,7 @@ from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import View
-from xadmin.util import static, json, vendor
+from xadmin.util import static, json, vendor, sortkeypicker
 
 
 csrf_protect_m = method_decorator(csrf_protect)
@@ -313,7 +313,8 @@ class CommAdminView(BaseAdminView):
                 'title': unicode(capfirst(model._meta.verbose_name_plural)),
                 'url': self.get_model_url(model, "changelist"),
                 'icon': self.get_model_icon(model),
-                'perm': self.get_model_perm(model, 'view')
+                'perm': self.get_model_perm(model, 'view'),
+                'order': model_admin.order,
             }
             if model_dict['url'] in had_urls:
                 continue
@@ -335,7 +336,7 @@ class CommAdminView(BaseAdminView):
                 app_menu['first_url'] = model_dict['url']
 
         for menu in nav_menu.values():
-            menu['menus'].sort(key=lambda x: x['title'])
+            menu['menus'].sort(key=sortkeypicker(['order', 'title']))
 
         nav_menu = nav_menu.values()
         nav_menu.sort(key=lambda x: x['title'])
@@ -370,8 +371,7 @@ class CommAdminView(BaseAdminView):
                         i) for i in item['menus'] if check_menu_permission(i)]
                 return item
 
-            nav_menu = [filter_item(
-                item) for item in menus if check_menu_permission(item)]
+            nav_menu = [filter_item(item) for item in menus if check_menu_permission(item)]
             nav_menu = filter(lambda i: bool(i['menus']), nav_menu)
 
             if not settings.DEBUG:
