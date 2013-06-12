@@ -213,7 +213,7 @@ class InlineModelAdmin(ModelFormAdminView):
                         if readonly_field in inst._meta.get_all_field_names():
                             label = inst._meta.get_field_by_name(readonly_field)[0].verbose_name
                             value = unicode(getattr(inst, readonly_field))
-                        elif inspect.ismethod(getattr(inst, readonly_field)):
+                        elif inspect.ismethod(getattr(inst, readonly_field, None)):
                             value = getattr(inst, readonly_field)()
                             label = getattr(getattr(inst, readonly_field), 'short_description', readonly_field)
                         if value:

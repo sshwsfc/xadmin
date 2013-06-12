@@ -24,7 +24,7 @@
       <tr class="formset-row">
         {% crispy fs formset.formset.helper %}
         {% for r_o_f in fs.readonly_fields %}
-            <td>{{ r_o_f.contents }}</td>
+            <td>{{ r_o_f.contents|safe }}</td>
         {% endfor %}
         {% if formset.formset.can_delete %}
           <td><a class="delete-row"><i class="icon icon-remove"></i></a></td>
