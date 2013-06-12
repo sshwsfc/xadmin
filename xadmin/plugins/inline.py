@@ -92,9 +92,14 @@ class TableInlineStyle(InlineStyle):
             Layout(*[TDField(f) for f in self.formset[0].fields.keys()]))
 
     def get_attrs(self):
+        fields = []
+        readonly_fields = []
+        if len(self.formset):
+            fields = [f for k, f in self.formset[0].fields.items() if k != DELETION_FIELD_NAME]
+            readonly_fields = [f for f in self.formset[0].readonly_fields]
         return {
-            'fields': [f for k, f in self.formset[0].fields.items() if k != DELETION_FIELD_NAME],
-            'readonly_fields': [f for f in self.formset[0].readonly_fields]
+            'fields': fields,
+            'readonly_fields': readonly_fields
         }
 style_manager.register_style("table", TableInlineStyle)
 
