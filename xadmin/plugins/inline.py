@@ -1,5 +1,5 @@
 import copy
-
+import inspect
 from django import forms
 from django.forms.formsets import all_valid, DELETION_FIELD_NAME
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
@@ -92,7 +92,10 @@ class TableInlineStyle(InlineStyle):
             Layout(*[TDField(f) for f in self.formset[0].fields.keys()]))
 
     def get_attrs(self):
-        return {'fields': [f for k, f in self.formset[0].fields.items() if k != DELETION_FIELD_NAME]}
+        return {
+            'fields': [f for k, f in self.formset[0].fields.items() if k != DELETION_FIELD_NAME],
+            'readonly_fields': [f for f in self.formset[0].readonly_fields]
+        }
 style_manager.register_style("table", TableInlineStyle)
 
 
@@ -190,7 +193,6 @@ class InlineModelAdmin(ModelFormAdminView):
                               .fields.keys() if f not in rendered_fields])
 
             helper.add_layout(layout)
-
             style.update_layout(helper)
 
             # replace delete field with Dynamic field, for hidden delete field when instance is NEW.
@@ -199,6 +201,23 @@ class InlineModelAdmin(ModelFormAdminView):
         instance.helper = helper
         instance.style = style
 
+        readonly_fields = self.get_readonly_fields()
+        if readonly_fields:
+            for form in instance:
+                form.readonly_fields = []
+                inst = form.save(commit=False)
+                if inst:
+                    for readonly_field in readonly_fields:
+                        value = None
+                        label = None
+                        if readonly_field in inst._meta.get_all_field_names():
+                            label = inst._meta.get_field_by_name(readonly_field)[0].verbose_name
+                            value = unicode(getattr(inst, readonly_field))
+                        elif inspect.ismethod(getattr(inst, readonly_field)):
+                            value = getattr(inst, readonly_field)()
+                            label = getattr(getattr(inst, readonly_field), 'short_description', readonly_field)
+                        if value:
+                            form.readonly_fields.append({'label': label, 'contents': value})
         return instance
 
     def has_auto_field(self, form):
