@@ -53,7 +53,7 @@ select.selectmultiple {
 
 select, .select2-container {
   max-width: 200px;
-  width: 100%;
+  width: 60%;
   margin-bottom: 10px;
 }
 .form-horizontal .select2-container{
