@@ -96,7 +96,7 @@ class TableInlineStyle(InlineStyle):
         readonly_fields = []
         if len(self.formset):
             fields = [f for k, f in self.formset[0].fields.items() if k != DELETION_FIELD_NAME]
-            readonly_fields = [f for f in self.formset[0].readonly_fields]
+            readonly_fields = [f for f in getattr(self.formset[0], 'readonly_fields', [])]
         return {
             'fields': fields,
             'readonly_fields': readonly_fields
