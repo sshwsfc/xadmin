@@ -29,9 +29,13 @@ class ShowField(Field):
     def render(self, form, form_style, context):
         html = ''
         for field, result in self.results:
-            if form.fields[field].widget != forms.HiddenInput:
+            if field in form.fields:
+                if form.fields[field].widget != forms.HiddenInput:
+                    html += loader.render_to_string(
+                        self.template, {'field': form[field], 'result': result})
+            else:
                 html += loader.render_to_string(
-                    self.template, {'field': form[field], 'result': result})
+                    self.template, {'field': field, 'result': result})
         return html
 
 
