@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-06 17:15+0300\n"
+"POT-Creation-Date: 2013-06-19 14:49+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -60,7 +60,7 @@ msgid ""
 "Please enter the correct username and password for a staff account. Note "
 "that both fields are case-sensitive."
 msgstr ""
-"Prašome įvesti teisingą vartotojo vardą ir slaptašodį.Didžiosios ir mažosios "
+"Prašome įvesti teisingą vartotojo vardą ir slaptašodį. Didžiosios ir mažosios "
 "raidės traktuojamos kaip skirtingi simboliai"
 
 #: forms.py:21
@@ -72,63 +72,68 @@ msgstr "Jūsų sesija baigėsi. Prašome prisijungti iš naujo."
 msgid "Your e-mail address is not your username. Try '%s' instead."
 msgstr "Elektroninis paštas nėra Jūsų slaptažodis. Pabandykite '%s' vietoj to."
 
-#: models.py:41
+#: models.py:39
+#, fuzzy, python-format
+msgid "Can view %s"
+msgstr "Sukurti Naują %s"
+
+#: models.py:47
 msgid "Title"
 msgstr "Antraštė"
 
-#: models.py:43
+#: models.py:49
 msgid "Url Name"
 msgstr "Url Adresas"
 
-#: models.py:45
+#: models.py:51
 msgid "Query String"
 msgstr "Užklausa"
 
-#: models.py:46
+#: models.py:52
 msgid "Is Share"
 msgstr "Dalintis"
 
-#: models.py:59 plugins/bookmark.py:42 plugins/bookmark.py:139
+#: models.py:65 plugins/bookmark.py:42 plugins/bookmark.py:139
 msgid "Bookmark"
 msgstr "Žyma"
 
-#: models.py:60
+#: models.py:66
 msgid "Bookmarks"
 msgstr "Žymos"
 
-#: models.py:82
+#: models.py:88
 msgid "Settings Key"
 msgstr "Nustatymų raktas"
 
-#: models.py:83
+#: models.py:89
 msgid "Settings Content"
 msgstr "Nustatymų Turinys"
 
-#: models.py:95
+#: models.py:101
 msgid "User Setting"
 msgstr "Vartotojo Nustatymas"
 
-#: models.py:96
+#: models.py:102
 msgid "User Settings"
 msgstr "Vartotojo Nustatymai"
 
-#: models.py:101
+#: models.py:107
 msgid "Page"
 msgstr "Puslapis"
 
-#: models.py:102 views/dashboard.py:77
+#: models.py:108 views/dashboard.py:77
 msgid "Widget Type"
 msgstr "Valdiklio Tipas"
 
-#: models.py:103 views/dashboard.py:78
+#: models.py:109 views/dashboard.py:78
 msgid "Widget Params"
 msgstr "Valdiklio Parametrai"
 
-#: models.py:130
+#: models.py:136
 msgid "User Widget"
 msgstr "Vartotojo Valdiklis"
 
-#: models.py:131
+#: models.py:137
 msgid "User Widgets"
 msgstr "Vartotojo Valdikliai"
 
@@ -255,7 +260,7 @@ msgstr "Rodyti modelio paprastą grafiką"
 msgid "%s Charts"
 msgstr "%s Grafikai"
 
-#: plugins/details.py:31
+#: plugins/details.py:31 views/list.py:575
 #, python-format
 msgid "Details of %s"
 msgstr "%s detalės"
@@ -265,7 +270,7 @@ msgstr "%s detalės"
 msgid "Enter %s"
 msgstr "Įveskite %s"
 
-#: plugins/editable.py:74 views/delete.py:24 views/detail.py:118
+#: plugins/editable.py:74 views/delete.py:24 views/detail.py:122
 #: views/edit.py:415
 #, python-format
 msgid "%(name)s object with primary key %(key)r does not exist."
@@ -658,7 +663,7 @@ msgstr ""
 
 #: templates/xadmin/base_site.html:23
 msgid "Welcome,"
-msgstr "Sveiki, "
+msgstr "vartotojas: "
 
 #: templates/xadmin/base_site.html:83
 msgid "You don't have permission to edit anything."
@@ -783,7 +788,7 @@ msgstr "Eksportuoti"
 #: templates/xadmin/blocks/model_list.top_toolbar.exports.html:21
 #: templates/xadmin/blocks/model_list.top_toolbar.exports.html:24
 msgid "Export with table header."
-msgstr "EKsportuoti su lentelės antrašte."
+msgstr "Eksportuoti su lentelės antrašte."
 
 #: templates/xadmin/blocks/model_list.top_toolbar.exports.html:27
 #: templates/xadmin/blocks/model_list.top_toolbar.exports.html:30
@@ -804,7 +809,7 @@ msgstr "Išvalyti Filtrus"
 msgid "Every %(t)s seconds"
 msgstr "Kas %(t)s sekundės"
 
-#: templates/xadmin/edit_inline/blank.html:7 views/edit.py:97 views/list.py:28
+#: templates/xadmin/edit_inline/blank.html:7 views/edit.py:97 views/list.py:29
 msgid "None"
 msgstr ""
 
@@ -1208,15 +1213,15 @@ msgstr "Valdymo pultas"
 msgid "The %(name)s \"%(obj)s\" was deleted successfully."
 msgstr "%(name)s \"%(obj)s\" buvo sėkmingai ištrintas."
 
-#: views/detail.py:87
+#: views/detail.py:91
 msgid "Null"
 msgstr ""
 
-#: views/detail.py:142 views/edit.py:194
+#: views/detail.py:146 views/edit.py:194
 msgid "Other Fields"
 msgstr "Kiti Laukeliai"
 
-#: views/detail.py:203
+#: views/detail.py:207
 #, python-format
 msgid "%s Detail"
 msgstr "%s Detalės"
@@ -1240,24 +1245,24 @@ msgstr "Žemiau galite pridėti naują %s."
 msgid "The %(name)s \"%(obj)s\" was changed successfully."
 msgstr "%(name)s \"%(obj)s\" buvo sėkmingai pakeistas"
 
-#: views/list.py:195
+#: views/list.py:197
 msgid "Database error"
 msgstr "Duomenų bazės klaida"
 
-#: views/list.py:365
+#: views/list.py:367
 #, python-format
 msgid "%s List"
 msgstr "%s Sąrašas"
 
-#: views/list.py:493
+#: views/list.py:495
 msgid "Sort ASC"
 msgstr "Rikiuoti did. tvarka"
 
-#: views/list.py:494
+#: views/list.py:496
 msgid "Sort DESC"
 msgstr "Rikiuoti maž. tvarka"
 
-#: views/list.py:498
+#: views/list.py:500
 msgid "Cancel Sort"
 msgstr "Atšaukti rikiavimą"
 

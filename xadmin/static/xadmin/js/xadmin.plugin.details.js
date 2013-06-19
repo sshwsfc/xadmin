@@ -17,11 +17,13 @@
         e.preventDefault();
         var modal = $('#detail-modal');
         var el = this.$element;
+        var close_text = gettext('Close');
+        var edit_text = gettext('Edit');
         if(!modal.length){
           modal = $('<div id="detail-modal" class="modal container hide fade quick-form" role="dialog"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h3>'+ 
             el.attr('title') +'</h3></div><div class="modal-body"></div>'+
-            '<div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>'+
-            '<a class="btn btn-submit btn-primary edit-btn"><i class="icon-pencil"></i> Edit</a></div></div>');
+            '<div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">'+close_text+'</button>'+
+            '<a class="btn btn-submit btn-primary edit-btn"><i class="icon-pencil"></i> '+edit_text+'</a></div></div>');
           $('body').append(modal);
         }
         modal.find('.edit-btn').attr('href', this.edit_uri);
