@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-19 14:49+0300\n"
+"POT-Creation-Date: 2013-06-19 15:28+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -60,8 +60,8 @@ msgid ""
 "Please enter the correct username and password for a staff account. Note "
 "that both fields are case-sensitive."
 msgstr ""
-"Prašome įvesti teisingą vartotojo vardą ir slaptašodį. Didžiosios ir mažosios "
-"raidės traktuojamos kaip skirtingi simboliai"
+"Prašome įvesti teisingą vartotojo vardą ir slaptašodį. Didžiosios ir "
+"mažosios raidės traktuojamos kaip skirtingi simboliai"
 
 #: forms.py:21
 msgid "Please log in again, because your session has expired."
@@ -1078,7 +1078,19 @@ msgstr "Rodyti Stulpelius"
 msgid "Restore Default"
 msgstr "Atstatyti Numatytuosius"
 
-#: templates/xadmin/views/model_list.html:142
+#: templates/xadmin/views/model_list.html:63
+msgid "default table view"
+msgstr "numatytas lentelės vaizdas"
+
+#: templates/xadmin/views/model_list.html:67
+msgid "condensed table view"
+msgstr "suspaustas lentelės vaizdas"
+
+#: templates/xadmin/views/model_list.html:74
+msgid "full screen"
+msgstr "pilnas ekranas"
+
+#: templates/xadmin/views/model_list.html:151
 #: templates/xadmin/widgets/list.html:31
 msgid "Empty list"
 msgstr "Išvalyti sąrašą"

@@ -34,7 +34,12 @@
             modal.find('.modal-body').html(msg + xhr.status + " " + (typeof xhr === 'string' ? xhr : xhr.responseText || xhr.statusText || 'Unknown error!'));
           }
         });
-        modal.modal();
+        modal.modal().css(
+            {
+                'margin-top': function () {
+                    return window.pageYOffset;
+                }
+            });
       }
   };
 
