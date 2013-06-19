@@ -1,5 +1,6 @@
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.core.paginator import InvalidPage, Paginator
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.http import HttpResponseRedirect
 from django.template.response import SimpleTemplateResponse, TemplateResponse
@@ -100,6 +101,7 @@ class ListAdminView(ModelAdminView):
     """
     list_display = ('__str__',)
     list_display_links = ()
+    list_display_links_preview = False
     list_select_related = False
     list_per_page = 50
     list_max_show_all = 200
@@ -559,9 +561,21 @@ class ListAdminView(ModelAdminView):
         # If list_display_links not defined, add the link tag to the first field
         if (item.row['is_display_first'] and not self.list_display_links) \
                 or field_name in self.list_display_links:
-            url = self.url_for_result(obj)
             item.row['is_display_first'] = False
-            item.wraps.append(u'<a href="%s">%%s</a>' % url)
+            if self.list_display_links_preview:
+                opts = obj._meta
+                item_res_uri = reverse(
+                    'admin:%s_%s_detail' % (opts.app_label, opts.module_name),
+                    args=(getattr(obj, opts.pk.attname),))
+                if item_res_uri:
+                    edit_url = reverse(
+                        'admin:%s_%s_change' % (opts.app_label, opts.module_name),
+                        args=(getattr(obj, opts.pk.attname),))
+                    item.wraps.append('<a data-res-uri="%s" data-edit-uri="%s" class="details-handler" rel="tooltip" title="%s">%%s</a>'
+                                     % (item_res_uri, edit_url, _(u'Details of %s' % str(obj))))
+            else:
+                url = self.url_for_result(obj)
+                item.wraps.append(u'<a href="%s">%%s</a>' % url)
 
         return item
 
@@ -591,9 +605,13 @@ class ListAdminView(ModelAdminView):
     # Media
     @filter_hook
     def get_media(self):
-        return super(ListAdminView, self).get_media() + self.vendor('xadmin.page.list.js')
+        media = super(ListAdminView, self).get_media() + self.vendor('xadmin.page.list.js')
+        if self.list_display_links_preview:
+            media += self.vendor('xadmin.plugin.details.js',
+                                 'xadmin.modal.css', 'xadmin.form.css')
+        return media
 
-    # Blocks
+        # Blocks
     @inclusion_tag('xadmin/includes/pagination.html')
     def block_pagination(self, context, nodes, page_type='normal'):
         """
