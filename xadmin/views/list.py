@@ -101,7 +101,7 @@ class ListAdminView(ModelAdminView):
     """
     list_display = ('__str__',)
     list_display_links = ()
-    list_display_links_preview = False
+    list_display_links_details = False
     list_select_related = False
     list_per_page = 50
     list_max_show_all = 200
@@ -562,7 +562,7 @@ class ListAdminView(ModelAdminView):
         if (item.row['is_display_first'] and not self.list_display_links) \
                 or field_name in self.list_display_links:
             item.row['is_display_first'] = False
-            if self.list_display_links_preview:
+            if self.list_display_links_details:
                 opts = obj._meta
                 item_res_uri = reverse(
                     'admin:%s_%s_detail' % (opts.app_label, opts.module_name),
@@ -606,7 +606,7 @@ class ListAdminView(ModelAdminView):
     @filter_hook
     def get_media(self):
         media = super(ListAdminView, self).get_media() + self.vendor('xadmin.page.list.js')
-        if self.list_display_links_preview:
+        if self.list_display_links_details:
             media += self.vendor('xadmin.plugin.details.js',
                                  'xadmin.modal.css', 'xadmin.form.css')
         return media
