@@ -28,7 +28,7 @@ class DetailsPlugin(BaseAdminPlugin):
                         '%s:%s_%s_change' % (self.admin_site.app_name, opts.app_label, opts.module_name),
                         args=(getattr(rel_obj, opts.pk.attname),))
                     item.btns.append('<a data-res-uri="%s" data-edit-uri="%s" class="details-handler" rel="tooltip" title="%s"><i class="icon-info-sign"></i></a>'
-                                     % (item_res_uri, edit_url, _(u'Details of %s' % str(rel_obj))))
+                                     % (item_res_uri, edit_url, _(u'Details of %s') % str(rel_obj)))
         return item
 
     # Media
