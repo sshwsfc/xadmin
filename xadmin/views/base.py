@@ -379,7 +379,13 @@ class CommAdminView(BaseAdminView):
                 self.request.session.modified = True
 
         def check_selected(menu, path):
-            selected = 'url' in menu and path.startswith(menu['url']) or False
+            selected = False
+            if 'url' in menu:
+                chop_index = menu['url'].find('?')
+                if chop_index == -1:
+                    selected = path.startswith(menu['url'])
+                else:
+                    selected = path.startswith(menu['url'][:chop_index])
             if 'menus' in menu:
                 for m in menu['menus']:
                     _s = check_selected(m, path)

@@ -54,8 +54,9 @@ class BookmarkPlugin(BaseAdminPlugin):
                 params[COL_LIST_VAR] = '.'.join(bk['cols'])
             if 'search' in bk:
                 params[SEARCH_VAR] = bk['search']
-            bk_qs = '&'.join(['%s=%s' % (k, v) for k, v in sorted(
-                filter(lambda i: bool(i[1]), params.items()))])
+            def check_item(i):
+                return bool(i[1]) or i[1] == False
+            bk_qs = '&'.join(['%s=%s' % (k, v) for k, v in sorted(filter(check_item, params.items()))])
 
             url = list_base_url + '?' + bk_qs
             selected = (current_qs == bk_qs)
