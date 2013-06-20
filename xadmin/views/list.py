@@ -572,7 +572,7 @@ class ListAdminView(ModelAdminView):
                         'admin:%s_%s_change' % (opts.app_label, opts.module_name),
                         args=(getattr(obj, opts.pk.attname),))
                     item.wraps.append('<a data-res-uri="%s" data-edit-uri="%s" class="details-handler" rel="tooltip" title="%s">%%s</a>'
-                                     % (item_res_uri, edit_url, _(u'Details of %s' % str(obj))))
+                                     % (item_res_uri, edit_url, _(u'Details of %s') % str(obj)))
             else:
                 url = self.url_for_result(obj)
                 item.wraps.append(u'<a href="%s">%%s</a>' % url)
