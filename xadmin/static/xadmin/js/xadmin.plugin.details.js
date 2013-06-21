@@ -5,7 +5,6 @@
     this.res_uri = this.$element.data('res-uri');
     this.edit_uri = this.$element.data('edit-uri');
     this.obj_data = null;
-
     this.$element.on('click', $.proxy(this.click, this));
   };
 
@@ -19,9 +18,9 @@
         var el = this.$element;
         var close_text = gettext('Close');
         var edit_text = gettext('Edit');
+        var title = el.attr('title');
         if(!modal.length){
-          modal = $('<div id="detail-modal" class="modal container hide fade quick-form" role="dialog"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h3>'+ 
-            el.attr('title') +'</h3></div><div class="modal-body"></div>'+
+          modal = $('<div id="detail-modal" class="modal container hide fade quick-form" role="dialog"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h3></h3></div><div class="modal-body"></div>'+
             '<div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">'+close_text+'</button>'+
             '<a class="btn btn-submit btn-primary edit-btn"><i class="icon-pencil"></i> '+edit_text+'</a></div></div>');
           $('body').append(modal);
@@ -33,6 +32,7 @@
             var msg = "Sorry but there was an error: ";
             modal.find('.modal-body').html(msg + xhr.status + " " + (typeof xhr === 'string' ? xhr : xhr.responseText || xhr.statusText || 'Unknown error!'));
           }
+          modal.find('h3').text(title);
         });
         modal.modal().css(
             {
