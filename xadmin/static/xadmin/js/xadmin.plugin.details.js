@@ -25,7 +25,14 @@
             '<a class="btn btn-submit btn-primary edit-btn"><i class="icon-pencil"></i> '+edit_text+'</a></div></div>');
           $('body').append(modal);
         }
-        modal.find('.edit-btn').attr('href', this.edit_uri);
+        var edit_btn = modal.find('.edit-btn');
+        if (this.edit_uri){
+            edit_btn.attr('href', this.edit_uri);
+            edit_btn.show();
+        }else{
+            edit_btn.hide();
+        }
+
         modal.find('.modal-body').html('<div class="progress progress-striped active" style="width:50%; margin: 10px auto;"><div class="bar" style="width: 100%;"></div></div>');
         modal.find('.modal-body').load(this.res_uri + '?_format=html', function(response, status, xhr) {
           if (status == "error") {
