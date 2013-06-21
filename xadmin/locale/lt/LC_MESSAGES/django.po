@@ -1230,7 +1230,7 @@ msgstr "Bet kokio objekto sąrašas."
 
 #: views/dashboard.py:423
 msgid "addform"
-msgstr "Tuščia Forma"
+msgstr "tuščia forma"
 
 #: views/dashboard.py:424
 msgid "Add any model object Widget."
