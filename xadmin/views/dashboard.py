@@ -83,7 +83,8 @@ class UserWidgetAdmin(object):
         if db_field.name == 'widget_type':
             widgets = widget_manager._widgets.values()
             form_widget = WidgetTypeSelect(widgets)
-            return forms.ChoiceField(choices=[(w.widget_type, w.description) for w in widgets], widget=form_widget)
+            return forms.ChoiceField(choices=[(w.widget_type, w.description) for w in widgets],
+                                     widget=form_widget, label=_('Widget Type'))
         if 'page_id' in self.request.GET and db_field.name == 'page_id':
             kwargs['widget'] = forms.HiddenInput
         field = super(
@@ -344,7 +345,7 @@ class PartialBaseWidget(BaseWidget):
 
 @widget_manager.register
 class QuickBtnWidget(BaseWidget):
-    widget_type = 'qbutton'
+    widget_type = _('qbutton')
     description = _(u'Quick button Widget, quickly open any page.')
     template = "xadmin/widgets/qbutton.html"
     base_title = _(u"Quick Buttons")
@@ -382,7 +383,7 @@ class QuickBtnWidget(BaseWidget):
 
 @widget_manager.register
 class ListWidget(ModelBaseWidget, PartialBaseWidget):
-    widget_type = 'list'
+    widget_type = _('list')
     description = _(u'Any Objects list Widget.')
     template = "xadmin/widgets/list.html"
     model_perm = 'view'
@@ -419,7 +420,7 @@ class ListWidget(ModelBaseWidget, PartialBaseWidget):
 
 @widget_manager.register
 class AddFormWidget(ModelBaseWidget, PartialBaseWidget):
-    widget_type = 'addform'
+    widget_type = _('addform')
     description = _(u'Add any model object Widget.')
     template = "xadmin/widgets/addform.html"
     model_perm = 'add'

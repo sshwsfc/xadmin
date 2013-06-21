@@ -20,7 +20,7 @@ from xadmin.util import lookup_field, label_for_field, json
 
 @widget_manager.register
 class ChartWidget(ModelBaseWidget):
-    widget_type = 'chart'
+    widget_type = _('chart')
     description = _('Show models simple chart.')
     template = 'xadmin/widgets/chart.html'
 

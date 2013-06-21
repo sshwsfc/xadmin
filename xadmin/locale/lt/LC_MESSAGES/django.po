@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-20 09:40+0300\n"
+"POT-Creation-Date: 2013-06-21 09:44+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -93,7 +93,7 @@ msgstr "Užklausa"
 msgid "Is Share"
 msgstr "Dalintis"
 
-#: models.py:65 plugins/bookmark.py:42 plugins/bookmark.py:139
+#: models.py:65 plugins/bookmark.py:42 plugins/bookmark.py:140
 msgid "Bookmark"
 msgstr "Žyma"
 
@@ -121,7 +121,7 @@ msgstr "Vartotojo Nustatymai"
 msgid "Page"
 msgstr "Puslapis"
 
-#: models.py:108 views/dashboard.py:77
+#: models.py:108 views/dashboard.py:77 views/dashboard.py:87
 msgid "Widget Type"
 msgstr "Valdiklio Tipas"
 
@@ -247,13 +247,21 @@ msgstr ""
 msgid "Change %s"
 msgstr "Keisti %s"
 
-#: plugins/bookmark.py:135
+#: plugins/bookmark.py:134
+msgid "bookmark"
+msgstr "žyma"
+
+#: plugins/bookmark.py:136
 msgid "Bookmark Widget, can show user's bookmark list data in widget."
-msgstr ""
+msgstr "Rodo lentelę pagal pasirinktą žymą."
+
+#: plugins/chart.py:23
+msgid "chart"
+msgstr "grafikas"
 
 #: plugins/chart.py:24
 msgid "Show models simple chart."
-msgstr "Rodyti modelio paprastą grafiką"
+msgstr "Rodo objekto paprastą grafiką"
 
 #: plugins/chart.py:49
 #, python-format
@@ -322,7 +330,7 @@ msgstr "Numatytoji Tema"
 msgid "default bootstrap theme"
 msgstr "numatytoji bootstrap tema"
 
-#: plugins/topnav.py:56 views/dashboard.py:431 views/edit.py:359
+#: plugins/topnav.py:56 views/dashboard.py:432 views/edit.py:359
 #, python-format
 msgid "Add %s"
 msgstr "Pridėti %s"
@@ -1176,47 +1184,59 @@ msgstr "Uždaryti"
 msgid "Save changes"
 msgstr "Išsaugoti pakeitimus"
 
-#: views/base.py:395
+#: views/base.py:401
 msgid "Django Xadmin"
 msgstr ""
 
-#: views/dashboard.py:169
+#: views/dashboard.py:170
 msgid "Widget ID"
 msgstr "Valdiklio ID"
 
-#: views/dashboard.py:170
+#: views/dashboard.py:171
 msgid "Widget Title"
 msgstr "Valdiklio Antraštė"
 
-#: views/dashboard.py:232
+#: views/dashboard.py:233
 msgid "Html Content Widget, can write any html content in widget."
 msgstr "HTML Turinio Valdiklis, galite rašyti betkokį HTML kodą."
 
-#: views/dashboard.py:235
+#: views/dashboard.py:236
 msgid "Html Content"
 msgstr "HTML Kodas"
 
-#: views/dashboard.py:298
+#: views/dashboard.py:299
 msgid "Target Model"
 msgstr "Target Modelis"
 
 #: views/dashboard.py:348
-msgid "Quick button Widget, quickly open any page."
-msgstr "Valdiklis - Greitasis Mygtukas, greitai atidarykite bet kokį puslapį."
+msgid "qbutton"
+msgstr "greitasis mygtukas"
 
-#: views/dashboard.py:350
+#: views/dashboard.py:349
+msgid "Quick button Widget, quickly open any page."
+msgstr "Greitai atidarykite bet kokį puslapį."
+
+#: views/dashboard.py:351
 msgid "Quick Buttons"
 msgstr "Greitieji Mygtukai"
 
 #: views/dashboard.py:386
+msgid "list"
+msgstr "sąrašas"
+
+#: views/dashboard.py:387
 msgid "Any Objects list Widget."
-msgstr "Valdiklis - Bet kokio objekto sąrašas."
+msgstr "Bet kokio objekto sąrašas."
 
 #: views/dashboard.py:423
-msgid "Add any model object Widget."
-msgstr "Pridėti bet kokio objekto sarašo valdiklį"
+msgid "addform"
+msgstr "Tuščia Forma"
 
-#: views/dashboard.py:456
+#: views/dashboard.py:424
+msgid "Add any model object Widget."
+msgstr "Bet kokio objekto kūrimo forma"
+
+#: views/dashboard.py:457
 msgid "Dashboard"
 msgstr "Valdymo pultas"
 
