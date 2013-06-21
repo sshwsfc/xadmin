@@ -16,6 +16,8 @@ class ShowField(Field):
     def __init__(self, admin_view, *args, **kwargs):
         super(ShowField, self).__init__(*args, **kwargs)
         self.admin_view = admin_view
+        if admin_view.style == 'table':
+            self.template = "xadmin/layout/field_value_td.html"
 
     def render(self, form, form_style, context):
         html = ''
