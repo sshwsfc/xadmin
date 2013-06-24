@@ -60,7 +60,7 @@ msgid ""
 "Please enter the correct username and password for a staff account. Note "
 "that both fields are case-sensitive."
 msgstr ""
-"Prašome įvesti teisingą vartotojo vardą ir slaptašodį. Didžiosios ir "
+"Prašome įvesti teisingą vartotojo vardą ir slaptažodį. Didžiosios ir "
 "mažosios raidės traktuojamos kaip skirtingi simboliai"
 
 #: forms.py:21
