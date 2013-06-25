@@ -333,7 +333,7 @@ msgstr "numatytoji bootstrap tema"
 #: plugins/topnav.py:56 views/dashboard.py:432 views/edit.py:359
 #, python-format
 msgid "Add %s"
-msgstr "Pridėti %s"
+msgstr "Sukurti: %s"
 
 #: plugins/xversion.py:130
 msgid "Initial version."
@@ -663,11 +663,11 @@ msgid ""
 "There's been an error. It's been reported to the site administrators via e-"
 "mail and should be fixed shortly. Thanks for your patience."
 msgstr ""
-"Nekažkąąą... Serveryje įvyko klaida. Tikėkimės, kad administratoriai tai "
+"Atsiprašome, tačiau serveryje įvyko klaida. Tikėkimės, kad administratoriai tai "
 "pastebėjo ir šią klaidą greitai ištaisys.Jei klaida kartojasi, o jūs "
 "negalite naudotis jums reikalingu funkcionalumu, susisiekite su jais. Būkite "
-"pasiruošę papasakoti kokį konkrečiai veiksmą atliekant Jūs aptinkate šią "
-"klaidą."
+"pasiruošę papasakoti kokį veiksmą atliekant Jūs aptinkate šią "
+"klaidą. Dėkojame už supratimą."
 
 #: templates/xadmin/base_site.html:23
 msgid "Welcome,"
@@ -922,7 +922,7 @@ msgstr "Išsaugoti kaip naują"
 
 #: templates/xadmin/includes/submit_line.html:6
 msgid "Save and add another"
-msgstr "Išsaugoti ir pridėti naują"
+msgstr "Išsaugoti ir sukurti naują"
 
 #: templates/xadmin/includes/submit_line.html:7
 msgid "Save and continue editing"
@@ -949,7 +949,7 @@ msgstr "Keisti Keletą"
 
 #: templates/xadmin/views/dashboard.html:19
 msgid "Add Widget"
-msgstr "Pridėti Valdiklį"
+msgstr "Sukurti Valdiklį"
 
 #: templates/xadmin/views/invalid_setup.html:13
 msgid ""
@@ -1076,7 +1076,7 @@ msgstr ""
 #: templates/xadmin/views/model_list.html:39
 #, python-format
 msgid "Add %(name)s"
-msgstr "Pridėti %(name)s"
+msgstr "Sukurti: %(name)s"
 
 #: templates/xadmin/views/model_list.html:49
 msgid "Display Columns"
@@ -1166,11 +1166,11 @@ msgstr "Pavyko"
 
 #: templates/xadmin/widgets/addform.html:13
 msgid "Add success, click <a id='change-link'>edit</a> to edit."
-msgstr "Pridėti pavyko, <a id='change-link'>redaguoti</a>."
+msgstr "Sukurti pavyko, <a id='change-link'>redaguoti</a>."
 
 #: templates/xadmin/widgets/addform.html:16
 msgid "Quick Add"
-msgstr "Greitai Pridėti"
+msgstr "Greitai Sukurti"
 
 #: templates/xadmin/widgets/base.html:26
 msgid "Widget Options"
@@ -1270,7 +1270,7 @@ msgstr "Žemiau galite jį redaguoti ir vėl."
 #: views/edit.py:392 views/edit.py:479
 #, python-format
 msgid "You may add another %s below."
-msgstr "Žemiau galite pridėti naują %s."
+msgstr "Žemiau galite sukurti naują: %s."
 
 #: views/edit.py:472
 #, python-format
