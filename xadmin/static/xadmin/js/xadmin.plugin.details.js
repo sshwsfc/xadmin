@@ -40,6 +40,10 @@
             modal.find('.modal-body').html(msg + xhr.status + " " + (typeof xhr === 'string' ? xhr : xhr.responseText || xhr.statusText || 'Unknown error!'));
           }
           modal.find('h3').text(title);
+          modal.find( ".box-title .icon.chevron" ).click(function() {
+              $( this ).toggleClass( "icon-chevron-up" ).toggleClass( "icon-chevron-down" );
+              $( this ).parents( ".box:first" ).find( ".box-content" ).toggle('fast');
+          });
         });
         modal.modal().css(
             {
