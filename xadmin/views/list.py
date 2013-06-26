@@ -26,7 +26,7 @@ ERROR_FLAG = 'e'
 DOT = '.'
 
 # Text to display within change-list table cells if the value is blank.
-EMPTY_CHANGELIST_VALUE = _('None')
+EMPTY_CHANGELIST_VALUE = _('Null')
 
 
 class FakeMethodField(object):
@@ -530,7 +530,7 @@ class ListAdminView(ModelAdminView):
         try:
             f, attr, value = lookup_field(field_name, obj, self)
         except (AttributeError, ObjectDoesNotExist):
-            item.text = EMPTY_CHANGELIST_VALUE
+            item.text = mark_safe("<span class='muted'>%s</span>" % EMPTY_CHANGELIST_VALUE)
         else:
             if f is None:
                 item.allow_tags = getattr(attr, 'allow_tags', False)
@@ -544,7 +544,7 @@ class ListAdminView(ModelAdminView):
                 if isinstance(f.rel, models.ManyToOneRel):
                     field_val = getattr(obj, f.name)
                     if field_val is None:
-                        item.text = EMPTY_CHANGELIST_VALUE
+                        item.text = mark_safe("<span class='muted'>%s</span>" % EMPTY_CHANGELIST_VALUE)
                     else:
                         item.text = field_val
                 else:

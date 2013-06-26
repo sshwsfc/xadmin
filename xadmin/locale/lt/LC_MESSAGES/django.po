@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-21 09:44+0300\n"
+"POT-Creation-Date: 2013-06-26 15:49+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -81,6 +81,10 @@ msgstr "Sukurti Naują %s"
 msgid "Title"
 msgstr "Antraštė"
 
+#: models.py:48 models.py:87 models.py:106
+msgid "user"
+msgstr ""
+
 #: models.py:49
 msgid "Url Name"
 msgstr "Url Adresas"
@@ -93,7 +97,7 @@ msgstr "Užklausa"
 msgid "Is Share"
 msgstr "Dalintis"
 
-#: models.py:65 plugins/bookmark.py:42 plugins/bookmark.py:140
+#: models.py:65 plugins/bookmark.py:49 plugins/bookmark.py:173
 msgid "Bookmark"
 msgstr "Žyma"
 
@@ -247,11 +251,11 @@ msgstr ""
 msgid "Change %s"
 msgstr "Keisti %s"
 
-#: plugins/bookmark.py:134
+#: plugins/bookmark.py:167
 msgid "bookmark"
 msgstr "žyma"
 
-#: plugins/bookmark.py:136
+#: plugins/bookmark.py:169
 msgid "Bookmark Widget, can show user's bookmark list data in widget."
 msgstr "Rodo lentelę pagal pasirinktą žymą."
 
@@ -268,7 +272,7 @@ msgstr "Rodo objekto paprastą grafiką"
 msgid "%s Charts"
 msgstr "%s Grafikai"
 
-#: plugins/details.py:31 views/list.py:575
+#: plugins/details.py:37 views/list.py:575
 #, python-format
 msgid "Details of %s"
 msgstr "%s peržiūra"
@@ -278,7 +282,7 @@ msgstr "%s peržiūra"
 msgid "Enter %s"
 msgstr "Įveskite %s"
 
-#: plugins/editable.py:74 views/delete.py:24 views/detail.py:122
+#: plugins/editable.py:74 views/delete.py:24 views/detail.py:127
 #: views/edit.py:415
 #, python-format
 msgid "%(name)s object with primary key %(key)r does not exist."
@@ -441,7 +445,7 @@ msgstr "Dokumentacija"
 
 #: templates/registration/password_change_done.html:4
 #: templates/registration/password_change_form.html:4
-#: templates/xadmin/base_site.html:29
+#: templates/xadmin/base_site.html:30
 msgid "Log out"
 msgstr "Atsijungti"
 
@@ -451,7 +455,7 @@ msgstr "Atsijungti"
 #: templates/registration/password_reset_confirm.html:7
 #: templates/registration/password_reset_done.html:7
 #: templates/registration/password_reset_form.html:7
-#: templates/xadmin/500.html:7 templates/xadmin/base_site.html:93
+#: templates/xadmin/500.html:7 templates/xadmin/base_site.html:95
 #: templates/xadmin/auth/user/change_password.html:10
 #: templates/xadmin/auth/user/change_password.html:15
 #: templates/xadmin/views/app_index.html:9
@@ -663,17 +667,17 @@ msgid ""
 "There's been an error. It's been reported to the site administrators via e-"
 "mail and should be fixed shortly. Thanks for your patience."
 msgstr ""
-"Atsiprašome, tačiau serveryje įvyko klaida. Tikėkimės, kad administratoriai tai "
-"pastebėjo ir šią klaidą greitai ištaisys.Jei klaida kartojasi, o jūs "
+"Atsiprašome, tačiau serveryje įvyko klaida. Tikėkimės, kad administratoriai "
+"tai pastebėjo ir šią klaidą greitai ištaisys.Jei klaida kartojasi, o jūs "
 "negalite naudotis jums reikalingu funkcionalumu, susisiekite su jais. Būkite "
-"pasiruošę papasakoti kokį veiksmą atliekant Jūs aptinkate šią "
-"klaidą. Dėkojame už supratimą."
+"pasiruošę papasakoti kokį veiksmą atliekant Jūs aptinkate šią klaidą. "
+"Dėkojame už supratimą."
 
 #: templates/xadmin/base_site.html:23
 msgid "Welcome,"
 msgstr "vartotojas: "
 
-#: templates/xadmin/base_site.html:83
+#: templates/xadmin/base_site.html:85
 msgid "You don't have permission to edit anything."
 msgstr "Jūs neturite leidimų redaguoti"
 
@@ -808,7 +812,6 @@ msgid "Export all datas."
 msgstr "Eksportuoti visus duomenis."
 
 #: templates/xadmin/blocks/model_list.top_toolbar.refresh.html:8
-#, fuzzy
 msgid "Clean Refresh"
 msgstr "Išvalyti Filtrus"
 
@@ -817,9 +820,10 @@ msgstr "Išvalyti Filtrus"
 msgid "Every %(t)s seconds"
 msgstr "Kas %(t)s sekundės"
 
-#: templates/xadmin/edit_inline/blank.html:7 views/edit.py:97 views/list.py:29
-msgid "None"
-msgstr ""
+#: templates/xadmin/edit_inline/blank.html:7 views/detail.py:22
+#: views/edit.py:97 views/list.py:29
+msgid "Null"
+msgstr "Nėra"
 
 #: templates/xadmin/filters/char.html:14
 msgid "Enter"
@@ -1245,15 +1249,11 @@ msgstr "Valdymo pultas"
 msgid "The %(name)s \"%(obj)s\" was deleted successfully."
 msgstr "%(name)s \"%(obj)s\" buvo sėkmingai ištrintas."
 
-#: views/detail.py:91
-msgid "Null"
-msgstr ""
-
-#: views/detail.py:146 views/edit.py:194
+#: views/detail.py:151 views/edit.py:194
 msgid "Other Fields"
 msgstr "Kiti Laukeliai"
 
-#: views/detail.py:207
+#: views/detail.py:212
 #, python-format
 msgid "%s Detail"
 msgstr "%s Detalės"
@@ -1302,5 +1302,5 @@ msgstr "Atšaukti rikiavimą"
 msgid "Main Dashboard"
 msgstr "Pagrindinis Valdymo Pultas"
 
-#~ msgid "Select Columes"
-#~ msgstr "Rodytu stulpelius"
+#~ msgid "None"
+#~ msgstr "Nėra nieko"

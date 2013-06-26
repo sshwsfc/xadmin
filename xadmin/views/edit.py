@@ -94,7 +94,7 @@ class ModelFormAdminView(ModelAdminView):
             if db_field.choices:
                 attrs['choices'] = db_field.get_choices(
                     include_blank=db_field.blank,
-                    blank_choice=[('', _('None'))]
+                    blank_choice=[('', _('Null'))]
                 )
             return attrs
 
