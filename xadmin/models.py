@@ -105,7 +105,7 @@ class UserSettings(models.Model):
 class UserWidget(models.Model):
     user = models.ForeignKey(AUTH_USER_MODEL)
     page_id = models.CharField(_(u"Page"), max_length=256)
-    widget_type = models.CharField(_(u"Widget Type"), max_length=16)
+    widget_type = models.CharField(_(u"Widget Type"), max_length=50)
     value = models.TextField(_(u"Widget Params"))
 
     def get_value(self):
