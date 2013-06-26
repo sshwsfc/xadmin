@@ -119,6 +119,7 @@ class ListAdminView(ModelAdminView):
             raise PermissionDenied
 
         request = self.request
+        request.session['LIST_QUERY'] = (self.model_info, self.request.META['QUERY_STRING'])
 
         self.pk_attname = self.opts.pk.attname
         self.lookup_opts = self.opts
