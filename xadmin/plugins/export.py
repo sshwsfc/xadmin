@@ -12,6 +12,7 @@ from django.db.models import BooleanField, NullBooleanField
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
 from xadmin.util import json
+from xadmin.views.list import ALL_VAR
 
 try:
     import xlwt
@@ -31,6 +32,7 @@ class ExportMenuPlugin(BaseAdminPlugin):
     def block_top_toolbar(self, context, nodes):
         if self.list_export:
             context.update({
+                'show_export_all': self.admin_view.paginator.count > self.admin_view.list_per_page and not ALL_VAR in self.admin_view.request.GET,
                 'form_params': self.admin_view.get_form_params({'_do_': 'export'}, ('export_type',)),
                 'export_types': [{'type': et, 'name': self.export_names[et]} for et in self.list_export],
             })
@@ -47,6 +49,8 @@ class ExportPlugin(BaseAdminPlugin):
 
     def get_results(self, context):
         headers = [c for c in context['result_headers'].cells if c.export]
+        for c in context['result_headers'].cells:
+            print c
         rows = context['results']
 
         new_rows = []
@@ -56,8 +60,10 @@ class ExportPlugin(BaseAdminPlugin):
                 if (o.field is None and getattr(o.attr, 'boolean', False)) or \
                    (o.field and isinstance(o.field, (BooleanField, NullBooleanField))):
                         value = o.value
+                elif str(o.text).startswith("<span class='muted'>"):
+                    value = escape(str(o.text)[20:-7])
                 else:
-                        value = escape(str(o.text))
+                    value = escape(str(o.text))
                 d[force_unicode(headers[i].text)] = value
             new_rows.append(d)
         return new_rows

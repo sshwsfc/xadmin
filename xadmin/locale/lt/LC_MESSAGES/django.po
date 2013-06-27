@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-26 15:49+0300\n"
+"POT-Creation-Date: 2013-06-27 19:18+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,11 +23,11 @@ msgstr ""
 msgid "All"
 msgstr "Visi"
 
-#: filters.py:159 plugins/export.py:105
+#: filters.py:159 plugins/export.py:107
 msgid "Yes"
 msgstr "Taip"
 
-#: filters.py:160 plugins/export.py:105
+#: filters.py:160 plugins/export.py:107
 msgid "No"
 msgstr "Ne"
 
@@ -272,7 +272,7 @@ msgstr "Rodo objekto paprastą grafiką"
 msgid "%s Charts"
 msgstr "%s Grafikai"
 
-#: plugins/details.py:37 views/list.py:575
+#: plugins/details.py:37 views/list.py:576
 #, python-format
 msgid "Details of %s"
 msgstr "%s peržiūra"
@@ -282,13 +282,13 @@ msgstr "%s peržiūra"
 msgid "Enter %s"
 msgstr "Įveskite %s"
 
-#: plugins/editable.py:74 views/delete.py:24 views/detail.py:127
+#: plugins/editable.py:74 views/delete.py:24 views/detail.py:126
 #: views/edit.py:415
 #, python-format
 msgid "%(name)s object with primary key %(key)r does not exist."
 msgstr "%(name)s objektas neegzistuoja. Objekto 'primary key': %(key)r"
 
-#: plugins/export.py:74
+#: plugins/export.py:76
 msgid "Sheet"
 msgstr "Lapas"
 
@@ -808,8 +808,8 @@ msgid "Export with format."
 msgstr "Eksportuoti formatais."
 
 #: templates/xadmin/blocks/model_list.top_toolbar.exports.html:34
-msgid "Export all datas."
-msgstr "Eksportuoti visus duomenis."
+msgid "Export all rows."
+msgstr "Eksportuoti visas eilutes."
 
 #: templates/xadmin/blocks/model_list.top_toolbar.refresh.html:8
 msgid "Clean Refresh"
@@ -1249,11 +1249,11 @@ msgstr "Valdymo pultas"
 msgid "The %(name)s \"%(obj)s\" was deleted successfully."
 msgstr "%(name)s \"%(obj)s\" buvo sėkmingai ištrintas."
 
-#: views/detail.py:151 views/edit.py:194
+#: views/detail.py:150 views/edit.py:194
 msgid "Other Fields"
 msgstr "Kiti Laukeliai"
 
-#: views/detail.py:212
+#: views/detail.py:211
 #, python-format
 msgid "%s Detail"
 msgstr "%s Detalės"
@@ -1277,24 +1277,24 @@ msgstr "Žemiau galite sukurti naują: %s."
 msgid "The %(name)s \"%(obj)s\" was changed successfully."
 msgstr "%(name)s \"%(obj)s\" buvo sėkmingai pakeistas"
 
-#: views/list.py:197
+#: views/list.py:198
 msgid "Database error"
 msgstr "Duomenų bazės klaida"
 
-#: views/list.py:367
+#: views/list.py:368
 #, python-format
 msgid "%s List"
 msgstr "%s Sąrašas"
 
-#: views/list.py:495
+#: views/list.py:496
 msgid "Sort ASC"
 msgstr "Rikiuoti did. tvarka"
 
-#: views/list.py:496
+#: views/list.py:497
 msgid "Sort DESC"
 msgstr "Rikiuoti maž. tvarka"
 
-#: views/list.py:500
+#: views/list.py:501
 msgid "Cancel Sort"
 msgstr "Atšaukti rikiavimą"
 
