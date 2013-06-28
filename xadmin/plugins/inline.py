@@ -237,7 +237,7 @@ class InlineModelAdmin(ModelFormAdminView):
 
     def queryset(self):
         queryset = super(InlineModelAdmin, self).queryset()
-        if not self.has_change_permission():
+        if not self.has_change_permission() and not self.has_view_permission():
             queryset = queryset.none()
         return queryset
 
@@ -327,7 +327,8 @@ class InlineFormsetPlugin(BaseAdminPlugin):
                     InlineModelAdmin, inline_class).init(self.admin_view)
                 if not (inline.has_add_permission() or
                         inline.has_change_permission() or
-                        inline.has_delete_permission()):
+                        inline.has_delete_permission() or
+                        inline.has_view_permission()):
                     continue
                 if not inline.has_add_permission():
                     inline.max_num = 0
@@ -336,8 +337,12 @@ class InlineFormsetPlugin(BaseAdminPlugin):
         return self._inline_instances
 
     def instance_forms(self, ret):
-        self.formsets = [inline.instance_form(
-        ) for inline in self.inline_instances]
+        self.formsets = []
+        for inline in self.inline_instances:
+            if inline.has_change_permission():
+                self.formsets.append(inline.instance_form())
+            else:
+                self.formsets.append(self._get_detail_formset_instance(inline))
         self.admin_view.formsets = self.formsets
 
     def valid_forms(self, result):
@@ -385,6 +390,20 @@ class InlineFormsetPlugin(BaseAdminPlugin):
                 'xadmin.plugin.formset.js', 'xadmin.plugin.formset.css')
         return media
 
+    def _get_detail_formset_instance(self, inline):
+        formset = inline.instance_form(extra=0, max_num=0, can_delete=0)
+        formset.detail_page = True
+        if True:
+            replace_field_to_value(formset.helper.layout, inline)
+            model = inline.model
+            opts = model._meta
+            fake_admin_class = type(str('%s%sFakeAdmin' % (opts.app_label, opts.module_name)), (object, ), {'model': model})
+            for form in formset.forms:
+                instance = form.instance
+                if instance.pk:
+                    form.detail = self.get_view(
+                        DetailAdminUtil, fake_admin_class, instance)
+        return formset
 
 class DetailAdminUtil(DetailAdminView):
 
@@ -395,24 +414,8 @@ class DetailAdminUtil(DetailAdminView):
 
 class DetailInlineFormsetPlugin(InlineFormsetPlugin):
 
-    def _get_formset_instance(self, inline):
-        formset = inline.instance_form(extra=0, max_num=0, can_delete=0)
-        formset.detail_page = True
-        if formset.helper.layout:
-            replace_field_to_value(formset.helper.layout, inline)
-            model = inline.model
-            opts = model._meta
-            fake_admin_class = type(str('%s%sFakeAdmin' % (opts.app_label, opts.module_name)), (object, ), {'model': model})
-            for form in formset.forms:
-                instance = form.instance
-                if instance.pk:
-                    form.detail = self.get_view(
-                        DetailAdminUtil, fake_admin_class, instance)
-
-        return formset
-
     def get_model_form(self, form, **kwargs):
-        self.formsets = [self._get_formset_instance(
+        self.formsets = [self._get_detail_formset_instance(
             inline) for inline in self.inline_instances]
         return form
 
