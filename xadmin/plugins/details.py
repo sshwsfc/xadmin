@@ -20,14 +20,24 @@ class DetailsPlugin(BaseAdminPlugin):
                 rel_obj = getattr(obj, field_name)
             elif field_name in self.show_detail_fields:
                 rel_obj = obj
-            if rel_obj and self.has_model_perm(rel_obj.__class__, 'view'):
+
+            if rel_obj:
+                if rel_obj.__class__ in site._registry:
+                    model_admin = site._registry[rel_obj.__class__]
+                    has_view_perm = model_admin(self.admin_view.request).has_view_permission(rel_obj)
+                    has_change_perm = model_admin(self.admin_view.request).has_change_permission(rel_obj)
+                else:
+                    has_view_perm = self.admin_view.has_model_perm(rel_obj.__class__, 'view')
+                    has_change_perm = self.has_model_perm(rel_obj.__class__, 'change')
+
+            if rel_obj and has_view_perm:
                 opts = rel_obj._meta
                 item_res_uri = reverse(
                     '%s:%s_%s_detail' % (self.admin_site.app_name,
                                          opts.app_label, opts.module_name),
                     args=(getattr(rel_obj, opts.pk.attname),))
                 if item_res_uri:
-                    if self.has_model_perm(rel_obj.__class__, 'change'):
+                    if has_change_perm:
                         edit_url = reverse(
                             '%s:%s_%s_change' % (self.admin_site.app_name, opts.app_label, opts.module_name),
                             args=(getattr(rel_obj, opts.pk.attname),))
