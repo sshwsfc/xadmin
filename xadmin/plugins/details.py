@@ -23,9 +23,13 @@ class DetailsPlugin(BaseAdminPlugin):
 
             if rel_obj:
                 if rel_obj.__class__ in site._registry:
-                    model_admin = site._registry[rel_obj.__class__]
-                    has_view_perm = model_admin(self.admin_view.request).has_view_permission(rel_obj)
-                    has_change_perm = model_admin(self.admin_view.request).has_change_permission(rel_obj)
+                    try:
+                        model_admin = site._registry[rel_obj.__class__]
+                        has_view_perm = model_admin(self.admin_view.request).has_view_permission(rel_obj)
+                        has_change_perm = model_admin(self.admin_view.request).has_change_permission(rel_obj)
+                    except:
+                        has_view_perm = self.admin_view.has_model_perm(rel_obj.__class__, 'view')
+                        has_change_perm = self.has_model_perm(rel_obj.__class__, 'change')
                 else:
                     has_view_perm = self.admin_view.has_model_perm(rel_obj.__class__, 'view')
                     has_change_perm = self.has_model_perm(rel_obj.__class__, 'change')
