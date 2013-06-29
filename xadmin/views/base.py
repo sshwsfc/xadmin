@@ -308,12 +308,12 @@ class CommAdminView(BaseAdminView):
 
         for model, model_admin in self.admin_site._registry.items():
             app_label = model._meta.app_label
-
+            print model, self.has_model_perm(model, 'change'), self.has_model_perm(model, 'view')
             model_dict = {
                 'title': unicode(capfirst(model._meta.verbose_name_plural)),
                 'url': self.get_model_url(model, "changelist"),
                 'icon': self.get_model_icon(model),
-                'perm': self.get_model_perm(model, 'view'),
+                'perm': self.has_model_perm(model, 'change') or self.has_model_perm(model, 'view'),
                 'order': model_admin.order,
             }
             if model_dict['url'] in had_urls:
@@ -354,24 +354,13 @@ class CommAdminView(BaseAdminView):
         else:
             menus = copy.copy(self.get_nav_menu())
 
-            def check_menu_permission(item):
-                need_perm = item.pop('perm', None)
-                if need_perm is None:
-                    return True
-                elif callable(need_perm):
-                    return need_perm(self.user)
-                elif need_perm == 'super':
-                    return self.user.is_superuser
-                else:
-                    return self.user.has_perm(need_perm)
-
             def filter_item(item):
                 if 'menus' in item:
                     item['menus'] = [filter_item(
-                        i) for i in item['menus'] if check_menu_permission(i)]
+                        i) for i in item['menus'] if i.get('perm', False)]
                 return item
 
-            nav_menu = [filter_item(item) for item in menus if check_menu_permission(item)]
+            nav_menu = [filter_item(item) for item in menus]
             nav_menu = filter(lambda i: bool(i['menus']), nav_menu)
 
             if not settings.DEBUG:
