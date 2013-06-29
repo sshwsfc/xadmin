@@ -503,7 +503,8 @@ class ModelAdminView(CommAdminView):
         return self.model._default_manager.get_query_set()
 
     def has_view_permission(self, obj=None):
-        return self.user.has_perm('%s.view_%s' % self.model_info) or self.has_change_permission(obj)
+        return self.user.has_perm('%s.view_%s' % self.model_info) or \
+            self.user.has_perm('%s.change_%s' % self.model_info)
 
     def has_add_permission(self):
         return self.user.has_perm('%s.add_%s' % self.model_info)
