@@ -91,8 +91,6 @@ class ResultField(object):
             self.text) if self.allow_tags else conditional_escape(self.text)
         if force_unicode(text) == '' or text == 'None' or text == EMPTY_CHANGELIST_VALUE:
             text = mark_safe('<span class="muted">%s</span>' % EMPTY_CHANGELIST_VALUE)
-        else:
-            print type(text), text
         for wrap in self.wraps:
             text = mark_safe(wrap % text)
         return text

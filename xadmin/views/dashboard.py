@@ -470,7 +470,13 @@ class Dashboard(CommAdminView):
                 widget = widget_or_id
             else:
                 widget = UserWidget.objects.get(user=self.user, page_id=self.get_page_id(), id=widget_or_id)
-            return widget_manager.get(widget.widget_type)(self, data or widget.get_value())
+            wid = widget_manager.get(widget.widget_type)
+            class widget_with_perm(wid):
+                def context(self, context):
+                    super(widget_with_perm, self).context(context)
+                    context.update({'has_change_permission': self.request.user.has_perm('xadmin.change_userwidget')})
+            wid_instance = widget_with_perm(self, data or widget.get_value())
+            return wid_instance
         except UserWidget.DoesNotExist:
             return None
 

@@ -308,7 +308,6 @@ class CommAdminView(BaseAdminView):
 
         for model, model_admin in self.admin_site._registry.items():
             app_label = model._meta.app_label
-            print model, self.has_model_perm(model, 'change'), self.has_model_perm(model, 'view')
             model_dict = {
                 'title': unicode(capfirst(model._meta.verbose_name_plural)),
                 'url': self.get_model_url(model, "changelist"),

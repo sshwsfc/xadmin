@@ -49,8 +49,6 @@ class ExportPlugin(BaseAdminPlugin):
 
     def get_results(self, context):
         headers = [c for c in context['result_headers'].cells if c.export]
-        for c in context['result_headers'].cells:
-            print c
         rows = context['results']
 
         new_rows = []
