@@ -144,6 +144,7 @@ class BookmarkAdmin(object):
     model_icon = 'book'
     list_display = ('title', 'user', 'url_name', 'query')
     list_display_links = ('title',)
+    user_fields = ['user']
 
     def queryset(self):
         if self.user.is_superuser:
