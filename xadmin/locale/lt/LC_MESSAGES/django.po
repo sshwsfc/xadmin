@@ -881,7 +881,7 @@ msgstr "Išvalyti"
 #: templates/xadmin/filters/number.html:22
 #: templates/xadmin/filters/number.html:28
 msgid "Enter Number"
-msgstr "Įveskite SKaičių"
+msgstr "Įveskite Skaičių"
 
 #: templates/xadmin/filters/rel.html:3
 #, python-format
