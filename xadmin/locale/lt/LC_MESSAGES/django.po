@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-27 19:18+0300\n"
+"POT-Creation-Date: 2013-07-03 17:56+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,11 +23,11 @@ msgstr ""
 msgid "All"
 msgstr "Visi"
 
-#: filters.py:159 plugins/export.py:107
+#: filters.py:159 plugins/export.py:109
 msgid "Yes"
 msgstr "Taip"
 
-#: filters.py:160 plugins/export.py:107
+#: filters.py:160 plugins/export.py:109
 msgid "No"
 msgstr "Ne"
 
@@ -97,7 +97,7 @@ msgstr "Užklausa"
 msgid "Is Share"
 msgstr "Dalintis"
 
-#: models.py:65 plugins/bookmark.py:49 plugins/bookmark.py:173
+#: models.py:65 plugins/bookmark.py:49 plugins/bookmark.py:176
 msgid "Bookmark"
 msgstr "Žyma"
 
@@ -251,11 +251,11 @@ msgstr ""
 msgid "Change %s"
 msgstr "Keisti %s"
 
-#: plugins/bookmark.py:167
+#: plugins/bookmark.py:170
 msgid "bookmark"
 msgstr "žyma"
 
-#: plugins/bookmark.py:169
+#: plugins/bookmark.py:172
 msgid "Bookmark Widget, can show user's bookmark list data in widget."
 msgstr "Rodo lentelę pagal pasirinktą žymą."
 
@@ -272,7 +272,7 @@ msgstr "Rodo objekto paprastą grafiką"
 msgid "%s Charts"
 msgstr "%s Grafikai"
 
-#: plugins/details.py:37 views/list.py:576
+#: plugins/details.py:51 views/list.py:576
 #, python-format
 msgid "Details of %s"
 msgstr "%s peržiūra"
@@ -282,15 +282,20 @@ msgstr "%s peržiūra"
 msgid "Enter %s"
 msgstr "Įveskite %s"
 
-#: plugins/editable.py:74 views/delete.py:24 views/detail.py:126
+#: plugins/editable.py:74 views/delete.py:24 views/detail.py:124
 #: views/edit.py:415
 #, python-format
 msgid "%(name)s object with primary key %(key)r does not exist."
 msgstr "%(name)s objektas neegzistuoja. Objekto 'primary key': %(key)r"
 
-#: plugins/export.py:76
+#: plugins/export.py:78
 msgid "Sheet"
 msgstr "Lapas"
+
+#: plugins/filters.py:125
+#, python-format
+msgid "<b>Filtering error:</b> %s"
+msgstr "<b>Filtravimo klaida:</b> %s"
 
 #: plugins/images.py:27
 msgid "Change:"
@@ -900,7 +905,7 @@ msgid "Choose"
 msgstr "Pasirinkti"
 
 #: templates/xadmin/forms/transfer.html:19
-#: templates/xadmin/widgets/base.html:35
+#: templates/xadmin/widgets/base.html:38
 msgid "Remove"
 msgstr "Pašalinti"
 
@@ -1176,19 +1181,19 @@ msgstr "Sukurti pavyko, <a id='change-link'>redaguoti</a>."
 msgid "Quick Add"
 msgstr "Greitai Sukurti"
 
-#: templates/xadmin/widgets/base.html:26
+#: templates/xadmin/widgets/base.html:29
 msgid "Widget Options"
 msgstr "Valdiklio Nustatymai"
 
-#: templates/xadmin/widgets/base.html:36
+#: templates/xadmin/widgets/base.html:39
 msgid "Close"
 msgstr "Uždaryti"
 
-#: templates/xadmin/widgets/base.html:37
+#: templates/xadmin/widgets/base.html:40
 msgid "Save changes"
 msgstr "Išsaugoti pakeitimus"
 
-#: views/base.py:401
+#: views/base.py:389
 msgid "Django Xadmin"
 msgstr ""
 
@@ -1249,11 +1254,11 @@ msgstr "Valdymo pultas"
 msgid "The %(name)s \"%(obj)s\" was deleted successfully."
 msgstr "%(name)s \"%(obj)s\" buvo sėkmingai ištrintas."
 
-#: views/detail.py:150 views/edit.py:194
+#: views/detail.py:148 views/edit.py:194
 msgid "Other Fields"
 msgstr "Kiti Laukeliai"
 
-#: views/detail.py:211
+#: views/detail.py:209
 #, python-format
 msgid "%s Detail"
 msgstr "%s Detalės"

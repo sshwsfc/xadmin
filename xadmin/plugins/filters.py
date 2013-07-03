@@ -2,13 +2,14 @@ import operator
 from xadmin import widgets
 
 from xadmin.util import get_fields_from_path, lookup_needs_distinct
-from django.core.exceptions import SuspiciousOperation, ImproperlyConfigured
+from django.core.exceptions import SuspiciousOperation, ImproperlyConfigured, ValidationError
 from django.db import models
 from django.db.models.fields import FieldDoesNotExist
 from django.db.models.related import RelatedObject
 from django.db.models.sql.query import LOOKUP_SEP, QUERY_TERMS
 from django.template import loader
 from django.utils.encoding import smart_str
+from django.utils.translation import ugettext as _
 
 from xadmin.filters import manager as filter_manager, FILTER_PREFIX, SEARCH_VAR, DateFieldListFilter, RelatedFieldSearchFilter
 from xadmin.sites import site
@@ -117,9 +118,15 @@ class FilterPlugin(BaseAdminPlugin):
                     use_distinct = (use_distinct or
                                     lookup_needs_distinct(self.opts, field_path))
                 if spec and spec.has_output():
-                    new_qs = spec.do_filte(queryset)
+                    try:
+                        new_qs = spec.do_filte(queryset)
+                    except ValidationError, e:
+                        new_qs = None
+                        self.admin_view.message_user(_("<b>Filtering error:</b> %s") % e.messages[0], 'error')
                     if new_qs is not None:
                         queryset = new_qs
+
+
                     self.filter_specs.append(spec)
 
         self.has_filters = bool(self.filter_specs)
