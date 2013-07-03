@@ -117,7 +117,7 @@ def prepare_lookup_value(key, value):
     if key.endswith('__in'):
         value = value.split(',')
     # if key ends with __isnull, special case '' and false
-    if key.endswith('__isnull'):
+    if key.endswith('__isnull') and type(value) == str:
         if value.lower() in ('', 'false'):
             value = False
         else:

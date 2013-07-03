@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-03 17:56+0300\n"
+"POT-Creation-Date: 2013-07-03 18:54+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n"
 "%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: filters.py:158 filters.py:190 filters.py:389 filters.py:439
+#: filters.py:158 filters.py:190 filters.py:396 filters.py:446
 msgid "All"
 msgstr "Visi"
 
@@ -35,23 +35,32 @@ msgstr "Ne"
 msgid "Unknown"
 msgstr "Nežinomas"
 
-#: filters.py:265
+#: filters.py:266
 msgid "Any date"
 msgstr "Bet kokia data"
 
-#: filters.py:266 widgets.py:30
+#: filters.py:267
+msgid "Has date"
+msgstr "Turi datą"
+
+#: filters.py:270
+#, fuzzy
+msgid "Has no date"
+msgstr "Neturi datos"
+
+#: filters.py:273 widgets.py:30
 msgid "Today"
 msgstr "Šiandien"
 
-#: filters.py:270
+#: filters.py:277
 msgid "Past 7 days"
 msgstr "Paskutinės 7 dienos"
 
-#: filters.py:274
+#: filters.py:281
 msgid "This month"
 msgstr "Šis mėnuo"
 
-#: filters.py:278
+#: filters.py:285
 msgid "This year"
 msgstr "Šie metai"
 
