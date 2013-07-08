@@ -612,7 +612,7 @@ class ListAdminView(ModelAdminView):
                                  'xadmin.modal.css', 'xadmin.form.css')
         return media
 
-        # Blocks
+    # Blocks
     @inclusion_tag('xadmin/includes/pagination.html')
     def block_pagination(self, context, nodes, page_type='normal'):
         """
