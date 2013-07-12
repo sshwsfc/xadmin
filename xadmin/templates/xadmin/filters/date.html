@@ -36,7 +36,7 @@
     <li class="dropdown-submenu menu-date-range"><a>{% trans "Date Range" %}</a>
       <div class="dropdown-menu">
         <form method="get" action="" class="clearfix">
-          <div class="ranges col col-lg-3 hidden-sm">
+          <div class="ranges col-lg-3 hidden-sm">
             <fieldset class="range_inputs">
               <h4>{% trans "Select Date" %}</h4>
               <label for="{{since_name}}">{% trans "From" %}</label>
@@ -46,11 +46,11 @@
               <button type="submit" class="btn btn-success btn-block">{% trans "Apply" %}</button>
             </fieldset>
           </div>
-          <div class="col col-lg-9">
-            <div class="calendar date-start col col-lg-6" data-date="{{since_val}}"></div>
-            <div class="calendar date-end col col-lg-6" data-date="{{until_val}}"></div>
+          <div class="col-lg-9">
+            <div class="calendar date-start col-lg-6" data-date="{{since_val}}"></div>
+            <div class="calendar date-end col-lg-6" data-date="{{until_val}}"></div>
           </div>
-          <div class="col">
+          <div class="">
             <button type="submit" class="btn btn-success btn-block visible-sm">{% trans "Apply" %}</button>
           </div>
           {{ form_params|safe }}

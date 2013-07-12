@@ -13,8 +13,8 @@ select.selectmultiple {
 }
 
 /* form css */
-.control-group + .control-group{
-  margin-top: 15px;
+.form-horizontal .control-group + .control-group{
+  margin-top: 20px;
 }
 .control-label {
   padding: 6px 15px;

@@ -4,7 +4,7 @@
 {% block content %}
   <div class="row" style="margin-bottom: -10px;">
     {% for btn in btns %}
-    <div class="col col-lg-3 col-sm-6" style="margin-bottom: 10px;">
+    <div class="col-6 col-sm-4 col-lg-3" style="margin-bottom: 10px;">
     <a href="{{ btn.url }}" class="btn btn-primary btn-quick">
       <i class="icon-{% if btn.icon %}{{btn.icon}}{%else%}leaf{% endif %}"></i>
       <p>{{ btn.title }}</p>

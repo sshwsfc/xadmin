@@ -63,23 +63,19 @@
   }
 
   Editpop.prototype.beforeToggle = function() {
-    if(this.content == null){
-      var $el = this.$element
-      var that = this
+    var $el = this.$element
+    var that = this
 
-      $el.find('>i').removeClass('icon-edit').addClass('icon-spinner icon-spin')
-      $.ajax({
-        url: $el.data('editable-loadurl'),
-        success: function(content){
-          $el.find('>i').removeClass('icon-spinner icon-spin').addClass('icon-edit')
-          that.content = content
-          that.toggle()
-        },
-        dataType: 'html'
-      })
-    } else {
-      this.toggle()
-    }
+    $el.find('>i').removeClass('icon-edit').addClass('icon-spinner icon-spin')
+    $.ajax({
+      url: $el.data('editable-loadurl'),
+      success: function(content){
+        $el.find('>i').removeClass('icon-spinner icon-spin').addClass('icon-edit')
+        that.content = content
+        that.toggle()
+      },
+      dataType: 'html'
+    })
   }
 
   Editpop.prototype.setContent = function () {

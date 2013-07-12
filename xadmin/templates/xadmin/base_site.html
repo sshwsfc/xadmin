@@ -29,8 +29,8 @@
     </div>
   </div>
 
-  <div id="body-content" class="row">
-    <div id="left-side" class="col col-lg-2">
+  <div id="body-content" class="clearfix row">
+    <div id="left-side" class="col-sm-1 col-lg-2">
         {% block navbar %}
         {% if nav_menu %}
           <ul class="well nav nav-pills nav-stacked nav-sitemenu hidden-md">
@@ -84,7 +84,7 @@
       {% endblock %}
     </div>
 
-    <div id="content-block" class="col col-lg-10">
+    <div id="content-block" class="col-sm-11 col-lg-10">
       {% block breadcrumbs %}
       <ul class="breadcrumb">
       <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a><li>
@@ -134,7 +134,7 @@
   </div>
 
   {% block footer %}
-  <div id="footer" class="clearfix">
+  <div id="footer" class="col-12">
     <hr/>
     <footer class="text-center">
       <p>&copy; my-company.inc 2013</p>

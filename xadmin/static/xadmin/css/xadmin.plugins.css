@@ -2,9 +2,6 @@
 .action-checkbox-column {
   width: 14px;
 }
-.quick-form.modal .modal-body{
-  padding: 15px 0;
-}
 /** Detail **/
 @media (min-width: 768px) {
   .detail-modal.modal .modal-dialog{
