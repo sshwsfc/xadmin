@@ -114,6 +114,9 @@ select.selectmultiple {
     width: 50%;
     float: left;
   }
+  .form-horizontal .form-row.num3 .control-group{width: 33.333%}
+  .form-horizontal .form-row.num4 .control-group{width: 25%}
+  .form-horizontal .form-row.num5 .control-group{width: 20%}
   .form-horizontal .form-row::before, .form-horizontal .form-row::after{
     display: table;
     content: " ";
