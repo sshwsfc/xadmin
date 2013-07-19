@@ -41,3 +41,6 @@ nosetests.xml
 
 _build
 xadmin/static/xadmin/components/
+
+.idea
+*~

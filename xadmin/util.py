@@ -2,6 +2,7 @@
 import datetime
 import decimal
 
+import django
 from django.db import models
 from django.db.models.sql.query import LOOKUP_SEP
 from django.db.models.deletion import Collector
@@ -32,8 +33,6 @@ try:
     from django.utils.timezone import template_localtime as tz_localtime
 except ImportError:
     from django.utils.timezone import localtime as tz_localtime
-
-AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 try:
     from django.contrib.auth import get_user_model
@@ -118,7 +117,7 @@ def prepare_lookup_value(key, value):
     if key.endswith('__in'):
         value = value.split(',')
     # if key ends with __isnull, special case '' and false
-    if key.endswith('__isnull'):
+    if key.endswith('__isnull') and type(value) == str:
         if value.lower() in ('', 'false'):
             value = False
         else:
@@ -540,3 +539,17 @@ def get_limit_choices_to_from_path(model, path):
         return limit_choices_to  # already a Q
     else:
         return models.Q(**limit_choices_to)  # convert dict to Q
+
+def sortkeypicker(keynames):
+    negate = set()
+    for i, k in enumerate(keynames):
+        if k[:1] == '-':
+            keynames[i] = k[1:]
+            negate.add(k[1:])
+    def getit(adict):
+        composite = [adict[k] for k in keynames]
+        for i, (k, v) in enumerate(zip(keynames, composite)):
+            if k in negate:
+                composite[i] = -v
+        return composite
+    return getit

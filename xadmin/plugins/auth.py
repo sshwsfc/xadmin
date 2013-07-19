@@ -142,7 +142,7 @@ class ChangePasswordView(ModelAdminView):
     def get_context(self):
         context = super(ChangePasswordView, self).get_context()
         context.update({
-            'title': _('Change password: %s') % escape(self.obj.username),
+            'title': _('Change password: %s') % escape(unicode(self.obj)),
             'form': self.form,
             'has_delete_permission': False,
             'has_change_permission': True,

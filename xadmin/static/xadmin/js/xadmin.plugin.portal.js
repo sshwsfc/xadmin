@@ -22,11 +22,6 @@ jQuery(function() {
         }
     });
 
-    $( ".box" )
-        .find( ".box-title" )
-            .prepend( "<i class='icon icon-chevron-up chevron'></i>")
-            .end()
-        .find( ".box-content" );
 
     $( ".box-title .icon.chevron" ).click(function() {
         $( this ).toggleClass( "icon-chevron-up" ).toggleClass( "icon-chevron-down" );

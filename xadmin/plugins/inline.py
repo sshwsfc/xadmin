@@ -1,5 +1,5 @@
 import copy
-
+import inspect
 from django import forms
 from django.forms.formsets import all_valid, DELETION_FIELD_NAME
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
@@ -16,6 +16,8 @@ class ShowField(Field):
     def __init__(self, admin_view, *args, **kwargs):
         super(ShowField, self).__init__(*args, **kwargs)
         self.admin_view = admin_view
+        if admin_view.style == 'table':
+            self.template = "xadmin/layout/field_value_td.html"
 
     def render(self, form, form_style, context):
         html = ''
@@ -92,18 +94,27 @@ class TableInlineStyle(InlineStyle):
             Layout(*[TDField(f) for f in self.formset[0].fields.keys()]))
 
     def get_attrs(self):
-        return {'fields': [f for k, f in self.formset[0].fields.items() if k != DELETION_FIELD_NAME]}
+        fields = []
+        readonly_fields = []
+        if len(self.formset):
+            fields = [f for k, f in self.formset[0].fields.items() if k != DELETION_FIELD_NAME]
+            readonly_fields = [f for f in getattr(self.formset[0], 'readonly_fields', [])]
+        return {
+            'fields': fields,
+            'readonly_fields': readonly_fields
+        }
 style_manager.register_style("table", TableInlineStyle)
 
 
 def replace_field_to_value(layout, av):
-    for i, lo in enumerate(layout.fields):
-        if isinstance(lo, Field) or issubclass(lo.__class__, Field):
-            layout.fields[i] = ShowField(av, *lo.fields, **lo.attrs)
-        elif isinstance(lo, basestring):
-            layout.fields[i] = ShowField(av, lo)
-        elif hasattr(lo, 'get_field_names'):
-            replace_field_to_value(lo, av)
+    if layout:
+        for i, lo in enumerate(layout.fields):
+            if isinstance(lo, Field) or issubclass(lo.__class__, Field):
+                layout.fields[i] = ShowField(av, *lo.fields, **lo.attrs)
+            elif isinstance(lo, basestring):
+                layout.fields[i] = ShowField(av, lo)
+            elif hasattr(lo, 'get_field_names'):
+                replace_field_to_value(lo, av)
 
 
 class InlineModelAdmin(ModelFormAdminView):
@@ -190,7 +201,6 @@ class InlineModelAdmin(ModelFormAdminView):
                               .fields.keys() if f not in rendered_fields])
 
             helper.add_layout(layout)
-
             style.update_layout(helper)
 
             # replace delete field with Dynamic field, for hidden delete field when instance is NEW.
@@ -199,6 +209,23 @@ class InlineModelAdmin(ModelFormAdminView):
         instance.helper = helper
         instance.style = style
 
+        readonly_fields = self.get_readonly_fields()
+        if readonly_fields:
+            for form in instance:
+                form.readonly_fields = []
+                inst = form.save(commit=False)
+                if inst:
+                    for readonly_field in readonly_fields:
+                        value = None
+                        label = None
+                        if readonly_field in inst._meta.get_all_field_names():
+                            label = inst._meta.get_field_by_name(readonly_field)[0].verbose_name
+                            value = unicode(getattr(inst, readonly_field))
+                        elif inspect.ismethod(getattr(inst, readonly_field, None)):
+                            value = getattr(inst, readonly_field)()
+                            label = getattr(getattr(inst, readonly_field), 'short_description', readonly_field)
+                        if value:
+                            form.readonly_fields.append({'label': label, 'contents': value})
         return instance
 
     def has_auto_field(self, form):
@@ -211,7 +238,7 @@ class InlineModelAdmin(ModelFormAdminView):
 
     def queryset(self):
         queryset = super(InlineModelAdmin, self).queryset()
-        if not self.has_change_permission():
+        if not self.has_change_permission() and not self.has_view_permission():
             queryset = queryset.none()
         return queryset
 
@@ -301,7 +328,8 @@ class InlineFormsetPlugin(BaseAdminPlugin):
                     InlineModelAdmin, inline_class).init(self.admin_view)
                 if not (inline.has_add_permission() or
                         inline.has_change_permission() or
-                        inline.has_delete_permission()):
+                        inline.has_delete_permission() or
+                        inline.has_view_permission()):
                     continue
                 if not inline.has_add_permission():
                     inline.max_num = 0
@@ -310,8 +338,12 @@ class InlineFormsetPlugin(BaseAdminPlugin):
         return self._inline_instances
 
     def instance_forms(self, ret):
-        self.formsets = [inline.instance_form(
-        ) for inline in self.inline_instances]
+        self.formsets = []
+        for inline in self.inline_instances:
+            if inline.has_change_permission():
+                self.formsets.append(inline.instance_form())
+            else:
+                self.formsets.append(self._get_detail_formset_instance(inline))
         self.admin_view.formsets = self.formsets
 
     def valid_forms(self, result):
@@ -359,6 +391,20 @@ class InlineFormsetPlugin(BaseAdminPlugin):
                 'xadmin.plugin.formset.js', 'xadmin.plugin.formset.css')
         return media
 
+    def _get_detail_formset_instance(self, inline):
+        formset = inline.instance_form(extra=0, max_num=0, can_delete=0)
+        formset.detail_page = True
+        if True:
+            replace_field_to_value(formset.helper.layout, inline)
+            model = inline.model
+            opts = model._meta
+            fake_admin_class = type(str('%s%sFakeAdmin' % (opts.app_label, opts.module_name)), (object, ), {'model': model})
+            for form in formset.forms:
+                instance = form.instance
+                if instance.pk:
+                    form.detail = self.get_view(
+                        DetailAdminUtil, fake_admin_class, instance)
+        return formset
 
 class DetailAdminUtil(DetailAdminView):
 
@@ -369,24 +415,8 @@ class DetailAdminUtil(DetailAdminView):
 
 class DetailInlineFormsetPlugin(InlineFormsetPlugin):
 
-    def _get_formset_instance(self, inline):
-        formset = inline.instance_form(extra=0, max_num=0, can_delete=0)
-        formset.detail_page = True
-        if formset.helper.layout:
-            replace_field_to_value(formset.helper.layout, inline)
-            model = inline.model
-            opts = model._meta
-            fake_admin_class = type(str('%s%sFakeAdmin' % (opts.app_label, opts.module_name)), (object, ), {'model': model})
-            for form in formset.forms:
-                instance = form.instance
-                if instance.pk:
-                    form.detail = self.get_view(
-                        DetailAdminUtil, fake_admin_class, instance)
-
-        return formset
-
     def get_model_form(self, form, **kwargs):
-        self.formsets = [self._get_formset_instance(
+        self.formsets = [self._get_detail_formset_instance(
             inline) for inline in self.inline_instances]
         return form
 

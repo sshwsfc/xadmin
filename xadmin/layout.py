@@ -11,6 +11,7 @@ class Fieldset(layout.Fieldset):
 
     def __init__(self, legend, *fields, **kwargs):
         self.description = kwargs.pop('description', None)
+        self.collapsed = kwargs.pop('collapsed', None)
         super(Fieldset, self).__init__(legend, *fields, **kwargs)
 
 

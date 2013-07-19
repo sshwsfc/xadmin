@@ -19,6 +19,8 @@ from xadmin.util import unquote, lookup_field, display_for_field, boolean_icon, 
 
 from base import ModelAdminView, filter_hook, csrf_protect_m
 
+# Text to display within change-list table cells if the value is blank.
+EMPTY_CHANGELIST_VALUE = _('Null')
 
 class ShowField(Field):
     template = "xadmin/layout/field_value.html"
@@ -30,9 +32,13 @@ class ShowField(Field):
     def render(self, form, form_style, context):
         html = ''
         for field, result in self.results:
-            if form.fields[field].widget != forms.HiddenInput:
+            if field in form.fields:
+                if form.fields[field].widget != forms.HiddenInput:
+                    html += loader.render_to_string(
+                        self.template, {'field': form[field], 'result': result})
+            else:
                 html += loader.render_to_string(
-                    self.template, {'field': form[field], 'result': result})
+                    self.template, {'field': field, 'result': result})
         return html
 
 
@@ -84,8 +90,8 @@ class ResultField(object):
     def val(self):
         text = mark_safe(
             self.text) if self.allow_tags else conditional_escape(self.text)
-        if force_unicode(text) == '':
-            text = mark_safe('<span class="muted">%s</span>' % _('Null'))
+        if force_unicode(text) == '' or text == 'None' or text == EMPTY_CHANGELIST_VALUE:
+            text = mark_safe('<span class="muted">%s</span>' % EMPTY_CHANGELIST_VALUE)
         for wrap in self.wraps:
             text = mark_safe(wrap % text)
         return text

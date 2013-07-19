@@ -13,4 +13,5 @@ class BaseTest(TestCase):
     def _mocked_request(self, url, user='admin'):
         request = self.factory.get(url)
         request.user = isinstance(user, User) and user or self._create_superuser(user)
+        request.session = {}
         return request

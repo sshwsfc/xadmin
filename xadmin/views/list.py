@@ -1,6 +1,7 @@
 # coding=utf-8
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.core.paginator import InvalidPage, Paginator
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.http import HttpResponseRedirect
 from django.template.response import SimpleTemplateResponse, TemplateResponse
@@ -26,7 +27,7 @@ ERROR_FLAG = 'e'
 DOT = '.'
 
 # 数据表格中的值为空时显示的值
-EMPTY_CHANGELIST_VALUE = _('None')
+EMPTY_CHANGELIST_VALUE = _('Null')
 
 
 class FakeMethodField(object):
@@ -116,6 +117,7 @@ class ListAdminView(ModelAdminView):
     """
     list_display = ('__str__',)    #: 默认显示列
     list_display_links = ()        #: 显示修改或查看数据详情连接的列
+    list_display_links_details = False  #: 点击列表连接后是否转到详情页面
     list_select_related = False    #: 是否提前加载关联数据, 使用 ``select_related``
     list_per_page = 50             #: 每页显示数据的条数
     list_max_show_all = 200        #: 每页最大显示数据的条数
@@ -134,6 +136,7 @@ class ListAdminView(ModelAdminView):
             raise PermissionDenied
 
         request = self.request
+        request.session['LIST_QUERY'] = (self.model_info, self.request.META['QUERY_STRING'])
 
         self.pk_attname = self.opts.pk.attname
         self.lookup_opts = self.opts
@@ -407,7 +410,7 @@ class ListAdminView(ModelAdminView):
             'clean_select_field_url': self.get_query_string(remove=[COL_LIST_VAR]),
             'has_add_permission': self.has_add_permission(),
             'app_label': self.app_label,
-            'brand_name': self.opts.verbose_name,
+            'brand_name': self.opts.verbose_name_plural,
             'brand_icon': self.get_model_icon(self.model),
             'add_url': self.model_admin_url('add'),
             'result_headers': self.result_headers(),
@@ -590,7 +593,7 @@ class ListAdminView(ModelAdminView):
         try:
             f, attr, value = lookup_field(field_name, obj, self)
         except (AttributeError, ObjectDoesNotExist):
-            item.text = EMPTY_CHANGELIST_VALUE
+            item.text = mark_safe("<span class='muted'>%s</span>" % EMPTY_CHANGELIST_VALUE)
         else:
             if f is None:
                 # Model 属性或是 OptionClass 属性列
@@ -606,7 +609,7 @@ class ListAdminView(ModelAdminView):
                 if isinstance(f.rel, models.ManyToOneRel):
                     field_val = getattr(obj, f.name)
                     if field_val is None:
-                        item.text = EMPTY_CHANGELIST_VALUE
+                        item.text = mark_safe("<span class='muted'>%s</span>" % EMPTY_CHANGELIST_VALUE)
                     else:
                         item.text = field_val
                 else:
@@ -623,9 +626,21 @@ class ListAdminView(ModelAdminView):
         # 如果没有指定 ``list_display_links`` , 使用第一列作为内容连接列.
         if (item.row['is_display_first'] and not self.list_display_links) \
                 or field_name in self.list_display_links:
-            url = self.url_for_result(obj)
             item.row['is_display_first'] = False
-            item.wraps.append(u'<a href="%s">%%s</a>' % url)
+            if self.list_display_links_details:
+                opts = obj._meta
+                item_res_uri = reverse(
+                    'admin:%s_%s_detail' % (opts.app_label, opts.module_name),
+                    args=(getattr(obj, opts.pk.attname),))
+                if item_res_uri:
+                    edit_url = reverse(
+                        'admin:%s_%s_change' % (opts.app_label, opts.module_name),
+                        args=(getattr(obj, opts.pk.attname),))
+                    item.wraps.append('<a data-res-uri="%s" data-edit-uri="%s" class="details-handler" rel="tooltip" title="%s">%%s</a>'
+                                     % (item_res_uri, edit_url, _(u'Details of %s') % str(obj)))
+            else:
+                url = self.url_for_result(obj)
+                item.wraps.append(u'<a href="%s">%%s</a>' % url)
 
         return item
 
@@ -671,7 +686,11 @@ class ListAdminView(ModelAdminView):
         """
         返回列表页面的 Media, 该页面添加了 ``xadmin.page.list.js`` 文件
         """
-        return super(ListAdminView, self).get_media() + self.vendor('xadmin.page.list.js')
+        media = super(ListAdminView, self).get_media() + self.vendor('xadmin.page.list.js')
+        if self.list_display_links_details:
+            media += self.vendor('xadmin.plugin.details.js',
+                                 'xadmin.modal.css', 'xadmin.form.css')
+        return media
 
     # Blocks
     @inclusion_tag('xadmin/includes/pagination.html')

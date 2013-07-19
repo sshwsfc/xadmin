@@ -178,7 +178,7 @@ class ModelFormAdminView(ModelAdminView):
             if db_field.choices:
                 attrs['choices'] = db_field.get_choices(
                     include_blank=db_field.blank,
-                    blank_choice=[('', _('None'))]
+                    blank_choice=[('', _('Null'))]
                 )
             return attrs
 
@@ -284,7 +284,7 @@ class ModelFormAdminView(ModelAdminView):
         layout = copy.deepcopy(self.form_layout)
         fields = self.form_obj.fields.keys() + list(self.get_readonly_fields())
 
-        if layout is None:
+        if layout is None or len(fields) < len(layout.get_field_names()):
             # 默认的 Layout 方式
             layout = Layout(Container(
                 Fieldset("", *fields, css_class="unsort no_title"), css_class="form-horizontal"
@@ -692,7 +692,11 @@ class UpdateAdminView(ModelFormAdminView):
 
             # 如果没有查看列表的权限就跳转到主页
             if self.has_view_permission():
-                return self.model_admin_url('changelist')
+                change_list_url = self.model_admin_url('changelist')
+                if 'LIST_QUERY' in self.request.session \
+                and self.request.session['LIST_QUERY'][0] == self.model_info:
+                    change_list_url += '?' + self.request.session['LIST_QUERY'][1]
+                return change_list_url
             else:
                 return self.get_admin_url('index')
 

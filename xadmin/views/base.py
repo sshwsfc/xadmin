@@ -26,7 +26,7 @@ from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import View
-from xadmin.util import static, json, vendor
+from xadmin.util import static, json, vendor, sortkeypicker
 
 #: 通用的csrf_protect_m装饰器，给其他模块的 AdminView 使用
 csrf_protect_m = method_decorator(csrf_protect)
@@ -506,12 +506,12 @@ class CommAdminView(BaseAdminView):
 
         for model, model_admin in self.admin_site._registry.items():
             app_label = model._meta.app_label
-
             model_dict = {
                 'title': unicode(capfirst(model._meta.verbose_name_plural)),
                 'url': self.get_model_url(model, "changelist"),
                 'icon': self.get_model_icon(model),
-                'perm': self.get_model_perm(model, 'view')
+                'perm': self.get_model_perm(model, 'view'),
+                'order': model_admin.order,
             }
             if model_dict['url'] in had_urls:
                 # 过如该url已经在之前的菜单项中存在，就跳过该项
@@ -534,7 +534,7 @@ class CommAdminView(BaseAdminView):
                 app_menu['first_url'] = model_dict['url']
 
         for menu in nav_menu.values():
-            menu['menus'].sort(key=lambda x: x['title'])
+            menu['menus'].sort(key=sortkeypicker(['order', 'title']))
 
         nav_menu = nav_menu.values()
         nav_menu.sort(key=lambda x: x['title'])
@@ -587,7 +587,13 @@ class CommAdminView(BaseAdminView):
 
         def check_selected(menu, path):
             # 判断菜单项是否被选择，使用当前url跟菜单项url对比
-            selected = 'url' in menu and path.startswith(menu['url']) or False
+            selected = False
+            if 'url' in menu:
+                chop_index = menu['url'].find('?')
+                if chop_index == -1:
+                    selected = path.startswith(menu['url'])
+                else:
+                    selected = path.startswith(menu['url'][:chop_index])
             if 'menus' in menu:
                 for m in menu['menus']:
                     _s = check_selected(m, path)
@@ -809,7 +815,8 @@ class ModelAdminView(CommAdminView):
 
             目前的实现为：如果一个用户有对数据的修改权限，那么他就有对数据的查看权限。当然您可以在子类中修改这一规则
         """
-        return self.user.has_perm('%s.view_%s' % self.model_info) or self.has_change_permission(obj)
+        return self.user.has_perm('%s.view_%s' % self.model_info) or \
+            self.user.has_perm('%s.change_%s' % self.model_info)
 
     def has_add_permission(self):
         """
