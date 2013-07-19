@@ -38,3 +38,6 @@ nosetests.xml
 .c9revisions
 .settings
 xadmin/static/xadmin/components/
+
+.idea
+*~

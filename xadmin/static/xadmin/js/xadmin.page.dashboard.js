@@ -63,7 +63,12 @@ jQuery(function() {
         })
       });
     }
-    btn.data('form-modal').modal();
+    btn.data('form-modal').modal().css(
+        {
+            'margin-top': function () {
+                return window.pageYOffset;
+            }
+        });
     return false;
   });
 

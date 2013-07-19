@@ -145,7 +145,7 @@ class ChangePasswordView(ModelAdminView):
         helper.form_tag = False
         self.form.helper = helper
         context.update({
-            'title': _('Change password: %s') % escape(self.obj.username),
+            'title': _('Change password: %s') % escape(unicode(self.obj)),
             'form': self.form,
             'has_delete_permission': False,
             'has_change_permission': True,

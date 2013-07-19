@@ -8,9 +8,11 @@ from django.utils.encoding import force_unicode, smart_unicode
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.xmlutils import SimplerXMLGenerator
+from django.db.models import BooleanField, NullBooleanField
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
 from xadmin.util import json
+from xadmin.views.list import ALL_VAR
 
 try:
     import xlwt
@@ -30,6 +32,7 @@ class ExportMenuPlugin(BaseAdminPlugin):
     def block_top_toolbar(self, context, nodes):
         if self.list_export:
             context.update({
+                'show_export_all': self.admin_view.paginator.count > self.admin_view.list_per_page and not ALL_VAR in self.admin_view.request.GET,
                 'form_params': self.admin_view.get_form_params({'_do_': 'export'}, ('export_type',)),
                 'export_types': [{'type': et, 'name': self.export_names[et]} for et in self.list_export],
             })
@@ -48,9 +51,20 @@ class ExportPlugin(BaseAdminPlugin):
         headers = [c for c in context['result_headers'].cells if c.export]
         rows = context['results']
 
-        return [dict([(force_unicode(headers[i].text), escape(str(o.value))) for i, o in
-                      enumerate(filter(lambda c:getattr(c, 'export', False), r.cells))])
-                for r in rows]
+        new_rows = []
+        for r in rows:
+            d = {}
+            for i, o in enumerate(filter(lambda c:getattr(c, 'export', False), r.cells)):
+                if (o.field is None and getattr(o.attr, 'boolean', False)) or \
+                   (o.field and isinstance(o.field, (BooleanField, NullBooleanField))):
+                        value = o.value
+                elif str(o.text).startswith("<span class='muted'>"):
+                    value = escape(str(o.text)[20:-7])
+                else:
+                    value = escape(str(o.text))
+                d[force_unicode(headers[i].text)] = value
+            new_rows.append(d)
+        return new_rows
 
     def get_xls_export(self, context):
         results = self.get_results(context)
@@ -91,6 +105,8 @@ class ExportPlugin(BaseAdminPlugin):
         return output.getvalue()
 
     def _format_csv_text(self, t):
+        if isinstance(t, bool):
+            return _('Yes') if t else _('No')
         t = t.replace('"', '""').replace(',', '\,')
         if isinstance(t, basestring):
             t = '"%s"' % t

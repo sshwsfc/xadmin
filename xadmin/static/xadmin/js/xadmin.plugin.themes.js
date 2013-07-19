@@ -80,7 +80,12 @@
           });
         })
 
-        modal.modal();
+        modal.modal().css(
+            {
+                'margin-top': function () {
+                    return window.pageYOffset;
+                }
+            });
       })
     }
   });

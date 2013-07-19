@@ -1,4 +1,7 @@
+import json
+import django
 from django.db import models
+from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
@@ -9,10 +12,13 @@ from django.utils.encoding import smart_unicode
 from django.db.models.signals import post_syncdb
 from django.contrib.auth.models import Permission
 
-from xadmin.util import json, AUTH_USER_MODEL
-
 import datetime
 import decimal
+
+if django.VERSION[1] > 4:
+    AUTH_USER_MODEL = django.contrib.auth.get_user_model()
+else:
+    AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 
 def add_view_permissions(sender, **kwargs):
@@ -30,7 +36,7 @@ def add_view_permissions(sender, **kwargs):
             # add it
             Permission.objects.create(content_type=content_type,
                                       codename=codename,
-                                      name="Can view %s" % content_type.name)
+                                      name=_("Can view %s") % content_type.name)
             #print "Added view permission for %s" % content_type.name
 
 # check for all our view permissions after a syncdb
@@ -39,7 +45,7 @@ post_syncdb.connect(add_view_permissions)
 
 class Bookmark(models.Model):
     title = models.CharField(_(u'Title'), max_length=128)
-    user = models.ForeignKey(AUTH_USER_MODEL, blank=True, null=True)
+    user = models.ForeignKey(AUTH_USER_MODEL, verbose_name=_(u"user"), blank=True, null=True)
     url_name = models.CharField(_(u'Url Name'), max_length=64)
     content_type = models.ForeignKey(ContentType)
     query = models.CharField(_(u'Query String'), max_length=1000, blank=True)
@@ -78,7 +84,7 @@ class JSONEncoder(DjangoJSONEncoder):
 
 
 class UserSettings(models.Model):
-    user = models.ForeignKey(AUTH_USER_MODEL)
+    user = models.ForeignKey(AUTH_USER_MODEL, verbose_name=_(u"user"))
     key = models.CharField(_('Settings Key'), max_length=256)
     value = models.TextField(_('Settings Content'))
 
@@ -97,9 +103,9 @@ class UserSettings(models.Model):
 
 
 class UserWidget(models.Model):
-    user = models.ForeignKey(AUTH_USER_MODEL)
+    user = models.ForeignKey(AUTH_USER_MODEL, verbose_name=_(u"user"))
     page_id = models.CharField(_(u"Page"), max_length=256)
-    widget_type = models.CharField(_(u"Widget Type"), max_length=16)
+    widget_type = models.CharField(_(u"Widget Type"), max_length=50)
     value = models.TextField(_(u"Widget Params"))
 
     def get_value(self):
