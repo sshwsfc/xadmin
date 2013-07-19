@@ -176,7 +176,7 @@ class ModelFormAdminView(ModelAdminView):
         layout = copy.deepcopy(self.form_layout)
         fields = self.form_obj.fields.keys() + list(self.get_readonly_fields())
 
-        if layout is None or len(fields) < len(layout.get_field_names()):
+        if layout is None:
             layout = Layout(Container(
                 Fieldset("", *fields, css_class="unsort no_title"), css_class="form-horizontal"
             ))
