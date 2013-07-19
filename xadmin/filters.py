@@ -231,7 +231,8 @@ class NumberFieldListFilter(FieldFilter):
 class DateFieldListFilter(ListFieldFilter):
     template = 'xadmin/filters/date.html'
     lookup_formats = {'since': '%s__gte', 'until': '%s__lt',
-                      'year': '%s__year', 'month': '%s__month', 'day': '%s__day'}
+                      'year': '%s__year', 'month': '%s__month', 'day': '%s__day',
+                      'isnull': '%s__isnull'}
 
     @classmethod
     def test(cls, field, request, params, model, admin_view, field_path):
@@ -263,6 +264,12 @@ class DateFieldListFilter(ListFieldFilter):
 
         self.links = (
             (_('Any date'), {}),
+            (_('Has date'), {
+                self.lookup_isnull_name: False
+            }),
+            (_('Has no date'), {
+                self.lookup_isnull_name: 'True'
+            }),
             (_('Today'), {
                 self.lookup_since_name: str(today),
                 self.lookup_until_name: str(tomorrow),

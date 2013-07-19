@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-05 18:10+0300\n"
+"POT-Creation-Date: 2013-06-19 15:05+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,6 +25,14 @@ msgid_plural "%(sel)s of %(cnt)s selected"
 msgstr[0] "%(sel)s iš %(cnt)s pažymėta"
 msgstr[1] "%(sel)s iš %(cnt)s pažymėta"
 msgstr[2] "%(sel)s iš %(cnt)s pažymėta"
+
+#: static/xadmin/js/xadmin.plugin.details.js:20
+msgid "Close"
+msgstr "Uždaryti"
+
+#: static/xadmin/js/xadmin.plugin.details.js:21
+msgid "Edit"
+msgstr "Redaguoti"
 
 #: static/xadmin/js/xadmin.plugin.revision.js:25
 msgid "New Item"

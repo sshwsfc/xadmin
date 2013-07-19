@@ -1,7 +1,7 @@
 {% load i18n %}
 <li class="dropdown bookmarks">
   <a id="drop-bookmark" title="{{bk_menu_title}}" class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-  <i class="icon-book"></i> {{ bk_menu_title|truncatechars:9 }}
+  <i class="icon-book"></i> {{ bk_menu_title|truncatechars:16 }}
   <b class="caret"></b></a>
   <ul id="bookmark-menu" class="dropdown-menu" role="menu">
     {% if bk_has_selected %}
@@ -11,14 +11,14 @@
     {% for bk in bk_bookmarks %}
     <li class="{% if bk.selected %}active {% endif %}{% if bk.edit_url %}with_menu_btn{% endif %}">
       <a href="{{bk.url}}" title="{{bk.title}}"><i class="icon-bookmark"></i> {{bk.title}}</a>
-      {% if bk.edit_url %}
+      {% if bk.edit_url and has_change_permission %}
         <a href="{{bk.edit_url}}" class="dropdown-menu-btn"><i class="icon-pencil"></i></a>
       {% endif %}
     </li>
     {% empty %}
     <li><a class="mute">{% trans "No Bookmarks" %}</a></li>
     {% endfor %}
-    {% if not bk_has_selected and bk_current_qs %}
+    {% if not bk_has_selected and bk_current_qs and has_add_permission %}
     <li class="divider add-bookmark"></li>
     <li class="dropdown-submenu add-bookmark"><a href="#"><i class="icon-plus"></i> {% trans "New Bookmark" %}</a>
       <div class="popover right dropdown-menu">

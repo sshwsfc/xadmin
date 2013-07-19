@@ -116,7 +116,7 @@ select, .select2-container {
   margin: 0px;
 }
 .form-horizontal .form-row .controls {
-  height: 30px;
+  min-height: 30px;
 }
 .form-horizontal .form-row .control-group{
   display: inline-block;

@@ -5,7 +5,9 @@
 {% block box_attrs %}id="{{ widget_id }}"{% endblock box_attrs %}
 
 {% block box_title %}
+  {% if has_change_permission %}
   <i class='icon icon-wrench pull-right' data-toggle="modal" data-target="#{{ widget_id }}-opts-form"></i>
+  {% endif %}
   {% block title %}
     {{ widget_title }}
   {% endblock title %}
@@ -18,6 +20,7 @@
 {% endblock box_content %}
 
 {% block box_extra %}
+  {% if has_change_permission %}
   <div class="modal hide fade" tabindex="-1" role="dialog" id="{{ widget_id }}-opts-form">
     <form method="post" class="box-form form-horizontal widget-form">
     {% csrf_token %}
@@ -38,4 +41,5 @@
     </div>
     </form>
   </div>
+  {% endif %}
 {% endblock box_extra %}

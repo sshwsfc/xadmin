@@ -59,12 +59,21 @@
         </ul>
       </div>
       <div class="btn-group layout-btns" data-toggle="buttons-radio">
-        <button type="button" class="btn btn-small layout-normal active"><i class="icon-th-large"></i></button>
-        <button type="button" class="btn btn-small layout-condensed"><i class="icon-th"></i></button>
+        <button type="button" class="btn btn-small layout-normal active"
+                title="{% trans "default table view" %}">
+            <i class="icon-th-large"></i>
+        </button>
+        <button type="button" class="btn btn-small layout-condensed"
+                title="{% trans "condensed table view" %}">
+            <i class="icon-th"></i>
+        </button>
         {% view_block 'top_layout_btns' %}
       </div>
       <div class="btn-group layout-btns" data-toggle="buttons-checkbox">
-        <button type="button" class="btn btn-small layout-full"><i class="icon-fullscreen"></i></button>
+        <button type="button" class="btn btn-small layout-full"
+                title="{% trans "full screen" %}">
+            <i class="icon-fullscreen"></i>
+        </button>
         {% view_block 'top_check_btns' %}
       </div>
       {% view_block 'top_btns' %}
