@@ -30,8 +30,8 @@
                   <input type="checkbox" name="export_json_format" checked="checked" value="on"> {% trans "Export with format." %}
                   {% endif %}
                 </label>
-                <label class="checkbox">
-                  <input type="checkbox" name="all" value="on"> {% trans "Export all datas." %}
+                <label class="checkbox {% if not show_export_all %}hidden{% endif %}">
+                  <input type="checkbox" name="all" value="on"> {% trans "Export all rows." %}
                 </label>
                 <button class="btn btn-success" type="submit">{% trans "Export" %}</button>
             </form>

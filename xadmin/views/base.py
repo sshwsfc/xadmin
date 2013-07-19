@@ -308,7 +308,6 @@ class CommAdminView(BaseAdminView):
 
         for model, model_admin in self.admin_site._registry.items():
             app_label = model._meta.app_label
-
             model_dict = {
                 'title': unicode(capfirst(model._meta.verbose_name_plural)),
                 'url': self.get_model_url(model, "changelist"),
@@ -379,7 +378,13 @@ class CommAdminView(BaseAdminView):
                 self.request.session.modified = True
 
         def check_selected(menu, path):
-            selected = 'url' in menu and path.startswith(menu['url']) or False
+            selected = False
+            if 'url' in menu:
+                chop_index = menu['url'].find('?')
+                if chop_index == -1:
+                    selected = path.startswith(menu['url'])
+                else:
+                    selected = path.startswith(menu['url'][:chop_index])
             if 'menus' in menu:
                 for m in menu['menus']:
                     _s = check_selected(m, path)
@@ -497,7 +502,8 @@ class ModelAdminView(CommAdminView):
         return self.model._default_manager.get_query_set()
 
     def has_view_permission(self, obj=None):
-        return self.user.has_perm('%s.view_%s' % self.model_info) or self.has_change_permission(obj)
+        return self.user.has_perm('%s.view_%s' % self.model_info) or \
+            self.user.has_perm('%s.change_%s' % self.model_info)
 
     def has_add_permission(self):
         return self.user.has_perm('%s.add_%s' % self.model_info)

@@ -22,13 +22,6 @@ jQuery(function() {
         }
     });
 
-    $(".box .box-title").each(function(index){
-        if ($(this).closest('.box').hasClass('collapsed')){
-            $(this).prepend( "<i class='icon icon-chevron-up chevron'></i>");
-        }else{
-            $(this).prepend( "<i class='icon icon-chevron-down chevron'></i>");
-        }
-    });
 
     $( ".box-title .icon.chevron" ).click(function() {
         $( this ).toggleClass( "icon-chevron-up" ).toggleClass( "icon-chevron-down" );

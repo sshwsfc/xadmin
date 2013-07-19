@@ -5,7 +5,7 @@
 {% block box_attrs %}id="{{ formset.css_id }}" {{ formset.flat_attrs|safe }}{% endblock box_attrs %}
 
 {% block box_title %}
-  {% if not formset.formset.detail_page %}
+  {% if not formset.formset.detail_page and formset.formset.max_num %}
   <a class="add-row" id="{{ prefix }}-add-row" href="javascript:void(0)"><i class="icon icon-plus"></i></a>
   {% endif %}
   {{ formset.opts.verbose_name_plural|title }}

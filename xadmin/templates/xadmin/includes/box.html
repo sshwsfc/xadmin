@@ -1,5 +1,11 @@
-<div class="box well {% block box_class %}{% endblock box_class %} {% if fieldset.collapsed %}collapsed{% endif %}" {% block box_attrs %}{% endblock box_attrs %}>
-  <h4 class="box-title">{% block box_title %}{% endblock box_title %}</h4>
+<div class="box well {% block box_class %}{% endblock box_class %}" {% block box_attrs %}{% endblock box_attrs %}>
+  <h4 class="box-title">{% block box_title %}{% endblock box_title %}
+      {% if fieldset.collapsed %}
+      <i class='icon icon-chevron-up chevron'></i>
+      {% else %}
+      <i class='icon icon-chevron-down chevron'></i>
+      {% endif %}
+  </h4>
   <div class="box-content {% block box_content_class %}{% endblock box_content_class %}"
           {% block box_content_attrs %}{% endblock box_content_attrs %}
           {% if fieldset.collapsed %}style="display:none"{% endif %}>
