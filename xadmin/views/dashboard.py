@@ -365,6 +365,8 @@ class QuickBtnWidget(BaseWidget):
             btn = {}
             if 'model' in b:
                 model = self.get_model(b['model'])
+                if not self.user.has_perm("%s.view_%s" % (model._meta.app_label, model._meta.module_name)):
+                    continue
                 btn['url'] = reverse("%s:%s_%s_%s" % (self.admin_site.app_name, model._meta.app_label,
                                                       model._meta.module_name, b.get('view', 'changelist')))
                 btn['title'] = model._meta.verbose_name
@@ -379,6 +381,9 @@ class QuickBtnWidget(BaseWidget):
             btns.append(btn)
 
         context.update({'btns': btns})
+
+    def has_perm(self):
+        return True
 
 
 @widget_manager.register
@@ -520,6 +525,8 @@ class Dashboard(CommAdminView):
                             widget = user_widgets.get(int(wid))
                             if widget:
                                 ws.append(self.get_widget(widget))
+                        except ValueError:
+                            pass
                         except Exception, e:
                             import logging
                             logging.error(e, exc_info=True)
