@@ -8,9 +8,11 @@ from django.db.models.base import ModelBase
 from django.forms.forms import DeclarativeFieldsMetaclass
 from django.forms.util import flatatt
 from django.template import loader
+from django.http import Http404
 from django.template.context import RequestContext
 from django.test.client import RequestFactory
 from django.utils.encoding import force_unicode, smart_unicode
+from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from django.views.decorators.cache import never_cache
@@ -18,9 +20,10 @@ from xadmin import widgets as exwidgets
 from xadmin.layout import FormHelper
 from xadmin.models import UserSettings, UserWidget
 from xadmin.sites import site
-from xadmin.views.base import CommAdminView, filter_hook, csrf_protect_m
+from xadmin.views.base import CommAdminView, ModelAdminView, filter_hook, csrf_protect_m
 from xadmin.views.edit import CreateAdminView
 from xadmin.views.list import ListAdminView
+from xadmin.util import unquote
 
 
 class WidgetTypeSelect(forms.Widget):
@@ -537,27 +540,24 @@ class Dashboard(CommAdminView):
     def get_context(self):
         new_context = {
             'title': self.get_title(),
-        }
-        context = super(Dashboard, self).get_context()
-        context.update(new_context)
-        return context
-
-    @never_cache
-    def get(self, request):
-        self.widgets = self.get_widgets()
-        context = self.get_context()
-        context.update({
             'icon': self.icon,
             'portal_key': self.get_portal_key(),
             'columns': [('span%d' % int(12 / len(self.widgets)), ws) for ws in self.widgets],
             'has_add_widget_permission': self.has_model_perm(UserWidget, 'add'),
             'add_widget_url': self.get_admin_url('%s_%s_add' % (UserWidget._meta.app_label, UserWidget._meta.module_name)) +
             "?user=%s&page_id=%s" % (self.user.id, self.get_page_id())
-        })
-        return self.template_response('xadmin/views/dashboard.html', context)
+        }
+        context = super(Dashboard, self).get_context()
+        context.update(new_context)
+        return context
+
+    @never_cache
+    def get(self, request, *args, **kwargs):
+        self.widgets = self.get_widgets()
+        return self.template_response('xadmin/views/dashboard.html', self.get_context())
 
     @csrf_protect_m
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         if 'id' in request.POST:
             widget_id = request.POST['id']
             if request.POST.get('_delete', None) != 'on':
@@ -590,3 +590,34 @@ class Dashboard(CommAdminView):
             for widget in ws:
                 media = media + widget.media()
         return media
+
+class ModelDashboard(Dashboard, ModelAdminView):
+
+    title = _(u"%s Dashboard")
+
+    @filter_hook
+    def get_context(self):
+        context = super(ModelDashboard, self).get_context()
+        context.update({
+            'has_add_widget_permission': False
+            })
+        return context
+
+    def get_page_id(self):
+        return 'model:%s/%s' % self.model_info
+
+    @filter_hook
+    def get_title(self):
+        return self.title % force_unicode(self.obj)
+
+    def init_request(self, object_id, *args, **kwargs):
+        self.obj = self.get_object(unquote(object_id))
+
+        if not self.has_view_permission(self.obj):
+            raise PermissionDenied
+
+        if self.obj is None:
+            raise Http404(_('%(name)s object with primary key %(key)r does not exist.') %
+                          {'name': force_unicode(self.opts.verbose_name), 'key': escape(object_id)})
+
+        
