@@ -211,7 +211,7 @@ class ActionPlugin(BaseAdminPlugin):
 
         # Convert the actions into a SortedDict keyed by name.
         actions = SortedDict([
-            (name, (ac, name, desc))
+            (name, (ac, name, desc, icon))
             for ac, name, desc, icon in actions
         ])
 
