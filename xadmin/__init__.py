@@ -15,6 +15,11 @@ def autodiscover():
     from django.utils.module_loading import module_has_submodule
 
     setattr(settings, 'CRISPY_TEMPLATE_PACK', 'bootstrap3')
+    setattr(settings, 'CRISPY_CLASS_CONVERTERS', {
+        "textinput": "textinput textInput form-control",
+        "fileinput": "fileinput fileUpload form-control",
+        "passwordinput": "textinput textInput form-control",
+        })
 
     from xadmin import views
     from xadmin import plugins

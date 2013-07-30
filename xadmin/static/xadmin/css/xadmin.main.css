@@ -109,7 +109,7 @@ a { cursor: pointer;}
   margin-left: 10px;
   cursor: pointer;
   font-size: 15px;
-  margin-top: 5px;
+  margin-top: 2px;
 }
 .panel .panel-heading .badge { float: right; top: 50%; margin-top: 4px; margin-left: 10px;}
 .panel.no_title .panel-heading{
@@ -276,15 +276,8 @@ a[class^="icon-"]:before, a[class*=" icon-"]:before {
 }
 
 /** fix navbar input-append and input-prepend margin **/
-.navbar .input-append, .navbar .input-prepend {
-  margin-bottom: 5px;
-}
 .navbar .navbar-brand {
   max-width: 400px;
-}
-.navbar-btns {
-  margin-top: 8px;
-  float: right;
 }
 
 /** import for bp3.0 */
@@ -353,4 +346,19 @@ a[class^="icon-"]:before, a[class*=" icon-"]:before {
 }
 .dropdown-submenu.open > .dropdown-menu {
   display: block;
+}
+
+/** nav-header **/
+.nav-header {
+  display: block;
+  padding: 3px 15px;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 1.428571429;
+  color: #999999;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+}
+.nav > li + .nav-header {
+  margin-top: 9px;
 }

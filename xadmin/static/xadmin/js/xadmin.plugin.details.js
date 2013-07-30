@@ -18,7 +18,7 @@
         var modal = $('#detail-modal-id');
         var el = this.$element;
         if(!modal.length){
-          modal = $('<div id="detail-modal-id" class="modal fade quick-form detail-modal" role="dialog"><div class="modal-dialog"><div class="modal-content">'+
+          modal = $('<div id="detail-modal-id" class="modal fade detail-modal" role="dialog"><div class="modal-dialog"><div class="modal-content">'+
             '<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title">'+ 
             el.attr('title') +'</h4></div><div class="modal-body"></div>'+
             '<div class="modal-footer"><button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>'+

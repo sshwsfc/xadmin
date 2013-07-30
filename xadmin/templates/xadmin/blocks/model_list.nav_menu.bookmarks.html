@@ -30,7 +30,7 @@
             <form id="bookmark_form" method="post" action="{{bk_post_url}}">
               {% csrf_token %}
               <input type="hidden" name="query" value="{{bk_current_qs}}"/>
-              <input name="title" type="text" placeholder="{% trans "Enter bookmark title" %}…"/>
+              <input name="title" type="text" class="form-control" placeholder="{% trans "Enter bookmark title" %}…"/>
               <button class="btn btn-success" type="submit" data-loading-text="{% trans "Waiting" %}...">{% trans "Save Bookmark" %}</button>
             </form>
           </div>

@@ -19,7 +19,7 @@ class AdminDateWidget(forms.DateInput):
         return vendor('datepicker.js', 'datepicker.css', 'xadmin.widget.datetime.js')
 
     def __init__(self, attrs=None, format=None):
-        final_attrs = {'class': 'date-field input-with-feedback', 'size': '10'}
+        final_attrs = {'class': 'date-field form-control', 'size': '10'}
         if attrs is not None:
             final_attrs.update(attrs)
         super(AdminDateWidget, self).__init__(attrs=final_attrs, format=format)
@@ -36,7 +36,7 @@ class AdminTimeWidget(forms.TimeInput):
         return vendor('timepicker.js', 'timepicker.css', 'xadmin.widget.datetime.js')
 
     def __init__(self, attrs=None, format=None):
-        final_attrs = {'class': 'time-field input-with-feedback', 'size': '8'}
+        final_attrs = {'class': 'time-field form-control', 'size': '8'}
         if attrs is not None:
             final_attrs.update(attrs)
         super(AdminTimeWidget, self).__init__(attrs=final_attrs, format=format)
@@ -136,7 +136,7 @@ class AdminFileWidget(forms.ClearableFileInput):
 
 class AdminTextareaWidget(forms.Textarea):
     def __init__(self, attrs=None):
-        final_attrs = {'class': 'textarea-field input-with-feedback'}
+        final_attrs = {'class': 'textarea-field form-control'}
         if attrs is not None:
             final_attrs.update(attrs)
         super(AdminTextareaWidget, self).__init__(attrs=final_attrs)
@@ -144,7 +144,7 @@ class AdminTextareaWidget(forms.Textarea):
 
 class AdminTextInputWidget(forms.TextInput):
     def __init__(self, attrs=None):
-        final_attrs = {'class': 'text-field input-with-feedback'}
+        final_attrs = {'class': 'text-field form-control'}
         if attrs is not None:
             final_attrs.update(attrs)
         super(AdminTextInputWidget, self).__init__(attrs=final_attrs)
@@ -152,7 +152,7 @@ class AdminTextInputWidget(forms.TextInput):
 
 class AdminURLFieldWidget(forms.TextInput):
     def __init__(self, attrs=None):
-        final_attrs = {'class': 'url-field input-with-feedback'}
+        final_attrs = {'class': 'url-field form-control'}
         if attrs is not None:
             final_attrs.update(attrs)
         super(AdminURLFieldWidget, self).__init__(attrs=final_attrs)
@@ -160,7 +160,7 @@ class AdminURLFieldWidget(forms.TextInput):
 
 class AdminIntegerFieldWidget(forms.TextInput):
     def __init__(self, attrs=None):
-        final_attrs = {'class': 'int-field input-with-feedback'}
+        final_attrs = {'class': 'int-field form-control'}
         if attrs is not None:
             final_attrs.update(attrs)
         super(AdminIntegerFieldWidget, self).__init__(attrs=final_attrs)
@@ -168,7 +168,7 @@ class AdminIntegerFieldWidget(forms.TextInput):
 
 class AdminCommaSeparatedIntegerFieldWidget(forms.TextInput):
     def __init__(self, attrs=None):
-        final_attrs = {'class': 'sep-int-field input-with-feedback'}
+        final_attrs = {'class': 'sep-int-field form-control'}
         if attrs is not None:
             final_attrs.update(attrs)
         super(AdminCommaSeparatedIntegerFieldWidget,

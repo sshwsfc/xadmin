@@ -11,7 +11,7 @@
         <form method="get" action="">
           {{ form_params|safe }}
             <div class="input-group">
-              <input name="{{search_name}}" class="input-char" type="text" value="{{search_val}}" placeholder="{% trans "Enter" %} {{title}}…"/>
+              <input name="{{search_name}}" class="input-char form-control" type="text" value="{{search_val}}" placeholder="{% trans "Enter" %} {{title}}…"/>
               <span class="input-group-btn">
               {% if search_val %}
                 <a class="btn btn-default" href="{{remove_url}}">x</a>

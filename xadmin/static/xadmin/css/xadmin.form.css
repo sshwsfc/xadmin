@@ -108,7 +108,11 @@ select.selectmultiple {
   .form-horizontal.short_label .controls {
     padding-left: 130px;
   }
-
+  .form-horizontal .control-group + .form-row,
+  .form-horizontal .form-row + .form-row,
+  .form-horizontal .form-row + .control-group {
+    margin-top: 20px;
+  }
   .form-horizontal .form-row .control-group{
     display: inline-block;
     width: 50%;

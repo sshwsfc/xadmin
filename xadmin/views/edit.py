@@ -31,6 +31,7 @@ FORMFIELD_FOR_DBFIELD_DEFAULTS = {
     models.IntegerField: {'widget': widgets.AdminIntegerFieldWidget},
     models.BigIntegerField: {'widget': widgets.AdminIntegerFieldWidget},
     models.CharField: {'widget': widgets.AdminTextInputWidget},
+    models.IPAddressField: {'widget': widgets.AdminTextInputWidget},
     models.ImageField: {'widget': widgets.AdminFileWidget},
     models.FileField: {'widget': widgets.AdminFileWidget},
     models.ForeignKey: {'widget': widgets.AdminSelectWidget},

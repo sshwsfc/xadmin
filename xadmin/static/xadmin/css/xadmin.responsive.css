@@ -32,7 +32,7 @@
 
 @media (min-width: 768px) {
   .form-actions .more-btns{
-    display: inline-block;
+    display: inline-block !important;
   }
   .form-actions .hidden-sm{
     display: inline-block !important;
@@ -53,6 +53,13 @@
     width: auto !important;
   }
   .show-sm { display:  none;}
+
+  .quick-form .modal-dialog {
+    width: auto;
+  }
+  .detail-modal .modal-dialog {
+    width: 60%;
+  }
 }
 
 @media (max-width: 767px) {
@@ -175,6 +182,8 @@
   padding: 3px 10px;
   font-size: 20px;
   color: white;
+  width: auto;
+  height: auto;
 }
 .content-navbar .navbar-btn .btn:hover,
 .content-navbar .navbar-btn .btn:focus{

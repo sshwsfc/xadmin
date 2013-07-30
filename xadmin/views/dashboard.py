@@ -171,7 +171,7 @@ class BaseWidget(forms.Form):
     base_title = None
 
     id = forms.IntegerField(_('Widget ID'), widget=forms.HiddenInput)
-    title = forms.CharField(_('Widget Title'), required=False)
+    title = forms.CharField(_('Widget Title'), required=False, widget=exwidgets.AdminTextInputWidget)
 
     def __init__(self, dashboard, data):
         self.dashboard = dashboard
@@ -299,7 +299,7 @@ class ModelBaseWidget(BaseWidget):
     app_label = None
     module_name = None
     model_perm = 'change'
-    model = ModelChoiceField(label=_(u'Target Model'))
+    model = ModelChoiceField(label=_(u'Target Model'), widget=exwidgets.AdminSelectWidget)
 
     def __init__(self, dashboard, data):
         self.dashboard = dashboard

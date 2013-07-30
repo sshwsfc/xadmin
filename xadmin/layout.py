@@ -60,7 +60,8 @@ class InputGroup(layout.Field):
         super(InputGroup, self).__init__(field, **kwargs)
 
     def render(self, form, form_style, context, template_pack='bootstrap'):
-        context.update({'inputs': self.inputs})
+        classes = form.fields[self.field].widget.attrs['class']
+        context.update({'inputs': self.inputs, 'classes': classes.replace('form-control', '')})
         return render_field(self.field, form, form_style, context, template=self.template, attrs=self.attrs, template_pack=template_pack)
 
 class PrependedText(InputGroup):

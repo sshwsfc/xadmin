@@ -2,7 +2,7 @@
 {% load crispy_forms_field %}
 
 {% block normal_field %}
-<div class="input-group {{field.field.widget.attrs.class}}">
+<div class="input-group {{classes}}">
 {% for input in inputs %}
   {% if input == '@@' %}
     {% crispy_field field %}
