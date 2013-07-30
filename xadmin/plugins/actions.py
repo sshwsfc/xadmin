@@ -31,6 +31,7 @@ action_checkbox.is_column = False
 class BaseActionView(ModelAdminView):
     action_name = None
     description = None
+    icon = 'remove'
 
     model_perm = 'change'
 
@@ -166,7 +167,7 @@ class ActionPlugin(BaseAdminPlugin):
                         "actions on them. No items have been changed.")
                 av.message_user(msg)
             else:
-                ac, name, description = self.actions[action]
+                ac, name, description, icon = self.actions[action]
                 select_across = request.POST.get('select_across', False) == '1'
                 selected = request.POST.getlist(ACTION_CHECKBOX_NAME)
 
@@ -210,8 +211,8 @@ class ActionPlugin(BaseAdminPlugin):
 
         # Convert the actions into a SortedDict keyed by name.
         actions = SortedDict([
-            (name, (ac, name, desc))
-            for ac, name, desc in actions
+            (name, (ac, name, desc, icon))
+            for ac, name, desc, icon in actions
         ])
 
         return actions
@@ -222,15 +223,15 @@ class ActionPlugin(BaseAdminPlugin):
         tuple (name, description).
         """
         choices = []
-        for ac, name, description in self.actions.itervalues():
-            choice = (name, description % model_format_dict(self.opts))
+        for ac, name, description, icon in self.actions.itervalues():
+            choice = (name, description % model_format_dict(self.opts), icon)
             choices.append(choice)
         return choices
 
     def get_action(self, action):
         if not issubclass(action, BaseActionView) or not action.has_perm(self.admin_view):
             return None
-        return action, getattr(action, 'action_name'), getattr(action, 'description')
+        return action, getattr(action, 'action_name'), getattr(action, 'description'), getattr(action, 'icon')
 
     # View Methods
     def result_header(self, item, field_name, row):
