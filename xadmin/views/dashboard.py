@@ -200,7 +200,7 @@ class BaseWidget(forms.Form):
     @property
     def widget(self):
         context = {'widget_id': self.id, 'widget_title':
-                   self.title, 'form': self}
+                   self.title, 'form': self, 'widget': self}
         self.context(context)
         return loader.render_to_string(self.template, context, context_instance=RequestContext(self.request))
 
@@ -335,6 +335,7 @@ class PartialBaseWidget(BaseWidget):
 
     def setup_request(self, request):
         request.user = self.user
+        request.session = self.request.session
         return request
 
     def make_get_request(self, path, data={}, **extra):
