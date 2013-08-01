@@ -15,6 +15,7 @@ from django.utils.encoding import force_unicode, smart_unicode
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
+from django.utils.http import urlencode
 from django.views.decorators.cache import never_cache
 from xadmin import widgets as exwidgets
 from xadmin.layout import FormHelper
@@ -408,6 +409,7 @@ class ListWidget(ModelBaseWidget, PartialBaseWidget):
     def context(self, context):
         list_view = self.list_view
         list_view.make_result_list()
+        list_view.get_list_display()
 
         base_fields = list_view.base_list_display
         if len(base_fields) > 5:
@@ -419,7 +421,7 @@ class ListWidget(ModelBaseWidget, PartialBaseWidget):
                                enumerate(filter(lambda c:c.field_name in base_fields, r.cells))]
                               for r in list_view.results()]
         context['result_count'] = list_view.result_count
-        context['page_url'] = self.model_admin_url('changelist')
+        context['page_url'] = self.model_admin_url('changelist') + "?" + urlencode(self.list_params)
 
 
 @widget_manager.register
