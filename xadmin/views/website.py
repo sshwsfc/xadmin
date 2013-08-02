@@ -16,6 +16,8 @@ class IndexView(Dashboard):
     title = _("Main Dashboard")
     icon = "dashboard"
 
+    def get_page_id(self):
+        return 'home'
 
 class UserSettingView(BaseAdminView):
 
