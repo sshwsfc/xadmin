@@ -15,6 +15,7 @@ from django.utils.encoding import force_unicode, smart_unicode
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
+from django.utils.http import urlencode
 from django.views.decorators.cache import never_cache
 from xadmin import widgets as exwidgets
 from xadmin.layout import FormHelper
@@ -84,7 +85,7 @@ class UserWidgetAdmin(object):
 
     def formfield_for_dbfield(self, db_field, **kwargs):
         if db_field.name == 'widget_type':
-            widgets = widget_manager._widgets.values()
+            widgets = widget_manager.get_widgets(self.request.GET.get('page_id', ''))
             form_widget = WidgetTypeSelect(widgets)
             return forms.ChoiceField(choices=[(w.widget_type, w.description) for w in widgets],
                                      widget=form_widget, label=_('Widget Type'))
@@ -151,6 +152,9 @@ class WidgetManager(object):
     def get(self, name):
         return self._widgets[name]
 
+    def get_widgets(self, page_id):
+        return self._widgets.values()
+
 widget_manager = WidgetManager()
 
 
@@ -200,7 +204,7 @@ class BaseWidget(forms.Form):
     @property
     def widget(self):
         context = {'widget_id': self.id, 'widget_title':
-                   self.title, 'form': self}
+                   self.title, 'form': self, 'widget': self}
         self.context(context)
         return loader.render_to_string(self.template, context, context_instance=RequestContext(self.request))
 
@@ -335,6 +339,7 @@ class PartialBaseWidget(BaseWidget):
 
     def setup_request(self, request):
         request.user = self.user
+        request.session = self.request.session
         return request
 
     def make_get_request(self, path, data={}, **extra):
@@ -412,6 +417,7 @@ class ListWidget(ModelBaseWidget, PartialBaseWidget):
     def context(self, context):
         list_view = self.list_view
         list_view.make_result_list()
+        list_view.get_list_display()
 
         base_fields = list_view.base_list_display
         if len(base_fields) > 5:
@@ -423,7 +429,7 @@ class ListWidget(ModelBaseWidget, PartialBaseWidget):
                                enumerate(filter(lambda c:c.field_name in base_fields, r.cells))]
                               for r in list_view.results()]
         context['result_count'] = list_view.result_count
-        context['page_url'] = self.model_admin_url('changelist')
+        context['page_url'] = self.model_admin_url('changelist') + "?" + urlencode(self.list_params)
 
 
 @widget_manager.register
@@ -461,6 +467,7 @@ class AddFormWidget(ModelBaseWidget, PartialBaseWidget):
 
 class Dashboard(CommAdminView):
 
+    widget_customiz = True
     widgets = []
     title = _(u"Dashboard")
     icon = None
@@ -513,31 +520,31 @@ class Dashboard(CommAdminView):
 
     @filter_hook
     def get_widgets(self):
-        portal_pos = UserSettings.objects.filter(
-            user=self.user, key=self.get_portal_key())
-        if len(portal_pos):
-            portal_pos = portal_pos[0].value
-            widgets = []
-            
-            if portal_pos:
-                user_widgets = dict([(uw.id, uw) for uw in UserWidget.objects.filter(user=self.user, page_id=self.get_page_id())])
-                for col in portal_pos.split('|'):
-                    ws = []
-                    for wid in col.split(','):
-                        try:
-                            widget = user_widgets.get(int(wid))
-                            if widget:
-                                ws.append(self.get_widget(widget))
-                        except ValueError:
-                            pass
-                        except Exception, e:
-                            import logging
-                            logging.error(e, exc_info=True)
-                    widgets.append(ws)
 
-            return widgets
-        else:
-            return self.get_init_widget()
+        if self.widget_customiz:
+            portal_pos = UserSettings.objects.filter(
+                user=self.user, key=self.get_portal_key())
+            if len(portal_pos):
+                portal_pos = portal_pos[0].value
+                widgets = []
+                
+                if portal_pos:
+                    user_widgets = dict([(uw.id, uw) for uw in UserWidget.objects.filter(user=self.user, page_id=self.get_page_id())])
+                    for col in portal_pos.split('|'):
+                        ws = []
+                        for wid in col.split(','):
+                            try:
+                                widget = user_widgets.get(int(wid))
+                                if widget:
+                                    ws.append(self.get_widget(widget))
+                            except Exception, e:
+                                import logging
+                                logging.error(e, exc_info=True)
+                        widgets.append(ws)
+
+                return widgets
+
+        return self.get_init_widget()
 
     @filter_hook
     def get_title(self):
@@ -550,7 +557,7 @@ class Dashboard(CommAdminView):
             'icon': self.icon,
             'portal_key': self.get_portal_key(),
             'columns': [('span%d' % int(12 / len(self.widgets)), ws) for ws in self.widgets],
-            'has_add_widget_permission': self.has_model_perm(UserWidget, 'add'),
+            'has_add_widget_permission': self.has_model_perm(UserWidget, 'add') and self.widget_customiz,
             'add_widget_url': self.get_admin_url('%s_%s_add' % (UserWidget._meta.app_label, UserWidget._meta.module_name)) +
             "?user=%s&page_id=%s" % (self.user.id, self.get_page_id())
         }
@@ -591,8 +598,9 @@ class Dashboard(CommAdminView):
     @filter_hook
     def get_media(self):
         media = super(Dashboard, self).get_media() + \
-            self.vendor('xadmin.plugin.portal.js', 'xadmin.page.dashboard.js',
-                        'xadmin.page.dashboard.css')
+            self.vendor( 'xadmin.page.dashboard.js', 'xadmin.page.dashboard.css')
+        if self.widget_customiz:
+            media = media + self.vendor('xadmin.plugin.portal.js')
         for ws in self.widgets:
             for widget in ws:
                 media = media + widget.media()
@@ -601,14 +609,6 @@ class Dashboard(CommAdminView):
 class ModelDashboard(Dashboard, ModelAdminView):
 
     title = _(u"%s Dashboard")
-
-    @filter_hook
-    def get_context(self):
-        context = super(ModelDashboard, self).get_context()
-        context.update({
-            'has_add_widget_permission': False
-            })
-        return context
 
     def get_page_id(self):
         return 'model:%s/%s' % self.model_info
