@@ -23,13 +23,13 @@
     window.__admin_media_prefix__ = "{% filter escapejs %}{% static "xadmin/" %}{% endfilter %}";
     window.__admin_path_prefix__ = "{% filter escapejs %}{{ indexurl }}{% endfilter %}";
   </script>
+  {% vendor 'jquery.js' 'jquery-ui-sortable.js' 'bootstrap.js' 'xadmin.main.js' %}
+  {{ media.js }}
   {% block extrahead %}{% endblock %}
   {% view_block 'extrahead' %}
 </head>
 <body class="{% block bodyclass %}{% endblock %}">
   {% block body %}{% endblock body %}
-  {% vendor 'jquery.js' 'jquery-ui-sortable.js' 'bootstrap.js' 'xadmin.main.js' %}
-  {{ media.js }}
   {% block extrabody %}{% endblock %}
   {% view_block 'extrabody' %}
 </body>
