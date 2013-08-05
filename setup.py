@@ -18,10 +18,12 @@ setup(
     install_requires=[
         'setuptools',
         'django>=1.4',
-        'xlwt',
         'django-crispy-forms>=1.2.3',
         'django-reversion',
     ],
+    extras_require={
+        'Excel': ['xlwt'],
+    },
     zip_safe=True,
     keywords=['admin', 'django', 'xadmin', 'bootstrap'],
     classifiers=[
