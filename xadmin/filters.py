@@ -66,7 +66,7 @@ class BaseFilter(object):
     def get_context(self):
         return {'title': self.title, 'spec': self, 'form_params': self.form_params()}
 
-    def __repr__(self):
+    def __str__(self):
         tpl = get_template(self.template)
         return mark_safe(tpl.render(Context(self.get_context())))
 
