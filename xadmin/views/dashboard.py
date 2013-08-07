@@ -621,5 +621,21 @@ class ModelDashboard(Dashboard, ModelAdminView):
         if self.obj is None:
             raise Http404(_('%(name)s object with primary key %(key)r does not exist.') %
                           {'name': force_unicode(self.opts.verbose_name), 'key': escape(object_id)})
+    @filter_hook
+    def get_context(self):
+        new_context = {
+            'has_change_permission': self.has_change_permission(self.obj),
+            'object': self.obj,
+        }
+        context = Dashboard.get_context(self)
+        context.update(ModelAdminView.get_context(self))
+        context.update(new_context)
+        return context
+
+    @never_cache
+    def get(self, request, *args, **kwargs):
+        self.widgets = self.get_widgets()
+        return self.template_response('xadmin/views/model_dashboard.html', self.get_context())
+
 
         
