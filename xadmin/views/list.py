@@ -564,14 +564,9 @@ class ListAdminView(ModelAdminView):
                 or field_name in self.list_display_links:
             item.row['is_display_first'] = False
             if self.list_display_links_details:
-                opts = obj._meta
-                item_res_uri = reverse(
-                    'admin:%s_%s_detail' % (opts.app_label, opts.module_name),
-                    args=(getattr(obj, opts.pk.attname),))
+                item_res_uri = self.model_admin_url("detail", getattr(obj, self.pk_attname))
                 if item_res_uri:
-                    edit_url = reverse(
-                        'admin:%s_%s_change' % (opts.app_label, opts.module_name),
-                        args=(getattr(obj, opts.pk.attname),))
+                    edit_url = self.model_admin_url("change", getattr(obj, self.pk_attname))
                     item.wraps.append('<a data-res-uri="%s" data-edit-uri="%s" class="details-handler" rel="tooltip" title="%s">%%s</a>'
                                      % (item_res_uri, edit_url, _(u'Details of %s') % str(obj)))
             else:
