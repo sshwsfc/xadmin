@@ -20,6 +20,6 @@ import images
 import xversion
 import auth
 import multiselect
-#import themes
+import themes
 import aggregation
 import mobile
