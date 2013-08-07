@@ -307,6 +307,8 @@ class CommAdminView(BaseAdminView):
         nav_menu = SortedDict()
 
         for model, model_admin in self.admin_site._registry.items():
+            if getattr(model_admin, 'hidden_menu', False):
+                continue
             app_label = model._meta.app_label
             model_dict = {
                 'title': unicode(capfirst(model._meta.verbose_name_plural)),
