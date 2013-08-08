@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-xadmin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-07 21:52+0800\n"
+"POT-Creation-Date: 2013-08-08 14:01+0800\n"
 "PO-Revision-Date: 2013-05-01 12:10+0000\n"
 "Last-Translator: sshwsfc <sshwsfc@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -263,10 +263,6 @@ msgstr "书签"
 #: plugins/bookmark.py:172
 msgid "Bookmark Widget, can show user's bookmark list data in widget."
 msgstr "书签组件，展示用户书签页内容。"
-
-#: plugins/chart.py:23
-msgid "chart"
-msgstr "图表"
 
 #: plugins/chart.py:24
 msgid "Show models simple chart."
@@ -808,6 +804,7 @@ msgid "Clean Refresh"
 msgstr "清除自动刷新"
 
 #: templates/xadmin/blocks/model_list.top_toolbar.refresh.html:14
+#, python-format
 msgid "Every %(t)s seconds"
 msgstr "每%(t)s秒"
 
@@ -1177,7 +1174,7 @@ msgstr "小组件设置项"
 msgid "Save changes"
 msgstr "保存变更"
 
-#: views/base.py:400
+#: views/base.py:402
 msgid "Django Xadmin"
 msgstr "Django Xadmin"
 
@@ -1201,10 +1198,6 @@ msgstr "HTML内容"
 msgid "Target Model"
 msgstr "目标数据"
 
-#: views/dashboard.py:356
-msgid "qbutton"
-msgstr ""
-
 #: views/dashboard.py:357
 msgid "Quick button Widget, quickly open any page."
 msgstr "快捷按钮小组件，可以快速打开任意页面。"
@@ -1213,17 +1206,9 @@ msgstr "快捷按钮小组件，可以快速打开任意页面。"
 msgid "Quick Buttons"
 msgstr "快速按钮"
 
-#: views/dashboard.py:394
-msgid "list"
-msgstr ""
-
 #: views/dashboard.py:395
 msgid "Any Objects list Widget."
 msgstr "数据列表小组件"
-
-#: views/dashboard.py:432
-msgid "addform"
-msgstr ""
 
 #: views/dashboard.py:433
 msgid "Add any model object Widget."
@@ -1234,6 +1219,7 @@ msgid "Dashboard"
 msgstr "仪表盘"
 
 #: views/dashboard.py:606
+#, python-format
 msgid "%s Dashboard"
 msgstr "%s 仪表盘"
 
