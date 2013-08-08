@@ -362,3 +362,8 @@ a[class^="icon-"]:before, a[class*=" icon-"]:before {
 .nav > li + .nav-header {
   margin-top: 9px;
 }
+
+/** table in panel **/
+.panel .panel-content .table {
+  margin-bottom: 0px;
+}
