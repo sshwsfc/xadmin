@@ -406,8 +406,7 @@ class ListWidget(ModelBaseWidget, PartialBaseWidget):
             self.title = self.model._meta.verbose_name_plural
 
         req = self.make_get_request("", self.list_params)
-        self.list_view = self.get_view_class(
-            ListAdminView, self.model, list_per_page=10)(req)
+        self.list_view = self.get_view_class(ListAdminView, self.model)(req)
 
     def context(self, context):
         list_view = self.list_view
