@@ -47,7 +47,7 @@
   };
 
   $(function(){
-    $('.table td .details-handler').details();
+    $('.details-handler').details();
   });
 
 })(jQuery);
