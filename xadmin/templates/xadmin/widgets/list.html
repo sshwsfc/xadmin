@@ -6,7 +6,7 @@
   {{ block.super }}
 {% endblock title %}
 
-{% block box_content_class %}nopadding x-scroll{% endblock box_content_class %}
+{% block box_content_class %}{% if results %}nopadding x-scroll{% endif %}{% endblock box_content_class %}
 
 {% block content %}
 {% if results %}
@@ -30,6 +30,6 @@
   </tbody>
 </table>
 {% else %}
-  <p class="well">{% trans "Empty list" %}</p>
+  <span class="text-muted">{% trans "Empty list" %}</span>
 {% endif %}
 {% endblock content %}
