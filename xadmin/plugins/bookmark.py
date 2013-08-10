@@ -145,6 +145,7 @@ class BookmarkAdmin(object):
     list_display = ('title', 'user', 'url_name', 'query')
     list_display_links = ('title',)
     user_fields = ['user']
+    hidden_menu = True
 
     def queryset(self):
         if self.user.is_superuser:
