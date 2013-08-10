@@ -287,6 +287,7 @@ class CommAdminView(BaseAdminView):
     site_title = None
     globe_models_icon = {}
     default_model_icon = None
+    apps_label_title = {}
 
     def get_site_menu(self):
         return None
@@ -325,7 +326,7 @@ class CommAdminView(BaseAdminView):
                 nav_menu[app_key]['menus'].append(model_dict)
             else:
                 nav_menu[app_key] = {
-                    'title': unicode(app_label.title()),
+                    'title': self.apps_label_title.get(app_label.lower(), unicode(app_label.title())),
                     'menus': [model_dict],
                 }
 
@@ -427,6 +428,7 @@ class ModelAdminView(CommAdminView):
     exclude = None
     ordering = None
     model = None
+    remove_permissions = []
 
     def __init__(self, request, *args, **kwargs):
         self.opts = self.model._meta
@@ -504,14 +506,14 @@ class ModelAdminView(CommAdminView):
         return self.model._default_manager.get_query_set()
 
     def has_view_permission(self, obj=None):
-        return self.user.has_perm('%s.view_%s' % self.model_info) or \
-            self.user.has_perm('%s.change_%s' % self.model_info)
+        return ('view' not in self.remove_permissions) and (self.user.has_perm('%s.view_%s' % self.model_info) or \
+            self.user.has_perm('%s.change_%s' % self.model_info))
 
     def has_add_permission(self):
-        return self.user.has_perm('%s.add_%s' % self.model_info)
+        return ('add' not in self.remove_permissions) and self.user.has_perm('%s.add_%s' % self.model_info)
 
     def has_change_permission(self, obj=None):
-        return self.user.has_perm('%s.change_%s' % self.model_info)
+        return ('change' not in self.remove_permissions) and self.user.has_perm('%s.change_%s' % self.model_info)
 
     def has_delete_permission(self, obj=None):
-        return self.user.has_perm('%s.delete_%s' % self.model_info)
+        return ('delete' not in self.remove_permissions) and self.user.has_perm('%s.delete_%s' % self.model_info)
