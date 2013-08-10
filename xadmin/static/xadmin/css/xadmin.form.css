@@ -118,6 +118,12 @@ select.selectmultiple {
     width: 50%;
     float: left;
   }
+  .form-horizontal .form-row .control-label{
+    width: 100px;
+  }
+  .form-horizontal .form-row .controls {
+    padding-left: 105px;
+  }
   .form-horizontal .form-row.num3 .control-group{width: 33.333%}
   .form-horizontal .form-row.num4 .control-group{width: 25%}
   .form-horizontal .form-row.num5 .control-group{width: 20%}

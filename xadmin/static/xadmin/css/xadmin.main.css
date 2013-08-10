@@ -111,7 +111,7 @@ a { cursor: pointer;}
   font-size: 15px;
   margin-top: 2px;
 }
-.panel .panel-heading .badge { float: right; top: 50%; margin-top: 4px; margin-left: 10px;}
+.panel .panel-heading .badge { float: right; top: 50%; margin-left: 10px;}
 .panel.no_title .panel-heading{
   display: none;
 }

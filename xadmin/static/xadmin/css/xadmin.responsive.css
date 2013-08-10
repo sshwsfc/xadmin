@@ -52,7 +52,7 @@
   {
     width: auto !important;
   }
-  .show-sm { display:  none;}
+  .show-sm { display: none !important;}
 
   .quick-form .modal-dialog {
     width: auto;
@@ -63,6 +63,7 @@
 }
 
 @media (max-width: 767px) {
+.hide-sm {display: none !important;}
 #body-content {
   margin-top: 50px; 
   padding-top: 10px;
