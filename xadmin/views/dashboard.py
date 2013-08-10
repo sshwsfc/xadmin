@@ -399,6 +399,7 @@ class ListWidget(ModelBaseWidget, PartialBaseWidget):
 
     def convert(self, data):
         self.list_params = data.pop('params', {})
+        self.list_count = data.pop('count', 10)
 
     def setup(self):
         super(ListWidget, self).setup()
@@ -408,6 +409,8 @@ class ListWidget(ModelBaseWidget, PartialBaseWidget):
 
         req = self.make_get_request("", self.list_params)
         self.list_view = self.get_view_class(ListAdminView, self.model)(req)
+        if self.list_count:
+            self.list_view.list_per_page = self.list_count
 
     def context(self, context):
         list_view = self.list_view
@@ -635,7 +638,7 @@ class ModelDashboard(Dashboard, ModelAdminView):
     @never_cache
     def get(self, request, *args, **kwargs):
         self.widgets = self.get_widgets()
-        return self.template_response('xadmin/views/model_dashboard.html', self.get_context())
+        return self.template_response(self.get_template_list('views/model_dashboard.html'), self.get_context())
 
 
         

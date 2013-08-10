@@ -6,7 +6,9 @@
 {% block box_class %}widget{% endblock box_class %}
 
 {% block box_title %}
-  <i class='icon icon-wrench pull-right' data-toggle="modal" data-target="#{{ widget_id }}-opts-form"></i>
+  {% if widget.dashboard.widget_customiz %}
+    <i class='icon icon-wrench pull-right' data-toggle="modal" data-target="#{{ widget_id }}-opts-form"></i>
+  {% endif %}
   {% block title %}
     {{ widget_title }}
   {% endblock title %}
