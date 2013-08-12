@@ -1003,9 +1003,9 @@ msgstr ""
 msgid "Yes, I'm sure"
 msgstr ""
 
-#: templates/xadmin/views/model_delete_confirm.html:44
-#: templates/xadmin/views/model_delete_selected_confirm.html:50
-msgid "Cacnel"
+#: templates/xadmin/views/model_delete_confirm.html:42
+#: templates/xadmin/views/model_delete_selected_confirm.html:49
+msgid "Cancel"
 msgstr ""
 
 #: templates/xadmin/views/model_delete_selected_confirm.html:10

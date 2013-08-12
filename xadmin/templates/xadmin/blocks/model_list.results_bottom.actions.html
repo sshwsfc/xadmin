@@ -9,8 +9,8 @@
     <span class="all" style="display: none;">{{ selection_note_all }}</span>
     <span class="caret"></span></a>
     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-      {% for name, descr in action_choices %}
-        <li><a onclick="$.do_action('{{name}}');"><i class="icon-remove"></i> {{descr}}</a></li>
+      {% for name, descr, icon in action_choices %}
+        <li><a onclick="$.do_action('{{name}}');"><i class="icon-{{icon}}"></i> {{descr}}</a></li>
       {% endfor %}
     </ul>
   </div>
