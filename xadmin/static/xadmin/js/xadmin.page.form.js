@@ -44,7 +44,6 @@
                     }
                     parent = parent.parent();
                 }
-                console.log("WUALA");
             }
         });
     }
