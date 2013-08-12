@@ -102,7 +102,7 @@ class ListAdminView(ModelAdminView):
     list_display = ('__str__',)
     list_display_links = ()
     list_display_links_details = False
-    list_select_related = False
+    list_select_related = None
     list_per_page = 50
     list_max_show_all = 200
     list_exclude = ()
@@ -223,7 +223,8 @@ class ListAdminView(ModelAdminView):
         if not queryset.query.select_related:
             if self.list_select_related:
                 queryset = queryset.select_related()
-            else:
+            elif self.list_select_related is None:
+                related_fields = []
                 for field_name in self.list_display:
                     try:
                         field = self.opts.get_field(field_name)
@@ -231,8 +232,11 @@ class ListAdminView(ModelAdminView):
                         pass
                     else:
                         if isinstance(field.rel, models.ManyToOneRel):
-                            queryset = queryset.select_related()
-                            break
+                            related_fields.append(field_name)
+                if related_fields:
+                    queryset = queryset.select_related(*related_fields)
+            else:
+                pass
 
         # Then, set queryset ordering.
         queryset = queryset.order_by(*self.get_ordering())
