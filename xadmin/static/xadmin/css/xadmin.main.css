@@ -79,7 +79,7 @@ a { cursor: pointer;}
     margin-bottom: 0px;
   }
   .top-search-form .input-group {
-    max-width: 300px;
+    max-width: 240px;
   }
 }
 @media (max-width: 767px) {
@@ -369,6 +369,9 @@ a[class^="icon-"]:before, a[class*=" icon-"]:before {
 }
 
 /** thumbnail **/
+.thumbnail-panel.panel { padding-bottom: 0px;}
+.thumbnail-panel .thumbnail{margin-bottom: 15px;}
+.thumbnail-panel .thumbnail:hover { background-color: #efefef; }
 .thumbnail > h1 { margin: 0px; }
 .thumbnail.warning {
   background-color: #fcf8e3;
