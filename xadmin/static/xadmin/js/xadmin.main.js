@@ -1,5 +1,4 @@
 ;(function($){
-  $('body').on('touchstart.dropdown', '.dropdown-menu', function (e) { e.stopPropagation(); });
 
   $.fn.exform = function(){
     this.each(function () {
@@ -30,6 +29,55 @@
       }
       return cookieValue;
   }
+
+  //dropdown submenu plugin
+  $(document)
+    .on('click.xa.dropdown.data-api touchstart.xa.dropdown.data-api', '.dropdown-submenu', function (e) { e.stopPropagation(); })
+    .on('click.xa.dropdown.data-api', function(e){
+      $('.dropdown-submenu.open').removeClass('open');
+    });
+
+  if ('ontouchstart' in document.documentElement) {
+    $('.dropdown-submenu a').on('click.xa.dropdown.data-api', function(e){
+      $(this).parent().toggleClass('open');
+    });
+  } else{
+    $('.dropdown-submenu').on('click.xa.dropdown.data-api mouseover.xa.dropdown.data-api', function(e){
+      $(this).parent().find('>.dropdown-submenu.open').removeClass('open');
+      $(this).addClass('open');
+    });
+  }
+  
+  //toggle class button
+  $('body').on('click.xa.togglebtn.data-api', '[data-toggle=class]', function (e) {
+    var $this  = $(this), href
+    var target = $this.attr('data-target')
+        || e.preventDefault()
+        || (href = $this.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') //strip for ie7
+    var className = $this.attr('data-class-name')
+    $(target).toggleClass(className)
+  })
+  
+  // loading btn
+  $('.btn.btn-loading,.btn[type=submit]')
+    .click(function () {
+      var btn = $(this)
+      btn.button('loading')
+      setTimeout(function () {
+        btn.button('reset')
+      }, 4000)
+    })
+
+  //.nav-content bar nav-menu
+  $('.navbar-sm .navbar-nav > li')
+    .on('shown.bs.dropdown', function(e){
+      $(this).find('>.dropdown-menu').css('max-height', $(window).height()-120);
+      $(this).parent().find('>li').addClass('hidden-sm');
+      $(this).removeClass('hidden-sm');
+    })
+    .on('hidden.bs.dropdown', function(e){
+      $(this).parent().find('>li').removeClass('hidden-sm');
+    });
 
   // dashboard widget
   $('.widget-form').each(function(e){

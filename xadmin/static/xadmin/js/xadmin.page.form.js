@@ -11,6 +11,17 @@
             window.onscroll=onchange;
             onchange();
         }
+        if(window.__admin_ismobile__){
+            $(window).bind('resize', function(e){
+                var rate = $(window).height() / $(window).width();
+                var action_bar = $('.form-actions');
+                if(rate < 1){
+                    action_bar.css('display', 'none');
+                } else {
+                    action_bar.css('display', 'block');
+                }
+            });
+        }
     });
     var exform = $('.exform').first();
     if (exform.find('.text-error').length > 0){

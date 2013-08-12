@@ -1,31 +1,249 @@
 
 
-@media (min-width: 768px) and (max-width: 979px) {
-  #left-side {
-    width: 5.801104972375691%;
-    *width: 5.747913483013988%;
+@media (min-width: 768px) and (max-width: 991px) {
+  .col {
+    padding-right: 10px;
+    padding-left: 10px;
   }
-  #content-block {
-    width: 91.43646408839778%;
-    *width: 91.38327259903608%;
+  .row .row {
+    margin-right: -10px;
+    margin-left: -10px;
   }
-  .sidebar-nav .nav-list.visible-tablet{
+  .nav-sitemenu{
     padding: 0px;
   }
-  .sidebar-nav .nav-list.visible-tablet > li.app_menu>a{
+  .nav-sitemenu > li.app_menu>a{
     padding: 3px 0px;
     margin: 0px;
     text-align: center;
   }
-  .sidebar-nav .nav-list.visible-tablet > li.app_menu>a:after{
+  .nav-sitemenu > li.app_menu>a:after{
     display: none;
   }
-  .sidebar-nav .nav-list.visible-tablet > li.app_menu>hr{ margin: 0px;}
-  .sidebar-nav .nav-list.visible-tablet > li.app_menu>a>i[class^="icon-"]{
+  .nav-sitemenu > li.app_menu>hr{ margin: 0px;}
+  .nav-sitemenu > li.app_menu>a>i[class^="icon-"]{
     font-size: 20px;
     line-height: 1.7em;
   }
-  .sidebar-nav .nav-list.visible-tablet > li.app_menu li {
+  .nav-sitemenu > li.app_menu li {
 
   }
+}
+
+@media (min-width: 768px) {
+  .form-actions .more-btns{
+    display: inline-block !important;
+  }
+  .form-actions .hidden-sm{
+    display: inline-block !important;
+  }
+  .form-actions .col-1,
+  .form-actions .col-2,
+  .form-actions .col-3,
+  .form-actions .col-4,
+  .form-actions .col-5,
+  .form-actions .col-6,
+  .form-actions .col-7,
+  .form-actions .col-8,
+  .form-actions .col-9,
+  .form-actions .col-10,
+  .form-actions .col-11,
+  .form-actions .col-12
+  {
+    width: auto !important;
+  }
+  .show-sm { display: none !important;}
+
+  .quick-form .modal-dialog {
+    width: auto;
+  }
+  .detail-modal .modal-dialog {
+    width: 60%;
+  }
+}
+
+@media (max-width: 767px) {
+.hide-sm {display: none !important;}
+#body-content {
+  margin-top: 50px; 
+  padding-top: 10px;
+}
+#body-content.show_menu{
+  width: 100%;
+  overflow-x: hidden;
+}
+#footer, .breadcrumb {
+  display: none;
+}
+#top-nav .navbar-nav {
+  float: none;
+}
+#left-side {
+  min-height: 0px;
+  position: fixed;
+  padding: 0px;
+  top: 50px;
+  left: 0px;
+  bottom: 0px;
+  background: #FFF;
+  z-index: 999;
+  overflow: auto;
+  display: none;
+  width: 70%;
+}
+#body-content.show_menu #left-side {
+  display: block;
+}
+#body-content.show_menu #content-block{
+  margin-left: 70%;
+  width: 100%;
+}
+#left-side .well {
+  border: 0px;
+}
+#changelist-form {
+  clear: both;
+}
+.popover.dropdown-menu form > .btn {
+  width: 100%;
+}
+.navbar .navbar-brand {
+  max-width: 260px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.panel-content.nopadding {
+  margin: -15px;
+}
+
+.panel-content.nopadding .table {
+  margin-bottom: 0;
+}
+
+.results {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.form-actions {
+  margin-bottom: 0px;
+  padding: 10px;
+  position:fixed;
+  bottom:0px;
+  z-index:295;
+  width: 100%;
+  margin-right: -15px;
+  margin-left: -15px;
+  border: 0px;
+  border-radius: 0px;
+}
+.form-actions .btn-group {
+  padding-left: 10px;
+  padding-right: 0px;
+}
+.form-actions .more-btns{
+  clear: both;
+  overflow: hidden;
+}
+.form-actions .more-btns .btn:first-child{
+}
+.form-actions .more-btns .btn, .form-actions .more-btns .btn-group {
+  display: block;
+  width: 100%;
+  padding-right: 0;
+  padding-left: 0;
+}
+.form-actions .more-btns .btn,
+.form-actions .more-btns .btn-group {
+  margin-top: 5px;
+}
+
+#body-content {
+  padding-bottom: 60px;
+}
+.model_ul {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+.navbar.content-navbar {
+  position: fixed;
+  right: 0;
+  left: 0;
+  top: 0px;
+  z-index: 1030;
+  border-radius: 0;
+}
+.content-navbar .navbar-btn .btn,
+.navbar-toggle
+{
+  background: none;
+  border-color: #333;
+  padding: 3px 10px;
+  font-size: 20px;
+  color: white;
+  width: auto;
+  height: auto;
+}
+.content-navbar .navbar-btn .btn:hover,
+.content-navbar .navbar-btn .btn:focus{
+  background-color: #333;
+}
+.navbar-toggle{
+  top: 7px;
+}
+.navbar.tools-navbar {
+  height: 50px;
+  margin-top: -10px;
+  text-align: right;
+}
+.btn span{
+  display: none;
+}
+.navbar-btn {
+  position: absolute;
+  top: 0px;
+  right: 10px;
+}
+.nav-back {
+  left: 10px;
+  right: auto;
+}
+.navbar-nav > .dropdown > .dropdown-menu{
+  position: relative;
+  float: none;
+  max-height: 400px;
+  overflow: auto;
+}
+.navbar-nav > .dropdown > .dropdown-menu li a{
+  padding: 8px 20px;
+}
+.navbar-nav > .dropdown .dropdown-submenu > .dropdown-menu{
+  position: relative;
+  top: 0px;
+  left: 0px;
+  margin: 10px;
+  float: none;
+}
+.navbar-nav .dropdown-submenu .popover.dropdown-menu {
+  max-width: none;
+}
+.navbar-nav .dropdown-submenu .popover.dropdown-menu .arrow {
+  display: none;
+}
+
+.layout-btns {
+  display: none;
+}
+.pagination.pagination-small{
+  display: none;
+}
+
+/* search form */
+.input-group.search-group{
+  max-width: none;
+  width: auto;
+}
+
 }

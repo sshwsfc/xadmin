@@ -19,8 +19,8 @@
     margin: 0px;
     padding: 5px 5px 3px; 
 }
-.formset .accordion-inner {
-    padding: 0px;
+.formset .formset-form {
+    padding: 15px;
 }
 .formset .accordion-heading .delete-row {
     float: right;

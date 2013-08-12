@@ -1,7 +1,7 @@
 {% load url from future %}{% load xadmin_tags %}{% load i18n %}<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
   {% block extrameta %}
   <meta name="description" content="">
   <meta name="author" content="">
@@ -15,7 +15,7 @@
   {% else %}
   <link rel="stylesheet" type="text/css" href="{% static "xadmin/css/themes/bootstrap-xadmin.css" %}" />
   {% endif %}
-  {% vendor 'font-awesome.css' 'xadmin.main.css' 'xadmin.responsive.css' %}
+  {% vendor 'font-awesome.css' 'xadmin.main.css' 'xadmin.plugins.css' 'xadmin.responsive.css' %}
   {{ media.css }}
   {% block extrastyle %}{% endblock %}
   {% url 'admin:index' as indexurl %}
@@ -28,7 +28,7 @@
 </head>
 <body class="{% block bodyclass %}{% endblock %}">
   {% block body %}{% endblock body %}
-  {% vendor 'jquery.js' 'jquery-ui-sortable.js' 'bootstrap.js' 'xadmin.main.js' %}
+  {% vendor 'jquery.js' 'jquery-ui-sortable.js' 'bootstrap.js' 'xadmin.main.js' 'xadmin.responsive.js' %}
   {{ media.js }}
   {% block extrabody %}{% endblock %}
   {% view_block 'extrabody' %}

@@ -5,17 +5,19 @@
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
-<li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> <span class="divider">/</span></li>
-<li><a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst|escape }}</a> <span class="divider">/</span></li>
-<li><a href="{% url opts|admin_urlname:'changelist' %}{{ object.pk }}/update">{{ object|truncatewords:"18" }}</a> <span class="divider">/</span></li>
+<li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
+<li><a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst|escape }}</a></li>
+<li><a href="{% url opts|admin_urlname:'changelist' %}{{ object.pk }}/update">{{ object|truncatewords:"18" }}</a></li>
 <li>{% trans 'Delete' %}</li>
 </ul>
 {% endblock %}
 
+{% block nav_title %}{{title}}{% endblock %}
+
 {% block content %}
 {% if perms_lacking or protected %}
     {% if perms_lacking %}
-        <div class="alert alert-error">{% blocktrans with escaped_object=object %}Deleting the {{ verbose_name }} '{{ escaped_object }}' would result in deleting related objects, but your account doesn't have permission to delete the following types of objects:{% endblocktrans %}</div>
+        <div class="alert alert-danger">{% blocktrans with escaped_object=object %}Deleting the {{ verbose_name }} '{{ escaped_object }}' would result in deleting related objects, but your account doesn't have permission to delete the following types of objects:{% endblocktrans %}</div>
         <ul class="model_ul">
         {% for obj in perms_lacking %}
             <li>{{ obj }}</li>
@@ -23,7 +25,7 @@
         </ul>
     {% endif %}
     {% if protected %}
-        <div class="alert alert-error">{% blocktrans with escaped_object=object %}Deleting the {{ verbose_name }} '{{ escaped_object }}' would require deleting the following protected related objects:{% endblocktrans %}</div>
+        <div class="alert alert-danger">{% blocktrans with escaped_object=object %}Deleting the {{ verbose_name }} '{{ escaped_object }}' would require deleting the following protected related objects:{% endblocktrans %}</div>
         <ul class="model_ul">
         {% for obj in protected %}
             <li>{{ obj }}</li>
@@ -37,9 +39,9 @@
     <div>
     <input type="hidden" name="post" value="yes" />
     {% view_block 'form_fields' %}
-    <div class="well">
+    <div class="form-actions well well-small">
         <input class="btn btn-danger btn-large" type="submit" value="{% trans "Yes, I'm sure" %}" />
-        <a class="btn pull-right" onclick="javascript:history.back();" >{% trans 'Cacnel' %}</a>
+        <a class="btn btn-default pull-right" onclick="javascript:history.back();" >{% trans 'Cancel' %}</a>
     </div>
     </div>
     </form>

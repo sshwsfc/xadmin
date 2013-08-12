@@ -19,7 +19,7 @@
     constructor: AjaxForm
 
     , ainit: function(){
-      this.$mask = $('<div class="mask"><div class="progress progress-striped active"><div class="bar"></div></div></div>')
+      this.$mask = $('<div class="mask"><h2 style="text-align:center;"><i class="icon-spinner icon-spin icon-large"></i></h2></div>')
 
       this.$form.prepend(this.$mask)
       this.$form.submit($.proxy(this.submit, this))
@@ -67,10 +67,10 @@
               var e = data['errors'][i]
               var errdiv = this.$form.find('#div_' + e['id'])
               if(errdiv.length){
-                errdiv.addClass('error')
+                errdiv.addClass('has-error')
                 var err_html = []
                 for (var j = e['errors'].length - 1; j >= 0; j--) {
-                  err_html.push('<span id="error_'+j+'_'+ e['id'] +'" class="help-inline error"><strong>'+e['errors'][j]+'</strong></span>')
+                  err_html.push('<span id="error_'+j+'_'+ e['id'] +'" class="text-danger">'+e['errors'][j]+'</span>')
                 }
                 errdiv.find('.controls').append(err_html.join('\n'))
               } else {
@@ -80,7 +80,7 @@
             if(non_fields_errors.length){
               var err_html = []
               for (var i = non_fields_errors.length - 1; i >= 0; i--) {
-                err_html.push('<p class="text-error"><strong>'+e['errors'][i]+'</strong></p>')
+                err_html.push('<p class="text-danger"><strong>'+e['errors'][i]+'</strong></p>')
               }
               this.$form.prepend(err_html.join('\n'))
             }
@@ -166,14 +166,15 @@
       e.preventDefault()
 
       if(!this.modal){
-        var modal = $('<div class="modal container hide fade quick-form" role="dialog"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h3>'+ 
+        var modal = $('<div class="modal fade quick-form" role="dialog"><div class="modal-dialog"><div class="modal-content">'+
+          '<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>'+ 
           this.$btn.attr('title') +'</h3></div><div class="modal-body"></div>'+
-          '<div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>'+
-          '<a class="btn btn-primary btn-submit">Add</a></div></div>')
+          '<div class="modal-footer"><button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>'+
+          '<a class="btn btn-primary btn-submit">Add</a></div></div></div></div>')
         $('body').append(modal)
 
         var self = this
-        modal.find('.modal-body').html('<div class="progress progress-striped active" style="width:50%; margin: 10px auto;"><div class="bar" style="width: 100%;"></div></div>')
+        modal.find('.modal-body').html('<h2 style="text-align:center;"><i class="icon-spinner icon-spin icon-large"></i></h2>')
         modal.find('.modal-body').load(this.add_url, function(form_html, status, xhr){
           var form = $(this).find('form')
           form.addClass('quick-form')

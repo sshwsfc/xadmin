@@ -8,6 +8,40 @@
     this.einit('editpop', element, options)
   }
 
+  Editpop.DEFAULTS = $.extend({} , $.fn.popover.Constructor.DEFAULTS, {
+    container: 'body'
+  , trigger: 'manual'
+  , placement: function(tip, el) {
+    var $tip = $(tip)
+    var $el = $(el)
+
+    var tip_width = $tip.width(),
+        tip_height = $tip.height(),
+        el_width = $el.width(),
+        el_height = $el.height(),
+        client_width = document.body.clientWidth,
+        gap = 20
+
+    var top_gap = $el.offset().top - $("body").scrollTop() - 40,
+        left_gap = $el.offset().left - $("body").scrollLeft(),
+        right_gap = client_width - left_gap - el_width
+
+    if(top_gap > tip_height + gap && left_gap > tip_width/2 + gap && right_gap > tip_width/2 + gap){
+      return 'top'
+    }
+    if(top_gap > tip_height/2){
+      if(right_gap > tip_width + gap){
+        return 'right'
+      } else if(left_gap > tip_width + gap) {
+        return 'left'
+      }
+    }
+    return 'bottom'
+  }
+  , template: '<div class="popover editpop editable"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+  })
+
+
   // NOTE: POPOVER EXTENDS tooltip.js
   // ================================
 
@@ -29,23 +63,19 @@
   }
 
   Editpop.prototype.beforeToggle = function() {
-    if(this.content == null){
-      var $el = this.$element
-      var that = this
+    var $el = this.$element
+    var that = this
 
-      $el.find('>i').removeClass('icon-edit').addClass('icon-spinner icon-spin')
-      $.ajax({
-        url: $el.data('editable-loadurl'),
-        success: function(content){
-          $el.find('>i').removeClass('icon-spinner icon-spin').addClass('icon-edit')
-          that.content = content
-          that.toggle()
-        },
-        dataType: 'html'
-      })
-    } else {
-      this.toggle()
-    }
+    $el.find('>i').removeClass('icon-edit').addClass('icon-spinner icon-spin')
+    $.ajax({
+      url: $el.data('editable-loadurl'),
+      success: function(content){
+        $el.find('>i').removeClass('icon-spinner icon-spin').addClass('icon-edit')
+        that.content = content
+        that.toggle()
+      },
+      dataType: 'html'
+    })
   }
 
   Editpop.prototype.setContent = function () {
@@ -155,13 +185,6 @@
   }
 
   $.fn.editpop.Constructor = Editpop
-
-  $.fn.editpop.defaults = $.extend({} , $.fn.popover.defaults, {
-    container: 'body'
-  , placement: 'top'
-  , trigger: 'manual'
-  , template: '<div class="popover editpop editable"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-  })
 
 
   // POPOVER NO CONFLICT

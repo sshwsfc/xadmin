@@ -448,7 +448,7 @@ class CommAdminView(BaseAdminView):
     #:
     #:     globe_models_icon = {User: 'user-icon'}
     globe_models_icon = {}
-    default_model_icon = None    #: 默认的 Model 图标
+    default_model_icon = None
 
     def get_site_menu(self):
         """``FAQ:如何定制系统菜单``\n
@@ -505,6 +505,8 @@ class CommAdminView(BaseAdminView):
         nav_menu = SortedDict()    #使用有序 dict，保证每次生成的菜单顺序固定
 
         for model, model_admin in self.admin_site._registry.items():
+            if getattr(model_admin, 'hidden_menu', False):
+                continue
             app_label = model._meta.app_label
             model_dict = {
                 'title': unicode(capfirst(model._meta.verbose_name_plural)),
@@ -522,7 +524,7 @@ class CommAdminView(BaseAdminView):
                 nav_menu[app_key]['menus'].append(model_dict)
             else:
                 nav_menu[app_key] = {
-                    'title': unicode(app_label.title()),
+                    'title': self.apps_label_title.get(app_label.lower(), unicode(app_label.title())),
                     'menus': [model_dict],
                 }
 
@@ -708,6 +710,7 @@ class ModelAdminView(CommAdminView):
     exclude = None   #: (list,tuple) 排除的字段，主要用在编辑页面
     ordering = None  #: (dict) 获取 Model 的 queryset 时默认的排序规则
     model = None     #: 绑定的 Model 类，在注册 Model 时，该项会自动附在 OptionClass 中，见方法 :meth:`AdminSite.register`
+    remove_permissions = []
 
     def __init__(self, request, *args, **kwargs):
         #: 即 Model._meta
@@ -815,24 +818,24 @@ class ModelAdminView(CommAdminView):
 
             目前的实现为：如果一个用户有对数据的修改权限，那么他就有对数据的查看权限。当然您可以在子类中修改这一规则
         """
-        return self.user.has_perm('%s.view_%s' % self.model_info) or \
-            self.user.has_perm('%s.change_%s' % self.model_info)
+        return ('view' not in self.remove_permissions) and (self.user.has_perm('%s.view_%s' % self.model_info) or \
+            self.user.has_perm('%s.change_%s' % self.model_info))
 
     def has_add_permission(self):
         """
         返回当前用户是否有添加权限
         """
-        return self.user.has_perm('%s.add_%s' % self.model_info)
+        return ('add' not in self.remove_permissions) and self.user.has_perm('%s.add_%s' % self.model_info)
 
     def has_change_permission(self, obj=None):
         """
         返回当前用户是否有修改权限
         """
-        return self.user.has_perm('%s.change_%s' % self.model_info)
+        return ('change' not in self.remove_permissions) and self.user.has_perm('%s.change_%s' % self.model_info)
 
     def has_delete_permission(self, obj=None):
         """
         返回当前用户是否有删除权限
         """
-        return self.user.has_perm('%s.delete_%s' % self.model_info)
+        return ('delete' not in self.remove_permissions) and self.user.has_perm('%s.delete_%s' % self.model_info)
 

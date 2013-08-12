@@ -1,10 +1,27 @@
 {% load i18n %}
 {% load xadmin_tags %}
-<div class="form-actions">
-{% if show_save %}<input type="submit" value="{% trans 'Save' %}" class="default btn btn-primary" name="_save" {{ onclick_attrib }}/>{% endif %}
-{% if show_save_as_new %}<input type="submit" class="btn" value="{% trans 'Save as new' %}" name="_saveasnew" {{ onclick_attrib }}/>{%endif%}
-{% if show_save_and_add_another %}<input type="submit" class="btn" value="{% trans 'Save and add another' %}" name="_addanother" {{ onclick_attrib }} />{% endif %}
-{% if show_save_and_continue %}<input type="submit" class="btn" value="{% trans 'Save and continue editing' %}" name="_continue" {{ onclick_attrib }}/>{% endif %}
+<div class="form-actions well well-small clearfix">
+{% if show_delete_link %}
+  <a href="{{ delete_url }}" class="btn btn-danger deletelink col-2 visible-sm"><i class="icon-trash"></i></a>
+{% endif %}
+
+{% if show_save %}
+  <div class="btn-group clearfix visible-sm save-group {% if show_delete_link %}col-10{%else%}col-12{% endif %}">
+  <button type="submit" class="default btn btn-primary col-10" name="_save" data-loading-text="{% trans "Saving.." %}" {{ onclick_attrib }}/><i class="icon-save"></i> {% trans 'Save' %}</button>
+  <button type="button" class="more btn btn-primary col-2" data-toggle="collapse" data-target=".nav-collapse.more-btns"><i class="icon-ellipsis-vertical"></i></button>
+  </div>
+  <button type="submit" class="default btn btn-primary hidden-sm" name="_save" data-loading-text="{% trans "Saving.." %}" {{ onclick_attrib }}/><i class="icon-save"></i> {% trans 'Save' %}</button>
+{% endif %}
+
+<div class="nav-collapse collapse more-btns">
+{% if show_save_as_new %}<input type="submit" class="btn btn-default" value="{% trans 'Save as new' %}" name="_saveasnew" {{ onclick_attrib }}/>{%endif%}
+{% if show_save_and_add_another %}<input type="submit" class="btn btn-default" value="{% trans 'Save and add another' %}" name="_addanother" {{ onclick_attrib }} />{% endif %}
+{% if show_save_and_continue %}<input type="submit" class="btn btn-default" value="{% trans 'Save and continue editing' %}" name="_continue" {{ onclick_attrib }}/>{% endif %}
+</div>
+
+{% if show_delete_link %}
+  <a href="{{ delete_url }}" class="btn btn-danger deletelink pull-right hidden-sm"><i class="icon-trash"></i> {% trans "Delete" %}</a>
+{% endif %}
+
 {% view_block 'submit_line' %}
-{% if show_delete_link %}<a href="{{ delete_url }}" class="btn btn-danger deletelink pull-right"><i class="icon-remove"></i> {% trans "Delete" %}</a>{% endif %}
 </div>

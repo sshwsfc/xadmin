@@ -118,7 +118,7 @@ class ListAdminView(ModelAdminView):
     list_display = ('__str__',)    #: 默认显示列
     list_display_links = ()        #: 显示修改或查看数据详情连接的列
     list_display_links_details = False  #: 点击列表连接后是否转到详情页面
-    list_select_related = False    #: 是否提前加载关联数据, 使用 ``select_related``
+    list_select_related = None     #: 是否提前加载关联数据, 使用 ``select_related``
     list_per_page = 50             #: 每页显示数据的条数
     list_max_show_all = 200        #: 每页最大显示数据的条数
     list_exclude = ()              #: 排除显示的列, 在显示列的设置中不会出现这些被排除的列
@@ -244,7 +244,8 @@ class ListAdminView(ModelAdminView):
         if not queryset.query.select_related:
             if self.list_select_related:
                 queryset = queryset.select_related()
-            else:
+            elif self.list_select_related is None:
+                related_fields = []
                 for field_name in self.list_display:
                     try:
                         field = self.opts.get_field(field_name)
@@ -252,9 +253,12 @@ class ListAdminView(ModelAdminView):
                         pass
                     else:
                         if isinstance(field.rel, models.ManyToOneRel):
-                            # 有关联字段显示, 则使用 ``select_related``
-                            queryset = queryset.select_related()
-                            break
+                            related_fields.append(field_name)
+                if related_fields:
+                    # 有关联字段显示, 则使用 ``select_related``
+                    queryset = queryset.select_related(*related_fields)
+            else:
+                pass
 
         # 进行排序
         queryset = queryset.order_by(*self.get_ordering())
@@ -627,15 +631,11 @@ class ListAdminView(ModelAdminView):
         if (item.row['is_display_first'] and not self.list_display_links) \
                 or field_name in self.list_display_links:
             item.row['is_display_first'] = False
+            item.is_display_link = True
             if self.list_display_links_details:
-                opts = obj._meta
-                item_res_uri = reverse(
-                    'admin:%s_%s_detail' % (opts.app_label, opts.module_name),
-                    args=(getattr(obj, opts.pk.attname),))
+                item_res_uri = self.model_admin_url("detail", getattr(obj, self.pk_attname))
                 if item_res_uri:
-                    edit_url = reverse(
-                        'admin:%s_%s_change' % (opts.app_label, opts.module_name),
-                        args=(getattr(obj, opts.pk.attname),))
+                    edit_url = self.model_admin_url("change", getattr(obj, self.pk_attname))
                     item.wraps.append('<a data-res-uri="%s" data-edit-uri="%s" class="details-handler" rel="tooltip" title="%s">%%s</a>'
                                      % (item_res_uri, edit_url, _(u'Details of %s') % str(obj)))
             else:

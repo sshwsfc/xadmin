@@ -10,18 +10,25 @@
 {% block bodyclass %}dashboard{% endblock %}
 {% block breadcrumbs %}{% endblock %}
 
+{% block nav_title %}
+  {% if icon %}<i class="icon-{{icon}}"></i>{%endif%} {{ title }}
+{% endblock %}
+
+{% block nav_left %}
+<button type="button" class="navbar-toggle nav-back" data-toggle="class" data-target="#body-content" data-class-name="show_menu">
+  <i class="icon-list"></i>
+</button>
+{% endblock %}
+
+{% block nav_btns %}
+{% if has_add_widget_permission %}
+  <a title="{% trans "Add Widget" %}" href="{{ add_widget_url }}" class="btn btn-primary">
+    <i class="icon-plus icon-white"></i> <span>{% trans "Add Widget" %}</span></a>
+{% endif %}
+{% endblock %}
+
 {% block content %}
-<div class="navbar">
-  <div class="navbar-inner">
-    <a class="brand" href="#">{% if icon %}<i class="icon-{{icon}}"></i>{%endif%} {{ title }}</a>
-    <div class="btn-group pull-right">
-      {% if has_add_widget_permission %}
-      <a title="{% trans "Add Widget" %}" href="{{ add_widget_url }}" class="btn btn-primary"><i class="icon-plus icon-white"></i> {% trans "Add Widget" %}</a>
-      {% endif %}
-    </div>
-  </div>
-</div>
-<div class="dashboard row-fluid">
+<div class="dashboard row">
   {% for c in columns %}
   <div class="{{ c.0 }} column">
     {% for widget in c.1 %}

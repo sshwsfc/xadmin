@@ -13,6 +13,7 @@ import actions
 import filters
 import bookmark
 import export
+import layout
 import refresh
 import sortable
 import details
@@ -27,8 +28,9 @@ import portal
 import quickform
 import wizard
 import images
-import xversion
+#import xversion
 import auth
 import multiselect
 import themes
 import aggregation
+import mobile

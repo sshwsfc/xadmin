@@ -1023,7 +1023,7 @@ msgstr "Taip, Aš esu tikras"
 
 #: templates/xadmin/views/model_delete_confirm.html:42
 #: templates/xadmin/views/model_delete_selected_confirm.html:49
-msgid "Cacnel"
+msgid "Cancel"
 msgstr "Atšaukti"
 
 #: templates/xadmin/views/model_delete_selected_confirm.html:10

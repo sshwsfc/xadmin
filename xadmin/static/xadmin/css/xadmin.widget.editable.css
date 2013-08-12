@@ -13,11 +13,30 @@
 .editable form{
   margin-bottom: 0px;
 }
+.editable form .control-group,
+.editable form .controls{
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+}
+.editable form .control-group {
+  margin-bottom: 10px;
+}
+.editable form .control-label{
+  display: none;
+}
+.editable form .controls label {
+  white-space:nowrap; 
+}
+
+@media (min-width: 768px) {
 .editable form .text-field, 
 .editable form .textinput {
     width: 200px;
 }
-
+.editable form .date-field {
+    width: 120px;
+}
 .editable form .int-field {
     width: 150px;
 }
@@ -31,19 +50,15 @@
   max-width: 200px;
   min-width: 100px;
   width: 100%;
-  margin-bottom: 10px;
 }
-
-.editable form .control-group,
-.editable form .controls{
-  margin: 0px;
-  padding: 0px;
-  border: 0px;
 }
-.editable form .control-label{
-  display: none;
+@media (max-width: 767px) {
+  .popover.editpop{
+    position: fixed;
+    top: 30px !important;
+    left: 10px !important;
+    right: 10px !important;
+    z-index: 1040;
+    max-width: none;
+  }
 }
-.editable form .controls label {
-  white-space:nowrap; 
-}
-
