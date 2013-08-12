@@ -44,6 +44,7 @@
 {% block content %}
   <div class="content-toolbar btn-toolbar pull-right clearfix">
     {% view_block 'top_toolbar' %}
+    {% block toolbar_columes %}
     <div class="btn-group">
       <a class="dropdown-toggle btn btn-default btn-small" data-toggle="dropdown" href="#">
         <i class="icon-list-alt"></i> {% trans "Columes" %} <span class="caret"></span>
@@ -58,15 +59,20 @@
         {% endfor %}
       </ul>
     </div>
+    {% endblock toolbar_columes %}
+    {% block toolbar_layouts %}
     <div class="btn-group layout-btns" data-toggle="buttons-radio">
       <button type="button" class="btn btn-default btn-small layout-normal active"><i class="icon-th-large"></i></button>
       <button type="button" class="btn btn-default btn-small layout-condensed"><i class="icon-th"></i></button>
       {% view_block 'top_layout_btns' %}
     </div>
+    {% endblock toolbar_layouts %}
+    {% block toolbar_fullscreen %}
     <div class="btn-group layout-btns" data-toggle="buttons-checkbox">
       <button type="button" class="btn btn-default btn-small layout-full"><i class="icon-fullscreen"></i></button>
       {% view_block 'top_check_btns' %}
     </div>
+    {% endblock toolbar_fullscreen %}
     {% view_block 'top_btns' %}
   </div>
 
@@ -78,7 +84,9 @@
   {% view_block 'results_top' %}
   <div class="results">
   {% if results %}
+  {% block results_grid %}
   <table class="table table-bordered table-striped table-hover">
+    {% block results_grid_head %}
     <thead>
       <tr>{% for o in result_headers.cells %}
         <th {{o.tagattrs}}>
@@ -107,6 +115,8 @@
       </tr>
       {% view_block 'result_head' %}
     </thead>
+    {% endblock results_grid_head %}
+    {% block results_grid_body %}
     <tbody>
     {% for row in results %}
       <tr class="{% cycle 'row1' 'row2' %}{% if row.css_class %} {{row.css_class}}{%endif%}">{% for o in row.cells %}
@@ -137,7 +147,9 @@
       {% view_block 'result_row' row %}
     {% endfor %}
     </tbody>
+    {% endblock results_grid_body %}
   </table>
+  {% endblock results_grid %}
   {% else %}
     <p class="well">{% trans "Empty list" %}</p>
   {% endif %}

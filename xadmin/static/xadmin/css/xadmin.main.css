@@ -367,3 +367,13 @@ a[class^="icon-"]:before, a[class*=" icon-"]:before {
 .panel .panel-content .table {
   margin-bottom: 0px;
 }
+
+/** thumbnail **/
+.thumbnail > h1 { margin: 0px; }
+.thumbnail.warning {
+  background-color: #fcf8e3;
+  border-color: #fbeed5;
+}
+.thumbnail .action-select {position: absolute; top: 0px; left: 20px;}
+.thumbnail .dropdown.related_menu {position: absolute; top: 0px; right: 20px;}
+

@@ -3,6 +3,7 @@ import actions
 import filters
 import bookmark
 import export
+import layout
 import refresh
 import sortable
 import details

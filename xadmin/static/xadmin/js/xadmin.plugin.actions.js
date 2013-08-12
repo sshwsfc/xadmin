@@ -113,6 +113,6 @@
     }
 
     $(document).ready(function($) {
-        $("tr input.action-select").actions();
+        $(".results input.action-select").actions();
     });
 })(jQuery);
