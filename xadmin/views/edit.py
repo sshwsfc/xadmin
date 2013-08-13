@@ -166,6 +166,7 @@ class ModelFormAdminView(ModelAdminView):
         exclude = exclude or None
         defaults = {
             "form": self.form,
+            "fields": self.fields and list(self.fields) or None,
             "exclude": exclude,
             "formfield_callback": self.formfield_for_dbfield,
         }
