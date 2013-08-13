@@ -174,6 +174,7 @@ class DetailAdminView(ModelAdminView):
         exclude = exclude or None
         defaults = {
             "form": self.form,
+            "fields": self.fields and list(self.fields) or None,
             "exclude": exclude,
         }
         defaults.update(kwargs)
