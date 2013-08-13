@@ -460,13 +460,7 @@ class UpdateAdminView(ModelFormAdminView):
         opts = self.new_obj._meta
         obj = self.new_obj
         request = self.request
-
-        # Handle proxy models automatically created by .only() or .defer().
-        # Refs #14529
         verbose_name = opts.verbose_name
-        if obj._deferred:
-            opts_ = opts.proxy_for_model._meta
-            verbose_name = opts_.verbose_name
 
         pk_value = obj._get_pk_val()
 
