@@ -19,15 +19,19 @@
         {% if obj.thumbnail_label %}
           <h4>{{obj.thumbnail_label.label}}</h4>
         {% endif %}
+        <ul class="list-unstyled">
         {% for o in obj.cells %}
         {% if not o.thumbnail_hidden %}
-        <div class="clearfix">
+        <li class="text-right">
           {% if o.btns %}
             <div class="btn-group pull-right">
               {% for b in o.btns %}
                 {{b|safe}}
               {% endfor %}
             </div>
+          {% endif %}
+          {% if o.field_label %}
+          <strong class="pull-left">{{o.field_label}}:</strong>
           {% endif %}
           {% if o.menus %}
             <div class="dropdown">
@@ -43,8 +47,9 @@
           {% else %}
             {{ o.label }}
           {% endif %}
-        </div>{% endif %}
+        </li>{% endif %}
         {% endfor %}
+        </ul>
       </div>
     </div>
     {% endblock grid_item %}

@@ -74,6 +74,7 @@ class RelateMenuPlugin(BaseAdminPlugin):
     related_link.short_description = '&nbsp;'
     related_link.allow_tags = True
     related_link.allow_export = False
+    related_link.is_column = False
 
     def get_list_display(self, list_display):
         if self.use_related_menu and len(self.get_related_list()):
