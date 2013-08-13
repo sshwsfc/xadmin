@@ -52,7 +52,7 @@ class GridLayoutPlugin(BaseAdminPlugin):
         if getattr(item.attr, 'thumbnail_img', False):
             setattr(item, 'thumbnail_hidden', True)
             row['thumbnail_img'] = item
-        if item.is_display_link:
+        elif item.is_display_link:
             setattr(item, 'thumbnail_hidden', True)
             row['thumbnail_label'] = item
         return item
