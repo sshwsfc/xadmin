@@ -16,13 +16,6 @@
 {% endblock %}
 {% block bodyclass %}change-list{% endblock %}
 
-{% block breadcrumbs %}
-<ul class="breadcrumb">
-  <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
-  <li class="active">{{ cl.opts.verbose_name_plural|capfirst }}</li>
-</ul>
-{% endblock %}
-
 {% block nav_title %}{% if brand_icon %}<i class="icon-{{brand_icon}}"></i> {% endif %}{{brand_name}}{% endblock %}
 
 {% block nav_left %}

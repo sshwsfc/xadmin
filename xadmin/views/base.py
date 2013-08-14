@@ -401,6 +401,7 @@ class CommAdminView(BaseAdminView):
 
         context['nav_menu'] = nav_menu
         context['site_title'] = self.site_title or _(u'Django Xadmin')
+        context['breadcrumbs'] = self.get_breadcrumb()
 
         return context
 
@@ -421,6 +422,12 @@ class CommAdminView(BaseAdminView):
         if hasattr(messages, level) and callable(getattr(messages, level)):
             getattr(messages, level)(self.request, message)
 
+    @filter_hook
+    def get_breadcrumb(self):
+        return [{
+            'url': self.get_admin_url('index'),
+            'title': _('Home')
+            }]
 
 class ModelAdminView(CommAdminView):
 
@@ -450,6 +457,15 @@ class ModelAdminView(CommAdminView):
         context = super(ModelAdminView, self).get_context()
         context.update(new_context)
         return context
+
+    @filter_hook
+    def get_breadcrumb(self):
+        bcs = super(ModelAdminView, self).get_breadcrumb()
+        item = {'title': self.opts.verbose_name_plural}
+        if self.has_view_permission():
+            item['url'] = self.model_admin_url('changelist')
+        bcs.append(item)
+        return bcs
 
     @filter_hook
     def get_object(self, object_id):

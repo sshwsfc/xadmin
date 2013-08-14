@@ -7,7 +7,9 @@ from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from xadmin.util import unquote, get_deleted_objects
 
-from base import ModelAdminView, filter_hook, csrf_protect_m
+from xadmin.views.edit import UpdateAdminView
+from xadmin.views.detail import DetailAdminView
+from xadmin.views.base import ModelAdminView, filter_hook, csrf_protect_m
 
 
 class DeleteAdminView(ModelAdminView):
@@ -78,6 +80,17 @@ class DeleteAdminView(ModelAdminView):
         context = super(DeleteAdminView, self).get_context()
         context.update(new_context)
         return context
+
+    @filter_hook
+    def get_breadcrumb(self):
+        bcs = super(DeleteAdminView, self).get_breadcrumb()
+
+        item = {'title': _('Delete')}
+        if self.has_delete_permission():
+            item['url'] = self.model_admin_url('delete', self.obj.pk)
+        bcs.append(item)
+
+        return bcs
 
     @filter_hook
     def post_response(self):

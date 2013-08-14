@@ -224,6 +224,15 @@ class DetailAdminView(ModelAdminView):
         return context
 
     @filter_hook
+    def get_breadcrumb(self):
+        bcs = super(DetailAdminView, self).get_breadcrumb()
+        item = {'title': force_unicode(self.obj)}
+        if self.has_view_permission():
+            item['url'] = self.model_admin_url('detail', self.obj.pk)
+        bcs.append(item)
+        return bcs
+
+    @filter_hook
     def get_media(self):
         media = super(DetailAdminView, self).get_media()
         media = media + self.form_obj.media

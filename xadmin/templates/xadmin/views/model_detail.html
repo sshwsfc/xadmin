@@ -11,20 +11,6 @@
 
 {% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} detail{% endblock %}
 
-{% block breadcrumbs %}
-<ul class="breadcrumb">
-  <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
-  <li>
-    {% if has_view_permission %}
-    <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
-    {% else %}{{ opts.verbose_name_plural|capfirst }}{% endif %}
-  </li>
-  <li class="active">
-    {{ object|truncatewords:"18" }}
-  </li>
-</ul>
-{% endblock %}
-
 {% block nav_title %}
   {% if model_icon %}<i class="icon-{{model_icon}}"></i> {% endif %}{{ object|truncatewords:"18" }}
 {% endblock %}

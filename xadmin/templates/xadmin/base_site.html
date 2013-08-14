@@ -87,8 +87,17 @@
     <div id="content-block" class="col-sm-11 col-lg-10">
       {% block breadcrumbs %}
       <ul class="breadcrumb">
-      <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a><li>
-      {% if title %} &rsaquo; {{ title }}{% endif %}
+      {% if breadcrumbs %}
+      {% for bc in breadcrumbs %}
+      <li>
+        {% if forloop.last or not bc.url %}{{bc.title}}
+        {% else %}<a href="{{bc.url}}">{{bc.title}}</a>{% endif %}
+      </li>
+      {% endfor %}
+      {% else %}
+      <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
+      {% if title %}{{ title }}{% endif %}
+      {% endif %}
       </ul>
       {% endblock %}
 
