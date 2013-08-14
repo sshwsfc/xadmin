@@ -25,6 +25,7 @@
             '<a class="btn btn-submit btn-primary edit-btn"><i class="icon-pencil"></i> Edit</a></div></div></div></div>');
           $('body').append(modal);
         }
+        modal.find('.modal-title').html(el.attr('title'));
         modal.find('.edit-btn').attr('href', this.edit_uri);
         modal.find('.modal-body').html('<h2 style="text-align:center;"><i class="icon-spinner icon-spin icon-large"></i></h2>');
         modal.find('.modal-body').load(this.res_uri + '?_format=html', function(response, status, xhr) {
