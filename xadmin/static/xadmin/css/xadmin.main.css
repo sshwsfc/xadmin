@@ -79,7 +79,7 @@ a { cursor: pointer;}
     margin-bottom: 0px;
   }
   .top-search-form .input-group {
-    max-width: 240px;
+    width: 240px;
   }
 }
 @media (max-width: 767px) {
