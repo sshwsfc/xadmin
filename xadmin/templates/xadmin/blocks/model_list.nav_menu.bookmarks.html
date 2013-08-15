@@ -11,14 +11,14 @@
     {% for bk in bk_bookmarks %}
     <li class="{% if bk.selected %}active {% endif %}{% if bk.edit_url %}with_menu_btn{% endif %}">
       <a href="{{bk.url}}" title="{{bk.title}}"><i class="icon-bookmark"></i> {{bk.title}}</a>
-      {% if bk.edit_url and has_change_permission %}
+      {% if bk.edit_url and has_change_permission_bookmark %}
         <a href="{{bk.edit_url}}" class="dropdown-menu-btn"><i class="icon-pencil"></i></a>
       {% endif %}
     </li>
     {% empty %}
     <li><a class="mute">{% trans "No Bookmarks" %}</a></li>
     {% endfor %}
-    {% if not bk_has_selected and bk_current_qs and has_add_permission %}
+    {% if not bk_has_selected and bk_current_qs and has_add_permission_bookmark %}
     <li class="divider add-bookmark"></li>
     <li class="dropdown-submenu add-bookmark"><a href="#"><i class="icon-plus"></i> {% trans "New Bookmark" %}</a>
       <div class="popover right dropdown-menu">
