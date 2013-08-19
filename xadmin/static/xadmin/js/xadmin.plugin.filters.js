@@ -19,7 +19,7 @@
       return true;
     });
 
-    $('.menu-date-range .dropdown-menu form').each(function(){
+    $('.menu-date-range form').each(function(){
       var el = $(this);
       var start_date = el.find('.calendar.date-start').datepicker({format: $.date_local.dateJSFormat, language: 'xadmin'});
       var end_date = el.find('.calendar.date-end').datepicker({format: $.date_local.dateJSFormat, language: 'xadmin'});

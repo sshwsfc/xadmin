@@ -5,12 +5,13 @@
 
 {% block results_grid %}
 {{ block.super }}
-<div class="panel thumbnail-panel">
+<div class="panel panel-default thumbnail-panel">
+  <div class="panel-body">
   <div class="row">
     {% for obj in results %}
     {% block grid_item %}
-    <div class="col-lg-2 col-sm-3 col-4">
-      <div class="thumbnail text-center">
+    <div class="col-md-2 col-sm-3 col-xs-4">
+      <div class="thumbnail text-center grid-item">
         {% if obj.thumbnail_img %}
           {{obj.thumbnail_img.label}}
         {% else %}
@@ -54,6 +55,7 @@
     </div>
     {% endblock grid_item %}
     {% endfor %}
+  </div>
   </div>
 </div>
 {% endblock results_grid %}

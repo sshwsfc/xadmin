@@ -75,7 +75,7 @@
       <input type="hidden" name="this_is_the_login_form" value="1" />
       <input type="hidden" name="next" value="{{ next }}" />
 
-      <button class="btn btn-large btn-primary btn-block" type="submit">{% trans 'log in' %}</button>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">{% trans 'log in' %}</button>
 
       {% url 'admin_password_reset' as password_reset_url %}
       {% if password_reset_url %}

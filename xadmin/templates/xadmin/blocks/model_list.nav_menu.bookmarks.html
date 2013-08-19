@@ -22,18 +22,16 @@
     <li class="dropdown-submenu add-bookmark"><a href="#"><i class="icon-plus"></i> {% trans "New Bookmark" %}</a>
       <div class="popover right dropdown-menu">
         <div class="arrow"></div>
-        <div class="popover-inner">
-          <h3 class="popover-title">
-            {% trans "Save current page as Bookmark" %}
-          </h3>
-          <div class="popover-content">
-            <form id="bookmark_form" method="post" action="{{bk_post_url}}">
-              {% csrf_token %}
-              <input type="hidden" name="query" value="{{bk_current_qs}}"/>
-              <input name="title" type="text" class="form-control" placeholder="{% trans "Enter bookmark title" %}…"/>
-              <button class="btn btn-success" type="submit" data-loading-text="{% trans "Waiting" %}...">{% trans "Save Bookmark" %}</button>
-            </form>
-          </div>
+        <h3 class="popover-title">
+          {% trans "Save current page as Bookmark" %}
+        </h3>
+        <div class="popover-content">
+          <form id="bookmark_form" method="post" action="{{bk_post_url}}">
+            {% csrf_token %}
+            <input type="hidden" name="query" value="{{bk_current_qs}}"/>
+            <input name="title" type="text" class="form-control" placeholder="{% trans "Enter bookmark title" %}…"/>
+            <button class="btn btn-success" type="submit" data-loading-text="{% trans "Waiting" %}...">{% trans "Save Bookmark" %}</button>
+          </form>
         </div>
       </div>
     </li>

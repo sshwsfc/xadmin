@@ -18,19 +18,22 @@
 
 {% block nav_title %}{% if brand_icon %}<i class="icon-{{brand_icon}}"></i> {% endif %}{{brand_name}}{% endblock %}
 
-{% block nav_left %}
-<button type="button" class="navbar-toggle nav-back" data-toggle="class" data-target="#body-content" data-class-name="show_menu">
+{% block nav_toggles %}
+<button class="navbar-toggle pull-left" data-toggle="class" data-target="#body-content" data-class-name="show_menu">
   <i class="icon-list"></i>
+</button>
+{% if has_add_permission %}
+  <a href="{{add_url}}" class="navbar-toggle pull-right"><i class="icon-plus icon-white"></i></a>
+{% endif %}
+<button class="navbar-toggle pull-right" data-toggle="collapse" data-target=".content-navbar .navbar-collapse">
+  <i class="icon-filter icon-white"></i>
 </button>
 {% endblock %}
 
 {% block nav_btns %}
-    <a class="btn btn-default show-sm" data-toggle="collapse" data-target=".content-navbar .nav-collapse">
-      <i class="icon-filter icon-white"></i>
-    </a>
   {% if has_add_permission %}
     <a href="{{add_url}}" class="btn btn-primary"><i class="icon-plus icon-white"></i> 
-    <span>{% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}</span></a>
+    {% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}</a>
   {% endif %}
 {% endblock nav_btns %}
 
@@ -39,7 +42,7 @@
     {% view_block 'top_toolbar' %}
     {% block toolbar_columes %}
     <div class="btn-group">
-      <a class="dropdown-toggle btn btn-default btn-small" data-toggle="dropdown" href="#">
+      <a class="dropdown-toggle btn btn-default btn-sm" data-toggle="dropdown" href="#">
         <i class="icon-list-alt"></i> {% trans "Columes" %} <span class="caret"></span>
       </a>
       <ul class="dropdown-menu model_fields pull-right" role="menu" aria-labelledby="dLabel">
@@ -54,22 +57,26 @@
     </div>
     {% endblock toolbar_columes %}
     {% block toolbar_layouts %}
-    <div class="btn-group layout-btns" data-toggle="buttons-radio">
-      <button type="button" class="btn btn-default btn-small layout-normal active"><i class="icon-th-large"></i></button>
-      <button type="button" class="btn btn-default btn-small layout-condensed"><i class="icon-th"></i></button>
+    <div class="btn-group layout-btns" data-toggle="buttons">
+      <label class="btn btn-default btn-sm layout-normal active">
+        <input type="radio"> <i class="icon-th-large"></i>
+      </label>
+      <label class="btn btn-default btn-sm layout-condensed">
+        <input type="radio"> <i class="icon-th"></i>
+      </label>
       {% view_block 'top_layout_btns' %}
     </div>
     {% endblock toolbar_layouts %}
     {% block toolbar_fullscreen %}
     <div class="btn-group layout-btns" data-toggle="buttons-checkbox">
-      <button type="button" class="btn btn-default btn-small layout-full"><i class="icon-fullscreen"></i></button>
+      <button type="button" class="btn btn-default btn-sm layout-full"><i class="icon-fullscreen"></i></button>
       {% view_block 'top_check_btns' %}
     </div>
     {% endblock toolbar_fullscreen %}
     {% view_block 'top_btns' %}
   </div>
 
-  <ul class="pagination pagination-small pagination-left pagination-inline">
+  <ul class="pagination pagination-sm pagination-left pagination-inline">
     {% view_block 'pagination' 'small' %}
   </ul>
   
@@ -112,7 +119,7 @@
     {% block results_grid_body %}
     <tbody>
     {% for row in results %}
-      <tr class="{% cycle 'row1' 'row2' %}{% if row.css_class %} {{row.css_class}}{%endif%}">{% for o in row.cells %}
+      <tr class="grid-item{% if row.css_class %} {{row.css_class}}{%endif%}">{% for o in row.cells %}
         <td {{o.tagattrs}}>
           {% if o.btns %}
             <div class="btn-group pull-right">

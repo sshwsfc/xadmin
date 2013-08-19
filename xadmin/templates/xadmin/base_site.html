@@ -6,13 +6,12 @@
 
 {% block body %}
   <!-- Header -->
-  <div id="top-nav" class="navbar navbar-sm navbar-inverse navbar-fixed-top">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#top-nav .nav-collapse">
-      <span class="icon-list"></span>
-    </button>
-    <a class="navbar-brand" href="#">{% block branding %}{{ site_title }}{% endblock %}</a>
-    <div class="nav-collapse collapse">
-      <ul class="nav navbar-nav pull-right">
+  <div id="top-nav" class="navbar navbar-xs navbar-inverse navbar-fixed-top">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">{% block branding %}{{ site_title }}{% endblock %}</a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
         {% view_block 'top_navmenu' %}
         {% if user.is_active and user.is_staff %}
           <li class="dropdown">
@@ -30,10 +29,10 @@
   </div>
 
   <div id="body-content" class="clearfix row">
-    <div id="left-side" class="col-sm-1 col-lg-2">
+    <div id="left-side" class="col-sm-1 col-md-2">
         {% block navbar %}
         {% if nav_menu %}
-          <ul class="well nav nav-pills nav-stacked nav-sitemenu hidden-md">
+          <ul class="well nav nav-pills nav-stacked nav-sitemenu hidden-sm">
             <li>
               <a href="{% url 'admin:index' %}"><i class="icon-fixed-width icon-home"></i> {% trans 'Home' %}</a>
             </li>
@@ -54,7 +53,7 @@
           {% view_block 'menu-nav' %}
           </ul>
 
-          <ul class="well nav nav-list nav-sitemenu visible-md">
+          <ul class="well nav nav-list nav-sitemenu visible-sm">
             <li class="app_menu">
               <a href="{% url 'admin:index' %}"><i class="icon-fixed-width icon-home"></i></a><hr/>
             </li>
@@ -84,7 +83,7 @@
       {% endblock %}
     </div>
 
-    <div id="content-block" class="col-sm-11 col-lg-10">
+    <div id="content-block" class="col-sm-11 col-md-10">
       {% block breadcrumbs %}
       <ul class="breadcrumb">
       {% if breadcrumbs %}
@@ -102,25 +101,28 @@
       {% endblock %}
 
       {% block content-nav %}
-      <div class="navbar content-navbar navbar-sm" data-toggle="breakpoint"
-        data-class-sm="navbar content-navbar navbar-inverse"
-        data-class-md="navbar content-navbar"
-        data-class-lg="navbar content-navbar">
-        {% block nav_left %}
-        <button type="button" class="navbar-toggle nav-back" onclick="javascript: history.back();"><i class="icon-arrow-left"></i></button>
-        {% endblock %}
-        <a class="navbar-brand" data-toggle="collapse" data-target="#top-nav .nav-collapse">
-          {% block nav_title %}{% endblock %}
-        </a>
-        <div class="nav-collapse collapse">
+      <div class="navbar content-navbar navbar-default navbar-xs" data-toggle="breakpoint"
+        data-class-xs="navbar content-navbar navbar-inverse navbar-xs"
+        data-class-sm="navbar content-navbar navbar-default navbar-xs">
+        <div class="navbar-header">
+          {% view_block 'nav-toggles' %}
+          {% block nav_toggles %}
+          <button type="button" class="btn show-sm" onclick="javascript: history.back();"><i class="icon-arrow-left"></i></button>
+          {% endblock %}
+
+          <a class="navbar-brand" data-toggle="collapse" data-target="#top-nav .navbar-collapse">
+            {% block nav_title %}{% endblock %}
+          </a>
+        </div>
+        <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             {% view_block 'nav_menu' %}
           </ul>
           {% view_block 'nav_form' %}
-        </div>
-        <div class="navbar-btn pull-right">
-          {% view_block 'nav_btns' %}
-          {% block nav_btns %}{% endblock %}
+          <div class="navbar-btn navbar-right hidden-xs">
+            {% view_block 'nav_btns' %}
+            {% block nav_btns %}{% endblock %}
+          </div>
         </div>
       </div>
       {% endblock %}
@@ -128,8 +130,8 @@
       {% block messages %}
       {% if messages %}
         {% for message in messages %}
-        <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">
-          <a class="close" data-dismiss="alert" href="#">&times;</a>
+        <div class="alert alert-dismissable{% if message.tags %} alert-{{ message.tags }}{% endif %}">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
           {{ message|safe }}
         </div>
         {% endfor %}
@@ -143,7 +145,7 @@
   </div>
 
   {% block footer %}
-  <div id="footer" class="col-12">
+  <div id="footer">
     <hr/>
     <footer class="text-center">
       <p>&copy; my-company.inc 2013</p>

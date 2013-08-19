@@ -69,14 +69,14 @@
     })
 
   //.nav-content bar nav-menu
-  $('.navbar-sm .navbar-nav > li')
+  $('.navbar-xs .navbar-nav > li')
     .on('shown.bs.dropdown', function(e){
       $(this).find('>.dropdown-menu').css('max-height', $(window).height()-120);
-      $(this).parent().find('>li').addClass('hidden-sm');
-      $(this).removeClass('hidden-sm');
+      $(this).parent().find('>li').addClass('hidden-xs');
+      $(this).removeClass('hidden-xs');
     })
     .on('hidden.bs.dropdown', function(e){
-      $(this).parent().find('>li').removeClass('hidden-sm');
+      $(this).parent().find('>li').removeClass('hidden-xs');
     });
 
   // dashboard widget

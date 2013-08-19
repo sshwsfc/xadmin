@@ -122,7 +122,7 @@ class EditPatchView(ModelFormAdminView, ListAdminView):
         form.helper = helper
 
         s = '{% load i18n crispy_forms_tags %}<form method="post" action="{{action_url}}">{% crispy form %}'+ \
-            '<button type="submit" class="btn btn-success btn-block btn-small">{% trans "Apply" %}</button></form>'
+            '<button type="submit" class="btn btn-success btn-block btn-sm">{% trans "Apply" %}</button></form>'
         t = template.Template(s)
         c = template.Context({'form':form, 'action_url': self.model_admin_url('patch', self.org_obj.pk)})
 

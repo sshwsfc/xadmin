@@ -63,7 +63,7 @@
 }
 
 @media (max-width: 767px) {
-.hide-sm {display: none !important;}
+.hide-xs {display: none !important;}
 #body-content {
   margin-top: 50px; 
   padding-top: 10px;
@@ -175,28 +175,16 @@
   z-index: 1030;
   border-radius: 0;
 }
-.content-navbar .navbar-btn .btn,
-.navbar-toggle
-{
-  background: none;
-  border-color: #333;
+.content-navbar .navbar-toggle{
   padding: 3px 10px;
   font-size: 20px;
   color: white;
   width: auto;
   height: auto;
 }
-.content-navbar .navbar-btn .btn:hover,
-.content-navbar .navbar-btn .btn:focus{
-  background-color: #333;
-}
-.navbar-toggle{
-  top: 7px;
-}
-.navbar.tools-navbar {
-  height: 50px;
-  margin-top: -10px;
-  text-align: right;
+.navbar-toggle.pull-left{
+  margin-left: 15px;
+  margin-right: 0px;
 }
 .btn span{
   display: none;
@@ -206,30 +194,27 @@
   top: 0px;
   right: 10px;
 }
-.nav-back {
-  left: 10px;
-  right: auto;
-}
 .navbar-nav > .dropdown > .dropdown-menu{
   position: relative;
   float: none;
   max-height: 400px;
   overflow: auto;
 }
-.navbar-nav > .dropdown > .dropdown-menu li a{
+.navbar-nav > .dropdown > .dropdown-menu li>a{
   padding: 8px 20px;
 }
-.navbar-nav > .dropdown .dropdown-submenu > .dropdown-menu{
+.navbar-nav > .dropdown .dropdown-submenu > .dropdown-menu,
+.navbar-nav > .dropdown .dropdown-submenu > .popover{
   position: relative;
   top: 0px;
   left: 0px;
   margin: 10px;
   float: none;
 }
-.navbar-nav .dropdown-submenu .popover.dropdown-menu {
+.navbar-nav .dropdown-submenu .popover {
   max-width: none;
 }
-.navbar-nav .dropdown-submenu .popover.dropdown-menu .arrow {
+.navbar-nav .dropdown-submenu .popover .arrow {
   display: none;
 }
 

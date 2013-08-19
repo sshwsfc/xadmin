@@ -10,33 +10,34 @@ a { cursor: pointer;}
 .popover{
   width: auto;
 }
-.popover.dropdown-menu {
+.dropdown-submenu .popover {
   padding: 0px;
   max-width: none;
+  left: 100%;
 }
-.popover.right.dropdown-menu {
+.dropdown-submenu .popover.right {
   margin-top: -35px;
   margin-left: -10px;
 }
-.popover.left.dropdown-menu {
+.dropdown-submenu .popover.left {
   margin-top: -35px;
 }
-.popover.right.dropdown-menu .arrow, .popover.left.dropdown-menu .arrow{
+.dropdown-submenu .popover.right .arrow, .dropdown-submenu .popover.left .arrow{
   top: 47px;
 }
-.popover.dropdown-menu form{
+.dropdown-submenu .popover form{
   margin: 6px 0;
 }
-.popover.dropdown-menu form input {
+.dropdown-submenu .popover form input {
   min-width: 120px;
 }
-.popover.dropdown-menu form > .input-group {
+.dropdown-submenu .popover form > .input-group {
   width: 100%;
 }
-.popover.dropdown-menu form > .btn {
+.dropdown-submenu .popover form > .btn {
   margin-top: 10px;
 }
-.popover.dropdown-menu form > .input-group + .input-group {
+.dropdown-submenu .popover form > .input-group + .input-group {
   margin-top: 5px;
 }
 
@@ -48,31 +49,15 @@ a { cursor: pointer;}
   margin-top: 10px;
 }
 @media (min-width: 768px) {
-  .filter-date .menu-date-range .dropdown-menu {
+  .filter-date .menu-date-range .popover {
     width: 600px;
     left: 10px;
     top: 35px;
+    margin-top: -2px;
+    margin-left: -40px;
   }
-  .filter-date .menu-date-range .dropdown-menu:before {
-    position: absolute;
-    top: -7px;
-    left: 9px;
-    display: inline-block;
-    border-right: 7px solid transparent;
-    border-bottom: 7px solid #ccc;
-    border-left: 7px solid transparent;
-    border-bottom-color: rgba(0, 0, 0, 0.2);
-    content: '';
-  }
-  .filter-date .menu-date-range .dropdown-menu:after {
-    position: absolute;
-    top: -6px;
-    left: 10px;
-    display: inline-block;
-    border-right: 6px solid transparent;
-    border-bottom: 6px solid #fff;
-    border-left: 6px solid transparent;
-    content: '';
+  .filter-date .menu-date-range .popover .arrow {
+    left: 60px;
   }
   .top-search-form {
     margin-top: 6px;
@@ -116,8 +101,8 @@ a { cursor: pointer;}
   display: none;
 }
 
-.panel .nopadding{
-  margin: -15px;
+.panel .panel-body.nopadding{
+  padding: 0px;
 }
 .ui-sortable-placeholder { border: 1px dotted #CCC; visibility: visible !important; }
 .ui-sortable-placeholder * { visibility: hidden; }
@@ -341,14 +326,17 @@ a[class^="icon-"]:before, a[class*=" icon-"]:before {
   padding-left: 20px;
 }
 
-.dropdown-submenu:hover > .dropdown-menu {
+.dropdown-submenu:hover > .dropdown-menu,
+.dropdown-submenu:hover > .popover {
   display: none;
 }
-.dropdown-submenu.open > .dropdown-menu {
+.dropdown-submenu.open > .dropdown-menu,
+.dropdown-submenu.open > .popover {
   display: block;
 }
 
 /** nav-header **/
+.navbar-collapse {max-height: none !important;}
 .nav-header {
   display: block;
   padding: 3px 15px;
@@ -364,12 +352,12 @@ a[class^="icon-"]:before, a[class*=" icon-"]:before {
 }
 
 /** table in panel **/
-.panel .panel-content .table {
+.panel .panel-body > .table {
   margin-bottom: 0px;
 }
 
 /** thumbnail **/
-.thumbnail-panel.panel { padding-bottom: 0px;}
+.thumbnail-panel.panel .panel-body { padding-bottom: 0px;}
 .thumbnail-panel .thumbnail{margin-bottom: 15px;}
 .thumbnail-panel .thumbnail:hover { background-color: #efefef; }
 .thumbnail > h1 { margin: 0px; }
