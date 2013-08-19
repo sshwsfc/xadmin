@@ -1,8 +1,7 @@
 {% if form.non_field_errors %}
     <div class="alert alert-block alert-danger alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
         {% if form_error_title %}<h4>{{ form_error_title }}</h4>{% endif %}
-        <ul>
+        <ul style="padding-left:0px;">
             {{ form.non_field_errors|unordered_list }}
         </ul>
     </div>
