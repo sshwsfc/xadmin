@@ -50,7 +50,7 @@ class InlineStyleManager(object):
     def register_style(self, name, style):
         self.inline_styles[name] = style
 
-    def get_style(self, name=None):
+    def get_style(self, name='stacked'):
         return self.inline_styles.get(name)
 
 style_manager = InlineStyleManager()
@@ -68,7 +68,7 @@ class InlineStyle(object):
 
     def get_attrs(self):
         return {}
-style_manager.register_style(None, InlineStyle)
+style_manager.register_style('stacked', InlineStyle)
 
 
 class OneInlineStyle(InlineStyle):
@@ -126,7 +126,7 @@ class InlineModelAdmin(ModelFormAdminView):
     can_delete = True
     fields = []
     admin_view = None
-    style = None
+    style = 'stacked'
 
     def init(self, admin_view):
         self.admin_view = admin_view
@@ -187,6 +187,7 @@ class InlineModelAdmin(ModelFormAdminView):
 
         style = style_manager.get_style(
             'one' if self.max_num == 1 else self.style)(self, instance)
+        style.name = self.style
 
         if len(instance):
             layout = copy.deepcopy(self.form_layout)
@@ -272,6 +273,7 @@ class InlineFormset(Fieldset):
         self.css_class = kwargs.pop('css_class', '')
         self.css_id = "%s-group" % formset.prefix
         self.template = formset.style.template
+        self.inline_style = formset.style.name
         if allow_blank and len(formset) == 0:
             self.template = 'xadmin/edit_inline/blank.html'
         self.formset = formset
@@ -282,7 +284,7 @@ class InlineFormset(Fieldset):
 
     def render(self, form, form_style, context):
         return render_to_string(
-            self.template, dict({'formset': self, 'prefix': self.formset.prefix, 'form_style': form_style}, **self.extra_attrs),
+            self.template, dict({'formset': self, 'prefix': self.formset.prefix, 'inline_style': self.inline_style}, **self.extra_attrs),
             context_instance=context)
 
 
