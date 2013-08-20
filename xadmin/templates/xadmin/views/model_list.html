@@ -80,7 +80,7 @@
   
   <form id="changelist-form" action="" method="post"{% view_block 'result_list_form' %}>{% csrf_token %}
   {% view_block 'results_top' %}
-  <div class="results">
+  <div class="results table-responsive">
   {% if results %}
   {% block results_grid %}
   <table class="table table-bordered table-striped table-hover">
