@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-xadmin',
-    version='0.1.12-dev',
+    version='0.3.6-dev',
     description='Drop-in replacement of Django admin comes with lots of goodies, fully extensible with plugin support, pretty UI based on Twitter Bootstrap.',
     long_description=open('README.rst').read(),
     author='sshwsfc',
@@ -35,7 +35,6 @@ setup(
         'Operating System :: OS Independent',
         "Programming Language :: JavaScript",
         'Programming Language :: Python',
-        "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
         "Topic :: Internet :: WWW/HTTP",
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
