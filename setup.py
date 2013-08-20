@@ -12,7 +12,7 @@ setup(
     author='sshwsfc',
     author_email='sshwsfc@gmail.com',
     url='http://www.xadmin.io',
-    download_url='http://github.com/sshwsfc/django-xadmin/archive/0.1.12.dev.zip',
+    download_url='http://github.com/sshwsfc/django-xadmin/archive/master.zip',
     packages=['xadmin', 'xadmin.plugins', 'xadmin.templatetags', 'xadmin.views'],
     include_package_data=True,
     install_requires=[
