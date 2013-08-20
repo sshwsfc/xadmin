@@ -11,6 +11,7 @@ setup(
     long_description=open('README.rst').read(),
     author='sshwsfc',
     author_email='sshwsfc@gmail.com',
+    license=open('LICENSE').read(),
     url='http://www.xadmin.io',
     download_url='http://github.com/sshwsfc/django-xadmin/archive/master.zip',
     packages=['xadmin', 'xadmin.plugins', 'xadmin.templatetags', 'xadmin.views'],
