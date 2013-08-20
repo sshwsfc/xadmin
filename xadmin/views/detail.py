@@ -13,7 +13,7 @@ from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from django.utils.html import conditional_escape
-from xadmin.layout import FormHelper, Layout, Fieldset, Container, Column, Field
+from xadmin.layout import FormHelper, Layout, Fieldset, Container, Column, Field, Col, TabHolder
 from xadmin.util import unquote, lookup_field, display_for_field, boolean_icon, label_for_field
 
 from base import ModelAdminView, filter_hook, csrf_protect_m
@@ -130,17 +130,18 @@ class DetailAdminView(ModelAdminView):
         layout = copy.deepcopy(self.detail_layout or self.form_layout)
 
         if layout is None:
-            layout = Layout(Container(
-                Fieldset("", *self.form_obj.fields.keys(), css_class="unsort no_title"), css_class="form-horizontal"
+            layout = Layout(Container(Col('full', 
+                Fieldset("", *self.form_obj.fields.keys(), css_class="unsort no_title"), horizontal=True, span=12)
             ))
         elif type(layout) in (list, tuple) and len(layout) > 0:
             if isinstance(layout[0], Column):
-                layout = Layout(Container(*layout))
-            elif isinstance(layout[0], Fieldset):
-                layout = Layout(
-                    Container(*layout, css_class="form-horizontal"))
+                fs = layout
+            elif isinstance(layout[0], (Fieldset, TabHolder)):
+                fs = (Col('full', *layout, horizontal=True, span=12),)
             else:
-                layout = Layout(Container(Fieldset("", *layout, css_class="unsort no_title"), css_class="form-horizontal"))
+                fs = (Col('full', Fieldset("", *layout, css_class="unsort no_title"), horizontal=True, span=12),)
+
+            layout = Layout(Container(*fs))
 
             if self.detail_show_all:
                 rendered_fields = [i[1] for i in layout.get_field_names()]
