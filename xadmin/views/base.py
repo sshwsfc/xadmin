@@ -481,6 +481,15 @@ class ModelAdminView(CommAdminView):
         except (model.DoesNotExist, ValidationError):
             return None
 
+    @filter_hook
+    def get_object_url(self, obj):
+        if self.has_change_permission(obj):
+            return self.model_admin_url("change", getattr(obj, self.opts.pk.attname))
+        elif self.has_view_permission(obj):
+            return self.model_admin_url("detail", getattr(obj, self.opts.pk.attname))
+        else:
+            return None
+
     def model_admin_url(self, name, *args, **kwargs):
         return reverse(
             "%s:%s_%s_%s" % (self.admin_site.app_name, self.opts.app_label,

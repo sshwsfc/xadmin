@@ -598,10 +598,7 @@ class ListAdminView(ModelAdminView):
 
     @filter_hook
     def url_for_result(self, result):
-        if self.has_change_permission(result):
-            return self.model_admin_url("change", getattr(result, self.pk_attname))
-        else:
-            return self.model_admin_url("detail", getattr(result, self.pk_attname))
+        return self.get_object_url(result)
 
     # Media
     @filter_hook

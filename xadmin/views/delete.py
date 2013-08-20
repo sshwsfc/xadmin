@@ -84,7 +84,10 @@ class DeleteAdminView(ModelAdminView):
     @filter_hook
     def get_breadcrumb(self):
         bcs = super(DeleteAdminView, self).get_breadcrumb()
-
+        bcs.append({
+            'title': force_unicode(self.obj),
+            'url': self.get_object_url(self.obj)
+            })
         item = {'title': _('Delete')}
         if self.has_delete_permission():
             item['url'] = self.model_admin_url('delete', self.obj.pk)
