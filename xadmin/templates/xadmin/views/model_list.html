@@ -19,9 +19,7 @@
 {% block nav_title %}{% if brand_icon %}<i class="icon-{{brand_icon}}"></i> {% endif %}{{brand_name}}{% endblock %}
 
 {% block nav_toggles %}
-<button class="navbar-toggle pull-left" data-toggle="class" data-target="#body-content" data-class-name="show_menu">
-  <i class="icon-list"></i>
-</button>
+{% include "xadmin/includes/toggle_menu.html" %}
 {% if has_add_permission %}
   <a href="{{add_url}}" class="navbar-toggle pull-right"><i class="icon-plus icon-white"></i></a>
 {% endif %}

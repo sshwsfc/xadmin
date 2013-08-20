@@ -14,6 +14,13 @@
 </ul>
 {% endblock %}
 
+{% block nav_toggles %}
+{% include "xadmin/includes/toggle_back.html" %}
+{% if has_change_permission %}
+  <a href="{% url opts|admin_urlname:'change' object.pk %}" class="navbar-toggle pull-right"><i class="icon-pencil"></i></a>
+{% endif %}
+{% endblock %}
+
 {% block nav_btns %}
   {% if has_change_permission %}
   <a href="{% url opts|admin_urlname:'change' object.pk %}" class="btn btn-default"><i class="icon-pencil"></i> <span>{% trans "Edit" %}</span></a>

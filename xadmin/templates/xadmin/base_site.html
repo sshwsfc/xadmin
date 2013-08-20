@@ -105,9 +105,9 @@
         data-class-xs="navbar content-navbar navbar-inverse navbar-xs"
         data-class-sm="navbar content-navbar navbar-default navbar-xs">
         <div class="navbar-header">
-          {% view_block 'nav-toggles' %}
+          {% view_block 'nav_toggles' %}
           {% block nav_toggles %}
-          <button type="button" class="btn show-sm" onclick="javascript: history.back();"><i class="icon-arrow-left"></i></button>
+          {% include "xadmin/includes/toggle_back.html" %}
           {% endblock %}
 
           <a class="navbar-brand" data-toggle="collapse" data-target="#top-nav .navbar-collapse">
