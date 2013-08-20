@@ -52,7 +52,6 @@
   {
     width: auto !important;
   }
-  .show-sm { display: none !important;}
 
   .quick-form .modal-dialog {
     width: auto;
@@ -63,7 +62,6 @@
 }
 
 @media (max-width: 767px) {
-.hide-xs {display: none !important;}
 #body-content {
   margin-top: 50px; 
   padding-top: 10px;
@@ -231,4 +229,28 @@
   width: auto;
 }
 
+}
+
+@media (max-width: 767px) {
+  .show-sm, .show-md, .show-lg, .hide-xs{
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .show-xs, .show-md, .show-lg, .hide-sm{
+    display: none !important;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .show-xs, .show-sm, .show-lg, .hide-md{
+    display: none !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .show-xs, .show-sm, .show-md, .hide-lg{
+    display: none !important;
+  }
 }

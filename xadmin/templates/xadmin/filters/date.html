@@ -36,7 +36,7 @@
         <div class="arrow"></div>
         <div class="popover-content row">
         <form method="get" action="" class="clearfix">
-          <div class="ranges col-sm-3 hidden-xs">
+          <div class="ranges col-sm-3 hide-xs">
             <fieldset class="range_inputs">
               <h4>{% trans "Select Date" %}</h4>
               <label for="{{since_name}}">{% trans "From" %}</label>
@@ -51,7 +51,7 @@
             <div class="calendar date-end col-sm-6" data-date="{{until_val}}"></div>
           </div>
           <div class="col-xs-12">
-            <button type="submit" class="btn btn-success btn-block visible-xs">{% trans "Apply" %}</button>
+            <button type="submit" class="btn btn-success btn-block show-xs">{% trans "Apply" %}</button>
           </div>
           {{ form_params|safe }}
         </form>

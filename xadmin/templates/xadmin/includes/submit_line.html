@@ -2,11 +2,11 @@
 {% load xadmin_tags %}
 <div class="form-actions well well-sm clearfix">
 {% if show_delete_link %}
-  <a href="{{ delete_url }}" class="btn btn-danger deletelink col-xs-2 visible-xs"><i class="icon-trash"></i></a>
+  <a href="{{ delete_url }}" class="btn btn-danger deletelink col-xs-2 show-xs"><i class="icon-trash"></i></a>
 {% endif %}
 
 {% if show_save %}
-  <div class="btn-group clearfix visible-xs save-group {% if show_delete_link %}col-xs-10{%else%}col-xs-12{% endif %}">
+  <div class="btn-group clearfix show-xs save-group {% if show_delete_link %}col-xs-10{%else%}col-xs-12{% endif %}">
   <button type="submit" class="default btn btn-primary col-xs-10" name="_save" data-loading-text="{% trans "Saving.." %}" {{ onclick_attrib }}/><i class="icon-save"></i> {% trans 'Save' %}</button>
   <button type="button" class="more btn btn-primary col-xs-2" data-toggle="collapse" data-target=".nav-collapse.more-btns"><i class="icon-ellipsis-vertical"></i></button>
   </div>
