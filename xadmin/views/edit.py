@@ -268,7 +268,6 @@ class ModelFormAdminView(ModelAdminView):
 
     @filter_hook
     def get_context(self):
-        ordered_objects = self.opts.get_ordered_objects()
         add = self.org_obj is None
         change = self.org_obj is not None
 
@@ -287,7 +286,6 @@ class ModelFormAdminView(ModelAdminView):
 
             'has_file_field': True,  # FIXME - this should check if form or formsets have a FileField,
             'has_absolute_url': hasattr(self.model, 'get_absolute_url'),
-            'ordered_objects': ordered_objects,
             'form_url': '',
             'content_type_id': ContentType.objects.get_for_model(self.model).id,
             'save_as': self.save_as,
@@ -296,8 +294,7 @@ class ModelFormAdminView(ModelAdminView):
 
         # for submit line
         new_context.update({
-            'onclick_attrib': (self.opts.get_ordered_objects() and change
-                               and 'onclick="submitOrderForm();"' or ''),
+            'onclick_attrib': '',
             'show_delete_link': (new_context['has_delete_permission']
                                  and (change or new_context['show_delete'])),
             'show_save_as_new': change and self.save_as,
