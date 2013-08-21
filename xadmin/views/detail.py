@@ -25,19 +25,29 @@ class ShowField(Field):
     template = "xadmin/layout/field_value.html"
 
     def __init__(self, callback, *args, **kwargs):
-        super(ShowField, self).__init__(*args, **kwargs)
+        super(ShowField, self).__init__(*args)
+
+        if 'attrs' in kwargs:
+            self.attrs = kwargs.pop('attrs')
+        if 'wrapper_class' in kwargs:
+            self.wrapper_class = kwargs.pop('wrapper_class')
+
         self.results = [(field, callback(field)) for field in self.fields]
 
     def render(self, form, form_style, context):
+        if hasattr(self, 'wrapper_class'):
+            context['wrapper_class'] = self.wrapper_class
+
         html = ''
         for field, result in self.results:
+            context['result'] = result
             if field in form.fields:
                 if form.fields[field].widget != forms.HiddenInput:
-                    html += loader.render_to_string(
-                        self.template, {'field': form[field], 'result': result})
+                    context['field'] = form[field]
+                    html += loader.render_to_string(self.template, context)
             else:
-                html += loader.render_to_string(
-                    self.template, {'field': field, 'result': result})
+                context['field'] = field
+                html += loader.render_to_string(self.template, context)
         return html
 
 
@@ -99,7 +109,7 @@ class ResultField(object):
 def replace_field_to_value(layout, cb):
     for i, lo in enumerate(layout.fields):
         if isinstance(lo, Field) or issubclass(lo.__class__, Field):
-            layout.fields[i] = ShowField(cb, *lo.fields, **lo.attrs)
+            layout.fields[i] = ShowField(cb, *lo.fields, attrs=lo.attrs, wrapper_class=lo.wrapper_class)
         elif isinstance(lo, basestring):
             layout.fields[i] = ShowField(cb, lo)
         elif hasattr(lo, 'get_field_names'):
