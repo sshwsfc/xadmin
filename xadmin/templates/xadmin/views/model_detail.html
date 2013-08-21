@@ -27,7 +27,7 @@
 
 {% block nav_btns %}
   {% if has_change_permission %}
-  <a href="{% url opts|admin_urlname:'change' object.pk %}" class="btn btn-default"><i class="icon-pencil"></i> <span>{% trans "Edit" %}</span></a>
+  <a href="{% url opts|admin_urlname:'change' object.pk %}" class="btn btn-primary"><i class="icon-pencil"></i> <span>{% trans "Edit" %}</span></a>
   {% endif %}
   {% if has_delete_permission %}
   <a href="{% url opts|admin_urlname:'delete' object.pk %}" class="btn btn-danger"><i class="icon-trash"></i> <span>{% trans "Delete" %}</span></a>

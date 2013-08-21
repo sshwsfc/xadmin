@@ -23,6 +23,6 @@
 
 {% block nav_btns %}
   {% if has_change_permission %}
-  <a href="{% url opts|admin_urlname:'change' object.pk %}" class="btn btn-default"><i class="icon-pencil"></i> <span>{% trans "Edit" %}</span></a>
+  <a href="{% url opts|admin_urlname:'change' object.pk %}" class="btn btn-primary"><i class="icon-pencil"></i> <span>{% trans "Edit" %}</span></a>
   {% endif %}
 {% endblock %}
