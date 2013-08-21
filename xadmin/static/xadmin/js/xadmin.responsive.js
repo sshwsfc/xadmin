@@ -114,11 +114,16 @@
       $('[data-toggle=breakpoint]').each(function(){
         if(newClass = $(this).data('class-' + mode)){
           $(this)[0].className = newClass;
+        } else {
+          $(this)[0].className = $(this).data('class-org');
         }
       })
       lastMode = mode;
     }
   });
+  $('[data-toggle=breakpoint]').each(function(){
+    $(this).data('class-org', $(this)[0].className);
+  })
   $(window).trigger('resize');
   })
 

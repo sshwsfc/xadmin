@@ -2,9 +2,9 @@
 {% load i18n xadmin_tags %}
 
 {% block content %}
-  <div class="row" style="margin-bottom: -10px;">
+  <div class="row">
     {% for btn in btns %}
-    <div class="col-xs-6 col-sm-4 col-md-3" style="margin-bottom: 10px;">
+    <div class="col-xs-6 col-sm-4 col-md-3">
     <a href="{{ btn.url }}" class="btn btn-primary btn-quick">
       <i class="icon-{% if btn.icon %}{{btn.icon}}{%else%}leaf{% endif %}"></i>
       <p>{{ btn.title }}</p>

@@ -100,19 +100,21 @@ select.selectmultiple {
     float: left;
   }
   .form-horizontal .controls {
-    padding-left: 180px;
+    margin-left: 180px;
   }
   .form-horizontal.short_label .control-label {
     width: 120px;
   }
   .form-horizontal.short_label .controls {
-    padding-left: 130px;
+    margin-left: 130px;
   }
   .form-horizontal .form-group {
     margin-bottom: 24px;
   }
   .form-horizontal .form-inline .form-group {
-    margin-bottom: 0px;
+    margin: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
   }
   .form-horizontal .fieldset .panel-body {
     padding-top: 24px;

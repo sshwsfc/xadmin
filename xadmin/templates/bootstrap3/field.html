@@ -20,7 +20,7 @@
         {% endif %}
 
         {% if field|css_class != "checkboxselectmultiple" and field|css_class != "radioselect" %}
-            <div class="controls">
+            <div class="controls clearfix">
                 {% if field|is_checkbox %}
                     <label for="{{ field.id_for_label }}" class="checkbox {% if field.field.required %}requiredField{% endif %}">
                         {% crispy_field field %}
