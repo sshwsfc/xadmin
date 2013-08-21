@@ -173,6 +173,7 @@ class BaseWidget(forms.Form):
     description = 'Base Widget, don\'t use it.'
     widget_title = None
     widget_icon = 'icon-plus-sign-alt'
+    widget_type = 'base'
     base_title = None
 
     id = forms.IntegerField(label=_('Widget ID'), widget=forms.HiddenInput)
@@ -204,8 +205,8 @@ class BaseWidget(forms.Form):
 
     @property
     def widget(self):
-        context = {'widget_id': self.id, 'widget_title':
-                   self.title, 'form': self, 'widget': self}
+        context = {'widget_id': self.id, 'widget_title': self.title, 
+            'widget_type': self.widget_type, 'form': self, 'widget': self}
         self.context(context)
         return loader.render_to_string(self.template, context, context_instance=RequestContext(self.request))
 

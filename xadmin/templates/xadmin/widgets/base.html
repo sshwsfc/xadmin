@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block box_attrs %}id="{{ widget_id }}"{% endblock box_attrs %}
-{% block box_class %}widget{% endblock box_class %}
+{% block box_class %}widget {{widget_type}}{% endblock box_class %}
 
 {% block box_title %}
   {% if widget.dashboard.widget_customiz %}
