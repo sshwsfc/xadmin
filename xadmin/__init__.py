@@ -1,6 +1,6 @@
 from xadmin.sites import AdminSite, site
 
-VERSION = [0, 3, 6]
+VERSION = [0, 3, 8]
 
 
 def autodiscover():
