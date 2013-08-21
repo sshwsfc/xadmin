@@ -175,8 +175,8 @@ class BaseWidget(forms.Form):
     widget_icon = 'icon-plus-sign-alt'
     base_title = None
 
-    id = forms.IntegerField(_('Widget ID'), widget=forms.HiddenInput)
-    title = forms.CharField(_('Widget Title'), required=False, widget=exwidgets.AdminTextInputWidget)
+    id = forms.IntegerField(label=_('Widget ID'), widget=forms.HiddenInput)
+    title = forms.CharField(label=_('Widget Title'), required=False, widget=exwidgets.AdminTextInputWidget)
 
     def __init__(self, dashboard, data):
         self.dashboard = dashboard
