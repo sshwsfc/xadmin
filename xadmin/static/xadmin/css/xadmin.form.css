@@ -38,6 +38,9 @@ select.selectmultiple {
 .controls > .checkbox:first-child {
   margin-top: 0px;
 }
+.help-block {
+  margin-bottom: 0px;
+}
 
 .form-row .row {
   margin: 0px !important;
@@ -102,10 +105,12 @@ select.selectmultiple {
   .form-horizontal .controls {
     margin-left: 180px;
   }
-  .form-horizontal.short_label .control-label {
+  .form-horizontal.short_label .control-label,
+  .form-horizontal .short_label .control-label {
     width: 120px;
   }
-  .form-horizontal.short_label .controls {
+  .form-horizontal.short_label .controls,
+  .form-horizontal .short_label .controls {
     margin-left: 130px;
   }
   .form-horizontal .form-group {

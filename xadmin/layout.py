@@ -26,7 +26,7 @@ class Row(layout.Div):
 
     def convert_field(self, f, counts):
         col_class = "col-sm-%d" % int(math.ceil(12/counts))
-        if not isinstance(f, layout.Field):
+        if not (isinstance(f, Field) or issubclass(f.__class__, Field)):
             f = layout.Field(f)
         if f.wrapper_class:
             f.wrapper_class += " %s" % col_class
@@ -72,7 +72,7 @@ class InputGroup(layout.Field):
         super(InputGroup, self).__init__(field, **kwargs)
 
     def render(self, form, form_style, context, template_pack='bootstrap'):
-        classes = form.fields[self.field].widget.attrs['class']
+        classes = form.fields[self.field].widget.attrs.get('class','')
         context.update({'inputs': self.inputs, 'classes': classes.replace('form-control', '')})
         if hasattr(self, 'wrapper_class'):
             context['wrapper_class'] = self.wrapper_class
