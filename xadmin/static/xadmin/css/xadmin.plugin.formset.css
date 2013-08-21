@@ -20,7 +20,7 @@
     padding: 5px 5px 3px; 
 }
 .formset .formset-form {
-    padding: 15px;
+    padding: 24px 15px 0px;
 }
 .formset .accordion-heading .delete-row {
     float: right;
@@ -44,16 +44,6 @@
 }
 .formset .table td{
     padding: 4px;
-}
-
-.formset .table td input,
-.formset .table td select,
-.formset .table td textarea {
-    width: 100%;
-    height: 30px;
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
 }
 
 .formset .table td .delete-row{

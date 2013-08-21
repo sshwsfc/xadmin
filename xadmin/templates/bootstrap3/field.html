@@ -3,7 +3,7 @@
 {% if field.is_hidden %}
 	{{ field }}
 {% else %}
-	<div id="div_{{ field.auto_id }}" class="control-group row{% if wrapper_class %} {{ wrapper_class }}{% endif %}{% if form_show_errors%}{% if field.errors %} has-error{% endif %}{% endif %}{% if field.css_classes %} {{ field.css_classes }}{% endif %}">
+	<div id="div_{{ field.auto_id }}" class="form-group row{% if wrapper_class %} {{ wrapper_class }}{% endif %}{% if form_show_errors%}{% if field.errors %} has-error{% endif %}{% endif %}{% if field.css_classes %} {{ field.css_classes }}{% endif %}">
 
 		{% if field.label and not field|is_checkbox %}
 			<label for="{{ field.id_for_label }}" class="control-label">
