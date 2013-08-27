@@ -8,6 +8,7 @@ from django.utils.encoding import force_unicode, smart_unicode
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.xmlutils import SimplerXMLGenerator
+from django.utils.text import slugify
 from django.db.models import BooleanField, NullBooleanField
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
@@ -47,27 +48,35 @@ class ExportPlugin(BaseAdminPlugin):
     def init_request(self, *args, **kwargs):
         return self.request.GET.get('_do_') == 'export'
 
-    def get_results(self, context):
+    def _format_value(self, o):
+        value = None
+        if (o.field is None and getattr(o.attr, 'boolean', False)) or \
+           (o.field and isinstance(o.field, (BooleanField, NullBooleanField))):
+                value = o.value
+        elif str(o.text).startswith("<span class='muted'>"):
+            value = escape(str(o.text)[20:-7])
+        else:
+            value = escape(str(o.text))
+        return value
+
+    def _get_objects(self, context):
         headers = [c for c in context['result_headers'].cells if c.export]
         rows = context['results']
 
-        new_rows = []
-        for r in rows:
-            d = {}
-            for i, o in enumerate(filter(lambda c:getattr(c, 'export', False), r.cells)):
-                if (o.field is None and getattr(o.attr, 'boolean', False)) or \
-                   (o.field and isinstance(o.field, (BooleanField, NullBooleanField))):
-                        value = o.value
-                elif str(o.text).startswith("<span class='muted'>"):
-                    value = escape(str(o.text)[20:-7])
-                else:
-                    value = escape(str(o.text))
-                d[force_unicode(headers[i].text)] = value
-            new_rows.append(d)
+        return [dict([\
+            (force_unicode(headers[i].text), self._format_value(o)) for i, o in \
+            enumerate(filter(lambda c:getattr(c, 'export', False), r.cells))]) for r in rows]
+
+    def _get_datas(self, context):
+        rows = context['results']
+
+        new_rows = [[self._format_value(o) for o in \
+            filter(lambda c:getattr(c, 'export', False), r.cells)] for r in rows]
+        new_rows.insert(0, [force_unicode(c.text) for c in context['result_headers'].cells if c.export])
         return new_rows
 
     def get_xls_export(self, context):
-        results = self.get_results(context)
+        datas = self._get_datas(context)
         output = StringIO.StringIO()
         export_header = (
             self.request.GET.get('export_xls_header', 'off') == 'on')
@@ -82,9 +91,8 @@ class ExportPlugin(BaseAdminPlugin):
                   'header': xlwt.easyxf('font: name Times New Roman, color-index red, bold on', num_format_str='#,##0.00'),
                   'default': xlwt.Style.default_style}
 
-        datas = [row.values() for row in results]
-        if export_header:
-            datas.insert(0, results[0].keys())
+        if not export_header:
+            datas = datas[1:]
         for rowx, row in enumerate(datas):
             for colx, value in enumerate(row):
                 if export_header and rowx == 0:
@@ -113,15 +121,14 @@ class ExportPlugin(BaseAdminPlugin):
         return t
 
     def get_csv_export(self, context):
-        results = self.get_results(context)
+        datas = self._get_datas(context)
         stream = []
 
-        if self.request.GET.get('export_csv_header', 'off') == 'on':
-            stream.append(
-                ','.join(map(self._format_csv_text, results[0].keys())))
+        if self.request.GET.get('export_csv_header', 'off') != 'on':
+            datas = datas[1:]
 
-        for row in results:
-            stream.append(','.join(map(self._format_csv_text, row.values())))
+        for row in datas:
+            stream.append(','.join(map(self._format_csv_text, row)))
 
         return '\r\n'.join(stream)
 
@@ -133,6 +140,7 @@ class ExportPlugin(BaseAdminPlugin):
                 xml.endElement("row")
         elif isinstance(data, dict):
             for key, value in data.iteritems():
+                key = slugify(key)
                 xml.startElement(key, {})
                 self._to_xml(xml, value)
                 xml.endElement(key)
@@ -140,7 +148,7 @@ class ExportPlugin(BaseAdminPlugin):
             xml.characters(smart_unicode(data))
 
     def get_xml_export(self, context):
-        results = self.get_results(context)
+        results = self._get_objects(context)
         stream = StringIO.StringIO()
 
         xml = SimplerXMLGenerator(stream, "utf-8")
@@ -155,7 +163,7 @@ class ExportPlugin(BaseAdminPlugin):
         return stream.getvalue().split('\n')[1]
 
     def get_json_export(self, context):
-        results = self.get_results(context)
+        results = self._get_objects(context)
         return json.dumps({'objects': results}, ensure_ascii=False,
                           indent=(self.request.GET.get('export_json_format', 'off') == 'on') and 4 or None)
 
