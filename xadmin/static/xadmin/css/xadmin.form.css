@@ -14,7 +14,7 @@ select.selectmultiple {
 
 /* form css */
 .control-label {
-  padding: 6px 15px;
+  padding: 6px 10px;
   font-weight: bold;
 }
 .controls {
@@ -103,7 +103,7 @@ select.selectmultiple {
     float: left;
   }
   .form-horizontal .controls {
-    margin-left: 180px;
+    margin-left: 175px;
   }
   .form-horizontal.short_label .control-label,
   .form-horizontal .short_label .control-label {
@@ -111,7 +111,7 @@ select.selectmultiple {
   }
   .form-horizontal.short_label .controls,
   .form-horizontal .short_label .controls {
-    margin-left: 130px;
+    margin-left: 120px;
   }
   .form-horizontal .form-group {
     margin-bottom: 24px;
@@ -123,6 +123,22 @@ select.selectmultiple {
   }
   .form-horizontal .fieldset .panel-body {
     padding-top: 24px;
+  }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  .form-horizontal .control-label {
+    width: 150px;
+  }
+  .form-horizontal .controls {
+    margin-left: 155px;
+  }
+  .form-horizontal.short_label .control-label,
+  .form-horizontal .short_label .control-label {
+    width: 100px;
+  }
+  .form-horizontal.short_label .controls,
+  .form-horizontal .short_label .controls {
+    margin-left: 100px;
   }
 }
 @media (max-width: 767px) {
