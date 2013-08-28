@@ -8,7 +8,6 @@ from django.utils.encoding import force_unicode, smart_unicode
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.xmlutils import SimplerXMLGenerator
-from django.utils.text import slugify
 from django.db.models import BooleanField, NullBooleanField
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
@@ -140,7 +139,7 @@ class ExportPlugin(BaseAdminPlugin):
                 xml.endElement("row")
         elif isinstance(data, dict):
             for key, value in data.iteritems():
-                key = slugify(key)
+                key = key.replace(' ', '_')
                 xml.startElement(key, {})
                 self._to_xml(xml, value)
                 xml.endElement(key)
