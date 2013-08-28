@@ -27,7 +27,4 @@ jQuery(function() {
         $( this ).parents( ".panel:first" ).find( ".panel-body" ).toggle('fast');
     });
     
-    $( ".column" ).disableSelection();
-
-    // for dashboard
 });
