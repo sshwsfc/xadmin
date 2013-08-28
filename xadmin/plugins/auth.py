@@ -136,7 +136,7 @@ class ChangePasswordView(ModelAdminView):
 
     def get_media(self):
         media = super(ChangePasswordView, self).get_media()
-        media = media + self.vendor('xadmin.form.css') + self.form.media
+        media = media + self.vendor('xadmin.form.css', 'xadmin.page.form.js') + self.form.media
         return media
 
     def get_context(self):

@@ -66,7 +66,6 @@ class LoginView(BaseAdminView):
     def post(self, request, *args, **kwargs):
         return self.get(request)
 
-
 class LogoutView(BaseAdminView):
 
     logout_template = None
@@ -81,6 +80,7 @@ class LogoutView(BaseAdminView):
         defaults = {
             'extra_context': context,
             'current_app': self.admin_site.name,
+            'template_name': self.logout_template or 'xadmin/views/logged_out.html',
         }
         if self.logout_template is not None:
             defaults['template_name'] = self.logout_template

@@ -6,54 +6,31 @@
 {% block extrastyle %}{{ block.super }}
 <style type="text/css">
   body {
-    padding-top: 40px;
+    padding-top: 50px;
     padding-bottom: 40px;
-    background-color: #f5f5f5;
   }
-  .form-signin {
+  #panel-login {
     max-width: 350px;
-    padding: 19px 29px 29px;
     margin: 0 auto 20px;
-    background-color: #fff;
-    border: 1px solid #e5e5e5;
     -webkit-border-radius: 5px;
        -moz-border-radius: 5px;
             border-radius: 5px;
-    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-       -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-            box-shadow: 0 1px 2px rgba(0,0,0,.05);
+    -webkit-box-shadow: 0 0 40px rgba(0,0,0,.3);
+       -moz-box-shadow: 0 0 40px rgba(0,0,0,.3);
+            box-shadow: 0 0 40px rgba(0,0,0,.3);
   }
-  .form-signin .form-signin-heading,
-  .form-signin .checkbox {
-    margin-bottom: 10px;
-  }
-  .form-signin .control-group{
-    background-color: transparent;
-    border: none;
-    margin-left: 0px;
-    margin-right: 0px;
-  }
-  .form-signin label {
-    font-size: 16px;
-  }
-  .form-signin input[type="text"],
-  .form-signin input[type="password"] {
-    font-size: 16px;
-    height: auto;
-    margin-bottom: 15px;
-    padding: 7px 9px;
-    width: 100%;
-    box-sizing: border-box;
+  #panel-login .controls{
+    padding: 0px 15px 15px !important;
   }
 
-  .form-signin .alert-block{
+  #panel-login .alert-block{
     padding: 0px;
   }
-  .form-signin .alert-block ul{
+  #panel-login .alert-block ul{
     margin: 10px 15px;
     padding-left: 0px;
   }
-  .form-signin .alert-block ul li{
+  #panel-login .alert-block ul li{
     list-style-type: none;
   }
 </style>
@@ -64,14 +41,42 @@
 {% block body %}
 <div class="container">
 
-  <form action="" method="post" id="login-form" class="form-signin">
+  <form action="" method="post" id="login-form">
+    <div class="panel panel-default" id="panel-login">
     {% csrf_token %}
     {% block login_form %}
-      {% block login_heading %}
-      <h2 class="form-signin-heading">{% if title %}{{title}}{% else %}{% trans "Please Login" %}{% endif %}</h2>
-      {% endblock %}
+      <div class="panel-heading">
+        {% block login_heading %}
+        <h2 class="form-signin-heading">{% if title %}{{title}}{% else %}{% trans "Please Login" %}{% endif %}</h2>
+        {% endblock %}
+      </div>
+      <div class="panel-body">
 
-      {% crispy form helper %}
+      {% include 'bootstrap3/errors.html' %}
+
+      <div id="div_id_username" class="row{% if form.username.errors %} has-error{% endif %}">
+        <div class="controls clearfix">
+        <div class="input-group input-group-lg">
+          <span class="input-group-addon"><i class="icon-user"></i></span>
+          <input class="form-control input-lg" id="id_username" maxlength="254" name="username" type="text" placeholder="{% trans "Username" %}">
+        </div>
+        {% for error in form.username.errors %}
+            <p id="error_{{ forloop.counter }}_{{ field.auto_id }}" class="text-danger help-block">{{ error }}</p>
+        {% endfor %}
+        </div>
+      </div>
+
+      <div id="div_id_password" class="row{% if form.password.errors %} has-error{% endif %}">
+        <div class="controls clearfix">
+        <div class="input-group input-group-lg">
+          <span class="input-group-addon"><i class="icon-lock"></i></span>
+          <input class="form-control input-lg" id="id_password" name="password" type="password" placeholder="{% trans "Password" %}"> 
+        </div>
+        {% for error in form.password.errors %}
+            <p id="error_{{ forloop.counter }}_{{ field.auto_id }}" class="text-danger help-block">{{ error }}</p>
+        {% endfor %}
+        </div>
+      </div>
 
       <input type="hidden" name="this_is_the_login_form" value="1" />
       <input type="hidden" name="next" value="{{ next }}" />
@@ -84,7 +89,9 @@
         <a href="{{ password_reset_url }}">{% trans 'Forgotten your password or username?' %}</a>
       </div>
       {% endif %}
+      </div>
     {% endblock %}
+    </div>
   </form>
 
 </div> <!-- /container -->

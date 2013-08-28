@@ -1,0 +1,43 @@
+{% extends base_template %}
+{% load i18n %}
+{% load url from future %}
+
+{% block extrastyle %}{{ block.super }}
+<style type="text/css">
+  body {
+    padding-top: 50px;
+    padding-bottom: 40px;
+  }
+
+  .form-signout {
+    max-width: 300px;
+    margin: 0 auto 20px;
+    -webkit-border-radius: 5px;
+       -moz-border-radius: 5px;
+            border-radius: 5px;
+    -webkit-box-shadow: 0 0 40px rgba(0,0,0,.3);
+       -moz-box-shadow: 0 0 40px rgba(0,0,0,.3);
+            box-shadow: 0 0 40px rgba(0,0,0,.3);
+  }
+  .form-signout h2, .form-signout p{margin-bottom: 15px;}
+
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+
+  <div class="panel panel-default form-signout">
+    <div class="panel-body">
+      <h2 class="text-success">{% trans "Logout Success" %}</h2>
+      <p>{% trans "Thanks for spending some quality time with the Web site today." %}</p>
+      <p class="btn-group">
+        <a href="#" onclick="javascript:window.opener=null;window.open('','_self');window.close();" class="btn btn-primary">{% trans 'Close Window' %}</a>
+        <a href="{% url 'admin:index' %}" class="btn btn-default">{% trans 'Log in again' %}</a>
+      </p>
+    </div>
+  </div>
+
+</div> <!-- /container -->
+
+{% endblock %}
