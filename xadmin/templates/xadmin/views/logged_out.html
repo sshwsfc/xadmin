@@ -4,30 +4,14 @@
 
 {% block extrastyle %}{{ block.super }}
 <style type="text/css">
-  body {
-    padding-top: 50px;
-    padding-bottom: 40px;
-  }
-
-  .form-signout {
-    max-width: 300px;
-    margin: 0 auto 20px;
-    -webkit-border-radius: 5px;
-       -moz-border-radius: 5px;
-            border-radius: 5px;
-    -webkit-box-shadow: 0 0 40px rgba(0,0,0,.3);
-       -moz-box-shadow: 0 0 40px rgba(0,0,0,.3);
-            box-shadow: 0 0 40px rgba(0,0,0,.3);
-  }
   .form-signout h2, .form-signout p{margin-bottom: 15px;}
-
 </style>
 {% endblock %}
 
 {% block body %}
 <div class="container">
 
-  <div class="panel panel-default form-signout">
+  <div class="panel panel-default form-signout panel-single" style="max-width: 300px;">
     <div class="panel-body">
       <h2 class="text-success">{% trans "Logout Success" %}</h2>
       <p>{% trans "Thanks for spending some quality time with the Web site today." %}</p>

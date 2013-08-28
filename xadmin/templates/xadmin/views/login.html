@@ -5,19 +5,8 @@
 
 {% block extrastyle %}{{ block.super }}
 <style type="text/css">
-  body {
-    padding-top: 50px;
-    padding-bottom: 40px;
-  }
   #panel-login {
     max-width: 350px;
-    margin: 0 auto 20px;
-    -webkit-border-radius: 5px;
-       -moz-border-radius: 5px;
-            border-radius: 5px;
-    -webkit-box-shadow: 0 0 40px rgba(0,0,0,.3);
-       -moz-box-shadow: 0 0 40px rgba(0,0,0,.3);
-            box-shadow: 0 0 40px rgba(0,0,0,.3);
   }
   #panel-login .controls{
     padding: 0px 15px 15px !important;
@@ -42,7 +31,7 @@
 <div class="container">
 
   <form action="" method="post" id="login-form">
-    <div class="panel panel-default" id="panel-login">
+    <div class="panel panel-default panel-single" id="panel-login">
     {% csrf_token %}
     {% block login_form %}
       <div class="panel-heading">
@@ -52,6 +41,8 @@
       </div>
       <div class="panel-body">
 
+      {% view_block 'form_top' %}
+      
       {% include 'bootstrap3/errors.html' %}
 
       <div id="div_id_username" class="row{% if form.username.errors %} has-error{% endif %}">
@@ -83,12 +74,7 @@
 
       <button class="btn btn-lg btn-primary btn-block" type="submit">{% trans 'log in' %}</button>
 
-      {% url 'admin_password_reset' as password_reset_url %}
-      {% if password_reset_url %}
-      <div class="password-reset-link">
-        <a href="{{ password_reset_url }}">{% trans 'Forgotten your password or username?' %}</a>
-      </div>
-      {% endif %}
+      {% view_block 'form_bottom' %}
       </div>
     {% endblock %}
     </div>

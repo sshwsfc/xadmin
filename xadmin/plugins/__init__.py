@@ -24,3 +24,4 @@ import multiselect
 import themes
 import aggregation
 import mobile
+import passwords

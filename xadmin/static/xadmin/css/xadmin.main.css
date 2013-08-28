@@ -368,3 +368,13 @@ a[class^="icon-"]:before, a[class*=" icon-"]:before {
 .thumbnail .action-select {position: absolute; top: 0px; left: 20px;}
 .thumbnail .dropdown.related_menu {position: absolute; top: 0px; right: 20px;}
 
+/* panel single **/
+.panel-single {
+  margin: 50px auto 20px;
+  -webkit-border-radius: 5px;
+     -moz-border-radius: 5px;
+          border-radius: 5px;
+  -webkit-box-shadow: 0 0 40px rgba(0,0,0,.3);
+     -moz-box-shadow: 0 0 40px rgba(0,0,0,.3);
+          box-shadow: 0 0 40px rgba(0,0,0,.3);
+}
