@@ -34,3 +34,5 @@ site.register_modelview(
     r'^(.+)/detail/$', DetailAdminView, name='%s_%s_detail')
 site.register_modelview(
     r'^(.+)/dashboard/$', ModelDashboard, name='%s_%s_dashboard')
+
+site.set_loginview(LoginView)

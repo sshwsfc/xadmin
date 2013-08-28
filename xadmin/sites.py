@@ -141,6 +141,9 @@ class AdminSite(object):
                     raise NotRegistered('The admin_view_class %s is not registered' % model.__name__)
                 del self._registry_avs[model]
 
+    def set_loginview(self, login_view):
+        self.login_view = login_view
+
     def has_permission(self, request):
         """
         Returns True if the given HttpRequest has permission to view
@@ -189,20 +192,11 @@ class AdminSite(object):
         cacheable=True.
         """
         def inner(request, *args, **kwargs):
-            if not self.has_permission(request):
-                if request.path == reverse('admin:logout',
-                                           current_app=self.name):
-                    index_path = reverse('admin:index', current_app=self.name)
-                    return HttpResponseRedirect(index_path)
-                from xadmin.views import LoginView
-                return self.create_admin_view(LoginView)(request, *args, **kwargs)
+            if not self.has_permission(request) and getattr(view, 'need_site_permission', True):
+                return self.create_admin_view(self.login_view)(request, *args, **kwargs)
             return view(request, *args, **kwargs)
         if not cacheable:
             inner = never_cache(inner)
-        # We add csrf_protect here so this function can be used as a utility
-        # function for any view, without having to repeat 'csrf_protect'.
-        if not getattr(view, 'csrf_exempt', False):
-            inner = csrf_protect(inner)
         return update_wrapper(inner, view)
 
     def _get_merge_attrs(self, option_class, plugin_class):
