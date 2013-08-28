@@ -11,11 +11,11 @@
     {% csrf_token %}
     {% block login_form %}
       <div class="panel-heading">
-        <h2 class="form-signin-heading">{% trans "Password reset" %}</h2>
+        <h3 class="form-signin-heading">{% trans "Password reset" %}</h3>
       </div>
       <div class="panel-body">
       
-			<p class="text-primary">{% trans "Forgotten your password? Enter your e-mail address below, and we'll e-mail instructions for setting a new one." %}</p>
+			<p class="text-default">{% trans "Forgotten your password? Enter your e-mail address below, and we'll e-mail instructions for setting a new one." %}</p>
 
       {% include 'bootstrap3/errors.html' %}
 
