@@ -69,6 +69,7 @@ class LoginView(BaseAdminView):
 class LogoutView(BaseAdminView):
 
     logout_template = None
+    need_site_permission = False
 
     @filter_hook
     def update_params(self, defaults):

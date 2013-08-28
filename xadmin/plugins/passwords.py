@@ -18,6 +18,8 @@ from xadmin.views.website import LoginView
 
 
 class ResetPasswordSendView(BaseAdminView):
+    
+    need_site_permission = False
 
     password_reset_form = PasswordResetForm
     password_reset_template = 'xadmin/auth/password_reset/form.html'
@@ -58,7 +60,7 @@ class ResetLinkPlugin(BaseAdminPlugin):
 
     def block_form_bottom(self, context, nodes):
         reset_link = self.get_admin_url('xadmin_password_reset')
-        return '<p class="text-info"><a href="%s"><i class="icon-question-sign"></i> %s</a></p>' % (reset_link, _('Forgotten your password or username?'))
+        return '<div class="text-info" style="margin-top:15px;"><a href="%s"><i class="icon-question-sign"></i> %s</a></div>' % (reset_link, _('Forgotten your password or username?'))
 
 site.register_plugin(ResetLinkPlugin, LoginView)
 

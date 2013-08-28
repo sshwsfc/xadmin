@@ -215,6 +215,7 @@ class BaseAdminView(BaseAdminObject, View):
     """ Base Admin view, support some comm attrs."""
 
     base_template = 'xadmin/base.html'
+    need_site_permission = True
 
     def __init__(self, request, *args, **kwargs):
         self.request = request
@@ -247,9 +248,8 @@ class BaseAdminView(BaseAdminObject, View):
 
         # take name and docstring from class
         update_wrapper(view, cls, updated=())
-        # and possible attributes set by decorators
-        # like csrf_exempt from dispatch
-        update_wrapper(view, cls.dispatch, assigned=())
+        view.need_site_permission = cls.need_site_permission
+        
         return view
 
     def init_request(self, *args, **kwargs):
