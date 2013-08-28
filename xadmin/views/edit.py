@@ -61,6 +61,7 @@ class ModelFormAdminView(ModelAdminView):
     formfield_overrides = {}
     readonly_fields = ()
     style_fields = {}
+    exclude = None
     relfield_style = None
 
     save_as = False

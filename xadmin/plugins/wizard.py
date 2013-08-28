@@ -1,5 +1,6 @@
 import re
 from django import forms
+from django.db import models
 from django.template import loader
 from django.contrib.formtools.wizard.storage import get_storage
 from django.contrib.formtools.wizard.forms import ManagementForm
@@ -149,10 +150,35 @@ class WizardFormPlugin(BaseAdminPlugin):
 
     def _done(self):
         cleaned_data = self.get_all_cleaned_data()
-        form = modelform_factory(self.model, form=forms.ModelForm,
-                                 formfield_callback=self.admin_view.formfield_for_dbfield)
-        form_obj = form(data=cleaned_data, instance=self.admin_view.org_obj)
-        self.admin_view.new_obj = form_obj.save(commit=True)
+        exclude = self.admin_view.exclude
+
+        opts = self.admin_view.opts
+        instance = self.admin_view.org_obj or self.admin_view.model()
+
+        file_field_list = []
+        for f in opts.fields:
+            if not f.editable or isinstance(f, models.AutoField) \
+                    or not f.name in cleaned_data:
+                continue
+            if exclude and f.name in exclude:
+                continue
+            # Defer saving file-type fields until after the other fields, so a
+            # callable upload_to can use the values from other fields.
+            if isinstance(f, models.FileField):
+                file_field_list.append(f)
+            else:
+                f.save_form_data(instance, cleaned_data[f.name])
+
+        for f in file_field_list:
+            f.save_form_data(instance, cleaned_data[f.name])
+
+        instance.save()
+
+        for f in opts.many_to_many:
+            if f.name in cleaned_data:
+                f.save_form_data(instance, cleaned_data[f.name])
+
+        self.admin_view.new_obj = instance
 
     def save_forms(self, __):
         # if the form is valid, store the cleaned data and files.
