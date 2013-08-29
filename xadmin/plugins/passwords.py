@@ -1,9 +1,10 @@
 # coding=utf-8
 from django import forms
 from django.core.urlresolvers import reverse
-from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
 from django.contrib.auth.models import Group, Permission
 from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.views import password_reset_confirm
 from django.core.exceptions import PermissionDenied
 from django.template.response import TemplateResponse
 from django.utils.decorators import method_decorator
@@ -23,6 +24,7 @@ class ResetPasswordSendView(BaseAdminView):
 
     password_reset_form = PasswordResetForm
     password_reset_template = 'xadmin/auth/password_reset/form.html'
+    password_reset_done_template = 'xadmin/auth/password_reset/done.html'
     password_reset_token_generator = default_token_generator
 
     password_reset_from_email = None
@@ -31,7 +33,7 @@ class ResetPasswordSendView(BaseAdminView):
 
     def get(self, request, *args, **kwargs):
         context = super(ResetPasswordSendView, self).get_context()
-        context['form'] = self.password_reset_form()
+        context['form'] = kwargs.get('form', self.password_reset_form())
 
         return TemplateResponse(request, self.password_reset_template, context,
                                 current_app=self.admin_site.name)
@@ -44,15 +46,22 @@ class ResetPasswordSendView(BaseAdminView):
             opts = {
                 'use_https': request.is_secure(),
                 'token_generator': self.password_reset_token_generator,
-                'from_email': self.password_reset_from_email,
                 'email_template_name': self.password_reset_email_template,
-                'subject_template_name': self.password_reset_subject_template,
                 'request': request,
                 'domain_override': request.get_host()
             }
+
+            if self.password_reset_from_email:
+                opts['from_email'] = self.password_reset_from_email
+            if self.password_reset_subject_template:
+                opts['subject_template_name'] = self.password_reset_subject_template
+
             form.save(**opts)
 
-            return HttpResponseRedirect(self.get_admin_url('xadmin_password_reset_done'))
+            return TemplateResponse(request, self.password_reset_done_template, opts,
+                                current_app=self.admin_site.name)
+        else:
+            return self.get(request, form=form)
 
 site.register_view(r'^xadmin/password_reset/$', ResetPasswordSendView, name='xadmin_password_reset')
 
@@ -63,4 +72,51 @@ class ResetLinkPlugin(BaseAdminPlugin):
         return '<div class="text-info" style="margin-top:15px;"><a href="%s"><i class="icon-question-sign"></i> %s</a></div>' % (reset_link, _('Forgotten your password or username?'))
 
 site.register_plugin(ResetLinkPlugin, LoginView)
+
+
+class ResetPasswordComfirmView(BaseAdminView):
+    
+    need_site_permission = False
+
+    password_reset_set_form = SetPasswordForm
+    password_reset_confirm_template = 'xadmin/auth/password_reset/confirm.html'
+    password_reset_token_generator = default_token_generator
+
+    def do_view(self, request, uidb36, token, *args, **kwargs):
+        context = super(ResetPasswordComfirmView, self).get_context()
+        return password_reset_confirm(request, uidb36, token,
+                   template_name=self.password_reset_confirm_template,
+                   token_generator=self.password_reset_token_generator,
+                   set_password_form=self.password_reset_set_form,
+                   post_reset_redirect=self.get_admin_url('xadmin_password_reset_complete'),
+                   current_app=self.admin_site.name, extra_context=context)
+
+    def get(self, request, uidb36, token, *args, **kwargs):
+        return self.do_view(request, uidb36, token)
+
+    def post(self, request, uidb36, token, *args, **kwargs):
+        return self.do_view(request, uidb36, token)
+
+    def get_media(self):
+        return super(ResetPasswordComfirmView, self).get_media() + \
+            self.vendor('xadmin.page.form.js', 'xadmin.form.css')
+
+site.register_view(r'^xadmin/password_reset/(?P<uidb36>[0-9A-Za-z]{1,13})-(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', 
+    ResetPasswordComfirmView, name='xadmin_password_reset_confirm')
+
+
+class ResetPasswordCompleteView(BaseAdminView):
+    
+    need_site_permission = False
+
+    password_reset_complete_template = 'xadmin/auth/password_reset/complete.html'
+
+    def get(self, request, *args, **kwargs):
+        context = super(ResetPasswordCompleteView, self).get_context()
+        context['login_url'] = self.get_admin_url('index')
+        
+        return TemplateResponse(request, self.password_reset_complete_template, context,
+                                current_app=self.admin_site.name)
+
+site.register_view(r'^xadmin/password_reset/complete/$', ResetPasswordCompleteView, name='xadmin_password_reset_complete')
 
