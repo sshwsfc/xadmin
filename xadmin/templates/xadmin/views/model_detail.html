@@ -4,11 +4,6 @@
 {% load xadmin_tags %}
 {% load crispy_forms_tags %}
 
-{% block extrahead %}{{ block.super }}
-{% url 'admin:jsi18n' as jsi18nurl %}
-<script type="text/javascript" src="{{ jsi18nurl|default:"../../../jsi18n/" }}"></script>
-{% endblock %}
-
 {% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} detail{% endblock %}
 
 {% block nav_title %}
