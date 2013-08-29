@@ -20,10 +20,10 @@ setup(
         'setuptools',
         'django>=1.4',
         'django-crispy-forms>=1.2.3',
-        'django-reversion',
     ],
     extras_require={
         'Excel': ['xlwt'],
+        'Reversion': ['django-reversion'],
     },
     zip_safe=True,
     keywords=['admin', 'django', 'xadmin', 'bootstrap'],

@@ -1,4 +1,2 @@
 django>=1.4
-xlwt
 django-crispy-forms>=1.2.3
-django-reversion
