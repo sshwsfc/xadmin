@@ -21,7 +21,6 @@ ALWAYS_INSTALLED_APPS = [
 
     'xadmin',
     'crispy_forms',
-    'reversion',
 ]
 
 def get_test_modules():
