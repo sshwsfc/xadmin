@@ -1,10 +1,11 @@
 # coding=utf-8
+from django.db import models
 from django.core.exceptions import PermissionDenied
 from django.forms.models import modelform_factory
 from django.template.response import TemplateResponse
 from django.utils.encoding import force_unicode
 from django.utils.translation import ugettext as _, ugettext_lazy
-from xadmin.layout import FormHelper, Layout, Fieldset, Container
+from xadmin.layout import FormHelper, Layout, Fieldset, Container, Col
 from xadmin.plugins.actions import BaseActionView, ACTION_CHECKBOX_NAME
 from xadmin.util import model_ngettext
 from xadmin.views.base import filter_hook
@@ -23,21 +24,37 @@ class BatchChangeAction(BaseActionView):
 
     batch_fields = []
 
-    def change_models(self, queryset):
+    def change_models(self, queryset, cleaned_data):
         n = queryset.count()
+
+        data = {}
+        for f in self.opts.fields:
+            if not f.editable or isinstance(f, models.AutoField) \
+                    or not f.name in cleaned_data:
+                continue
+            value = cleaned_data[f.name]
+            if value:
+                data[f] = value
+
         if n:
-            queryset.delete()
-            self.message_user(_("Successfully deleted %(count)d %(items)s.") % {
+            for obj in queryset:
+                for f, v in data.items():
+                    f.save_form_data(obj, v)
+                obj.save()
+            self.message_user(_("Successfully change %(count)d %(items)s.") % {
                 "count": n, "items": model_ngettext(self.opts, n)
             }, 'success')
 
     def get_change_form(self):
         edit_view = self.get_model_view(ModelFormAdminView, self.model)
 
+        def formfield_for_dbfield(field, **kwargs):
+            return edit_view.formfield_for_dbfield(field, required=False, **kwargs)
+
         defaults = {
             "form": edit_view.form,
             "fields": self.batch_fields,
-            "formfield_callback": edit_view.formfield_for_dbfield,    # 设置生成表单字段的回调函数
+            "formfield_callback": formfield_for_dbfield,    # 设置生成表单字段的回调函数
         }
         # 使用 modelform_factory 生成 Form 类
         return modelform_factory(self.model, **defaults)
@@ -51,15 +68,16 @@ class BatchChangeAction(BaseActionView):
         if self.request.POST.get('post'):
             self.form_obj = form_class(
                 data=self.request.POST, files=self.request.FILES)
-
-            return None
+            if self.form_obj.is_valid():
+                self.change_models(queryset, self.form_obj.cleaned_data)
+                return None
         else:
             self.form_obj = form_class()
 
         helper = FormHelper()
         helper.form_tag = False  # 默认不需要 crispy 生成 form_tag
-        helper.add_layout(Layout(Container(
-            Fieldset("", *self.form_obj.fields.keys(), css_class="unsort no_title"), css_class="form-horizontal"
+        helper.add_layout(Layout(Container(Col('full', 
+            Fieldset("", *self.form_obj.fields.keys(), css_class="unsort no_title"), horizontal=True, span=12)
         )))
         self.form_obj.helper = helper
 
