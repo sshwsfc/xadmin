@@ -18,7 +18,6 @@ import portal
 import quickform
 import wizard
 import images
-#import xversion
 import auth
 import multiselect
 import themes
