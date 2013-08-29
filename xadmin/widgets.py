@@ -126,6 +126,13 @@ class AdminCheckboxSelect(forms.CheckboxSelectMultiple):
             output.append(u'<label%s class="checkbox %s">%s %s</label>' % (label_for, final_attrs.get('class', ''), rendered_cb, option_label))
         return mark_safe(u'\n'.join(output))
 
+class AdminSelectMultiple(forms.SelectMultiple):
+    def __init__(self, attrs=None):
+        final_attrs = {'class': 'select-multi form-control'}
+        if attrs is not None:
+            final_attrs.update(attrs)
+        super(AdminSelectMultiple, self).__init__(attrs=final_attrs)
+        
 
 class AdminFileWidget(forms.ClearableFileInput):
     template_with_initial = (u'<p class="file-upload">%s</p>'

@@ -36,6 +36,7 @@ FORMFIELD_FOR_DBFIELD_DEFAULTS = {
     models.FileField: {'widget': widgets.AdminFileWidget},
     models.ForeignKey: {'widget': widgets.AdminSelectWidget},
     models.OneToOneField: {'widget': widgets.AdminSelectWidget},
+    models.ManyToManyField: {'widget': widgets.AdminSelectMultiple},
 }
 
 

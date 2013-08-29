@@ -26,9 +26,6 @@
 }
 .selector .selector-chosen .selector-filter {
 }
-.selector .selector-filter input[type=text] {
-    width: 87%;
-}
 .selector.stacked .selector-filter input[type=text] {
     width: 716px !important;
     max-width: 716px !important;
