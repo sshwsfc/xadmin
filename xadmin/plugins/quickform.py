@@ -43,6 +43,7 @@ class RelatedFieldWidgetWrapper(forms.Widget):
         self.needs_multipart_form = widget.needs_multipart_form
         self.attrs = widget.attrs
         self.choices = widget.choices
+        self.is_required = widget.is_required
         self.widget = widget
         self.rel = rel
 

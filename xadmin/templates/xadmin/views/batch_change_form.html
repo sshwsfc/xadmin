@@ -13,11 +13,15 @@
 {% endblock %}
 
 {% block nav_title %}{% if model_icon %}<i class="icon-{{model_icon}}"><sub class="icon-pencil"></sub></i> {% endif %}
-{{ title }}{% endblock %}
+  {% blocktrans count counter=count %}
+    Change one {{ objects_name }}
+  {% plural %}
+    Batch change {{ counter }} {{ objects_name }}
+  {% endblocktrans %}
+{% endblock %}
 
 {% block content %}
 <form class="exform" {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="" method="post" id="{{ opts.module_name }}_form">{% csrf_token %}
-
   {% if errors %}
       <div class="alert alert-danger alert-dismissable">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
