@@ -1,0 +1,33 @@
+{% extends 'xadmin/includes/sitemenu_default.html' %}
+{% load i18n xadmin_tags %}
+{% load url from future %}
+
+{% block navbar_md %}
+<div class="panel-group hide-sm nav-sitemenu" id="nav-accordion">
+  {% for item in nav_menu %}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h6 class="panel-title">
+        <span class="badge badge-info">{{ item.menus|length }}</span>
+        <a class="accordion-toggle" data-toggle="collapse" data-parent="#nav-accordion" href="#nav-panel-{{forloop.counter}}">
+          {% if item.url %}<a href="{{ item.url }}" class="section">{% endif %}
+          {% if item.icon %}<i class="icon-fixed-width icon-{{item.icon}}"></i>
+          {% elif item.first_icon %}<i class="icon-fixed-width icon-{{item.first_icon}}"></i>
+          {%else%}<i class="icon-fixed-width icon-exclamation-sign"></i>{% endif %}
+          {{ item.title }}
+          {% if item.url %}</a>{% endif %}
+        </a>
+      </h6>
+    </div>
+    <div id="nav-panel-{{forloop.counter}}" class="list-group panel-collapse collapse{% if item.selected %} in{% endif %}">
+      {% for sitem in item.menus %}
+      <a href="{{ sitem.url|default_if_none:'#' }}" class="list-group-item{% if sitem.selected %} active{% endif %}">
+        {% if sitem.icon %}<i class="icon-fixed-width icon-{{sitem.icon}}"></i>{%else%}<i class="icon-fixed-width icon-exclamation-sign"></i>{% endif %}
+        {{ sitem.title }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock navbar_md %}

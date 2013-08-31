@@ -32,51 +32,7 @@
     <div id="left-side" class="col-sm-1 col-md-2">
         {% block navbar %}
         {% if nav_menu %}
-          <ul class="well nav nav-pills nav-stacked nav-sitemenu hide-sm">
-            <li>
-              <a href="{% url 'admin:index' %}"><i class="icon-fixed-width icon-home"></i> {% trans 'Home' %}</a>
-            </li>
-            {% for item in nav_menu %}
-              <li class="nav-header {% if item.selected %} active{% endif %}">
-                {% if item.url %}<a href="{{ item.url }}" class="section">{% endif %}
-                {% if item.icon %}<i class="icon-fixed-width icon-{{item.icon}}"></i>{% endif %}{{ item.title }}
-                {% if item.url %}</a>{% endif %}
-              </li>
-              {% for sitem in item.menus %}
-              <li{% if sitem.selected %} class="active"{% endif %}>
-                {% if sitem.url %}<a href="{{ sitem.url }}">{% endif %}
-                {% if sitem.icon %}<i class="icon-fixed-width icon-{{sitem.icon}}"></i>{%else%}<i class="icon-fixed-width icon-exclamation-sign"></i>{% endif %}
-                {{ sitem.title }}</span>{% if sitem.url %}</a>{% endif %}
-              </li>
-              {% endfor %}
-            {% endfor %}
-          {% view_block 'menu-nav' %}
-          </ul>
-
-          <ul class="well nav nav-list nav-sitemenu show-sm">
-            <li class="app_menu">
-              <a href="{% url 'admin:index' %}"><i class="icon-fixed-width icon-home"></i></a><hr/>
-            </li>
-            {% for item in nav_menu %}
-              <li class="app_menu dropdown-submenu {% if item.selected %} active{% endif %}">
-                <a href="#" class="section">
-                  {% if item.icon %}<i class="icon-{{item.icon}}"></i>
-                  {% elif item.first_icon %}<i class="icon-{{item.first_icon}}"></i>
-                  {%else%}<i class="icon-exclamation-sign"></i>{% endif %}
-                </a><hr/>
-                <ul class="dropdown-menu">
-                  {% for sitem in item.menus %}
-                  <li{% if sitem.selected %} class="active"{% endif %}>
-                    {% if sitem.url %}<a href="{{ sitem.url }}">{% endif %}
-                    {% if sitem.icon %}<i class="icon-fixed-width icon-{{sitem.icon}}"></i>{%else%}<i class="icon-fixed-width icon-exclamation-sign"></i>{% endif %}
-                    {{ sitem.title }}</span>{% if sitem.url %}</a>{% endif %}
-                  </li>
-                  {% endfor %}
-                </ul>
-              </li>
-            {% endfor %}
-          {% view_block 'menu-nav' %}
-          </ul>
+          {% include menu_template %}
         {% else %}
           <p>{% trans "You don't have permission to edit anything." %}</p>
         {% endif %}

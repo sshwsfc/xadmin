@@ -209,11 +209,29 @@ a { cursor: pointer;}
 }
 
 /* nav sitemenu */
-.nav-sitemenu {
+ul.nav-sitemenu {
   padding: 10px;
 }
-.nav-sitemenu li a {
+ul.nav-sitemenu li a {
   padding: 6px 10px;
+}
+.panel-group.nav-sitemenu .panel .accordion-toggle{
+  text-decoration: none;
+}
+.panel-group.nav-sitemenu .panel:not(:first-child) {
+  border-radius: 0px;
+  border-top: 0px;
+  margin-top: 0px;
+}
+.panel-group.nav-sitemenu .panel:not(:first-child) .panel-heading {
+  border-radius: 0px;
+}
+.panel-group.nav-sitemenu .panel:first-child {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+.panel-group.nav-sitemenu .panel .list-group .list-group-item:first-child {
+  border-top-width: 1px;
 }
 
 /* models list */

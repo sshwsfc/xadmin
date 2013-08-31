@@ -283,6 +283,7 @@ class BaseAdminView(BaseAdminObject, View):
 class CommAdminView(BaseAdminView):
 
     base_template = 'xadmin/base_site.html'
+    menu_template = 'xadmin/includes/sitemenu_default.html'
 
     site_title = None
     globe_models_icon = {}
@@ -399,9 +400,12 @@ class CommAdminView(BaseAdminView):
         for menu in nav_menu:
             check_selected(menu, self.request.path)
 
-        context['nav_menu'] = nav_menu
-        context['site_title'] = self.site_title or _(u'Django Xadmin')
-        context['breadcrumbs'] = self.get_breadcrumb()
+        context.update({
+            'menu_template': self.menu_template,
+            'nav_menu': nav_menu,
+            'site_title': self.site_title or _(u'Django Xadmin'),
+            'breadcrumbs': self.get_breadcrumb()
+        })
 
         return context
 
