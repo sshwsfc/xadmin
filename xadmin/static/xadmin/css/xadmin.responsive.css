@@ -1,23 +1,26 @@
 
 
 @media (min-width: 768px) and (max-width: 991px) {
-  .nav-sitemenu{
+  ul.nav-sitemenu{
     padding: 0px;
   }
-  .nav-sitemenu > li.app_menu>a{
+  ul.nav-sitemenu > li.app_menu>a{
     padding: 3px 0px;
     margin: 0px;
     text-align: center;
   }
-  .nav-sitemenu > li.app_menu>a:after{
+  ul.nav-sitemenu .dropdown-menu{
+    z-index: 1100;
+  }
+  ul.nav-sitemenu > li.app_menu>a:after{
     display: none;
   }
-  .nav-sitemenu > li.app_menu>hr{ margin: 0px;}
-  .nav-sitemenu > li.app_menu>a>i[class^="icon-"]{
+  ul.nav-sitemenu > li.app_menu>hr{ margin: 0px;}
+  ul.nav-sitemenu > li.app_menu>a>i[class^="icon-"]{
     font-size: 20px;
     line-height: 1.7em;
   }
-  .nav-sitemenu > li.app_menu li {
+  ul.nav-sitemenu > li.app_menu li {
 
   }
 }

@@ -24,3 +24,4 @@ import themes
 import aggregation
 import mobile
 import passwords
+import sitemenu
