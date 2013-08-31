@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-31 09:47+0800\n"
+"POT-Creation-Date: 2013-08-31 15:58+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -263,7 +263,7 @@ msgstr ""
 msgid "Successfully change %(count)d %(items)s."
 msgstr "Sėkmingai ištrinta %(count)d %(items)s"
 
-#: plugins/batch.py:142
+#: plugins/batch.py:141
 #, fuzzy, python-format
 msgid "Batch change %s"
 msgstr "Keisti %s"
@@ -472,10 +472,10 @@ msgstr "Puslapis nerastas"
 msgid "We're sorry, but the requested page could not be found."
 msgstr "Apmaudu pranešti, bet tokio puslapio nėra. :("
 
-#: templates/xadmin/500.html:7 templates/xadmin/base_site.html:37
-#: templates/xadmin/base_site.html.py:97
+#: templates/xadmin/500.html:7 templates/xadmin/base_site.html:53
 #: templates/xadmin/auth/user/change_password.html:10
 #: templates/xadmin/auth/user/change_password.html:15
+#: templates/xadmin/includes/sitemenu_default.html:7
 #: templates/xadmin/views/app_index.html:9
 #: templates/xadmin/views/batch_change_form.html:9
 #: templates/xadmin/views/invalid_setup.html:7
@@ -485,7 +485,7 @@ msgstr "Apmaudu pranešti, bet tokio puslapio nėra. :("
 #: templates/xadmin/views/recover_form.html:8
 #: templates/xadmin/views/recover_list.html:8
 #: templates/xadmin/views/revision_diff.html:8
-#: templates/xadmin/views/revision_form.html:8 views/base.py:429
+#: templates/xadmin/views/revision_form.html:8 views/base.py:433
 msgid "Home"
 msgstr "Pagrindinis"
 
@@ -521,7 +521,7 @@ msgstr "vartotojas: "
 msgid "Log out"
 msgstr "Atsijungti"
 
-#: templates/xadmin/base_site.html:81
+#: templates/xadmin/base_site.html:37
 msgid "You don't have permission to edit anything."
 msgstr "Jūs neturite leidimų redaguoti"
 
@@ -636,7 +636,7 @@ msgid "Enter a username and password."
 msgstr "Įveskite vartotojo vardą ir slaptažodį"
 
 #: templates/xadmin/auth/user/change_password.html:31
-#: templates/xadmin/views/batch_change_form.html:28
+#: templates/xadmin/views/batch_change_form.html:24
 #: templates/xadmin/views/model_form.html:20
 msgid "Please correct the error below."
 msgid_plural "Please correct the errors below."
@@ -923,20 +923,14 @@ msgid "Change multiple objects"
 msgstr "Keisti keletą objektų"
 
 #: templates/xadmin/views/batch_change_form.html:16
-#, python-format
-msgid ""
-"\n"
-"    Change one %(objects_name)s\n"
-"  "
-msgid_plural ""
-"\n"
-"    Batch change %(counter)s %(objects_name)s\n"
-"  "
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+#, fuzzy, python-format
+msgid "Change one %(objects_name)s"
+msgid_plural "Batch change %(counter)s %(objects_name)s"
+msgstr[0] "Keisti keletą objektų"
+msgstr[1] "Keisti keletą objektų"
+msgstr[2] "Keisti keletą objektų"
 
-#: templates/xadmin/views/batch_change_form.html:42
+#: templates/xadmin/views/batch_change_form.html:38
 msgid "Change Multiple"
 msgstr "Keisti Keletą"
 
@@ -1183,7 +1177,7 @@ msgstr "Valdiklio Nustatymai"
 msgid "Save changes"
 msgstr "Išsaugoti pakeitimus"
 
-#: views/base.py:403
+#: views/base.py:406
 msgid "Django Xadmin"
 msgstr ""
 

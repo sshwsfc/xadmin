@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-31 09:46+0800\n"
+"POT-Creation-Date: 2013-08-31 15:57+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=1;\n"
 
 #: filters.py:158 filters.py:190 filters.py:396 filters.py:446
 msgid "All"
@@ -255,7 +256,7 @@ msgstr ""
 msgid "Successfully change %(count)d %(items)s."
 msgstr ""
 
-#: plugins/batch.py:142
+#: plugins/batch.py:141
 #, python-format
 msgid "Batch change %s"
 msgstr ""
@@ -457,10 +458,10 @@ msgstr ""
 msgid "We're sorry, but the requested page could not be found."
 msgstr ""
 
-#: templates/xadmin/500.html:7 templates/xadmin/base_site.html:37
-#: templates/xadmin/base_site.html.py:97
+#: templates/xadmin/500.html:7 templates/xadmin/base_site.html:53
 #: templates/xadmin/auth/user/change_password.html:10
 #: templates/xadmin/auth/user/change_password.html:15
+#: templates/xadmin/includes/sitemenu_default.html:7
 #: templates/xadmin/views/app_index.html:9
 #: templates/xadmin/views/batch_change_form.html:9
 #: templates/xadmin/views/invalid_setup.html:7
@@ -470,7 +471,7 @@ msgstr ""
 #: templates/xadmin/views/recover_form.html:8
 #: templates/xadmin/views/recover_list.html:8
 #: templates/xadmin/views/revision_diff.html:8
-#: templates/xadmin/views/revision_form.html:8 views/base.py:429
+#: templates/xadmin/views/revision_form.html:8 views/base.py:433
 msgid "Home"
 msgstr ""
 
@@ -500,7 +501,7 @@ msgstr ""
 msgid "Log out"
 msgstr ""
 
-#: templates/xadmin/base_site.html:81
+#: templates/xadmin/base_site.html:37
 msgid "You don't have permission to edit anything."
 msgstr ""
 
@@ -600,7 +601,7 @@ msgid "Enter a username and password."
 msgstr ""
 
 #: templates/xadmin/auth/user/change_password.html:31
-#: templates/xadmin/views/batch_change_form.html:28
+#: templates/xadmin/views/batch_change_form.html:24
 #: templates/xadmin/views/model_form.html:20
 msgid "Please correct the error below."
 msgid_plural "Please correct the errors below."
@@ -887,18 +888,12 @@ msgstr ""
 
 #: templates/xadmin/views/batch_change_form.html:16
 #, python-format
-msgid ""
-"\n"
-"    Change one %(objects_name)s\n"
-"  "
-msgid_plural ""
-"\n"
-"    Batch change %(counter)s %(objects_name)s\n"
-"  "
+msgid "Change one %(objects_name)s"
+msgid_plural "Batch change %(counter)s %(objects_name)s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/xadmin/views/batch_change_form.html:42
+#: templates/xadmin/views/batch_change_form.html:38
 msgid "Change Multiple"
 msgstr ""
 
@@ -1128,7 +1123,7 @@ msgstr ""
 msgid "Save changes"
 msgstr ""
 
-#: views/base.py:403
+#: views/base.py:406
 msgid "Django Xadmin"
 msgstr ""
 

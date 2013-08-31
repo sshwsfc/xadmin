@@ -13,11 +13,7 @@
 {% endblock %}
 
 {% block nav_title %}{% if model_icon %}<i class="icon-{{model_icon}}"><sub class="icon-pencil"></sub></i> {% endif %}
-  {% blocktrans count counter=count %}
-    Change one {{ objects_name }}
-  {% plural %}
-    Batch change {{ counter }} {{ objects_name }}
-  {% endblocktrans %}
+  {% blocktrans count counter=count %}Change one {{ objects_name }}{% plural %}Batch change {{ counter }} {{ objects_name }}{% endblocktrans %}
 {% endblock %}
 
 {% block content %}
