@@ -1,4 +1,4 @@
-# coding=utf-8
+
 import copy
 from django import forms
 from django.db import models
@@ -105,9 +105,8 @@ class BatchChangeAction(BaseActionView):
         defaults = {
             "form": edit_view.form,
             "fields": fields,
-            "formfield_callback": formfield_for_dbfield,    # 设置生成表单字段的回调函数
+            "formfield_callback": formfield_for_dbfield,
         }
-        # 使用 modelform_factory 生成 Form 类
         return modelform_factory(self.model, **defaults)
 
     def do_action(self, queryset):
@@ -126,7 +125,7 @@ class BatchChangeAction(BaseActionView):
             self.form_obj = self.get_change_form(False, self.batch_fields)()
 
         helper = FormHelper()
-        helper.form_tag = False  # 默认不需要 crispy 生成 form_tag
+        helper.form_tag = False
         helper.add_layout(Layout(Container(Col('full', 
             Fieldset("", *self.form_obj.fields.keys(), css_class="unsort no_title"), horizontal=True, span=12)
         )))
