@@ -25,3 +25,4 @@ import aggregation
 import mobile
 import passwords
 import sitemenu
+import language
