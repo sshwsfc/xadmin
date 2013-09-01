@@ -19,7 +19,7 @@
 {% if add_models %}
 <li class="dropdown g-add">
   <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-  <i class="icon-plus icon-white"></i> {% trans "Add" %} <span class="caret"></span></a>
+  <i class="icon-plus icon-white"></i> <span class="hide-sm">{% trans "Add" %} <i class="caret"></i></span></a>
   <ul id="g-add-menu" class="dropdown-menu" role="menu">
     {% for m in add_models %}
         <li><a href="{{m.url}}"><i class="icon-plus"></i> {{m.title}}</a></li>

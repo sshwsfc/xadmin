@@ -233,6 +233,10 @@ ul.nav-sitemenu li a {
 .panel-group.nav-sitemenu .panel .list-group .list-group-item:first-child {
   border-top-width: 1px;
 }
+.panel-group.nav-sitemenu .panel .list-group .list-group-item:last-child {
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
 
 /* models list */
 ul.model_ul{
