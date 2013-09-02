@@ -8,7 +8,7 @@ from django.db.models.base import ModelBase
 from django.forms.forms import DeclarativeFieldsMetaclass
 from django.forms.util import flatatt
 from django.template import loader
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.template.context import RequestContext
 from django.test.client import RequestFactory
 from django.utils.encoding import force_unicode, smart_unicode
@@ -110,7 +110,7 @@ class UserWidgetAdmin(object):
         value = dict([(f.name, f.value()) for f in form])
         widget.set_value(value)
         cleaned_data['value'] = widget.value
-        cleaned_data['user'] = self.user.pk
+        cleaned_data['user'] = self.user
 
     def get_list_display(self):
         list_display = super(UserWidgetAdmin, self).get_list_display()

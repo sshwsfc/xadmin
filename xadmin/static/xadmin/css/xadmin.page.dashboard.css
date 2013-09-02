@@ -2,17 +2,8 @@
 .dashboard.container-fluid {
     padding-left: 0px;
 }
-
-.box .table{
-    margin-bottom: 0px;
-}
-
-.box-content.tabs {
-    padding: 5px;
-}
-
-.box-content > form, form.box-form {
-  margin-bottom: 0px;
+.dashboard .column{
+  min-height: 60px;
 }
 
 .widget {
