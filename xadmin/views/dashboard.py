@@ -15,7 +15,7 @@ from django.utils.encoding import force_unicode, smart_unicode
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
-from django.utils.http import urlencode
+from django.utils.http import urlencode, urlquote
 from django.views.decorators.cache import never_cache
 from xadmin import widgets as exwidgets
 from xadmin.layout import FormHelper
@@ -110,7 +110,7 @@ class UserWidgetAdmin(object):
         value = dict([(f.name, f.value()) for f in form])
         widget.set_value(value)
         cleaned_data['value'] = widget.value
-        cleaned_data['user'] = self.user.pk
+        cleaned_data['user'] = self.user
 
     def get_list_display(self):
         list_display = super(UserWidgetAdmin, self).get_list_display()
@@ -570,7 +570,7 @@ class Dashboard(CommAdminView):
             'columns': [('col-sm-%d' % int(12 / len(self.widgets)), ws) for ws in self.widgets],
             'has_add_widget_permission': self.has_model_perm(UserWidget, 'add') and self.widget_customiz,
             'add_widget_url': self.get_admin_url('%s_%s_add' % (UserWidget._meta.app_label, UserWidget._meta.module_name)) +
-            "?user=%s&page_id=%s" % (self.user.id, self.get_page_id())
+            "?user=%s&page_id=%s&_redirect=%s" % (self.user.id, self.get_page_id(), urlquote(self.request.get_full_path()))
         }
         context = super(Dashboard, self).get_context()
         context.update(new_context)
