@@ -123,20 +123,24 @@ class UserWidgetAdmin(object):
             return super(UserWidgetAdmin, self).queryset()
         return UserWidget.objects.filter(user=self.user)
 
-    def delete_models(self, queryset):
+    def update_dashboard(self, obj):
         try:
-            for obj in queryset:
-                try:
-                    portal_pos = UserSettings.objects.get(
-                    user=obj.user, key="dashboard:%s:pos" % obj.page_id)
-                except UserSettings.DoesNotExist:
-                    continue
-                pos = [[w for w in col.split(',') if w != str(
-                    obj.id)] for col in portal_pos.value.split('|')]
-                portal_pos.value = '|'.join([','.join(col) for col in pos])
-                portal_pos.save()
-        except Exception:
-            pass
+            portal_pos = UserSettings.objects.get(
+            user=obj.user, key="dashboard:%s:pos" % obj.page_id)
+        except UserSettings.DoesNotExist:
+            return
+        pos = [[w for w in col.split(',') if w != str(
+            obj.id)] for col in portal_pos.value.split('|')]
+        portal_pos.value = '|'.join([','.join(col) for col in pos])
+        portal_pos.save()
+
+    def delete_model(self):
+        self.update_dashboard(self.obj)
+        super(UserWidgetAdmin, self).delete_model()
+
+    def delete_models(self, queryset):
+        for obj in queryset:
+            self.update_dashboard(obj)
         super(UserWidgetAdmin, self).delete_models(queryset)
 
 
