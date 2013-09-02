@@ -124,7 +124,7 @@ class UserWidget(models.Model):
             try:
                 portal_pos = UserSettings.objects.get(
                     user=self.user, key="dashboard:%s:pos" % self.page_id)
-                portal_pos.value = "%s,%s" % (self.pk, portal_pos.value)
+                portal_pos.value = "%s,%s" % (self.pk, portal_pos.value) if portal_pos.value else self.pk
                 portal_pos.save()
             except Exception:
                 pass
