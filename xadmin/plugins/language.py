@@ -14,6 +14,6 @@ class SetLangNavPlugin(BaseAdminPlugin):
                 'redirect_to': self.request.get_full_path(),
             }, context_instance=RequestContext(self.request)))
 
-if settings.LANGUAGES:
+if settings.LANGUAGES and 'django.middleware.locale.LocaleMiddleware' in settings.MIDDLEWARE_CLASSES:
     site.register_plugin(SetLangNavPlugin, CommAdminView)
     site.register_view(r'^i18n/', lambda site:'django.conf.urls.i18n', 'i18n')
