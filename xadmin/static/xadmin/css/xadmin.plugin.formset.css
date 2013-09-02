@@ -20,7 +20,8 @@
     padding: 5px 5px 3px; 
 }
 .formset .formset-form {
-    padding: 24px 15px 0px;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 .formset .accordion-heading .delete-row {
     float: right;

@@ -48,7 +48,7 @@
       <div id="div_id_username" class="row{% if form.username.errors %} has-error{% endif %}">
         <div class="controls clearfix">
         <div class="input-group input-group-lg">
-          <span class="input-group-addon"><i class="icon-user"></i></span>
+          <span class="input-group-addon"><i class="icon-user icon-fixed-width"></i></span>
           <input class="form-control input-lg" id="id_username" maxlength="254" name="username" type="text" placeholder="{% trans "Username" %}">
         </div>
         {% for error in form.username.errors %}
@@ -60,7 +60,7 @@
       <div id="div_id_password" class="row{% if form.password.errors %} has-error{% endif %}">
         <div class="controls clearfix">
         <div class="input-group input-group-lg">
-          <span class="input-group-addon"><i class="icon-lock"></i></span>
+          <span class="input-group-addon"><i class="icon-lock icon-fixed-width"></i></span>
           <input class="form-control input-lg" id="id_password" name="password" type="password" placeholder="{% trans "Password" %}"> 
         </div>
         {% for error in form.password.errors %}

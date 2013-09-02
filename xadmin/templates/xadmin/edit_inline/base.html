@@ -1,7 +1,7 @@
 {% extends "xadmin/includes/box.html" %}
 {% load i18n xadmin_tags crispy_forms_tags %}
 
-{% block box_class %}formset{% if formset.css_class or inline_style %} {{ formset.css_class }} {{ inline_style }}{% endif %}{% endblock box_class %}
+{% block box_class %}formset fieldset{% if formset.css_class or inline_style %} {{ formset.css_class }} {{ inline_style }}{% endif %}{% endblock box_class %}
 {% block box_attrs %}id="{{ formset.css_id }}" {{ formset.flat_attrs|safe }}{% endblock box_attrs %}
 
 {% block box_title %}
