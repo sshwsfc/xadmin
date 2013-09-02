@@ -8,7 +8,7 @@ from django.db.models.base import ModelBase
 from django.forms.forms import DeclarativeFieldsMetaclass
 from django.forms.util import flatatt
 from django.template import loader
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.template.context import RequestContext
 from django.test.client import RequestFactory
 from django.utils.encoding import force_unicode, smart_unicode
