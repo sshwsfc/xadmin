@@ -1,8 +1,8 @@
 import xadmin
 
 from xadmin.layout import *
+from xadmin.util import username_field
 
-from django.contrib.auth import get_user_model
 from django.contrib.comments.models import Comment
 from django.utils.translation import ugettext_lazy as _, ungettext
 from django.contrib.comments import get_model
@@ -14,7 +14,7 @@ class UsernameSearch(object):
     search in CommentAdmin.
     """
     def __str__(self):
-        return 'user__%s' % get_user_model().USERNAME_FIELD
+        return 'user__%s' % username_field
 
 
 class CommentsAdmin(object):
