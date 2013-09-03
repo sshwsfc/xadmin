@@ -3,17 +3,17 @@
   $(function(){
 
     // menber filter
-    $('.filter-number .add-on.remove').click(function(e){
-      $(this).parent().find('input[type="text"]').val('');
+    $('.filter-number .remove').click(function(e){
+      $(this).parent().parent().find('input[type="number"]').val('');
     });
 
-    $('.filter-number .add-on.toggle').click(function(e){
+    $('.filter-number .toggle').click(function(e){
       var new_name = $(this).hasClass('active') ? $(this).attr('data-off-name') : $(this).attr('data-on-name');
-      $(this).parent().find('input[type="text"]').attr('name', new_name);
+      $(this).parent().parent().find('input[type="number"]').attr('name', new_name);
     });
 
     $('#filter-menu form').submit(function(){
-      $(this).find('input[type="text"]').each(function(e){
+      $(this).find('input[type="text"],input[type="number"]').each(function(e){
         if(!$(this).val()) $(this).attr('name', '');
       });
       return true;
