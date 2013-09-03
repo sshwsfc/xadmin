@@ -16,7 +16,6 @@
   outline: none;
 }
 .modal-gallery.fade.in {
-  top: 50%;
 }
 .modal-gallery .modal-body {
   max-height: none;

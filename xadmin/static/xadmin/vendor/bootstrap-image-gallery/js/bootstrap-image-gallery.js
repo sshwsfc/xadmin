@@ -68,7 +68,7 @@
                 selector = options.selector ||
                     'a[data-target=' + options.target + ']';
             this.$links = $(options.delegate).find(selector)
-                .filter(options.filter).each(function (index) {
+                .each(function (index) {
                     if ($this.getUrl(this) === options.href) {
                         options.index = index;
                     }
@@ -174,16 +174,16 @@
             if (transition) {
                 clone = modal.clone().hide().appendTo(document.body);
             }
-            if ($(window).width() > 767) {
-                method.call(modal.stop(), {
-                    'margin-top': -((clone || modal).outerHeight() / 2),
-                    'margin-left': -((clone || modal).outerWidth() / 2)
-                });
-            } else {
-                modal.css({
-                    top: ($(window).height() - (clone || modal).outerHeight()) / 2
-                });
-            }
+            // if ($(window).width() > 767) {
+            //     method.call(modal.stop(), {
+            //         'margin-top': -((clone || modal).outerHeight() / 2),
+            //         'margin-left': -((clone || modal).outerWidth() / 2)
+            //     });
+            // } else {
+            //     modal.css({
+            //         top: ($(window).height() - (clone || modal).outerHeight()) / 2
+            //     });
+            // }
             if (clone) {
                 clone.remove();
             }
@@ -334,16 +334,16 @@
                         canvas: options.canvas
                     };
                 }
-                if (windowWidth > 767) {
-                    modal.css({
-                        'margin-top': -(modal.outerHeight() / 2),
-                        'margin-left': -(modal.outerWidth() / 2)
-                    });
-                } else {
-                    modal.css({
-                        top: ($(window).height() - modal.outerHeight()) / 2
-                    });
-                }
+                // if (windowWidth > 767) {
+                //     modal.css({
+                //         'margin-top': -(modal.outerHeight() / 2),
+                //         'margin-left': -(modal.outerWidth() / 2)
+                //     });
+                // } else {
+                //     modal.css({
+                //         top: ($(window).height() - modal.outerHeight()) / 2
+                //     });
+                // }
                 this.initGalleryEvents();
                 this.initLinks();
                 if (this.$links.length) {
