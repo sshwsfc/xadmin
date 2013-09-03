@@ -3,6 +3,7 @@ import xadmin
 from xadmin.layout import *
 from xadmin.util import username_field
 
+from django.conf import settings
 from django.contrib.comments.models import Comment
 from django.utils.translation import ugettext_lazy as _, ungettext
 from django.contrib.comments import get_model
@@ -89,5 +90,5 @@ class CommentsAdmin(object):
 
 # Only register the default admin if the model is the built-in comment model
 # (this won't be true if there's a custom comment app).
-if get_model() is Comment:
+if 'django.contrib.comments' in settings.INSTALLED_APPS and (get_model() is Comment):
     xadmin.site.register(Comment, CommentsAdmin)
