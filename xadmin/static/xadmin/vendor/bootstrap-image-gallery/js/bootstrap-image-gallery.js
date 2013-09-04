@@ -33,7 +33,7 @@
     // Bootstrap Image Gallery is an extension to the Modal dialog of Twitter's
     // Bootstrap toolkit, to ease navigation between a set of gallery images.
     // It features transition effects, fullscreen mode and slideshow functionality.
-    $.extend($.fn.modal.defaults, {
+    $.extend($.fn.modal.Constructor.DEFAULTS, {
         // Delegate to search gallery links from, can be anything that
         // is accepted as parameter for $():
         delegate: document,
@@ -51,7 +51,7 @@
         // Offset of image width to viewport width:
         offsetWidth: 100,
         // Offset of image height to viewport height:
-        offsetHeight: 200,
+        offsetHeight: 230,
         // Set to true to display images as canvas elements:
         canvas: false,
         // Shows the next image after the given time in ms (0 = disabled):
@@ -135,7 +135,7 @@
             this._loadingTimeout = window.setTimeout(function () {
                 modal.addClass('modal-loading');
             }, 100);
-            oldImg = modal.find('.modal-image').children().removeClass('in');
+            oldImg = modal.find('.modal-image').children('img').removeClass('in');
             // The timeout allows transition effects to finish:
             window.setTimeout(function () {
                 oldImg.remove();
@@ -170,23 +170,26 @@
                 width: img.width,
                 height: img.height
             });
-            modal.find('.modal-title').css({ width: Math.max(img.width, 380) });
-            if (transition) {
-                clone = modal.clone().hide().appendTo(document.body);
+            if ($(window).width() > 767) {
+                modal.find('.modal-dialog').css({width: Math.max(img.width + 60, 450)});
             }
-            // if ($(window).width() > 767) {
-            //     method.call(modal.stop(), {
-            //         'margin-top': -((clone || modal).outerHeight() / 2),
-            //         'margin-left': -((clone || modal).outerWidth() / 2)
-            //     });
-            // } else {
-            //     modal.css({
-            //         top: ($(window).height() - (clone || modal).outerHeight()) / 2
-            //     });
+            // modal.find('.modal-title').css({ width: Math.max(img.width, 380) });
+            // if (transition) {
+            //     clone = modal.clone().hide().appendTo(document.body);
             // }
-            if (clone) {
-                clone.remove();
-            }
+            // // if ($(window).width() > 767) {
+            // //     method.call(modal.stop(), {
+            // //         'margin-top': -((clone || modal).outerHeight() / 2),
+            // //         'margin-left': -((clone || modal).outerWidth() / 2)
+            // //     });
+            // // } else {
+            // //     modal.css({
+            // //         top: ($(window).height() - (clone || modal).outerHeight()) / 2
+            // //     });
+            // // }
+            // if (clone) {
+            //     clone.remove();
+            // }
             modalImage.append(img);
             forceReflow = img.offsetWidth;
             modal.trigger('display');
@@ -375,7 +378,7 @@
                 var $this = $(this),
                     options = $this.data(),
                     modal = $(options.target),
-                    data = modal.data('modal'),
+                    data = modal.data('bs.modal'),
                     link;
                 if (!data) {
                     options = $.extend(modal.data(), options);
