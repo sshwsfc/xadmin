@@ -31,8 +31,8 @@
       {% for label, value_a, value_b, diff in diffs %}
         <tr{%if diff%} class="diff-row warning"{% endif %}>
           <th scope="row">{{ label }}</th>
-          <td class="version-a{%if not diff%} muted{% endif %}">{{value_a}}</td>
-          <td class="version-b{%if not diff%} muted{% endif %}">{{value_b}}</td>
+          <td class="version-a{%if not diff%} text-muted{% endif %}">{{value_a}}</td>
+          <td class="version-b{%if not diff%} text-muted{% endif %}">{{value_b}}</td>
         </tr>
       {% endfor %}
         <tr>

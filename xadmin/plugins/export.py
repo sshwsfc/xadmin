@@ -52,7 +52,7 @@ class ExportPlugin(BaseAdminPlugin):
         if (o.field is None and getattr(o.attr, 'boolean', False)) or \
            (o.field and isinstance(o.field, (BooleanField, NullBooleanField))):
                 value = o.value
-        elif str(o.text).startswith("<span class='muted'>"):
+        elif str(o.text).startswith("<span class='text-muted'>"):
             value = escape(str(o.text)[20:-7])
         else:
             value = escape(str(o.text))

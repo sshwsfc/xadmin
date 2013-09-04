@@ -19,7 +19,7 @@
     constructor: AjaxForm
 
     , ainit: function(){
-      this.$mask = $('<div class="mask"><h2 style="text-align:center;"><i class="icon-spinner icon-spin icon-large"></i></h2></div>')
+      this.$mask = $('<div class="mask"><h1 style="text-align:center;"><i class="icon-spinner icon-spin icon-large"></i></h1></div>')
 
       this.$form.prepend(this.$mask)
       this.$form.submit($.proxy(this.submit, this))

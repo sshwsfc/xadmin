@@ -310,6 +310,7 @@ class InlineFormset(Fieldset):
         self.inline_style = formset.style.name
         if allow_blank and len(formset) == 0:
             self.template = 'xadmin/edit_inline/blank.html'
+            self.inline_style = 'blank'
         self.formset = formset
         self.model = formset.model
         self.opts = formset.model._meta
