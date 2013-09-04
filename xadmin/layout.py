@@ -61,7 +61,7 @@ class Container(layout.Div):
 # Override bootstrap3
 class InputGroup(layout.Field):
 
-    template = "bootstrap3/layout/input_group.html"
+    template = "xadmin/layout/input_group.html"
 
     def __init__(self, field, *args, **kwargs):
         self.field = field

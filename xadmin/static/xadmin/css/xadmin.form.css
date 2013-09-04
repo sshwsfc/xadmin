@@ -7,12 +7,23 @@ select.selectmultiple {
 .select2-container{
   width: 100%;
 }
+.select2-container.form-control{
+  padding: 0px;
+  border: 0px;
+}
 .select2-container .select2-choice {
   height: 35px;
   padding-top: 3px;
 }
 
 /* form css */
+.form-container .column{
+  min-height: 60px;
+}
+.form-group {
+  margin-right: -15px;
+  margin-left: -15px;
+}
 .control-label {
   padding: 6px 10px;
   font-weight: bold;
@@ -20,12 +31,20 @@ select.selectmultiple {
 .controls {
   padding: 0px 15px 0px 15px;
 }
+.controls:before,
+.controls:after {
+  display: table;
+  content: " ";
+}
+.controls:after {
+  clear: both;
+}
 .control-wrap {
   display: block;
   width: 100%;
   padding-right: 45px;
 }
-.asterisk_field {
+.asteriskField, .asterisk-field {
   color: red;
 }
 
@@ -34,10 +53,6 @@ select.selectmultiple {
   display: inline-block;
 }
 
-.controls > .radio:first-child,
-.controls > .checkbox:first-child {
-  margin-top: 0px;
-}
 .help-block {
   margin-bottom: 0px;
 }

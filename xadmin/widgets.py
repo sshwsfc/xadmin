@@ -19,7 +19,7 @@ class AdminDateWidget(forms.DateInput):
         return vendor('datepicker.js', 'datepicker.css', 'xadmin.widget.datetime.js')
 
     def __init__(self, attrs=None, format=None):
-        final_attrs = {'class': 'date-field form-control', 'size': '10'}
+        final_attrs = {'class': 'date-field', 'size': '10'}
         if attrs is not None:
             final_attrs.update(attrs)
         super(AdminDateWidget, self).__init__(attrs=final_attrs, format=format)
@@ -36,7 +36,7 @@ class AdminTimeWidget(forms.TimeInput):
         return vendor('timepicker.js', 'timepicker.css', 'xadmin.widget.datetime.js')
 
     def __init__(self, attrs=None, format=None):
-        final_attrs = {'class': 'time-field form-control', 'size': '8'}
+        final_attrs = {'class': 'time-field', 'size': '8'}
         if attrs is not None:
             final_attrs.update(attrs)
         super(AdminTimeWidget, self).__init__(attrs=final_attrs, format=format)
@@ -64,7 +64,7 @@ class AdminSplitDateTime(forms.SplitDateTimeWidget):
         forms.MultiWidget.__init__(self, widgets, attrs)
 
     def format_output(self, rendered_widgets):
-        return mark_safe(u'<div class="datetime">%s%s</div>' %
+        return mark_safe(u'<div class="datetime clearfix">%s%s</div>' %
                         (rendered_widgets[0], rendered_widgets[1]))
 
 
@@ -128,7 +128,7 @@ class AdminCheckboxSelect(forms.CheckboxSelectMultiple):
 
 class AdminSelectMultiple(forms.SelectMultiple):
     def __init__(self, attrs=None):
-        final_attrs = {'class': 'select-multi form-control'}
+        final_attrs = {'class': 'select-multi'}
         if attrs is not None:
             final_attrs.update(attrs)
         super(AdminSelectMultiple, self).__init__(attrs=final_attrs)
@@ -143,7 +143,7 @@ class AdminFileWidget(forms.ClearableFileInput):
 
 class AdminTextareaWidget(forms.Textarea):
     def __init__(self, attrs=None):
-        final_attrs = {'class': 'textarea-field form-control'}
+        final_attrs = {'class': 'textarea-field'}
         if attrs is not None:
             final_attrs.update(attrs)
         super(AdminTextareaWidget, self).__init__(attrs=final_attrs)
@@ -151,7 +151,7 @@ class AdminTextareaWidget(forms.Textarea):
 
 class AdminTextInputWidget(forms.TextInput):
     def __init__(self, attrs=None):
-        final_attrs = {'class': 'text-field form-control'}
+        final_attrs = {'class': 'text-field'}
         if attrs is not None:
             final_attrs.update(attrs)
         super(AdminTextInputWidget, self).__init__(attrs=final_attrs)
@@ -159,7 +159,7 @@ class AdminTextInputWidget(forms.TextInput):
 
 class AdminURLFieldWidget(forms.TextInput):
     def __init__(self, attrs=None):
-        final_attrs = {'class': 'url-field form-control'}
+        final_attrs = {'class': 'url-field'}
         if attrs is not None:
             final_attrs.update(attrs)
         super(AdminURLFieldWidget, self).__init__(attrs=final_attrs)
@@ -167,7 +167,7 @@ class AdminURLFieldWidget(forms.TextInput):
 
 class AdminIntegerFieldWidget(forms.TextInput):
     def __init__(self, attrs=None):
-        final_attrs = {'class': 'int-field form-control'}
+        final_attrs = {'class': 'int-field'}
         if attrs is not None:
             final_attrs.update(attrs)
         super(AdminIntegerFieldWidget, self).__init__(attrs=final_attrs)
@@ -175,7 +175,7 @@ class AdminIntegerFieldWidget(forms.TextInput):
 
 class AdminCommaSeparatedIntegerFieldWidget(forms.TextInput):
     def __init__(self, attrs=None):
-        final_attrs = {'class': 'sep-int-field form-control'}
+        final_attrs = {'class': 'sep-int-field'}
         if attrs is not None:
             final_attrs.update(attrs)
         super(AdminCommaSeparatedIntegerFieldWidget,
