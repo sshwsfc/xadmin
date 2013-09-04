@@ -11,19 +11,12 @@
  */
 
 .modal-gallery {
-  width: auto;
-  max-height: none;
-  outline: none;
 }
 .modal-gallery.fade.in {
 }
 .modal-gallery .modal-body {
-  max-height: none;
 }
 .modal-gallery .modal-title {
-  display: inline-block;
-  max-height: 54px;
-  overflow: hidden;
 }
 .modal-gallery .modal-image {
   position: relative;

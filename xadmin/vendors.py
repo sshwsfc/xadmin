@@ -69,11 +69,11 @@ vendors = {
     "image-gallery": {
         "css": {
             'dev': 'xadmin/vendor/bootstrap-image-gallery/css/bootstrap-image-gallery.css',
-            'production': 'xadmin/vendor/bootstrap-image-gallery/css/bootstrap-image-gallery.min.css',
+            'production': 'xadmin/vendor/bootstrap-image-gallery/css/bootstrap-image-gallery.css',
         },
         "js": {
             'dev': ['xadmin/vendor/load-image/load-image.js', 'xadmin/vendor/bootstrap-image-gallery/js/bootstrap-image-gallery.js'],
-            'production': ['xadmin/vendor/load-image/load-image.min.js', 'xadmin/vendor/bootstrap-image-gallery/js/bootstrap-image-gallery.min.js']
+            'production': ['xadmin/vendor/load-image/load-image.min.js', 'xadmin/vendor/bootstrap-image-gallery/js/bootstrap-image-gallery.js']
         }
     },
     "select2": {
