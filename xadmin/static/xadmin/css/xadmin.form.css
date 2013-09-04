@@ -25,8 +25,11 @@ select.selectmultiple {
   margin-left: -15px;
 }
 .control-label {
-  padding: 6px 10px;
+  padding: 7px 10px;
   font-weight: bold;
+}
+.form-horizontal .control-label {
+  margin-bottom: 5px;
 }
 .controls {
   padding: 0px 15px 0px 15px;
