@@ -93,7 +93,7 @@ class ModelFormAdminView(ModelAdminView):
     def get_field_style(self, db_field, style, **kwargs):
         if style in ('radio', 'radio-inline') and (db_field.choices or isinstance(db_field, models.ForeignKey)):
             attrs = {'widget': widgets.AdminRadioSelect(
-                attrs={'class': 'radio-inline' if style == 'radio-inline' else ""})}
+                attrs={'inline': style == 'radio-inline'})}
             if db_field.choices:
                 attrs['choices'] = db_field.get_choices(
                     include_blank=db_field.blank,
@@ -102,7 +102,7 @@ class ModelFormAdminView(ModelAdminView):
             return attrs
 
         if style in ('checkbox', 'checkbox-inline') and isinstance(db_field, models.ManyToManyField):
-            return {'widget': widgets.AdminCheckboxSelect(attrs={'class': 'checkbox-inline' if style == 'checkbox-inline' else ""}),
+            return {'widget': widgets.AdminCheckboxSelect(attrs={'inline': style == 'checkbox-inline'}),
                     'help_text': None}
 
     @filter_hook

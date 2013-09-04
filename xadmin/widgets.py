@@ -74,12 +74,16 @@ class AdminRadioInput(RadioInput):
         name = name or self.name
         value = value or self.value
         attrs = attrs or self.attrs
+        attrs['class'] = attrs.get('class', '').replace('form-control', '')
         if 'id' in self.attrs:
             label_for = ' for="%s_%s"' % (self.attrs['id'], self.index)
         else:
             label_for = ''
         choice_label = conditional_escape(force_unicode(self.choice_label))
-        return mark_safe(u'<label%s class="radio %s">%s %s</label>' % (label_for, attrs.get('class', ''), self.tag(), choice_label))
+        if attrs.get('inline', False):
+            return mark_safe(u'<label%s class="radio-inline">%s %s</label>' % (label_for, self.tag(), choice_label))
+        else:
+            return mark_safe(u'<div class="radio"><label%s>%s %s</label></div>' % (label_for, self.tag(), choice_label))
 
 
 class AdminRadioFieldRenderer(RadioFieldRenderer):
@@ -123,7 +127,11 @@ class AdminCheckboxSelect(forms.CheckboxSelectMultiple):
             option_value = force_unicode(option_value)
             rendered_cb = cb.render(name, option_value)
             option_label = conditional_escape(force_unicode(option_label))
-            output.append(u'<label%s class="checkbox %s">%s %s</label>' % (label_for, final_attrs.get('class', ''), rendered_cb, option_label))
+
+            if final_attrs.get('inline', False):
+                output.append(u'<label%s class="checkbox-inline">%s %s</label>' % (label_for, rendered_cb, option_label))
+            else:
+                output.append(u'<div class="checkbox"><label%s>%s %s</label></div>' % (label_for, rendered_cb, option_label))
         return mark_safe(u'\n'.join(output))
 
 class AdminSelectMultiple(forms.SelectMultiple):

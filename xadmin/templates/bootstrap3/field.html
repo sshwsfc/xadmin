@@ -10,27 +10,17 @@
             </label>
         {% endif %}
 
-        {% if field|is_checkboxselectmultiple %}
-            {% include 'bootstrap3/layout/checkboxselectmultiple.html' %}
-        {% endif %}
-
-        {% if field|is_radioselect %}
-            {% include 'bootstrap3/layout/radioselect.html' %}
-        {% endif %}
-
-        {% if not field|is_checkboxselectmultiple and not field|is_radioselect %}
-            <div class="controls {{ field_class }}">
-                {% if field|is_checkbox %}
-                    <label for="{{ field.id_for_label }}" class="checkbox {% if field.field.required %} requiredField{% endif %}">
-                        {% crispy_field field %}
-                        {{ field.label|safe }}
-                        {% include 'bootstrap3/layout/help_text_and_errors.html' %}
-                    </label>
-                {% else %}
+        <div class="controls {{ field_class }}">
+            {% if field|is_checkbox %}
+                <label for="{{ field.id_for_label }}" class="checkbox {% if field.field.required %} requiredField{% endif %}">
                     {% crispy_field field %}
+                    {{ field.label|safe }}
                     {% include 'bootstrap3/layout/help_text_and_errors.html' %}
-                {% endif %}
-            </div>
-        {% endif %}
+                </label>
+            {% else %}
+                {% crispy_field field %}
+                {% include 'bootstrap3/layout/help_text_and_errors.html' %}
+            {% endif %}
+        </div>
     </{% if tag %}{{ tag }}{% else %}div{% endif %}>
 {% endif %}
