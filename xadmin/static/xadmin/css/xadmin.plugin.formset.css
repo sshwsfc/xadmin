@@ -2,6 +2,9 @@
 .empty-form {
     display: none;
 }
+.formset:not(.one) > .panel-body {
+    padding-top: 0px !important;
+}
 .formset .row-deleted{
     background: #fff0f0  !important;
 }
@@ -20,7 +23,8 @@
     padding: 5px 5px 3px; 
 }
 .formset .formset-form {
-    padding: 24px 15px 0px;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 .formset .accordion-heading .delete-row {
     float: right;
@@ -28,6 +32,13 @@
 }
 .formset .nav{
     margin-bottom: 5px;
+}
+.formset .nav.nav-tabs{
+    padding: 10px 10px 0px;
+}
+.formset .panel-body.tabs {
+    padding-left: 0px;
+    padding-right: 0px;
 }
 .formset .box-content.tabs{
     padding: 5px 0px 0px;

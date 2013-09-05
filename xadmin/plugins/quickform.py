@@ -7,7 +7,7 @@ import copy
 from xadmin.sites import site
 from xadmin.util import get_model_from_relation, vendor
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView
-
+from xadmin.layout import Layout
 
 class QuickFormPlugin(BaseAdminPlugin):
 
@@ -26,6 +26,11 @@ class QuickFormPlugin(BaseAdminPlugin):
                 "formfield_callback": self.admin_view.formfield_for_dbfield,
             }
             return modelform_factory(self.model, **defaults)
+        return __()
+
+    def get_form_layout(self, __):
+        if '_field' in self.request.GET:
+            return Layout(*self.request.GET['_field'].split(','))
         return __()
 
     def get_context(self, context):
@@ -90,9 +95,6 @@ class RelatedFieldWidgetWrapper(forms.Widget):
 
 
 class QuickAddBtnPlugin(BaseAdminPlugin):
-
-    def init_request(self, *args, **kwargs):
-        return not self.request.is_ajax()
 
     def formfield_for_dbfield(self, formfield, db_field, **kwargs):
         if formfield and self.model in self.admin_site._registry and isinstance(db_field, (models.ForeignKey, models.ManyToManyField)):

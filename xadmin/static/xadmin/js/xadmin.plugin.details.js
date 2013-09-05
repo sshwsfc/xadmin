@@ -27,7 +27,7 @@
         }
         modal.find('.modal-title').html(el.attr('title'));
         modal.find('.edit-btn').attr('href', this.edit_uri);
-        modal.find('.modal-body').html('<h2 style="text-align:center;"><i class="icon-spinner icon-spin icon-large"></i></h2>');
+        modal.find('.modal-body').html('<h1 style="text-align:center;"><i class="icon-spinner icon-spin icon-large"></i></h1>');
         modal.find('.modal-body').load(this.res_uri + '?_format=html', function(response, status, xhr) {
           if (status == "error") {
             var msg = "Sorry but there was an error: ";

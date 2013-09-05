@@ -19,7 +19,7 @@
     constructor: AjaxForm
 
     , ainit: function(){
-      this.$mask = $('<div class="mask"><h2 style="text-align:center;"><i class="icon-spinner icon-spin icon-large"></i></h2></div>')
+      this.$mask = $('<div class="mask"><h1 style="text-align:center;"><i class="icon-spinner icon-spin icon-large"></i></h1></div>')
 
       this.$form.prepend(this.$mask)
       this.$form.submit($.proxy(this.submit, this))
@@ -169,8 +169,8 @@
         var modal = $('<div class="modal fade quick-form" role="dialog"><div class="modal-dialog"><div class="modal-content">'+
           '<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>'+ 
           this.$btn.attr('title') +'</h3></div><div class="modal-body"></div>'+
-          '<div class="modal-footer"><button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>'+
-          '<a class="btn btn-primary btn-submit">Add</a></div></div></div></div>')
+          '<div class="modal-footer" style="display: none;"><button class="btn btn-default" data-dismiss="modal" aria-hidden="true">'+gettext('Close')+'</button>'+
+          '<a class="btn btn-primary btn-submit">'+gettext('Add')+'</a></div></div></div></div>')
         $('body').append(modal)
 
         var self = this
@@ -180,7 +180,8 @@
           form.addClass('quick-form')
           form.on('post-success', $.proxy(self.post, self))
           form.exform()
-
+          
+          modal.find('.modal-footer').show()
           modal.find('.btn-submit').click(function(){form.submit()})
 
           self.$form = form

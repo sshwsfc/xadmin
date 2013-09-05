@@ -535,7 +535,7 @@ class ListAdminView(ModelAdminView):
         try:
             f, attr, value = lookup_field(field_name, obj, self)
         except (AttributeError, ObjectDoesNotExist):
-            item.text = mark_safe("<span class='muted'>%s</span>" % EMPTY_CHANGELIST_VALUE)
+            item.text = mark_safe("<span class='text-muted'>%s</span>" % EMPTY_CHANGELIST_VALUE)
         else:
             if f is None:
                 item.allow_tags = getattr(attr, 'allow_tags', False)

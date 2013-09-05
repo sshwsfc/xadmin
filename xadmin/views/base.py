@@ -190,6 +190,14 @@ class BaseAdminObject(object):
     def template_response(self, template, context):
         return TemplateResponse(self.request, template, context, current_app=self.admin_site.name)
 
+    def message_user(self, message, level='info'):
+        """
+        Send a message to the user. The default implementation
+        posts a message using the django.contrib.messages backend.
+        """
+        if hasattr(messages, level) and callable(getattr(messages, level)):
+            getattr(messages, level)(self.request, message)
+
     def static(self, path):
         return static(path)
 
@@ -416,15 +424,6 @@ class CommAdminView(BaseAdminView):
             icon = getattr(self.admin_site._registry[model],
                            'model_icon', self.default_model_icon)
         return icon
-
-    @filter_hook
-    def message_user(self, message, level='info'):
-        """
-        Send a message to the user. The default implementation
-        posts a message using the django.contrib.messages backend.
-        """
-        if hasattr(messages, level) and callable(getattr(messages, level)):
-            getattr(messages, level)(self.request, message)
 
     @filter_hook
     def get_breadcrumb(self):

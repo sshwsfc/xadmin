@@ -4,7 +4,7 @@
 {% block box_content_class %}{{ block.super }} panel-group{% endblock box_content_class %}
 
 {% block formset_form %}
-  <div class="panel formset-row fieldset">
+  <div class="panel formset-row row fieldset">
     <div class="panel-heading">
       {% if formset.formset.can_delete %}
         <a class="delete-row pull-right"><i class="icon icon-remove"></i></a>
@@ -20,7 +20,7 @@
   </div>
 {% endblock formset_form %}
 {% block formset_empty %}
-  <div class="panel formset-row fieldset">
+  <div class="panel formset-row row fieldset">
     <div class="panel-heading">
       {% if formset.formset.can_delete %}
           <a class="delete-row pull-right"><i class="icon icon-remove"></i></a>

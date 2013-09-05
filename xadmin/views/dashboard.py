@@ -8,14 +8,14 @@ from django.db.models.base import ModelBase
 from django.forms.forms import DeclarativeFieldsMetaclass
 from django.forms.util import flatatt
 from django.template import loader
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.template.context import RequestContext
 from django.test.client import RequestFactory
 from django.utils.encoding import force_unicode, smart_unicode
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
-from django.utils.http import urlencode
+from django.utils.http import urlencode, urlquote
 from django.views.decorators.cache import never_cache
 from xadmin import widgets as exwidgets
 from xadmin.layout import FormHelper
@@ -110,7 +110,7 @@ class UserWidgetAdmin(object):
         value = dict([(f.name, f.value()) for f in form])
         widget.set_value(value)
         cleaned_data['value'] = widget.value
-        cleaned_data['user'] = self.user.pk
+        cleaned_data['user'] = self.user
 
     def get_list_display(self):
         list_display = super(UserWidgetAdmin, self).get_list_display()
@@ -123,20 +123,24 @@ class UserWidgetAdmin(object):
             return super(UserWidgetAdmin, self).queryset()
         return UserWidget.objects.filter(user=self.user)
 
-    def delete_models(self, queryset):
+    def update_dashboard(self, obj):
         try:
-            for obj in queryset:
-                try:
-                    portal_pos = UserSettings.objects.get(
-                    user=obj.user, key="dashboard:%s:pos" % obj.page_id)
-                except UserSettings.DoesNotExist:
-                    continue
-                pos = [[w for w in col.split(',') if w != str(
-                    obj.id)] for col in portal_pos.value.split('|')]
-                portal_pos.value = '|'.join([','.join(col) for col in pos])
-                portal_pos.save()
-        except Exception:
-            pass
+            portal_pos = UserSettings.objects.get(
+            user=obj.user, key="dashboard:%s:pos" % obj.page_id)
+        except UserSettings.DoesNotExist:
+            return
+        pos = [[w for w in col.split(',') if w != str(
+            obj.id)] for col in portal_pos.value.split('|')]
+        portal_pos.value = '|'.join([','.join(col) for col in pos])
+        portal_pos.save()
+
+    def delete_model(self):
+        self.update_dashboard(self.obj)
+        super(UserWidgetAdmin, self).delete_model()
+
+    def delete_models(self, queryset):
+        for obj in queryset:
+            self.update_dashboard(obj)
         super(UserWidgetAdmin, self).delete_models(queryset)
 
 
@@ -566,7 +570,7 @@ class Dashboard(CommAdminView):
             'columns': [('col-sm-%d' % int(12 / len(self.widgets)), ws) for ws in self.widgets],
             'has_add_widget_permission': self.has_model_perm(UserWidget, 'add') and self.widget_customiz,
             'add_widget_url': self.get_admin_url('%s_%s_add' % (UserWidget._meta.app_label, UserWidget._meta.module_name)) +
-            "?user=%s&page_id=%s" % (self.user.id, self.get_page_id())
+            "?user=%s&page_id=%s&_redirect=%s" % (self.user.id, self.get_page_id(), urlquote(self.request.get_full_path()))
         }
         context = super(Dashboard, self).get_context()
         context.update(new_context)

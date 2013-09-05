@@ -26,6 +26,9 @@
 }
 
 @media (min-width: 768px) {
+  #content-block {
+    padding-left: 5px;
+  }
   .form-actions .more-btns{
     display: inline-block !important;
   }
@@ -74,8 +77,7 @@
 #left-side {
   min-height: 0px;
   position: fixed;
-  padding: 0px;
-  top: 50px;
+  top: 65px;
   left: 0px;
   bottom: 0px;
   background: #FFF;

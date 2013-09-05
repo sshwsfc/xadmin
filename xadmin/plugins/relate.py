@@ -57,7 +57,7 @@ class RelateMenuPlugin(BaseAdminPlugin):
                             reverse('%s:%s_%s_changelist' % (
                                     self.admin_site.app_name, label, model_name)),
                             RELATE_PREFIX + lookup_name, str(instance.pk), verbose_name, verbose_name) if view_perm else
-                            '<a><span class="muted"><i class="icon icon-blank"></i> %s</span></a>' % verbose_name,
+                            '<a><span class="text-muted"><i class="icon icon-blank"></i> %s</span></a>' % verbose_name,
 
                             '<a class="add_link dropdown-menu-btn" href="%s?%s=%s"><i class="icon icon-plus pull-right"></i></a>' %
                           (

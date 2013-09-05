@@ -37,7 +37,10 @@
 }
 .controls {
   background-color: white;
-  padding: 15px!important;
+  padding: 15px !important;
+}
+.control-label {
+  margin-bottom: 0px !important;
 }
 .fieldset .panel-body {
   padding-top: 0px !important;

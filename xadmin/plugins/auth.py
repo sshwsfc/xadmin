@@ -35,6 +35,7 @@ class UserAdmin(object):
     ordering = ('username',)
     style_fields = {'user_permissions': 'm2m_transfer'}
     model_icon = 'user'
+    relfield_style = 'fk-ajax'
 
     def get_model_form(self, **kwargs):
         if self.org_obj is None:

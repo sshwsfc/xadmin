@@ -15,7 +15,7 @@
   </ul>
   <div class="tab-content formset-content" data-prefix="{{ prefix }}" data-style="tab">
   {% for fs in formset.formset %}
-    <div class="formset-row tab-pane{% if forloop.first%} active{% endif %}" id="{{ prefix }}-{{ forloop.counter0 }}-body">
+    <div class="formset-row tab-pane col-xs-12{% if forloop.first%} active{% endif %}" id="{{ prefix }}-{{ forloop.counter0 }}-body">
       {% if formset.formset.can_delete %}
         <a class="delete-row pull-right"><i class="icon icon-remove"></i></a>
       {% endif %}
@@ -26,7 +26,7 @@
 {% endblock formset_content %}
 
 {% block formset_empty %}
-  <div class="formset-row tab-pane" data-replace-id="{{ prefix }}-__prefix__-body">
+  <div class="formset-row tab-pane col-xs-12" data-replace-id="{{ prefix }}-__prefix__-body">
       {% if formset.formset.can_delete %}
         <a class="delete-row pull-right"><i class="icon icon-remove"></i></a>
       {% endif %}

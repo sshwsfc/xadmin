@@ -1,2 +1,2 @@
 django>=1.4
-django-crispy-forms>=1.2.3
+django-crispy-forms>=1.4.0

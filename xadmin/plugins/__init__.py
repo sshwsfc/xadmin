@@ -26,3 +26,4 @@ import mobile
 import passwords
 import sitemenu
 import language
+import comments
