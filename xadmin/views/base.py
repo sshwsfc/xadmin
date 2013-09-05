@@ -1,3 +1,4 @@
+import sys
 import copy
 import functools
 import datetime
@@ -334,8 +335,23 @@ class CommAdminView(BaseAdminView):
             if app_key in nav_menu:
                 nav_menu[app_key]['menus'].append(model_dict)
             else:
+                # Find app title
+                app_title = unicode(app_label.title())
+                if app_label.lower() in self.apps_label_title:
+                    app_title = self.apps_label_title[app_label.lower()]
+                else:
+                    mods = model.__module__.split('.')
+                    if len(mods) > 1:
+                        mod = '.'.join(mods[0:-1])
+                        if mod in sys.modules:
+                            mod = sys.modules[mod]
+                            if 'verbose_name' in dir(mod):
+                                app_title = getattr(mod, 'verbose_name')
+                            elif 'app_title' in dir(mod):
+                                app_title = getattr(mod, 'app_title')
+
                 nav_menu[app_key] = {
-                    'title': self.apps_label_title.get(app_label.lower(), unicode(app_label.title())),
+                    'title': app_title,
                     'menus': [model_dict],
                 }
 
