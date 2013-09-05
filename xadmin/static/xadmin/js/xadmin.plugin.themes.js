@@ -31,6 +31,9 @@
       $('#g-theme-menu li>a').click(function(){
         var $el = $(this);
         var themeHref = $el.data('css-href');
+        
+        var topmenu = $('#top-nav .navbar-collapse');
+        if(topmenu.data('bs.collapse')) topmenu.collapse('hide');
 
         var modal = $('<div id="load-theme-modal" class="modal fade" role="dialog"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4>'+ 
             'Loading theme</h4></div><div class="modal-body"><h2 style="text-align:center;"><i class="icon-spinner icon-spin icon-large"></i></h2></div></div></div></div>');
