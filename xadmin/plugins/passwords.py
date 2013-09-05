@@ -57,8 +57,8 @@ class ResetPasswordSendView(BaseAdminView):
                 opts['subject_template_name'] = self.password_reset_subject_template
 
             form.save(**opts)
-
-            return TemplateResponse(request, self.password_reset_done_template, opts,
+            context = super(ResetPasswordSendView, self).get_context()
+            return TemplateResponse(request, self.password_reset_done_template, context,
                                 current_app=self.admin_site.name)
         else:
             return self.get(request, form=form)
