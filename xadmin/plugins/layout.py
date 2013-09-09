@@ -46,7 +46,6 @@ class GridLayoutPlugin(BaseAdminPlugin):
                     self._current_icon = layout['icon']
                     layout['selected'] = True
                     self.admin_view.object_list_template = self.admin_view.get_template_list(layout['template'])
-                    print self.admin_view.get_template_list(layout['template'])
         return active
 
     def result_item(self, item, obj, field_name, row):
