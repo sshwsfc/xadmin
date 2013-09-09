@@ -198,13 +198,22 @@
       return false
     }
     , post: function(e, data){
-      this.$form.data('ajaxform').clean()
-      var wrap = this.$for_wrap
-      $.get(this.refresh_url + data['obj_id'], function(form_html, status, xhr){
-        wrap.html($('<body>' + form_html + '</body>').find('#' + wrap.attr('id')).html())
-        wrap.exform()
-      })
-      this.modal.modal('hide')
+      this.$form.data('ajaxform').clean();
+      var wrap = this.$for_wrap;
+      var input = this.$for_input;
+      var selected = [data['obj_id']];
+      if (input.attr('multiple')){
+          var opt = 'option';
+          if (input.hasClass('selectdropdown') || input.hasClass('select-multi')){
+              opt = 'option:selected';
+          }
+          selected.push($.map(input.find(opt) ,function(opt) { return opt.value; }));
+      }
+      $.get(this.refresh_url + selected.join() ,function(form_html, status, xhr){
+        wrap.html($('<body>' + form_html + '</body>').find('#' + wrap.attr('id')).html());
+        wrap.exform();
+      });
+      this.modal.modal('hide');
     }
 
   }
