@@ -21,6 +21,7 @@ from base import ModelAdminView, filter_hook, csrf_protect_m
 # Text to display within change-list table cells if the value is blank.
 EMPTY_CHANGELIST_VALUE = _('Null')
 
+
 class ShowField(Field):
     template = "xadmin/layout/field_value.html"
 
@@ -37,6 +38,12 @@ class ShowField(Field):
     def render(self, form, form_style, context):
         if hasattr(self, 'wrapper_class'):
             context['wrapper_class'] = self.wrapper_class
+
+        if self.attrs:
+            if 'detail-class' in self.attrs:
+                context['input_class'] = self.attrs['detail-class']
+            elif 'class' in self.attrs:
+                context['input_class'] = self.attrs['class']
 
         html = ''
         for field, result in self.results:
@@ -100,7 +107,8 @@ class ResultField(object):
         text = mark_safe(
             self.text) if self.allow_tags else conditional_escape(self.text)
         if force_unicode(text) == '' or text == 'None' or text == EMPTY_CHANGELIST_VALUE:
-            text = mark_safe('<span class="text-muted">%s</span>' % EMPTY_CHANGELIST_VALUE)
+            text = mark_safe(
+                '<span class="text-muted">%s</span>' % EMPTY_CHANGELIST_VALUE)
         for wrap in self.wraps:
             text = mark_safe(wrap % text)
         return text
@@ -109,7 +117,8 @@ class ResultField(object):
 def replace_field_to_value(layout, cb):
     for i, lo in enumerate(layout.fields):
         if isinstance(lo, Field) or issubclass(lo.__class__, Field):
-            layout.fields[i] = ShowField(cb, *lo.fields, attrs=lo.attrs, wrapper_class=lo.wrapper_class)
+            layout.fields[i] = ShowField(
+                cb, *lo.fields, attrs=lo.attrs, wrapper_class=lo.wrapper_class)
         elif isinstance(lo, basestring):
             layout.fields[i] = ShowField(cb, lo)
         elif hasattr(lo, 'get_field_names'):
@@ -131,8 +140,9 @@ class DetailAdminView(ModelAdminView):
             raise PermissionDenied
 
         if self.obj is None:
-            raise Http404(_('%(name)s object with primary key %(key)r does not exist.') %
-                          {'name': force_unicode(self.opts.verbose_name), 'key': escape(object_id)})
+            raise Http404(
+                _('%(name)s object with primary key %(key)r does not exist.') %
+                {'name': force_unicode(self.opts.verbose_name), 'key': escape(object_id)})
         self.org_obj = self.obj
 
     @filter_hook
@@ -140,23 +150,27 @@ class DetailAdminView(ModelAdminView):
         layout = copy.deepcopy(self.detail_layout or self.form_layout)
 
         if layout is None:
-            layout = Layout(Container(Col('full', 
-                Fieldset("", *self.form_obj.fields.keys(), css_class="unsort no_title"), horizontal=True, span=12)
-            ))
+            layout = Layout(Container(Col('full',
+                                          Fieldset(
+                                              "", *self.form_obj.fields.keys(),
+                                              css_class="unsort no_title"), horizontal=True, span=12)
+                                      ))
         elif type(layout) in (list, tuple) and len(layout) > 0:
             if isinstance(layout[0], Column):
                 fs = layout
             elif isinstance(layout[0], (Fieldset, TabHolder)):
                 fs = (Col('full', *layout, horizontal=True, span=12),)
             else:
-                fs = (Col('full', Fieldset("", *layout, css_class="unsort no_title"), horizontal=True, span=12),)
+                fs = (
+                    Col('full', Fieldset("", *layout, css_class="unsort no_title"), horizontal=True, span=12),)
 
             layout = Layout(Container(*fs))
 
             if self.detail_show_all:
                 rendered_fields = [i[1] for i in layout.get_field_names()]
                 container = layout[0].fields
-                other_fieldset = Fieldset(_(u'Other Fields'), *[f for f in self.form_obj.fields.keys() if f not in rendered_fields])
+                other_fieldset = Fieldset(_(u'Other Fields'), *[
+                                          f for f in self.form_obj.fields.keys() if f not in rendered_fields])
 
                 if len(other_fieldset.fields):
                     if len(container) and isinstance(container[0], Column):
@@ -260,7 +274,9 @@ class DetailAdminView(ModelAdminView):
         context.update(kwargs or {})
 
         return TemplateResponse(self.request, self.detail_template or
-                                self.get_template_list('views/model_detail.html'), context, current_app=self.admin_site.name)
+                                self.get_template_list(
+                                    'views/model_detail.html'),
+                                context, current_app=self.admin_site.name)
 
 
 class DetailAdminUtil(DetailAdminView):
