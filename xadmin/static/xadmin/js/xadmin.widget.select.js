@@ -12,7 +12,7 @@
                         callback({id: elem.val(), '__str__': $el.data('label')});
                     },
                     ajax: {
-                        url: $el.data('search-url'),
+                        url: $el.data('search-url')+$el.data('choices'),
                         dataType: 'json',
                         data: function (term, page) {
                             return {
@@ -41,7 +41,7 @@
                         callback({id: elem.val(), '__str__': $el.data('label')});
                     },
                     ajax: {
-                        url: $el.data('search-url'),
+                        url: $el.data('search-url')+$el.data('choices'),
                         dataType: 'json',
                         data: function (term, page) {
                             return {
