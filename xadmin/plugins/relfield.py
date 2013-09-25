@@ -1,4 +1,3 @@
-
 from django.db import models
 from django.utils.html import escape
 from django.utils.text import Truncator
@@ -28,6 +27,11 @@ class ForeignKeySearchWidget(forms.TextInput):
         attrs['data-search-url'] = self.admin_view.get_admin_url(
             '%s_%s_changelist' % (to_opts.app_label, to_opts.module_name))
         attrs['data-placeholder'] = _('Search %s') % to_opts.verbose_name
+        attrs['data-choices'] = '?'
+        if self.rel.limit_choices_to:
+            for i in list(self.rel.limit_choices_to):
+                attrs['data-choices'] += "&_p_%s=%s" % (i,self.rel.limit_choices_to[i])
+            attrs['data-choices'] = format_html(attrs['data-choices'])
         if value:
             attrs['data-label'] = self.label_for_value(value)
 
