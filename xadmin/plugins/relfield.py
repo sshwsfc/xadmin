@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils.html import escape
+from django.utils.html import escape,format_html
 from django.utils.text import Truncator
 from django.utils.translation import ugettext as _
 from django import forms
