@@ -428,7 +428,6 @@ class ListWidget(ModelBaseWidget, PartialBaseWidget):
     def context(self, context):
         list_view = self.list_view
         list_view.make_result_list()
-        list_view.get_list_display()
 
         base_fields = list_view.base_list_display
         if len(base_fields) > 5:

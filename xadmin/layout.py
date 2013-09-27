@@ -8,6 +8,7 @@ from crispy_forms import bootstrap
 
 import math
 
+
 class Fieldset(layout.Fieldset):
     template = "xadmin/layout/fieldset.html"
 
@@ -25,7 +26,7 @@ class Row(layout.Div):
         super(Row, self).__init__(css_class=css_class, *new_fields, **kwargs)
 
     def convert_field(self, f, counts):
-        col_class = "col-sm-%d" % int(math.ceil(12/counts))
+        col_class = "col-sm-%d" % int(math.ceil(12 / counts))
         if not (isinstance(f, Field) or issubclass(f.__class__, Field)):
             f = layout.Field(f)
         if f.wrapper_class:
@@ -72,25 +73,30 @@ class InputGroup(layout.Field):
         super(InputGroup, self).__init__(field, **kwargs)
 
     def render(self, form, form_style, context, template_pack='bootstrap'):
-        classes = form.fields[self.field].widget.attrs.get('class','')
-        context.update({'inputs': self.inputs, 'classes': classes.replace('form-control', '')})
+        classes = form.fields[self.field].widget.attrs.get('class', '')
+        context.update(
+            {'inputs': self.inputs, 'classes': classes.replace('form-control', '')})
         if hasattr(self, 'wrapper_class'):
             context['wrapper_class'] = self.wrapper_class
-        return render_field(self.field, form, form_style, context, template=self.template, attrs=self.attrs, template_pack=template_pack)
+        return render_field(
+            self.field, form, form_style, context, template=self.template,
+            attrs=self.attrs, template_pack=template_pack)
+
 
 class PrependedText(InputGroup):
 
     def __init__(self, field, text, **kwargs):
         super(PrependedText, self).__init__(field, text, '@@', **kwargs)
 
+
 class AppendedText(InputGroup):
 
     def __init__(self, field, text, **kwargs):
         super(AppendedText, self).__init__(field, '@@', text, **kwargs)
 
+
 class PrependedAppendedText(InputGroup):
 
     def __init__(self, field, prepended_text=None, appended_text=None, *args, **kwargs):
-        super(PrependedAppendedText, self).__init__(field, prepended_text, '@@', appended_text, **kwargs)
-
-
+        super(PrependedAppendedText, self).__init__(
+            field, prepended_text, '@@', appended_text, **kwargs)

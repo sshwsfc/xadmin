@@ -5,7 +5,7 @@
 {% block navbar_md %}
 <div class="panel-group hide-sm nav-sitemenu col-md-2" id="nav-accordion">
   {% for item in nav_menu %}
-  <div class="panel panel-default">
+  <div class="panel panel-{% if item.selected %}info{%else%}default{% endif %}">
     <div class="panel-heading">
       <h6 class="panel-title">
         <span class="badge badge-info">{{ item.menus|length }}</span>

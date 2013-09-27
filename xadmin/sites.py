@@ -34,6 +34,7 @@ class AdminSite(object):
 
         self._registry = {}  # model_class class -> admin_class class
         self._registry_avs = {}  # admin_view_class class -> admin_class class
+        self._registry_settings = {}  # settings name -> admin_class class
         self._registry_views = []
             # url instance contains (path, admin_view class, name)
         self._registry_modelviews = []
@@ -52,6 +53,7 @@ class AdminSite(object):
             'models': copy.copy(self._registry),
             'avs': copy.copy(self._registry_avs),
             'views': copy.copy(self._registry_views),
+            'settings': copy.copy(self._registry_settings),
             'modelviews': copy.copy(self._registry_modelviews),
             'plugins': copy.copy(self._registry_plugins),
         }
@@ -60,6 +62,7 @@ class AdminSite(object):
         self._registry = data['models']
         self._registry_avs = data['avs']
         self._registry_views = data['views']
+        self._registry_settings = data['settings']
         self._registry_modelviews = data['modelviews']
         self._registry_plugins = data['plugins']
 
@@ -82,6 +85,9 @@ class AdminSite(object):
         else:
             raise ImproperlyConfigured(u'The registered plugin class %s isn\'t subclass of %s' %
                                       (plugin_class.__name__, BaseAdminPlugin.__name__))
+
+    def register_settings(self, name, admin_class):
+        self._registry_settings[name.lower()] = admin_class
 
     def register(self, model_or_iterable, admin_class=object, **options):
         from xadmin.views.base import BaseAdminView
@@ -203,6 +209,18 @@ class AdminSite(object):
         return dict([(name, getattr(option_class, name)) for name in dir(option_class)
                     if name[0] != '_' and not callable(getattr(option_class, name)) and hasattr(plugin_class, name)])
 
+    def _get_settings_class(self, admin_view_class):
+        name = admin_view_class.__name__.lower()
+
+        if name in self._registry_settings:
+            return self._registry_settings[name]
+        elif name.endswith('admin') and name[0:-5] in self._registry_settings:
+            return self._registry_settings[name[0:-5]]
+        elif name.endswith('adminview') and name[0:-9] in self._registry_settings:
+            return self._registry_settings[name[0:-9]]
+
+        return None
+
     def _create_plugin(self, option_classes):
         def merge_class(plugin_class):
             if option_classes:
@@ -226,21 +244,29 @@ class AdminSite(object):
         opts = [oc for oc in option_classes if oc]
         for klass in admin_view_class.mro():
             if klass == BaseAdminView or issubclass(klass, BaseAdminView):
+                merge_opts = []
                 reg_class = self._registry_avs.get(klass)
-                merge_opts = opts if reg_class is None else [reg_class] + opts
+                if reg_class:
+                    merge_opts.append(reg_class)
+                settings_class = self._get_settings_class(klass)
+                if settings_class:
+                    merge_opts.append(settings_class)
+                merge_opts.extend(opts)
                 ps = self._registry_plugins.get(klass, [])
                 plugins.extend(map(self._create_plugin(
                     merge_opts), ps) if merge_opts else ps)
         return plugins
 
     def get_view_class(self, view_class, option_class=None, **opts):
-        option_classes = [option_class]
+        merges = [option_class] if option_class else []
         for klass in view_class.mro():
             reg_class = self._registry_avs.get(klass)
             if reg_class:
-                option_classes.append(reg_class)
-            option_classes.append(klass)
-        merges = filter(lambda x: x, option_classes)
+                merges.append(reg_class)
+            settings_class = self._get_settings_class(klass)
+            if settings_class:
+                merges.append(settings_class)
+            merges.append(klass)
         new_class_name = ''.join([c.__name__ for c in merges])
 
         if new_class_name not in self._admin_view_cache:

@@ -1,29 +1,13 @@
 
-import actions
-import filters
-import bookmark
-import export
-import layout
-import refresh
-import sortable
-import details
-import editable
-import relate
-import chart
-import ajax
-import relfield
-import inline
-import topnav
-import portal
-import quickform
-import wizard
-import images
-import auth
-import multiselect
-import themes
-import aggregation
-import mobile
-import passwords
-import sitemenu
-import language
-import comments
+PLUGINS = ('actions', 'filters', 'bookmark', 'export', 'layout', 'refresh', 'sortable', 'details', 
+    'editable', 'relate', 'chart', 'ajax', 'relfield', 'inline', 'topnav', 'portal', 'quickform', 
+    'wizard', 'images', 'auth', 'multiselect', 'themes', 'aggregation', 'mobile', 'passwords', 
+    'sitemenu', 'language', 'comments')
+
+def register_builtin_plugins(site):
+    from django.utils.importlib import import_module
+    from django.conf import settings
+
+    exclude_plugins = getattr(settings, 'XADMIN_EXCLUDE_PLUGINS', [])
+
+    [import_module('xadmin.plugins.%s' % plugin) for plugin in PLUGINS if plugin not in exclude_plugins]

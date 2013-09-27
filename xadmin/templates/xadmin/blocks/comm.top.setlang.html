@@ -24,6 +24,9 @@
       var lang = $(this).data('lang');
       $('#setlang-form #setlang-id_language').attr('value', lang);
       $('#setlang-form').submit();
+      
+      var topmenu = $('#top-nav .navbar-collapse');
+      if(topmenu.data('bs.collapse')) topmenu.collapse('hide');
     })
   })
 </script>
