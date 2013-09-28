@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # sshwsfc <sshwsfc@gmail.com>, 2013
 # sshwsfc <sshwsfc@gmail.com>, 2013
@@ -9,14 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xadmin-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-31 15:14+0800\n"
+"POT-Creation-Date: 2013-09-28 10:36+0800\n"
 "PO-Revision-Date: 2013-08-31 08:19+0000\n"
 "Last-Translator: sshwsfc <sshwsfc@gmail.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/xadmin/language/zh_CN/)\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/xadmin/"
+"language/zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: filters.py:158 filters.py:190 filters.py:396 filters.py:446
@@ -67,7 +68,9 @@ msgstr "今年"
 msgid ""
 "Please enter the correct username and password for a staff account. Note "
 "that both fields are case-sensitive."
-msgstr "请输入正确的用户名和密码来登陆您的管理账户。请注意用户名和密码均为大小写相关。"
+msgstr ""
+"请输入正确的用户名和密码来登陆您的管理账户。请注意用户名和密码均为大小写相"
+"关。"
 
 #: forms.py:21
 msgid "Please log in again, because your session has expired."
@@ -77,11 +80,6 @@ msgstr "请重新登录，因为你的会话已经过期。"
 #, python-format
 msgid "Your e-mail address is not your username. Try '%s' instead."
 msgstr "你的 e-mail 地址不是你的用户名。换 '%s' 试试。"
-
-#: models.py:39
-#, python-format
-msgid "Can view %s"
-msgstr "可查看%s"
 
 #: models.py:47
 msgid "Title"
@@ -156,32 +154,32 @@ msgstr "现在"
 msgid "Delete selected %(verbose_name_plural)s"
 msgstr "删除所选的 %(verbose_name_plural)s"
 
-#: plugins/actions.py:66
+#: plugins/actions.py:67
 #, python-format
 msgid "Successfully deleted %(count)d %(items)s."
 msgstr "成功删除了 %(count)d 个 %(items)s"
 
-#: plugins/actions.py:98 views/delete.py:68
+#: plugins/actions.py:99 views/delete.py:68
 #, python-format
 msgid "Cannot delete %(name)s"
 msgstr "无法删除 %(name)s"
 
-#: plugins/actions.py:100 views/delete.py:71
+#: plugins/actions.py:101 views/delete.py:71
 msgid "Are you sure?"
 msgstr "你确定吗？"
 
-#: plugins/actions.py:146
+#: plugins/actions.py:147
 #, python-format
 msgid "%(total_count)s selected"
 msgid_plural "All %(total_count)s selected"
 msgstr[0] "选中了 %(total_count)s 个"
 
-#: plugins/actions.py:150
+#: plugins/actions.py:151
 #, python-format
 msgid "0 of %(cnt)s selected"
 msgstr "%(cnt)s 个中 0 个被选"
 
-#: plugins/actions.py:167 plugins/actions.py:177
+#: plugins/actions.py:168 plugins/actions.py:178
 msgid ""
 "Items must be selected in order to perform actions on them. No items have "
 "been changed."
@@ -207,36 +205,65 @@ msgstr "总和"
 msgid "Count"
 msgstr "总数"
 
-#: plugins/auth.py:54
+#: plugins/auth.py:55
 msgid "Personal info"
 msgstr "个人信息"
 
-#: plugins/auth.py:58
+#: plugins/auth.py:59
 msgid "Permissions"
 msgstr "权限"
 
-#: plugins/auth.py:61
+#: plugins/auth.py:62
 msgid "Important dates"
 msgstr "重要日期"
 
-#: plugins/auth.py:66
+#: plugins/auth.py:67
 msgid "Status"
 msgstr "状态"
 
-#: plugins/auth.py:119
+#: plugins/auth.py:75
+#, python-format
+msgid "Can add %s"
+msgstr "添加 %s"
+
+#: plugins/auth.py:76
+#, python-format
+msgid "Can change %s"
+msgstr "修改 %s"
+
+#: plugins/auth.py:77
+#, python-format
+msgid "Can edit %s"
+msgstr "编辑 %s"
+
+#: plugins/auth.py:78
+#, python-format
+msgid "Can delete %s"
+msgstr "删除 %s"
+
+#: plugins/auth.py:79
+#, python-format
+msgid "Can view %s"
+msgstr "查看 %s"
+
+#: plugins/auth.py:90
+msgid "Permission Name"
+msgstr "权限名称"
+
+#: plugins/auth.py:138
 msgid "Change Password"
 msgstr "更改密码"
 
-#: plugins/auth.py:148
+#: plugins/auth.py:167
 #, python-format
 msgid "Change password: %s"
 msgstr "更改密码：%s"
 
-#: plugins/auth.py:172 plugins/auth.py:202
+#: plugins/auth.py:191 plugins/auth.py:221
 msgid "Password changed successfully."
 msgstr "密码更改成功"
 
-#: plugins/auth.py:190 templates/xadmin/auth/user/change_password.html:11
+#: plugins/auth.py:209 templates/xadmin/auth/user/change_password.html:11
 #: templates/xadmin/auth/user/change_password.html:22
 #: templates/xadmin/auth/user/change_password.html:55
 msgid "Change password"
@@ -278,7 +305,44 @@ msgstr "展示简单数据图表"
 msgid "%s Charts"
 msgstr "%s图表"
 
-#: plugins/details.py:51 views/list.py:576
+#: plugins/comments.py:33
+msgid "Metadata"
+msgstr ""
+
+#: plugins/comments.py:60
+msgid "flagged"
+msgid_plural "flagged"
+msgstr[0] ""
+
+#: plugins/comments.py:61
+msgid "Flag selected comments"
+msgstr ""
+
+#: plugins/comments.py:66
+msgid "approved"
+msgid_plural "approved"
+msgstr[0] ""
+
+#: plugins/comments.py:67
+msgid "Approve selected comments"
+msgstr ""
+
+#: plugins/comments.py:72
+msgid "removed"
+msgid_plural "removed"
+msgstr[0] "删除"
+
+#: plugins/comments.py:73
+msgid "Remove selected comments"
+msgstr "删除所选的评论"
+
+#: plugins/comments.py:86
+#, python-format
+msgid "1 comment was successfully %(action)s."
+msgid_plural "%(count)s comments were successfully %(action)s."
+msgstr[0] ""
+
+#: plugins/details.py:52 views/list.py:576
 #, python-format
 msgid "Details of %s"
 msgstr "%s详情"
@@ -288,8 +352,8 @@ msgstr "%s详情"
 msgid "Enter %s"
 msgstr "输入%s"
 
-#: plugins/editable.py:74 views/dashboard.py:631 views/delete.py:26
-#: views/detail.py:134 views/edit.py:426
+#: plugins/editable.py:74 views/dashboard.py:637 views/delete.py:26
+#: views/detail.py:144 views/edit.py:428
 #, python-format
 msgid "%(name)s object with primary key %(key)r does not exist."
 msgstr "具有主键 %(key)r 的对象 %(name)s 不存在。"
@@ -303,25 +367,25 @@ msgstr "表"
 msgid "<b>Filtering error:</b> %s"
 msgstr "<b>过滤器错误:</b> %s"
 
-#: plugins/images.py:27
-msgid "Change:"
-msgstr "修改:"
-
-#: plugins/images.py:78
-msgid "Next"
-msgstr "下一个"
-
-#: plugins/images.py:78
+#: plugins/images.py:29
 msgid "Previous"
 msgstr "上一个"
 
-#: plugins/images.py:78
+#: plugins/images.py:29
+msgid "Next"
+msgstr "下一个"
+
+#: plugins/images.py:29
 msgid "Slideshow"
 msgstr "幻灯片"
 
-#: plugins/images.py:78
+#: plugins/images.py:29
 msgid "Download"
 msgstr "下载"
+
+#: plugins/images.py:49
+msgid "Change:"
+msgstr "修改:"
 
 #: plugins/layout.py:15
 msgid "Table"
@@ -335,7 +399,7 @@ msgstr "图标"
 msgid "Forgotten your password or username?"
 msgstr "忘记了您的密码或用户名？"
 
-#: plugins/quickform.py:71
+#: plugins/quickform.py:76
 #, python-format
 msgid "Create New %s"
 msgstr "创建新的 %s"
@@ -344,7 +408,7 @@ msgstr "创建新的 %s"
 msgid "Related Objects"
 msgstr "关联数据"
 
-#: plugins/relfield.py:30 plugins/topnav.py:35
+#: plugins/relfield.py:29 plugins/topnav.py:35
 #, python-format
 msgid "Search %s"
 msgstr "搜索%s"
@@ -365,7 +429,7 @@ msgstr "Bootstrap2"
 msgid "Bootstrap 2.x theme"
 msgstr "Bootstrap2主题"
 
-#: plugins/topnav.py:59 views/dashboard.py:450 views/edit.py:361
+#: plugins/topnav.py:59 views/dashboard.py:456 views/edit.py:361
 #: views/edit.py:370
 #, python-format
 msgid "Add %s"
@@ -446,8 +510,8 @@ msgstr "恢复%s"
 #: plugins/xversion.py:493
 #, python-format
 msgid ""
-"The %(model)s \"%(name)s\" was recovered successfully. You may edit it again"
-" below."
+"The %(model)s \"%(name)s\" was recovered successfully. You may edit it again "
+"below."
 msgstr "%(model)s “%(name)s”成功恢复，您可以继续编辑。"
 
 #: templates/xadmin/404.html:4 templates/xadmin/404.html.py:8
@@ -471,7 +535,7 @@ msgstr "很报歉，请求页面无法找到。"
 #: templates/xadmin/views/recover_form.html:8
 #: templates/xadmin/views/recover_list.html:8
 #: templates/xadmin/views/revision_diff.html:8
-#: templates/xadmin/views/revision_form.html:8 views/base.py:433
+#: templates/xadmin/views/revision_form.html:8 views/base.py:448
 msgid "Home"
 msgstr "首页"
 
@@ -489,9 +553,11 @@ msgstr "服务器错误 <em>(500)</em>"
 
 #: templates/xadmin/500.html:16
 msgid ""
-"There's been an error. It's been reported to the site administrators via "
-"e-mail and should be fixed shortly. Thanks for your patience."
-msgstr "发生了一个错误。系统已将错误通过电子邮件报告给了站点管理员，相信问题应该会很快得到解决。感谢您的耐心。"
+"There's been an error. It's been reported to the site administrators via e-"
+"mail and should be fixed shortly. Thanks for your patience."
+msgstr ""
+"发生了一个错误。系统已将错误通过电子邮件报告给了站点管理员，相信问题应该会很"
+"快得到解决。感谢您的耐心。"
 
 #: templates/xadmin/base_site.html:19
 msgid "Welcome,"
@@ -546,13 +612,15 @@ msgstr "密码重置链接无效，可能是因为它已使用。可以请求一
 msgid ""
 "We've e-mailed you instructions for setting your password to the e-mail "
 "address you submitted. You should be receiving it shortly."
-msgstr "我们已经按你所提交的电子邮箱地址发送了密码设置说明。你应该很快就能收到这封邮件。"
+msgstr ""
+"我们已经按你所提交的电子邮箱地址发送了密码设置说明。你应该很快就能收到这封邮"
+"件。"
 
 #: templates/xadmin/auth/password_reset/email.html:2
 #, python-format
 msgid ""
-"You're receiving this e-mail because you requested a password reset for your"
-" user account at %(site_name)s."
+"You're receiving this e-mail because you requested a password reset for your "
+"user account at %(site_name)s."
 msgstr "因为你要求重置 %(site_name)s 上的账户密码, 所以收到了这封邮件."
 
 #: templates/xadmin/auth/password_reset/email.html:4
@@ -580,7 +648,9 @@ msgstr "密码重设"
 msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll e-mail "
 "instructions for setting a new one."
-msgstr "忘记了你的密码？请在下面输入你的 e-mail 地址，我们将把新密码设置说明通过邮件发送给你。"
+msgstr ""
+"忘记了你的密码？请在下面输入你的 e-mail 地址，我们将把新密码设置说明通过邮件"
+"发送给你。"
 
 #: templates/xadmin/auth/password_reset/form.html:25
 msgid "E-mail address:"
@@ -592,8 +662,8 @@ msgstr "重设我的密码"
 
 #: templates/xadmin/auth/user/add_form.html:6
 msgid ""
-"First, enter a username and password. Then, you'll be able to edit more user"
-" options."
+"First, enter a username and password. Then, you'll be able to edit more user "
+"options."
 msgstr "首先，输入一个用户名和密码。然后，你就可以编辑更多的用户选项。"
 
 #: templates/xadmin/auth/user/add_form.html:8
@@ -741,7 +811,7 @@ msgstr "清除自动刷新"
 msgid "Every %(t)s seconds"
 msgstr "每 %(t)s 秒"
 
-#: templates/xadmin/edit_inline/blank.html:7 views/detail.py:22
+#: templates/xadmin/edit_inline/blank.html:5 views/detail.py:22
 #: views/edit.py:100 views/list.py:29
 msgid "Null"
 msgstr "空"
@@ -903,10 +973,12 @@ msgstr "添加小组件"
 
 #: templates/xadmin/views/invalid_setup.html:13
 msgid ""
-"Something's wrong with your database installation. Make sure the appropriate"
-" database tables have been created, and make sure the database is readable "
-"by the appropriate user."
-msgstr "你的数据库安装有误。确保已经创建了相应的数据库表，并确保数据库可被相关的用户读取。"
+"Something's wrong with your database installation. Make sure the appropriate "
+"database tables have been created, and make sure the database is readable by "
+"the appropriate user."
+msgstr ""
+"你的数据库安装有误。确保已经创建了相应的数据库表，并确保数据库可被相关的用户"
+"读取。"
 
 #: templates/xadmin/views/logged_out.html:16
 msgid "Logout Success"
@@ -951,21 +1023,27 @@ msgid ""
 "Deleting the %(verbose_name)s '%(escaped_object)s' would result in deleting "
 "related objects, but your account doesn't have permission to delete the "
 "following types of objects:"
-msgstr "要删除所选的%(verbose_name)s '%(escaped_object)s'  结果会删除相关对象, 但你的账户没有权限删除这类对象:"
+msgstr ""
+"要删除所选的%(verbose_name)s '%(escaped_object)s'  结果会删除相关对象, 但你的"
+"账户没有权限删除这类对象:"
 
 #: templates/xadmin/views/model_delete_confirm.html:19
 #, python-format
 msgid ""
 "Deleting the %(verbose_name)s '%(escaped_object)s' would require deleting "
 "the following protected related objects:"
-msgstr "要删除所选的%(verbose_name)s '%(escaped_object)s' 将要求删除以下受保护的相关对象:"
+msgstr ""
+"要删除所选的%(verbose_name)s '%(escaped_object)s' 将要求删除以下受保护的相关"
+"对象:"
 
 #: templates/xadmin/views/model_delete_confirm.html:27
 #, python-format
 msgid ""
-"Are you sure you want to delete the %(verbose_name)s \"%(escaped_object)s\"?"
-" All of the following related items will be deleted:"
-msgstr "请确认要删除选中的%(verbose_name)s \"%(escaped_object)s\"吗？以下所有对象和余它们相关的条目将都会被删除："
+"Are you sure you want to delete the %(verbose_name)s \"%(escaped_object)s\"? "
+"All of the following related items will be deleted:"
+msgstr ""
+"请确认要删除选中的%(verbose_name)s \"%(escaped_object)s\"吗？以下所有对象和余"
+"它们相关的条目将都会被删除："
 
 #: templates/xadmin/views/model_delete_confirm.html:34
 #: templates/xadmin/views/model_delete_selected_confirm.html:49
@@ -987,7 +1065,9 @@ msgid ""
 "Deleting the selected %(objects_name)s would result in deleting related "
 "objects, but your account doesn't have permission to delete the following "
 "types of objects:"
-msgstr "要删除所选的 %(objects_name)s 结果会删除相关对象, 但你的账户没有权限删除这类对象:"
+msgstr ""
+"要删除所选的 %(objects_name)s 结果会删除相关对象, 但你的账户没有权限删除这类"
+"对象:"
 
 #: templates/xadmin/views/model_delete_selected_confirm.html:26
 #, python-format
@@ -1001,7 +1081,9 @@ msgstr "要删除所选的 %(objects_name)s, 将要求删除以下受保护的�
 msgid ""
 "Are you sure you want to delete the selected %(objects_name)s? All of the "
 "following objects and their related items will be deleted:"
-msgstr "请确认要删除选中的 %(objects_name)s 吗？以下所有对象和余它们相关的条目将都会被删除："
+msgstr ""
+"请确认要删除选中的 %(objects_name)s 吗？以下所有对象和余它们相关的条目将都会"
+"被删除："
 
 #: templates/xadmin/views/model_history.html:26
 msgid "Diff"
@@ -1026,8 +1108,8 @@ msgstr "查看所选版本的不同"
 
 #: templates/xadmin/views/model_history.html:58
 msgid ""
-"This object doesn't have a change history. It probably wasn't added via this"
-" admin site."
+"This object doesn't have a change history. It probably wasn't added via this "
+"admin site."
 msgstr "该对象没有变更历史记录。可能从未通过这个管理站点添加。"
 
 #: templates/xadmin/views/model_list.html:29
@@ -1121,51 +1203,51 @@ msgstr "小组件设置项"
 msgid "Save changes"
 msgstr "保存变更"
 
-#: views/base.py:406
+#: views/base.py:430
 msgid "Django Xadmin"
 msgstr "Django Xadmin"
 
-#: views/dashboard.py:179
+#: views/dashboard.py:186
 msgid "Widget ID"
 msgstr "小组件ID"
 
-#: views/dashboard.py:180
+#: views/dashboard.py:187
 msgid "Widget Title"
 msgstr "小组件标题"
 
-#: views/dashboard.py:242
+#: views/dashboard.py:249
 msgid "Html Content Widget, can write any html content in widget."
 msgstr "HTML内容小组件，可以编写任意HTML内容。"
 
-#: views/dashboard.py:245
+#: views/dashboard.py:252
 msgid "Html Content"
 msgstr "HTML内容"
 
-#: views/dashboard.py:308
+#: views/dashboard.py:315
 msgid "Target Model"
 msgstr "目标数据"
 
-#: views/dashboard.py:359
+#: views/dashboard.py:366
 msgid "Quick button Widget, quickly open any page."
 msgstr "快捷按钮小组件，可以快速打开任意页面。"
 
-#: views/dashboard.py:361
+#: views/dashboard.py:368
 msgid "Quick Buttons"
 msgstr "快速按钮"
 
-#: views/dashboard.py:402
+#: views/dashboard.py:409
 msgid "Any Objects list Widget."
 msgstr "数据列表小组件"
 
-#: views/dashboard.py:442
+#: views/dashboard.py:448
 msgid "Add any model object Widget."
 msgstr "添加任意数据的小组件"
 
-#: views/dashboard.py:476
+#: views/dashboard.py:482
 msgid "Dashboard"
 msgstr "仪表盘"
 
-#: views/dashboard.py:615
+#: views/dashboard.py:621
 #, python-format
 msgid "%s Dashboard"
 msgstr "%s 主页"
@@ -1175,11 +1257,11 @@ msgstr "%s 主页"
 msgid "The %(name)s \"%(obj)s\" was deleted successfully."
 msgstr "%(name)s \"%(obj)s\" 删除成功。"
 
-#: views/detail.py:159 views/edit.py:199
+#: views/detail.py:172 views/edit.py:199
 msgid "Other Fields"
 msgstr "其它字段"
 
-#: views/detail.py:221
+#: views/detail.py:235
 #, python-format
 msgid "%s Detail"
 msgstr "%s详情"
@@ -1189,21 +1271,21 @@ msgstr "%s详情"
 msgid "The %(name)s \"%(obj)s\" was added successfully."
 msgstr "%(name)s \"%(obj)s\" 添加成功。"
 
-#: views/edit.py:399 views/edit.py:492
+#: views/edit.py:399 views/edit.py:494
 msgid "You may edit it again below."
 msgstr "你可以在下面再次编辑它。"
 
-#: views/edit.py:403 views/edit.py:495
+#: views/edit.py:403 views/edit.py:497
 #, python-format
 msgid "You may add another %s below."
 msgstr "你可以在下面增加另一个 %s 。"
 
-#: views/edit.py:443
+#: views/edit.py:445
 #, python-format
 msgid "Change %s"
 msgstr "修改 %s"
 
-#: views/edit.py:488
+#: views/edit.py:490
 #, python-format
 msgid "The %(name)s \"%(obj)s\" was changed successfully."
 msgstr "%(name)s \"%(obj)s\" 修改成功。"
