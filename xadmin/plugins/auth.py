@@ -29,7 +29,7 @@ ACTION_NAME = {
 }
 
 
-def get_perssmsion_name(p):
+def get_permission_name(p):
     action = p.codename.split('_')[0]
     if action in ACTION_NAME:
         return ACTION_NAME[action] % str(p.content_type)
@@ -40,7 +40,7 @@ def get_perssmsion_name(p):
 class PermissionModelMultipleChoiceField(ModelMultipleChoiceField):
 
     def label_from_instance(self, p):
-        return get_perssmsion_name(p)
+        return get_permission_name(p)
 
 
 class GroupAdmin(object):
@@ -110,7 +110,7 @@ class UserAdmin(object):
 class PermissionAdmin(object):
 
     def show_name(self, p):
-        return get_perssmsion_name(p)
+        return get_permission_name(p)
     show_name.short_description = _('Permission Name')
     show_name.is_column = True
 
