@@ -8,7 +8,7 @@ from django.template.response import TemplateResponse
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect
 from django.utils.html import escape
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.forms import ModelMultipleChoiceField
@@ -63,7 +63,7 @@ class UserAdmin(object):
     style_fields = {'user_permissions': 'm2m_transfer'}
     model_icon = 'user'
     relfield_style = 'fk-ajax'
-    
+
     def get_field_attrs(self, db_field, **kwargs):
         attrs = super(UserAdmin, self).get_field_attrs(db_field, **kwargs)
         if db_field.name == 'user_permissions':
