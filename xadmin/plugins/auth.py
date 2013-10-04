@@ -28,12 +28,14 @@ ACTION_NAME = {
     'view': _('Can view %s'),
 }
 
+
 def get_perssmsion_name(p):
     action = p.codename.split('_')[0]
     if action in ACTION_NAME:
         return ACTION_NAME[action] % str(p.content_type)
     else:
         return p.name
+
 
 class PermissionModelMultipleChoiceField(ModelMultipleChoiceField):
 
@@ -63,7 +65,7 @@ class UserAdmin(object):
     style_fields = {'user_permissions': 'm2m_transfer'}
     model_icon = 'user'
     relfield_style = 'fk-ajax'
-    
+
     def get_field_attrs(self, db_field, **kwargs):
         attrs = super(UserAdmin, self).get_field_attrs(db_field, **kwargs)
         if db_field.name == 'user_permissions':
