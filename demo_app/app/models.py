@@ -1,24 +1,6 @@
 from django.db import models
 
 
-class IDC(models.Model):
-    name = models.CharField(max_length=64)
-    description = models.TextField()
-
-    contact = models.CharField(max_length=32)
-    telphone = models.CharField(max_length=32)
-    address = models.CharField(max_length=128)
-    customer_id = models.CharField(max_length=128)
-
-    create_time = models.DateField(auto_now=True)
-
-    def __unicode__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = u"IDC"
-        verbose_name_plural = verbose_name
-
 SERVER_STATUS = (
     (0, u"Normal"),
     (1, u"Down"),
@@ -38,8 +20,26 @@ SERVICE_TYPES = (
 )
 
 
-class Host(models.Model):
+class IDC(models.Model):
+    name = models.CharField(max_length=64)
+    description = models.TextField()
 
+    contact = models.CharField(max_length=32)
+    telphone = models.CharField(max_length=32)
+    address = models.CharField(max_length=128)
+    customer_id = models.CharField(max_length=128)
+
+    create_time = models.DateField(auto_now=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = u"IDC"
+        verbose_name_plural = verbose_name
+
+
+class Host(models.Model):
     idc = models.ForeignKey(IDC)
     name = models.CharField(max_length=64)
     nagios_name = models.CharField(u"Nagios Host ID", max_length=64, blank=True, null=True)
