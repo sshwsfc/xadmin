@@ -28,6 +28,7 @@ def get_gallery_modal():
         </div>
     """ % (_('Previous'), _('Next'), _('Slideshow'), _('Download'))
 
+
 class AdminImageField(forms.ImageField):
 
     def widget_attrs(self, widget):

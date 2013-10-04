@@ -9,6 +9,7 @@ from xadmin.util import get_model_from_relation, vendor
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView
 from xadmin.layout import Layout
 
+
 class QuickFormPlugin(BaseAdminPlugin):
 
     def init_request(self, *args, **kwargs):

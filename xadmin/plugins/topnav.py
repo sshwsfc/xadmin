@@ -47,7 +47,6 @@ class TopNavPlugin(BaseAdminPlugin):
         site_name = self.admin_site.name
         models = self.globe_search_models or self.admin_site._registry.keys()
 
-
         models = self.globe_add_models or self.admin_site._registry.keys()
         for model in models:
             app_label = model._meta.app_label

@@ -1,8 +1,9 @@
 
-PLUGINS = ('actions', 'filters', 'bookmark', 'export', 'layout', 'refresh', 'sortable', 'details', 
-    'editable', 'relate', 'chart', 'ajax', 'relfield', 'inline', 'topnav', 'portal', 'quickform', 
-    'wizard', 'images', 'auth', 'multiselect', 'themes', 'aggregation', 'mobile', 'passwords', 
+PLUGINS = ('actions', 'filters', 'bookmark', 'export', 'layout', 'refresh', 'sortable', 'details',
+    'editable', 'relate', 'chart', 'ajax', 'relfield', 'inline', 'topnav', 'portal', 'quickform',
+    'wizard', 'images', 'auth', 'multiselect', 'themes', 'aggregation', 'mobile', 'passwords',
     'sitemenu', 'language', 'comments')
+
 
 def register_builtin_plugins(site):
     from django.utils.importlib import import_module

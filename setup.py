@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from setuptools import setup, find_packages
+from setuptools import setup
 
 # version_tuple = __import__('xadmin.version').VERSION
 # version = ".".join([str(v) for v in version_tuple])

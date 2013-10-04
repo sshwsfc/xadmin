@@ -1,6 +1,5 @@
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.core.paginator import InvalidPage, Paginator
-from django.core.urlresolvers import reverse
 from django.db import models
 from django.http import HttpResponseRedirect
 from django.template.response import SimpleTemplateResponse, TemplateResponse

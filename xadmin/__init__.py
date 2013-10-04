@@ -2,8 +2,10 @@ from xadmin.sites import AdminSite, site
 
 VERSION = [0,4,0]
 
+
 class Settings(object):
     pass
+
 
 def autodiscover():
     """
@@ -21,7 +23,7 @@ def autodiscover():
         "textinput": "textinput textInput form-control",
         "fileinput": "fileinput fileUpload form-control",
         "passwordinput": "textinput textInput form-control",
-        })
+    })
 
     from xadmin.views import register_builtin_views
     register_builtin_views(site)

@@ -19,6 +19,7 @@ class IndexView(Dashboard):
     def get_page_id(self):
         return 'home'
 
+
 class UserSettingView(BaseAdminView):
 
     @never_cache
@@ -65,6 +66,7 @@ class LoginView(BaseAdminView):
     @never_cache
     def post(self, request, *args, **kwargs):
         return self.get(request)
+
 
 class LogoutView(BaseAdminView):
 
