@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xadmin-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-28 10:36+0800\n"
+"POT-Creation-Date: 2013-10-04 11:58-0500\n"
 "PO-Revision-Date: 2013-08-31 08:19+0000\n"
 "Last-Translator: sshwsfc <sshwsfc@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/projects/p/xadmin/"
@@ -205,65 +205,66 @@ msgstr "总和"
 msgid "Count"
 msgstr "总数"
 
-#: plugins/auth.py:55
-msgid "Personal info"
-msgstr "个人信息"
-
-#: plugins/auth.py:59
-msgid "Permissions"
-msgstr "权限"
-
-#: plugins/auth.py:62
-msgid "Important dates"
-msgstr "重要日期"
-
-#: plugins/auth.py:67
-msgid "Status"
-msgstr "状态"
-
-#: plugins/auth.py:75
+#: plugins/auth.py:24
 #, python-format
 msgid "Can add %s"
 msgstr "添加 %s"
 
-#: plugins/auth.py:76
+#: plugins/auth.py:25
 #, python-format
 msgid "Can change %s"
 msgstr "修改 %s"
 
-#: plugins/auth.py:77
+#: plugins/auth.py:26
 #, python-format
 msgid "Can edit %s"
 msgstr "编辑 %s"
 
-#: plugins/auth.py:78
+#: plugins/auth.py:27
 #, python-format
 msgid "Can delete %s"
 msgstr "删除 %s"
 
-#: plugins/auth.py:79
+#: plugins/auth.py:28
 #, python-format
 msgid "Can view %s"
 msgstr "查看 %s"
 
-#: plugins/auth.py:90
+#: plugins/auth.py:88
+msgid "Personal info"
+msgstr "个人信息"
+
+#: plugins/auth.py:92
+msgid "Permissions"
+msgstr "权限"
+
+#: plugins/auth.py:95
+msgid "Important dates"
+msgstr "重要日期"
+
+#: plugins/auth.py:100
+msgid "Status"
+msgstr "状态"
+
+#: plugins/auth.py:112
 msgid "Permission Name"
 msgstr "权限名称"
 
-#: plugins/auth.py:138
-msgid "Change Password"
+#: plugins/auth.py:160
+#, fuzzy
+msgid "Changed Password"
 msgstr "更改密码"
 
-#: plugins/auth.py:167
+#: plugins/auth.py:189
 #, python-format
 msgid "Change password: %s"
 msgstr "更改密码：%s"
 
-#: plugins/auth.py:191 plugins/auth.py:221
+#: plugins/auth.py:213 plugins/auth.py:243
 msgid "Password changed successfully."
 msgstr "密码更改成功"
 
-#: plugins/auth.py:209 templates/xadmin/auth/user/change_password.html:11
+#: plugins/auth.py:231 templates/xadmin/auth/user/change_password.html:11
 #: templates/xadmin/auth/user/change_password.html:22
 #: templates/xadmin/auth/user/change_password.html:55
 msgid "Change password"

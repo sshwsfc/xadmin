@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-28 10:37+0800\n"
+"POT-Creation-Date: 2013-10-04 11:58-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -202,65 +202,65 @@ msgstr ""
 msgid "Count"
 msgstr ""
 
-#: plugins/auth.py:55
-msgid "Personal info"
-msgstr ""
-
-#: plugins/auth.py:59
-msgid "Permissions"
-msgstr ""
-
-#: plugins/auth.py:62
-msgid "Important dates"
-msgstr ""
-
-#: plugins/auth.py:67
-msgid "Status"
-msgstr ""
-
-#: plugins/auth.py:75
+#: plugins/auth.py:24
 #, python-format
 msgid "Can add %s"
 msgstr ""
 
-#: plugins/auth.py:76
+#: plugins/auth.py:25
 #, python-format
 msgid "Can change %s"
 msgstr ""
 
-#: plugins/auth.py:77
+#: plugins/auth.py:26
 #, python-format
 msgid "Can edit %s"
 msgstr ""
 
-#: plugins/auth.py:78
+#: plugins/auth.py:27
 #, python-format
 msgid "Can delete %s"
 msgstr ""
 
-#: plugins/auth.py:79
+#: plugins/auth.py:28
 #, python-format
 msgid "Can view %s"
 msgstr ""
 
-#: plugins/auth.py:90
+#: plugins/auth.py:88
+msgid "Personal info"
+msgstr ""
+
+#: plugins/auth.py:92
+msgid "Permissions"
+msgstr ""
+
+#: plugins/auth.py:95
+msgid "Important dates"
+msgstr ""
+
+#: plugins/auth.py:100
+msgid "Status"
+msgstr ""
+
+#: plugins/auth.py:112
 msgid "Permission Name"
 msgstr ""
 
-#: plugins/auth.py:138
-msgid "Change Password"
-msgstr ""
+#: plugins/auth.py:160
+msgid "Changed Password"
+msgstr "Changed Password"
 
-#: plugins/auth.py:167
+#: plugins/auth.py:189
 #, python-format
 msgid "Change password: %s"
 msgstr ""
 
-#: plugins/auth.py:191 plugins/auth.py:221
+#: plugins/auth.py:213 plugins/auth.py:243
 msgid "Password changed successfully."
 msgstr ""
 
-#: plugins/auth.py:209 templates/xadmin/auth/user/change_password.html:11
+#: plugins/auth.py:231 templates/xadmin/auth/user/change_password.html:11
 #: templates/xadmin/auth/user/change_password.html:22
 #: templates/xadmin/auth/user/change_password.html:55
 msgid "Change password"
