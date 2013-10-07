@@ -66,6 +66,14 @@ vendors = {
                     'xadmin/vendor/flot/jquery.flot.resize.js']
         }
     },
+    "nvd3": {
+        "css": {
+            'dev': 'xadmin/vendor/nvd3/src/nv.d3.css',
+        },
+        "js": {
+            'dev': ['xadmin/vendor/d3/d3.js', 'xadmin/vendor/nvd3/nv.d3.js'],
+        }
+    },
     "image-gallery": {
         "css": {
             'dev': 'xadmin/vendor/bootstrap-image-gallery/css/bootstrap-image-gallery.css',

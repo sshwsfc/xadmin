@@ -2,6 +2,7 @@
 import datetime
 import decimal
 import calendar
+import time
 
 from django.template import loader
 from django.http import HttpResponseNotFound
@@ -14,17 +15,18 @@ from django.utils.translation import ugettext_lazy as _, ugettext
 
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
-from xadmin.views.dashboard import ModelBaseWidget, widget_manager
+from xadmin.views.dashboard import ModelBaseWidget, widget_manager, PartialBaseWidget
 from xadmin.util import lookup_field, label_for_field, force_unicode, json
 
 
 @widget_manager.register
-class ChartWidget(ModelBaseWidget):
+class ChartWidget(ModelBaseWidget, PartialBaseWidget):
     widget_type = 'chart'
     description = _('Show models simple chart.')
     template = 'xadmin/widgets/chart.html'
 
     def convert(self, data):
+        print data
         self.list_params = data.pop('params', {})
         self.chart = data.pop('chart', None)
 
@@ -48,6 +50,11 @@ class ChartWidget(ModelBaseWidget):
                     self.title = ugettext(
                         "%s Charts") % self.model._meta.verbose_name_plural
 
+        req = self.make_get_request("", self.list_params)
+        self.list_view = self.get_view_class(ListAdminView, self.model)(req)
+        # if self.list_count:
+        #     self.list_view.list_per_page = self.list_count
+
     def filte_choices_model(self, model, modeladmin):
         return bool(getattr(modeladmin, 'data_charts', None)) and \
             super(ChartWidget, self).filte_choices_model(model, modeladmin)
@@ -56,13 +63,95 @@ class ChartWidget(ModelBaseWidget):
         return self.model_admin_url('chart', name) + "?" + urlencode(self.list_params)
 
     def context(self, context):
+
+        list_view = self.list_view
+        list_view.make_result_list()
+
+        base_fields = list_view.base_list_display
+        if len(base_fields) > 5:
+            base_fields = base_fields[0:5]
+
+        context['result_headers'] = [c for c in list_view.result_headers(
+        ).cells if c.field_name in base_fields]
+        context['results'] = [[o for i, o in
+                               enumerate(filter(lambda c:c.field_name in base_fields, r.cells))]
+                              for r in list_view.results()]
+        context['result_count'] = list_view.result_count
+        context['page_url'] = self.model_admin_url('changelist') + "?" + urlencode(self.list_params)
+
+        # # -----------
+        name = 'user_count'
+        # self.data_charts = [{"name": name, "title": v['title'], 'url': self.get_chart_url(name, v)} for name, v in self.charts.items()]
+        # # -----------
+
+        self.mychart = list_view.data_charts[name]
+        print self.mychart
+
+        self.x_field = self.mychart['x-field']
+        y_fields = self.mychart['y-field']
+        self.y_fields = (
+            y_fields,) if type(y_fields) not in (list, tuple) else y_fields
+
+        datas = [{"data":[], 'yAxis': '1', "key": force_unicode(label_for_field(
+            i, self.model, model_admin=self))} for i in self.y_fields]
+
+        # for i, yfname in enumerate(self.y_fields):
+        #     print i, yfname
+
+        list_view.make_result_list()
+
+        #used by chart on django-nvd3
+        tooltip_date = "%d %b %Y %H:%M"
+        extra_serie = {"tooltip": {"y_start": "", "y_end": ""},
+                       "date_format": tooltip_date}
+
+        ydata = {}
+        for i, yfname in enumerate(self.y_fields):
+            k = i + 1
+            ydata[yfname] = {'name%d' % k: yfname, 'y%d' % k: None, 'extra%d' % k: extra_serie}
+
+        xdata = []
+
+        for obj in list_view.result_list:
+            xf, attrs, value = lookup_field(self.x_field, obj, self)
+            for i, yfname in enumerate(self.y_fields):
+                k = i + 1
+                lkey = 'y%d' % k
+                yf, yattrs, yv = lookup_field(yfname, obj, self)
+                datas[i]["data"].append((value, yv))
+                # timevalue = int(time.mktime(datetime.datetime(2012, 6, 1).timetuple()) * 1000)
+                xtime = int(time.mktime((value.timetuple())) * 1000)
+                if xtime not in xdata:
+                    xdata.append(xtime)
+                if not ydata[yfname][lkey]:
+                    ydata[yfname][lkey] = []
+                ydata[yfname][lkey].append(yv)
+
+        # chartdata = {'x': xdata,
+        #              'name1': 'series 1', 'y1': ydata, 'extra1': extra_serie,
+        #              'name2': 'series 2', 'y2': ydata2, 'extra2': extra_serie}
+        chartdata = {'x': xdata}
+        #merge the dictionaries
+        for i, yfname in enumerate(self.y_fields):
+            chartdata.update(ydata[yfname])
+
+        charttype = "lineChart"
+
+        extra = {
+            'x_is_date': True,
+            'x_axis_format': '%d %b %Y',
+            'tag_script_js': False,
+            'jquery_on_ready': True,
+            'y_axis_format': '.0f',
+        }
+
         context.update({
-            'charts': [{"name": name, "title": v['title'], 'url': self.get_chart_url(name, v)} for name, v in self.charts.items()],
+            'charts': [{"name": name, "charttype": charttype, "chartdata": chartdata, "extra": extra, "title": v['title'], 'url': self.get_chart_url(name, v)} for name, v in self.charts.items()],
         })
 
     # Media
     def media(self):
-        return self.vendor('flot.js', 'xadmin.plugin.charts.js')
+        return self.vendor('nvd3.js', 'nvd3.css', 'xadmin.plugin.charts.js')
 
 
 class JSONEncoder(DjangoJSONEncoder):
@@ -90,7 +179,7 @@ class ChartsPlugin(BaseAdminPlugin):
 
     # Media
     def get_media(self, media):
-        return media + self.vendor('flot.js', 'xadmin.plugin.charts.js')
+        return media + self.vendor('nvd3.js', 'xadmin.plugin.charts.js')
 
     # Block Views
     def block_results_top(self, context, nodes):
@@ -100,6 +189,14 @@ class ChartsPlugin(BaseAdminPlugin):
         nodes.append(loader.render_to_string('xadmin/blocks/model_list.results_top.charts.html', context_instance=context))
 
 
+# From xadmin.py ::
+    # data_charts = {
+    #     "user_count": {'title': u"User Report", "x-field": "date", "y-field": ("user_count", "view_count"), "order": ('date',)},
+    #     "avg_count": {'title': u"Avg Report", "x-field": "date", "y-field": ('avg_count',), "order": ('date',)}
+    # }
+
+
+#TODO: we can remove this as replace by above class not using json url
 class ChartsView(ListAdminView):
 
     data_charts = {}
@@ -121,7 +218,7 @@ class ChartsView(ListAdminView):
         self.y_fields = (
             y_fields,) if type(y_fields) not in (list, tuple) else y_fields
 
-        datas = [{"data":[], "label": force_unicode(label_for_field(
+        datas = [{"data":[], 'yAxis': '1', "key": force_unicode(label_for_field(
             i, self.model, model_admin=self))} for i in self.y_fields]
 
         self.make_result_list()
@@ -147,9 +244,12 @@ class ChartsView(ListAdminView):
         except Exception:
             pass
 
+        option = {'series': {'lines': {'show': True}, 'points': {'show': False}},
+                  'grid': {'hoverable': True, 'clickable': True}}
         option.update(self.chart.get('option', {}))
 
-        content = {'data': datas, 'option': option}
+        content = {'data': datas}
+        # content = {'data': datas}
         result = json.dumps(content, cls=JSONEncoder, ensure_ascii=False)
 
         return HttpResponse(result)
