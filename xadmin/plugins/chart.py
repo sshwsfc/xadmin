@@ -1,4 +1,3 @@
-
 import datetime
 import decimal
 import calendar
@@ -10,7 +9,6 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse
 from django.utils.encoding import smart_unicode
 from django.db import models
-from django.utils.http import urlencode
 from django.utils.translation import ugettext_lazy as _, ugettext
 
 from xadmin.sites import site
@@ -26,7 +24,6 @@ class ChartWidget(ModelBaseWidget, PartialBaseWidget):
     template = 'xadmin/widgets/chart.html'
 
     def convert(self, data):
-        print data
         self.list_params = data.pop('params', {})
         self.chart = data.pop('chart', None)
 
@@ -57,9 +54,6 @@ class ChartWidget(ModelBaseWidget, PartialBaseWidget):
         return bool(getattr(modeladmin, 'data_charts', None)) and \
             super(ChartWidget, self).filte_choices_model(model, modeladmin)
 
-    def get_chart_url(self, name, v):
-        return self.model_admin_url('chart', name) + "?" + urlencode(self.list_params)
-
     def context(self, context):
 
         list_view = self.list_view
@@ -78,6 +72,7 @@ class ChartWidget(ModelBaseWidget, PartialBaseWidget):
         datas = [{"data":[], 'yAxis': '1', "key": force_unicode(label_for_field(
             i, self.model, model_admin=self))} for i in self.y_fields]
 
+        #TODO: not needed 2 times
         list_view.make_result_list()
 
         tooltip_date = "%d %b %Y %H:%M"
@@ -115,12 +110,12 @@ class ChartWidget(ModelBaseWidget, PartialBaseWidget):
         for i, yfname in enumerate(self.y_fields):
             chartdata.update(ydata[yfname])
 
+        # charts settings
         charttype = "lineChart"
-
         extra = {
             'x_is_date': True,
             'x_axis_format': '%d %b %Y',
-            'tag_script_js': False,
+            'tag_script_js': True,
             'jquery_on_ready': True,
             'y_axis_format': '.0f',
         }
@@ -134,6 +129,11 @@ class ChartWidget(ModelBaseWidget, PartialBaseWidget):
         return self.vendor('nvd3.js', 'nvd3.css', 'xadmin.plugin.charts.js')
 
 
+# >>> dir(self)
+# ['__class__', '__delattr__', '__dict__', '__doc__', '__format__', '__getattribute__', '__hash__', '__init__', '__module__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', 'admin_site', 'admin_view', 'args', 'block_results_top', 'data_charts', 'get_admin_url', 'get_form_params', 'get_media', 'get_model_perm', 'get_model_url', 'get_model_view', 'get_query_string', 'get_view', 'has_model_perm', 'init_request', 'kwargs', 'message_user', 'model', 'opts', 'render_response', 'request', 'static', 'template_response', 'user', 'vendor'  ]
+# >>> self.get_query_string
+# <bound method appaccessrecordAdminChartsPlugin.get_query_string of <xadmin.sites.appaccessrecordAdminChartsPlugin object at 0x7f6a605f0650>>
+
 class ChartsPlugin(BaseAdminPlugin):
 
     data_charts = {}
@@ -146,12 +146,22 @@ class ChartsPlugin(BaseAdminPlugin):
 
     # Media
     def get_media(self, media):
-        return media + self.vendor('nvd3.js', 'xadmin.plugin.charts.js')
+        return media + self.vendor('nvd3.js', 'nvd3.css', 'xadmin.plugin.charts.js')
 
     # Block Views
     def block_results_top(self, context, nodes):
+        chartdata = {'x': 1}
+        # charts settings
+        charttype = "lineChart"
+        extra = {
+            'x_is_date': True,
+            'x_axis_format': '%d %b %Y',
+            'tag_script_js': True,
+            'jquery_on_ready': True,
+            'y_axis_format': '.0f',
+        }
         context.update({
-            'charts': [{"name": name, "title": v['title'], 'url': self.get_chart_url(name, v)} for name, v in self.data_charts.items()],
+            'charts': [{"name": name, "charttype": charttype, "chartdata": chartdata, "extra": extra, "title": v['title'], 'url': self.get_chart_url(name, v)} for name, v in self.data_charts.items()],
         })
         nodes.append(loader.render_to_string('xadmin/blocks/model_list.results_top.charts.html', context_instance=context))
 
@@ -199,39 +209,23 @@ class ChartsView(ListAdminView):
         self.y_fields = (
             y_fields,) if type(y_fields) not in (list, tuple) else y_fields
 
-        datas = [{"data":[], 'yAxis': '1', "key": force_unicode(label_for_field(
+        datas = [{"values":[], 'yAxis': '1', "key": force_unicode(label_for_field(
             i, self.model, model_admin=self))} for i in self.y_fields]
 
         self.make_result_list()
+
+        xdata = []
 
         for obj in self.result_list:
             xf, attrs, value = lookup_field(self.x_field, obj, self)
             for i, yfname in enumerate(self.y_fields):
                 yf, yattrs, yv = lookup_field(yfname, obj, self)
-                datas[i]["data"].append((value, yv))
+                xtime = int(time.mktime((value.timetuple())) * 1000)
+                datas[i]["values"].append({'x': xtime, 'y': yv})
+                if xtime not in xdata:
+                    xdata.append(xtime)
 
-        option = {'series': {'lines': {'show': True}, 'points': {'show': False}},
-                  'grid': {'hoverable': True, 'clickable': True}}
-        try:
-            xfield = self.opts.get_field(self.x_field)
-            if type(xfield) in (models.DateTimeField, models.DateField, models.TimeField):
-                option['xaxis'] = {'mode': "time", 'tickLength': 5}
-                if type(xfield) is models.DateField:
-                    option['xaxis']['timeformat'] = "%y/%m/%d"
-                elif type(xfield) is models.TimeField:
-                    option['xaxis']['timeformat'] = "%H:%M:%S"
-                else:
-                    option['xaxis']['timeformat'] = "%y/%m/%d %H:%M:%S"
-        except Exception:
-            pass
-
-        option = {'series': {'lines': {'show': True}, 'points': {'show': False}},
-                  'grid': {'hoverable': True, 'clickable': True}}
-        option.update(self.chart.get('option', {}))
-
-        content = {'data': datas}
-        # content = {'data': datas}
-        result = json.dumps(content, cls=JSONEncoder, ensure_ascii=False)
+        result = json.dumps(datas, cls=JSONEncoder, ensure_ascii=False)
 
         return HttpResponse(result)
 

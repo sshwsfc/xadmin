@@ -14,7 +14,7 @@
   </ul>
   <div class="tab-content">
     {% for c in charts %}
-      {{c}}
+      url <a href="{{c.url}}">{{c.url}}</a>
       <div class="chart tab-pane{% if forloop.first%} active{% endif %}" id="chart-{{c.name}}">
 
         {% load_chart c.charttype c.chartdata "linechart_container" c.extra %}

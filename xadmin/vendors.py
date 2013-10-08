@@ -60,12 +60,6 @@ vendors = {
             'dev': 'xadmin/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js',
         }
     },
-    "flot": {
-        "js": {
-            'dev': ['xadmin/vendor/flot/jquery.flot.js', 'xadmin/vendor/flot/jquery.flot.pie.js', 'xadmin/vendor/flot/jquery.flot.time.js',
-                    'xadmin/vendor/flot/jquery.flot.resize.js']
-        }
-    },
     "nvd3": {
         "css": {
             'dev': 'xadmin/vendor/nvd3/src/nv.d3.css',

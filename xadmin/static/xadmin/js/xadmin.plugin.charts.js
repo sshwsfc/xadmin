@@ -16,5 +16,5 @@ $(document).ready(function(){
       $($(this).attr('href')).chart();
     });
     $('.chart-tab a:first').click();
-    $('.chart.init').chart();
+    // $('.chart.init').chart();
 });
