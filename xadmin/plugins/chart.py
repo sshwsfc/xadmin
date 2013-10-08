@@ -134,20 +134,6 @@ class ChartWidget(ModelBaseWidget, PartialBaseWidget):
         return self.vendor('nvd3.js', 'nvd3.css', 'xadmin.plugin.charts.js')
 
 
-#TODO: we can remove this as replace by above class not using json url
-class JSONEncoder(DjangoJSONEncoder):
-    def default(self, o):
-        if isinstance(o, (datetime.date, datetime.datetime)):
-            return calendar.timegm(o.timetuple()) * 1000
-        elif isinstance(o, decimal.Decimal):
-            return str(o)
-        else:
-            try:
-                return super(JSONEncoder, self).default(o)
-            except Exception:
-                return smart_unicode(o)
-
-
 class ChartsPlugin(BaseAdminPlugin):
 
     data_charts = {}
@@ -175,6 +161,20 @@ class ChartsPlugin(BaseAdminPlugin):
     #     "user_count": {'title': u"User Report", "x-field": "date", "y-field": ("user_count", "view_count"), "order": ('date',)},
     #     "avg_count": {'title': u"Avg Report", "x-field": "date", "y-field": ('avg_count',), "order": ('date',)}
     # }
+
+
+#TODO: we can remove this as replace by above class not using json url
+class JSONEncoder(DjangoJSONEncoder):
+    def default(self, o):
+        if isinstance(o, (datetime.date, datetime.datetime)):
+            return calendar.timegm(o.timetuple()) * 1000
+        elif isinstance(o, decimal.Decimal):
+            return str(o)
+        else:
+            try:
+                return super(JSONEncoder, self).default(o)
+            except Exception:
+                return smart_unicode(o)
 
 
 #TODO: we can remove this as replace by above class not using json url

@@ -14,11 +14,10 @@
     {% for c in charts %}
       <div class="chart tab-pane{% if forloop.first%} active{% endif %}{% if widget.one_chart%} init{% endif %}" id="chart-{{c.name}}">
 
-      {# {{c.url}} #}
-      {% load_chart c.charttype c.chartdata "linechart_container" c.extra %}
-      {% include_container "linechart_container" 400 '100%' %}
-      </div>
+        {% load_chart c.charttype c.chartdata "linechart_container" c.extra %}
+        {% include_container "linechart_container" 400 '100%' %}
 
+      </div>
     {% endfor %}
   </div>
 {% endblock content %}

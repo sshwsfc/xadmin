@@ -1,5 +1,6 @@
 {% extends "xadmin/includes/box.html" %}
-{% load i18n xadmin_tags %}
+{% load i18n xadmin_tags nvd3_tags %}
+
 {% block box_title %}
   <i class="icon-bar-chart"></i> {% trans "Charts" %}
 {% endblock box_title %}
@@ -13,9 +14,13 @@
   </ul>
   <div class="tab-content">
     {% for c in charts %}
-    <div class="chart tab-pane{% if forloop.first%} active{% endif %}" id="chart-{{c.name}}" data-chart-url="{{c.url}}"
-      style="height: 300px; margin:10px 40px; overflow: hidden;"></div>
+      {{c}}
+      <div class="chart tab-pane{% if forloop.first%} active{% endif %}" id="chart-{{c.name}}">
 
+        {% load_chart c.charttype c.chartdata "linechart_container" c.extra %}
+        {% include_container "linechart_container" 400 '100%' %}
+
+      </div>
     {% endfor %}
   </div>
 {% endblock box_content %}
