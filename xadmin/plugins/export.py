@@ -20,6 +20,7 @@ try:
 except:
     has_xlwt = False
 
+
 class ExportMenuPlugin(BaseAdminPlugin):
 
     list_export = ('xls', 'csv', 'xml', 'json')
@@ -37,7 +38,7 @@ class ExportMenuPlugin(BaseAdminPlugin):
                 'export_types': [{'type': et, 'name': self.export_names[et]} for et in self.list_export],
             })
             nodes.append(loader.render_to_string('xadmin/blocks/model_list.top_toolbar.exports.html', context_instance=context))
-        
+
 
 class ExportPlugin(BaseAdminPlugin):
 
@@ -62,14 +63,14 @@ class ExportPlugin(BaseAdminPlugin):
         headers = [c for c in context['result_headers'].cells if c.export]
         rows = context['results']
 
-        return [dict([\
-            (force_unicode(headers[i].text), self._format_value(o)) for i, o in \
+        return [dict([
+            (force_unicode(headers[i].text), self._format_value(o)) for i, o in
             enumerate(filter(lambda c:getattr(c, 'export', False), r.cells))]) for r in rows]
 
     def _get_datas(self, context):
         rows = context['results']
 
-        new_rows = [[self._format_value(o) for o in \
+        new_rows = [[self._format_value(o) for o in
             filter(lambda c:getattr(c, 'export', False), r.cells)] for r in rows]
         new_rows.insert(0, [force_unicode(c.text) for c in context['result_headers'].cells if c.export])
         return new_rows

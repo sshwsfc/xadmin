@@ -1,13 +1,9 @@
 import sys
 from functools import update_wrapper
-
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-from django.core.urlresolvers import reverse
 from django.db.models.base import ModelBase
-from django.http import HttpResponseRedirect
 from django.views.decorators.cache import never_cache
-from django.views.decorators.csrf import csrf_protect
 
 reload(sys)
 sys.setdefaultencoding("utf-8")

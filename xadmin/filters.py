@@ -1,5 +1,3 @@
-import datetime
-
 from django.db import models
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.encoding import smart_unicode
@@ -12,12 +10,13 @@ from django.utils.html import escape
 from django.utils.text import Truncator
 
 from xadmin.views.list import EMPTY_CHANGELIST_VALUE
+import datetime
 
 FILTER_PREFIX = '_p_'
 SEARCH_VAR = '_q_'
 
 from util import (get_model_from_relation,
-                  reverse_field_path, get_limit_choices_to_from_path, prepare_lookup_value)
+    reverse_field_path, get_limit_choices_to_from_path, prepare_lookup_value)
 
 
 class BaseFilter(object):

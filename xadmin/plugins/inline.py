@@ -4,7 +4,7 @@ from django import forms
 from django.forms.formsets import all_valid, DELETION_FIELD_NAME
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
 from django.contrib.contenttypes.generic import BaseGenericInlineFormSet, generic_inlineformset_factory
-from django.template import loader, Context
+from django.template import loader
 from django.template.loader import render_to_string
 from xadmin.layout import FormHelper, Layout, flatatt, Container, Column, Field, Fieldset
 from xadmin.sites import site
@@ -266,6 +266,7 @@ class InlineModelAdmin(ModelFormAdminView):
         return self.user.has_perm(
             self.opts.app_label + '.' + self.opts.get_delete_permission())
 
+
 class GenericInlineModelAdmin(InlineModelAdmin):
     ct_field = "content_type"
     ct_fk_field = "object_id"
@@ -362,7 +363,7 @@ class InlineFormsetPlugin(BaseAdminPlugin):
             inline_instances = []
             for inline_class in self.inlines:
                 inline = self.admin_view.get_view(
-                    (getattr(inline_class, 'generic_inline', False) and GenericInlineModelAdmin or InlineModelAdmin), 
+                    (getattr(inline_class, 'generic_inline', False) and GenericInlineModelAdmin or InlineModelAdmin),
                     inline_class).init(self.admin_view)
                 if not (inline.has_add_permission() or
                         inline.has_change_permission() or
