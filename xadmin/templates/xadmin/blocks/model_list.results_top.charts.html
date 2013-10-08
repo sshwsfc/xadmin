@@ -13,8 +13,9 @@
   </ul>
   <div class="tab-content">
     {% for c in charts %}
-    <div class="chart tab-pane{% if forloop.first%} active{% endif %}" id="chart-{{c.name}}" data-chart-url="{{c.url}}" 
+    <div class="chart tab-pane{% if forloop.first%} active{% endif %}" id="chart-{{c.name}}" data-chart-url="{{c.url}}"
       style="height: 300px; margin:10px 40px; overflow: hidden;"></div>
+
     {% endfor %}
   </div>
 {% endblock box_content %}

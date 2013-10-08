@@ -52,8 +52,6 @@ class ChartWidget(ModelBaseWidget, PartialBaseWidget):
 
         req = self.make_get_request("", self.list_params)
         self.list_view = self.get_view_class(ListAdminView, self.model)(req)
-        # if self.list_count:
-        #     self.list_view.list_per_page = self.list_count
 
     def filte_choices_model(self, model, modeladmin):
         return bool(getattr(modeladmin, 'data_charts', None)) and \
@@ -67,25 +65,10 @@ class ChartWidget(ModelBaseWidget, PartialBaseWidget):
         list_view = self.list_view
         list_view.make_result_list()
 
-        base_fields = list_view.base_list_display
-        if len(base_fields) > 5:
-            base_fields = base_fields[0:5]
+        for name, v in self.charts.items():
+            chartname = name
 
-        context['result_headers'] = [c for c in list_view.result_headers(
-        ).cells if c.field_name in base_fields]
-        context['results'] = [[o for i, o in
-                               enumerate(filter(lambda c:c.field_name in base_fields, r.cells))]
-                              for r in list_view.results()]
-        context['result_count'] = list_view.result_count
-        context['page_url'] = self.model_admin_url('changelist') + "?" + urlencode(self.list_params)
-
-        # # -----------
-        name = 'user_count'
-        # self.data_charts = [{"name": name, "title": v['title'], 'url': self.get_chart_url(name, v)} for name, v in self.charts.items()]
-        # # -----------
-
-        self.mychart = list_view.data_charts[name]
-        print self.mychart
+        self.mychart = list_view.data_charts[chartname]
 
         self.x_field = self.mychart['x-field']
         y_fields = self.mychart['y-field']
@@ -95,12 +78,8 @@ class ChartWidget(ModelBaseWidget, PartialBaseWidget):
         datas = [{"data":[], 'yAxis': '1', "key": force_unicode(label_for_field(
             i, self.model, model_admin=self))} for i in self.y_fields]
 
-        # for i, yfname in enumerate(self.y_fields):
-        #     print i, yfname
-
         list_view.make_result_list()
 
-        #used by chart on django-nvd3
         tooltip_date = "%d %b %Y %H:%M"
         extra_serie = {"tooltip": {"y_start": "", "y_end": ""},
                        "date_format": tooltip_date}
@@ -127,6 +106,7 @@ class ChartWidget(ModelBaseWidget, PartialBaseWidget):
                     ydata[yfname][lkey] = []
                 ydata[yfname][lkey].append(yv)
 
+        # build chartdata similar to:
         # chartdata = {'x': xdata,
         #              'name1': 'series 1', 'y1': ydata, 'extra1': extra_serie,
         #              'name2': 'series 2', 'y2': ydata2, 'extra2': extra_serie}
@@ -146,7 +126,7 @@ class ChartWidget(ModelBaseWidget, PartialBaseWidget):
         }
 
         context.update({
-            'charts': [{"name": name, "charttype": charttype, "chartdata": chartdata, "extra": extra, "title": v['title'], 'url': self.get_chart_url(name, v)} for name, v in self.charts.items()],
+            'charts': [{"name": name, "charttype": charttype, "chartdata": chartdata, "extra": extra, "title": v['title']} for name, v in self.charts.items()],
         })
 
     # Media
@@ -154,6 +134,7 @@ class ChartWidget(ModelBaseWidget, PartialBaseWidget):
         return self.vendor('nvd3.js', 'nvd3.css', 'xadmin.plugin.charts.js')
 
 
+#TODO: we can remove this as replace by above class not using json url
 class JSONEncoder(DjangoJSONEncoder):
     def default(self, o):
         if isinstance(o, (datetime.date, datetime.datetime)):
