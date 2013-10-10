@@ -41,3 +41,4 @@ xadmin/static/xadmin/components/
 
 .idea
 *~
+demo_app/data.db

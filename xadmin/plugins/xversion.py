@@ -1,6 +1,4 @@
-from functools import partial
-
-from django.contrib.contenttypes.generic import GenericInlineModelAdmin, GenericRelation
+from django.contrib.contenttypes.generic import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
 from django.db import models
@@ -24,6 +22,7 @@ from xadmin.views.base import csrf_protect_m, filter_hook
 from xadmin.views.detail import DetailAdminUtil
 from reversion.models import Revision, Version
 from reversion.revisions import default_revision_manager, RegistrationError
+from functools import partial
 
 
 def _autoregister(admin, model, follow=None):

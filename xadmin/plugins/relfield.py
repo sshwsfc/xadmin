@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils.html import escape,format_html
+from django.utils.html import escape, format_html
 from django.utils.text import Truncator
 from django.utils.translation import ugettext as _
 from django import forms
@@ -30,7 +30,7 @@ class ForeignKeySearchWidget(forms.TextInput):
         attrs['data-choices'] = '?'
         if self.rel.limit_choices_to:
             for i in list(self.rel.limit_choices_to):
-                attrs['data-choices'] += "&_p_%s=%s" % (i,self.rel.limit_choices_to[i])
+                attrs['data-choices'] += "&_p_%s=%s" % (i, self.rel.limit_choices_to[i])
             attrs['data-choices'] = format_html(attrs['data-choices'])
         if value:
             attrs['data-label'] = self.label_for_value(value)

@@ -7,6 +7,7 @@ BUILDIN_STYLES = {
     'accordion': 'xadmin/includes/sitemenu_accordion.html',
 }
 
+
 class SiteMenuStylePlugin(BaseAdminPlugin):
 
     menu_style = None

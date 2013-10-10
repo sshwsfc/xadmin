@@ -85,7 +85,7 @@ class ModelFormAdminView(ModelAdminView):
         # a field in admin.
         if isinstance(db_field, models.ManyToManyField) and not db_field.rel.through._meta.auto_created:
             return None
-            
+
         attrs = self.get_field_attrs(db_field, **kwargs)
         return db_field.formfield(**dict(attrs, **kwargs))
 
@@ -181,7 +181,7 @@ class ModelFormAdminView(ModelAdminView):
         fields = self.form_obj.fields.keys() + list(self.get_readonly_fields())
 
         if layout is None:
-            layout = Layout(Container(Col('full', 
+            layout = Layout(Container(Col('full',
                 Fieldset("", *fields, css_class="unsort no_title"), horizontal=True, span=12)
             ))
         elif type(layout) in (list, tuple) and len(layout) > 0:

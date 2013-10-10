@@ -1,9 +1,8 @@
-
+#coding:utf-8
 import urllib
 from django.template import loader
 from django.core.cache import cache
 from django.utils.translation import ugettext as _
-
 from xadmin.sites import site
 from xadmin.models import UserSettings
 from xadmin.views import BaseAdminPlugin, BaseAdminView
@@ -47,8 +46,8 @@ class ThemePlugin(BaseAdminPlugin):
 
         themes = [{'name': _(u"Default"), 'description': _(
             u"Default bootstrap theme"), 'css': self.default_theme},
-            {'name': _(u"Bootstrap2"), 'description': _(
-                u"Bootstrap 2.x theme"), 'css': self.bootstrap2_theme},]
+            {'name': _(u"Bootstrap2"), 'description': _(u"Bootstrap 2.x theme"),
+            'css': self.bootstrap2_theme}]
         select_css = context.get('site_theme', self.default_theme)
 
         if self.user_themes:
