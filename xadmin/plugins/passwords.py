@@ -1,17 +1,9 @@
 # coding=utf-8
-from django import forms
-from django.core.urlresolvers import reverse
 from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
-from django.contrib.auth.models import Group, Permission
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import password_reset_confirm
-from django.core.exceptions import PermissionDenied
 from django.template.response import TemplateResponse
-from django.utils.decorators import method_decorator
-from django.http import HttpResponseRedirect
-from django.utils.html import escape
 from django.utils.translation import ugettext as _
-from django.views.decorators.debug import sensitive_post_parameters
 
 from xadmin.sites import site
 from xadmin.views.base import BaseAdminPlugin, BaseAdminView, csrf_protect_m
