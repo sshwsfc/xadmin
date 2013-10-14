@@ -166,6 +166,7 @@ class ChangePasswordView(ModelAdminView):
     change_password_form = AdminPasswordChangeForm
     change_user_password_template = None
 
+    @csrf_protect_m
     def get(self, request, object_id):
         if not self.has_change_permission(request):
             raise PermissionDenied
@@ -219,6 +220,7 @@ class ChangePasswordView(ModelAdminView):
 class ChangeAccountPasswordView(ChangePasswordView):
     change_password_form = PasswordChangeForm
 
+    @csrf_protect_m
     def get(self, request):
         self.obj = self.user
         self.form = self.change_password_form(self.obj)
