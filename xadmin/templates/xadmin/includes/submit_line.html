@@ -17,6 +17,7 @@
 {% if show_save_as_new %}<input type="submit" class="btn btn-default" value="{% trans 'Save as new' %}" name="_saveasnew" {{ onclick_attrib }}/>{%endif%}
 {% if show_save_and_add_another %}<input type="submit" class="btn btn-default" value="{% trans 'Save and add another' %}" name="_addanother" {{ onclick_attrib }} />{% endif %}
 {% if show_save_and_continue %}<input type="submit" class="btn btn-default" value="{% trans 'Save and continue editing' %}" name="_continue" {{ onclick_attrib }}/>{% endif %}
+{% view_block 'submit_more_btns' %}
 </div>
 
 {% if show_delete_link %}
