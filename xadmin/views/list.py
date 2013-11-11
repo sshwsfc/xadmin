@@ -604,8 +604,7 @@ class ListAdminView(ModelAdminView):
     def get_media(self):
         media = super(ListAdminView, self).get_media() + self.vendor('xadmin.page.list.js', 'xadmin.page.form.js')
         if self.list_display_links_details:
-            media += self.vendor('xadmin.plugin.details.js',
-                                 'xadmin.modal.css', 'xadmin.form.css')
+            media += self.vendor('xadmin.plugin.details.js', 'xadmin.form.css')
         return media
 
     # Blocks
