@@ -150,11 +150,17 @@ class DetailAdminView(ModelAdminView):
         layout = copy.deepcopy(self.detail_layout or self.form_layout)
 
         if layout is None:
-            layout = Layout(Container(Col('full',
-                                          Fieldset(
-                                              "", *self.form_obj.fields.keys(),
-                                              css_class="unsort no_title"), horizontal=True, span=12)
-                                      ))
+            # if we had assigned fields, form_obj has no fields at all
+            # thus, we need to use all of self.fields as layout_fields
+            fields = self.fields and list(self.fields) or self.form_obj.fields.keys()
+            layout = Layout(
+                Container(
+                    Col('full',
+                        Fieldset("", *fields, css_class="unsort no_title"),
+                        horizontal=True, span=12
+                    )
+                )
+            )
         elif type(layout) in (list, tuple) and len(layout) > 0:
             if isinstance(layout[0], Column):
                 fs = layout
@@ -186,21 +192,13 @@ class DetailAdminView(ModelAdminView):
         Returns a Form class for use in the admin add view. This is used by
         add_view and change_view.
         """
-        if self.exclude is None:
-            exclude = []
-        else:
-            exclude = list(self.exclude)
-        if self.exclude is None and hasattr(self.form, '_meta') and self.form._meta.exclude:
-            # Take the custom ModelForm's Meta.exclude into account only if the
-            # ModelAdmin doesn't define its own.
-            exclude.extend(self.form._meta.exclude)
-        # if exclude is an empty list we pass None to be consistant with the
-        # default on modelform_factory
-        exclude = exclude or None
+        # for detail view, all fields should be exclude
+        # to avoid form_obj creating html for updating
+        # if None, we will handle fields in get_form_layout
         defaults = {
             "form": self.form,
             "fields": self.fields and list(self.fields) or None,
-            "exclude": exclude,
+            "exclude": self.fields and list(self.fields) or None,
         }
         defaults.update(kwargs)
         return modelform_factory(self.model, **defaults)
