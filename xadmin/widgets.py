@@ -34,7 +34,7 @@ class AdminTimeWidget(forms.TimeInput):
 
     @property
     def media(self):
-        return vendor('timepicker.js', 'timepicker.css', 'xadmin.widget.datetime.js')
+        return vendor('datepicker.js','timepicker.js', 'timepicker.css', 'xadmin.widget.datetime.js')
 
     def __init__(self, attrs=None, format=None):
         final_attrs = {'class': 'time-field', 'size': '8'}
