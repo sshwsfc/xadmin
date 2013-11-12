@@ -59,11 +59,11 @@
   })
   
   // loading btn
-  $('.btn.btn-loading,.btn[type=submit]')
-    .click(function () {
-      var btn = $(this)
-      btn.button('loading')
-    })
+  // $('.btn.btn-loading,.btn[type=submit]')
+  //   .click(function () {
+  //     var btn = $(this)
+  //     btn.button('loading')
+  //   })
 
   //.nav-content bar nav-menu
   $('.navbar-xs .navbar-nav > li')
