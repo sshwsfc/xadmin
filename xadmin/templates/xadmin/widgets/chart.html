@@ -1,5 +1,5 @@
 {% extends "xadmin/widgets/base.html" %}
-{% load i18n xadmin_tags %}
+{% load i18n xadmin_tags nvd3_tags %}
 
 {% block content_css %}tabs{% endblock content_css %}
 {% block content %}
@@ -12,8 +12,12 @@
 {% endif %}
   <div class="tab-content">
     {% for c in charts %}
-    <div class="chart tab-pane{% if forloop.first%} active{% endif %}{% if widget.one_chart%} init{% endif %}" id="chart-{{c.name}}" data-chart-url="{{c.url}}" 
-      style="height: 300px; margin:0px; overflow: hidden;"></div>
+      <div class="chart tab-pane{% if forloop.first%} active{% endif %}{% if widget.one_chart%} init{% endif %}" id="chart-{{c.name}}">
+
+        {% load_chart c.charttype c.chartdata "linechart_container" c.extra %}
+        {% include_container "linechart_container" 400 '100%' %}
+
+      </div>
     {% endfor %}
   </div>
 {% endblock content %}

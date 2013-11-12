@@ -11,10 +11,12 @@ vendors = {
             'production': 'xadmin/vendor/bootstrap/css/bootstrap.css',
             'cdn': 'http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css'
         },
-        'responsive': {'css':{
+        'responsive': {
+            'css': {
                 'dev': 'xadmin/vendor/bootstrap/bootstrap-responsive.css',
                 'production': 'xadmin/vendor/bootstrap/bootstrap-responsive.css'
-            }}
+            }
+        }
     },
     'jquery': {
         "js": {
@@ -60,10 +62,12 @@ vendors = {
             'dev': 'xadmin/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js',
         }
     },
-    "flot": {
+    "nvd3": {
+        "css": {
+            'dev': 'xadmin/vendor/nvd3/src/nv.d3.css',
+        },
         "js": {
-            'dev': ['xadmin/vendor/flot/jquery.flot.js', 'xadmin/vendor/flot/jquery.flot.pie.js', 'xadmin/vendor/flot/jquery.flot.time.js',
-                    'xadmin/vendor/flot/jquery.flot.resize.js']
+            'dev': ['xadmin/vendor/d3/d3.js', 'xadmin/vendor/nvd3/nv.d3.js'],
         }
     },
     "image-gallery": {

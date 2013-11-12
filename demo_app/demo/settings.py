@@ -136,10 +136,20 @@ INSTALLED_APPS = (
 
     'xadmin',
     'crispy_forms',
+    'django_nvd3',
     #'reversion',
 
     'app',
 )
+
+# Django extensions
+try:
+    import django_extensions
+except ImportError:
+    pass
+else:
+    INSTALLED_APPS = INSTALLED_APPS + ('django_extensions',)
+
 
 DATE_FORMAT = 'Y-m-d'
 DATETIME_FORMAT = 'Y-m-d H:i'
