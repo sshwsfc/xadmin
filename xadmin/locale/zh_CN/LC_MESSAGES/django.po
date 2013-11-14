@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xadmin-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-04 11:58-0500\n"
+"POT-Creation-Date: 2013-11-14 13:45-0500\n"
 "PO-Revision-Date: 2013-08-31 08:19+0000\n"
 "Last-Translator: sshwsfc <sshwsfc@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/projects/p/xadmin/"
@@ -20,47 +20,47 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: filters.py:158 filters.py:190 filters.py:396 filters.py:446
+#: filters.py:157 filters.py:189 filters.py:401 filters.py:451
 msgid "All"
 msgstr "全部"
 
-#: filters.py:159 plugins/export.py:116
+#: filters.py:158 plugins/export.py:117
 msgid "Yes"
 msgstr "是"
 
-#: filters.py:160 plugins/export.py:116
+#: filters.py:159 plugins/export.py:117
 msgid "No"
 msgstr "否"
 
-#: filters.py:174
+#: filters.py:173
 msgid "Unknown"
 msgstr "未知"
 
-#: filters.py:266
+#: filters.py:265
 msgid "Any date"
 msgstr "任意日期"
 
-#: filters.py:267
+#: filters.py:266
 msgid "Has date"
 msgstr "有日期"
 
-#: filters.py:270
+#: filters.py:269
 msgid "Has no date"
 msgstr "无日期"
 
-#: filters.py:273 widgets.py:30
+#: filters.py:272 widgets.py:30
 msgid "Today"
 msgstr "今天"
 
-#: filters.py:277
+#: filters.py:276
 msgid "Past 7 days"
 msgstr "过去7天"
 
-#: filters.py:281
+#: filters.py:280
 msgid "This month"
 msgstr "本月"
 
-#: filters.py:285
+#: filters.py:284
 msgid "This year"
 msgstr "今年"
 
@@ -129,11 +129,11 @@ msgstr "用户设置"
 msgid "Page"
 msgstr "页面"
 
-#: models.py:108 views/dashboard.py:82 views/dashboard.py:92
+#: models.py:108 views/dashboard.py:81 views/dashboard.py:91
 msgid "Widget Type"
 msgstr "Widget类型"
 
-#: models.py:109 views/dashboard.py:83
+#: models.py:109 views/dashboard.py:82
 msgid "Widget Params"
 msgstr "Widget参数"
 
@@ -145,7 +145,7 @@ msgstr "用户小组件"
 msgid "User Widgets"
 msgstr "用户小组件"
 
-#: widgets.py:47
+#: widgets.py:48
 msgid "Now"
 msgstr "现在"
 
@@ -205,54 +205,54 @@ msgstr "总和"
 msgid "Count"
 msgstr "总数"
 
-#: plugins/auth.py:24
+#: plugins/auth.py:21
 #, python-format
 msgid "Can add %s"
 msgstr "添加 %s"
 
-#: plugins/auth.py:25
+#: plugins/auth.py:22
 #, python-format
 msgid "Can change %s"
 msgstr "修改 %s"
 
-#: plugins/auth.py:26
+#: plugins/auth.py:23
 #, python-format
 msgid "Can edit %s"
 msgstr "编辑 %s"
 
-#: plugins/auth.py:27
+#: plugins/auth.py:24
 #, python-format
 msgid "Can delete %s"
 msgstr "删除 %s"
 
-#: plugins/auth.py:28
+#: plugins/auth.py:25
 #, python-format
 msgid "Can view %s"
 msgstr "查看 %s"
 
-#: plugins/auth.py:88
+#: plugins/auth.py:87
 msgid "Personal info"
 msgstr "个人信息"
 
-#: plugins/auth.py:92
+#: plugins/auth.py:91
 msgid "Permissions"
 msgstr "权限"
 
-#: plugins/auth.py:95
+#: plugins/auth.py:94
 msgid "Important dates"
 msgstr "重要日期"
 
-#: plugins/auth.py:100
+#: plugins/auth.py:99
 msgid "Status"
 msgstr "状态"
 
-#: plugins/auth.py:112
+#: plugins/auth.py:111
 msgid "Permission Name"
 msgstr "权限名称"
 
-#: plugins/auth.py:160
+#: plugins/auth.py:159
 #, fuzzy
-msgid "Changed Password"
+msgid "Change Password"
 msgstr "更改密码"
 
 #: plugins/auth.py:189
@@ -260,11 +260,11 @@ msgstr "更改密码"
 msgid "Change password: %s"
 msgstr "更改密码：%s"
 
-#: plugins/auth.py:213 plugins/auth.py:243
+#: plugins/auth.py:214 plugins/auth.py:246
 msgid "Password changed successfully."
 msgstr "密码更改成功"
 
-#: plugins/auth.py:231 templates/xadmin/auth/user/change_password.html:11
+#: plugins/auth.py:233 templates/xadmin/auth/user/change_password.html:11
 #: templates/xadmin/auth/user/change_password.html:22
 #: templates/xadmin/auth/user/change_password.html:55
 msgid "Change password"
@@ -343,7 +343,7 @@ msgid "1 comment was successfully %(action)s."
 msgid_plural "%(count)s comments were successfully %(action)s."
 msgstr[0] ""
 
-#: plugins/details.py:52 views/list.py:576
+#: plugins/details.py:52 views/list.py:575
 #, python-format
 msgid "Details of %s"
 msgstr "%s详情"
@@ -353,13 +353,13 @@ msgstr "%s详情"
 msgid "Enter %s"
 msgstr "输入%s"
 
-#: plugins/editable.py:74 views/dashboard.py:637 views/delete.py:26
+#: plugins/editable.py:74 views/dashboard.py:638 views/delete.py:26
 #: views/detail.py:144 views/edit.py:428
 #, python-format
 msgid "%(name)s object with primary key %(key)r does not exist."
 msgstr "具有主键 %(key)r 的对象 %(name)s 不存在。"
 
-#: plugins/export.py:86
+#: plugins/export.py:87
 msgid "Sheet"
 msgstr "表"
 
@@ -384,7 +384,7 @@ msgstr "幻灯片"
 msgid "Download"
 msgstr "下载"
 
-#: plugins/images.py:49
+#: plugins/images.py:50
 msgid "Change:"
 msgstr "修改:"
 
@@ -396,11 +396,11 @@ msgstr "表格"
 msgid "Thumbnails"
 msgstr "图标"
 
-#: plugins/passwords.py:72
+#: plugins/passwords.py:64
 msgid "Forgotten your password or username?"
 msgstr "忘记了您的密码或用户名？"
 
-#: plugins/quickform.py:76
+#: plugins/quickform.py:77
 #, python-format
 msgid "Create New %s"
 msgstr "创建新的 %s"
@@ -414,101 +414,101 @@ msgstr "关联数据"
 msgid "Search %s"
 msgstr "搜索%s"
 
-#: plugins/themes.py:48
+#: plugins/themes.py:47
 msgid "Default"
 msgstr "默认"
 
-#: plugins/themes.py:49
+#: plugins/themes.py:48
 msgid "Default bootstrap theme"
 msgstr "默认Bootstrap主题"
 
-#: plugins/themes.py:50
+#: plugins/themes.py:49
 msgid "Bootstrap2"
 msgstr "Bootstrap2"
 
-#: plugins/themes.py:51
+#: plugins/themes.py:49
 msgid "Bootstrap 2.x theme"
 msgstr "Bootstrap2主题"
 
-#: plugins/topnav.py:59 views/dashboard.py:456 views/edit.py:361
+#: plugins/topnav.py:58 views/dashboard.py:455 views/edit.py:361
 #: views/edit.py:370
 #, python-format
 msgid "Add %s"
 msgstr "增加 %s"
 
-#: plugins/xversion.py:130
+#: plugins/xversion.py:129
 msgid "Initial version."
 msgstr "初始化版本"
 
-#: plugins/xversion.py:132
+#: plugins/xversion.py:131
 msgid "Change version."
 msgstr "修改版本"
 
-#: plugins/xversion.py:134
+#: plugins/xversion.py:133
 msgid "Revert version."
 msgstr "还原版本"
 
-#: plugins/xversion.py:136
+#: plugins/xversion.py:135
 msgid "Rercover version."
 msgstr "恢复版本"
 
-#: plugins/xversion.py:138
+#: plugins/xversion.py:137
 #, python-format
 msgid "Deleted %(verbose_name)s."
 msgstr "删除%(verbose_name)s。"
 
-#: plugins/xversion.py:166 templates/xadmin/views/recover_form.html:26
+#: plugins/xversion.py:165 templates/xadmin/views/recover_form.html:26
 msgid "Recover"
 msgstr "还原"
 
-#: plugins/xversion.py:182 templates/xadmin/views/model_history.html:11
+#: plugins/xversion.py:181 templates/xadmin/views/model_history.html:11
 #: templates/xadmin/views/revision_diff.html:11
 #: templates/xadmin/views/revision_form.html:15
 msgid "History"
 msgstr "历史"
 
-#: plugins/xversion.py:225 templates/xadmin/views/recover_form.html:14
+#: plugins/xversion.py:224 templates/xadmin/views/recover_form.html:14
 #: templates/xadmin/views/recover_list.html:10
 #, python-format
 msgid "Recover deleted %(name)s"
 msgstr "恢复删除的%(name)s"
 
-#: plugins/xversion.py:263
+#: plugins/xversion.py:262
 #, python-format
 msgid "Change history: %s"
 msgstr "变更历史： %s"
 
-#: plugins/xversion.py:313
+#: plugins/xversion.py:312
 msgid "Must select two versions."
 msgstr "必须选择两个版本。"
 
-#: plugins/xversion.py:321
+#: plugins/xversion.py:320
 msgid "Please select two different versions."
 msgstr "请选择两个不同的版本。"
 
-#: plugins/xversion.py:408 plugins/xversion.py:516
+#: plugins/xversion.py:407 plugins/xversion.py:515
 #, python-format
 msgid "Current: %s"
 msgstr "当前：%s"
 
-#: plugins/xversion.py:440
+#: plugins/xversion.py:439
 #, python-format
 msgid "Revert %s"
 msgstr "还原%s"
 
-#: plugins/xversion.py:456
+#: plugins/xversion.py:455
 #, python-format
 msgid ""
 "The %(model)s \"%(name)s\" was reverted successfully. You may edit it again "
 "below."
 msgstr "%(model)s “%(name)s”成功还原，您可以继续编辑。"
 
-#: plugins/xversion.py:477
+#: plugins/xversion.py:476
 #, python-format
 msgid "Recover %s"
 msgstr "恢复%s"
 
-#: plugins/xversion.py:493
+#: plugins/xversion.py:492
 #, python-format
 msgid ""
 "The %(model)s \"%(name)s\" was recovered successfully. You may edit it again "
@@ -813,7 +813,7 @@ msgid "Every %(t)s seconds"
 msgstr "每 %(t)s 秒"
 
 #: templates/xadmin/edit_inline/blank.html:5 views/detail.py:22
-#: views/edit.py:100 views/list.py:29
+#: views/edit.py:100 views/list.py:28
 msgid "Null"
 msgstr "空"
 
@@ -942,7 +942,7 @@ msgstr "保存并增加另一个"
 msgid "Save and continue editing"
 msgstr "保存并继续编辑"
 
-#: templates/xadmin/includes/submit_line.html:23
+#: templates/xadmin/includes/submit_line.html:24
 #: templates/xadmin/views/model_detail.html:28 views/delete.py:91
 msgid "Delete"
 msgstr "删除"
@@ -997,7 +997,7 @@ msgstr "关闭窗口"
 msgid "Log in again"
 msgstr "重新登录"
 
-#: templates/xadmin/views/login.html:39 views/website.py:37
+#: templates/xadmin/views/login.html:39 views/website.py:38
 msgid "Please Login"
 msgstr "请登录"
 
@@ -1119,7 +1119,7 @@ msgid "Add %(name)s"
 msgstr "增加 %(name)s"
 
 #: templates/xadmin/views/model_list.html:39
-msgid "Columes"
+msgid "Columns"
 msgstr "列"
 
 #: templates/xadmin/views/model_list.html:42
@@ -1208,47 +1208,47 @@ msgstr "保存变更"
 msgid "Django Xadmin"
 msgstr "Django Xadmin"
 
-#: views/dashboard.py:186
+#: views/dashboard.py:185
 msgid "Widget ID"
 msgstr "小组件ID"
 
-#: views/dashboard.py:187
+#: views/dashboard.py:186
 msgid "Widget Title"
 msgstr "小组件标题"
 
-#: views/dashboard.py:249
+#: views/dashboard.py:248
 msgid "Html Content Widget, can write any html content in widget."
 msgstr "HTML内容小组件，可以编写任意HTML内容。"
 
-#: views/dashboard.py:252
+#: views/dashboard.py:251
 msgid "Html Content"
 msgstr "HTML内容"
 
-#: views/dashboard.py:315
+#: views/dashboard.py:314
 msgid "Target Model"
 msgstr "目标数据"
 
-#: views/dashboard.py:366
+#: views/dashboard.py:365
 msgid "Quick button Widget, quickly open any page."
 msgstr "快捷按钮小组件，可以快速打开任意页面。"
 
-#: views/dashboard.py:368
+#: views/dashboard.py:367
 msgid "Quick Buttons"
 msgstr "快速按钮"
 
-#: views/dashboard.py:409
+#: views/dashboard.py:408
 msgid "Any Objects list Widget."
 msgstr "数据列表小组件"
 
-#: views/dashboard.py:448
+#: views/dashboard.py:447
 msgid "Add any model object Widget."
 msgstr "添加任意数据的小组件"
 
-#: views/dashboard.py:482
+#: views/dashboard.py:481
 msgid "Dashboard"
 msgstr "仪表盘"
 
-#: views/dashboard.py:621
+#: views/dashboard.py:622
 #, python-format
 msgid "%s Dashboard"
 msgstr "%s 主页"
@@ -1291,24 +1291,24 @@ msgstr "修改 %s"
 msgid "The %(name)s \"%(obj)s\" was changed successfully."
 msgstr "%(name)s \"%(obj)s\" 修改成功。"
 
-#: views/list.py:198
+#: views/list.py:197
 msgid "Database error"
 msgstr "数据库错误"
 
-#: views/list.py:372
+#: views/list.py:371
 #, python-format
 msgid "%s List"
 msgstr "%s列表"
 
-#: views/list.py:500
+#: views/list.py:499
 msgid "Sort ASC"
 msgstr "正序"
 
-#: views/list.py:501
+#: views/list.py:500
 msgid "Sort DESC"
 msgstr "倒序"
 
-#: views/list.py:505
+#: views/list.py:504
 msgid "Cancel Sort"
 msgstr "取消排序"
 
