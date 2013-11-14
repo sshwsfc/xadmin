@@ -69,7 +69,7 @@ def _register_model(admin, model):
         _autoregister(admin, model, inline_fields)
 
 
-def registe_models(admin_site=None):
+def register_models(admin_site=None):
     if admin_site is None:
         admin_site = site
 

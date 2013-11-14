@@ -5,7 +5,7 @@ import xadmin
 xadmin.autodiscover()
 
 # from xadmin.plugins import xversion
-# xversion.registe_models()
+# xversion.register_models()
 
 urlpatterns = patterns('',
                        url(r'', include(xadmin.site.urls)),
