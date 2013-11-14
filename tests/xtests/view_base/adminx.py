@@ -12,7 +12,7 @@ class TestBaseView(BaseAdminView):
     pass
 
 class TestCommView(CommAdminView):
-    globe_models_icon = {ModelB: 'test'}
+    global_models_icon = {ModelB: 'test'}
 
 class TestAView(BaseAdminView):
     pass

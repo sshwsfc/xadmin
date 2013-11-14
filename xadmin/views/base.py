@@ -258,7 +258,7 @@ class BaseAdminView(BaseAdminObject, View):
         # take name and docstring from class
         update_wrapper(view, cls, updated=())
         view.need_site_permission = cls.need_site_permission
-        
+
         return view
 
     def init_request(self, *args, **kwargs):
@@ -295,7 +295,7 @@ class CommAdminView(BaseAdminView):
     menu_template = 'xadmin/includes/sitemenu_default.html'
 
     site_title = None
-    globe_models_icon = {}
+    global_models_icon = {}
     default_model_icon = None
     apps_label_title = {}
 
@@ -435,7 +435,7 @@ class CommAdminView(BaseAdminView):
 
     @filter_hook
     def get_model_icon(self, model):
-        icon = self.globe_models_icon.get(model)
+        icon = self.global_models_icon.get(model)
         if icon is None and model in self.admin_site._registry:
             icon = getattr(self.admin_site._registry[model],
                            'model_icon', self.default_model_icon)
