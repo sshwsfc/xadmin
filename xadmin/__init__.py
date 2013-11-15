@@ -1,6 +1,6 @@
 from xadmin.sites import AdminSite, site
 
-VERSION = [0,4,0]
+VERSION = [0,4,2]
 
 
 class Settings(object):
