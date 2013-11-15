@@ -186,7 +186,7 @@ class FilterPlugin(BaseAdminPlugin):
                                         'xadmin.widget.datetime.js')
         if bool(filter(lambda s: isinstance(s, RelatedFieldSearchFilter), self.filter_specs)):
             media = media + self.vendor(
-                'select2.js', 'select2.css', 'xadmin.widget.select.js')
+                'select.js', 'select.css', 'xadmin.widget.select.js')
         return media + self.vendor('xadmin.plugin.filters.js')
 
     # Block Views

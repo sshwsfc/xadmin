@@ -38,6 +38,7 @@ nosetests.xml
 .c9revisions
 .settings
 xadmin/static/xadmin/components/
+xadmin/static/xadmin/bower_components/
 
 .idea
 *~

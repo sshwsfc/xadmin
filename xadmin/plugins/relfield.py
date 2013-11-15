@@ -48,7 +48,7 @@ class ForeignKeySearchWidget(forms.TextInput):
 
     @property
     def media(self):
-        return vendor('select2.js', 'select2.css', 'xadmin.widget.select.js')
+        return vendor('select.js', 'select.css', 'xadmin.widget.select.js')
 
 
 class RelateFieldPlugin(BaseAdminPlugin):

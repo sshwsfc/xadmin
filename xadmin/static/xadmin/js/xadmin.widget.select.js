@@ -2,8 +2,8 @@
     // add select2 render
     if(!window.__admin_ismobile__){
         $.fn.exform.renders.push(function(f){
-          if($.fn.select2){
-            f.find('select:not(.select-search):not([multiple=multiple])').select2();
+          if($.fn.selectize){
+            f.find('select:not(.select-search):not([multiple=multiple])').selectize();
             f.find('.select-search').each(function(){
                 var $el = $(this);
                 $el.select2({
