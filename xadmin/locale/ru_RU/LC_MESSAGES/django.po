@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xadmin-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-04 11:58-0500\n"
+"POT-Creation-Date: 2013-11-14 13:45-0500\n"
 "PO-Revision-Date: 2013-07-31 01:41+0000\n"
 "Last-Translator: sshwsfc <sshwsfc@gmail.com>\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/projects/p/xadmin/"
@@ -19,47 +19,47 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: filters.py:158 filters.py:190 filters.py:396 filters.py:446
+#: filters.py:157 filters.py:189 filters.py:401 filters.py:451
 msgid "All"
 msgstr ""
 
-#: filters.py:159 plugins/export.py:116
+#: filters.py:158 plugins/export.py:117
 msgid "Yes"
 msgstr ""
 
-#: filters.py:160 plugins/export.py:116
+#: filters.py:159 plugins/export.py:117
 msgid "No"
 msgstr ""
 
-#: filters.py:174
+#: filters.py:173
 msgid "Unknown"
 msgstr ""
 
-#: filters.py:266
+#: filters.py:265
 msgid "Any date"
 msgstr ""
 
-#: filters.py:267
+#: filters.py:266
 msgid "Has date"
 msgstr ""
 
-#: filters.py:270
+#: filters.py:269
 msgid "Has no date"
 msgstr ""
 
-#: filters.py:273 widgets.py:30
+#: filters.py:272 widgets.py:30
 msgid "Today"
 msgstr ""
 
-#: filters.py:277
+#: filters.py:276
 msgid "Past 7 days"
 msgstr ""
 
-#: filters.py:281
+#: filters.py:280
 msgid "This month"
 msgstr ""
 
-#: filters.py:285
+#: filters.py:284
 msgid "This year"
 msgstr ""
 
@@ -126,11 +126,11 @@ msgstr ""
 msgid "Page"
 msgstr ""
 
-#: models.py:108 views/dashboard.py:82 views/dashboard.py:92
+#: models.py:108 views/dashboard.py:81 views/dashboard.py:91
 msgid "Widget Type"
 msgstr ""
 
-#: models.py:109 views/dashboard.py:83
+#: models.py:109 views/dashboard.py:82
 msgid "Widget Params"
 msgstr ""
 
@@ -142,7 +142,7 @@ msgstr ""
 msgid "User Widgets"
 msgstr ""
 
-#: widgets.py:47
+#: widgets.py:48
 msgid "Now"
 msgstr ""
 
@@ -204,53 +204,53 @@ msgstr ""
 msgid "Count"
 msgstr ""
 
-#: plugins/auth.py:24
+#: plugins/auth.py:21
 #, python-format
 msgid "Can add %s"
 msgstr ""
 
-#: plugins/auth.py:25
+#: plugins/auth.py:22
 #, python-format
 msgid "Can change %s"
 msgstr ""
 
-#: plugins/auth.py:26
+#: plugins/auth.py:23
 #, python-format
 msgid "Can edit %s"
 msgstr ""
 
-#: plugins/auth.py:27
+#: plugins/auth.py:24
 #, python-format
 msgid "Can delete %s"
 msgstr ""
 
-#: plugins/auth.py:28
+#: plugins/auth.py:25
 #, python-format
 msgid "Can view %s"
 msgstr ""
 
-#: plugins/auth.py:88
+#: plugins/auth.py:87
 msgid "Personal info"
 msgstr ""
 
-#: plugins/auth.py:92
+#: plugins/auth.py:91
 msgid "Permissions"
 msgstr ""
 
-#: plugins/auth.py:95
+#: plugins/auth.py:94
 msgid "Important dates"
 msgstr ""
 
-#: plugins/auth.py:100
+#: plugins/auth.py:99
 msgid "Status"
 msgstr ""
 
-#: plugins/auth.py:112
+#: plugins/auth.py:111
 msgid "Permission Name"
 msgstr ""
 
-#: plugins/auth.py:160
-msgid "Changed Password"
+#: plugins/auth.py:159
+msgid "Change Password"
 msgstr ""
 
 #: plugins/auth.py:189
@@ -258,11 +258,11 @@ msgstr ""
 msgid "Change password: %s"
 msgstr ""
 
-#: plugins/auth.py:213 plugins/auth.py:243
+#: plugins/auth.py:214 plugins/auth.py:246
 msgid "Password changed successfully."
 msgstr ""
 
-#: plugins/auth.py:231 templates/xadmin/auth/user/change_password.html:11
+#: plugins/auth.py:233 templates/xadmin/auth/user/change_password.html:11
 #: templates/xadmin/auth/user/change_password.html:22
 #: templates/xadmin/auth/user/change_password.html:55
 msgid "Change password"
@@ -349,7 +349,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: plugins/details.py:52 views/list.py:576
+#: plugins/details.py:52 views/list.py:575
 #, python-format
 msgid "Details of %s"
 msgstr ""
@@ -359,13 +359,13 @@ msgstr ""
 msgid "Enter %s"
 msgstr ""
 
-#: plugins/editable.py:74 views/dashboard.py:637 views/delete.py:26
+#: plugins/editable.py:74 views/dashboard.py:638 views/delete.py:26
 #: views/detail.py:144 views/edit.py:428
 #, python-format
 msgid "%(name)s object with primary key %(key)r does not exist."
 msgstr ""
 
-#: plugins/export.py:86
+#: plugins/export.py:87
 msgid "Sheet"
 msgstr ""
 
@@ -390,7 +390,7 @@ msgstr ""
 msgid "Download"
 msgstr ""
 
-#: plugins/images.py:49
+#: plugins/images.py:50
 msgid "Change:"
 msgstr ""
 
@@ -402,11 +402,11 @@ msgstr ""
 msgid "Thumbnails"
 msgstr ""
 
-#: plugins/passwords.py:72
+#: plugins/passwords.py:64
 msgid "Forgotten your password or username?"
 msgstr ""
 
-#: plugins/quickform.py:76
+#: plugins/quickform.py:77
 #, python-format
 msgid "Create New %s"
 msgstr ""
@@ -420,101 +420,101 @@ msgstr ""
 msgid "Search %s"
 msgstr ""
 
-#: plugins/themes.py:48
+#: plugins/themes.py:47
 msgid "Default"
 msgstr ""
 
-#: plugins/themes.py:49
+#: plugins/themes.py:48
 msgid "Default bootstrap theme"
 msgstr ""
 
-#: plugins/themes.py:50
+#: plugins/themes.py:49
 msgid "Bootstrap2"
 msgstr ""
 
-#: plugins/themes.py:51
+#: plugins/themes.py:49
 msgid "Bootstrap 2.x theme"
 msgstr ""
 
-#: plugins/topnav.py:59 views/dashboard.py:456 views/edit.py:361
+#: plugins/topnav.py:58 views/dashboard.py:455 views/edit.py:361
 #: views/edit.py:370
 #, python-format
 msgid "Add %s"
 msgstr ""
 
-#: plugins/xversion.py:130
+#: plugins/xversion.py:129
 msgid "Initial version."
 msgstr ""
 
-#: plugins/xversion.py:132
+#: plugins/xversion.py:131
 msgid "Change version."
 msgstr ""
 
-#: plugins/xversion.py:134
+#: plugins/xversion.py:133
 msgid "Revert version."
 msgstr ""
 
-#: plugins/xversion.py:136
+#: plugins/xversion.py:135
 msgid "Rercover version."
 msgstr ""
 
-#: plugins/xversion.py:138
+#: plugins/xversion.py:137
 #, python-format
 msgid "Deleted %(verbose_name)s."
 msgstr ""
 
-#: plugins/xversion.py:166 templates/xadmin/views/recover_form.html:26
+#: plugins/xversion.py:165 templates/xadmin/views/recover_form.html:26
 msgid "Recover"
 msgstr ""
 
-#: plugins/xversion.py:182 templates/xadmin/views/model_history.html:11
+#: plugins/xversion.py:181 templates/xadmin/views/model_history.html:11
 #: templates/xadmin/views/revision_diff.html:11
 #: templates/xadmin/views/revision_form.html:15
 msgid "History"
 msgstr ""
 
-#: plugins/xversion.py:225 templates/xadmin/views/recover_form.html:14
+#: plugins/xversion.py:224 templates/xadmin/views/recover_form.html:14
 #: templates/xadmin/views/recover_list.html:10
 #, python-format
 msgid "Recover deleted %(name)s"
 msgstr ""
 
-#: plugins/xversion.py:263
+#: plugins/xversion.py:262
 #, python-format
 msgid "Change history: %s"
 msgstr ""
 
-#: plugins/xversion.py:313
+#: plugins/xversion.py:312
 msgid "Must select two versions."
 msgstr ""
 
-#: plugins/xversion.py:321
+#: plugins/xversion.py:320
 msgid "Please select two different versions."
 msgstr ""
 
-#: plugins/xversion.py:408 plugins/xversion.py:516
+#: plugins/xversion.py:407 plugins/xversion.py:515
 #, python-format
 msgid "Current: %s"
 msgstr ""
 
-#: plugins/xversion.py:440
+#: plugins/xversion.py:439
 #, python-format
 msgid "Revert %s"
 msgstr ""
 
-#: plugins/xversion.py:456
+#: plugins/xversion.py:455
 #, python-format
 msgid ""
 "The %(model)s \"%(name)s\" was reverted successfully. You may edit it again "
 "below."
 msgstr ""
 
-#: plugins/xversion.py:477
+#: plugins/xversion.py:476
 #, python-format
 msgid "Recover %s"
 msgstr ""
 
-#: plugins/xversion.py:493
+#: plugins/xversion.py:492
 #, python-format
 msgid ""
 "The %(model)s \"%(name)s\" was recovered successfully. You may edit it again "
@@ -815,7 +815,7 @@ msgid "Every %(t)s seconds"
 msgstr ""
 
 #: templates/xadmin/edit_inline/blank.html:5 views/detail.py:22
-#: views/edit.py:100 views/list.py:29
+#: views/edit.py:100 views/list.py:28
 msgid "Null"
 msgstr ""
 
@@ -944,7 +944,7 @@ msgstr ""
 msgid "Save and continue editing"
 msgstr ""
 
-#: templates/xadmin/includes/submit_line.html:23
+#: templates/xadmin/includes/submit_line.html:24
 #: templates/xadmin/views/model_detail.html:28 views/delete.py:91
 msgid "Delete"
 msgstr ""
@@ -999,7 +999,7 @@ msgstr ""
 msgid "Log in again"
 msgstr ""
 
-#: templates/xadmin/views/login.html:39 views/website.py:37
+#: templates/xadmin/views/login.html:39 views/website.py:38
 msgid "Please Login"
 msgstr ""
 
@@ -1111,7 +1111,7 @@ msgid "Add %(name)s"
 msgstr ""
 
 #: templates/xadmin/views/model_list.html:39
-msgid "Columes"
+msgid "Columns"
 msgstr ""
 
 #: templates/xadmin/views/model_list.html:42
@@ -1200,47 +1200,47 @@ msgstr ""
 msgid "Django Xadmin"
 msgstr ""
 
-#: views/dashboard.py:186
+#: views/dashboard.py:185
 msgid "Widget ID"
 msgstr ""
 
-#: views/dashboard.py:187
+#: views/dashboard.py:186
 msgid "Widget Title"
 msgstr ""
 
-#: views/dashboard.py:249
+#: views/dashboard.py:248
 msgid "Html Content Widget, can write any html content in widget."
 msgstr ""
 
-#: views/dashboard.py:252
+#: views/dashboard.py:251
 msgid "Html Content"
 msgstr ""
 
-#: views/dashboard.py:315
+#: views/dashboard.py:314
 msgid "Target Model"
 msgstr ""
 
-#: views/dashboard.py:366
+#: views/dashboard.py:365
 msgid "Quick button Widget, quickly open any page."
 msgstr ""
 
-#: views/dashboard.py:368
+#: views/dashboard.py:367
 msgid "Quick Buttons"
 msgstr ""
 
-#: views/dashboard.py:409
+#: views/dashboard.py:408
 msgid "Any Objects list Widget."
 msgstr ""
 
-#: views/dashboard.py:448
+#: views/dashboard.py:447
 msgid "Add any model object Widget."
 msgstr ""
 
-#: views/dashboard.py:482
+#: views/dashboard.py:481
 msgid "Dashboard"
 msgstr ""
 
-#: views/dashboard.py:621
+#: views/dashboard.py:622
 #, python-format
 msgid "%s Dashboard"
 msgstr ""
@@ -1283,24 +1283,24 @@ msgstr ""
 msgid "The %(name)s \"%(obj)s\" was changed successfully."
 msgstr ""
 
-#: views/list.py:198
+#: views/list.py:197
 msgid "Database error"
 msgstr ""
 
-#: views/list.py:372
+#: views/list.py:371
 #, python-format
 msgid "%s List"
 msgstr ""
 
-#: views/list.py:500
+#: views/list.py:499
 msgid "Sort ASC"
 msgstr ""
 
-#: views/list.py:501
+#: views/list.py:500
 msgid "Sort DESC"
 msgstr ""
 
-#: views/list.py:505
+#: views/list.py:504
 msgid "Cancel Sort"
 msgstr ""
 
