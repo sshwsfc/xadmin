@@ -1,8 +1,7 @@
 import xadmin
 from xadmin import views
-from models import *
-from xadmin.layout import *
-
+from models import IDC, Host, MaintainLog, HostGroup, AccessRecord
+from xadmin.layout import Main, TabHolder, Tab, Fieldset, Row, Col, AppendedText, Side
 from xadmin.plugins.inline import Inline
 from xadmin.plugins.batch import BatchChangeAction
 
@@ -30,8 +29,8 @@ xadmin.site.register(views.BaseAdminView, BaseSetting)
 
 
 class GolbeSetting(object):
-    globe_search_models = [Host, IDC]
-    globe_models_icon = {
+    global_search_models = [Host, IDC]
+    global_models_icon = {
         Host: 'laptop', IDC: 'cloud'
     }
 xadmin.site.register(views.CommAdminView, GolbeSetting)
@@ -90,14 +89,14 @@ class HostAdmin(object):
     form_layout = (
         Main(
             TabHolder(
-                Tab('Comm Fiels',
+                Tab('Comm Fields',
                     Fieldset('Company data',
                              'name', 'idc',
                              description="some comm fields, required"
                              ),
                     Inline(MaintainLog),
                     ),
-                Tab('Extend Fiedls',
+                Tab('Extend Fields',
                     Fieldset('Contact details',
                              'service_type',
                              Row('brand', 'model'),

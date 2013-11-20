@@ -1,5 +1,3 @@
-import copy
-
 from django import forms
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
@@ -8,7 +6,7 @@ from django.db.models.base import ModelBase
 from django.forms.forms import DeclarativeFieldsMetaclass
 from django.forms.util import flatatt
 from django.template import loader
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404
 from django.template.context import RequestContext
 from django.test.client import RequestFactory
 from django.utils.encoding import force_unicode, smart_unicode
@@ -25,6 +23,7 @@ from xadmin.views.base import CommAdminView, ModelAdminView, filter_hook, csrf_p
 from xadmin.views.edit import CreateAdminView
 from xadmin.views.list import ListAdminView
 from xadmin.util import unquote
+import copy
 
 
 class WidgetTypeSelect(forms.Widget):
@@ -126,7 +125,7 @@ class UserWidgetAdmin(object):
     def update_dashboard(self, obj):
         try:
             portal_pos = UserSettings.objects.get(
-            user=obj.user, key="dashboard:%s:pos" % obj.page_id)
+                user=obj.user, key="dashboard:%s:pos" % obj.page_id)
         except UserSettings.DoesNotExist:
             return
         pos = [[w for w in col.split(',') if w != str(
@@ -212,7 +211,7 @@ class BaseWidget(forms.Form):
 
     @property
     def widget(self):
-        context = {'widget_id': self.id, 'widget_title': self.title, 
+        context = {'widget_id': self.id, 'widget_title': self.title,
             'widget_type': self.widget_type, 'form': self, 'widget': self}
         self.context(context)
         return loader.render_to_string(self.template, context, context_instance=RequestContext(self.request))
@@ -496,6 +495,7 @@ class Dashboard(CommAdminView):
             else:
                 widget = UserWidget.objects.get(user=self.user, page_id=self.get_page_id(), id=widget_or_id)
             wid = widget_manager.get(widget.widget_type)
+
             class widget_with_perm(wid):
                 def context(self, context):
                     super(widget_with_perm, self).context(context)
@@ -537,7 +537,7 @@ class Dashboard(CommAdminView):
             if len(portal_pos):
                 portal_pos = portal_pos[0].value
                 widgets = []
-                
+
                 if portal_pos:
                     user_widgets = dict([(uw.id, uw) for uw in UserWidget.objects.filter(user=self.user, page_id=self.get_page_id())])
                     for col in portal_pos.split('|'):
@@ -608,13 +608,14 @@ class Dashboard(CommAdminView):
     @filter_hook
     def get_media(self):
         media = super(Dashboard, self).get_media() + \
-            self.vendor( 'xadmin.page.dashboard.js', 'xadmin.page.dashboard.css')
+            self.vendor('xadmin.page.dashboard.js', 'xadmin.page.dashboard.css')
         if self.widget_customiz:
             media = media + self.vendor('xadmin.plugin.portal.js')
         for ws in self.widgets:
             for widget in ws:
                 media = media + widget.media()
         return media
+
 
 class ModelDashboard(Dashboard, ModelAdminView):
 
@@ -636,6 +637,7 @@ class ModelDashboard(Dashboard, ModelAdminView):
         if self.obj is None:
             raise Http404(_('%(name)s object with primary key %(key)r does not exist.') %
                           {'name': force_unicode(self.opts.verbose_name), 'key': escape(object_id)})
+
     @filter_hook
     def get_context(self):
         new_context = {
@@ -651,6 +653,3 @@ class ModelDashboard(Dashboard, ModelAdminView):
     def get(self, request, *args, **kwargs):
         self.widgets = self.get_widgets()
         return self.template_response(self.get_template_list('views/model_dashboard.html'), self.get_context())
-
-
-        

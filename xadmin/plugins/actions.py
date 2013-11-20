@@ -163,7 +163,7 @@ class ActionPlugin(BaseAdminPlugin):
         # Actions with no confirmation
         if self.actions and 'action' in request.POST:
             action = request.POST['action']
-            
+
             if action not in self.actions:
                 msg = _("Items must be selected in order to perform "
                         "actions on them. No items have been changed.")

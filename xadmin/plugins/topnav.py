@@ -11,8 +11,8 @@ from xadmin.views import BaseAdminPlugin, CommAdminView
 
 class TopNavPlugin(BaseAdminPlugin):
 
-    globe_search_models = None
-    globe_add_models = None
+    global_search_models = None
+    global_add_models = None
 
     def get_context(self, context):
         return context
@@ -22,7 +22,7 @@ class TopNavPlugin(BaseAdminPlugin):
         search_models = []
 
         site_name = self.admin_site.name
-        models = self.globe_search_models or self.admin_site._registry.keys()
+        models = self.global_search_models or self.admin_site._registry.keys()
 
         for model in models:
             app_label = model._meta.app_label
@@ -45,10 +45,9 @@ class TopNavPlugin(BaseAdminPlugin):
         add_models = []
 
         site_name = self.admin_site.name
-        models = self.globe_search_models or self.admin_site._registry.keys()
+        models = self.global_search_models or self.admin_site._registry.keys()
 
-
-        models = self.globe_add_models or self.admin_site._registry.keys()
+        models = self.global_add_models or self.admin_site._registry.keys()
         for model in models:
             app_label = model._meta.app_label
 

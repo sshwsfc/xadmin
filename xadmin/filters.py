@@ -1,5 +1,3 @@
-import datetime
-
 from django.db import models
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.encoding import smart_unicode
@@ -8,16 +6,17 @@ from django.utils import timezone
 from django.template.loader import get_template
 from django.template.context import Context
 from django.utils.safestring import mark_safe
-from django.utils.html import escape
+from django.utils.html import escape,format_html
 from django.utils.text import Truncator
 
 from xadmin.views.list import EMPTY_CHANGELIST_VALUE
+import datetime
 
 FILTER_PREFIX = '_p_'
 SEARCH_VAR = '_q_'
 
 from util import (get_model_from_relation,
-                  reverse_field_path, get_limit_choices_to_from_path, prepare_lookup_value)
+    reverse_field_path, get_limit_choices_to_from_path, prepare_lookup_value)
 
 
 class BaseFilter(object):
@@ -335,6 +334,11 @@ class RelatedFieldSearchFilter(FieldFilter):
         self.search_url = model_admin.get_admin_url('%s_%s_changelist' % (
             other_model._meta.app_label, other_model._meta.module_name))
         self.label = self.label_for_value(other_model, rel_name, self.lookup_exact_val) if self.lookup_exact_val else ""
+        self.choices = '?'
+        if field.rel.limit_choices_to:
+            for i in list(field.rel.limit_choices_to):
+                self.choices += "&_p_%s=%s" % (i, field.rel.limit_choices_to[i])
+            self.choices = format_html(self.choices)
 
     def label_for_value(self, other_model, rel_name, value):
         try:
@@ -347,6 +351,7 @@ class RelatedFieldSearchFilter(FieldFilter):
         context = super(RelatedFieldSearchFilter, self).get_context()
         context['search_url'] = self.search_url
         context['label'] = self.label
+        context['choices'] = self.choices
         return context
 
 

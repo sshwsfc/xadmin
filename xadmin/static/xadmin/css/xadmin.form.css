@@ -100,7 +100,7 @@ select.selectmultiple {
   select.selectmultiple {
     max-width: 350px;
   }
-  .select2-container{
+  .select2-container, .selectize-control{
     max-width: 300px;
   }
 

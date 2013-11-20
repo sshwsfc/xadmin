@@ -29,11 +29,12 @@ class AdminDateWidget(forms.DateInput):
         return mark_safe('<div class="input-group date bootstrap-datepicker"><span class="input-group-addon"><i class="icon-calendar"></i></span>%s'
                          '<span class="input-group-btn"><button class="btn btn-default" type="button">%s</button></span></div>' % (input_html, _(u'Today')))
 
+
 class AdminTimeWidget(forms.TimeInput):
 
     @property
     def media(self):
-        return vendor('timepicker.js', 'timepicker.css', 'xadmin.widget.datetime.js')
+        return vendor('datepicker.js','timepicker.js', 'timepicker.css', 'xadmin.widget.datetime.js')
 
     def __init__(self, attrs=None, format=None):
         final_attrs = {'class': 'time-field', 'size': '8'}
@@ -46,11 +47,12 @@ class AdminTimeWidget(forms.TimeInput):
         return mark_safe('<div class="input-group time bootstrap-timepicker"><span class="input-group-addon"><i class="icon-time">'
                          '</i></span>%s<span class="input-group-btn"><button class="btn btn-default" type="button">%s</button></span></div>' % (input_html, _(u'Now')))
 
+
 class AdminSelectWidget(forms.Select):
 
     @property
     def media(self):
-        return vendor('select2.js', 'select2.css', 'xadmin.widget.select.js')
+        return vendor('select.js', 'select.css', 'xadmin.widget.select.js')
 
 
 class AdminSplitDateTime(forms.SplitDateTimeWidget):
@@ -134,13 +136,14 @@ class AdminCheckboxSelect(forms.CheckboxSelectMultiple):
                 output.append(u'<div class="checkbox"><label%s>%s %s</label></div>' % (label_for, rendered_cb, option_label))
         return mark_safe(u'\n'.join(output))
 
+
 class AdminSelectMultiple(forms.SelectMultiple):
     def __init__(self, attrs=None):
         final_attrs = {'class': 'select-multi'}
         if attrs is not None:
             final_attrs.update(attrs)
         super(AdminSelectMultiple, self).__init__(attrs=final_attrs)
-        
+
 
 class AdminFileWidget(forms.ClearableFileInput):
     template_with_initial = (u'<p class="file-upload">%s</p>'

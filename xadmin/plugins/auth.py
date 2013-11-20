@@ -8,17 +8,14 @@ from django.template.response import TemplateResponse
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect
 from django.utils.html import escape
-from django.utils.translation import ugettext_lazy as _
-from django.views.decorators.csrf import csrf_protect
+from django.utils.translation import ugettext as _
 from django.views.decorators.debug import sensitive_post_parameters
 from django.forms import ModelMultipleChoiceField
 from xadmin.layout import Fieldset, Main, Side, Row, FormHelper
 from xadmin.sites import site
 from xadmin.util import unquote, User
-from xadmin.views import BaseAdminPlugin, ModelFormAdminView, ModelAdminView, CommAdminView
+from xadmin.views import BaseAdminPlugin, ModelFormAdminView, ModelAdminView, CommAdminView, csrf_protect_m
 
-
-csrf_protect_m = method_decorator(csrf_protect)
 
 ACTION_NAME = {
     'add': _('Can add %s'),
@@ -28,17 +25,19 @@ ACTION_NAME = {
     'view': _('Can view %s'),
 }
 
-def get_perssmsion_name(p):
+
+def get_permission_name(p):
     action = p.codename.split('_')[0]
     if action in ACTION_NAME:
         return ACTION_NAME[action] % str(p.content_type)
     else:
         return p.name
 
+
 class PermissionModelMultipleChoiceField(ModelMultipleChoiceField):
 
     def label_from_instance(self, p):
-        return get_perssmsion_name(p)
+        return get_permission_name(p)
 
 
 class GroupAdmin(object):
@@ -63,7 +62,7 @@ class UserAdmin(object):
     style_fields = {'user_permissions': 'm2m_transfer'}
     model_icon = 'user'
     relfield_style = 'fk-ajax'
-    
+
     def get_field_attrs(self, db_field, **kwargs):
         attrs = super(UserAdmin, self).get_field_attrs(db_field, **kwargs)
         if db_field.name == 'user_permissions':
@@ -108,7 +107,7 @@ class UserAdmin(object):
 class PermissionAdmin(object):
 
     def show_name(self, p):
-        return get_perssmsion_name(p)
+        return get_permission_name(p)
     show_name.short_description = _('Permission Name')
     show_name.is_column = True
 
@@ -167,6 +166,7 @@ class ChangePasswordView(ModelAdminView):
     change_password_form = AdminPasswordChangeForm
     change_user_password_template = None
 
+    @csrf_protect_m
     def get(self, request, object_id):
         if not self.has_change_permission(request):
             raise PermissionDenied
@@ -201,7 +201,8 @@ class ChangePasswordView(ModelAdminView):
             'xadmin/auth/user/change_password.html'
         ], self.get_context(), current_app=self.admin_site.name)
 
-    @sensitive_post_parameters()
+    @method_decorator(sensitive_post_parameters())
+    @csrf_protect_m
     def post(self, request, object_id):
         if not self.has_change_permission(request):
             raise PermissionDenied
@@ -219,6 +220,7 @@ class ChangePasswordView(ModelAdminView):
 class ChangeAccountPasswordView(ChangePasswordView):
     change_password_form = PasswordChangeForm
 
+    @csrf_protect_m
     def get(self, request):
         self.obj = self.user
         self.form = self.change_password_form(self.obj)
@@ -233,7 +235,8 @@ class ChangeAccountPasswordView(ChangePasswordView):
         })
         return context
 
-    @sensitive_post_parameters()
+    @method_decorator(sensitive_post_parameters())
+    @csrf_protect_m
     def post(self, request):
         self.obj = self.user
         self.form = self.change_password_form(self.obj, request.POST)

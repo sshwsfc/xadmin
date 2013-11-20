@@ -13,6 +13,7 @@
     "load-image": "blueimp/JavaScript-Load-Image",
     "bootstrap-image-gallery": "blueimp/Bootstrap-Image-Gallery",
     "select2": ">=3.3.2",
+    "selectize": ">=0.8.4",
     "datejs": "datejs/Datejs",
     "bootstrap-multiselect": "davidstutz/bootstrap-multiselect"
   }

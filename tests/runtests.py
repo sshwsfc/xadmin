@@ -5,9 +5,11 @@ import sys
 import tempfile
 
 TEST_ROOT = os.path.realpath(os.path.dirname(__file__))
-sys.path.insert(0, os.path.join(TEST_ROOT, os.pardir))
-
 RUNTESTS_DIR = os.path.join(TEST_ROOT, 'xtests')
+
+sys.path.insert(0, os.path.join(TEST_ROOT, os.pardir))
+sys.path.insert(0, RUNTESTS_DIR)
+
 TEST_TEMPLATE_DIR = 'templates'
 TEMP_DIR = tempfile.mkdtemp(prefix='django_')
 os.environ['DJANGO_TEST_TEMP_DIR'] = TEMP_DIR

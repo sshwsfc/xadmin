@@ -27,6 +27,7 @@ class WizardFormPlugin(BaseAdminPlugin):
     initial_dict = None
     instance_dict = None
     condition_dict = None
+    file_storage = None
 
     def _get_form_prefix(self, step=None):
         if step is None:

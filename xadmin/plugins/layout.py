@@ -23,6 +23,7 @@ DEFAULT_LAYOUTS = {
     },
 }
 
+
 class GridLayoutPlugin(BaseAdminPlugin):
 
     grid_layouts = []
@@ -51,10 +52,11 @@ class GridLayoutPlugin(BaseAdminPlugin):
     def result_item(self, item, obj, field_name, row):
         if self._current_layout == 'thumbnails':
             if getattr(item.attr, 'is_column', True):
-                item.field_label = label_for_field(field_name, self.model,
-                                     model_admin=self.admin_view,
-                                     return_attr=False
-                                     )
+                item.field_label = label_for_field(
+                    field_name, self.model,
+                    model_admin=self.admin_view,
+                    return_attr=False
+                )
             if getattr(item.attr, 'thumbnail_img', False):
                 setattr(item, 'thumbnail_hidden', True)
                 row['thumbnail_img'] = item

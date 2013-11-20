@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-from setuptools import setup, find_packages
+from setuptools import setup
 
 # version_tuple = __import__('xadmin.version').VERSION
 # version = ".".join([str(v) for v in version_tuple])
 
 setup(
     name='django-xadmin',
-    version='0.4.0',
+    version='0.4.2',
     description='Drop-in replacement of Django admin comes with lots of goodies, fully extensible with plugin support, pretty UI based on Twitter Bootstrap.',
     long_description=open('README.rst').read(),
     author='sshwsfc',
@@ -18,7 +18,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'setuptools',
-        'django>=1.4',
+        'django>=1.5',
         'django-crispy-forms>=1.4.0',
     ],
     extras_require={

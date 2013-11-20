@@ -1,6 +1,5 @@
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.core.paginator import InvalidPage, Paginator
-from django.core.urlresolvers import reverse
 from django.db import models
 from django.http import HttpResponseRedirect
 from django.template.response import SimpleTemplateResponse, TemplateResponse
@@ -605,8 +604,7 @@ class ListAdminView(ModelAdminView):
     def get_media(self):
         media = super(ListAdminView, self).get_media() + self.vendor('xadmin.page.list.js', 'xadmin.page.form.js')
         if self.list_display_links_details:
-            media += self.vendor('xadmin.plugin.details.js',
-                                 'xadmin.modal.css', 'xadmin.form.css')
+            media += self.vendor('xadmin.plugin.details.js', 'xadmin.form.css')
         return media
 
     # Blocks

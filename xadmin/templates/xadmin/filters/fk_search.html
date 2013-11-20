@@ -10,7 +10,7 @@
       <form class="exform" method="get" action="">
         {{ form_params|safe }}
           <input name="{{exact_name}}" class="select-search" type="hidden" value="{{exact_val}}" 
-          data-search-url="{{search_url}}" data-label="{{label}}"
+          data-search-url="{{search_url}}" data-label="{{label}} " data-choices="{{ choices }}"
           data-placeholder="{% trans "Search" %} {{title}}…"/>
 
           <button type="submit" class="btn btn-success">{% trans "Apply" %}</button>

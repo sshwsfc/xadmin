@@ -5,10 +5,12 @@ jQuery(function($){
             // reset
             $('#left-side, ul.breadcrumb').show('fast');
             $('#content-block').removeClass('col-md-12 col-sm-12 full-content').addClass('col-sm-11 col-md-10');
+            $(window).trigger('resize');
         } else {
             // full screen
             $('#left-side, ul.breadcrumb').hide('fast', function(){
                 $('#content-block').removeClass('col-sm-11 col-md-10').addClass('col-md-12 col-sm-12 full-content');
+                $(window).trigger('resize');
             });
         }
     });
