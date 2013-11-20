@@ -156,7 +156,7 @@
 
     var off_check_box = Object();
     this.$form.find('input[type=checkbox]').each(function(){
-      if(!$(this).attr('checked')){
+      if(!$(this).is(':checked')){
         off_check_box[$(this).attr('name')] = ''
       }
     })
