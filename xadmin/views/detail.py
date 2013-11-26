@@ -229,8 +229,6 @@ class DetailAdminView(ModelAdminView):
 
     @filter_hook
     def get_context(self):
-        ordered_objects = self.opts.get_ordered_objects()
-
         new_context = {
             'title': _('%s Detail') % force_unicode(self.opts.verbose_name),
             'form': self.form_obj,
@@ -240,7 +238,6 @@ class DetailAdminView(ModelAdminView):
             'has_change_permission': self.has_change_permission(self.obj),
             'has_delete_permission': self.has_delete_permission(self.obj),
 
-            'ordered_objects': ordered_objects,
             'content_type_id': ContentType.objects.get_for_model(self.model).id,
         }
 
