@@ -5,13 +5,14 @@ from list import ListAdminView
 from edit import CreateAdminView, UpdateAdminView, ModelFormAdminView
 from delete import DeleteAdminView
 from detail import DetailAdminView
+from form import FormAdminView
 from dashboard import Dashboard, BaseWidget, widget_manager, ModelDashboard
 from website import IndexView, LoginView, LogoutView, UserSettingView
 
 __all__ = (
     'BaseAdminObject',
     'BaseAdminPlugin', 'BaseAdminView', 'CommAdminView', 'ModelAdminView', 'ListAdminView',
-    'ModelFormAdminView', 'CreateAdminView', 'UpdateAdminView', 'DeleteAdminView', 'DetailAdminView',
+    'ModelFormAdminView', 'CreateAdminView', 'UpdateAdminView', 'DeleteAdminView', 'DetailAdminView', 'FormAdminView',
     'Dashboard', 'BaseWidget',
     'IndexView', 'LoginView', 'LogoutView',
     'filter_hook', 'csrf_protect_m'
