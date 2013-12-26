@@ -30,8 +30,8 @@ xadmin.site.register(views.BaseAdminView, BaseSetting)
 
 
 class GlobalSetting(object):
-    global_search_models = [Host, IDC]
-    global_models_icon = {
+    globe_search_models = [Host, IDC]
+    globe_models_icon = {
         Host: 'laptop', IDC: 'cloud'
     }
 xadmin.site.register(views.CommAdminView, GlobalSetting)
