@@ -29,12 +29,12 @@ class BaseSetting(object):
 xadmin.site.register(views.BaseAdminView, BaseSetting)
 
 
-class GlobeSetting(object):
-    globe_search_models = [Host, IDC]
-    globe_models_icon = {
+class GlobalSetting(object):
+    global_search_models = [Host, IDC]
+    global_models_icon = {
         Host: 'laptop', IDC: 'cloud'
     }
-xadmin.site.register(views.CommAdminView, GlobeSetting)
+xadmin.site.register(views.CommAdminView, GlobalSetting)
 
 
 class MaintainInline(object):
