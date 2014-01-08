@@ -1,105 +1,228 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh_cn">
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="assets/ico/favicon.png">
 
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <title>Xadmin - 管理系统从未如此简单</title>
 
-    <title>Django-xadmin by sshwsfc</title>
+    <!-- Bootstrap core CSS -->
+    <link href="dist/css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+    <!--[if lte IE 7]><script src="lte-ie7.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="assets/js/html5shiv.js"></script>
+      <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Custom styles for this template -->
+    <link href="assets/css/main.css" rel="stylesheet">
   </head>
-
+<!-- NAVBAR
+================================================== -->
   <body>
-
-    <header>
+    <div class="navbar-wrapper">
       <div class="container">
-        <h1>Django-xadmin</h1>
-        <h2>New style and free plugin django admin module, UI base bootstrap2</h2>
 
-        <section id="downloads">
-          <a href="https://github.com/sshwsfc/django-xadmin/zipball/master" class="btn">Download as .zip</a>
-          <a href="https://github.com/sshwsfc/django-xadmin/tarball/master" class="btn">Download as .tar.gz</a>
-          <a href="https://github.com/sshwsfc/django-xadmin" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
-        </section>
+        <div class="navbar-inverse navbar-default navbar-fixed-top">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="#">Xadmin</a>
+            </div>
+            <div class="navbar-collapse collapse">
+              <ul class="nav navbar-nav">
+                <li><a href="#features">特性</a></li>
+                <li><a href="http://demo.xadmin.io">示例</a></li>
+                <li><a href="http://docs.xadmin.io">文档</a></li>
+                <li><a href="http://apps.xadmin.io">Xadmin云</a></li>
+                <li><a href="http://github.com/sshwsfc/django-xadmin">GITHUB</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
       </div>
-    </header>
-
-    <div class="container">
-      <section id="main_content">
-        <h1>django-xadmin <a href="https://travis-ci.org/sshwsfc/django-xadmin"><img src="https://travis-ci.org/sshwsfc/django-xadmin.png?branch=master" alt="Build Status"></a>
-</h1>
-
-<p>Drop-in replacement of Django admin comes with lots of goodies, fully extensible with plugin support, pretty UI based on Twitter Bootstrap.</p>
-
-<h2>Live Demo</h2>
-
-<p><a href="http://demo.xadmin.io">http://demo.xadmin.io</a></p>
-
-<ul>
-<li>User: admin</li>
-<li>Password: admin</li>
-</ul><h2>Features</h2>
-
-<ul>
-<li>Drop-in replacement of Django admin</li>
-<li>Twitter Bootstrap based UI with theme support</li>
-<li>Extensible with plugin support</li>
-<li>Better filter, date range, number range, etc.</li>
-<li>Built-in data export with xls, csv, xml and json format</li>
-<li>Dashboard page with widget support</li>
-<li>In-site bookmarking</li>
-<li>Full CRUD methods</li>
-</ul><h2>Screenshots</h2>
-
-<p><img src="https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/docs/images/plugins/action.png" alt="Actions"></p>
-
-<p><img src="https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/docs/images/plugins/filter.png" alt="Filter"></p>
-
-<p><img src="https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/docs/images/plugins/chart.png" alt="Chart"></p>
-
-<p><img src="https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/docs/images/plugins/export.png" alt="Export Data"></p>
-
-<p><img src="https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/docs/images/plugins/editable.png" alt="Edit inline"></p>
-
-<h2>Get Started</h2>
-
-<p><strong>Install</strong></p>
-
-<p>Xadmin is best installed via PyPI. To install the latest version, run:</p>
-
-<div class="highlight"><pre>pip install django-xadmin
-</pre></div>
-
-<p>or Install from github source:</p>
-
-<div class="highlight"><pre>pip install git+git://github.com/sshwsfc/django-xadmin.git
-</pre></div>
-
-<h2>Documentation</h2>
-
-<ul>
-<li>English (coming soon)</li>
-<li><a href="https://xadmin.readthedocs.org/en/latest/index.html">Chinese</a></li>
-</ul><h2>Online Group</h2>
-
-<ul>
-<li>QQ群 : 282936295</li>
-</ul><h2>Run Demo Locally</h2>
-
-<div class="highlight"><pre><span class="nb">cd </span>demo_app
-./manage.py runserver
-</pre></div>
-
-<p>Open <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a> in your browser, the admin user password is <code>admin</code></p>
-
-<h2>Help</h2>
-
-<p>Help Translate : <a href="http://trans.xadmin.io">http://trans.xadmin.io</a></p>
-      </section>
     </div>
 
-    
+
+    <!-- Carousel
+    ================================================== -->
+    <div id="myCarousel" class="carousel slide">
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
+      </ol>
+      <div class="carousel-inner">
+        <div class="item active main">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>打造管理系统从未如此简单</h1>
+              <p>使用 Xadmin 您只需定义您数据的字段等信息，即可即刻获得一个功能全面的管理系统。不仅如此，您还可以方便的扩展更多的定制功能和系统界面。</p>
+            </div>
+            <img src="imgs/overview_main_2x.png" alt="Python和Django">
+          </div>
+        </div>
+        <div class="item">
+          <img src="imgs/overview_langs_2x.png" alt="Python和Django">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>基于 Python/Django 天生灵巧</h1>
+              <p>Xadmin 采用Python语言编写，框架层基于最成熟的Web框架 Django。天生功能完备，灵巧多变，可以轻松愉快的扩展出各种各样的插件功能。</p>
+              <p><a class="btn btn-large btn-primary" href="http://docs.xadmin.io">Xadmin的系统介绍</a></p>
+            </div>
+          </div>
+        </div>
+        <div class="item thrid">
+          <!--img src="" alt="Xadmin与社区"-->
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>免费开源，完善的文档及社区支持</h1>
+              <p>Xadmin从诞生起就是完全免费的开源软件，今后也会免费开源。已经有成百上千来自世界各地的开发者加入到Xadmin的使用和开发中，你也一起如何？</p>
+              <p><a class="btn btn-large btn-primary" href="http://github.com/sshwsfc/django-xadmin">立即查看源码</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <a class="left carousel-control" href="#myCarousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+      <a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+    </div><!-- /.carousel -->
+
+
+
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+
+    <div id="features" class="container marketing">
+
+      <!-- Three columns of text below the carousel -->
+      <div class="row text-center">
+        <div class="col-md-4">
+          <h1 class="img-circle"><i class="icon-picture"></i></h1>
+          <h2>基于Bootstrap3</h2>
+          <p>Xadmin使用Bootstrap3.0框架精心打造。基于Bootstrap3，Xadmin天生就支持在多种屏幕上无缝浏览，并完全支持Bootstrap主题模板，让您的管理后台也动感、多样起来。</p>
+          <p><a class="btn btn-default" href="#">UI体系介绍 &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+        <div class="col-md-4">
+          <h1 class="img-circle"><i class="icon-dashboard"></i></h1>
+          <h2>内置功能丰富</h2>
+          <p>Xadmin作为一款全面的后台管理系统框架，不仅提供了基本的CRUD功能，还内置了丰富的插件功能。包括数据导出、书签、图表、数据添加向导及图片相册等多种扩展功能。</p>
+          <p><a class="btn btn-default" href="#">内置插件介绍 &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+        <div class="col-md-4">
+          <h1 class="img-circle"><i class="icon-puzzle"></i></h1>
+          <h2>真心强大的插件系统</h2>
+          <p>Xadmin的插件系统借鉴了其他领域成功框架的设计思想，让插件可以扩展系统的任何一个功能点。对于开发者，Xadmin的插件开发简单；对于使用者，Xadmin的插件安装方便。</p>
+          <p><a class="btn btn-default" href="#">如何制作插件 &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+      </div><!-- /.row -->
+
+
+      <!-- START THE FEATURETTES -->
+
+      <hr class="featurette-divider">
+
+      <div class="row featurette">
+        <div class="col-md-5">
+          <img class="featurette-image img-responsive" src="imgs/feature_plugins.jpg">
+        </div>
+        <div class="col-md-7">
+          <h2 class="featurette-heading">丰富的内置插件功能 <span class="text-muted">基本满足管理系统的方方面面</span></h2>
+          <p class="lead">Xadmin已经包含数据导出、书签、数据添加向导等十余项扩展功能。并且功能还在增加中。没有您急需的功能？没关系您可以到社区寻求帮助。</p>
+        </div>
+      </div>
+
+      <hr class="featurette-divider">
+
+      <div class="row featurette">
+        <div class="col-md-5 col-md-push-7">
+          <img class="featurette-image img-responsive" src="imgs/feature_filters.jpg">
+        </div>
+        <div class="col-md-7 col-md-pull-5">
+          <h2 class="featurette-heading">强大的过滤器功能 <span class="text-muted">数据筛选，面面俱到</span></h2>
+          <p class="lead">数据筛选是Xadmin的强项。通过Xadmin的过滤器，您可以使用模糊查找，数字范围查找，日期范围查找等多种高级查找方式。并且可以将您的查询结果存为书签方便今后使用。</p>
+        </div>
+      </div>
+
+      <hr class="featurette-divider">
+
+      <div class="row featurette">
+        <div class="col-md-5">
+          <img class="featurette-image img-responsive" src="imgs/feature_responsive.jpg">
+        </div>
+        <div class="col-md-7">
+          <h2 class="featurette-heading">在多种屏幕上完美浏览及操作 <span class="text-muted">UI的优势与生俱来</span></h2>
+          <p class="lead">基于Bootstrap3，一切都变的神奇。Xadmin完美支持各种屏幕浏览，包括PC桌面，PAD浏览及手机浏览。让您的系统使用各种环境下的使用要求。</p>
+        </div>
+      </div>
+
+      <hr class="featurette-divider">
+
+      <div class="row featurette">
+        <div class="col-md-5 col-md-push-7">
+          <img class="featurette-image img-responsive" src="imgs/feature_themes.jpg">
+        </div>
+        <div class="col-md-7 col-md-pull-5">
+          <h2 class="featurette-heading">预先提供多种界面主题，更可以自己定制 <span class="text-muted">管理系统也要绚丽多变</span></h2>
+          <p class="lead">使用统一的UI框架天生就具备灵活的界面扩展性。Xadmin支持基于 Bootstrap3 的系统主题，当然您也可以自己制作主题，让您的系统天生多彩。</p>
+        </div>
+      </div>
+
+      <hr class="featurette-divider">
+
+      <div class="row featurette">
+        <div class="col-md-5">
+          <img class="featurette-image img-responsive" src="data:image/png;base64," data-src="holder.js/500x500/auto" alt="Generic placeholder image">
+        </div>
+        <div class="col-md-7">
+          <h2 class="featurette-heading">完善的系统权限 <span class="text-muted">可配置，可定制，安全可靠</span></h2>
+          <p class="lead">全新打造的Xadmin安全系统，控制粒度可以精细到每行数据，甚至每个字段，结合角色及用户组，几乎可以胜任任何变态的权限系统要求。</p>
+        </div>
+      </div>
+
+      <hr class="featurette-divider">
+
+      <div class="row featurette">
+        <div class="col-md-5 col-md-push-7">
+          <img class="featurette-image img-responsive" src="data:image/png;base64," data-src="holder.js/500x500/auto" alt="Generic placeholder image">
+        </div>
+        <div class="col-md-7 col-md-pull-5">
+          <h2 class="featurette-heading">编写简单即时生效 <span class="text-muted">这就是你想要的</span></h2>
+          <p class="lead">Xadmin根据代码及时生成管理系统，并非采用模板方式。开发过程中代码修改即可及时查看修改后的效果。</p>
+        </div>
+      </div>
+
+      <hr class="featurette-divider">
+
+      <!-- /END THE FEATURETTES -->
+
+
+      <!-- FOOTER -->
+      <footer>
+        <p class="pull-right"><a href="#">回到顶部</a></p>
+        <p>&copy; 2014 Xadmin.io &middot; </p>
+      </footer>
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="assets/js/jquery.js"></script>
+    <script src="dist/js/bootstrap.min.js"></script>
+    <script src="assets/js/holder.js"></script>
   </body>
 </html>
