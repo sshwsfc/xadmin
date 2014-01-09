@@ -33,7 +33,7 @@
 {% block content %}
   <div class="content-toolbar btn-toolbar pull-right clearfix">
     {% view_block 'top_toolbar' %}
-    {% block toolbar_columes %}
+    {% block toolbar_column %}
     <div class="btn-group">
       <a class="dropdown-toggle btn btn-default btn-sm" data-toggle="dropdown" href="#">
         <i class="icon-list-alt"></i> {% trans "Columns" %} <span class="caret"></span>
@@ -48,7 +48,7 @@
         {% endfor %}
       </ul>
     </div>
-    {% endblock toolbar_columes %}
+    {% endblock toolbar_column %}
     {% block toolbar_layouts %}
     <div class="btn-group layout-btns" data-toggle="buttons">
       <label class="btn btn-default btn-sm layout-normal active">

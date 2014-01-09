@@ -146,7 +146,8 @@ class ListAdminView(ModelAdminView):
         """
         Return a sequence containing the fields to be displayed on the list.
         """
-        self.base_list_display = COL_LIST_VAR in self.request.GET and self.request.GET[COL_LIST_VAR].split('.') or self.list_display
+        self.base_list_display = (COL_LIST_VAR in self.request.GET and self.request.GET[COL_LIST_VAR] != "" and \
+            self.request.GET[COL_LIST_VAR].split('.')) or self.list_display
         return list(self.base_list_display)
 
     @filter_hook

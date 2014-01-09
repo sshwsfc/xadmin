@@ -1175,7 +1175,7 @@ msgstr "Agregar %(name)s"
 #: templates/xadmin/views/model_list.html:39
 #, fuzzy
 msgid "Columns"
-msgstr "Seleccionar columes."
+msgstr "Seleccionar columns."
 
 #: templates/xadmin/views/model_list.html:42
 msgid "Restore Selected"
