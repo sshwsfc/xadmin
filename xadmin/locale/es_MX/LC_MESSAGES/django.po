@@ -14,11 +14,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xadmin-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-14 13:45-0500\n"
+"POT-Creation-Date: 2014-01-10 10:31+0800\n"
 "PO-Revision-Date: 2013-05-12 18:45+0000\n"
 "Last-Translator: sacrac <crocha09.09@gmail.com>\n"
-"Language-Team: Spanish (Mexico) (http://www.transifex.com/projects/p/xadmin/"
-"language/es_MX/)\n"
+"Language-Team: Spanish (Mexico) (http://www.transifex.com/projects/p/xadmin/language/es_MX/)\n"
 "Language: es_MX\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,12 +71,8 @@ msgid "This year"
 msgstr "Este año"
 
 #: forms.py:10
-msgid ""
-"Please enter the correct username and password for a staff account. Note "
-"that both fields are case-sensitive."
-msgstr ""
-"Por favor, introduzca el nombre de usuario y contraseña correctos de su "
-"cuenta. Note que ambos campos son sensibles a mayúsculas y minúsculas."
+msgid "Please enter the correct username and password for a staff account. Note that both fields are case-sensitive."
+msgstr "Por favor, introduzca el nombre de usuario y contraseña correctos de su cuenta. Note que ambos campos son sensibles a mayúsculas y minúsculas."
 
 #: forms.py:21
 msgid "Please log in again, because your session has expired."
@@ -86,8 +81,7 @@ msgstr "Por favor, ingrese de nuevo, debido a que su sesión ha caducado."
 #: forms.py:41
 #, python-format
 msgid "Your e-mail address is not your username. Try '%s' instead."
-msgstr ""
-"Tu dirección de correo no es tu nombre de usuario. Prueba '%s'  nuevamente."
+msgstr "Tu dirección de correo no es tu nombre de usuario. Prueba '%s'  nuevamente."
 
 #: models.py:47
 msgid "Title"
@@ -189,12 +183,8 @@ msgid "0 of %(cnt)s selected"
 msgstr "0 de %(cnt)s seleccionado"
 
 #: plugins/actions.py:168 plugins/actions.py:178
-msgid ""
-"Items must be selected in order to perform actions on them. No items have "
-"been changed."
-msgstr ""
-"Los articulos deben de ser seleccionados en orden para realizar la acción. "
-"No existen artículos que han cambiado"
+msgid "Items must be selected in order to perform actions on them. No items have been changed."
+msgstr "Los articulos deben de ser seleccionados en orden para realizar la acción. No existen artículos que han cambiado"
 
 #: plugins/aggregation.py:14
 msgid "Min"
@@ -287,17 +277,17 @@ msgstr "Cambiar contraseña"
 msgid "Change this field"
 msgstr "Historial de cambios: %s"
 
-#: plugins/batch.py:68
+#: plugins/batch.py:65
 #, python-format
 msgid "Batch Change selected %(verbose_name_plural)s"
 msgstr "Cambio de grupo seleccionado %(verbose_name_plural)s"
 
-#: plugins/batch.py:93
+#: plugins/batch.py:90
 #, fuzzy, python-format
 msgid "Successfully change %(count)d %(items)s."
 msgstr "Correctamente eliminado %(count)d %(items)s."
 
-#: plugins/batch.py:141
+#: plugins/batch.py:138
 #, fuzzy, python-format
 msgid "Batch change %s"
 msgstr "Cambiar %s"
@@ -309,9 +299,7 @@ msgstr "Marcador"
 
 #: plugins/bookmark.py:173
 msgid "Bookmark Widget, can show user's bookmark list data in widget."
-msgstr ""
-"Widget de marcador, puede mostrar datos de la lista de favoritos del usuario "
-"en el widget."
+msgstr "Widget de marcador, puede mostrar datos de la lista de favoritos del usuario en el widget."
 
 #: plugins/chart.py:24
 msgid "Show models simple chart."
@@ -365,7 +353,7 @@ msgid_plural "%(count)s comments were successfully %(action)s."
 msgstr[0] ""
 msgstr[1] ""
 
-#: plugins/details.py:52 views/list.py:575
+#: plugins/details.py:52 views/list.py:576
 #, python-format
 msgid "Details of %s"
 msgstr "Detalles de %s"
@@ -461,88 +449,80 @@ msgstr "Tema bootstrap por defecto"
 msgid "Add %s"
 msgstr "Añadir %s"
 
-#: plugins/xversion.py:129
+#: plugins/xversion.py:130
 msgid "Initial version."
 msgstr "Versión inicial."
 
-#: plugins/xversion.py:131
+#: plugins/xversion.py:132
 msgid "Change version."
 msgstr "Cambiar la versión."
 
-#: plugins/xversion.py:133
+#: plugins/xversion.py:134
 msgid "Revert version."
 msgstr "Revertir la versión."
 
-#: plugins/xversion.py:135
+#: plugins/xversion.py:136
 msgid "Rercover version."
 msgstr "Recuperar versión"
 
-#: plugins/xversion.py:137
+#: plugins/xversion.py:138
 #, python-format
 msgid "Deleted %(verbose_name)s."
 msgstr "Borrado %(verbose_name)s."
 
-#: plugins/xversion.py:165 templates/xadmin/views/recover_form.html:26
+#: plugins/xversion.py:166 templates/xadmin/views/recover_form.html:26
 msgid "Recover"
 msgstr "Recuperar"
 
-#: plugins/xversion.py:181 templates/xadmin/views/model_history.html:11
+#: plugins/xversion.py:182 templates/xadmin/views/model_history.html:11
 #: templates/xadmin/views/revision_diff.html:11
 #: templates/xadmin/views/revision_form.html:15
 msgid "History"
 msgstr "Historico"
 
-#: plugins/xversion.py:224 templates/xadmin/views/recover_form.html:14
+#: plugins/xversion.py:225 templates/xadmin/views/recover_form.html:14
 #: templates/xadmin/views/recover_list.html:10
 #, python-format
 msgid "Recover deleted %(name)s"
 msgstr "Recuperar borrado %(name)s"
 
-#: plugins/xversion.py:262
+#: plugins/xversion.py:263
 #, python-format
 msgid "Change history: %s"
 msgstr "Historial de cambios: %s"
 
-#: plugins/xversion.py:312
+#: plugins/xversion.py:313
 msgid "Must select two versions."
 msgstr "Debe seleccionar dos versiones."
 
-#: plugins/xversion.py:320
+#: plugins/xversion.py:321
 msgid "Please select two different versions."
 msgstr "Por favor seleccione dos versiones diferente."
 
-#: plugins/xversion.py:407 plugins/xversion.py:515
+#: plugins/xversion.py:408 plugins/xversion.py:516
 #, python-format
 msgid "Current: %s"
 msgstr "Actual: %s"
 
-#: plugins/xversion.py:439
+#: plugins/xversion.py:440
 #, python-format
 msgid "Revert %s"
 msgstr "Revertir %s"
 
-#: plugins/xversion.py:455
+#: plugins/xversion.py:456
 #, python-format
-msgid ""
-"The %(model)s \"%(name)s\" was reverted successfully. You may edit it again "
-"below."
-msgstr ""
-"El %(model)s \"%(name)s\" se revirtió con éxito. Puede editarlo de nuevo a "
-"continuación."
+msgid "The %(model)s \"%(name)s\" was reverted successfully. You may edit it again below."
+msgstr "El %(model)s \"%(name)s\" se revirtió con éxito. Puede editarlo de nuevo a continuación."
 
-#: plugins/xversion.py:476
+#: plugins/xversion.py:477
 #, python-format
 msgid "Recover %s"
 msgstr "Recuperar %s"
 
-#: plugins/xversion.py:492
+#: plugins/xversion.py:493
 #, python-format
-msgid ""
-"The %(model)s \"%(name)s\" was recovered successfully. You may edit it again "
-"below."
-msgstr ""
-"El %(model)s \"%(name) s\" se recuperó con éxito. Puede editarlo de nuevo a "
-"continuación."
+msgid "The %(model)s \"%(name)s\" was recovered successfully. You may edit it again below."
+msgstr "El %(model)s \"%(name) s\" se recuperó con éxito. Puede editarlo de nuevo a continuación."
 
 #: templates/xadmin/404.html:4 templates/xadmin/404.html.py:8
 msgid "Page not found"
@@ -582,13 +562,8 @@ msgid "Server Error <em>(500)</em>"
 msgstr "Error en el servidor <em>(500)</em>"
 
 #: templates/xadmin/500.html:16
-msgid ""
-"There's been an error. It's been reported to the site administrators via e-"
-"mail and should be fixed shortly. Thanks for your patience."
-msgstr ""
-"Ha habido un error. Se nos ha informado a los administradores del sitio a "
-"través de un correo electrónico y debe repararse en la breve. Gracias por su "
-"paciencia."
+msgid "There's been an error. It's been reported to the site administrators via e-mail and should be fixed shortly. Thanks for your patience."
+msgstr "Ha habido un error. Se nos ha informado a los administradores del sitio a través de un correo electrónico y debe repararse en la breve. Gracias por su paciencia."
 
 #: templates/xadmin/base_site.html:19
 msgid "Welcome,"
@@ -620,12 +595,8 @@ msgid "Enter new password"
 msgstr "Escriba la nueva contraseña"
 
 #: templates/xadmin/auth/password_reset/confirm.html:17
-msgid ""
-"Please enter your new password twice so we can verify you typed it in "
-"correctly."
-msgstr ""
-"Introduzca su nueva contraseña dos veces para que podamos verificar que la "
-"ha escrito correctamente."
+msgid "Please enter your new password twice so we can verify you typed it in correctly."
+msgstr "Introduzca su nueva contraseña dos veces para que podamos verificar que la ha escrito correctamente."
 
 #: templates/xadmin/auth/password_reset/confirm.html:19
 msgid "Change my password"
@@ -636,31 +607,17 @@ msgid "Password reset unsuccessful"
 msgstr "Restablecimiento de contraseña sin éxito"
 
 #: templates/xadmin/auth/password_reset/confirm.html:27
-msgid ""
-"The password reset link was invalid, possibly because it has already been "
-"used.  Please request a new password reset."
-msgstr ""
-"El enlace de restablecimiento de contraseña no es válida, posiblemente "
-"debido a que ya se ha utilizado. Por favor, solicite un nuevo "
-"restablecimiento de contraseña."
+msgid "The password reset link was invalid, possibly because it has already been used.  Please request a new password reset."
+msgstr "El enlace de restablecimiento de contraseña no es válida, posiblemente debido a que ya se ha utilizado. Por favor, solicite un nuevo restablecimiento de contraseña."
 
 #: templates/xadmin/auth/password_reset/done.html:14
-msgid ""
-"We've e-mailed you instructions for setting your password to the e-mail "
-"address you submitted. You should be receiving it shortly."
-msgstr ""
-"Nosotro te hemos enviado por correo electrónico las instrucciones para "
-"configurar la contraseña a la dirección de correo electrónico que ha "
-"enviado. Usted debe recibirlo en breve momento."
+msgid "We've e-mailed you instructions for setting your password to the e-mail address you submitted. You should be receiving it shortly."
+msgstr "Nosotro te hemos enviado por correo electrónico las instrucciones para configurar la contraseña a la dirección de correo electrónico que ha enviado. Usted debe recibirlo en breve momento."
 
 #: templates/xadmin/auth/password_reset/email.html:2
 #, python-format
-msgid ""
-"You're receiving this e-mail because you requested a password reset for your "
-"user account at %(site_name)s."
-msgstr ""
-"Tu has recibido este correo debido a que has solicitado restablecimiento de "
-"contraseña para tu cuenta de usuario en %(site_name)s."
+msgid "You're receiving this e-mail because you requested a password reset for your user account at %(site_name)s."
+msgstr "Tu has recibido este correo debido a que has solicitado restablecimiento de contraseña para tu cuenta de usuario en %(site_name)s."
 
 #: templates/xadmin/auth/password_reset/email.html:4
 msgid "Please go to the following page and choose a new password:"
@@ -684,12 +641,8 @@ msgid "Password reset"
 msgstr "restablecimiento de contraseña"
 
 #: templates/xadmin/auth/password_reset/form.html:17
-msgid ""
-"Forgotten your password? Enter your e-mail address below, and we'll e-mail "
-"instructions for setting a new one."
-msgstr ""
-"¿Olvidaste tu contraseña? Escribe tu dirección de e-mail debajo, y le "
-"enviaremos un e-mail para el establecimiento de una nueva."
+msgid "Forgotten your password? Enter your e-mail address below, and we'll e-mail instructions for setting a new one."
+msgstr "¿Olvidaste tu contraseña? Escribe tu dirección de e-mail debajo, y le enviaremos un e-mail para el establecimiento de una nueva."
 
 #: templates/xadmin/auth/password_reset/form.html:25
 msgid "E-mail address:"
@@ -700,12 +653,8 @@ msgid "Reset my password"
 msgstr "Cambiar contraseña"
 
 #: templates/xadmin/auth/user/add_form.html:6
-msgid ""
-"First, enter a username and password. Then, you'll be able to edit more user "
-"options."
-msgstr ""
-"Primero, ingrese usuario y contraseña. Luego, sera capaz de editar mas "
-"opciones de usuario."
+msgid "First, enter a username and password. Then, you'll be able to edit more user options."
+msgstr "Primero, ingrese usuario y contraseña. Luego, sera capaz de editar mas opciones de usuario."
 
 #: templates/xadmin/auth/user/add_form.html:8
 msgid "Enter a username and password."
@@ -713,6 +662,7 @@ msgstr "Ingresa nombre de usuario y contraseña"
 
 #: templates/xadmin/auth/user/change_password.html:31
 #: templates/xadmin/views/batch_change_form.html:24
+#: templates/xadmin/views/form.html:18
 #: templates/xadmin/views/model_form.html:20
 msgid "Please correct the error below."
 msgid_plural "Please correct the errors below."
@@ -726,8 +676,7 @@ msgstr "Ingresa una nueva contraseña"
 #: templates/xadmin/auth/user/change_password.html:40
 #, python-format
 msgid "Enter a new password for the user <strong>%(username)s</strong>."
-msgstr ""
-"Introduzca una nueva contraseña para el usuario <strong>%(username)s</strong>"
+msgstr "Introduzca una nueva contraseña para el usuario <strong>%(username)s</strong>"
 
 #: templates/xadmin/blocks/comm.top.theme.html:4
 msgid "Themes"
@@ -759,6 +708,7 @@ msgstr "Próximo paso"
 #: templates/xadmin/blocks/model_form.submit_line.wizard.html:31
 #: templates/xadmin/includes/submit_line.html:10
 #: templates/xadmin/includes/submit_line.html:13
+#: templates/xadmin/views/form.html:30
 msgid "Save"
 msgstr "Guardar"
 
@@ -800,8 +750,7 @@ msgstr "Limpiar Filtros"
 
 #: templates/xadmin/blocks/model_list.results_bottom.actions.html:19
 msgid "Click here to select the objects across all pages"
-msgstr ""
-"Haz clic aquí para seleccionar los objetos a través de todas las páginas"
+msgstr "Haz clic aquí para seleccionar los objetos a través de todas las páginas"
 
 #: templates/xadmin/blocks/model_list.results_bottom.actions.html:19
 #, python-format
@@ -970,6 +919,7 @@ msgstr "Mostrar todos"
 
 #: templates/xadmin/includes/submit_line.html:10
 #: templates/xadmin/includes/submit_line.html:13
+#: templates/xadmin/views/form.html:30
 msgid "Saving.."
 msgstr ""
 
@@ -1017,14 +967,8 @@ msgid "Add Widget"
 msgstr "Añadir Widget"
 
 #: templates/xadmin/views/invalid_setup.html:13
-msgid ""
-"Something's wrong with your database installation. Make sure the appropriate "
-"database tables have been created, and make sure the database is readable by "
-"the appropriate user."
-msgstr ""
-"Algo está mal con tu instalación de base de datos. Asegúrese de que las "
-"tablas de la bases de datos se han creado apropiadamente, y asegúrese de que "
-"la base de datos puede ser leído por el usuario apropiado"
+msgid "Something's wrong with your database installation. Make sure the appropriate database tables have been created, and make sure the database is readable by the appropriate user."
+msgstr "Algo está mal con tu instalación de base de datos. Asegúrese de que las tablas de la bases de datos se han creado apropiadamente, y asegúrese de que la base de datos puede ser leído por el usuario apropiado"
 
 #: templates/xadmin/views/logged_out.html:16
 msgid "Logout Success"
@@ -1067,32 +1011,18 @@ msgstr "Editar."
 
 #: templates/xadmin/views/model_delete_confirm.html:11
 #, python-format
-msgid ""
-"Deleting the %(verbose_name)s '%(escaped_object)s' would result in deleting "
-"related objects, but your account doesn't have permission to delete the "
-"following types of objects:"
-msgstr ""
-"Eliminando los %(verbose_name)s '%(escaped_object)s terminaría eliminando "
-"objetos relacionados, pero su cuenta no tiene permisos para eliminar los "
-"siguientes tipo de objetos:"
+msgid "Deleting the %(verbose_name)s '%(escaped_object)s' would result in deleting related objects, but your account doesn't have permission to delete the following types of objects:"
+msgstr "Eliminando los %(verbose_name)s '%(escaped_object)s terminaría eliminando objetos relacionados, pero su cuenta no tiene permisos para eliminar los siguientes tipo de objetos:"
 
 #: templates/xadmin/views/model_delete_confirm.html:19
 #, python-format
-msgid ""
-"Deleting the %(verbose_name)s '%(escaped_object)s' would require deleting "
-"the following protected related objects:"
-msgstr ""
-"Eliminando los %(verbose_name)s '%(escaped_object)s requeriría eliminar los "
-"siguientes objetos relacionas protegidos:"
+msgid "Deleting the %(verbose_name)s '%(escaped_object)s' would require deleting the following protected related objects:"
+msgstr "Eliminando los %(verbose_name)s '%(escaped_object)s requeriría eliminar los siguientes objetos relacionas protegidos:"
 
 #: templates/xadmin/views/model_delete_confirm.html:27
 #, python-format
-msgid ""
-"Are you sure you want to delete the %(verbose_name)s \"%(escaped_object)s\"? "
-"All of the following related items will be deleted:"
-msgstr ""
-"¿Estas seguro de querer eliminar los %(verbose_name)s \"%(escaped_object)s"
-"\" ? Todos los siguientes artículos relacionados serán eliminados:"
+msgid "Are you sure you want to delete the %(verbose_name)s \"%(escaped_object)s\"? All of the following related items will be deleted:"
+msgstr "¿Estas seguro de querer eliminar los %(verbose_name)s \"%(escaped_object)s\" ? Todos los siguientes artículos relacionados serán eliminados:"
 
 #: templates/xadmin/views/model_delete_confirm.html:34
 #: templates/xadmin/views/model_delete_selected_confirm.html:49
@@ -1111,32 +1041,18 @@ msgstr "Eliminar múltiples objetos."
 
 #: templates/xadmin/views/model_delete_selected_confirm.html:18
 #, python-format
-msgid ""
-"Deleting the selected %(objects_name)s would result in deleting related "
-"objects, but your account doesn't have permission to delete the following "
-"types of objects:"
-msgstr ""
-"Eliminando los %(objects_name)s terminaría eliminando objetos relacionados, "
-"pero su cuenta no tiene permisos para eliminar los siguientes tipo de "
-"objetos:"
+msgid "Deleting the selected %(objects_name)s would result in deleting related objects, but your account doesn't have permission to delete the following types of objects:"
+msgstr "Eliminando los %(objects_name)s terminaría eliminando objetos relacionados, pero su cuenta no tiene permisos para eliminar los siguientes tipo de objetos:"
 
 #: templates/xadmin/views/model_delete_selected_confirm.html:26
 #, python-format
-msgid ""
-"Deleting the selected %(objects_name)s would require deleting the following "
-"protected related objects:"
-msgstr ""
-"Eliminando  los %(objects_name)s seleccionados terminaria emilinando los "
-"siguientes objetos relacionados protegidos:"
+msgid "Deleting the selected %(objects_name)s would require deleting the following protected related objects:"
+msgstr "Eliminando  los %(objects_name)s seleccionados terminaria emilinando los siguientes objetos relacionados protegidos:"
 
 #: templates/xadmin/views/model_delete_selected_confirm.html:34
 #, python-format
-msgid ""
-"Are you sure you want to delete the selected %(objects_name)s? All of the "
-"following objects and their related items will be deleted:"
-msgstr ""
-"¿Estas seguro de querer borrar los %(objects_name)s seleccionados? Todos los "
-"siguientes objetos y sus artículos relacionados serán eliminados:"
+msgid "Are you sure you want to delete the selected %(objects_name)s? All of the following objects and their related items will be deleted:"
+msgstr "¿Estas seguro de querer borrar los %(objects_name)s seleccionados? Todos los siguientes objetos y sus artículos relacionados serán eliminados:"
 
 #: templates/xadmin/views/model_history.html:26
 msgid "Diff"
@@ -1160,12 +1076,8 @@ msgid "Diff Select Versions"
 msgstr "Seleccionar diferentes versiones"
 
 #: templates/xadmin/views/model_history.html:58
-msgid ""
-"This object doesn't have a change history. It probably wasn't added via this "
-"admin site."
-msgstr ""
-"Este objeto no tiene un historial de cambios, Es probable  que no se haya "
-"añadido a través de este sitio de admin.|"
+msgid "This object doesn't have a change history. It probably wasn't added via this admin site."
+msgstr "Este objeto no tiene un historial de cambios, Es probable  que no se haya añadido a través de este sitio de admin.|"
 
 #: templates/xadmin/views/model_list.html:29
 #, python-format
@@ -1188,16 +1100,11 @@ msgstr "Lista vacia"
 
 #: templates/xadmin/views/recover_form.html:20
 msgid "Press the recover button below to recover this version of the object."
-msgstr ""
-"Presione el botón de recuperación abajo para recuperar esta versión del "
-"objeto."
+msgstr "Presione el botón de recuperación abajo para recuperar esta versión del objeto."
 
 #: templates/xadmin/views/recover_list.html:19
-msgid ""
-"Choose a date from the list below to recover a deleted version of an object."
-msgstr ""
-"Selecciona una fecha de la lista de abajo para recuperar una versión "
-"eliminada de un objeto."
+msgid "Choose a date from the list below to recover a deleted version of an object."
+msgstr "Selecciona una fecha de la lista de abajo para recuperar una versión eliminada de un objeto."
 
 #: templates/xadmin/views/recover_list.html:39
 msgid "There are no deleted objects to recover."
@@ -1237,8 +1144,7 @@ msgstr "Revertir  %(verbose_name)s"
 
 #: templates/xadmin/views/revision_form.html:21
 msgid "Press the revert button below to revert to this version of the object."
-msgstr ""
-"Presiona el botón revertir de abajo para revertir a esta versión del objeto."
+msgstr "Presiona el botón revertir de abajo para revertir a esta versión del objeto."
 
 #: templates/xadmin/views/revision_form.html:27
 msgid "Revert this revision"
@@ -1250,8 +1156,7 @@ msgstr "Éxito"
 
 #: templates/xadmin/widgets/addform.html:14
 msgid "Add success, click <a id='change-link'>edit</a> to edit."
-msgstr ""
-"Agregado exitosa mente, presiona  <a id='change-link'>edit</a> para editar."
+msgstr "Agregado exitosa mente, presiona  <a id='change-link'>edit</a> para editar."
 
 #: templates/xadmin/widgets/addform.html:17
 msgid "Quick Add"
@@ -1279,8 +1184,7 @@ msgstr "Titulo del Widget"
 
 #: views/dashboard.py:248
 msgid "Html Content Widget, can write any html content in widget."
-msgstr ""
-"Contenido html del Widget, puede escribir cualquier contenido del widget."
+msgstr "Contenido html del Widget, puede escribir cualquier contenido del widget."
 
 #: views/dashboard.py:251
 msgid "Html Content"
@@ -1320,11 +1224,11 @@ msgstr "Panel de control"
 msgid "The %(name)s \"%(obj)s\" was deleted successfully."
 msgstr "El   %(name)s \"%(obj)s\" fue eliminado exitosa mente."
 
-#: views/detail.py:172 views/edit.py:199
+#: views/detail.py:172 views/edit.py:199 views/form.py:72
 msgid "Other Fields"
 msgstr "Otros campos"
 
-#: views/detail.py:235
+#: views/detail.py:233
 #, python-format
 msgid "%s Detail"
 msgstr "%s Detalles"
@@ -1353,24 +1257,29 @@ msgstr "Cambiar %s"
 msgid "The %(name)s \"%(obj)s\" was changed successfully."
 msgstr "El %(name)s \"%(obj)s\" fue editado exitosa mente."
 
-#: views/list.py:197
+#: views/form.py:164
+#, fuzzy, python-format
+msgid "The %s was changed successfully."
+msgstr "El %(name)s \"%(obj)s\" fue editado exitosa mente."
+
+#: views/list.py:198
 msgid "Database error"
 msgstr "Error de base de datos"
 
-#: views/list.py:371
+#: views/list.py:372
 #, python-format
 msgid "%s List"
 msgstr "%s Lista"
 
-#: views/list.py:499
+#: views/list.py:500
 msgid "Sort ASC"
 msgstr "Ordenar ascendente mente."
 
-#: views/list.py:500
+#: views/list.py:501
 msgid "Sort DESC"
 msgstr "Ordenar descendente mente"
 
-#: views/list.py:504
+#: views/list.py:505
 msgid "Cancel Sort"
 msgstr "Cancelar ordenación"
 
@@ -1396,13 +1305,8 @@ msgstr "Dashboard principal."
 #~ msgid "Your password was changed."
 #~ msgstr "Tu contraseña fue cambiada."
 
-#~ msgid ""
-#~ "Please enter your old password, for security's sake, and then enter your "
-#~ "new password twice so we can verify you typed it in correctly."
-#~ msgstr ""
-#~ "Introduzca su antigua contraseña, por el bien de la seguridad, y luego "
-#~ "ingrese su nueva contraseña dos veces para que podamos verificar que la "
-#~ "ha escrito correctamente."
+#~ msgid "Please enter your old password, for security's sake, and then enter your new password twice so we can verify you typed it in correctly."
+#~ msgstr "Introduzca su antigua contraseña, por el bien de la seguridad, y luego ingrese su nueva contraseña dos veces para que podamos verificar que la ha escrito correctamente."
 
 #~ msgid "Old password"
 #~ msgstr "Vieja contraseña"
