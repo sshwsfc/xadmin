@@ -94,7 +94,7 @@ msgid "Query String"
 msgstr "Abfrage String"
 
 #: models.py:52
-msgid "Is Share"
+msgid "Is Shared"
 msgstr "Wird geteilt"
 
 #: models.py:65 plugins/bookmark.py:49 plugins/bookmark.py:177

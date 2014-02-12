@@ -100,7 +100,7 @@ msgid "Query String"
 msgstr "Cadena de consulta"
 
 #: models.py:52
-msgid "Is Share"
+msgid "Is Shared"
 msgstr "Es compartido"
 
 #: models.py:65 plugins/bookmark.py:49 plugins/bookmark.py:177

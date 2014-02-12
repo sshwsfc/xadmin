@@ -93,7 +93,7 @@ msgid "Query String"
 msgstr "Query参数"
 
 #: models.py:52
-msgid "Is Share"
+msgid "Is Shared"
 msgstr "是否共享"
 
 #: models.py:65 plugins/bookmark.py:49 plugins/bookmark.py:177
