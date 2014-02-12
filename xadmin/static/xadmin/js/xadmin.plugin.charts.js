@@ -1,7 +1,7 @@
 $(document).ready(function(){
     
     function showTooltip(x, y, contents) {
-        $('<div id="chart-tooltip" class="tooltip-inner">' + contents + '</div>').css( {
+        $('<div id="chart-tooltip" class="tooltip-inner"><div>' + contents + '</div></div>').css( {
             position: 'absolute',
             display: 'none',
             top: y + 5,
@@ -27,10 +27,15 @@ $(document).ready(function(){
                         
                         $("#chart-tooltip").remove();
                         var x = item.series.xaxis.tickFormatter(item.datapoint[0], item.series.xaxis),
-                            y = item.series.yaxis.tickFormatter(item.datapoint[1], item.series.yaxis);
-                        
+                        	y = item.series.yaxis.tickFormatter(item.datapoint[1], item.series.yaxis);
+                        if (item.series.xaxis.options.mode=="categories") {
+                        	x = item.series.data[item.dataIndex][0];
+                        }
+                        if (item.series.yaxis.options.mode=="categories") {
+                        	y = item.series.data[item.dataIndex][1];
+                        }
                         showTooltip(item.pageX, item.pageY,
-                                    item.series.label + " : " + x + " , " + y);
+                                    item.series.label + " : <br/>(" + x + " , " + y+")");
                     }
                 } else {
                     $("#chart-tooltip").remove();
