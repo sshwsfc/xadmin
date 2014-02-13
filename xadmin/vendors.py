@@ -63,7 +63,7 @@ vendors = {
     "flot": {
         "js": {
             'dev': ['xadmin/vendor/flot/jquery.flot.js', 'xadmin/vendor/flot/jquery.flot.pie.js', 'xadmin/vendor/flot/jquery.flot.time.js',
-                    'xadmin/vendor/flot/jquery.flot.resize.js']
+                    'xadmin/vendor/flot/jquery.flot.resize.js','xadmin/vendor/flot/jquery.flot.aggregate.js','xadmin/vendor/flot/jquery.flot.categories.js']
         }
     },
     "image-gallery": {
