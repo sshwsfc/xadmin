@@ -49,7 +49,7 @@ class Bookmark(models.Model):
     url_name = models.CharField(_(u'Url Name'), max_length=64)
     content_type = models.ForeignKey(ContentType)
     query = models.CharField(_(u'Query String'), max_length=1000, blank=True)
-    is_share = models.BooleanField(_(u'Is Share'), default=False)
+    is_share = models.BooleanField(_(u'Is Shared'), default=False)
 
     @property
     def url(self):

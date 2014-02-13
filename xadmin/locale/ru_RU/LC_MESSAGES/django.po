@@ -92,7 +92,7 @@ msgid "Query String"
 msgstr "Строка запроса"
 
 #: models.py:52
-msgid "Is Share"
+msgid "Is Shared"
 msgstr ""
 
 #: models.py:65 plugins/bookmark.py:49 plugins/bookmark.py:177
