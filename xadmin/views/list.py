@@ -549,7 +549,7 @@ class ListAdminView(ModelAdminView):
                 if isinstance(f.rel, models.ManyToOneRel):
                     field_val = getattr(obj, f.name)
                     if field_val is None:
-                        item.text = mark_safe("<span class='muted'>%s</span>" % EMPTY_CHANGELIST_VALUE)
+                        item.text = mark_safe("<span class='text-muted'>%s</span>" % EMPTY_CHANGELIST_VALUE)
                     else:
                         item.text = field_val
                 else:
