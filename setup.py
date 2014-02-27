@@ -22,10 +22,10 @@ setup(
         'django-crispy-forms>=1.4.0',
     ],
     extras_require={
-        'Excel': ['xlwt'],
+        'Excel': ['xlwt', 'xlsxwriter'],
         'Reversion': ['django-reversion'],
     },
-    zip_safe=True,
+    zip_safe=False,
     keywords=['admin', 'django', 'xadmin', 'bootstrap'],
     classifiers=[
         'Development Status :: 4 - Beta',

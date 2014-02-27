@@ -22,6 +22,9 @@
             {{ form_params|safe }}
             <input type="hidden" name="export_type" value="{{et.type}}">
               <label class="checkbox">
+                {% if et.type == "xlsx" %}
+                <input type="checkbox" name="export_xlsx_header" checked="checked" value="on"> {% trans "Export with table header." %}
+                {% endif %}
                 {% if et.type == "xls" %}
                 <input type="checkbox" name="export_xls_header" checked="checked" value="on"> {% trans "Export with table header." %}
                 {% endif %}

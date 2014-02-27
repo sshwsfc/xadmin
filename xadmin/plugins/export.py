@@ -20,15 +20,23 @@ try:
 except:
     has_xlwt = False
 
+try:
+    import xlsxwriter
+    has_xlsxwriter = True
+except:
+    has_xlsxwriter = False
+
 
 class ExportMenuPlugin(BaseAdminPlugin):
 
-    list_export = ('xls', 'csv', 'xml', 'json')
-    export_names = {'xls': 'Excel', 'csv': 'CSV', 'xml': 'XML', 'json': 'JSON'}
+    list_export = ('xlsx', 'xls', 'csv', 'xml', 'json')
+    export_names = {'xlsx': 'Excel 2007', 'xls': 'Excel', 'csv': 'CSV',
+                    'xml': 'XML', 'json': 'JSON'}
 
     def init_request(self, *args, **kwargs):
         self.list_export = [
-            f for f in self.list_export if f != 'xls' or has_xlwt]
+            f for f in self.list_export
+            if (f != 'xlsx' or has_xlsxwriter) and (f != 'xls' or has_xlwt)]
 
     def block_top_toolbar(self, context, nodes):
         if self.list_export:
@@ -42,14 +50,14 @@ class ExportMenuPlugin(BaseAdminPlugin):
 
 class ExportPlugin(BaseAdminPlugin):
 
-    export_mimes = {'xls': 'application/vnd.ms-excel', 'csv': 'text/csv',
+    export_mimes = {'xlsx': 'application/vnd.ms-excel',
+                    'xls': 'application/vnd.ms-excel', 'csv': 'text/csv',
                     'xml': 'application/xhtml+xml', 'json': 'application/json'}
 
     def init_request(self, *args, **kwargs):
         return self.request.GET.get('_do_') == 'export'
 
     def _format_value(self, o):
-        value = None
         if (o.field is None and getattr(o.attr, 'boolean', False)) or \
            (o.field and isinstance(o.field, (BooleanField, NullBooleanField))):
                 value = o.value
@@ -74,6 +82,43 @@ class ExportPlugin(BaseAdminPlugin):
             filter(lambda c:getattr(c, 'export', False), r.cells)] for r in rows]
         new_rows.insert(0, [force_unicode(c.text) for c in context['result_headers'].cells if c.export])
         return new_rows
+
+    def get_xlsx_export(self, context):
+        datas = self._get_datas(context)
+        output = StringIO.StringIO()
+        export_header = (
+            self.request.GET.get('export_xlsx_header', 'off') == 'on')
+
+        model_name = self.opts.verbose_name
+        book = xlsxwriter.Workbook(output)
+        sheet = book.add_worksheet(
+            u"%s %s" % (_(u'Sheet'), force_unicode(model_name)))
+        styles = {'datetime': book.add_format({'num_format': 'yyyy-mm-dd hh:mm:ss'}),
+                  'date': book.add_format({'num_format': 'yyyy-mm-dd'}),
+                  'time': book.add_format({'num_format': 'hh:mm:ss'}),
+                  'header': book.add_format({'font': 'name Times New Roman', 'color': 'red', 'bold': 'on', 'num_format': '#,##0.00'}),
+                  'default': book.add_format()}
+
+        if not export_header:
+            datas = datas[1:]
+        for rowx, row in enumerate(datas):
+            for colx, value in enumerate(row):
+                if export_header and rowx == 0:
+                    cell_style = styles['header']
+                else:
+                    if isinstance(value, datetime.datetime):
+                        cell_style = styles['datetime']
+                    elif isinstance(value, datetime.date):
+                        cell_style = styles['date']
+                    elif isinstance(value, datetime.time):
+                        cell_style = styles['time']
+                    else:
+                        cell_style = styles['default']
+                sheet.write(rowx, colx, value, cell_style)
+        book.close()
+
+        output.seek(0)
+        return output.getvalue()
 
     def get_xls_export(self, context):
         datas = self._get_datas(context)
