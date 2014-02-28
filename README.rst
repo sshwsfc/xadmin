@@ -76,11 +76,14 @@ Install Requires
 
 -  `xlwt`_ ([OPTION] For export xls files)
 
+-  `xlsxwriter`_ ([OPTION] For export xlsx files)
+
 .. _django: http://djangoproject.com
 .. _django-crispy-forms: http://django-crispy-forms.rtfd.org
 .. _django-reversion: https://github.com/etianen/django-reversion
 .. _changelog: https://github.com/etianen/django-reversion/blob/master/CHANGELOG.markdown
 .. _xlwt: http://www.python-excel.org/
+.. _xlsxwriter https://github.com/jmcnamara/XlsxWriter
 
 Documentation
 -------------
