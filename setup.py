@@ -6,7 +6,7 @@ from setuptools import setup
 
 setup(
     name='django-xadmin',
-    version='0.4.2',
+    version='0.4.4',
     description='Drop-in replacement of Django admin comes with lots of goodies, fully extensible with plugin support, pretty UI based on Twitter Bootstrap.',
     long_description=open('README.rst').read(),
     author='sshwsfc',
