@@ -40,9 +40,9 @@ class ChangeFieldWidgetWrapper(forms.Widget):
         output = []
         is_required = self.widget.is_required
         output.append(u'<label class="btn btn-info btn-xs">'
-            '<input type="checkbox" class="batch-field-checkbox" name="%s" value="%s"%s/> %s</label>' % 
+            '<input type="checkbox" class="batch-field-checkbox" name="%s" value="%s"%s/> %s</label>' %
             (BATCH_CHECKBOX_NAME, name, (is_required and ' checked="checked"' or ''), _('Change this field')))
-        output.extend([('<div class="control-wrap" style="margin-top: 10px;%s" id="id_%s_wrap_container">' % 
+        output.extend([('<div class="control-wrap" style="margin-top: 10px;%s" id="id_%s_wrap_container">' %
             ((not is_required and 'display: none;' or ''), name)),
             self.widget.render(name, value, attrs), '</div>'])
         return mark_safe(u''.join(output))
@@ -78,9 +78,7 @@ class BatchChangeAction(BaseActionView):
             if not f.editable or isinstance(f, models.AutoField) \
                     or not f.name in cleaned_data:
                 continue
-            value = cleaned_data[f.name]
-            if value:
-                data[f] = value
+            data[f] = cleaned_data[f.name]
 
         if n:
             for obj in queryset:
@@ -123,7 +121,7 @@ class BatchChangeAction(BaseActionView):
 
         helper = FormHelper()
         helper.form_tag = False
-        helper.add_layout(Layout(Container(Col('full', 
+        helper.add_layout(Layout(Container(Col('full',
             Fieldset("", *self.form_obj.fields.keys(), css_class="unsort no_title"), horizontal=True, span=12)
         )))
         self.form_obj.helper = helper
