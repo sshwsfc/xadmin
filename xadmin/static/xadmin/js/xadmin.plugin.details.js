@@ -22,12 +22,12 @@
             '<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title">'+ 
             el.attr('title') +'</h4></div><div class="modal-body"></div>'+
             '<div class="modal-footer"><button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>'+
-            '<a class="btn btn-submit btn-primary edit-btn"><i class="icon-pencil"></i> Edit</a></div></div></div></div>');
+            '<a class="btn btn-submit btn-primary edit-btn"><i class="fa fa-pencil"></i> Edit</a></div></div></div></div>');
           $('body').append(modal);
         }
         modal.find('.modal-title').html(el.attr('title'));
         modal.find('.edit-btn').attr('href', this.edit_uri);
-        modal.find('.modal-body').html('<h1 style="text-align:center;"><i class="fa-spinner fa-spin icon-large"></i></h1>');
+        modal.find('.modal-body').html('<h1 style="text-align:center;"><i class="fa-spinner fa-spin fa fa-large"></i></h1>');
         modal.find('.modal-body').load(this.res_uri + '?_format=html', function(response, status, xhr) {
           if (status == "error") {
             var msg = "Sorry but there was an error: ";

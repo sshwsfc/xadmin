@@ -19,7 +19,7 @@
     constructor: AjaxForm
 
     , ainit: function(){
-      this.$mask = $('<div class="mask"><h1 style="text-align:center;"><i class="fa-spinner fa-spin icon-large"></i></h1></div>')
+      this.$mask = $('<div class="mask"><h1 style="text-align:center;"><i class="fa-spinner fa-spin fa fa-large"></i></h1></div>')
 
       this.$form.prepend(this.$mask)
       this.$form.submit($.proxy(this.submit, this))
@@ -174,7 +174,7 @@
         $('body').append(modal)
 
         var self = this
-        modal.find('.modal-body').html('<h2 style="text-align:center;"><i class="fa-spinner fa-spin icon-large"></i></h2>')
+        modal.find('.modal-body').html('<h2 style="text-align:center;"><i class="fa-spinner fa-spin fa fa-large"></i></h2>')
         modal.find('.modal-body').load(this.add_url, function(form_html, status, xhr){
           var form = $(this).find('form')
           form.addClass('quick-form')

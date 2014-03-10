@@ -36,7 +36,7 @@
         if(topmenu.data('bs.collapse')) topmenu.collapse('hide');
 
         var modal = $('<div id="load-theme-modal" class="modal fade" role="dialog"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4>'+ 
-            'Loading theme</h4></div><div class="modal-body"><h2 style="text-align:center;"><i class="fa-spinner fa-spin icon-large"></i></h2></div></div></div></div>');
+            'Loading theme</h4></div><div class="modal-body"><h2 style="text-align:center;"><i class="fa-spinner fa-spin fa fa-large"></i></h2></div></div></div></div>');
         $('body').append(modal);
 
         modal.on('shown.bs.modal', function(){

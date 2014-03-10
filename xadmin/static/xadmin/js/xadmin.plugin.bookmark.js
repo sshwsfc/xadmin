@@ -7,7 +7,7 @@
         f.find('button[type=submit]').button('loading');
         $.post(f.attr('action'), f.serialize(), function(data){
           $('#bookmark-menu .add-bookmark').remove();
-          $('#bookmark-menu').append('<li><a href="'+ data.url +'" title="'+ data.title +'"><i class="icon-bookmark"></i> '+ data.title +'</a></li>');
+          $('#bookmark-menu').append('<li><a href="'+ data.url +'" title="'+ data.title +'"><i class="fa fa-bookmark"></i> '+ data.title +'</a></li>');
         }, 'json');
         return false;
       });

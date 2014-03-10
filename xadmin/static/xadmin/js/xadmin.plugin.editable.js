@@ -67,11 +67,11 @@
 
     if(this.content == null){
       var that = this
-      $el.find('>i').removeClass('icon-edit').addClass('fa-spinner fa-spin')
+      $el.find('>i').removeClass('fa fa-edit').addClass('fa-spinner fa-spin')
       $.ajax({
         url: $el.data('editable-loadurl'),
         success: function(content){
-          $el.find('>i').removeClass('fa-spinner fa-spin').addClass('icon-edit')
+          $el.find('>i').removeClass('fa-spinner fa-spin').addClass('fa fa-edit')
           that.content = content
           that.toggle()
         },
@@ -94,7 +94,7 @@
     $form.submit($.proxy(this.submit, this))
 
     this.$form = $form
-    this.$mask = $('<div class="mask"><h2 style="text-align:center;"><i class="fa-spinner fa-spin icon-large"></i></h2></div>')
+    this.$mask = $('<div class="mask"><h2 style="text-align:center;"><i class="fa-spinner fa-spin fa fa-large"></i></h2></div>')
     $tip.find('.popover-content').prepend(this.$mask)
 
     $tip.removeClass('fade top bottom left right in')
