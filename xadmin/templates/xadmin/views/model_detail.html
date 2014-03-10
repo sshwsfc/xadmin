@@ -7,7 +7,7 @@
 {% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} detail{% endblock %}
 
 {% block nav_title %}
-  {% if model_icon %}<i class="fa fa-{{model_icon}}"></i> {% endif %}{{ object|truncatewords:"18" }}
+  {% if model_icon %}<i class="{{model_icon}}"></i> {% endif %}{{ object|truncatewords:"18" }}
 {% endblock %}
 
 {% block nav_toggles %}
@@ -16,7 +16,7 @@
 <a href="{% url opts|admin_urlname:'change' object.pk %}" class="navbar-toggle pull-right"><i class="fa fa-pencil"></i></a>
 {% endif %}
 {% if has_delete_permission %}
-<a href="{% url opts|admin_urlname:'delete' object.pk %}" class="navbar-toggle pull-right"><i class="fa fa-trash"></i></a>
+<a href="{% url opts|admin_urlname:'delete' object.pk %}" class="navbar-toggle pull-right"><i class="fa fa-trash-o"></i></a>
 {% endif %}
 {% endblock %}
 
@@ -25,7 +25,7 @@
   <a href="{% url opts|admin_urlname:'change' object.pk %}" class="btn btn-primary"><i class="fa fa-pencil"></i> <span>{% trans "Edit" %}</span></a>
   {% endif %}
   {% if has_delete_permission %}
-  <a href="{% url opts|admin_urlname:'delete' object.pk %}" class="btn btn-danger"><i class="fa fa-trash"></i> <span>{% trans "Delete" %}</span></a>
+  <a href="{% url opts|admin_urlname:'delete' object.pk %}" class="btn btn-danger"><i class="fa fa-trash-o"></i> <span>{% trans "Delete" %}</span></a>
   {% endif %}
 {% endblock %}
 

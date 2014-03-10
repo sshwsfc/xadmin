@@ -4,6 +4,6 @@ from xadmin.layout import *
 
 
 class UserSettingsAdmin(object):
-    model_icon = 'cog'
+    model_icon = 'fa fa-cog'
     hidden_menu = True
 xadmin.site.register(UserSettings, UserSettingsAdmin)

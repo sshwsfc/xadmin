@@ -141,7 +141,7 @@ class BookmarkView(ModelAdminView):
 
 class BookmarkAdmin(object):
 
-    model_icon = 'book'
+    model_icon = 'fa fa-book'
     list_display = ('title', 'user', 'url_name', 'query')
     list_display_links = ('title',)
     user_fields = ['user']
@@ -169,6 +169,7 @@ class BookmarkAdmin(object):
 @widget_manager.register
 class BookmarkWidget(PartialBaseWidget):
     widget_type = _('bookmark')
+    widget_icon = 'fa fa-bookmark'
     description = _(
         'Bookmark Widget, can show user\'s bookmark list data in widget.')
     template = "xadmin/widgets/list.html"

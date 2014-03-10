@@ -41,7 +41,7 @@ class CommentsAdmin(object):
     ordering = ('-submit_date',)
     search_fields = ('comment', UsernameSearch(), 'user_name', 'user_email', 'user_url', 'ip_address')
     actions = ["flag_comments", "approve_comments", "remove_comments"]
-    model_icon = 'comment'
+    model_icon = 'fa fa-comment'
 
     def get_actions(self):
         actions = super(CommentsAdmin, self).get_actions()

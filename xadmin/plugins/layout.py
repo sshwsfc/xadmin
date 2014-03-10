@@ -11,13 +11,13 @@ LAYOUT_VAR = '_layout'
 DEFAULT_LAYOUTS = {
     'table': {
         'key': 'table',
-        'icon': 'table',
+        'icon': 'fa fa-table',
         'name': _(u'Table'),
         'template': 'views/model_list.html',
     },
     'thumbnails': {
         'key': 'thumbnails',
-        'icon': 'th-large',
+        'icon': 'fa fa-th-large',
         'name': _(u'Thumbnails'),
         'template': 'grids/thumbnails.html',
     },

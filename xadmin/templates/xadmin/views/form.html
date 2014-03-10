@@ -4,7 +4,7 @@
 {% load xadmin_tags %}
 {% load crispy_forms_tags %}
 
-{% block nav_title %}{% if model_icon %}<i class="fa fa-{{model_icon}}"><sub class="fa fa-{% if add%}plus{%else%}pencil{%endif%}"></sub></i> {% endif %}
+{% block nav_title %}{% if model_icon %}<i class="{{model_icon}}"><sub class="fa fa-{% if add%}plus{%else%}pencil{%endif%}"></sub></i> {% endif %}
 {{ title }}{% endblock %}
 
 {% block content %}

@@ -5,7 +5,7 @@
   <span class="caret"></span></a>
   <ul id="filter-menu" class="dropdown-menu" role="menu" aria-labelledby="drop-filter">
     {% if cl.has_query_param %}
-    <li><a href="{{cl.clean_query_url}}"><i class="fa fa-trash"></i> {% trans "Clean Filters" %}</a></li>
+    <li><a href="{{cl.clean_query_url}}"><i class="fa fa-trash-o"></i> {% trans "Clean Filters" %}</a></li>
     <li class="divider"></li>
     {% endif %}
   	{% for spec in cl.filter_specs %}{{ spec|safe }}{% endfor %}

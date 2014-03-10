@@ -11,7 +11,7 @@
 {% endblock %}
 {% block bodyclass %}change-list{% endblock %}
 
-{% block nav_title %}{% if brand_icon %}<i class="fa fa-{{brand_icon}}"></i> {% endif %}{{brand_name}}{% endblock %}
+{% block nav_title %}{% if brand_icon %}<i class="{{brand_icon}}"></i> {% endif %}{{brand_name}}{% endblock %}
 
 {% block nav_toggles %}
 {% include "xadmin/includes/toggle_menu.html" %}
@@ -62,7 +62,7 @@
     {% endblock toolbar_layouts %}
     {% block toolbar_fullscreen %}
     <div class="btn-group layout-btns" data-toggle="buttons-checkbox">
-      <button type="button" class="btn btn-default btn-sm layout-full"><i class="fa fa-fullscreen"></i></button>
+      <button type="button" class="btn btn-default btn-sm layout-full"><i class="fa fa-expand"></i></button>
       {% view_block 'top_check_btns' %}
     </div>
     {% endblock toolbar_fullscreen %}

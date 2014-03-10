@@ -31,7 +31,7 @@ action_checkbox.is_column = False
 class BaseActionView(ModelAdminView):
     action_name = None
     description = None
-    icon = 'tasks'
+    icon = 'fa fa-tasks'
 
     model_perm = 'change'
 
@@ -57,7 +57,7 @@ class DeleteSelectedAction(BaseActionView):
     delete_selected_confirmation_template = None
 
     model_perm = 'delete'
-    icon = 'remove'
+    icon = 'fa fa-times'
 
     @filter_hook
     def delete_models(self, queryset):

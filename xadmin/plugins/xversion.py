@@ -163,7 +163,7 @@ class ReversionPlugin(BaseAdminPlugin):
     # Block Views
     def block_top_toolbar(self, context, nodes):
         recoverlist_url = self.admin_view.model_admin_url('recoverlist')
-        nodes.append(mark_safe('<div class="btn-group"><a class="btn btn-default btn-sm" href="%s"><i class="icon-trash"></i> %s</a></div>' % (recoverlist_url, _(u"Recover"))))
+        nodes.append(mark_safe('<div class="btn-group"><a class="btn btn-default btn-sm" href="%s"><i class="fa fa-trash-o"></i> %s</a></div>' % (recoverlist_url, _(u"Recover"))))
 
     def block_nav_toggles(self, context, nodes):
         obj = getattr(
@@ -171,7 +171,7 @@ class ReversionPlugin(BaseAdminPlugin):
         if obj:
             revisionlist_url = self.admin_view.model_admin_url(
                 'revisionlist', quote(obj.pk))
-            nodes.append(mark_safe('<a href="%s" class="navbar-toggle pull-right"><i class="icon-time"></i></a>' % revisionlist_url))
+            nodes.append(mark_safe('<a href="%s" class="navbar-toggle pull-right"><i class="fa fa-time"></i></a>' % revisionlist_url))
 
     def block_nav_btns(self, context, nodes):
         obj = getattr(
@@ -179,7 +179,7 @@ class ReversionPlugin(BaseAdminPlugin):
         if obj:
             revisionlist_url = self.admin_view.model_admin_url(
                 'revisionlist', quote(obj.pk))
-            nodes.append(mark_safe('<a href="%s" class="btn btn-default"><i class="icon-time"></i> <span>%s</span></a>' % (revisionlist_url, _(u'History'))))
+            nodes.append(mark_safe('<a href="%s" class="btn btn-default"><i class="fa fa-time"></i> <span>%s</span></a>' % (revisionlist_url, _(u'History'))))
 
 
 class BaseReversionView(ModelAdminView):
@@ -628,7 +628,7 @@ class VersionInline(object):
     style = 'accordion'
 
 class ReversionAdmin(object):
-    model_icon = 'exchange'
+    model_icon = 'fa fa-exchange'
 
     list_display = ('__str__', 'date_created', 'user', 'comment')
     list_display_links = ('__str__',)

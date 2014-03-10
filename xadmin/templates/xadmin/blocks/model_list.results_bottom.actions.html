@@ -10,7 +10,7 @@
     <span class="caret"></span></a>
     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
       {% for name, descr, icon in action_choices %}
-        <li><a onclick="$.do_action('{{name}}');"><i class="fa fa-{{icon}}"></i> {{descr}}</a></li>
+        <li><a onclick="$.do_action('{{name}}');"><i class="{{icon}}"></i> {{descr}}</a></li>
       {% endfor %}
     </ul>
   </div>

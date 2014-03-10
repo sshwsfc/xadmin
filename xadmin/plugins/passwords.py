@@ -61,7 +61,7 @@ class ResetLinkPlugin(BaseAdminPlugin):
 
     def block_form_bottom(self, context, nodes):
         reset_link = self.get_admin_url('xadmin_password_reset')
-        return '<div class="text-info" style="margin-top:15px;"><a href="%s"><i class="icon-question-sign"></i> %s</a></div>' % (reset_link, _('Forgotten your password or username?'))
+        return '<div class="text-info" style="margin-top:15px;"><a href="%s"><i class="fa fa-question-sign"></i> %s</a></div>' % (reset_link, _('Forgotten your password or username?'))
 
 site.register_plugin(ResetLinkPlugin, LoginView)
 

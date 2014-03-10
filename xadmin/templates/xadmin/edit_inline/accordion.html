@@ -7,7 +7,7 @@
   <div class="panel formset-row row fieldset">
     <div class="panel-heading">
       {% if formset.formset.can_delete %}
-        <a class="delete-row pull-right"><i class="icon fa fa-remove"></i></a>
+        <a class="delete-row pull-right"><i class="fa fa-times"></i></a>
       {% endif %}
       <a class="panel-toggle" data-toggle="collapse" data-parent="#{{ formset.css_id }}-{{inline_style}}" href="#{{ prefix }}-{{ forloop.counter0 }}-body"><b>{{ formset.opts.verbose_name|title }}:</b>&nbsp;{% if fs.instance.pk %}{{ fs.instance }}{% else %}#<span class="formset-num">{{ forloop.counter }}</span>{% endif %}
       </a>
@@ -23,7 +23,7 @@
   <div class="panel formset-row row fieldset">
     <div class="panel-heading">
       {% if formset.formset.can_delete %}
-          <a class="delete-row pull-right"><i class="icon fa fa-remove"></i></a>
+          <a class="delete-row pull-right"><i class="fa fa-times"></i></a>
       {% endif %}
       <a class="panel-toggle" data-toggle="collapse" data-parent="#{{ formset.css_id }}-{{inline_style}}" href="#{{ prefix }}-__prefix__-body">
         <b>{{ formset.opts.verbose_name|title }}:</b>&nbsp;{% if fs.instance.pk %}{{ fs.instance }}{% else %}#<span class="formset-num">{{ forloop.counter }}</span>{% endif %}

@@ -14,7 +14,7 @@ from xadmin.layout import FormHelper
 
 class IndexView(Dashboard):
     title = _("Main Dashboard")
-    icon = "dashboard"
+    icon = "fa fa-dashboard"
 
     def get_page_id(self):
         return 'home'

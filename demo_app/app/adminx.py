@@ -30,8 +30,9 @@ xadmin.site.register(views.BaseAdminView, BaseSetting)
 class GlobalSetting(object):
     global_search_models = [Host, IDC]
     global_models_icon = {
-        Host: 'laptop', IDC: 'cloud'
+        Host: 'fa fa-laptop', IDC: 'fa fa-cloud'
     }
+    menu_style = 'accordion'
 xadmin.site.register(views.CommAdminView, GlobalSetting)
 
 
@@ -84,6 +85,7 @@ class HostAdmin(object):
     save_as = True
 
     aggregate_fields = {"guarantee_date": "min"}
+    grid_layouts = ('table', 'thumbnails')
 
     form_layout = (
         Main(

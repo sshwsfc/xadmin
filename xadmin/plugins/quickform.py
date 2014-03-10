@@ -72,7 +72,7 @@ class RelatedFieldWidgetWrapper(forms.Widget):
         self.widget.choices = self.choices
         output = []
         if self.add_url:
-            output.append(u'<a href="%s" title="%s" class="btn btn-primary btn-sm btn-ajax pull-right" data-for-id="id_%s" data-refresh-url="%s"><i class="icon-plus"></i></a>'
+            output.append(u'<a href="%s" title="%s" class="btn btn-primary btn-sm btn-ajax pull-right" data-for-id="id_%s" data-refresh-url="%s"><i class="fa fa-plus"></i></a>'
                           % (
                               self.add_url, (_('Create New %s') % self.rel.to._meta.verbose_name), name,
                               "%s?_field=%s&%s=" % (self.rel_add_url, name, name)))

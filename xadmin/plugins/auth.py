@@ -44,7 +44,7 @@ class GroupAdmin(object):
     search_fields = ('name',)
     ordering = ('name',)
     style_fields = {'permissions': 'm2m_transfer'}
-    model_icon = 'group'
+    model_icon = 'fa fa-group'
 
     def get_field_attrs(self, db_field, **kwargs):
         attrs = super(GroupAdmin, self).get_field_attrs(db_field, **kwargs)
@@ -60,7 +60,7 @@ class UserAdmin(object):
     search_fields = ('username', 'first_name', 'last_name', 'email')
     ordering = ('username',)
     style_fields = {'user_permissions': 'm2m_transfer'}
-    model_icon = 'user'
+    model_icon = 'fa fa-user'
     relfield_style = 'fk-ajax'
 
     def get_field_attrs(self, db_field, **kwargs):
@@ -111,7 +111,7 @@ class PermissionAdmin(object):
     show_name.short_description = _('Permission Name')
     show_name.is_column = True
 
-    model_icon = 'lock'
+    model_icon = 'fa fa-lock'
     list_display = ('show_name', )
 
 site.register(Group, GroupAdmin)
@@ -156,7 +156,7 @@ site.register_plugin(ModelPermissionPlugin, ModelAdminView)
 class AccountMenuPlugin(BaseAdminPlugin):
 
     def block_top_account_menu(self, context, nodes):
-        return '<li><a href="%s"><i class="icon-key"></i> %s</a></li>' % (self.get_admin_url('account_password'), _('Change Password'))
+        return '<li><a href="%s"><i class="fa fa-key"></i> %s</a></li>' % (self.get_admin_url('account_password'), _('Change Password'))
 
 site.register_plugin(AccountMenuPlugin, CommAdminView)
 

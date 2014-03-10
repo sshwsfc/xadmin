@@ -70,7 +70,7 @@ class WidgetTypeSelect(forms.Widget):
 
 class UserWidgetAdmin(object):
 
-    model_icon = 'dashboard'
+    model_icon = 'fa fa-dashboard'
     list_display = ('widget_type', 'page_id', 'user')
     list_filter = ['user', 'widget_type', 'page_id']
     list_display_links = ('widget_type',)
@@ -178,7 +178,7 @@ class BaseWidget(forms.Form):
     template = 'xadmin/widgets/base.html'
     description = 'Base Widget, don\'t use it.'
     widget_title = None
-    widget_icon = 'icon-plus-sign-alt'
+    widget_icon = 'fa fa-plus-square'
     widget_type = 'base'
     base_title = None
 
@@ -211,7 +211,7 @@ class BaseWidget(forms.Form):
 
     @property
     def widget(self):
-        context = {'widget_id': self.id, 'widget_title': self.title,
+        context = {'widget_id': self.id, 'widget_title': self.title, 'widget_icon': self.widget_icon,
             'widget_type': self.widget_type, 'form': self, 'widget': self}
         self.context(context)
         return loader.render_to_string(self.template, context, context_instance=RequestContext(self.request))
@@ -244,6 +244,7 @@ class BaseWidget(forms.Form):
 @widget_manager.register
 class HtmlWidget(BaseWidget):
     widget_type = 'html'
+    widget_icon = 'fa fa-file-o'
     description = _(
         u'Html Content Widget, can write any html content in widget.')
 
@@ -365,6 +366,7 @@ class QuickBtnWidget(BaseWidget):
     description = _(u'Quick button Widget, quickly open any page.')
     template = "xadmin/widgets/qbutton.html"
     base_title = _(u"Quick Buttons")
+    widget_icon = 'fa fa-caret-square-o-right'
 
     def convert(self, data):
         self.q_btns = data.pop('btns', [])
@@ -408,6 +410,7 @@ class ListWidget(ModelBaseWidget, PartialBaseWidget):
     description = _(u'Any Objects list Widget.')
     template = "xadmin/widgets/list.html"
     model_perm = 'view'
+    widget_icon = 'fa fa-align-justify'
 
     def convert(self, data):
         self.list_params = data.pop('params', {})
@@ -447,6 +450,7 @@ class AddFormWidget(ModelBaseWidget, PartialBaseWidget):
     description = _(u'Add any model object Widget.')
     template = "xadmin/widgets/addform.html"
     model_perm = 'add'
+    widget_icon = 'fa fa-plus'
 
     def setup(self):
         super(AddFormWidget, self).setup()

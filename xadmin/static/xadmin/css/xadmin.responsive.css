@@ -16,7 +16,7 @@
     display: none;
   }
   ul.nav-sitemenu > li.app_menu>hr{ margin: 0px;}
-  ul.nav-sitemenu > li.app_menu>a>i[class^="icon-"]{
+  ul.nav-sitemenu > li.app_menu>a>i.icon{
     font-size: 20px;
     line-height: 1.7em;
   }

@@ -502,11 +502,11 @@ class ListAdminView(ModelAdminView):
         ]
         if sorted:
             row['num_sorted_fields'] = row['num_sorted_fields'] + 1
-            menus.append((None, o_list_remove, 'remove', _(u'Cancel Sort')))
-            item.btns.append('<a class="toggle" href="%s"><i class="icon-%s"></i></a>' % (
+            menus.append((None, o_list_remove, 'times', _(u'Cancel Sort')))
+            item.btns.append('<a class="toggle" href="%s"><i class="fa fa-%s"></i></a>' % (
                 self.get_query_string({ORDER_VAR: '.'.join(o_list_toggle)}), 'sort-up' if order_type == "asc" else 'sort-down'))
 
-        item.menus.extend(['<li%s><a href="%s" class="active"><i class="icon-%s"></i> %s</a></li>' %
+        item.menus.extend(['<li%s><a href="%s" class="active"><i class="fa fa-%s"></i> %s</a></li>' %
                          (
                              (' class="active"' if sorted and order_type == i[
                               0] else ''),

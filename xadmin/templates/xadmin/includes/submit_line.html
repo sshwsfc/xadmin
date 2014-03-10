@@ -2,7 +2,7 @@
 {% load xadmin_tags %}
 <div class="form-actions well well-sm clearfix">
 {% if show_delete_link %}
-  <a href="{{ delete_url }}" class="btn btn-danger deletelink col-xs-2 show-xs"><i class="fa fa-trash"></i></a>
+  <a href="{{ delete_url }}" class="btn btn-danger deletelink col-xs-2 show-xs"><i class="fa fa-trash-o"></i></a>
 {% endif %}
 
 {% if show_save %}
@@ -21,7 +21,7 @@
 </div>
 
 {% if show_delete_link %}
-  <a href="{{ delete_url }}" class="btn btn-danger deletelink pull-right hide-xs"><i class="fa fa-trash"></i> {% trans "Delete" %}</a>
+  <a href="{{ delete_url }}" class="btn btn-danger deletelink pull-right hide-xs"><i class="fa fa-trash-o"></i> {% trans "Delete" %}</a>
 {% endif %}
 
 {% view_block 'submit_line' %}

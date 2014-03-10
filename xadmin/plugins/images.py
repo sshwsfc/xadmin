@@ -16,12 +16,12 @@ def get_gallery_modal():
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title"></h4>
               </div>
-              <div class="modal-body"><div class="modal-image"><h1 class="loader"><i class="icon-spinner icon-spin icon-large loader"></i></h1></div></div>
+              <div class="modal-body"><div class="modal-image"><h1 class="loader"><i class="fa-spinner fa-spin fa fa-large loader"></i></h1></div></div>
               <div class="modal-footer">
-                  <a class="btn btn-info modal-prev"><i class="icon-arrow-left icon-white"></i> <span>%s</span></a>
-                  <a class="btn btn-primary modal-next"><span>%s</span> <i class="icon-arrow-right icon-white"></i></a>
-                  <a class="btn btn-success modal-play modal-slideshow" data-slideshow="5000"><i class="icon-play icon-white"></i> <span>%s</span></a>
-                  <a class="btn btn-default modal-download" target="_blank"><i class="icon-download"></i> <span>%s</span></a>
+                  <a class="btn btn-info modal-prev"><i class="fa fa-arrow-left"></i> <span>%s</span></a>
+                  <a class="btn btn-primary modal-next"><span>%s</span> <i class="fa fa-arrow-right"></i></a>
+                  <a class="btn btn-success modal-play modal-slideshow" data-slideshow="5000"><i class="fa fa-play"></i> <span>%s</span></a>
+                  <a class="btn btn-default modal-download" target="_blank"><i class="fa fa-download"></i> <span>%s</span></a>
               </div>
             </div><!-- /.modal-content -->
           </div><!-- /.modal-dialog -->
