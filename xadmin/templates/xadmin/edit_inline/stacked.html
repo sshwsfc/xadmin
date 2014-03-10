@@ -7,7 +7,7 @@
   <div class="panel formset-row row fieldset">
     <div class="panel-heading">
       {% if formset.formset.can_delete %}
-        <a class="delete-row pull-right"><i class="icon icon-remove"></i></a>
+        <a class="delete-row pull-right"><i class="icon fa fa-remove"></i></a>
       {% endif %}
       <b>{{ formset.opts.verbose_name|title }}:</b>&nbsp;{% if fs.instance.pk %}{{ fs.instance }}{% else %}#<span class="formset-num">{{ forloop.counter }}</span>{% endif %}
     </div>
@@ -21,7 +21,7 @@
   <div class="panel formset-row row fieldset">
     <div class="panel-heading">
       {% if formset.formset.can_delete %}
-        <a class="delete-row pull-right"><i class="icon icon-remove"></i></a>
+        <a class="delete-row pull-right"><i class="icon fa fa-remove"></i></a>
       {% endif %}
       <b>{{ formset.opts.verbose_name|title }}:</b>&nbsp;#<span class="formset-num"></span>
     </div>

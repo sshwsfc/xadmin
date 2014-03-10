@@ -5,11 +5,11 @@
     <input name="{{ search_name }}" class="form-control" type="text">
     <span class="input-group-btn">
       <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-        <i class="icon-search"></i> {% trans "Search" %} <span class="caret"></span>
+        <i class="fa fa-search"></i> {% trans "Search" %} <span class="caret"></span>
       </button>
       <ul class="dropdown-menu">
       {% for m in search_models %}
-          <li><a data-action="{{m.url}}"><i class="icon-search"></i> {{m.title}}</a></li>
+          <li><a data-action="{{m.url}}"><i class="fa fa-search"></i> {{m.title}}</a></li>
       {% endfor %}
       </ul>
     </span>
@@ -19,10 +19,10 @@
 {% if add_models %}
 <li class="dropdown g-add">
   <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-  <i class="icon-plus icon-white"></i> <span class="hide-sm">{% trans "Add" %} <i class="caret"></i></span></a>
+  <i class="fa fa-plus"></i> <span class="hide-sm">{% trans "Add" %} <i class="caret"></i></span></a>
   <ul id="g-add-menu" class="dropdown-menu" role="menu">
     {% for m in add_models %}
-        <li><a href="{{m.url}}"><i class="icon-plus"></i> {{m.title}}</a></li>
+        <li><a href="{{m.url}}"><i class="fa fa-plus"></i> {{m.title}}</a></li>
     {% endfor %}
   </ul>
 </li>

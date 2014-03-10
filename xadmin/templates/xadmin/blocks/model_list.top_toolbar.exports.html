@@ -1,11 +1,11 @@
 {% load i18n %}
 <div class="btn-group export">
   <a class="dropdown-toggle btn btn-default btn-sm" data-toggle="dropdown" href="#">
-    <i class="icon-share"></i> {% trans "Export" %} <span class="caret"></span>
+    <i class="fa fa-share"></i> {% trans "Export" %} <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
     {% for et in export_types %}
-      <li><a data-toggle="modal" data-target="#export-modal-{{et.type}}"><i class="icon-circle-arrow-down"></i> {% trans "Export" %} {{et.name}}</a></li>
+      <li><a data-toggle="modal" data-target="#export-modal-{{et.type}}"><i class="fa fa-circle-arrow-down"></i> {% trans "Export" %} {{et.name}}</a></li>
     {% endfor %}
   </ul>
 
@@ -44,7 +44,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
-            <button class="btn btn-success" type="submit"><i class="icon-share"></i> {% trans "Export" %}</button>
+            <button class="btn btn-success" type="submit"><i class="fa fa-share"></i> {% trans "Export" %}</button>
           </div>
           </form>
         </div><!-- /.modal-content -->

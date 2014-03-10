@@ -12,7 +12,7 @@
 </ul>
 {% endblock %}
 
-{% block nav_title %}{% if model_icon %}<i class="icon-{{model_icon}}"><sub class="icon-pencil"></sub></i> {% endif %}
+{% block nav_title %}{% if model_icon %}<i class="fa fa-{{model_icon}}"><sub class="fa fa-pencil"></sub></i> {% endif %}
   {% blocktrans count counter=count %}Change one {{ objects_name }}{% plural %}Batch change {{ counter }} {{ objects_name }}{% endblocktrans %}
 {% endblock %}
 

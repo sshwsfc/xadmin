@@ -6,7 +6,7 @@
 
 {% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} change-form{% endblock %}
 
-{% block nav_title %}{% if model_icon %}<i class="icon-{{model_icon}}"><sub class="icon-{% if add%}plus{%else%}pencil{%endif%}"></sub></i> {% endif %}
+{% block nav_title %}{% if model_icon %}<i class="fa fa-{{model_icon}}"><sub class="fa fa-{% if add%}plus{%else%}pencil{%endif%}"></sub></i> {% endif %}
 {{ title }}{% endblock %}
 
 {% block content %}

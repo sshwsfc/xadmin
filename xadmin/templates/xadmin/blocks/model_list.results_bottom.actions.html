@@ -4,13 +4,13 @@
   <input type="hidden" id="select-across" name="select_across" value=""/>
   <div class="btn-group clearfix dropup">
     <a class="dropdown-toggle btn btn-success" data-toggle="dropdown" href="#">
-    <i class="icon-wrench icon-white"></i> 
+    <i class="fa fa-wrench"></i> 
     <span class="action-counter">{{ selection_note }}</span>
     <span class="all" style="display: none;">{{ selection_note_all }}</span>
     <span class="caret"></span></a>
     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
       {% for name, descr, icon in action_choices %}
-        <li><a onclick="$.do_action('{{name}}');"><i class="icon-{{icon}}"></i> {{descr}}</a></li>
+        <li><a onclick="$.do_action('{{name}}');"><i class="fa fa-{{icon}}"></i> {{descr}}</a></li>
       {% endfor %}
     </ul>
   </div>

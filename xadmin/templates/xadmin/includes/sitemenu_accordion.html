@@ -11,9 +11,9 @@
         <span class="badge badge-info">{{ item.menus|length }}</span>
         <a class="accordion-toggle" data-toggle="collapse" data-parent="#nav-accordion" href="#nav-panel-{{forloop.counter}}">
           {% if item.url %}<a href="{{ item.url }}" class="section">{% endif %}
-          {% if item.icon %}<i class="icon-fixed-width icon-{{item.icon}}"></i>
-          {% elif item.first_icon %}<i class="icon-fixed-width icon-{{item.first_icon}}"></i>
-          {%else%}<i class="icon-fixed-width icon-exclamation-sign"></i>{% endif %}
+          {% if item.icon %}<i class="fa fa-fixed-width fa fa-{{item.icon}}"></i>
+          {% elif item.first_icon %}<i class="fa fa-fixed-width fa fa-{{item.first_icon}}"></i>
+          {%else%}<i class="fa fa-fixed-width fa fa-exclamation-sign"></i>{% endif %}
           {{ item.title }}
           {% if item.url %}</a>{% endif %}
         </a>
@@ -22,7 +22,7 @@
     <div id="nav-panel-{{forloop.counter}}" class="list-group panel-collapse collapse{% if item.selected %} in{% endif %}">
       {% for sitem in item.menus %}
       <a href="{{ sitem.url|default_if_none:'#' }}" class="list-group-item{% if sitem.selected %} active{% endif %}">
-        {% if sitem.icon %}<i class="icon-fixed-width icon-{{sitem.icon}}"></i>{%else%}<i class="icon-fixed-width icon-exclamation-sign"></i>{% endif %}
+        {% if sitem.icon %}<i class="fa fa-fixed-width fa fa-{{sitem.icon}}"></i>{%else%}<i class="fa fa-fixed-width fa fa-exclamation-sign"></i>{% endif %}
         {{ sitem.title }}</span>
       </a>
       {% endfor %}

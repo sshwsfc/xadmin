@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block nav_title %}
-  <i class="icon-time"></i> {% blocktrans with opts.verbose_name as verbose_name %}Diff {{verbose_name}}{% endblocktrans %}
+  <i class="fa fa-time"></i> {% blocktrans with opts.verbose_name as verbose_name %}Diff {{verbose_name}}{% endblocktrans %}
 {% endblock %}
 
 {% block content %}
@@ -37,8 +37,8 @@
       {% endfor %}
         <tr>
           <th scope="row">{% trans "Revert to" %}</th>
-          <td><a class="btn btn-default" href="{{revision_a_url}}"><i class="icon-undo"></i> {% trans 'Revert' %}</a></td>
-          <td><a class="btn btn-default" href="{{revision_b_url}}"><i class="icon-undo"></i> {% trans 'Revert' %}</a></td>
+          <td><a class="btn btn-default" href="{{revision_a_url}}"><i class="fa fa-undo"></i> {% trans 'Revert' %}</a></td>
+          <td><a class="btn btn-default" href="{{revision_b_url}}"><i class="fa fa-undo"></i> {% trans 'Revert' %}</a></td>
         </tr>
     </tbody>
   </table>
