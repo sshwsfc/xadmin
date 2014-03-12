@@ -419,6 +419,39 @@ class RelatedFieldListFilter(ListFieldFilter):
                 'display': EMPTY_CHANGELIST_VALUE,
             }
 
+@manager.register
+class MultiSelectFieldListFilter(ListFieldFilter):
+    """ Delegates the filter to the default filter and ors the results of each
+     
+    Lists the distinct values of each field as a checkbox
+    Uses the default spec for each 
+     
+    """
+    template = 'xadmin/filters/checklist.html'
+    lookup_formats = {'in': '%s__in'}
+ 
+    @classmethod
+    def test(cls, field, request, params, model, admin_view, field_path):
+        return True
+ 
+    def __init__(self, field, request, params, model, model_admin, field_path):
+        super(MultiSelectFieldListFilter,self).__init__(field, request, params, model, model_admin, field_path)
+        self.lookup_choices = [x[0] for x in self.admin_view.queryset().order_by(field_path).values_list(field_path).distinct().exclude(**{"%s__isnull"%field_path:True}) if str(x[0]).strip()!=""]#field.get_choices(include_blank=False)
+
+    def choices(self):
+        self.lookup_in_val = (type(self.lookup_in_val) in (tuple,list)) and self.lookup_in_val or list(self.lookup_in_val)
+        yield {
+            'selected': len(self.lookup_in_val) == 0,
+            'query_string': self.query_string({},[self.lookup_in_name]),
+            'display': _('All'),
+        }
+        for val in self.lookup_choices:
+            yield {
+                'selected': smart_unicode(val) in self.lookup_in_val,
+                'query_string': self.query_string({self.lookup_in_name: ",".join([val]+self.lookup_in_val),}),
+                'remove_query_string': self.query_string({self.lookup_in_name: ",".join([v for v in self.lookup_in_val if v != val]),}),
+                'display': val,
+            }
 
 @manager.register
 class AllValuesFieldListFilter(ListFieldFilter):
