@@ -1,7 +1,12 @@
 (function($) {
    
   $(function(){
-
+    
+	// filter
+    $('.filter-multiselect input[type=checkbox]').click(function(e){
+    	window.location.href = $(this).parent().attr('href');
+    });
+    
     // menber filter
     $('.filter-number .remove').click(function(e){
       $(this).parent().parent().find('input[type="number"]').val('');
