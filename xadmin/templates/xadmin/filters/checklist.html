@@ -1,5 +1,5 @@
 {% load i18n %}
-<li class="dropdown-submenu">
+<li class="dropdown-submenu filter-multiselect">
   <a><i class="icon-filter {% if spec.is_used %}text-success{%else%}text-muted{% endif %}"></i> {{ title }}</a>
   <ul class="dropdown-menu">
     {% for choice in choices %}
