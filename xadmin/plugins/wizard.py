@@ -122,7 +122,7 @@ class WizardFormPlugin(BaseAdminPlugin):
                     return callback(self)
                 elif hasattr(self.admin_view, str(callback)):
                     return getattr(self.admin_view, str(callback))(self)
-        elif isinstance(attrs, forms.BaseForm):
+        elif issubclass(attrs, forms.BaseForm):
             return attrs
         return None
 
