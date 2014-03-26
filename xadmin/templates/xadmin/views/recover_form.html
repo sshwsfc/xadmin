@@ -5,7 +5,7 @@
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
-  <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
+  <li><a href="{% url 'xadmin:index' %}">{% trans 'Home' %}</a></li>
   <li>
     {% if has_view_permission %}
     <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>

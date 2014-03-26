@@ -6,7 +6,7 @@
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
-    <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
+    <li><a href="{% url 'xadmin:index' %}">{% trans 'Home' %}</a></li>
     <li><a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a></li>
     <li>{% trans 'Change multiple objects' %}</li>
 </ul>

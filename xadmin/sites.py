@@ -24,9 +24,9 @@ class MergeAdminMetaclass(type):
 
 class AdminSite(object):
 
-    def __init__(self, name='admin', app_name='admin'):
+    def __init__(self, name='xadmin'):
         self.name = name
-        self.app_name = app_name
+        self.app_name = 'xadmin'
 
         self._registry = {}  # model_class class -> admin_class class
         self._registry_avs = {}  # admin_view_class class -> admin_class class
@@ -322,7 +322,7 @@ class AdminSite(object):
 
     @property
     def urls(self):
-        return self.get_urls(), self.app_name, self.name
+        return self.get_urls(), self.name, self.app_name
 
     def i18n_javascript(self, request):
         """

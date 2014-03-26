@@ -47,7 +47,7 @@ class BookmarkPlugin(BaseAdminPlugin):
         model_info = (self.opts.app_label, self.opts.module_name)
         has_selected = False
         menu_title = _(u"Bookmark")
-        list_base_url = reverse('admin:%s_%s_changelist' %
+        list_base_url = reverse('xadmin:%s_%s_changelist' %
                                 model_info, current_app=self.admin_site.name)
 
         # local bookmarks
@@ -78,7 +78,7 @@ class BookmarkPlugin(BaseAdminPlugin):
         bk_model_info = (Bookmark._meta.app_label, Bookmark._meta.module_name)
         bookmarks_queryset = Bookmark.objects.filter(
             content_type=content_type,
-            url_name='admin:%s_%s_changelist' % model_info
+            url_name='xadmin:%s_%s_changelist' % model_info
         ).filter(Q(user=self.user) | Q(is_share=True))
 
         for bk in bookmarks_queryset:
@@ -90,13 +90,13 @@ class BookmarkPlugin(BaseAdminPlugin):
                 change_or_detail = 'detail'
 
             bookmarks.append({'title': bk.title, 'selected': selected, 'url': bk.url, 'edit_url':
-                              reverse('admin:%s_%s_%s' % (bk_model_info[0], bk_model_info[1], change_or_detail),
+                              reverse('xadmin:%s_%s_%s' % (bk_model_info[0], bk_model_info[1], change_or_detail),
                                       args=(bk.id,))})
             if selected:
                 menu_title = bk.title
                 has_selected = True
 
-        post_url = reverse('admin:%s_%s_bookmark' % model_info,
+        post_url = reverse('xadmin:%s_%s_bookmark' % model_info,
                            current_app=self.admin_site.name)
 
         new_context = {
@@ -128,7 +128,7 @@ class BookmarkView(ModelAdminView):
     @transaction.commit_on_success
     def post(self, request):
         model_info = (self.opts.app_label, self.opts.module_name)
-        url_name = 'admin:%s_%s_changelist' % model_info
+        url_name = 'xadmin:%s_%s_changelist' % model_info
         bookmark = Bookmark(
             content_type=ContentType.objects.get_for_model(self.model),
             title=request.POST[
