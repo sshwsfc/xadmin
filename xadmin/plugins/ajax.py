@@ -19,7 +19,10 @@ class AjaxListPlugin(BaseAjaxPlugin):
 
     def get_result_list(self, response):
         av = self.admin_view
-        base_fields = av.base_list_display
+        if '_fields' in self.request.GET:
+            base_fields = self.request.GET['_fields'].split(',')
+        else:
+            base_fields = av.base_list_display
         headers = dict([(c.field_name, force_unicode(c.text)) for c in av.result_headers(
         ).cells if c.field_name in base_fields])
 
