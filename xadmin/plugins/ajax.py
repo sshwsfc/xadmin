@@ -16,13 +16,17 @@ class BaseAjaxPlugin(BaseAdminPlugin):
 
 
 class AjaxListPlugin(BaseAjaxPlugin):
+    
+    def get_list_display(self,list_display):
+        list_fields = [field for field in self.request.GET.get('_fields',"").split(",") 
+                                if field.strip() != ""]
+        if list_fields:
+            return list_fields
+        return list_display
 
     def get_result_list(self, response):
         av = self.admin_view
-        if '_fields' in self.request.GET:
-            base_fields = self.request.GET['_fields'].split(',')
-        else:
-            base_fields = av.base_list_display
+        base_fields = self.get_list_display(av.base_list_display)
         headers = dict([(c.field_name, force_unicode(c.text)) for c in av.result_headers(
         ).cells if c.field_name in base_fields])
 
