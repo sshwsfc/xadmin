@@ -14,7 +14,7 @@
           {% if item.icon %}<i class="fa-fw {{item.icon}}"></i>
           {% elif item.first_icon %}<i class="fa-fw {{item.first_icon}}"></i>
           {%else%}<i class="fa-fw fa fa-circle-o"></i>{% endif %}
-          {{ item.title }}
+          {% trans item.title %}
           {% if item.url %}</a>{% endif %}
         </a>
       </h6>
