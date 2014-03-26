@@ -33,7 +33,7 @@ class TopNavPlugin(BaseAdminPlugin):
                     try:
                         search_models.append({
                             'title': _('Search %s') % capfirst(model._meta.verbose_name_plural),
-                            'url': reverse('admin:%s_%s_changelist' % info, current_app=site_name),
+                            'url': reverse('xadmin:%s_%s_changelist' % info, current_app=site_name),
                             'model': model
                         })
                     except NoReverseMatch:
@@ -56,7 +56,7 @@ class TopNavPlugin(BaseAdminPlugin):
                 try:
                     add_models.append({
                         'title': _('Add %s') % capfirst(model._meta.verbose_name),
-                        'url': reverse('admin:%s_%s_add' % info, current_app=site_name),
+                        'url': reverse('xadmin:%s_%s_add' % info, current_app=site_name),
                         'model': model
                     })
                 except NoReverseMatch:

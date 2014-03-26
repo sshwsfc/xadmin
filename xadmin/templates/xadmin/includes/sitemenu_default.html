@@ -4,7 +4,7 @@
 {% block navbar_md %}
   <ul class="well nav nav-pills nav-stacked nav-sitemenu hide-sm">
     <li>
-      <a href="{% url 'admin:index' %}"><i class="fa-fw fa fa-home"></i> {% trans 'Home' %}</a>
+      <a href="{% url 'xadmin:index' %}"><i class="fa-fw fa fa-home"></i> {% trans 'Home' %}</a>
     </li>
     {% for item in nav_menu %}
       <li class="nav-header {% if item.selected %} active{% endif %}">
@@ -27,7 +27,7 @@
 {% block navbar_sm %}
   <ul class="well nav nav-list nav-sitemenu show-sm">
     <li class="app_menu">
-      <a href="{% url 'admin:index' %}"><i class="icon fa-fw fa fa-home"></i></a><hr/>
+      <a href="{% url 'xadmin:index' %}"><i class="icon fa-fw fa fa-home"></i></a><hr/>
     </li>
     {% for item in nav_menu %}
       <li class="app_menu dropdown-submenu {% if item.selected %} active{% endif %}">

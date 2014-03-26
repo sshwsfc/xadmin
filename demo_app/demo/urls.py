@@ -7,6 +7,10 @@ xadmin.autodiscover()
 # from xadmin.plugins import xversion
 # xversion.register_models()
 
+from django.contrib import admin
+admin.autodiscover()
+
 urlpatterns = patterns('',
-                       url(r'', include(xadmin.site.urls)),
-                       )
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'^', include(xadmin.site.urls))
+)

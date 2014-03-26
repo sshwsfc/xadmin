@@ -2,7 +2,7 @@ from xadmin.sites import AdminSite
 from xadmin.views import BaseAdminView, CommAdminView, ListAdminView
 from models import ModelA, ModelB
 
-site = AdminSite('views_base','Views Base')
+site = AdminSite('views_base')
 
 class ModelAAdmin(object):
     test_model_attr = 'test_model'

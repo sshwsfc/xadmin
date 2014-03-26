@@ -398,7 +398,7 @@ def help_text_for_field(name, model):
 
 
 def admin_urlname(value, arg):
-    return 'admin:%s_%s_%s' % (value.app_label, value.module_name, arg)
+    return 'xadmin:%s_%s_%s' % (value.app_label, value.module_name, arg)
 
 
 def boolean_icon(field_val):
