@@ -182,7 +182,7 @@
         this.btn_add_all.toggleClass('disabled', this.from_box.find('option').length == 0);
         this.btn_remove_all.toggleClass('disabled', this.to_box.find('option').length == 0);
     },
-    filter_key_up: function(e) {
+    filter_key_up: function(event) {
       var from = this.from_box[0];
       // don't submit form if user pressed Enter
       if ((event.which && event.which == 13) || (event.keyCode && event.keyCode == 13)) {
@@ -196,7 +196,7 @@
       from.selectedIndex = temp;
       return true;
     },
-    filter_key_down: function(e) {
+    filter_key_down: function(event) {
       var from = this.from_box[0];
       if ((event.which && event.which == 13) || (event.keyCode && event.keyCode == 13)) {
         return false;
