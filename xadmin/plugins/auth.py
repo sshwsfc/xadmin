@@ -130,6 +130,8 @@ class UserFieldPlugin(BaseAdminPlugin):
 
     def get_form_datas(self, datas):
         if self.user_fields and 'data' in datas:
+            if hasattr(datas['data'],'_mutable') and not datas['data']._mutable:
+                datas['data'] = datas['data'].copy()
             for f in self.user_fields:
                 datas['data'][f] = self.user.id
         return datas
