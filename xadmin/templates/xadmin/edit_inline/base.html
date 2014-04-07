@@ -6,7 +6,9 @@
 
 {% block box_title %}
   {% if not formset.formset.detail_page %}
+  {% if has_add_permission %}
   <a class="add-row" id="{{ prefix }}-add-row" href="javascript:void(0)"><i class="icon fa fa-plus"></i></a>
+  {% endif %}
   {% endif %}
   {{ formset.opts.verbose_name_plural|title }}
 {% endblock box_title %}
