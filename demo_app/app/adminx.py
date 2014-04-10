@@ -32,7 +32,7 @@ class GlobalSetting(object):
     global_models_icon = {
         Host: 'fa fa-laptop', IDC: 'fa fa-cloud'
     }
-    menu_style = 'accordion'
+    menu_style = 'default'#'accordion'
 xadmin.site.register(views.CommAdminView, GlobalSetting)
 
 
@@ -76,7 +76,8 @@ class HostAdmin(object):
     search_fields = ['name', 'ip', 'description']
     list_filter = ['idc', 'guarantee_date', 'status', 'brand', 'model',
                    'cpu', 'core_num', 'hard_disk', 'memory', ('service_type',xadmin.filters.MultiSelectFieldListFilter)]
-
+    
+    list_quick_filter = ['service_type',{'field':'idc__name','limit':10}]
     list_bookmarks = [{'title': "Need Guarantee", 'query': {'status__exact': 2}, 'order': ('-guarantee_date',), 'cols': ('brand', 'guarantee_date', 'service_type')}]
 
     show_detail_fields = ('idc',)
