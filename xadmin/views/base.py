@@ -298,6 +298,7 @@ class CommAdminView(BaseAdminView):
     global_models_icon = {}
     default_model_icon = None
     apps_label_title = {}
+    apps_icons = {}
 
     def get_site_menu(self):
         return None
@@ -321,6 +322,7 @@ class CommAdminView(BaseAdminView):
             if getattr(model_admin, 'hidden_menu', False):
                 continue
             app_label = model._meta.app_label
+            app_icon = None
             model_dict = {
                 'title': unicode(capfirst(model._meta.verbose_name_plural)),
                 'url': self.get_model_url(model, "changelist"),
@@ -349,6 +351,9 @@ class CommAdminView(BaseAdminView):
                                 app_title = getattr(mod, 'verbose_name')
                             elif 'app_title' in dir(mod):
                                 app_title = getattr(mod, 'app_title')
+                #find app icon
+                if app_label.lower() in self.apps_icons:
+                    app_icon = self.apps_icons[app_label.lower()]
 
                 nav_menu[app_key] = {
                     'title': app_title,
@@ -356,9 +361,12 @@ class CommAdminView(BaseAdminView):
                 }
 
             app_menu = nav_menu[app_key]
-            if ('first_icon' not in app_menu or
+            if app_icon:
+                app_menu['first_icon'] = app_icon
+            elif ('first_icon' not in app_menu or
                     app_menu['first_icon'] == self.default_model_icon) and model_dict.get('icon'):
                 app_menu['first_icon'] = model_dict['icon']
+
             if 'first_url' not in app_menu and model_dict.get('url'):
                 app_menu['first_url'] = model_dict['url']
 
