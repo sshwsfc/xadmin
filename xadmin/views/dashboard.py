@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import PermissionDenied
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db import models
 from django.db.models.base import ModelBase
 from django.forms.forms import DeclarativeFieldsMetaclass
@@ -390,7 +390,10 @@ class QuickBtnWidget(BaseWidget):
                 btn['title'] = model._meta.verbose_name
                 btn['icon'] = self.dashboard.get_model_icon(model)
             else:
-                btn['url'] = b['url']
+                try:
+                    btn['url'] = reverse(b['url'])
+                except NoReverseMatch:
+                    btn['url'] = b['url']
 
             if 'title' in b:
                 btn['title'] = b['title']
