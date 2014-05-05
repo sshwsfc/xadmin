@@ -15,7 +15,7 @@ git for-each-ref --sort='*authordate' --format='%(tag)' refs/tags | grep -v '^$'
     fi
 
     echo '    ' >> changelog.md
-    GIT_PAGER=cat git log --no-merges --date=short  --pretty=format:'- %ad (%an) %s -> [view commit](https://github.com/xplusz/smartbus-nodejs/commit/%H)' $TAG..$NEXT >> changelog.md
+    GIT_PAGER=cat git log --no-merges --date=short  --pretty=format:'- %ad (%an) %s -> [view commit](https://github.com/sshwsfc/django-xadmin/commit/%H)' $TAG..$NEXT >> changelog.md
     echo '    ' >> changelog.md
     NEXT=$TAG
 done
