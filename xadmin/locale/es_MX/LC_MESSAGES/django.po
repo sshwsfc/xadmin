@@ -783,7 +783,7 @@ msgid "Export with format."
 msgstr "Exportar con formato"
 
 #: templates/xadmin/blocks/model_list.top_toolbar.exports.html:39
-msgid "Export all datas."
+msgid "Export all data."
 msgstr "Exportar todos los datos."
 
 #: templates/xadmin/blocks/model_list.top_toolbar.exports.html:43

@@ -769,7 +769,7 @@ msgid "Export with format."
 msgstr "Formatuarekin esportatu."
 
 #: templates/xadmin/blocks/model_list.top_toolbar.exports.html:39
-msgid "Export all datas."
+msgid "Export all data."
 msgstr "Data guztiak esportatu."
 
 #: templates/xadmin/blocks/model_list.top_toolbar.exports.html:43

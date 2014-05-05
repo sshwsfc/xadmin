@@ -764,7 +764,7 @@ msgid "Export with format."
 msgstr "导出格式"
 
 #: templates/xadmin/blocks/model_list.top_toolbar.exports.html:39
-msgid "Export all datas."
+msgid "Export all data."
 msgstr "导出全部数据"
 
 #: templates/xadmin/blocks/model_list.top_toolbar.exports.html:43
