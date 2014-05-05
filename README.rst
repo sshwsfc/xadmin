@@ -110,8 +110,9 @@ Changelogs
 - Fixed reverse many 2 many lookup giving FieldDoesNotExist error.
 - Fixed user permission check in inline model.
 
-`Detail Changelogs`_
-.. _Detail Changelogs: ./changelog.md
+`Detail`_
+
+.. _Detail: ./changelog.md
 
 Online Group
 ------------
