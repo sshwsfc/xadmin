@@ -93,6 +93,26 @@ Documentation
 
 .. _Chinese: https://xadmin.readthedocs.org/en/latest/index.html
 
+Changelogs
+-------------
+
+0.5.0
+^^^^^
+    
+- Update fontawesome to 4.0.3
+- Update javascript files to compact fa icons new version
+- Update tests for the new instance method of the AdminSite class
+- Added demo graphs
+- Added quickfilter plugin.
+- Adding apps_icons with same logic of apps_label_title.
+- Add xlsxwriter for big data export.
+- Upgrade reversion models admin list page.
+- Fixed reverse many 2 many lookup giving FieldDoesNotExist error.
+- Fixed user permission check in inline model.
+
+`Detail Changelogs`_
+.. _Detail Changelogs: ./changelog.md
+
 Online Group
 ------------
 
