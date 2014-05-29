@@ -7,7 +7,7 @@
       <a href="{% url 'xadmin:index' %}"><i class="fa-fw fa fa-home"></i> {% trans 'Home' %}</a>
     </li>
     {% for item in nav_menu %}
-      <li class="nav-header {% if item.selected %} active{% endif %}">
+      <li class="{% if item.menus %}nav-header{% endif %} {% if item.selected %} active{% endif %}">
         {% if item.url %}<a href="{{ item.url }}" class="section">{% endif %}
         {% if item.icon %}<i class="fa-fw {{item.icon}}"></i>{% endif %}{{ item.title }}
         {% if item.url %}</a>{% endif %}
