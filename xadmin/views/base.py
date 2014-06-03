@@ -295,6 +295,7 @@ class CommAdminView(BaseAdminView):
     menu_template = 'xadmin/includes/sitemenu_default.html'
 
     site_title = None
+    site_footer = None
     global_models_icon = {}
     default_model_icon = None
     apps_label_title = {}
@@ -436,6 +437,7 @@ class CommAdminView(BaseAdminView):
             'menu_template': self.menu_template,
             'nav_menu': nav_menu,
             'site_title': self.site_title or _(u'Django Xadmin'),
+            'site_footer': self.site_footer or _(u'my-company.inc 2013'),
             'breadcrumbs': self.get_breadcrumb()
         })
 
