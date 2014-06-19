@@ -100,7 +100,6 @@ class I18nView(BaseAdminView):
 
     need_site_permission = False
 
-    @never_cache
     def get(self, request, *args, **kwargs):
         context = self.get_context()
         """
