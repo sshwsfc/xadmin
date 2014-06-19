@@ -7,7 +7,7 @@ from delete import DeleteAdminView
 from detail import DetailAdminView
 from form import FormAdminView
 from dashboard import Dashboard, BaseWidget, widget_manager, ModelDashboard
-from website import IndexView, LoginView, LogoutView, UserSettingView
+from website import IndexView, LoginView, LogoutView, UserSettingView, I18nView
 
 __all__ = (
     'BaseAdminObject',
@@ -23,6 +23,7 @@ def register_builtin_views(site):
     site.register_view(r'^$', IndexView, name='index')
     site.register_view(r'^login/$', LoginView, name='login')
     site.register_view(r'^logout/$', LogoutView, name='logout')
+    site.register_view(r'^jsi18n/$', I18nView, name='jsi18n')
 
     site.register_view(r'^settings/user$', UserSettingView, name='user_settings')
 

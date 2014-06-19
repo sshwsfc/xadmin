@@ -292,13 +292,8 @@ class AdminSite(object):
             return update_wrapper(wrapper, view)
 
         # Admin-site-wide views.
-        urlpatterns = patterns('',
-                               url(r'^jsi18n/$', wrap(self.i18n_javascript,
-                                                      cacheable=True), name='jsi18n')
-                               )
-
         # Registed admin views
-        urlpatterns += patterns('',
+        urlpatterns = patterns('',
                                 *[url(
                                   path, wrap(self.create_admin_view(clz_or_func)) if type(clz_or_func) == type and issubclass(clz_or_func, BaseAdminView) else include(clz_or_func(self)),
                                   name=name) for path, clz_or_func, name in self._registry_views]
@@ -323,19 +318,6 @@ class AdminSite(object):
     @property
     def urls(self):
         return self.get_urls(), self.name, self.app_name
-
-    def i18n_javascript(self, request):
-        """
-        Displays the i18n JavaScript that the Django admin requires.
-
-        This takes into account the USE_I18N setting. If it's set to False, the
-        generated JavaScript will be leaner and faster.
-        """
-        if settings.USE_I18N:
-            from django.views.i18n import javascript_catalog
-        else:
-            from django.views.i18n import null_javascript_catalog as javascript_catalog
-        return javascript_catalog(request, packages=['django.conf', 'xadmin'])
 
 # This global object represents the default admin site, for the common case.
 # You can instantiate AdminSite in your own code to create a custom admin site.
