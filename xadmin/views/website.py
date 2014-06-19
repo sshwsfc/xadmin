@@ -4,6 +4,7 @@ from django.views.decorators.cache import never_cache
 from django.contrib.auth.views import login
 from django.contrib.auth.views import logout
 from django.http import HttpResponse
+from django.conf import settings
 
 from base import BaseAdminView, filter_hook
 from dashboard import Dashboard
@@ -94,3 +95,21 @@ class LogoutView(BaseAdminView):
     @never_cache
     def post(self, request, *args, **kwargs):
         return self.get(request)
+
+class I18nView(BaseAdminView):
+
+    need_site_permission = False
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context()
+        """
+        Displays the i18n JavaScript that the Django admin requires.
+
+        This takes into account the USE_I18N setting. If it's set to False, the
+        generated JavaScript will be leaner and faster.
+        """
+        if settings.USE_I18N:
+            from django.views.i18n import javascript_catalog
+        else:
+            from django.views.i18n import null_javascript_catalog as javascript_catalog
+        return javascript_catalog(request, packages=['django.conf', 'xadmin'])
