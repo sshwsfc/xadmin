@@ -1,4 +1,4 @@
-include README.md
+include README.rst
 include LICENSE
 include MANIFEST.in
 recursive-include xadmin/locale *
