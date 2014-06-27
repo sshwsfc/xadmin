@@ -403,7 +403,7 @@ class CommAdminView(BaseAdminView):
 
             def filter_item(item):
                 if 'menus' in item:
-                    before_filter_length = len(item['menu'])
+                    before_filter_length = len(item['menus'])
                     item['menus'] = [filter_item(
                         i) for i in item['menus'] if check_menu_permission(i)]
                     after_filter_length = len(item['menus'])
