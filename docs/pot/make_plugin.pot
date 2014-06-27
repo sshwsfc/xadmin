@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2013, sshwsfc
+# Copyright (C) 2015, sshwsfc
 # This file is distributed under the same license as the Django Xadmin package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Django Xadmin 1.0.0a3\n"
+"Project-Id-Version: Django Xadmin 2.1.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-01 21:34\n"
+"POT-Creation-Date: 2014-06-27 16:52+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,268 +16,268 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../make_plugin.rst:6
-# e4a459be49cc435fa5ae64bcb2c77899
+#: ../../make_plugin.rst:6
+# b43dfaa9cc8d4537ac6e669e53fef990
 msgid "|xadmin| 插件制作"
 msgstr ""
 
-#: ../make_plugin.rst:9
-# 5e9b04218802473bbf8e7ff09aad3b44
+#: ../../make_plugin.rst:9
+# c11dab0550a045ff9dc660dacf6ac014
 msgid "插件原理"
 msgstr ""
 
-#: ../make_plugin.rst:11
-# 856012af424f455ab9f615ab5df9fd35
+#: ../../make_plugin.rst:11
+# c28f3d8ca68342c2955d131dcecac437
 msgid "|xadmin| 的插件系统架构设计一定程度上借鉴了 ``wordpress`` 的设计。 想要了解 |xadmin| 的插件系统架构首先需要了解 |xadmin| ``AdminView`` 的概念。 简单来说，就是 |xadmin| 系统中每一个页面都是一个 ``AdminView`` 对象返回的 ``HttpResponse`` 结果。|xadmin| 的插件系统做的事情其实就是在 ``AdminView`` 运行过程中改变其执行的逻辑， 或是改变其返回的结果，起到修改或增强原有功能的效果。下面让我们看看整个插件从制作完成到实际运行的整个过程。"
 msgstr ""
 
-#: ../make_plugin.rst:15
-# 68965a35912a444ca058f3edbb13510a
+#: ../../make_plugin.rst:15
+# 6f62be8474074f3ba11a25a6b07030aa
 msgid "首先需要创建自己的插件类， 插件类继承 :class:`~xadmin.views.BaseAdminPlugin` ::"
 msgstr ""
 
-#: ../make_plugin.rst:20
-# e0f75614ff1d45a6a38d9db6403c541f
+#: ../../make_plugin.rst:20
+# 12e5182766384dbeac03de1be79f9ecb
 msgid "开发好的插件首先要注册到 |xadmin| 中， 示例代码如下::"
 msgstr ""
 
-#: ../make_plugin.rst:25
-# d7ec51545f7848b7a00ada0c06314c16
+#: ../../make_plugin.rst:25
+# be35ef7295b849bdaaeb29cd0f6745d4
 msgid "其中插件的注册和使用可以参看 :meth:`xadmin.sites.AdminSite.register_plugin`"
 msgstr ""
 
-#: ../make_plugin.rst:28
-# e778a696e50741759a3b896975b6b39f
+#: ../../make_plugin.rst:28
+# 0e290e0b54674f19898251ff554f2cc3
 msgid "当将插件注册到 |xadmin| 后， |xadmin| 在创建 ``AdminView`` 实例的时候会将该插件放入实例的 :attr:`plugins` 属性。当 ``AdminView`` 在处理请求 时，会首先逐个调用 :attr:`plugins` 中插件的 :meth:`~xadmin.views.BaseAdminPlugin.init_request` 方法，插件在该方法中一般进行初始化的操作并且返回一个 Boolean 值告诉 ``AdminView`` 是否需要加载该插件。当 :meth:`~xadmin.views.BaseAdminPlugin.init_request` 方法返回值为 ``False`` 时， ``AdminView`` 不会加载该插件。实例如下::"
 msgstr ""
 
-#: ../make_plugin.rst:38
-# bbcdbb377db6432fbbf97a6a8dbac246
+#: ../../make_plugin.rst:38
+# 91fb56ef4ce0485d8a252754a24acc6e
 msgid "在以上实例中，插件根据自身的 ``say_hello`` 属性来决定是否让自己被加载。您可能会迷惑， ``say_hello`` 属性看起来一直会是 ``False`` 呀，那样这个插件不是永远不会被加载？ 其实 |xadmin| 在创建插件实例的时候会将 ``OptionClass`` 的同名属性替换插件的属性。这样，在不同的 ``OptionClass`` 下会有不同的插件结果，实例如下::"
 msgstr ""
 
-#: ../make_plugin.rst:46
-# bd4704fb2b024af1ace332b47b4bf705
+#: ../../make_plugin.rst:46
+# 268e408c890943e1884f3795f4a5cf5f
 msgid "理解以上内容后，让我们再看看插件具体是如何起作用的。在 ``AdminView`` 的执行过程中，可以被插件截获或修改的方法使用 :func:`~xadmin.views.base.filter_hook` 装饰，实例如下::"
 msgstr ""
 
-#: ../make_plugin.rst:54
-# daca9b89be51412e9d9281017a219d68
+#: ../../make_plugin.rst:54
+# 069c5da4613247df97b01901771a6370
 msgid "使用 :func:`~xadmin.views.base.filter_hook` 装饰的方法执行过程中会根据一定原则执行插件中的同名方法，具体信息查考该装饰器的文档内容。"
 msgstr ""
 
-#: ../../xadmin/views/base.py:docstring of xadmin.views.base.filter_hook:1
-# 7ecaf8fc22364f1f9c00ad13684206df
+#: ../../../xadmin/views/base.py:docstring of xadmin.views.base.filter_hook:1
+# f4894079ee434e5e8ca669498c771b3d
 msgid "表明 AdminView 的方法可以被插件插入的装饰器。执行使用了该装饰器的方法时，会按照以下过程执行:"
 msgstr ""
 
-#: ../../xadmin/views/base.py:docstring of xadmin.views.base.filter_hook:3
-# e0027bd4ad124883bb189ebc71d8397e
+#: ../../../xadmin/views/base.py:docstring of xadmin.views.base.filter_hook:3
+# 9d4f3bd44a174f00bbb0fb5613ec948f
 msgid "首先将实例的 plugins 属性取出，取出含有同样方法名的插件"
 msgstr ""
 
-#: ../../xadmin/views/base.py:docstring of xadmin.views.base.filter_hook:5
-# 0bef1f1b1e6b4a55aadcf27a6091d73b
+#: ../../../xadmin/views/base.py:docstring of xadmin.views.base.filter_hook:5
+# b060da42525240a5acd3938b4e8c846a
 msgid "按照插件方法的 ``priority`` 属性排序"
 msgstr ""
 
-#: ../../xadmin/views/base.py:docstring of xadmin.views.base.filter_hook:7
-# ac0f86dfdcad4a93b87dc7b62e7e530f
+#: ../../../xadmin/views/base.py:docstring of xadmin.views.base.filter_hook:7
+# 89ebe8d5b0754d26a2377e4f3001cd7f
 msgid "顺序执行插件方法，执行插件方法的规则:"
 msgstr ""
 
-#: ../../xadmin/views/base.py:docstring of xadmin.views.base.filter_hook:9
-# cd3d2a66bc6e4735b39af05cbf499b15
+#: ../../../xadmin/views/base.py:docstring of xadmin.views.base.filter_hook:9
+# c4a6a8cc492a4543a41d3f4f2b322890
 msgid "如果插件方法没有参数，AdminView 方法的返回结果不为空则抛出异常"
 msgstr ""
 
-#: ../../xadmin/views/base.py:docstring of xadmin.views.base.filter_hook:11
-# 35ab972d40be488e9bfdcf38df278fe8
+#: ../../../xadmin/views/base.py:docstring of xadmin.views.base.filter_hook:11
+# 5784ca3affdb40cd97a3c98e253a92a1
 msgid "如果插件方法的第一个参数为 ``__`` ，则 AdminView 方法将作为第一个参数传入，注意，这时还未执行该方法， 在插件中可以通过 ``__()`` 执行，这样就可以实现插件在 AdminView 方法执行前实现一些自己的逻辑，例如::"
 msgstr ""
 
-#: ../../xadmin/views/base.py:docstring of xadmin.views.base.filter_hook:19
-# a1505fe57f0242329d37af4cb8fff769
+#: ../../../xadmin/views/base.py:docstring of xadmin.views.base.filter_hook:19
+# 13877acd84f64497b4641da29494126b
 msgid "如果插件方法的第一个参数不为 ``__`` ，则执行 AdminView 方法，将结果作为第一个参数传入"
 msgstr ""
 
-#: ../../xadmin/views/base.py:docstring of xadmin.views.base.filter_hook:21
-# 585b9027341d455194d67f64308e571b
+#: ../../../xadmin/views/base.py:docstring of xadmin.views.base.filter_hook:21
+# e8c60152937a440bbfd389b692cc8257
 msgid "最终将插件顺序执行的结果返回"
 msgstr ""
 
-#: ../make_plugin.rst:58
-# 5e8cc6b1eb324df19525c1bd44984360
+#: ../../make_plugin.rst:58
+# 087d7c6cd87c45afbb4a6eeb97ace37c
 msgid "根据该装饰器的执行原则，如果我们想修改上面示例中 ``ListAdminView`` 的 ``get_context`` 的返回值，可以在插件中实现如下代码::"
 msgstr ""
 
-#: ../make_plugin.rst:66
-# 244136caf26a47d483f9131395c0fc92
+#: ../../make_plugin.rst:66
+# 4a841b3aaf324491aa9ae36e12a7ad66
 msgid "如果我们希望插件在 ``AdminView`` 的方法前执行，或是完全使用自己的方法替代 ``AdminView`` 的方法可以这样::"
 msgstr ""
 
-#: ../make_plugin.rst:76
-# facbbc0f422c4e0dae77f3da3cd70ccf
+#: ../../make_plugin.rst:76
+# ecce2b93394145748eb5c86a0bbd2a49
 msgid "至此，加入的插件就实现了对 ``AdminView`` 方法的完全控制。"
 msgstr ""
 
-#: ../make_plugin.rst:78
-# 68de7c61b81646778c5766fefc6bb999
+#: ../../make_plugin.rst:78
+# e04f9a72daa24bb59f9c0b491c5f3f27
 msgid "**模板插件**"
 msgstr ""
 
-#: ../make_plugin.rst:80
-# 8ccb146d20f5481d870fe7e2f8ffb889
+#: ../../make_plugin.rst:80
+# 3974746b11904a119ee9d5eb23f758fc
 msgid "我们知道，Django 中一个完整的 View 是包含模板的，模板用来生成 View 最终返回的 HTML 内容。当然，插件也可以在模板中插入自己的内容。我们来看看具体如何实现。"
 msgstr ""
 
-#: ../make_plugin.rst:82
-# c49b175cec7040f2bb8498bd81197faf
+#: ../../make_plugin.rst:82
+# ec4f94eb19af4058b0735afdd5c9d284
 msgid "首先让我们来看看 |xadmin| 中的模板代码示例片段 (change_list.html):"
 msgstr ""
 
-#: ../make_plugin.rst:94
-# af47b16b49474a018dbbc8fbe48fb8b7
+#: ../../make_plugin.rst:94
+# be4c1b7909644afe86e3941ddfd19560
 msgid "其中的 ``view_block`` Tag 即为插件的 **插入点** 。插件可以在自己的插件类中使用 ``block_`` + ``插入点名称`` 方法将 HTML 片段插入到页面的这个位置，示例如下:"
 msgstr ""
 
-#: ../make_plugin.rst:106
-# 1bb78c68f4d74b4aaa29554ba5d571a8
+#: ../../make_plugin.rst:106
+# b8ec4a1d3a3c48d0bf5dd69eb7a39753
 msgid "插件实例"
 msgstr ""
 
-#: ../make_plugin.rst:108
-# 93a8ba185e174c4ea718b2d9f9854c48
+#: ../../make_plugin.rst:108
+# afe96647fd6a4e6b9e7d2a7188285f82
 msgid "下面让我们来看一个 |xadmin| 中完整的插件实例::"
 msgstr ""
 
-#: ../make_plugin.rst:153
-# c28b43abdbea482aac7f5bd2d39d0e87
+#: ../../make_plugin.rst:153
+# 8f4df82b5e0d44e1bc988b324c5e73a7
 msgid "最后不要忘记在适当的地方加载该代码， 让其执行。一般情况下，你可以将其写到 adminx.py 文件中，这样，只要您的 APP 加入到 Django Settings 的 INSTALL_APPS 中， |xadmin| 就会自动执行 app 下的 adminx.py 文件。"
 msgstr ""
 
-#: ../make_plugin.rst:157
-# 4336c88d11ad4f26b8156f102a1feaf9
+#: ../../make_plugin.rst:157
+# 65993e3040974aeba28a3c26a07ec532
 msgid "插件开发"
 msgstr ""
 
-#: ../make_plugin.rst:159
-# dfeaca3a217a4e1795d0cf8abae01d42
+#: ../../make_plugin.rst:159
+# 938cc33710fa4abf883e53aa29ea32b8
 msgid "了解了插件的运行原理后我们就可以开发自己的插件了。首先我们需要了解插件类中的实用方法。因为插件是继承 :class:`~xadmin.views.BaseAdminPlugin` 类，而该类继承自 :class:`~xadmin.views.BaseAdminObject`，所以这两个类的方法都可以在插件中使用。"
 msgstr ""
 
-#: ../make_plugin.rst:162
-# 1b8d4f439c994534b18e87564c9edb00
+#: ../../make_plugin.rst:162
+# 3f422278036548f493ea85cf7017167c
 msgid "|xadmin| 在创建插件时会自动注入以下属性到插件实例中:"
 msgstr ""
 
-#: ../make_plugin.rst:164
-# 1dc1a672afc24f36bdd54d07e4575602
+#: ../../make_plugin.rst:164
+# 16ccc755f1984489a28eea77b7d8e69f
 msgid "request : Http Request"
 msgstr ""
 
-#: ../make_plugin.rst:166
-# 75ca835883a64f92bc1be9bb031b5f56
+#: ../../make_plugin.rst:166
+# 7a46aa058f034c6dab88cb0378901319
 msgid "user : 当前 User 对象"
 msgstr ""
 
-#: ../make_plugin.rst:168
-# d73ed1e447664909972e2bcd773d99a0
+#: ../../make_plugin.rst:168
+# 5d618c94cb2c4562862458ed44d88304
 msgid "args : View 方法的 args 参数"
 msgstr ""
 
-#: ../make_plugin.rst:170
-# b9e242946ca9420b8bd99c433d61fe92
+#: ../../make_plugin.rst:170
+# a64a6a75bb464b378cab2dd6efdcde7a
 msgid "kwargs : View 方法的 kwargs 参数"
 msgstr ""
 
-#: ../make_plugin.rst:172
-# 7db02017ba314b7d9bd1c8a39581de22
+#: ../../make_plugin.rst:172
+# 9d0cc949c5404366b04a86aba09eb4ff
 msgid "admin_view : ``AdminView`` 实例"
 msgstr ""
 
-#: ../make_plugin.rst:174
-# 24c4d77e09e24a529abd8dfa4ec91be4
+#: ../../make_plugin.rst:174
+# e72defee612c4abd94f1c84c83c57b21
 msgid "admin_site : |xadmin| 的 ``admin_site`` 对象实例"
 msgstr ""
 
-#: ../make_plugin.rst:176
-# 8fa484bc53084000a810d53d99b05ce3
+#: ../../make_plugin.rst:176
+# 860af03a16f541ada5417c8be92685f2
 msgid "如果 ``AdminView`` 是 :class:`~xadmin.views.ModelAdminView` 的子类，还会自动注入以下属性:"
 msgstr ""
 
-#: ../make_plugin.rst:178
-# ecacf2ad31d74dc1a3d32d164fcee76d
+#: ../../make_plugin.rst:178
+# 80b12286dc8d47c0ab62eb027baff0ff
 msgid "model : Model 对象"
 msgstr ""
 
-#: ../make_plugin.rst:180
-# 33181058092c47deb1ac0ae7b3f5fe36
+#: ../../make_plugin.rst:180
+# 757302159a6640aea11a9fd01641b81e
 msgid "opts : Model 的 _meta 属性"
 msgstr ""
 
-#: ../make_plugin.rst:182
-# 4ae9e0ad205a4b3ea4ecbe8a33404ddb
+#: ../../make_plugin.rst:182
+# 7ccfaa02f7714752bf36e2734512531e
 msgid "接下来您应该考虑打算制作什么功能的插件了。不同功能的插件额能需要注册到不同的 ``AdminView`` 上，|xadmin| 系统中 主要的 ``AdminView`` 有:"
 msgstr ""
 
-#: ../make_plugin.rst:185
-# b960fb9b90ae4284917faf762773ea07
+#: ../../make_plugin.rst:185
+# ddf92a2ce0994c648991eb3e89d01bd1
 msgid ":class:`~xadmin.views.BaseAdminView` : 所有 ``AdminView`` 的基础类，注册在该 View 上的插件可以影响所有的 ``AdminView``"
 msgstr ""
 
-#: ../make_plugin.rst:187
-# 32220ea8efa9408c8ffcc8918c942127
+#: ../../make_plugin.rst:187
+# 489d522cd8274196856169a6e9ff5102
 msgid ":class:`~xadmin.views.CommAdminView` : 用户已经登陆后显示的 View，也是所有登陆后 View 的基础类。该 View主要作用是创建了 |xadmin| 的通用元素，例如：系统菜单，用户信息等。插件可以通过注册该 View 来修改这些信息。"
 msgstr ""
 
-#: ../make_plugin.rst:189
-# bf613331b11d473195f042e087f85769
+#: ../../make_plugin.rst:189
+# 30c6d119be01468d837f1df9bc467ac8
 msgid ":class:`~xadmin.views.ModelAdminView` : 基于 Model 的 ``AdminView`` 的基础类，注册的插件可以影响所有基于 Model 的 View。"
 msgstr ""
 
-#: ../make_plugin.rst:191
-# 118aa8f884b54dbcbaa36b2bf97fd281
+#: ../../make_plugin.rst:191
+# 0f7c68d16ddb40698ac1e360982fc243
 msgid ":class:`~xadmin.views.ListAdminView` : Model 列表页面 View。"
 msgstr ""
 
-#: ../make_plugin.rst:193
-# 42395d5e8a4f4e61bacc3359d7555d0c
+#: ../../make_plugin.rst:193
+# 7e1d57e785d74850b70c81b612fd0121
 msgid ":class:`~xadmin.views.ModelFormAdminView` : Model 编辑页面 View。"
 msgstr ""
 
-#: ../make_plugin.rst:195
-# 8ee6f627282e40b0bbcca3e4a6fa7879
+#: ../../make_plugin.rst:195
+# dd71d5f7133e458aac26d37ac79b724b
 msgid ":class:`~xadmin.views.CreateAdminView` : Model 创建页面 View。"
 msgstr ""
 
-#: ../make_plugin.rst:197
-# 922b49fd5cad4da19cf32d2ddcc1f011
+#: ../../make_plugin.rst:197
+# db259e9e281d425b947d8fa13b501afd
 msgid ":class:`~xadmin.views.UpdateAdminView` : Model 修改页面 View。"
 msgstr ""
 
-#: ../make_plugin.rst:199
-# 049e4a7f1e744aed9c1e201874e55d5d
+#: ../../make_plugin.rst:199
+# 17e74411631d4aacbf22097b0889ec5f
 msgid ":class:`~xadmin.views.DeleteAdminView` : Model 删除页面 View。"
 msgstr ""
 
-#: ../make_plugin.rst:201
-# 8aa4c2f594da4d3ea2a5b4f384e3c8f5
+#: ../../make_plugin.rst:201
+# 4c1bb80e412440bcadfa6aa6bdc1d101
 msgid ":class:`~xadmin.views.DetailAdminView` : Model 详情页面 View。"
 msgstr ""
 
-#: ../make_plugin.rst:203
-# 3f5b34962cbb417a8e9d9aed724a07b5
+#: ../../make_plugin.rst:203
+# 425411afbd044fd3be6fa332adfb8b11
 msgid "选择好目标 ``AdminView`` 后就要在自己的插件中编写方法来修改或增强这些 ``AdminView`` 。其中每个 ``AdminView`` 可以 拦截的方法及其介绍请参看各 ``AdminView`` 的文档。"
 msgstr ""
 
-#: ../make_plugin.rst:207
-# e18ec8ea6a6845c7a058d0d4dc5fe676
+#: ../../make_plugin.rst:207
+# 0885218dcb984bfb8042033077259a1e
 msgid "插件规范"
 msgstr ""
 
-#: ../make_plugin.rst:209
-# acb479980daa4ee2b1dcff1f8fd5daac
+#: ../../make_plugin.rst:209
+# 6ebf30daa05247bab79a3f2e8b18742b
 msgid "**文档模板**::"
 msgstr ""
 

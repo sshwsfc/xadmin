@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2013, sshwsfc
+# Copyright (C) 2015, sshwsfc
 # This file is distributed under the same license as the Django Xadmin package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Django Xadmin 1.0.0a3\n"
+"Project-Id-Version: Django Xadmin 2.1.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-01 21:34\n"
+"POT-Creation-Date: 2014-06-27 16:52+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,8 +16,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../customization.rst:6
-# a9103fb64983450aac3f48c27eeca3f0
+#: ../../customization.rst:6
+# e1b9fd775919441195faf2f262045d18
 msgid "Xadmin 的定制化"
 msgstr ""
 

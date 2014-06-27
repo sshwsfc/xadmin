@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2013, sshwsfc
+# Copyright (C) 2015, sshwsfc
 # This file is distributed under the same license as the Django Xadmin package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Django Xadmin 1.0.0a3\n"
+"Project-Id-Version: Django Xadmin 2.1.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-01 21:34\n"
+"POT-Creation-Date: 2014-06-27 16:52+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,98 +16,98 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../feature.rst:6
-# 55c6d61485a340918bd16549bed234cb
+#: ../../feature.rst:6
+# ab98a8a4c20648d1ab1bd9aaf5977389
 msgid "Xadmin 的功能特性"
 msgstr ""
 
-#: ../feature.rst:9
-# 30b6e9ee20bb4be48c0f80a84180c6f2
+#: ../../feature.rst:9
+# 27c78d3c788b4296862b59001971a7ed
 msgid "兼容 Django Admin"
 msgstr ""
 
-#: ../feature.rst:12
-# 5e2fc7756c29463895a677c1c7bb90ba
+#: ../../feature.rst:12
+# 094373555c8344f8b99980caaeff9f9b
 msgid "使用 Bootstrap 作为 UI 框架"
 msgstr ""
 
-#: ../feature.rst:15
-# e18b6a32b0d34fc983c4be502e7eec39
+#: ../../feature.rst:15
+# 65518d14ddb24b9fa6bfda0df8852ca7
 msgid "编辑页面灵活布局"
 msgstr ""
 
-#: ../feature.rst:18
-# 551d035dddfa41d09e302575c2c67031
+#: ../../feature.rst:18
+# 72609d96e36747fda645411728cde1fc
 msgid "主页面仪表盘及小部件"
 msgstr ""
 
-#: ../feature.rst:21
-# 48a7cf5c83b1435ea34fb2080257cac3
+#: ../../feature.rst:21
+# fb46b99ea21444f6ad95752253cc4710
 msgid "Font Icon 以及 Model Icon"
 msgstr ""
 
-#: ../feature.rst:24
-# 864121978b734b6581204d72ab8da38d
+#: ../../feature.rst:24
+# 0202b5594bcb4ecb802167069d8b997e
 msgid "即时编辑"
 msgstr ""
 
-#: ../feature.rst:27
-# c8cf683d5a374f14974760447484a7e4
+#: ../../feature.rst:27
+# b216e9078eb7463e9ba5847bcd3b7f2a
 msgid "图表功能"
 msgstr ""
 
-#: ../feature.rst:30
-# 9baf895d8b3a4c9cbcfbbb9598e81a14
+#: ../../feature.rst:30
+# 6bff02537ee145b9ae06e4e1d1a71a6a
 msgid "关联信息菜单"
 msgstr ""
 
-#: ../feature.rst:33
-# 8ad532c143b34214b8e0541acb8c1757
+#: ../../feature.rst:33
+# 6127b7f7c62b4d8db20a4ef35110e76a
 msgid "数据版本管理"
 msgstr ""
 
-#: ../feature.rst:36
-# 37d0330403d7424fb7451877b2edf1f5
+#: ../../feature.rst:36
+# f94f182c70734e0c9bd301d7a86cfd42
 msgid "数据详情页面"
 msgstr ""
 
-#: ../feature.rst:39
-# 1b11245d54f048a880abda599f01c194
+#: ../../feature.rst:39
+# 2a758335308b4a51b71c58fbbd750edb
 msgid "数据查看权限"
 msgstr ""
 
-#: ../feature.rst:42
-# d2c4429200ad4582a73d823689ef46be
+#: ../../feature.rst:42
+# 68715cf8b571441fa00e0773b7199a13
 msgid "过滤器强化"
 msgstr ""
 
-#: ../feature.rst:45
-# 7c500be23fa640d1b250ae55f7ddfab1
+#: ../../feature.rst:45
+# 0f4516c1bd7c45e1826b12ca7d452cf6
 msgid "书签功能"
 msgstr ""
 
-#: ../feature.rst:48
-# 4d6a1a1f28c041f19f9f914e61e449c7
+#: ../../feature.rst:48
+# 92c77441cb364a038e9b829fbbad7a0c
 msgid "数据导出"
 msgstr ""
 
-#: ../feature.rst:51
-# 68c8dce5a01d47d083ae4951e8441fda
+#: ../../feature.rst:51
+# 3eddab4d75fb490a8c7c71064d20131c
 msgid "Autocomplete"
 msgstr ""
 
-#: ../feature.rst:54
-# e357b1fc2cc24262a3b9ba353e2d3cb9
+#: ../../feature.rst:54
+# cacd569f0dd64676a10b5b7f68acf1ef
 msgid "Inline 数据编辑"
 msgstr ""
 
-#: ../feature.rst:57
-# 8120143461b84e3ab0fb90f1a2fad9bf
+#: ../../feature.rst:57
+# 748f4789744947989084ba03b55e58fd
 msgid "数据添加向导"
 msgstr ""
 
-#: ../feature.rst:60
-# 5a03581d2a874396ba94a503527b2f74
+#: ../../feature.rst:60
+# 98824f97c049461ca5c885f507159976
 msgid "强大的插件机制"
 msgstr ""
 

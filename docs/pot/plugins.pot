@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2013, sshwsfc
+# Copyright (C) 2015, sshwsfc
 # This file is distributed under the same license as the Django Xadmin package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Django Xadmin 1.0.0a3\n"
+"Project-Id-Version: Django Xadmin 2.1.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-01 21:34\n"
+"POT-Creation-Date: 2014-06-27 16:52+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,330 +16,330 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../plugins.rst:6
-# 23c4e0c743e44874b44346353bf50cab
+#: ../../plugins.rst:6
+# cfb64fa10da148318f747123e4fb993e
 msgid "|xadmin| 的插件"
 msgstr ""
 
-#: ../plugins.rst:9
-# ccf56f882bf34ee290e0282a37b42777
+#: ../../plugins.rst:9
+# fb37cc5d96a145f1915590329027798e
 msgid "插件概述"
 msgstr ""
 
-#: ../plugins.rst:12
-# 6f3c9c37faaf4a5eb983aa5603ea9b37
+#: ../../plugins.rst:12
+# 9a6a5150e495475cac9dc23f178c9713
 msgid "内置插件"
 msgstr ""
 
-#: ../../xadmin/plugins/actions.py:docstring of xadmin.plugins.actions:2
-# 4c5c1c69d20443e5a3ab0cc4a0097dac
+#: ../../../xadmin/plugins/actions.py:docstring of xadmin.plugins.actions:2
+# d95e75ddcf73403893b5e4d83bb82ba0
 msgid "Action"
 msgstr ""
 
-#: ../../xadmin/plugins/actions.py:docstring of xadmin.plugins.actions:5
-#: ../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:5
-#: ../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:5
-#: ../../xadmin/plugins/bookmark.py:docstring of xadmin.plugins.bookmark:5
-#: ../../xadmin/plugins/export.py:docstring of xadmin.plugins.export:5
-#: ../../xadmin/plugins/refresh.py:docstring of xadmin.plugins.refresh:5
-#: ../../xadmin/plugins/details.py:docstring of xadmin.plugins.details:5
-#: ../../xadmin/plugins/editable.py:docstring of xadmin.plugins.editable:5
-# 4a2b7a14d03242ff922102f7f2951378
-# 09204ee02a424b4f8b009e7dfcb1e404
-# 94b9219f6a534d1482dccdf1f5e64359
-# b889082d3d9448aa9c753b05df3d8b74
-# ddad2990e78346c6876ce7a9f2f76d9c
-# f93dcb05103641f48c0640bd12007a0f
-# 93b9e388671c4f2ba08ef3373a340f73
-# 45febb5f190c46c8a99df603e312266d
+#: ../../../xadmin/plugins/actions.py:docstring of xadmin.plugins.actions:5
+#: ../../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:5
+#: ../../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:5
+#: ../../../xadmin/plugins/bookmark.py:docstring of xadmin.plugins.bookmark:5
+#: ../../../xadmin/plugins/export.py:docstring of xadmin.plugins.export:5
+#: ../../../xadmin/plugins/refresh.py:docstring of xadmin.plugins.refresh:5
+#: ../../../xadmin/plugins/details.py:docstring of xadmin.plugins.details:5
+#: ../../../xadmin/plugins/editable.py:docstring of xadmin.plugins.editable:5
+# 10461e0229704220a31e2c8b19d878e6
+# e7c053cddfeb49f5baa85d99ae22a816
+# cc6f31c2a6684bcb89eb7ed868e25af9
+# cb14ae5c345e48eca1e9296f5a607d71
+# 120d3e6912884d85ae656608e2f8ee3c
+# 8db0e9ccad9f4cc28acd96a19c62eb84
+# e3360d73519f4219b6f4ac36f5b39097
+# 74680c2716a5437c80a1be9d3dea6523
 msgid "功能"
 msgstr ""
 
-#: ../../xadmin/plugins/actions.py:docstring of xadmin.plugins.actions:7
-# 62a56a87efda42f192ef22ab76a38b29
+#: ../../../xadmin/plugins/actions.py:docstring of xadmin.plugins.actions:7
+# b6bfa4a26c8346a0a3edd42647a0c924
 msgid "Action 插件在数据列表页面提供了数据选择功能, 选择后的数据可以经过 Action 做特殊的处理. 默认提供的 Action 为批量删除功能."
 msgstr ""
 
-#: ../../xadmin/plugins/actions.py:docstring of xadmin.plugins.actions:10
-#: ../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:10
-#: ../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:10
-#: ../../xadmin/plugins/bookmark.py:docstring of xadmin.plugins.bookmark:10
-#: ../../xadmin/plugins/export.py:docstring of xadmin.plugins.export:10
-#: ../../xadmin/plugins/refresh.py:docstring of xadmin.plugins.refresh:10
-#: ../../xadmin/plugins/details.py:docstring of xadmin.plugins.details:10
-#: ../../xadmin/plugins/editable.py:docstring of xadmin.plugins.editable:10
-# 3dc8088000c24259b70d2d48724271d5
-# c5445e619d8c4548af3a8530d43677d3
-# 2c4fde27c6424165bfabeb5aa038e9df
-# a52f2329ed064ded9083bb37bc2a506f
-# 4e61dcacd8cb4077b325aa46a3e973ee
-# d5f19176426b4d9f917cf28501b8baea
-# 4cf34d5322f04f98a687244eb9ee9f89
-# ac529fe7d61c4878bdb5165a5707b604
+#: ../../../xadmin/plugins/actions.py:docstring of xadmin.plugins.actions:10
+#: ../../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:10
+#: ../../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:10
+#: ../../../xadmin/plugins/bookmark.py:docstring of xadmin.plugins.bookmark:10
+#: ../../../xadmin/plugins/export.py:docstring of xadmin.plugins.export:10
+#: ../../../xadmin/plugins/refresh.py:docstring of xadmin.plugins.refresh:10
+#: ../../../xadmin/plugins/details.py:docstring of xadmin.plugins.details:10
+#: ../../../xadmin/plugins/editable.py:docstring of xadmin.plugins.editable:10
+# 5f13f94f6c974291b94dfefa6b12e162
+# ad5c6413cebd4c1f865094c87bae1276
+# b084fba8ee954116aa0766aa84c6ba9b
+# fee407f04a2d4138bd2244d743363c7e
+# 9be81fcc91d24590803ef87dfeeacc5a
+# a637b091d45d4df9a8e062f621a9715e
+# 502f8902fdf74ea7be0055beb4ce2f86
+# 7dfb47f966eb4c6fbc72e1c59db8959e
 msgid "截图"
 msgstr ""
 
-#: ../../xadmin/plugins/actions.py:docstring of xadmin.plugins.actions:15
-#: ../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:15
-#: ../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:15
-#: ../../xadmin/plugins/bookmark.py:docstring of xadmin.plugins.bookmark:15
-#: ../../xadmin/plugins/export.py:docstring of xadmin.plugins.export:15
-#: ../../xadmin/plugins/refresh.py:docstring of xadmin.plugins.refresh:15
-#: ../../xadmin/plugins/details.py:docstring of xadmin.plugins.details:15
-#: ../../xadmin/plugins/editable.py:docstring of xadmin.plugins.editable:15
-# 616db824f9b24dc9b0636470f1afafb3
-# 16220fe04ac642be8accb9b03f4bbf1c
-# c71f92e687bc4af392c56ceea980e04f
-# c4a36bdd732b4729ad4eec70a7ac1f55
-# bf2c20d8c52942bfaebf1ce1a1428f01
-# d64d88c3e7804886b7bc901f64eb430a
-# e829ad73df9e490c9b4d4b340fc8fb65
-# 539783fd5f1c4261af027b845c0655e6
+#: ../../../xadmin/plugins/actions.py:docstring of xadmin.plugins.actions:15
+#: ../../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:15
+#: ../../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:15
+#: ../../../xadmin/plugins/bookmark.py:docstring of xadmin.plugins.bookmark:15
+#: ../../../xadmin/plugins/export.py:docstring of xadmin.plugins.export:15
+#: ../../../xadmin/plugins/refresh.py:docstring of xadmin.plugins.refresh:15
+#: ../../../xadmin/plugins/details.py:docstring of xadmin.plugins.details:15
+#: ../../../xadmin/plugins/editable.py:docstring of xadmin.plugins.editable:15
+# 14ab095680b74097a2c35e3173c38e98
+# ffe9caf27c2146da835ebb5aa2cda27a
+# 98c5ff75312248d4b16b90a0a03ed14b
+# 87b8c086c1f143d8b27ec925aaa0c5d1
+# 69c56fb0d2434a30b999f3ed4c3d124b
+# 55a44f02415b46708e8b8a854cb5ce49
+# fcb30ae021444dd596ac3af9b3bf0d19
+# edac914e69724728af0f86edbc218529
 msgid "使用"
 msgstr ""
 
-#: ../../xadmin/plugins/actions.py:docstring of xadmin.plugins.actions:17
-# 0b54c0bb4372497c95f444406961b3ac
+#: ../../../xadmin/plugins/actions.py:docstring of xadmin.plugins.actions:17
+# c3262ab5d50d4be3b9fd3ea7dc47c68b
 msgid "开发者可以设置 Model OptionClass 的 actions 属性, 该属性是一个列表, 包含您想启用的 Action 的类. 系统已经默认内置了删除数据的 Action, 当然您可以自己制作 Action 来实现特定的功能, 制作 Action 的实例如下."
 msgstr ""
 
-#: ../../xadmin/plugins/actions.py:docstring of xadmin.plugins.actions:20
-# 0b6667d3d45a4143bf8b46682feb933e
+#: ../../../xadmin/plugins/actions.py:docstring of xadmin.plugins.actions:20
+# 317bdcd67c1842ff8257715d24d33f24
 msgid "首先要创建一个 Action 类, 该类需要继承 BaseActionView. BaseActionView 是 :class:`~xadmin.views.ModelAdminView` 的子类::"
 msgstr ""
 
-#: ../../xadmin/plugins/actions.py:docstring of xadmin.plugins.actions:41
-# 9d333f4318fe44f3a058b751bea2ae0c
+#: ../../../xadmin/plugins/actions.py:docstring of xadmin.plugins.actions:41
+# 3e66918dd0d948bf9d6d12597737a6a7
 msgid "然后在 Model 的 OptionClass 中使用这个 Action::"
 msgstr ""
 
-#: ../../xadmin/plugins/actions.py:docstring of xadmin.plugins.actions:47
-# 37b5dc923a6a4d4394373efe05adb20f
+#: ../../../xadmin/plugins/actions.py:docstring of xadmin.plugins.actions:47
+# 446fe0b6f2144aac85874574aec8877b
 msgid "这样就完成了自己的 Action"
 msgstr ""
 
-#: ../../xadmin/plugins/actions.py:docstring of xadmin.plugins.actions:50
-#: ../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:41
-# 12e84424d4e14dcfa8da54cfcd67b49a
-# eadc3ad1c8374fa8b81b0da0708eecee
+#: ../../../xadmin/plugins/actions.py:docstring of xadmin.plugins.actions:50
+#: ../../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:41
+# d85d363e26a0454eb891448c951873f8
+# 8526da1006804cb5bbd36dfb52e5e6de
 msgid "API"
 msgstr ""
 
-#: ../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:2
-# 91e2e0156aa74fcd9e16391cfa9836ac
+#: ../../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:2
+# be39d28d60ea4424b621ca59f7f75051
 msgid "数据过滤器"
 msgstr ""
 
-#: ../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:7
-# eb67fbbee95d4484b6df9285d97be1a4
+#: ../../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:7
+# cb4401cf434347e98be56731b66b5395
 msgid "在数据列表页面提供数据过滤功能, 包括: 模糊搜索, 数字范围搜索, 日期搜索等等"
 msgstr ""
 
-#: ../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:17
-# cb84618c35a543c3ba8b42a3abc28139
+#: ../../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:17
+# 7027352df39740b8ba2772c43b2ac006
 msgid "在 Model OptionClass 中设置以下属性:"
 msgstr ""
 
-#: ../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:19
-# 80c0497af2ce4380aa796a553c320135
+#: ../../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:19
+# a2cc578df747485c9e4d303f92a41552
 msgid "``list_filter`` 属性:"
 msgstr ""
 
-#: ../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:21
-# de8db31d40d84f22b741f2cd6520c163
+#: ../../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:21
+# a6c70941f12e455a86c5c4302d47a6c2
 msgid "该属性指定可以过滤的列的名字, 系统会自动生成搜索器"
 msgstr ""
 
-#: ../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:23
-# 92d0438b310e4ade8ab3ddba55e259bb
+#: ../../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:23
+# 6fd3a247dea3498c817ec72422792ef9
 msgid "``search_fields`` 属性:"
 msgstr ""
 
-#: ../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:25
-# 3bb9ac59c56f4b5eb7ee39b938fe9b09
+#: ../../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:25
+# 3de91c6964024d3abcf4a67d33c7f3cb
 msgid "属性指定可以通过搜索框搜索的数据列的名字, 搜索框搜索使用的是模糊查找的方式, 一般用来搜素名字等字符串字段"
 msgstr ""
 
-#: ../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:27
-# be9ec9454a28448c86ae06a0e37e54ba
+#: ../../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:27
+# 385cf9f65e5048248c6ef4a525210765
 msgid "``free_query_filter`` 属性:"
 msgstr ""
 
-#: ../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:29
-# 6ad6e8bd92054405a9e0b501c053755c
+#: ../../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:29
+# d6114f4c5fc6407688de0e45cd286da7
 msgid "默认为 ``True`` , 指定是否可以自由搜索. 如果开启自有搜索, 用户可以通过 url 参数来进行特定的搜索, 例如::"
 msgstr ""
 
-#: ../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:33
-# bdd2e49ba4504a0089224e25f20359c5
+#: ../../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:33
+# b8806de4eab4489f9a5ff65c11bb96bc
 msgid "使用过滤器的例子::"
 msgstr ""
 
-#: ../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:40
-#: ../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:36
-#: ../../xadmin/plugins/bookmark.py:docstring of xadmin.plugins.bookmark:38
-# 259aedbeef644342a5911b49d5b37b45
-# 28d199d08207456291d6a5661571a87d
-# f9045f620993467d8f0ef2feba47c98f
+#: ../../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:40
+#: ../../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:36
+#: ../../../xadmin/plugins/bookmark.py:docstring of xadmin.plugins.bookmark:38
+# a372a5217f9a49b8ba8d9bc9fd5b76d2
+# ab0fa7fa7f1d4e9e8c92b08da0bb8443
+# f7647225ea1a438da1f8422e8ce2d1e4
 msgid "版本"
 msgstr ""
 
-#: ../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:42
-#: ../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:38
-#: ../../xadmin/plugins/bookmark.py:docstring of xadmin.plugins.bookmark:40
-# ecebee25af4c41adad3e096d9e77af02
-# 2f3dfc3f7d394e2c8bd3ceddce39e081
-# 6a430b43792045bda2254e3ba0a37ec1
+#: ../../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:42
+#: ../../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:38
+#: ../../../xadmin/plugins/bookmark.py:docstring of xadmin.plugins.bookmark:40
+# 5c10fd93af4549e5bd573ec2f5e350ca
+# 1418d0ccdd574a6f8169364523fad465
+# 3c14d884b3934da69c3c60f3cc928755
 msgid "暂无"
 msgstr ""
 
-#: ../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:45
-# 7ecd403590874992bf9a994d377568d7
+#: ../../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:45
+# 5dabf77af5df4d93a23392dc3e9d2c36
 msgid "制作过滤器"
 msgstr ""
 
-#: ../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:47
-# 58c4197be30f438b8bb499b373ac5155
+#: ../../../xadmin/plugins/filters.py:docstring of xadmin.plugins.filters:47
+# 8cde85c3c40d413b836be53271d4131d
 msgid "您也可以制作自己的过滤器, 用来进行一些特定的过滤. 过滤器需要继承 :class:`xadmin.filters.BaseFilter` 类,  并使用 :attr:`xadmin.filters.manager` 注册过滤器."
 msgstr ""
 
-#: ../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:2
-# 62dfc1ceae93460a8736b2ecf811ce66
+#: ../../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:2
+# 8f36e64144fe442393f01127500e6e1d
 msgid "图表插件"
 msgstr ""
 
-#: ../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:7
-# 360ea3a2a9204e709975bebae3865098
+#: ../../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:7
+# e64d1dd4c49c4383af357c82a1bf54de
 msgid "在数据列表页面, 跟列表数据生成图表. 可以指定多个数据列, 生成多个图表."
 msgstr ""
 
-#: ../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:17
-# 4d3fe85b71f346fdbc131bc06af6c818
+#: ../../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:17
+# cf3163b1a2f4427ca22461819142a2f3
 msgid "在 Model OptionClass 中设定 ``data_charts`` 属性, 该属性为 dict 类型, key 是图表的标示名称, value 是图表的具体设置属性. 使用示例::"
 msgstr ""
 
-#: ../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:25
-# 44fab916ba154b3a8c6257de80cc4f87
+#: ../../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:25
+# cf8113aa520546b890bcccf9d22b2234
 msgid "图表的主要属性为:"
 msgstr ""
 
-#: ../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:27
-# 4f5c0c329a5e499580feff2a6ab83e3e
+#: ../../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:27
+# 87587cdd43214627b617921431d7e4a0
 msgid "``title`` : 图表的显示名称"
 msgstr ""
 
-#: ../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:29
-# afc9c379c67843f29493fde865e7e8df
+#: ../../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:29
+# 7dc2354a5171431ca77b238e16758d27
 msgid "``x-field`` : 图表的 X 轴数据列, 一般是日期, 时间等"
 msgstr ""
 
-#: ../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:31
-# 08df1da35d104f07b1009e8bc015023c
+#: ../../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:31
+# c5f4e0f383944ad28f6f3f848ce42ad6
 msgid "``y-field`` : 图表的 Y 轴数据列, 该项是一个 list, 可以同时设定多个列, 这样多个列的数据会在同一个图表中显示"
 msgstr ""
 
-#: ../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:33
-# 1865038faecb4880b8fa7816a4769ad0
+#: ../../../xadmin/plugins/chart.py:docstring of xadmin.plugins.chart:33
+# fc446a19589a4acabf7a0ef0760a82f8
 msgid "``order`` : 排序信息, 如果不写则使用数据列表的排序"
 msgstr ""
 
-#: ../../xadmin/plugins/bookmark.py:docstring of xadmin.plugins.bookmark:2
-# c896ae4fea3e4312b4d391b765e48f5a
+#: ../../../xadmin/plugins/bookmark.py:docstring of xadmin.plugins.bookmark:2
+# afe18876a92b4bceb89fd3d4536ba3ad
 msgid "书签"
 msgstr ""
 
-#: ../../xadmin/plugins/bookmark.py:docstring of xadmin.plugins.bookmark:7
-# 48f4f5b7d02e40f9b003c7ddc39a5951
+#: ../../../xadmin/plugins/bookmark.py:docstring of xadmin.plugins.bookmark:7
+# 5812cfb3d3d14811a053e5db385216e2
 msgid "记录数据列表页面特定的数据过滤, 排序等结果. 添加的书签还可以在首页仪表盘中作为小组件添加"
 msgstr ""
 
-#: ../../xadmin/plugins/bookmark.py:docstring of xadmin.plugins.bookmark:17
-# f27b64eb76224996b17e171bfc71980f
+#: ../../../xadmin/plugins/bookmark.py:docstring of xadmin.plugins.bookmark:17
+# b46ea113aa6647519a8349c1021fe02b
 msgid "在 Model OptionClass 中设定如下属性:"
 msgstr ""
 
-#: ../../xadmin/plugins/bookmark.py:docstring of xadmin.plugins.bookmark:19
-# 620330a9610d46a183edfd7cdcba72df
+#: ../../../xadmin/plugins/bookmark.py:docstring of xadmin.plugins.bookmark:19
+# eed1824414694e6cb7218677fb12672b
 msgid "``show_bookmarks`` 属性:"
 msgstr ""
 
-#: ../../xadmin/plugins/bookmark.py:docstring of xadmin.plugins.bookmark:21
-# 8611364f84504ff5b98df49549f8f893
+#: ../../../xadmin/plugins/bookmark.py:docstring of xadmin.plugins.bookmark:21
+# dd1a5eb92a7d4eb6a4d744ef38ca9c4a
 msgid "设置是否开启书签功能, 默认为 ``True``"
 msgstr ""
 
-#: ../../xadmin/plugins/bookmark.py:docstring of xadmin.plugins.bookmark:23
-# f63ddbda742e4de58d6da73b315f1d8d
+#: ../../../xadmin/plugins/bookmark.py:docstring of xadmin.plugins.bookmark:23
+# 02e5290699e541118dc84c2a83094497
 msgid "``list_bookmarks`` 属性:"
 msgstr ""
 
-#: ../../xadmin/plugins/bookmark.py:docstring of xadmin.plugins.bookmark:25
-# 1284fa496d324145b1ee2ea0dce5bb41
+#: ../../../xadmin/plugins/bookmark.py:docstring of xadmin.plugins.bookmark:25
+# cb8b8f82f8a1426eb306fe125a170ef3
 msgid "设置默认的书签. 用户可以在列表页面添加自己的书签, 你也可以实现设定好一些书签, 使用实例如下::"
 msgstr ""
 
-#: ../../xadmin/plugins/export.py:docstring of xadmin.plugins.export:2
-# e0e4cc36c54d45bba63171f1d821fd5e
+#: ../../../xadmin/plugins/export.py:docstring of xadmin.plugins.export:2
+# 483c9116404a4b6bab1c63ed2da0eac2
 msgid "数据导出"
 msgstr ""
 
-#: ../../xadmin/plugins/export.py:docstring of xadmin.plugins.export:7
-# 0bb4b0a47f1e47299caf782e0fcdada8
+#: ../../../xadmin/plugins/export.py:docstring of xadmin.plugins.export:7
+# d522cf06906b4247888fe97891d390a6
 msgid "该插件在数据列表页面提供了数据导出功能, 可以导出 Excel, CSV, XML, json 格式."
 msgstr ""
 
-#: ../../xadmin/plugins/export.py:docstring of xadmin.plugins.export:17
-# 88b76c61236c4408a4c4b591026ccf01
+#: ../../../xadmin/plugins/export.py:docstring of xadmin.plugins.export:17
+# 0771d04be3244485a5bc6335787cac8b
 msgid "如果想要导出 Excel 数据, 需要安装 `xlwt <http://pypi.python.org/pypi/xlwt>`_."
 msgstr ""
 
-#: ../../xadmin/plugins/export.py:docstring of xadmin.plugins.export:19
-# 75f85de9e3e44f76aec92fbd6e260b34
+#: ../../../xadmin/plugins/export.py:docstring of xadmin.plugins.export:19
+# 902728df1e314c36bca730e2efa9954f
 msgid "默认情况下, xadmin 会提供 Excel, CSV, XML, json 四种格式的数据导出. 您可以通过设置 OptionClass 的 ``list_export`` 属性来指定使用 哪些导出格式 (四种各使用分别用 ``xls``, ``csv``, ``xml``, ``json`` 表示), 或是将 ``list_export`` 设置为 ``None`` 来禁用数据导出功能. 示例如下::"
 msgstr ""
 
-#: ../../xadmin/plugins/refresh.py:docstring of xadmin.plugins.refresh:2
-# b09d89fcb6a24f87ab1878eddddcfb1c
+#: ../../../xadmin/plugins/refresh.py:docstring of xadmin.plugins.refresh:2
+# 7fb7dff7d232424a96f93e06272b81e6
 msgid "列表定时刷新"
 msgstr ""
 
-#: ../../xadmin/plugins/refresh.py:docstring of xadmin.plugins.refresh:7
-# d1116775551e490e935b941b60d3cd5e
+#: ../../../xadmin/plugins/refresh.py:docstring of xadmin.plugins.refresh:7
+# f26b2c52a86a49ae8a64da0289f50829
 msgid "该插件在数据列表页面提供了定时刷新功能, 对于需要实时刷新列表页面查看即时数据的情况非常有用."
 msgstr ""
 
-#: ../../xadmin/plugins/refresh.py:docstring of xadmin.plugins.refresh:17
-# a955f2a354f34cf08b72014966bbb5d0
+#: ../../../xadmin/plugins/refresh.py:docstring of xadmin.plugins.refresh:17
+# b91789248cf44af9a626ea53cd4c1821
 msgid "使用数据刷新插件非常简单, 设置 OptionClass 的 ``refresh_times`` 属性即可. ``refresh_times`` 属性是存有刷新时间的数组. xadmin 默认不开启该插件. 示例如下::"
 msgstr ""
 
-#: ../../xadmin/plugins/details.py:docstring of xadmin.plugins.details:2
-# aa871873a4c94ed882f1f9ee354e9617
+#: ../../../xadmin/plugins/details.py:docstring of xadmin.plugins.details:2
+# 63641ad32dcb4a5982c5c8fd529667ce
 msgid "显示数据详情"
 msgstr ""
 
-#: ../../xadmin/plugins/details.py:docstring of xadmin.plugins.details:7
-# 885fd78fe24749ac8762e079799eb844
+#: ../../../xadmin/plugins/details.py:docstring of xadmin.plugins.details:7
+# d0cd269989194782894396858dab72f4
 msgid "该插件可以在列表页中显示相关字段的详细信息, 使用 Ajax 在列表页中显示."
 msgstr ""
 
-#: ../../xadmin/plugins/details.py:docstring of xadmin.plugins.details:17
-# 0da22383294f4a50b0b24d243c4eaea2
+#: ../../../xadmin/plugins/details.py:docstring of xadmin.plugins.details:17
+# e5db125345ca4011877aa9afc6859d25
 msgid "使用该插件主要设置 OptionClass 的 ``show_detail_fields``, ``show_all_rel_details`` 两个属性. ``show_detail_fields`` 属性设置哪些字段要显示详细信息,  ``show_all_rel_details`` 属性设置时候自动显示所有关联字段的详细信息, 该属性默认为 ``True``. 示例如下::"
 msgstr ""
 
-#: ../../xadmin/plugins/editable.py:docstring of xadmin.plugins.editable:2
-# 07ece35a19124477a4dad29bd5543da2
+#: ../../../xadmin/plugins/editable.py:docstring of xadmin.plugins.editable:2
+# c259907c3dc447d0bb181935dbc91969
 msgid "数据即时编辑"
 msgstr ""
 
-#: ../../xadmin/plugins/editable.py:docstring of xadmin.plugins.editable:7
-# 3b39ed2bc5eb465cac30c51b66cc7482
+#: ../../../xadmin/plugins/editable.py:docstring of xadmin.plugins.editable:7
+# 4769ea3bae51453fa39d4be81295a7c7
 msgid "该插件可以在列表页中即时编辑某字段的值, 使用 Ajax 技术, 无需提交或刷新页面即可完成数据的修改, 对于需要频繁修改的字段(如: 状态)相当有用."
 msgstr ""
 
-#: ../../xadmin/plugins/editable.py:docstring of xadmin.plugins.editable:17
-# 850ad7d14cf34a9a83b6919681c95633
+#: ../../../xadmin/plugins/editable.py:docstring of xadmin.plugins.editable:17
+# 3f8aff2b4e7e481dbcc0219abab0b211
 msgid "使用该插件主要设置 OptionClass 的 ``list_editable`` 属性. ``list_editable`` 属性设置哪些字段需要即时修改功能. 示例如下::"
 msgstr ""
 

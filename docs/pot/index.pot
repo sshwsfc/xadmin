@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2013, sshwsfc
+# Copyright (C) 2015, sshwsfc
 # This file is distributed under the same license as the Django Xadmin package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Django Xadmin 1.0.0a3\n"
+"Project-Id-Version: Django Xadmin 2.1.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-01 21:34\n"
+"POT-Creation-Date: 2014-06-27 16:52+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,83 +16,83 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../index.rst:4
-# 9a77722b247e40ef99a0b47d20bbd655
+#: ../../index.rst:4
+# 1020ebb8098540ee86cdd01f670636a3
 msgid "Welcome to Django Xadmin's Documentation!"
 msgstr ""
 
-#: ../index.rst:6
-# 12128249bfc5468b8db09ee12e0abbca
+#: ../../index.rst:6
+# 3af086115cb54f19a19fcb7a84aa3fcd
 msgid "**不能错过的替代Django Admin的产品**."
 msgstr ""
 
-#: ../index.rst:9
-# 22b942ac859d4efd95d9646ca323c92f
+#: ../../index.rst:9
+# e68c63d376f94ebe867294fa7a797efb
 msgid "安装 & 设置"
 msgstr ""
 
-#: ../index.rst:18
-# 6c45c4afaee8417fb2d1d163ac48a596
+#: ../../index.rst:18
+# ca0ad1d5f3674a24bb644be3f35c7caf
 msgid "功能特性"
 msgstr ""
 
-#: ../index.rst:26
-# d09590a09d324366872747307d9f068d
+#: ../../index.rst:26
+# f76f47ae9cb841849b0a3344a405b0d9
 msgid "插件"
 msgstr ""
 
-#: ../index.rst:35
-# d79c8d6a0b01428d9d00909aeb73e904
+#: ../../index.rst:35
+# 21405e4f95db4272b8f27e6c6671c95b
 msgid "API"
 msgstr ""
 
-#: ../index.rst:44
-# 4a8a2921928e46cb9b82dd0335a2a50d
+#: ../../index.rst:44
+# 3f759cae948a4c4e91ac7318aa39f234
 msgid "帮助"
 msgstr ""
 
-#: ../index.rst:54
-# 41cc7d1fd44d4d248964553196436719
+#: ../../index.rst:54
+# b60af2f65afb4b839879dc663db98acf
 msgid "源码"
 msgstr ""
 
-#: ../index.rst:56
-# c3b53d8053fb4763bd871006067ac375
+#: ../../index.rst:56
+# 6453274be5884bfa891db24fbe4e661b
 msgid "https://github.com/sshwsfc/django-xadmin"
 msgstr ""
 
-#: ../index.rst:59
-# d5197d0fa806443fb4eddc8cc7348a8c
+#: ../../index.rst:59
+# 6ff62b1542b44cdc9e03b22cd8fce10a
 msgid "网站"
 msgstr ""
 
-#: ../index.rst:61
-# 6e20a4d09df04bd7844ee9c34ea65116
+#: ../../index.rst:61
+# 8d8f1b9a2a38432a8c042584b5c791d7
 msgid "http://sshwsfc.github.com/django-xadmin"
 msgstr ""
 
-#: ../index.rst:64
-# 6d2d0f922837445a9533881e9ce7922f
+#: ../../index.rst:64
+# ed2e605f1f7242aa8d5d2e26ffe61b06
 msgid "Versions and Compatibility"
 msgstr ""
 
-#: ../index.rst:67
-# 94c9300d6807422a99c78db8fcac886d
+#: ../../index.rst:67
+# 7a0abac2697f45118c02645d62c11bc8
 msgid "Indices and tables"
 msgstr ""
 
-#: ../index.rst:69
-# 27c55a6176064e6a806ddbf890889f00
+#: ../../index.rst:69
+# 5c0414c734fd4ea7a2ed3542432eaecc
 msgid ":ref:`genindex`"
 msgstr ""
 
-#: ../index.rst:70
-# b270cfea2c6d4e2ca5df989fead1124b
+#: ../../index.rst:70
+# b63441b41b464eda9848d5f1b26d2764
 msgid ":ref:`modindex`"
 msgstr ""
 
-#: ../index.rst:71
-# 0d5a713cdd9b45aba59f6d7716e6dfc5
+#: ../../index.rst:71
+# b8741065c2594ca1a64b2ec8c45fdf48
 msgid ":ref:`search`"
 msgstr ""
 
