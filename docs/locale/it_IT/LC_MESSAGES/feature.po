@@ -1,0 +1,113 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2013, sshwsfc
+# This file is distributed under the same license as the Django Xadmin package.
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: xadmin-docs\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-05-01 21:34\n"
+"PO-Revision-Date: 2013-05-02 03:26+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Italian (Italy) (http://www.transifex.com/projects/p/xadmin-docs/language/it_IT/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: it_IT\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# 55c6d61485a340918bd16549bed234cb
+#: ../feature.rst:6
+msgid "Xadmin 的功能特性"
+msgstr ""
+
+# 30b6e9ee20bb4be48c0f80a84180c6f2
+#: ../feature.rst:9
+msgid "兼容 Django Admin"
+msgstr ""
+
+# 5e2fc7756c29463895a677c1c7bb90ba
+#: ../feature.rst:12
+msgid "使用 Bootstrap 作为 UI 框架"
+msgstr ""
+
+# e18b6a32b0d34fc983c4be502e7eec39
+#: ../feature.rst:15
+msgid "编辑页面灵活布局"
+msgstr ""
+
+# 551d035dddfa41d09e302575c2c67031
+#: ../feature.rst:18
+msgid "主页面仪表盘及小部件"
+msgstr ""
+
+# 48a7cf5c83b1435ea34fb2080257cac3
+#: ../feature.rst:21
+msgid "Font Icon 以及 Model Icon"
+msgstr ""
+
+# 864121978b734b6581204d72ab8da38d
+#: ../feature.rst:24
+msgid "即时编辑"
+msgstr ""
+
+# c8cf683d5a374f14974760447484a7e4
+#: ../feature.rst:27
+msgid "图表功能"
+msgstr ""
+
+# 9baf895d8b3a4c9cbcfbbb9598e81a14
+#: ../feature.rst:30
+msgid "关联信息菜单"
+msgstr ""
+
+# 8ad532c143b34214b8e0541acb8c1757
+#: ../feature.rst:33
+msgid "数据版本管理"
+msgstr ""
+
+# 37d0330403d7424fb7451877b2edf1f5
+#: ../feature.rst:36
+msgid "数据详情页面"
+msgstr ""
+
+# 1b11245d54f048a880abda599f01c194
+#: ../feature.rst:39
+msgid "数据查看权限"
+msgstr ""
+
+# d2c4429200ad4582a73d823689ef46be
+#: ../feature.rst:42
+msgid "过滤器强化"
+msgstr ""
+
+# 7c500be23fa640d1b250ae55f7ddfab1
+#: ../feature.rst:45
+msgid "书签功能"
+msgstr ""
+
+# 4d6a1a1f28c041f19f9f914e61e449c7
+#: ../feature.rst:48
+msgid "数据导出"
+msgstr ""
+
+# 68c8dce5a01d47d083ae4951e8441fda
+#: ../feature.rst:51
+msgid "Autocomplete"
+msgstr ""
+
+# e357b1fc2cc24262a3b9ba353e2d3cb9
+#: ../feature.rst:54
+msgid "Inline 数据编辑"
+msgstr ""
+
+# 8120143461b84e3ab0fb90f1a2fad9bf
+#: ../feature.rst:57
+msgid "数据添加向导"
+msgstr ""
+
+# 5a03581d2a874396ba94a503527b2f74
+#: ../feature.rst:60
+msgid "强大的插件机制"
+msgstr ""

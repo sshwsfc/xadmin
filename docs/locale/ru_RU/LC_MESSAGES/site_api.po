@@ -1,0 +1,261 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2013, sshwsfc
+# This file is distributed under the same license as the Django Xadmin package.
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: xadmin-docs\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-05-01 21:34\n"
+"PO-Revision-Date: 2013-07-31 01:41+0000\n"
+"Last-Translator: sshw <sshwsfc@gmail.com>\n"
+"Language-Team: Russian (Russia) (http://www.transifex.com/projects/p/xadmin-docs/language/ru_RU/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ru_RU\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+# c923f6bd6cbf445091421173e7b88e68
+#: ../site_api.rst:2
+msgid "AdminSite"
+msgstr ""
+
+# 16f7ceb510b04ded8f423709504a5a04
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite:1
+msgid "xadmin最核心的类，管理整个xadmin站点的所有注册内容。"
+msgstr ""
+
+# 7f977a8803694c1f91221e2e02816073
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite:3
+msgid "一般一个管理站点只有一个 ``AdminSite`` 实例，该实例主要完成以下工作:"
+msgstr ""
+
+# e96bc7f2fa6c4f47b563a653bb3cee05
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite:5
+msgid "注册管理所有 xadmin 需要的信息"
+msgstr ""
+
+# ccf94b3904a04bc7a6fb5110fc1c6ae9
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite:6
+msgid "创建 ``admin view class``"
+msgstr ""
+
+# a0b873e3bcca4245b9b56d39907270f1
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite:7
+msgid "注册 django urls"
+msgstr ""
+
+# b04bd358726d41fca44a01d096bc52d3
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite:9
+msgid "其中，xadmin 需要的信息包括以下信息："
+msgstr ""
+
+# 26749df9b7724cb5a82defd64e22ead8
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite:11
+msgid "需要 xadmin 管理的 models，以及各 model 的 admin 信息"
+msgstr ""
+
+# 7f12cc5a335d4b58bc82d54c7c7988e6
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite:12
+msgid "注册的 ``admin view class``"
+msgstr ""
+
+# daa6cca0531542698e34d030830b51bd
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite:13
+msgid "注册的 ``model admin view class``"
+msgstr ""
+
+# e83fca1e7b644362b429b6342ecad991
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite:14
+msgid "注册的各种插件"
+msgstr ""
+
+# 0b379c30fa3b4d8c845cde0d45abe4e1
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite.admin_view:1
+msgid ""
+"为当前 ``AdminSite`` 的所有 View 提供的 Decorator。主要是功能是使用 "
+":meth:`AdminSite.has_permission`  方法来判断当前用户是否有权限访问该 ``AdminSite``， "
+"如果没有，转到登陆页面"
+msgstr ""
+
+# 2e9019238aa8496384de161350e13001
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite.admin_view:4
+msgid "通常情况下会在 :meth:`AdminSite.get_urls` 方法中使用该方法"
+msgstr ""
+
+# 50484810915240ad9294731079254a83
+#: ../../xadmin/sites.pydocstring of
+#: xadmin.sites.AdminSite.check_dependencies:1
+msgid "检查运行xadmin需要的包是否已经正确安装"
+msgstr ""
+
+# 18beea7f4ab440399515485224a428ad
+#: ../../xadmin/sites.pydocstring of
+#: xadmin.sites.AdminSite.check_dependencies:3
+msgid "默认情况下会检查 *ContentType* 模块是否已经正确安装"
+msgstr ""
+
+# ce1079d5c85b434fb1b884d2b6e23242
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite.copy_registry:1
+msgid "复制当前 AdminSite 实例的信息"
+msgstr ""
+
+# 59cfaaeb2e674184ac9acea553c15424
+#: ../../xadmin/sites.pydocstring of
+#: xadmin.sites.AdminSite.create_admin_view:1
+msgid ""
+"使用 :meth:`~AdminSite.get_view_class` 创建 AdminView 类，并且返回 view 方法，可以用于 "
+"get_urls 方法中"
+msgstr ""
+
+# 372f79057eff4d678d36c1a57f817f4b
+#: ../../xadmin/sites.pydocstring of
+#: xadmin.sites.AdminSite.create_model_admin_view:1
+msgid ""
+"使用 :meth:`~AdminSite.get_view_class` 创建 ModelAdminView 类，并且返回 view 方法，可以用于 "
+"get_urls 方法中"
+msgstr ""
+
+# 7ace23371c5d452da508623f7721485b
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite.get_plugins:1
+msgid "xadmin中 **核心** 方法，用于获取 AdminViewClass 的 plugins。"
+msgstr ""
+
+# 2ca810fe754849668beb7b3ffdecd755
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite.get_plugins:3
+msgid ""
+"获取 plugins 首先根据该 AdminViewClass 及其所有的集成类在已经注册的插件中找到相应的插件类。然后再使用第二个参数的 "
+"OptionClass 拼成插件类。"
+msgstr ""
+
+# 78668db896b44d41b6aba670eb16f364
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite.get_view_class:1
+msgid "xadmin中 **最核心** 的方法，用于创建 xadmin 特有的 AdminViewClass。"
+msgstr ""
+
+# 5025c15caaab43efa97f3cedf5b1660c
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite.get_view_class:3
+msgid "创建 AdminView 和核心思想为动态生成 mix 的类，主要步骤有两步:"
+msgstr ""
+
+# 3d68e63d16744bcaa855411c2175c70f
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite.get_view_class:5
+msgid ""
+"使用已经注册的 OptionClass (见 :meth:`~register`) 以及参数传入的 option_class 与 view_class "
+"动态生成类"
+msgstr ""
+
+# e06864e3fe0449b686f0115523d2c586
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite.get_view_class:6
+msgid "根据 view_class 及其继承类找到相应的 plugins， 作为生成的 AdminViewClass 的 plugins 属性"
+msgstr ""
+
+# 54446ae304fc4451bd95ecbf3452790b
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite.has_permission:1
+msgid ""
+"如果返回为 ``True`` 则说明 ``request.user`` 至少能够访问当前xadmin网站。否则无法访问xadmin的任何页面。"
+msgstr ""
+
+# 1d80b1d66df143d0b33b1b8920a0607e
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite.register:1
+msgid "注册需要管理的 Model， 或是注册某 AdminView 的 OptionClass"
+msgstr ""
+
+# 2699dd6ec96747c5b202c6c7e969f17f
+# 326d9c01b21948bfbcfb6903179b2ef6
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite.register:6
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite.register_plugin:6
+msgid ""
+"关于 Admin Plugin 具体内容可以参看 :class:`~xadmin.views.base.BaseAdminPlugin`。 举例::"
+msgstr ""
+
+# 9daf7d2854bc4dbba89a31819e9f8777
+#: ../../xadmin/sites.pydocstring of
+#: xadmin.sites.AdminSite.register_modelview:1
+msgid "将 Model Base Admin View 类注册到 AdminSite，"
+msgstr ""
+
+# da421a847a30484ab5481e7aba556601
+#: ../../xadmin/sites.pydocstring of
+#: xadmin.sites.AdminSite.register_modelview:7
+msgid ""
+"注册 Model Base Admin View 可以为每一个在xadmin注册的 Model 生成一个 Admin View，并且包含相关的 "
+"Model 信息。 具体内容可以参看 :class:`~xadmin.views.base.ModelAdminView`。 举例::"
+msgstr ""
+
+# 26900050f9a04ae9b4e5647ea6bb1394
+#: ../../xadmin/sites.pydocstring of
+#: xadmin.sites.AdminSite.register_modelview:19
+msgid "注册后，用户可以通过访问 ``/%(app_label)s/%(module_name)s/123/test`` 访问到该view"
+msgstr ""
+
+# f4af6d04e4be42f0bea12e069a9ad46a
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite.register_plugin:1
+msgid "将 Plugin 类注册到 AdminSite，当任何 Admin View 运行时当前 view 绑定的 plugin 会生效。"
+msgstr ""
+
+# d1bf17da97b349c0a7174048a37a421f
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite.register_plugin:18
+msgid "注册后，只要运行 SomeAdminView 实例的 get_context 方法，就会调用该 plugin。"
+msgstr ""
+
+# b8b48cab25a442c4bef3b2aed7310e0a
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite.register_view:1
+msgid "将 Admin View 类注册到 AdminSite，一般用于创建独立的 admin 页面，例如登陆，介绍页面，帮助页面等。"
+msgstr ""
+
+# 88ab206d8dcb4091a14253231a4dd603
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite.register_view:7
+msgid "关于 Admin View 具体内容可以参看 :class:`~xadmin.views.base.BaseAdminView`。 举例::"
+msgstr ""
+
+# 9c6f32a7300c4b57833cf358c34b3711
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite.register_view:18
+msgid "注册后，用户可以通过访问 ``/test_view/`` 访问到该view"
+msgstr ""
+
+# c6620df2c6484154a1c2ba50e0ea2837
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite.restore_registry:1
+msgid "恢复当前 AdminSite 实例的信息"
+msgstr ""
+
+# 4b2dcbc9d0cc4a759b7f2971744ff936
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite.unregister:1
+msgid "取消 Model 或 OptionClass 的注册"
+msgstr ""
+
+# 0ccb2f4580cb475ca95aa93054d1c76a
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite.unregister:3
+msgid "如果 Model 或 OptionClass 并未注册过，会抛出 :exc:`xadmin.sites.NotRegistered` 异常"
+msgstr ""
+
+# 6b724131e0b54ca8b3c862da48561eb2
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AdminSite.urls:1
+msgid ""
+"返回 xadmin site 的urls，用于设置django的urls。该方法用于属性使用。在您的Django的 ``urls.py`` "
+"中，使用示例如下::"
+msgstr ""
+
+# 08da8366ae144e3181e5d03396f18601
+#: ../../xadmin/sites.pydocstring of xadmin.sites.AlreadyRegistered:1
+msgid "如果一个 model 已经在 :class:`AdminSite` 注册过，当尝试再次注册时会抛出这个异常。"
+msgstr ""
+
+# 3477025aab9941c3bf49f2ce1e385df1
+#: ../../xadmin/sites.pydocstring of xadmin.sites.MergeAdminMetaclass:1
+msgid "用来生成 admin view class 的原类。"
+msgstr ""
+
+# 75d131ebded84637a82c97c90d15eb10
+#: ../../xadmin/sites.pydocstring of xadmin.sites.MergeAdminMetaclass:3
+msgid "目前该原类没有做什么特殊的工作。接下来的版本该原类可能会给 admin view class 注入一些公共的属性。"
+msgstr ""
+
+# baf309c6d8df4aa6ba0ccb0fb65463dd
+#: ../../xadmin/sites.pydocstring of xadmin.sites.NotRegistered:1
+msgid ""
+"当一个model并未在 :class:`AdminSite` 注册，当调用 :meth:`AdminSite.unregister` "
+"想要取消该model的注册就会抛出该异常。"
+msgstr ""

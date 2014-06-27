@@ -1,0 +1,1561 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2013, sshwsfc
+# This file is distributed under the same license as the Django Xadmin package.
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: xadmin-docs\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-05-01 21:34\n"
+"PO-Revision-Date: 2014-01-04 11:18+0000\n"
+"Last-Translator: sshw <sshwsfc@gmail.com>\n"
+"Language-Team: Arabic (http://www.transifex.com/projects/p/xadmin-docs/language/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+# 4e21597f86994a48a9e3af2189a5f263
+#: ../views_api.rst:2
+msgid "Views"
+msgstr ""
+
+# e2647191cb6b4fd9a32d198b0bbbeccd
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.BaseAdminObject:1
+msgid ""
+"提供给 :class:`BaseAdminView` 和 :class:`BaseAdminPlugin` 的通用基类，主要是提供了一些常用的通用方法"
+msgstr ""
+
+# aa73f10e99894aa796b414211e38fbf7
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.BaseAdminObject.get_admin_url:1
+msgid "便捷方法，方便的通过 name 取得 url，会加上 AdminSite.app_name 的 url namespace"
+msgstr ""
+
+# 3773dff2a08b406c8b845edc1fba85f0
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.BaseAdminObject.get_form_params:1
+msgid "将当前 request 的参数，新加或是删除后，生成 hidden input。用于放入 HTML 的 Form 中。"
+msgstr ""
+
+# d842e52e11394f868c9799a0b9e49dc4
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.BaseAdminObject.get_model_perm:1
+msgid "获取 Model 的某种权限标签，标签的格式为::"
+msgstr ""
+
+# 6a847d1e5b40479fbb6337f466614208
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.BaseAdminObject.get_model_url:1
+msgid ""
+"便捷方法，方便的通过 model, name 取得 url，会自动拼成 urlname，并会加上 AdminSite.app_name 的 url "
+"namespace"
+msgstr ""
+
+# 6bfdcde22a40429fb1872d41351a7ba8
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.BaseAdminObject.get_model_view:1
+msgid ""
+"获取 ModelAdminViewClass 的实例。首先通过 :class:`~xadmin.sites.AdminSite` 取得 model "
+"对应的 OptionClass，然后调用 :meth:`get_view` 方法"
+msgstr ""
+
+# 5302a3a4c10d45de9a0cec18681633ac
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.BaseAdminObject.get_query_string:1
+msgid "在当前的query_string基础上生成新的query_string"
+msgstr ""
+
+# b0af19d2ffa142c5a7ae43c1455fde91
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.BaseAdminObject.get_view:1
+msgid ""
+"获取 AdminViewClass 的实例。实际上就是调用 :meth:`~xadmin.sites.AdminSite.get_view_class`"
+" 方法"
+msgstr ""
+
+# 08925700a6fb42fcadb183523f9a9774
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.BaseAdminObject.has_model_perm:1
+msgid "判断当前用户是否有某个 Model 的 某种权限，例如:"
+msgstr ""
+
+# 1423c0c6f6dd4692b1859d9dec5ad6be
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.BaseAdminObject.render_response:1
+msgid "便捷方法，方便生成 HttpResponse，如果 response_type 为 ``json`` 会自动转为 json 格式后输出"
+msgstr ""
+
+# d481c6b61b324d4e921a444e6b4290a7
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.BaseAdminObject.static:1
+msgid ":meth:`xadmin.util.static` 的快捷方法，返回静态文件的 url。"
+msgstr ""
+
+# 07567b8aecba40a084f15eeb7193c430
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.BaseAdminObject.template_response:1
+msgid "便捷方法，方便生成 TemplateResponse"
+msgstr ""
+
+# f2f8fd5a53884b2398d69d9ed7c60432
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.BaseAdminPlugin:1
+msgid ""
+"所有 Plugin 的基类。继承于 :class:`BaseAdminObject` 。插件的注册和使用可以参看 "
+":meth:`xadmin.sites.AdminSite.register_plugin` ， 插件的原理可以参看 "
+":func:`filter_hook` :"
+msgstr ""
+
+# b2cc47a368384c5baad75e1f83133d9e
+#: ../../xadmin/views/base.pydocstring of xadmin.views.base.filter_hook:1
+msgid "表明 AdminView 的方法可以被插件插入的装饰器。执行使用了该装饰器的方法时，会按照以下过程执行:"
+msgstr ""
+
+# f4383db70ef84f5ea20e1cb56fe828ab
+#: ../../xadmin/views/base.pydocstring of xadmin.views.base.filter_hook:3
+msgid "首先将实例的 plugins 属性取出，取出含有同样方法名的插件"
+msgstr ""
+
+# b38913274900486ba2a10bd1a7fcc919
+#: ../../xadmin/views/base.pydocstring of xadmin.views.base.filter_hook:5
+msgid "按照插件方法的 ``priority`` 属性排序"
+msgstr ""
+
+# 6b5423fe58804fe0bd86c818c72e5104
+#: ../../xadmin/views/base.pydocstring of xadmin.views.base.filter_hook:7
+msgid "顺序执行插件方法，执行插件方法的规则:"
+msgstr ""
+
+# 2ac1a5422c7a4f84a5b5998559f552f5
+#: ../../xadmin/views/base.pydocstring of xadmin.views.base.filter_hook:9
+msgid "如果插件方法没有参数，AdminView 方法的返回结果不为空则抛出异常"
+msgstr ""
+
+# 09173a525b884f428aa915194042c289
+#: ../../xadmin/views/base.pydocstring of xadmin.views.base.filter_hook:11
+msgid ""
+"如果插件方法的第一个参数为 ``__`` ，则 AdminView 方法将作为第一个参数传入，注意，这时还未执行该方法， 在插件中可以通过 "
+"``__()`` 执行，这样就可以实现插件在 AdminView 方法执行前实现一些自己的逻辑，例如::"
+msgstr ""
+
+# 3b0c8ce0a105498c961e649730bdc15e
+#: ../../xadmin/views/base.pydocstring of xadmin.views.base.filter_hook:19
+msgid "如果插件方法的第一个参数不为 ``__`` ，则执行 AdminView 方法，将结果作为第一个参数传入"
+msgstr ""
+
+# caa776e3b38a4125bcffb78f0ac1f6e0
+#: ../../xadmin/views/base.pydocstring of xadmin.views.base.filter_hook:21
+msgid "最终将插件顺序执行的结果返回"
+msgstr ""
+
+# 10041b01e84c434fb39367a9c664d3ae
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.BaseAdminPlugin.init_request:1
+msgid ""
+"插件的初始化方法，Plugin 实例化后被调用的第一个方法。该方法主要用于初始化插件需要的属性， 同时判断当前请求是否需要加载该插件，例如 "
+"Ajax插件的实现方式::"
+msgstr ""
+
+# f48e24f60a7c4ab6986ad56e953f90e6
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.BaseAdminPlugin.init_request:7
+msgid "当返回值为 ``False`` 时，所属的 AdminView 实例不会加载该插件"
+msgstr ""
+
+# 3635d77f5cb74aef9e672b42c4160e57
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.BaseAdminView:1
+msgid ""
+"所有 AdminView 的基类。继承于 :class:`BaseAdminObject` 和 "
+":class:`django.views.generic.View`"
+msgstr ""
+
+# 80c88426a1af45b5802dc5a8449af5d0
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.BaseAdminView:3
+msgid ""
+"该类是 xadmin 中 **最核心** 的类，所有的 AdminView 都需要继承此类。xadmin 与 Django Admin最大的区别就在于 "
+"xadmin  每次请求会产生一个 AdminView 的实例，也就是基于 Class 的 view 方式。该方式在 Django 1.3 "
+"被实现，可以参看 Django 的官方文档 `Class-based generic views "
+"<https://docs.djangoproject.com/en/1.4/topics/class-based-views/>`_"
+msgstr ""
+
+# a53f39483fb6461a81d8b98a8eb2c458
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.BaseAdminView:7
+msgid ""
+"使用 Class 的方式实现的好处显而易见。首先，每一次请求都会产生一个新的实例，这样 request 这种变量就可以保存在实例中，基类的扩展，或 "
+"是复写父类方法时再也不用带着 request 到处跑了，当然，除了 request 还有很多可以基于实例存储的变量。"
+msgstr ""
+
+# 3e5cb177ca3b4001b7466f466a651950
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.BaseAdminView:10
+msgid ""
+"其次，基于实例的方式非常方便的实现了插件功能，而且还能实现插件的动态加载，因为每个 AdminView 实例可以根据自身实例的属性情况来判断加载 "
+"哪些插件，具体信息也可以参看 :class:`BaseAdminPlugin` 的描述。"
+msgstr ""
+
+# da016b6dad604ebb91a5db43d243c006
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.BaseAdminView:13
+msgid "实现一个自己的 AdminView 类很简单，举例如下::"
+msgstr ""
+
+# 6c1240e52b1045518a4f4b4937a86bb2
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.BaseAdminView:25
+msgid "而后您就可以在 ``me_test/`` 访问到该view了。当然xadmin同事提供了一些通用的 AdminView，分别为"
+msgstr ""
+
+# 24a7b2659174458fa8593656fb89e428
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.BaseAdminView:27
+msgid ":class:`CommAdminView` : xadmin通用界面的基础View，提供了xadmin通用界面需要的一些数据(菜单等)"
+msgstr ""
+
+# b39f1451134d420f9da6c1ddd3810085
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.BaseAdminView:28
+msgid ":class:`ModelAdminView` : 核心类之一，提供了基于 Model 的 AdminView。"
+msgstr ""
+
+# 21336c7f00914700893bb7badd62150e
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.BaseAdminView.as_view:1
+msgid ""
+"复写了 :meth:`View.as_view` 方法，主要是将 :meth:`View.dispatch` "
+"的也写到了本方法中，并且去掉了一些初始化操作， 因为这些初始化操作在 AdminView 的初始化方法中已经完成了，可以参看 "
+":meth:`BaseAdminView.init_request`"
+msgstr ""
+
+# 7bb3a00e850f40baafcf8669484f9cb4
+# 16f60f95ea084b3aa2279c4cb8e6ba9e
+# 5f77ff9ce5b548c1a8e465c3aa8efae1
+# c62068a8381f4f47ac1f4620d4861eed
+# 088145b03b304c1282030469466dd9ec
+# 2e6bc4d78efc4bfebacf3a1b792f7945
+# 1a21c04eb0654e0985c1b9dbb1fb8525
+# 4819c29f19214f2da89db419e5bef9f9
+# d1b48415f4164102aa6a4a3755338caf
+# 4a4b132d374f462798d913c9063e2ff5
+# d4321d0036524f39aa43ebd49145fcfa
+# de15ea1dfa6941e28cc68e9a3379f4d2
+# 7bded1fbf7364dee9d48c3b24bf92ce9
+# 09f0b47827b54839b70206f6f25b58a2
+# d1c4e7e3bff54bc38e5eae5852607537
+# 0c7c2e3f5718457496efca3ad52d47e9
+# ae9e498f9f6744e99a014d83acd7d783
+# 681a95695d864558875d924e63d80a5e
+# d7d2a508ab084077a87af0100f33907c
+# 27647c4fe3e64a68bec747e8dbc0cfb3
+# 1ca3d7f1e77d4b9286372a1ed1930c49
+# 5cdae70a89f7421b8c68b834bd63d164
+# 9c71b1d3bd904ba3a69303fe1e518201
+# 75bc7598d4964b72bb5992cb5f3b0dac
+# 6a98d2c0642a49aab57a16e2c9c9e4be
+# 1d7afd78c5ad42ba8edf69f9b59e63cc
+# 2444166d233942e8af72e7c70fbdcec7
+# e9163fefca324d91ae56abb36d66012b
+# 8eff01cb54ac4fc88a6864b06de8702f
+# 3b12cfb4061b47829138292aef0aa9e6
+# bff4d2c1091d41c590c0851572f4e7f0
+# c39c134713454fdc9395707b41197da6
+# 1e45b8c6cd8342f289cb7e7057d0676e
+# be101cde8864487b84e25961e00b070e
+# 5dcdaf71c7fc474dbd28539d3becb54b
+# fd9e58a899ef4f30b6f57f578c27f64b
+# be3d9aa4a0a04ed2bc9f71e1a1cff36a
+# 6e727869fb9d4eccb771d30e80bcd823
+# 31cea0cc5f9146428b251823e02c497a
+# 955ffc79a63447a9b48e79ef1fe1b1f7
+# 76324a17a6cd45e8b436767f7d5d165e
+# 154e1541d00c4ad5b701cd541fc08785
+# 2b158aa38352465eacce2fde9c2d231f
+# bee39008ceb341e68afc91347a75bb98
+# e1fa25facf784c468bf0b90e4a0b3cb8
+# b0dbab9290ef4dfaa51a4d72bc56f1b8
+# d9c1756592e3477693e9aaa929269c1b
+# 7e79e409ab324fe7a54186f49a54bfa2
+# e0ea0f2d5a2747d4879e95b1bd1b0df2
+# 7c48b013529f4ba982ae0cb516595145
+# 64d544e2f4454ea7be4567c24e8bd3f0
+# 3484d3567ebc4889b1f2cbbf68b88caf
+# 66a356a951dd49a29680bebd8b37c00b
+# 14a5be2083864db2a438918abd2dd4f9
+# b0ba7b4f08134a12bc70caca6eb49531
+# f5328b6ad59d45f788f5a085fdd83334
+# 06b19cb9d99d4fc68fe7c95a54906870
+# c87fcaf6ef474deeb8c0421968ca815c
+# 746859a6bad6421e89cd6e44eae2d38f
+# cfde18c8d4874c3584213e921543fe64
+# 8329298c7c5d4aceb499fec202dd4257
+# f97a32ec0ac14d479604d0fa0ce9838f
+# 23f3e24d87504ebcab2c5652e78f90ff
+# 1becab553c594380b9cc5505e02a342a
+# 6332fa05e54f491aa88b25e167eea2c7
+# 9b9198b3547344d792473586a3bff1bb
+# bd5d64fad94740049b564a03114c94c8
+# 4acf5402de894eee8a4a71a7c5b16bd2
+# 80a8e8e8401a4bb4bf581f0d6602a005
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.BaseAdminView.get_context:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.BaseAdminView.get_media:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CommAdminView.get_context:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CommAdminView.get_model_icon:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CommAdminView.get_nav_menu:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CommAdminView.message_user:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelAdminView.get_context:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelAdminView.get_object:1
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.ListAdminView.get:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_context:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_list_display:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_list_display_links:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_list_queryset:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_media:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_ordering:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_ordering_field:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_ordering_field_columns:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_page_number:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_paginator:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_response:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_result_list:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.post:1 ../../xadmin/views/__init__.pydocstring
+#: of xadmin.views.ListAdminView.post_response:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.post_result_list:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.result_header:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.result_headers:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.result_item:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.result_row:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.results:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.url_for_result:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.formfield_for_dbfield:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get_context:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get_error_list:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get_field_attrs:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get_field_style:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get_form_helper:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get_form_layout:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get_media:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get_model_form:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get_readonly_fields:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.instance_forms:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.post:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.prepare_form:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.save_forms:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.save_models:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.save_related:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.valid_forms:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CreateAdminView.get_context:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CreateAdminView.get_form_datas:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CreateAdminView.get_response:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CreateAdminView.post_response:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.UpdateAdminView.get_context:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.UpdateAdminView.get_form_datas:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.UpdateAdminView.get_response:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.UpdateAdminView.post_response:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DeleteAdminView.delete_model:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DeleteAdminView.get:1 ../../xadmin/views/__init__.pydocstring
+#: of xadmin.views.DeleteAdminView.get_context:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DeleteAdminView.post:1 ../../xadmin/views/__init__.pydocstring
+#: of xadmin.views.DeleteAdminView.post_response:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DetailAdminView.get:1 ../../xadmin/views/__init__.pydocstring
+#: of xadmin.views.DetailAdminView.get_context:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DetailAdminView.get_field_result:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DetailAdminView.get_form_helper:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DetailAdminView.get_form_layout:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DetailAdminView.get_media:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DetailAdminView.get_model_form:1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DetailAdminView.get_response:1
+msgid "``filter_hook``"
+msgstr ""
+
+# eab5aaaa7c084bd1b7f95ad740f0e03b
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.BaseAdminView.get_context:4
+msgid "返回显示页面所需的 context 对象。"
+msgstr ""
+
+# c30e3f9a97bf47b2bf052ededbbd1294
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.BaseAdminView.get_media:4
+msgid "取得页面所需的 Media 对象，用于生成 css 和 js 文件"
+msgstr ""
+
+# 7a9625f2620f408682725e510cf13878
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.BaseAdminView.init_plugin:1
+msgid ""
+"AdminView 实例中插件的初始化方法，在 :meth:`BaseAdminView.init_request` 后调用。根据 AdminView "
+"中 的 base_plugins 属性将插件逐一初始化，既调用 :meth:`BaseAdminPlugin.init_request` "
+"方法，并根据返回结果判断是否加载该插件。 最后该方法会将初始化后的插件设置为 plugins 属性。"
+msgstr ""
+
+# 400eed6529c24edaaf8da411bf246c4e
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.BaseAdminView.init_request:1
+msgid "一般用于子类复写的初始化方法，在 AdminView 实例化时调用，:class:`BaseAdminView` 的该方法不做任何操作。"
+msgstr ""
+
+# d2a64a7210db48ea93f27a1460ad708f
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.CommAdminView:1
+msgid ""
+"基于 :class:`BaseAdminView` 提供的通用 AdminView。主要是完成了一些 xadmin 页面通用内容的处理。主要有:"
+msgstr ""
+
+# 6d03b14317e74d8d911ad84eb8f9a365
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.CommAdminView:3
+msgid "网站标题"
+msgstr ""
+
+# d8964c479e784025ae0d139f726b036f
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.CommAdminView:4
+msgid "全局的 Model 图标"
+msgstr ""
+
+# 57f15b7ddbfb4cc6a7b7bea462f67d1a
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.CommAdminView:5
+msgid "网站菜单"
+msgstr ""
+
+# bb22f0005c414a02a934cc3a95c1ed4e
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.CommAdminView:7
+msgid "**View属性**:"
+msgstr ""
+
+# 4db71e534cbe4c6c8a1846d7074a23f1
+#: ../../xadmin/views/base.pydocstring of
+#: xadmin.views.CommAdminView.site_title:1
+msgid "网站的标题"
+msgstr ""
+
+# b0897c14669d47148e76de3c5ecb0a6c
+#: ../../xadmin/views/base.pydocstring of
+#: xadmin.views.CommAdminView.globe_models_icon:1
+msgid "全局的 Model 图标::"
+msgstr ""
+
+# f8bc8d4377f94b538dcc1b63862bdddd
+# 57b4c41e05984f7eb47a2be32cc654c1
+# 0c457c12cefa48d7920e05abc20dc1e9
+# a2d27156108848d2bc0126a66dedcc9b
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CommAdminView.get_context:4
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelAdminView.get_context:4
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_context:4
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DetailAdminView.get_context:4
+msgid "**Context Params** :"
+msgstr ""
+
+# ba276cd2e30a44e99ae83cb889b6ba13
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CommAdminView.get_context:6
+msgid "``site_title`` : 使用 :attr:`site_title` 属性，默认为 \"Django Xadmin\""
+msgstr ""
+
+# 155dc3a995e540a8ae37d25f540c4c46
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CommAdminView.get_context:8
+msgid "``nav_menu`` : 权限过滤后的系统菜单项，如果在非 DEBUG 模式，该项会缓存在 SESSION 中"
+msgstr ""
+
+# 47dba33f9ad540219ff2b17405e7c9b1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CommAdminView.get_model_icon:4
+msgid "取得 Model 图标，Model 图标会作为 css class，一般生成 HTML 如下::"
+msgstr ""
+
+# b20c9d1ccff142ffb20b04a9a11fc1b9
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CommAdminView.get_model_icon:8
+msgid ""
+"这是 Bootstrap 标准的图标格式，xadmin 目前是用了 Font Icon (Font-"
+"Awesome)，您可以制作自己的图标，具体信息可以参考 `如何制作自己的字体图标 <http://fortawesome.github.com"
+"/Font-Awesome/#contribute>`_"
+msgstr ""
+
+# 2df2036917fc4fb5a6eb8f7ae7cef163
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CommAdminView.get_model_icon:13
+msgid "Model 图标，目前被使用在以下几个地方，当然您也可以随时使用在自己实现的页面中:"
+msgstr ""
+
+# 1852943ebffb4a5aa578e67a9b5a086e
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CommAdminView.get_model_icon:15
+msgid "系统菜单"
+msgstr ""
+
+# 97d449e2ce824d96b03fca249a669284
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CommAdminView.get_model_icon:16
+msgid "列表页面标题中"
+msgstr ""
+
+# 3b173dc8a2874c41b49cc5836231a2db
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CommAdminView.get_model_icon:17
+msgid "添加、修改及删除页面的标题中"
+msgstr ""
+
+# 6a88c390f05c4b4faa9f58ee8c2edefc
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CommAdminView.get_model_icon:19
+msgid "``FAQ: 如果定义 Model 图标``"
+msgstr ""
+
+# 046342808d43406d8ab6e5f3132d8d1a
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CommAdminView.get_model_icon:21
+msgid ""
+"您可以在 :class:`CommAdminView` 的 OptionClass 中通过 "
+":attr:`CommAdminView.globe_models_icon` 属性设定全局的 Model 图标。 或者在 Model 的 "
+"OptionClass 中设置 :attr:`model_icon` 属性。"
+msgstr ""
+
+# 514989ea58e44336a2b544bedc1740a4
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CommAdminView.get_nav_menu:4
+msgid ""
+"返回网站菜单，如果 :meth:`get_site_menu` 返回的结果不是 None ，那么将把其返回结果作为菜单的第一部分，而后会补全没有出现的 "
+"Model 列表页菜单项， 如果 :meth:`get_site_menu` 返回为 None， 那么将自动根据 App 和 Model "
+"生成两级的菜单。"
+msgstr ""
+
+# db716a60a58e4dfebf20210ce18dc565
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CommAdminView.get_site_menu:1
+msgid "``FAQ:如何定制系统菜单``"
+msgstr ""
+
+# f481e4fafc574366a35bb5ff5cb65289
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CommAdminView.get_site_menu:3
+msgid "用于给子类复写的方法，开发者可以在子类或 OptionClass 中复写该方法，返回自己定义的网站菜单。菜单的格式为::"
+msgstr ""
+
+# b14fa8988770481eaf92b08a86d0426c
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CommAdminView.get_site_menu:11
+msgid ""
+"菜单项的 ``perm`` 和 ``url`` 如果是基于 Model 的，可以使用 xadmin 提供的便利方法  "
+":meth:`BaseAdminObject.get_model_perm` 和 "
+":meth:`BaseAdminObject.get_model_url`。举例说明创建菜单::"
+msgstr ""
+
+# 76b9547bd7ef40358913c0080b6e2003
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CommAdminView.message_user:4
+msgid "向用户显示一个消息，这个消息会在页面生成的时候生成以下 HTML::"
+msgstr ""
+
+# a49c97e1d7074efb993b125a34027714
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CommAdminView.message_user:13
+msgid "这是标准的 Bootstrap 格式。xadmin默认使用 :mod:`django.contrib.messages` 实现消息系统"
+msgstr ""
+
+# e5802979fb374a61a28bb709b2a68c62
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.ModelAdminView:1
+msgid ""
+"基于 Model 的 AdminView，该类的子类，在 AdminSite 生成 urls 时，会为每一个注册的 Model 生成一个 url 映射。"
+" ModelAdminView 注册时使用 :meth:`xadmin.sites.AdminSite.register_modelview` "
+"方法注册，具体使用实例可以参见该方法的说明，或参考实例::"
+msgstr ""
+
+# d8f33b5cb523403cb79630ea05967321
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.ModelAdminView:13
+msgid "注册后，用户可以通过访问 ``/%(app_label)s/%(module_name)s/123/test`` 访问到该view"
+msgstr ""
+
+# f50346f3225141ccb179d475505bf554
+# 34463535794143578fe38e2616f0eb95
+# 221cc597f79244a0ae4a52e683082d2a
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.ModelAdminView:15
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.ListAdminView:3
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView:3
+msgid "**Option 属性**"
+msgstr ""
+
+# e0706fb8f952436a9e69f57fded0a64a
+#: ../../xadmin/views/base.pydocstring of xadmin.views.ModelAdminView.fields:1
+msgid "(list,tuple) 默认显示的字段"
+msgstr ""
+
+# 98fdf767c96849ccad85788b1894d24a
+#: ../../xadmin/views/base.pydocstring of
+#: xadmin.views.ModelAdminView.exclude:1
+msgid "(list,tuple) 排除的字段，主要用在编辑页面"
+msgstr ""
+
+# 47e1be19b2ee4b9c9f8c4fa8b5bf5bd7
+#: ../../xadmin/views/base.pydocstring of
+#: xadmin.views.ModelAdminView.ordering:1
+msgid "(dict) 获取 Model 的 queryset 时默认的排序规则"
+msgstr ""
+
+# 2f168d0f5e954ab19dfee3419d96bd1b
+#: ../../xadmin/views/base.pydocstring of xadmin.views.ModelAdminView.model:1
+msgid ""
+"绑定的 Model 类，在注册 Model 时，该项会自动附在 OptionClass 中，见方法 :meth:`AdminSite.register`"
+msgstr ""
+
+# 5f84416605e94b65aeb8c04b253cf48f
+# 4a6e1e3c920f44b9a7e71c782a21f660
+# baf8542d5790491e883ef8a26b1b991a
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.ModelAdminView:22
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.DeleteAdminView:7
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.DetailAdminView:10
+msgid "**实例属性**"
+msgstr ""
+
+# 999ab419b2af472c8b62cf8f9054edbe
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.ModelAdminView:26
+msgid "即 Model._meta"
+msgstr ""
+
+# 57d330396c7246d18604f9ecce6bf39e
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.ModelAdminView:30
+msgid "即 Model._meta.app_label"
+msgstr ""
+
+# 6d9fac5f5a994d6d887ad53005f54e63
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.ModelAdminView:34
+msgid "即 Model._meta.module_name"
+msgstr ""
+
+# 1fb7ea69b08141748af132bd1a715ca3
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.ModelAdminView:38
+msgid "即 (self.app_label, self.module_name)"
+msgstr ""
+
+# eea3dcb271f343b48a46462c1c961ca9
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelAdminView.get_context:6
+msgid "``opts`` : Model 的 _meta"
+msgstr ""
+
+# b878ce4a178849edb006320d17e49bec
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelAdminView.get_context:8
+msgid "``app_label`` : Model 的 app_label"
+msgstr ""
+
+# ae090278e3d64ae6a625dba2f55a693c
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelAdminView.get_context:10
+msgid "``module_name`` : Model 的 module_name"
+msgstr ""
+
+# c033853a9912492dbb322fda49c7e937
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelAdminView.get_context:12
+msgid "``verbose_name`` : Model 的 verbose_name"
+msgstr ""
+
+# 1d1e5250da2e4fdfbe24d3d6cac4bc28
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelAdminView.get_model_perms:1
+msgid ""
+"返回包含 Model 所有权限的 dict。dict 的 key 值为： ``add`` ``view`` ``change`` ``delete`` "
+"，  value 为 boolean 值，表示当前用户是否具有相应的权限。"
+msgstr ""
+
+# ad512de04613488499770475a4f2c4cb
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelAdminView.get_object:4
+msgid "根据 object_id 获得唯一的 Model 实例，如果 pk 为 object_id 的 Model 不存在，则返回 None"
+msgstr ""
+
+# e71dd659d5ff4ce3baa72f0afdb7d70c
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelAdminView.get_ordering:1
+msgid ""
+"返回 Model 列表的 ordering， 默认就是返回 :attr:`ModelAdminView.ordering` ，子类可以复写该方法"
+msgstr ""
+
+# 31f6f9289c364d81a883daa2a6d48fca
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelAdminView.get_template_list:1
+msgid ""
+"根据 template_name 返回一个 templates "
+"列表，生成页面是在这些列表中寻找存在的模板。这样，您就能方便的复写某些模板。列表的格式为::"
+msgstr ""
+
+# a83207d49a0d4d56bc65fb36fbdac11c
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelAdminView.has_add_permission:1
+msgid "返回当前用户是否有添加权限"
+msgstr ""
+
+# 118cc17f557e4bb1832631e1206447d4
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelAdminView.has_change_permission:1
+msgid "返回当前用户是否有修改权限"
+msgstr ""
+
+# 0b32ffa376dd44ddaf371deed6be75f2
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelAdminView.has_delete_permission:1
+msgid "返回当前用户是否有删除权限"
+msgstr ""
+
+# 1b8ab1fc24d3436fa5fd540f6377d21a
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelAdminView.has_view_permission:1
+msgid "返回当前用户是否有查看权限"
+msgstr ""
+
+# 6517a5951dea4b188f21f48f5e1e021e
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelAdminView.has_view_permission:5
+msgid "目前的实现为：如果一个用户有对数据的修改权限，那么他就有对数据的查看权限。当然您可以在子类中修改这一规则"
+msgstr ""
+
+# 9b1250b5f746481bac3e8ba54cfd962a
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelAdminView.model_admin_url:1
+msgid ""
+"等同于 :meth:`BaseAdminObject.get_admin_url` ，只是无需填写 model 参数， 使用本身的 "
+":attr:`ModelAdminView.model` 属性。"
+msgstr ""
+
+# 3b3a21ebc56444509581ac3655628acc
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelAdminView.queryset:1
+msgid "返回 Model 的 queryset。可以使用该属性查询 Model 数据。"
+msgstr ""
+
+# f8c6af1d0a104bfcb53a505bb5f6d36e
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.ListAdminView:1
+msgid "显示数据列表的 AdminView, 该 View 实现了基本的数据排序和分页等功能."
+msgstr ""
+
+# 6c018393f19c42fd835cc1d23b47c75d
+#: ../../xadmin/views/list.pydocstring of
+#: xadmin.views.ListAdminView.list_display:1
+msgid "默认显示列"
+msgstr ""
+
+# d562131ef037491e804c5035051e0c5d
+#: ../../xadmin/views/list.pydocstring of
+#: xadmin.views.ListAdminView.list_display_links:1
+msgid "显示修改或查看数据详情连接的列"
+msgstr ""
+
+# a58666135db04ddb8a7a8a495d64c6db
+#: ../../xadmin/views/list.pydocstring of
+#: xadmin.views.ListAdminView.list_select_related:1
+msgid "是否提前加载关联数据, 使用 ``select_related``"
+msgstr ""
+
+# 206988dc0596461ca615687c0bcb9c50
+#: ../../xadmin/views/list.pydocstring of
+#: xadmin.views.ListAdminView.list_per_page:1
+msgid "每页显示数据的条数"
+msgstr ""
+
+# a0ff3be9b2914b628081a3a422581bd7
+#: ../../xadmin/views/list.pydocstring of
+#: xadmin.views.ListAdminView.list_max_show_all:1
+msgid "每页最大显示数据的条数"
+msgstr ""
+
+# 024d95dbdfde4f928a7aece9c807c9d6
+#: ../../xadmin/views/list.pydocstring of
+#: xadmin.views.ListAdminView.list_exclude:1
+msgid "排除显示的列, 在显示列的设置中不会出现这些被排除的列"
+msgstr ""
+
+# d7785abeffa144f4b2ad0e4a4ffd09dc
+#: ../../xadmin/views/list.pydocstring of
+#: xadmin.views.ListAdminView.search_fields:1
+msgid "按照这些列搜索数据"
+msgstr ""
+
+# 4cda58b77c784d4fa4274b8b5a051c82
+#: ../../xadmin/views/list.pydocstring of
+#: xadmin.views.ListAdminView.ordering:1
+msgid "默认的数据排序"
+msgstr ""
+
+# 7602c6485df34d0b81e8cc5640c11e3e
+#: ../../xadmin/views/list.pydocstring of
+#: xadmin.views.ListAdminView.object_list_template:1
+msgid "显示数据的模板"
+msgstr ""
+
+# 9701d73ee59b4522bfd2f23f93e0375b
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.ListAdminView.get:4
+msgid "显示 Model 列表."
+msgstr ""
+
+# 668a0b0df9a349459e4cd2873236ab55
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_check_field_url:1
+msgid "返回 ``显示列`` 菜单项中每一项的 url."
+msgstr ""
+
+# af55ea65722a4ded935b37f0e6321f16
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_context:6
+msgid "``model_fields`` : 用于 ``选择显示列`` 功能, 保存所有可显示的列信息"
+msgstr ""
+
+# 3020459b614c4ef3a156c1a939bd9c0d
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_context:8
+msgid "``result_headers`` : 显示列表的头部信息, 是 :class:`ResultHeader` 列表"
+msgstr ""
+
+# 8bb66e4e46af4065bb3c578aebd8ac84
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_context:10
+msgid "``results`` : 显示列表的内容信息, 是 :class:`ResultItem` 列表"
+msgstr ""
+
+# 8e19578a60064ddfa856ce8b6676f529
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_list_display:4
+msgid ""
+"获得列表显示的列. 如果 request 中有 ``_cols`` 参数, 则使用该参数, 否则使用 :attr:`list_display`."
+msgstr ""
+
+# b9b9449d9092453695d1366385a49a2a
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_list_display:8
+msgid ""
+"该方法会赋值 :attr:`base_list_display` 属性, 保存 list_display. 如果有插件修改了该方法的返回值 (例如: "
+"Action 插件), 可能会增加其他列. 但是这些列可能对其他插件没有意义(例如: 导出数据插件). 那么其他插件可以使用 "
+":attr:`base_list_display` 这个属性, 取得最原始的显示列."
+msgstr ""
+
+# f2c3998ab02049bc82d7fa4901a784d5
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_list_display_links:4
+msgid ""
+"返回一组列, 这些列的数据会以链接形式显示, 连接地址可能是数据修改页面(如果有修改权限), 或是查看页面.  默认情况下会使用 "
+":attr:`list_display_links` , 如果 :attr:`list_display_links` 为空, 则返回 "
+":attr:`list_display` 第一列."
+msgstr ""
+
+# 1481325fa7b14cacb3a45f83adf61d78
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_list_queryset:4
+msgid "取得 Model 的 queryset, 该 queryset 已经进行排序和过滤过. 其他插件可以在这里修改 queryset"
+msgstr ""
+
+# a1c52d4b47734ce18f12a7ea2244ab52
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_media:4
+msgid "返回列表页面的 Media, 该页面添加了 ``xadmin.page.list.js`` 文件"
+msgstr ""
+
+# 4f757407230b47a786a884ba4c2704e6
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_model_method_fields:1
+msgid ""
+"将所有 OptionClass 中含有 ``is_column=True`` 的方法, 使用 :class:`FakeMethodField` "
+"包装成一个假 的 DB Field. 用于在选择显示列的功能中显示."
+msgstr ""
+
+# 633211fd21fc4c519033a5233014805c
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_ordering:4
+msgid ""
+"Returns the list of ordering fields for the change list. First we check the "
+"get_ordering() method in model admin, then we check the object's default "
+"ordering. Then, any manually-specified ordering from the query string "
+"overrides anything. Finally, a deterministic order is guaranteed by ensuring"
+" the primary key is used as the last ordering field."
+msgstr ""
+
+# b8078a63e4884f24be7265e3f05ddca1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_ordering_field:4
+msgid ""
+"根据参数 ``field_name`` 获取需要排序 Field 的名字. ``field_name`` 可能是 Model 的一个标准 DB "
+"Field,  也有可能是可执行方法, 或是 OptionClass 及 Model 的一个属性, 这种情况下会取其 "
+"``admin_order_field`` 属性 作为排序字段, 如果取不到, 则返回 ``None``. 例如::"
+msgstr ""
+
+# 9c84498410e8485a844f5314570d75c9
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_ordering_field_columns:4
+msgid "Returns a SortedDict of ordering field column numbers and asc/desc"
+msgstr ""
+
+# 5011324a5ab749188e19ef98575829ac
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_page_number:4
+msgid "返回翻页组件各页码显示的 HTML 内容. 默认使用 bootstrap 样式"
+msgstr ""
+
+# 34df58d0048d4e358c541c9ee8226df3
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_paginator:4
+msgid "返回 paginator 实例, 使用 :attr:`paginator_class` 类实例化"
+msgstr ""
+
+# 81486367394a46db99570766567e73d0
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.get_response:4
+msgid "在 :meth:`get_context` 之后执行. 该方法默认无返回内容, 插件可以复写该方法, 返回指定的 HttpResponse."
+msgstr ""
+
+# 801a91be76104d24b9f91272d503a387
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.init_request:1
+msgid "初始化请求, 首先判断当前用户有无 view 权限, 而后进行一些生成数据列表所需的变量的初始化操作."
+msgstr ""
+
+# bdc81ac40cdf4ad4877db2c445d649fc
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.make_result_list:1
+msgid "该方法负责生成数据列表及分页信息. 数据列表会赋值给属性 :attr:`result_list` , 插件可以在该方法后执行一些数据处理."
+msgstr ""
+
+# 214924fa2437459e9104e3ff53cc6b47
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.post:4
+msgid ""
+"显示 Model 列表的 POST 请求, 默认跟 GET 请求返回同样的结果, 插件可以通过复写 :meth:`post_response` 方法改变"
+" POST 请求的返回"
+msgstr ""
+
+# a0e998406453409c8c0b64240da5fb79
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.post_response:4
+msgid "列表的 POST 请求, 该方法默认无返回内容, 插件可以复写该方法, 返回指定的 HttpResponse."
+msgstr ""
+
+# 834a4beec699418f96e337b393d2d40e
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.result_header:4
+msgid "返回某一列的头信息, 一个 :class:`ResultHeader` 实例."
+msgstr ""
+
+# f3e05e2430fe45dea394004819987c6d
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.result_headers:4
+msgid "返回列表的列头信息. 返回一个 :class:`ResultRow` 实例, 其 ``cells`` 属性包含列信息"
+msgstr ""
+
+# 3e5e6eda1d074216bac9314152b90d1f
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.result_item:4
+msgid "返回某一对象某一列的数据, :class:`ResultItem` 实例."
+msgstr ""
+
+# c6d0906466f6497d9d6c90771d5f419b
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.result_row:4
+msgid "返回列表某一行的内容信息. 返回一个 :class:`ResultRow` 实例, 其 ``cells`` 属性包含各列内容信息"
+msgstr ""
+
+# b906f94df6f64967bc82f76cde908202
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.results:4
+msgid "返回整个列表内容信息. 返回一个 :class:`ResultRow` 的数据, 包含各行信息"
+msgstr ""
+
+# 8a2022ada96a4b1380755ea2352c417a
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ListAdminView.url_for_result:4
+msgid "返回列表内容连接. 如果当前用户有修改权限就返回修改页面的连接, 否则返回查看详情页面连接"
+msgstr ""
+
+# 815078baf2a6496e8120e1c454b358b7
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView:1
+msgid ""
+"用于添加或修改数据的 AdminView，该类是一个基类，提供了数据表单显示及修改等通用功能，被 :class:`CreateAdminView` 及 "
+":class:`UpdateAdminView` 继承"
+msgstr ""
+
+# 409403b38aaa410d972af6270fe2b88f
+#: ../../xadmin/views/edit.pydocstring of
+#: xadmin.views.ModelFormAdminView.form:1
+msgid "使用 Model 生成 Form 的基本 Form 类，默认为 django.forms.ModelForm"
+msgstr ""
+
+# 590c7cd078614254a223494e339a01a4
+#: ../../xadmin/views/edit.pydocstring of
+#: xadmin.views.ModelFormAdminView.formfield_overrides:1
+msgid "可以指定某种类型的 DB Field，使用指定的 Form Field 属性，例如::"
+msgstr ""
+
+# 14c0b2e4b44749738af93aec5637cc41
+#: ../../xadmin/views/edit.pydocstring of
+#: xadmin.views.ModelFormAdminView.formfield_overrides:8
+msgid "这样，显示所有 FileField 字段时，都会使用 ``mywidgets.XFileWidget`` 来显示"
+msgstr ""
+
+# 802b3b59fdb34a408b0be42e15344152
+#: ../../xadmin/views/edit.pydocstring of
+#: xadmin.views.ModelFormAdminView.readonly_fields:1
+msgid "只读的字段，这些字段不能被编辑"
+msgstr ""
+
+# 6d287c1e13a2486598864aedb46438de
+#: ../../xadmin/views/edit.pydocstring of
+#: xadmin.views.ModelFormAdminView.style_fields:1
+msgid ""
+"指定 Field 的 Style， Style一般用来实现同一种类型的字段的不同效果，例如同样是 radio "
+"button，有普通及``inline``两种 Style。 通常 xadmin 针对表单的插件会实现更多的 Field "
+"Style。您使用这些插件后，只要方便的将想要使用插件效果的字段设置成插件实现的 Style 即可，例如::"
+msgstr ""
+
+# 430e8df5db3241dd9d145775d516f972
+#: ../../xadmin/views/edit.pydocstring of
+#: xadmin.views.ModelFormAdminView.style_fields:7
+msgid "``rich-textarea`` 可能是某插件提供的 Style，这样显示 ``content`` 字段时就会使用该插件的效果了"
+msgstr ""
+
+# 159bd8c9a37e4f82b5597e2ba58e2212
+#: ../../xadmin/views/edit.pydocstring of
+#: xadmin.views.ModelFormAdminView.relfield_style:1
+msgid ""
+"当 Model 是其他 Model 的 ref model 时，其他 Model 在显示本 Model 的字段时使用的 Field Style"
+msgstr ""
+
+# ab546a5282c9445aa2b6e0a96dbbba4e
+#: ../../xadmin/views/edit.pydocstring of
+#: xadmin.views.ModelFormAdminView.save_as:1
+msgid "是否显示 ``另存为`` 按钮"
+msgstr ""
+
+# 8496bedbd342445f91baebf72f634b5c
+#: ../../xadmin/views/edit.pydocstring of
+#: xadmin.views.ModelFormAdminView.save_on_top:1
+msgid "是否在页面上面显示按钮组"
+msgstr ""
+
+# 139b6ce5229c47ab8a27cb4307aae429
+#: ../../xadmin/views/edit.pydocstring of
+#: xadmin.views.ModelFormAdminView.add_form_template:1
+msgid "添加页面的模板"
+msgstr ""
+
+# a2cceea11dc14a8d9626e59f1c0fa742
+#: ../../xadmin/views/edit.pydocstring of
+#: xadmin.views.ModelFormAdminView.change_form_template:1
+msgid "修改页面的模板"
+msgstr ""
+
+# e9888797615d473d8436f148b5b69f4b
+#: ../../xadmin/views/edit.pydocstring of
+#: xadmin.views.ModelFormAdminView.form_layout:1
+msgid ""
+"页面 Form 的 Layout 对象，是一个标准的 Crispy Form Layout 对象。使用 Layout 可以方便的定义整个 Form "
+"页面的结构。 有关 Crispy Form 可以参考其文档 `Crispy Form 文档 <http://django-crispy-"
+"forms.readthedocs.org/en/latest/layouts.html>`_ 设置 form_layout 的示例::"
+msgstr ""
+
+# 7ddf27f1e7014f1ea56ab3f179e042fc
+#: ../../xadmin/views/edit.pydocstring of
+#: xadmin.views.ModelFormAdminView.form_layout:27
+msgid "有关 Layout 中元素的信息，可以参看文档 :ref:`form_layout`"
+msgstr ""
+
+# 374e4c2bff664ce29100cf63c4290543
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.formfield_for_dbfield:4
+msgid "生成表单时的回调方法，返回 Form Field。"
+msgstr ""
+
+# 704808f74ab243f48f6ed96d809c3d70
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get:4
+msgid "显示表单。具体的程序执行流程为:"
+msgstr ""
+
+# 8485bfc0e188420a8b1ef4dd3430d895
+# 7eee83b89a514df88f0a6f56a5a54dcf
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get:6
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.post:6
+msgid ":meth:`prepare_form`"
+msgstr ""
+
+# ca7adf697a904694ba3d5b6ade7c296a
+# 9d2dfc7cf0674b3185a027e09be17fa3
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get:8
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.post:8
+msgid ":meth:`instance_forms`"
+msgstr ""
+
+# 0d4c86282d974df2b863a44423567597
+# bfd8c22c6cae4841ac4474a72c2d638c
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get:10
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.post:10
+msgid "2.1 :meth:`get_form_datas`"
+msgstr ""
+
+# 50f5e5412d894221a1e4d453e7849384
+# c5c533f79f3c46ba881530ecf1e2aeea
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get:12
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.post:12
+msgid ":meth:`setup_forms`"
+msgstr ""
+
+# f737a9546f6047b3b71a0ada64097bee
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get:14
+msgid ":meth:`get_response`"
+msgstr ""
+
+# 921d55e487924bc993a7edb62ed46c57
+# 9fd5a99908ca4703a2b679ecb0ffe4dc
+# f52de8929c624f9997133156ef4d3f31
+# c4c2065c1557413aa21eb61af1179397
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get_context:4
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CreateAdminView.get_context:4
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.UpdateAdminView.get_context:4
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DeleteAdminView.get_context:4
+msgid "**Context Params**:"
+msgstr ""
+
+# 423267ed7f8842778f05957d89399119
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get_context:6
+msgid "``form`` : Form 对象"
+msgstr ""
+
+# 74f41444f60043649d295cd8e8b7c2ce
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get_context:8
+msgid "``original`` : 要修改的原始数据对象"
+msgstr ""
+
+# 781313cef6bc4efd83d8274cf318a8b3
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get_context:10
+msgid "``show_delete`` : 是否显示删除项"
+msgstr ""
+
+# e55014222fba482c9c804b3cab95d8f9
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get_context:12
+msgid "``add`` : 是否是添加数据"
+msgstr ""
+
+# c83201dbcd4e45ed9c7df059cc0797f5
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get_context:14
+msgid "``change`` : 是否是修改数据"
+msgstr ""
+
+# cafab961ceaa439291f9ad19dd5711d5
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get_context:16
+msgid "``errors`` : Form 错误信息"
+msgstr ""
+
+# ec9f8240831b4f0a86689ee491325d49
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get_error_list:4
+msgid "获取表单的错误信息列表。"
+msgstr ""
+
+# 132162b3f5fc43438a22b91b3032ae8d
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get_field_attrs:4
+msgid "根据 DB Field 返回 Form Field 的属性，dict类型。"
+msgstr ""
+
+# d583c31aba8b49809855f74952ca1b76
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get_field_style:4
+msgid "根据 Field Style 返回 Form Field 属性。扩展插件可以过滤该方法，提供各种不同的 Style"
+msgstr ""
+
+# 02025f58abd1415e9a830d976c1d78be
+# c64e9af8f30d4aef83c4d1003e9906a6
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get_form_helper:4
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DetailAdminView.get_form_helper:4
+msgid ""
+"取得 Crispy Form 需要的 FormHelper。具体信息可以参看 `Crispy Form 文档 <http://django-"
+"crispy-forms.readthedocs.org/en/latest/tags.html#crispy-tag>`_"
+msgstr ""
+
+# 6d0effa1b61a4a10a9b4a913c577e84c
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get_form_layout:4
+msgid ""
+"返回 Form Layout ，如果您设置了 :attr:`form_layout` 属性，则使用该属性，否则该方法会自动生成 Form Layout "
+"。 有关 Form Layout 的更多信息可以参看 `Crispy Form 文档 <http://django-crispy-"
+"forms.readthedocs.org/en/latest/layouts.html>`_ 设置 Form Layout "
+"可以非常灵活的显示表单页面的各个元素"
+msgstr ""
+
+# e35453e2affc40fba0c65b1236a1cb4d
+# 5b52069ac1af40179dae1766e22c9ef2
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get_model_form:4
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DetailAdminView.get_model_form:4
+msgid "根据 Model 返回 Form 类，用来显示表单。"
+msgstr ""
+
+# 7a9944f3b7734d60baa56eee908d5743
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.get_readonly_fields:4
+msgid "返回只读字段，子类或 OptionClass 可以复写该方法"
+msgstr ""
+
+# f3c3a001db6d4b1cac3906a7b9aa6db1
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.instance_forms:4
+msgid ""
+"实例化 Form 对象，即使用 :meth:`get_form_datas` 返回的值初始化 Form，实例化的 Form 对象赋值为 "
+":attr:`form_obj` 属性"
+msgstr ""
+
+# d5307dba367b4623a5ef2d6145f3bcbe
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.post:4
+msgid "保存表单数据。具体的程序执行流程为:"
+msgstr ""
+
+# ae3127a6a4454592915d2f325e733caf
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.post:14
+msgid ":meth:`valid_forms`"
+msgstr ""
+
+# ae9186a10c054f208103846882ebfcd7
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.post:16
+msgid "4.1 :meth:`save_forms`"
+msgstr ""
+
+# 01cea1d89c8540f89619d6d189eeaabe
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.post:18
+msgid "4.2 :meth:`save_models`"
+msgstr ""
+
+# b7e08390bc874c18ae7a7060cd196f43
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.post:20
+msgid "4.3 :meth:`save_related`"
+msgstr ""
+
+# edb74ecdea954aaebe3e3efacf48acc3
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.post:22
+msgid "4.4 :meth:`post_response`"
+msgstr ""
+
+# 206315de4bd74c49805cfb1f0f8f2b13
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.prepare_form:4
+msgid ""
+"准备 Form，即调用 :meth:`get_model_form` 获取 form ，然后赋值给 :attr:`model_form` 属性"
+msgstr ""
+
+# c70af629f3ea4b1f9806f8539370d7bb
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.save_forms:4
+msgid "保存表单，赋值为 :attr:`new_obj` 属性，这时该对象还没有保存到数据库中，也没有 pk 生成"
+msgstr ""
+
+# 0233e9fe1d1b452fa90f2d931ed9e93b
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.save_models:4
+msgid "保存数据到数据库中"
+msgstr ""
+
+# 8e3adfbcdbf648f9b7677fdcb7fdef28
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.save_related:4
+msgid "保存关联数据"
+msgstr ""
+
+# 7a687e787d2c40ad88e227b84d10ebb3
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.setup_forms:1
+msgid "配置 Form。主要是"
+msgstr ""
+
+# 5b820f3778344da9983b785063826492
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.ModelFormAdminView.valid_forms:4
+msgid "验证 Form 的数据合法性"
+msgstr ""
+
+# 4016d7d84d8442ce9ebaa6d3d1783355
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.CreateAdminView:1
+msgid "创建数据的 ModeAdminView 继承自 :class:`ModelFormAdminView` ，用于创建数据。"
+msgstr ""
+
+# 163bc5d66d364f0a9e3f00a09b8e3435
+# b7b5cd1bca6d4d049ac86510d5c76853
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CreateAdminView.get_context:6
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.UpdateAdminView.get_context:6
+msgid "``title`` : 表单标题"
+msgstr ""
+
+# 561678933b754a32bb911ad30cc2e027
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CreateAdminView.get_form_datas:4
+msgid "从 Request 中返回 Form 的初始化数据"
+msgstr ""
+
+# eb6480bdf18d4beea75bf1c762af09c5
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CreateAdminView.get_response:4
+msgid "返回显示表单页面的 Response ，子类或是 OptionClass 可以复写该方法"
+msgstr ""
+
+# 56b7ee0822d945c6a78f2859120fb52e
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.CreateAdminView.post_response:4
+msgid "当成功保存数据后，会调用该方法返回 HttpResponse 或跳转地址"
+msgstr ""
+
+# fdae65c8a53f4a67aca89580a73a9d52
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.UpdateAdminView:1
+msgid "修改数据的 ModeAdminView 继承自 :class:`ModelFormAdminView` ，用于修改数据。"
+msgstr ""
+
+# 890f7492e81a4d75b708508c509dbde3
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.UpdateAdminView.get_context:8
+msgid "``object_id`` : 修改的数据对象的 id"
+msgstr ""
+
+# 4a7e229c84c2480eadd0cfb3621b34b0
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.UpdateAdminView.get_form_datas:4
+msgid "获取 Form 数据"
+msgstr ""
+
+# 5cdecc3c206448f98d62e7b9c8911a67
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.UpdateAdminView.post_response:4
+msgid "当成功修改数据后，会调用该方法返回 HttpResponse 或跳转地址"
+msgstr ""
+
+# 2868bf8c9b014ec0ae474724516e46d1
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.DeleteAdminView:1
+msgid "删除 Model 的 AdminView。主要用于删除数据"
+msgstr ""
+
+# 31c227ba1b98498ea6b762db63ed2e65
+# db218f7489dd43b5a2a1e7e7241680cd
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.DeleteAdminView:3
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.DetailAdminView:4
+msgid "**Option属性**"
+msgstr ""
+
+# 3c56b5e9a3d442149b5789b31647bc74
+#: ../../xadmin/views/delete.pydocstring of
+#: xadmin.views.DeleteAdminView.delete_confirmation_template:1
+msgid "删除时确认删除页面的模板名称"
+msgstr ""
+
+# 029a121e57434181a59ed748ee52511e
+# bfb8cd01100b40749c1ebfd2e3779d27
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.DeleteAdminView:11
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.DetailAdminView:14
+msgid "即将被删除的对象"
+msgstr ""
+
+# dee5b0ba9b99402ba3c9cea8b154c2f6
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DeleteAdminView.delete_model:4
+msgid "删除 ``self.obj``"
+msgstr ""
+
+# e1e0ab9239394627b24a98802696a95d
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DeleteAdminView.get_context:6
+msgid "``title`` : 确认删除的标题，如果您没有权限删除的话，会提示无法删除"
+msgstr ""
+
+# a119444e56654b239a3c9e35a01580fa
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DeleteAdminView.get_context:8
+msgid "``object`` : 要被删除的对象"
+msgstr ""
+
+# d9cb68104f994b5f92fdac2e32cee6cc
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DeleteAdminView.get_context:10
+msgid "``deleted_objects`` : 关联被删除的所有数据对象"
+msgstr ""
+
+# 4ba9577aab8548a7aa5cce38740a4530
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DeleteAdminView.get_context:12
+msgid "``perms_lacking`` : 缺少的权限"
+msgstr ""
+
+# 8ab48dbb900242cea993eb3f93db0ab3
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DeleteAdminView.get_context:14
+msgid "``protected`` : 被保护的数据，无法被删除的数据对象"
+msgstr ""
+
+# 4c198c4daa3246ff8b6d44c0963d50a3
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DeleteAdminView.init_request:1
+msgid "初始化操作。根据传入的 ``object_id`` 取得要被删除的数据对象，而后进行权限判断"
+msgstr ""
+
+# fcc32e348a8c48a0b3867fcc6be9cdf4
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DeleteAdminView.post_response:4
+msgid "删除成功后的操作。首先提示用户信息，而后根据用户权限做跳转，如果用户有列表产看权限就跳转到列表页面，否则跳到网站首页。"
+msgstr ""
+
+# 7547e8a925b64320835cfed503beb832
+#: ../../xadmin/views/__init__.pydocstring of xadmin.views.DetailAdminView:1
+msgid ""
+"显示 Model 详细信息的 AdminView. 该 View 页面只能用来查看数据内容, 不能用来修改数据. 该 View 显示各字段的布局跟 "
+":class:`xadmin.views.edit.ModelFormAdminView` 一致."
+msgstr ""
+
+# 1ed8af0604464088a6e282e863a07926
+#: ../../xadmin/views/detail.pydocstring of
+#: xadmin.views.DetailAdminView.detail_layout:1
+msgid "详情页面的 Layout 对象，是一个标准的 Crispy Form Layout 对象。使用 Layout 可以方便的定义整个页面的结构。"
+msgstr ""
+
+# 517461cb3467408794b2adb3f999f109
+#: ../../xadmin/views/detail.pydocstring of
+#: xadmin.views.DetailAdminView.detail_show_all:1
+msgid ""
+"是否显示所有字段的内容, 默认为 ``True`` . 如果为 ``True`` 则会显示 Layout 中没有列出的字段, 否则会隐藏这些字段"
+msgstr ""
+
+# 3406bb5cc07d40ac860206f39954112f
+#: ../../xadmin/views/detail.pydocstring of
+#: xadmin.views.DetailAdminView.detail_template:1
+msgid "详情页面的模板文件"
+msgstr ""
+
+# f2e2bf80b698404bb53647ae1d48ae7e
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DetailAdminView.get_context:6
+msgid "``form`` : 用于显示数据的 Form 对象"
+msgstr ""
+
+# a1723d9ff7884292bd7ac26d6fa92634
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DetailAdminView.get_context:8
+msgid "``object`` : 要显示的 Model 对象"
+msgstr ""
+
+# 1507c0d0b75041dab37f584eab9ce8ca
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DetailAdminView.get_field_result:4
+msgid "返回包含该字段内容的 :class:`ResultField` 实例."
+msgstr ""
+
+# ece4a0102f2d417a831851a341512483
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DetailAdminView.get_form_layout:4
+msgid ""
+"返回 Form Layout ，如果您设置了 :attr:`detail_layout` 属性，则使用 :attr:`form_layout` "
+"属性，如果都没有该方法会自动生成 Form Layout 。 有关 Form Layout 的更多信息可以参看 `Crispy Form 文档 "
+"<http://django-crispy-forms.readthedocs.org/en/latest/layouts.html>`_ 设置 "
+"Form Layout 可以非常灵活的显示页面的各个元素"
+msgstr ""
+
+# 4dc9df340da24531b0a1e96e9cc2e6a2
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DetailAdminView.get_media:4
+msgid "返回列表页面的 Media, 该页面添加了 ``form.css`` 文件"
+msgstr ""
+
+# 2e9c446352a84a6c8307452282589d71
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DetailAdminView.get_response:4
+msgid "返回 HttpResponse , 插件可以复写该方法返回特定的 HttpResponse"
+msgstr ""
+
+# 2861f5b5e6484409b4337701d3104f1f
+#: ../../xadmin/views/__init__.pydocstring of
+#: xadmin.views.DetailAdminView.init_request:1
+msgid "初始化操作。根据传入的 ``object_id`` 取得要被显示的数据对象，而后进行权限判断, 如果没有数据查看权限会显示禁止页面."
+msgstr ""

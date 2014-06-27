@@ -1,0 +1,105 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2013, sshwsfc
+# This file is distributed under the same license as the Django Xadmin package.
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: xadmin-docs\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-05-01 21:34\n"
+"PO-Revision-Date: 2013-07-31 01:41+0000\n"
+"Last-Translator: sshw <sshwsfc@gmail.com>\n"
+"Language-Team: Japanese (http://www.transifex.com/projects/p/xadmin-docs/language/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+# e7b954132b2a4e07966bfa52c7a1e400
+#: ../quickstart.rst:6
+msgid "快速开始 Xadmin"
+msgstr ""
+
+# 6277f7eed57f4eb6873f1406668c7a8f
+#: ../quickstart.rst:8
+msgid ""
+"For using |xadmin|, `Django 1.4 <http://www.djangoproject.com>`_ needs to be"
+" installed and an `Admin Site "
+"<http://docs.djangoproject.com/en/dev/ref/contrib/admin/>`_ has to be "
+"activated."
+msgstr ""
+
+# a536fa8d0e6d4a0bafa606f4e9dc7ee7
+#: ../quickstart.rst:11
+msgid "安装"
+msgstr ""
+
+# c9168a4e9f4b4dd58ec118e069b28df2
+#: ../quickstart.rst:13
+msgid "使用 ``pip``::"
+msgstr ""
+
+# 045e6ba57b214a06a2379a57842e5461
+#: ../quickstart.rst:17
+msgid "**源码安装**"
+msgstr ""
+
+# badd03825b544dbeb8549cd535a9ad88
+#: ../quickstart.rst:19
+msgid ""
+"到 https://github.com/sshwsfc/django-xadmin 下载最新的源码包或是 clone git 库, "
+"然后在项目目录下执行::"
+msgstr ""
+
+# f12ff02bc5094cdbb1681355c5496146
+#: ../quickstart.rst:25
+msgid ""
+"在执行前您可以先编辑文件 ``requirements.txt`` , 其中 ``xlwt`` 不是必选的, 如果您不需要导出 excel 的功能, "
+"可以删除这项"
+msgstr ""
+
+# dd540594851349ec9f608c538ac6e15e
+#: ../quickstart.rst:28
+msgid "运行 Demo"
+msgstr ""
+
+# ff06c46992624d429a6f364f3e1a7189
+#: ../quickstart.rst:30
+msgid ""
+"如果您下载的是 |xadmin| 的源码包, 您会在项目目录下找到 ``demo_app`` 目录, 执行一下命令可以迅速开启一个 |xadmin| "
+"的演示实例::"
+msgstr ""
+
+# fde882a4590e4bcc853094ab31ea4e52
+#: ../quickstart.rst:35
+msgid "打开浏览器, 输入 ``http://127.0.0.1:8000`` 看一下效果吧."
+msgstr ""
+
+# ab80ce7d11ea4c76bf8ceccdd7577ccf
+#: ../quickstart.rst:38
+msgid "使用在自己的项目中"
+msgstr ""
+
+# 6b58274e6faa4a6b873d35ed5ff51b7a
+#: ../quickstart.rst:40
+msgid "|xadmin| 作为 Django 的模块, 可以很方便的使用在 Django 的网站中."
+msgstr ""
+
+# f5f8a4be34894119bc5738be998a96d1
+#: ../quickstart.rst:42
+msgid ""
+"首先编辑 ``settings.py`` 添加 |xadmin| 的模块到 ``INSTALLED_APPS`` 中 (注意, 安装 Django "
+"admin 所需要的 APP 也要安装, 但是 django.admin 可以不安装)::"
+msgstr ""
+
+# badc8141cd99439cb1511f6c97091ab7
+#: ../quickstart.rst:54
+msgid "然后添加 URL-patterns 以及 ``autodiscover`` 操作::"
+msgstr ""
+
+# ada4d130e67b4d8c9626d61de96b8193
+#: ../quickstart.rst:67
+msgid "收集 media 文件::"
+msgstr ""

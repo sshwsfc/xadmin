@@ -1,0 +1,98 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2013, sshwsfc
+# This file is distributed under the same license as the Django Xadmin package.
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: xadmin-docs\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-05-01 21:34\n"
+"PO-Revision-Date: 2013-11-20 12:57+0000\n"
+"Last-Translator: sshw <sshwsfc@gmail.com>\n"
+"Language-Team: Indonesian (Indonesia) (http://www.transifex.com/projects/p/xadmin-docs/language/id_ID/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: id_ID\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+# 9a77722b247e40ef99a0b47d20bbd655
+#: ../index.rst:4
+msgid "Welcome to Django Xadmin's Documentation!"
+msgstr ""
+
+# 12128249bfc5468b8db09ee12e0abbca
+#: ../index.rst:6
+msgid "**不能错过的替代Django Admin的产品**."
+msgstr ""
+
+# 22b942ac859d4efd95d9646ca323c92f
+#: ../index.rst:9
+msgid "安装 & 设置"
+msgstr ""
+
+# 6c45c4afaee8417fb2d1d163ac48a596
+#: ../index.rst:18
+msgid "功能特性"
+msgstr ""
+
+# d09590a09d324366872747307d9f068d
+#: ../index.rst:26
+msgid "插件"
+msgstr ""
+
+# d79c8d6a0b01428d9d00909aeb73e904
+#: ../index.rst:35
+msgid "API"
+msgstr ""
+
+# 4a8a2921928e46cb9b82dd0335a2a50d
+#: ../index.rst:44
+msgid "帮助"
+msgstr ""
+
+# 41cc7d1fd44d4d248964553196436719
+#: ../index.rst:54
+msgid "源码"
+msgstr ""
+
+# c3b53d8053fb4763bd871006067ac375
+#: ../index.rst:56
+msgid "https://github.com/sshwsfc/django-xadmin"
+msgstr ""
+
+# d5197d0fa806443fb4eddc8cc7348a8c
+#: ../index.rst:59
+msgid "网站"
+msgstr ""
+
+# 6e20a4d09df04bd7844ee9c34ea65116
+#: ../index.rst:61
+msgid "http://sshwsfc.github.com/django-xadmin"
+msgstr ""
+
+# 6d2d0f922837445a9533881e9ce7922f
+#: ../index.rst:64
+msgid "Versions and Compatibility"
+msgstr ""
+
+# 94c9300d6807422a99c78db8fcac886d
+#: ../index.rst:67
+msgid "Indices and tables"
+msgstr ""
+
+# 27c55a6176064e6a806ddbf890889f00
+#: ../index.rst:69
+msgid ":ref:`genindex`"
+msgstr ""
+
+# b270cfea2c6d4e2ca5df989fead1124b
+#: ../index.rst:70
+msgid ":ref:`modindex`"
+msgstr ""
+
+# 0d5a713cdd9b45aba59f6d7716e6dfc5
+#: ../index.rst:71
+msgid ":ref:`search`"
+msgstr ""

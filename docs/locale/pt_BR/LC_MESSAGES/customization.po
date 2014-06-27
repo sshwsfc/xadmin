@@ -1,0 +1,25 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2013, sshwsfc
+# This file is distributed under the same license as the Django Xadmin package.
+# 
+# Translators:
+# diegoponciano <dgo.ponciano@gmail.com>, 2013
+# Pedro Kiefer <pedro@kiefer.com.br>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: xadmin-docs\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-05-01 21:34\n"
+"PO-Revision-Date: 2014-01-20 23:36+0000\n"
+"Last-Translator: Pedro Kiefer <pedro@kiefer.com.br>\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/xadmin-docs/language/pt_BR/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+# a9103fb64983450aac3f48c27eeca3f0
+#: ../customization.rst:6
+msgid "Xadmin 的定制化"
+msgstr "Customização do Xadmin"

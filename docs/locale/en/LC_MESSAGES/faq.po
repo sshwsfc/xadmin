@@ -1,0 +1,24 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2013, sshwsfc
+# This file is distributed under the same license as the Django Xadmin package.
+# 
+# Translators:
+# Wang Xuerui <idontknw.wang+transifex@gmail.com>, 2013
+msgid ""
+msgstr ""
+"Project-Id-Version: xadmin-docs\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-05-01 21:34\n"
+"PO-Revision-Date: 2013-11-19 16:23+0000\n"
+"Last-Translator: Wang Xuerui <idontknw.wang+transifex@gmail.com>\n"
+"Language-Team: English (http://www.transifex.com/projects/p/xadmin-docs/language/en/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# 8efaa4fba12a4b4db86c8b8ff22c0854
+#: ../faq.rst:6
+msgid "FAQ"
+msgstr "FAQ"
