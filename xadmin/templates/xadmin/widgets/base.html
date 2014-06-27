@@ -3,13 +3,14 @@
 {% load crispy_forms_tags %}
 
 {% block box_attrs %}id="{{ widget_id }}"{% endblock box_attrs %}
-{% block box_class %}widget{% endblock box_class %}
+{% block box_class %}widget {{widget_type}}{% endblock box_class %}
 
 {% block box_title %}
   {% if widget.dashboard.widget_customiz %}
-    <i class='icon icon-wrench pull-right' data-toggle="modal" data-target="#{{ widget_id }}-opts-form"></i>
+    <i class='icon fa fa-wrench pull-right' data-toggle="modal" data-target="#{{ widget_id }}-opts-form"></i>
   {% endif %}
   {% block title %}
+    <i class='{{widget_icon}}'></i>
     {{ widget_title }}
   {% endblock title %}
 {% endblock box_title %}

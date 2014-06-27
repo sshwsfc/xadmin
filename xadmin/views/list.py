@@ -1,7 +1,6 @@
 # coding=utf-8
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.core.paginator import InvalidPage, Paginator
-from django.core.urlresolvers import reverse
 from django.db import models
 from django.http import HttpResponseRedirect
 from django.template.response import SimpleTemplateResponse, TemplateResponse
@@ -171,7 +170,8 @@ class ListAdminView(ModelAdminView):
             (例如: Action 插件), 可能会增加其他列. 但是这些列可能对其他插件没有意义(例如: 导出数据插件). 那么其他插件可以使用
             :attr:`base_list_display` 这个属性, 取得最原始的显示列.
         """
-        self.base_list_display = COL_LIST_VAR in self.request.GET and self.request.GET[COL_LIST_VAR].split('.') or self.list_display
+        self.base_list_display = (COL_LIST_VAR in self.request.GET and self.request.GET[COL_LIST_VAR] != "" and \
+            self.request.GET[COL_LIST_VAR].split('.')) or self.list_display
         return list(self.base_list_display)
 
     @filter_hook
@@ -558,13 +558,11 @@ class ListAdminView(ModelAdminView):
         ]
         if sorted:
             row['num_sorted_fields'] = row['num_sorted_fields'] + 1
-            menus.append((None, o_list_remove, 'remove', _(u'Cancel Sort')))
-            # 排序按钮
-            item.btns.append('<a class="toggle" href="%s"><i class="icon-%s"></i></a>' % (
+            menus.append((None, o_list_remove, 'times', _(u'Cancel Sort')))
+            item.btns.append('<a class="toggle" href="%s"><i class="fa fa-%s"></i></a>' % (
                 self.get_query_string({ORDER_VAR: '.'.join(o_list_toggle)}), 'sort-up' if order_type == "asc" else 'sort-down'))
 
-        # 添加排序菜单项
-        item.menus.extend(['<li%s><a href="%s" class="active"><i class="icon-%s"></i> %s</a></li>' %
+        item.menus.extend(['<li%s><a href="%s" class="active"><i class="fa fa-%s"></i> %s</a></li>' %
                          (
                              (' class="active"' if sorted and order_type == i[
                               0] else ''),
@@ -597,7 +595,7 @@ class ListAdminView(ModelAdminView):
         try:
             f, attr, value = lookup_field(field_name, obj, self)
         except (AttributeError, ObjectDoesNotExist):
-            item.text = mark_safe("<span class='muted'>%s</span>" % EMPTY_CHANGELIST_VALUE)
+            item.text = mark_safe("<span class='text-muted'>%s</span>" % EMPTY_CHANGELIST_VALUE)
         else:
             if f is None:
                 # Model 属性或是 OptionClass 属性列
@@ -613,7 +611,7 @@ class ListAdminView(ModelAdminView):
                 if isinstance(f.rel, models.ManyToOneRel):
                     field_val = getattr(obj, f.name)
                     if field_val is None:
-                        item.text = mark_safe("<span class='muted'>%s</span>" % EMPTY_CHANGELIST_VALUE)
+                        item.text = mark_safe("<span class='text-muted'>%s</span>" % EMPTY_CHANGELIST_VALUE)
                     else:
                         item.text = field_val
                 else:
@@ -675,10 +673,7 @@ class ListAdminView(ModelAdminView):
         
         :param result: Model 对象
         """
-        if self.has_change_permission(result):
-            return self.model_admin_url("change", getattr(result, self.pk_attname))
-        else:
-            return self.model_admin_url("detail", getattr(result, self.pk_attname))
+        return self.get_object_url(result)
 
     # Media
     @filter_hook
@@ -686,10 +681,9 @@ class ListAdminView(ModelAdminView):
         """
         返回列表页面的 Media, 该页面添加了 ``xadmin.page.list.js`` 文件
         """
-        media = super(ListAdminView, self).get_media() + self.vendor('xadmin.page.list.js')
+        media = super(ListAdminView, self).get_media() + self.vendor('xadmin.page.list.js', 'xadmin.page.form.js')
         if self.list_display_links_details:
-            media += self.vendor('xadmin.plugin.details.js',
-                                 'xadmin.modal.css', 'xadmin.form.css')
+            media += self.vendor('xadmin.plugin.details.js', 'xadmin.form.css')
         return media
 
     # Blocks

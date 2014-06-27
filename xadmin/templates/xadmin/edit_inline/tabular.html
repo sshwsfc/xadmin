@@ -10,7 +10,7 @@
    {% for field in fields %}
      {% if not field.widget.is_hidden %}
        <th{% if field.required %} class="required"{% endif %}>{{ field.label|capfirst }}
-       {% if field.help_text %}&nbsp;<a title="{{ field.help_text|striptags }}" /><i class="icon icon-question-sign"></i></a>{% endif %}
+       {% if field.help_text %}&nbsp;<a title="{{ field.help_text|striptags }}" /><i class="fa fa-question-circle"></i></a>{% endif %}
        </th>
      {% endif %}
    {% endfor %}
@@ -27,7 +27,7 @@
             <td>{{ r_o_f.contents|safe }}</td>
         {% endfor %}
         {% if formset.formset.can_delete %}
-          <td><a class="delete-row"><i class="icon icon-remove"></i></a></td>
+          <td><a class="delete-row"><i class="fa fa-times"></i></a></td>
         {% endif %}
       </tr>
       {% endfor %}
@@ -39,7 +39,7 @@
   <tr class="formset-row">
     {% crispy formset.formset.empty_form formset.formset.helper %}
     {% if formset.formset.can_delete %}
-      <td><a class="delete-row"><i class="icon icon-remove"></i></a></td>
+      <td><a class="delete-row"><i class="fa fa-times"></i></a></td>
     {% endif %}
   </tr>
 {% endblock formset_empty %}

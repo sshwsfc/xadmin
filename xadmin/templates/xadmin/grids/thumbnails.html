@@ -5,29 +5,34 @@
 
 {% block results_grid %}
 {{ block.super }}
-<div class="panel">
+<div class="panel panel-default thumbnail-panel">
+  <div class="panel-body">
   <div class="row">
     {% for obj in results %}
     {% block grid_item %}
-    <div class="col-lg-2 col-sm-3 col-4">
-      <div class="thumbnail text-center">
+    <div class="col-md-2 col-sm-3 col-xs-4">
+      <div class="thumbnail text-center grid-item">
         {% if obj.thumbnail_img %}
           {{obj.thumbnail_img.label}}
         {% else %}
-        <h1><i class="icon-{{brand_icon}}"></i></h1>
+        <h1><i class="{{brand_icon}}"></i></h1>
         {% endif %}
         {% if obj.thumbnail_label %}
           <h4>{{obj.thumbnail_label.label}}</h4>
         {% endif %}
+        <ul class="list-unstyled">
         {% for o in obj.cells %}
         {% if not o.thumbnail_hidden %}
-        <div class="clearfix">
+        <li class="text-right">
           {% if o.btns %}
             <div class="btn-group pull-right">
               {% for b in o.btns %}
                 {{b|safe}}
               {% endfor %}
             </div>
+          {% endif %}
+          {% if o.field_label %}
+          <strong class="pull-left">{{o.field_label}}:</strong>
           {% endif %}
           {% if o.menus %}
             <div class="dropdown">
@@ -43,12 +48,14 @@
           {% else %}
             {{ o.label }}
           {% endif %}
-        </div>{% endif %}
+        </li>{% endif %}
         {% endfor %}
+        </ul>
       </div>
     </div>
     {% endblock grid_item %}
     {% endfor %}
+  </div>
   </div>
 </div>
 {% endblock results_grid %}

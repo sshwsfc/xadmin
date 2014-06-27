@@ -133,10 +133,11 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.admin',
 
     'xadmin',
     'crispy_forms',
-    'reversion',
+    #'reversion',
 
     'app',
 )

@@ -52,14 +52,14 @@ class RelateMenuPlugin(BaseAdminPlugin):
 
             link = ''.join(('<li class="with_menu_btn">',
 
-                            '<a href="%s?%s=%s" title="%s"><i class="icon icon-th-list"></i> %s</a>' %
+                            '<a href="%s?%s=%s" title="%s"><i class="icon fa fa-th-list"></i> %s</a>' %
                           (
                             reverse('%s:%s_%s_changelist' % (
                                     self.admin_site.app_name, label, model_name)),
                             RELATE_PREFIX + lookup_name, str(instance.pk), verbose_name, verbose_name) if view_perm else
-                            '<a><span class="muted"><i class="icon icon-blank"></i> %s</span></a>' % verbose_name,
+                            '<a><span class="text-muted"><i class="icon fa fa-blank"></i> %s</span></a>' % verbose_name,
 
-                            '<a class="add_link dropdown-menu-btn" href="%s?%s=%s"><i class="icon icon-plus pull-right"></i></a>' %
+                            '<a class="add_link dropdown-menu-btn" href="%s?%s=%s"><i class="icon fa fa-plus pull-right"></i></a>' %
                           (
                             reverse('%s:%s_%s_add' % (
                                     self.admin_site.app_name, label, model_name)),
@@ -70,10 +70,11 @@ class RelateMenuPlugin(BaseAdminPlugin):
             links.append(link)
         ul_html = '<ul class="dropdown-menu" role="menu">%s</ul>' % ''.join(
             links)
-        return '<div class="dropdown related_menu pull-right"><a title="%s" class="relate_menu dropdown-toggle" data-toggle="dropdown"><i class="icon icon-list"></i></a>%s</div>' % (_('Related Objects'), ul_html)
+        return '<div class="dropdown related_menu pull-right"><a title="%s" class="relate_menu dropdown-toggle" data-toggle="dropdown"><i class="icon fa fa-list"></i></a>%s</div>' % (_('Related Objects'), ul_html)
     related_link.short_description = '&nbsp;'
     related_link.allow_tags = True
     related_link.allow_export = False
+    related_link.is_column = False
 
     def get_list_display(self, list_display):
         if self.use_related_menu and len(self.get_related_list()):
@@ -92,7 +93,7 @@ class RelateObject(object):
         self.value = value
 
         parts = lookup.split(LOOKUP_SEP)
-        field = self.opts.get_field(parts[0])
+        field = self.opts.get_field_by_name(parts[0])[0]
 
         if not hasattr(field, 'rel') and not isinstance(field, RelatedObject):
             raise Exception(u'Relate Lookup field must a related field')
@@ -120,7 +121,7 @@ class RelateObject(object):
         else:
             to_model_name = force_unicode(self.to_model._meta.verbose_name)
 
-        return mark_safe(u"<span class='rel-brand'>%s <i class='icon-caret-right'></i></span> %s" % (to_model_name, force_unicode(self.opts.verbose_name)))
+        return mark_safe(u"<span class='rel-brand'>%s <i class='fa fa-caret-right'></i></span> %s" % (to_model_name, force_unicode(self.opts.verbose_name_plural)))
 
 
 class BaseRelateDisplayPlugin(BaseAdminPlugin):

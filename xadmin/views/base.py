@@ -1,4 +1,5 @@
 # coding=utf-8
+import sys
 import copy
 import functools
 import datetime
@@ -274,6 +275,14 @@ class BaseAdminObject(object):
         """
         return TemplateResponse(self.request, template, context, current_app=self.admin_site.name)
 
+    def message_user(self, message, level='info'):
+        """
+        Send a message to the user. The default implementation
+        posts a message using the django.contrib.messages backend.
+        """
+        if hasattr(messages, level) and callable(getattr(messages, level)):
+            getattr(messages, level)(self.request, message)
+
     def static(self, path):
         """
         :meth:`xadmin.util.static` 的快捷方法，返回静态文件的 url。
@@ -345,6 +354,7 @@ class BaseAdminView(BaseAdminObject, View):
     """
 
     base_template = 'xadmin/base.html'
+    need_site_permission = True
 
     def __init__(self, request, *args, **kwargs):
         self.request = request
@@ -380,7 +390,8 @@ class BaseAdminView(BaseAdminObject, View):
             return handler(request, *args, **kwargs)
 
         update_wrapper(view, cls, updated=())
-        update_wrapper(view, cls.dispatch, assigned=())
+        view.need_site_permission = cls.need_site_permission
+
         return view
 
     def init_request(self, *args, **kwargs):
@@ -437,18 +448,24 @@ class CommAdminView(BaseAdminView):
     **View属性**:
  
         .. autoattribute:: site_title
-        .. autoattribute:: globe_models_icon
+        .. autoattribute:: site_footer
+        .. autoattribute:: global_models_icon
         .. autoattribute:: base_template
         .. autoattribute:: default_model_icon
     """
-    
+
     base_template = 'xadmin/base_site.html'    #: View模板继承的基础模板
+    menu_template = 'xadmin/includes/sitemenu_default.html'
+
     site_title = None         #: 网站的标题
+    site_footer = None         #: 网站的下角标文字
     #: 全局的 Model 图标::
     #:
     #:     globe_models_icon = {User: 'user-icon'}
-    globe_models_icon = {}
+    global_models_icon = {}
     default_model_icon = None
+    apps_label_title = {}
+    apps_icons = {}
 
     def get_site_menu(self):
         """``FAQ:如何定制系统菜单``\n
@@ -508,6 +525,7 @@ class CommAdminView(BaseAdminView):
             if getattr(model_admin, 'hidden_menu', False):
                 continue
             app_label = model._meta.app_label
+            app_icon = None
             model_dict = {
                 'title': unicode(capfirst(model._meta.verbose_name_plural)),
                 'url': self.get_model_url(model, "changelist"),
@@ -523,15 +541,36 @@ class CommAdminView(BaseAdminView):
             if app_key in nav_menu:
                 nav_menu[app_key]['menus'].append(model_dict)
             else:
+                # Find app title
+                app_title = unicode(app_label.title())
+                if app_label.lower() in self.apps_label_title:
+                    app_title = self.apps_label_title[app_label.lower()]
+                else:
+                    mods = model.__module__.split('.')
+                    if len(mods) > 1:
+                        mod = '.'.join(mods[0:-1])
+                        if mod in sys.modules:
+                            mod = sys.modules[mod]
+                            if 'verbose_name' in dir(mod):
+                                app_title = getattr(mod, 'verbose_name')
+                            elif 'app_title' in dir(mod):
+                                app_title = getattr(mod, 'app_title')
+                #find app icon
+                if app_label.lower() in self.apps_icons:
+                    app_icon = self.apps_icons[app_label.lower()]
+
                 nav_menu[app_key] = {
-                    'title': self.apps_label_title.get(app_label.lower(), unicode(app_label.title())),
+                    'title': app_title,
                     'menus': [model_dict],
                 }
 
             app_menu = nav_menu[app_key]
-            if ('first_icon' not in app_menu or
+            if app_icon:
+                app_menu['first_icon'] = app_icon
+            elif ('first_icon' not in app_menu or
                     app_menu['first_icon'] == self.default_model_icon) and model_dict.get('icon'):
                 app_menu['first_icon'] = model_dict['icon']
+
             if 'first_url' not in app_menu and model_dict.get('url'):
                 app_menu['first_url'] = model_dict['url']
 
@@ -575,13 +614,16 @@ class CommAdminView(BaseAdminView):
 
             def filter_item(item):
                 if 'menus' in item:
+                    before_filter_length = len(item['menus'])
                     item['menus'] = [filter_item(
                         i) for i in item['menus'] if check_menu_permission(i)]
+                    after_filter_length = len(item['menus'])
+                    if after_filter_length == 0 and before_filter_length > 0:
+                        return None
                 return item
 
-            nav_menu = [filter_item(
-                item) for item in menus if check_menu_permission(item)]
-            nav_menu = filter(lambda i: bool(i['menus']), nav_menu) # 去掉子菜单为空的一级菜单
+            nav_menu = [filter_item(item) for item in menus if check_menu_permission(item)]
+            nav_menu = filter(lambda x:x, nav_menu)
 
             if not settings.DEBUG:
                 self.request.session['nav_menu'] = json.dumps(nav_menu)
@@ -607,8 +649,13 @@ class CommAdminView(BaseAdminView):
         for menu in nav_menu:
             check_selected(menu, self.request.path)
 
-        context['nav_menu'] = nav_menu
-        context['site_title'] = self.site_title or _(u'Django Xadmin')
+        context.update({
+            'menu_template': self.menu_template,
+            'nav_menu': nav_menu,
+            'site_title': self.site_title or _(u'Django Xadmin'),
+            'site_footer': self.site_footer or _(u'my-company.inc 2013'),
+            'breadcrumbs': self.get_breadcrumb()
+        })
 
         return context
 
@@ -636,7 +683,7 @@ class CommAdminView(BaseAdminView):
         或者在 Model 的 OptionClass 中设置 :attr:`model_icon` 属性。
         """
         # 首先从全局图标中获取
-        icon = self.globe_models_icon.get(model)
+        icon = self.global_models_icon.get(model)
         if icon is None and model in self.admin_site._registry:
             # 如果 Model 的 OptionClass 中有 model_icon 属性，则使用该属性
             icon = getattr(self.admin_site._registry[model],
@@ -644,25 +691,11 @@ class CommAdminView(BaseAdminView):
         return icon
 
     @filter_hook
-    def message_user(self, message, level='info'):
-        """
-        向用户显示一个消息，这个消息会在页面生成的时候生成以下 HTML::
-
-            {% for message in messages %}
-            <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">
-              <a class="close" data-dismiss="alert" href="#">&times;</a>
-              {{ message }}
-            </div>
-            {% endfor %}
-
-        这是标准的 Bootstrap 格式。xadmin默认使用 :mod:`django.contrib.messages` 实现消息系统
-
-        :param message: 消息内容
-        :param level: 消息等级，默认为 ``info``
-        """
-        if hasattr(messages, level) and callable(getattr(messages, level)):
-            getattr(messages, level)(self.request, message)
-
+    def get_breadcrumb(self):
+        return [{
+            'url': self.get_admin_url('index'),
+            'title': _('Home')
+            }]
 
 class ModelAdminView(CommAdminView):
     """
@@ -749,6 +782,15 @@ class ModelAdminView(CommAdminView):
         return context
 
     @filter_hook
+    def get_breadcrumb(self):
+        bcs = super(ModelAdminView, self).get_breadcrumb()
+        item = {'title': self.opts.verbose_name_plural}
+        if self.has_view_permission():
+            item['url'] = self.model_admin_url('changelist')
+        bcs.append(item)
+        return bcs
+
+    @filter_hook
     def get_object(self, object_id):
         """
         根据 object_id 获得唯一的 Model 实例，如果 pk 为 object_id 的 Model 不存在，则返回 None
@@ -759,6 +801,15 @@ class ModelAdminView(CommAdminView):
             object_id = model._meta.pk.to_python(object_id)
             return queryset.get(pk=object_id)
         except (model.DoesNotExist, ValidationError):
+            return None
+
+    @filter_hook
+    def get_object_url(self, obj):
+        if self.has_change_permission(obj):
+            return self.model_admin_url("change", getattr(obj, self.opts.pk.attname))
+        elif self.has_view_permission(obj):
+            return self.model_admin_url("detail", getattr(obj, self.opts.pk.attname))
+        else:
             return None
 
     def model_admin_url(self, name, *args, **kwargs):

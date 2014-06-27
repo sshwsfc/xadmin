@@ -1,11 +1,11 @@
 {% load i18n %}
 <div class="btn-group export">
-  <a class="dropdown-toggle btn btn-default btn-small" data-toggle="dropdown" href="#">
-    <i class="icon-share"></i> {% trans "Export" %} <span class="caret"></span>
+  <a class="dropdown-toggle btn btn-default btn-sm" data-toggle="dropdown" href="#">
+    <i class="fa fa-share"></i> {% trans "Export" %} <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
     {% for et in export_types %}
-      <li><a data-toggle="modal" data-target="#export-modal-{{et.type}}"><i class="icon-circle-arrow-down"></i> {% trans "Export" %} {{et.name}}</a></li>
+      <li><a data-toggle="modal" data-target="#export-modal-{{et.type}}"><i class="fa fa-arrow-circle-down"></i> {% trans "Export" %} {{et.name}}</a></li>
     {% endfor %}
   </ul>
 
@@ -22,6 +22,9 @@
             {{ form_params|safe }}
             <input type="hidden" name="export_type" value="{{et.type}}">
               <label class="checkbox">
+                {% if et.type == "xlsx" %}
+                <input type="checkbox" name="export_xlsx_header" checked="checked" value="on"> {% trans "Export with table header." %}
+                {% endif %}
                 {% if et.type == "xls" %}
                 <input type="checkbox" name="export_xls_header" checked="checked" value="on"> {% trans "Export with table header." %}
                 {% endif %}
@@ -36,12 +39,12 @@
                 {% endif %}
               </label>
               <label class="checkbox">
-                <input type="checkbox" name="all" value="on"> {% trans "Export all datas." %}
+                <input type="checkbox" name="all" value="on"> {% trans "Export all data." %}
               </label>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
-            <button class="btn btn-success" type="submit"><i class="icon-share"></i> {% trans "Export" %}</button>
+            <button class="btn btn-success" type="submit"><i class="fa fa-share"></i> {% trans "Export" %}</button>
           </div>
           </form>
         </div><!-- /.modal-content -->

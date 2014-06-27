@@ -63,26 +63,26 @@ vendors = {
     "flot": {
         "js": {
             'dev': ['xadmin/vendor/flot/jquery.flot.js', 'xadmin/vendor/flot/jquery.flot.pie.js', 'xadmin/vendor/flot/jquery.flot.time.js',
-                    'xadmin/vendor/flot/jquery.flot.resize.js']
+                    'xadmin/vendor/flot/jquery.flot.resize.js','xadmin/vendor/flot/jquery.flot.aggregate.js','xadmin/vendor/flot/jquery.flot.categories.js']
         }
     },
     "image-gallery": {
         "css": {
             'dev': 'xadmin/vendor/bootstrap-image-gallery/css/bootstrap-image-gallery.css',
-            'production': 'xadmin/vendor/bootstrap-image-gallery/css/bootstrap-image-gallery.min.css',
+            'production': 'xadmin/vendor/bootstrap-image-gallery/css/bootstrap-image-gallery.css',
         },
         "js": {
             'dev': ['xadmin/vendor/load-image/load-image.js', 'xadmin/vendor/bootstrap-image-gallery/js/bootstrap-image-gallery.js'],
-            'production': ['xadmin/vendor/load-image/load-image.min.js', 'xadmin/vendor/bootstrap-image-gallery/js/bootstrap-image-gallery.min.js']
+            'production': ['xadmin/vendor/load-image/load-image.min.js', 'xadmin/vendor/bootstrap-image-gallery/js/bootstrap-image-gallery.js']
         }
     },
-    "select2": {
+    "select": {
         "css": {
-            'dev': 'xadmin/vendor/select2/select2.css',
+            'dev': ['xadmin/vendor/select2/select2.css', 'xadmin/vendor/selectize/selectize.css', 'xadmin/vendor/selectize/selectize.bootstrap3.css'],
         },
         "js": {
-            'dev': 'xadmin/vendor/select2/select2.js',
-            'production': 'xadmin/vendor/select2/select2.min.js',
+            'dev': ['xadmin/vendor/selectize/selectize.js', 'xadmin/vendor/select2/select2.js'],
+            'production': ['xadmin/vendor/selectize/selectize.min.js', 'xadmin/vendor/select2/select2.min.js']
         }
     },
     "multiselect": {

@@ -4,23 +4,25 @@ from django.utils.translation import ugettext_lazy as _
 
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
+from xadmin.util import label_for_field
 
 LAYOUT_VAR = '_layout'
 
 DEFAULT_LAYOUTS = {
     'table': {
         'key': 'table',
-        'icon': 'table',
+        'icon': 'fa fa-table',
         'name': _(u'Table'),
         'template': 'views/model_list.html',
     },
     'thumbnails': {
         'key': 'thumbnails',
-        'icon': 'th-large',
+        'icon': 'fa fa-th-large',
         'name': _(u'Thumbnails'),
         'template': 'grids/thumbnails.html',
     },
 }
+
 
 class GridLayoutPlugin(BaseAdminPlugin):
 
@@ -45,16 +47,23 @@ class GridLayoutPlugin(BaseAdminPlugin):
                     self._current_icon = layout['icon']
                     layout['selected'] = True
                     self.admin_view.object_list_template = self.admin_view.get_template_list(layout['template'])
-                    print self.admin_view.get_template_list(layout['template'])
         return active
 
     def result_item(self, item, obj, field_name, row):
-        if getattr(item.attr, 'thumbnail_img', False):
-            setattr(item, 'thumbnail_hidden', True)
-            row['thumbnail_img'] = item
-        if item.is_display_link:
-            setattr(item, 'thumbnail_hidden', True)
-            row['thumbnail_label'] = item
+        if self._current_layout == 'thumbnails':
+            if getattr(item.attr, 'is_column', True):
+                item.field_label = label_for_field(
+                    field_name, self.model,
+                    model_admin=self.admin_view,
+                    return_attr=False
+                )
+            if getattr(item.attr, 'thumbnail_img', False):
+                setattr(item, 'thumbnail_hidden', True)
+                row['thumbnail_img'] = item
+            elif item.is_display_link:
+                setattr(item, 'thumbnail_hidden', True)
+                row['thumbnail_label'] = item
+
         return item
 
     # Block Views

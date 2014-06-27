@@ -4,28 +4,9 @@
 {% load xadmin_tags %}
 {% load crispy_forms_tags %}
 
-{% block extrahead %}{{ block.super }}
-{% url 'admin:jsi18n' as jsi18nurl %}
-<script type="text/javascript" src="{{ jsi18nurl|default:"../../../jsi18n/" }}"></script>
-{% endblock %}
-
 {% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} change-form{% endblock %}
 
-{% block breadcrumbs %}
-<ul class="breadcrumb">
-  <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
-  <li>
-    {% if has_view_permission %}
-    <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
-    {% else %}{{ opts.verbose_name_plural|capfirst }}{% endif %}
-  </li>
-  <li class="active">
-    {% if add %}{% trans 'Add' %} {{ opts.verbose_name }}{% else %}{{ original|truncatewords:"18" }}{% endif %}
-  </li>
-</ul>
-{% endblock %}
-
-{% block nav_title %}{% if model_icon %}<i class="icon-{{model_icon}}"><sub class="icon-{% if add%}plus{%else%}pencil{%endif%}"></sub></i> {% endif %}
+{% block nav_title %}{% if model_icon %}<i class="{{model_icon}}"><sub class="fa fa-{% if add%}plus{%else%}pencil{%endif%}"></sub></i> {% endif %}
 {{ title }}{% endblock %}
 
 {% block content %}
@@ -34,7 +15,7 @@
   {% view_block 'form_top' %}
 
   {% if errors %}
-      <div class="alert alert-danger">
+      <div class="alert alert-danger alert-dismissable">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
       {% blocktrans count counter=errors|length %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
       </div>

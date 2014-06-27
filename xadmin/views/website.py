@@ -14,10 +14,11 @@ from xadmin.layout import FormHelper
 
 class IndexView(Dashboard):
     title = _("Main Dashboard")
-    icon = "dashboard"
+    icon = "fa fa-dashboard"
 
     def get_page_id(self):
         return 'home'
+
 
 class UserSettingView(BaseAdminView):
 
@@ -70,6 +71,7 @@ class LoginView(BaseAdminView):
 class LogoutView(BaseAdminView):
 
     logout_template = None
+    need_site_permission = False
 
     @filter_hook
     def update_params(self, defaults):
@@ -81,6 +83,7 @@ class LogoutView(BaseAdminView):
         defaults = {
             'extra_context': context,
             'current_app': self.admin_site.name,
+            'template_name': self.logout_template or 'xadmin/views/logged_out.html',
         }
         if self.logout_template is not None:
             defaults['template_name'] = self.logout_template

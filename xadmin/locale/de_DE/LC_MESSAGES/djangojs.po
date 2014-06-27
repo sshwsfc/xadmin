@@ -4,12 +4,13 @@
 # 
 # Translators:
 # Azd325 <tim.kleinschmidt@gmail.com>, 2013
+# Azd325 <tim.kleinschmidt@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: xadmin-core\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-04-30 23:11+0800\n"
-"PO-Revision-Date: 2013-05-06 16:49+0000\n"
+"PO-Revision-Date: 2013-11-20 12:41+0000\n"
 "Last-Translator: Azd325 <tim.kleinschmidt@gmail.com>\n"
 "Language-Team: German (Germany) (http://www.transifex.com/projects/p/xadmin/language/de_DE/)\n"
 "MIME-Version: 1.0\n"

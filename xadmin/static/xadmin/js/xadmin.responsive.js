@@ -107,17 +107,23 @@
   $(window).bind('resize', function(e){
     var width = $(window).width();
     var mode = 'lg';
-    if(width <= 767){ mode = 'sm'; }
-    else if(width <= 979){ mode = 'md'; }
+    if(width < 768){ mode = 'xs'; }
+    else if(width < 992){ mode = 'sm'; }
+    else if(width < 1200){ mode = 'md'; }
     if(lastMode != mode){
       $('[data-toggle=breakpoint]').each(function(){
         if(newClass = $(this).data('class-' + mode)){
           $(this)[0].className = newClass;
+        } else {
+          $(this)[0].className = $(this).data('class-org');
         }
       })
       lastMode = mode;
     }
   });
+  $('[data-toggle=breakpoint]').each(function(){
+    $(this).data('class-org', $(this)[0].className);
+  })
   $(window).trigger('resize');
   })
 

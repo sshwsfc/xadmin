@@ -5,14 +5,14 @@
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
-  <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
+  <li><a href="{% url 'xadmin:index' %}">{% trans 'Home' %}</a></li>
   <li><a href="{{changelist_url}}">{{opts.verbose_name_plural|capfirst}}</a></li>
   <li class="active">{% blocktrans with opts.verbose_name_plural|escape as name %}Recover deleted {{name}}{% endblocktrans %}</li>
 </ul>
 {% endblock %}
 
 {% block nav_title %}
-  <i class="icon-trash"></i> {{title}}
+  <i class="fa fa-trash-o"></i> {{title}}
 {% endblock %}
 
 {% block content %}

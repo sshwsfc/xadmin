@@ -48,14 +48,23 @@ try:
 except:
     has_xlwt = False
 
+try:
+    import xlsxwriter
+    has_xlsxwriter = True
+except:
+    has_xlsxwriter = False
+
+
 class ExportMenuPlugin(BaseAdminPlugin):
 
-    list_export = ('xls', 'csv', 'xml', 'json')
-    export_names = {'xls': 'Excel', 'csv': 'CSV', 'xml': 'XML', 'json': 'JSON'}
+    list_export = ('xlsx', 'xls', 'csv', 'xml', 'json')
+    export_names = {'xlsx': 'Excel 2007', 'xls': 'Excel', 'csv': 'CSV',
+                    'xml': 'XML', 'json': 'JSON'}
 
     def init_request(self, *args, **kwargs):
         self.list_export = [
-            f for f in self.list_export if f != 'xls' or has_xlwt]
+            f for f in self.list_export
+            if (f != 'xlsx' or has_xlsxwriter) and (f != 'xls' or has_xlwt)]
 
     def block_top_toolbar(self, context, nodes):
         if self.list_export:
@@ -65,37 +74,82 @@ class ExportMenuPlugin(BaseAdminPlugin):
                 'export_types': [{'type': et, 'name': self.export_names[et]} for et in self.list_export],
             })
             nodes.append(loader.render_to_string('xadmin/blocks/model_list.top_toolbar.exports.html', context_instance=context))
-        
+
 
 class ExportPlugin(BaseAdminPlugin):
 
-    export_mimes = {'xls': 'application/vnd.ms-excel', 'csv': 'text/csv',
+    export_mimes = {'xlsx': 'application/vnd.ms-excel',
+                    'xls': 'application/vnd.ms-excel', 'csv': 'text/csv',
                     'xml': 'application/xhtml+xml', 'json': 'application/json'}
 
     def init_request(self, *args, **kwargs):
         return self.request.GET.get('_do_') == 'export'
 
-    def get_results(self, context):
+    def _format_value(self, o):
+        if (o.field is None and getattr(o.attr, 'boolean', False)) or \
+           (o.field and isinstance(o.field, (BooleanField, NullBooleanField))):
+                value = o.value
+        elif str(o.text).startswith("<span class='text-muted'>"):
+            value = escape(str(o.text)[25:-7])
+        else:
+            value = escape(str(o.text))
+        return value
+
+    def _get_objects(self, context):
         headers = [c for c in context['result_headers'].cells if c.export]
         rows = context['results']
 
-        new_rows = []
-        for r in rows:
-            d = {}
-            for i, o in enumerate(filter(lambda c:getattr(c, 'export', False), r.cells)):
-                if (o.field is None and getattr(o.attr, 'boolean', False)) or \
-                   (o.field and isinstance(o.field, (BooleanField, NullBooleanField))):
-                        value = o.value
-                elif str(o.text).startswith("<span class='muted'>"):
-                    value = escape(str(o.text)[20:-7])
-                else:
-                    value = escape(str(o.text))
-                d[force_unicode(headers[i].text)] = value
-            new_rows.append(d)
+        return [dict([
+            (force_unicode(headers[i].text), self._format_value(o)) for i, o in
+            enumerate(filter(lambda c:getattr(c, 'export', False), r.cells))]) for r in rows]
+
+    def _get_datas(self, context):
+        rows = context['results']
+
+        new_rows = [[self._format_value(o) for o in
+            filter(lambda c:getattr(c, 'export', False), r.cells)] for r in rows]
+        new_rows.insert(0, [force_unicode(c.text) for c in context['result_headers'].cells if c.export])
         return new_rows
 
+    def get_xlsx_export(self, context):
+        datas = self._get_datas(context)
+        output = StringIO.StringIO()
+        export_header = (
+            self.request.GET.get('export_xlsx_header', 'off') == 'on')
+
+        model_name = self.opts.verbose_name
+        book = xlsxwriter.Workbook(output)
+        sheet = book.add_worksheet(
+            u"%s %s" % (_(u'Sheet'), force_unicode(model_name)))
+        styles = {'datetime': book.add_format({'num_format': 'yyyy-mm-dd hh:mm:ss'}),
+                  'date': book.add_format({'num_format': 'yyyy-mm-dd'}),
+                  'time': book.add_format({'num_format': 'hh:mm:ss'}),
+                  'header': book.add_format({'font': 'name Times New Roman', 'color': 'red', 'bold': 'on', 'num_format': '#,##0.00'}),
+                  'default': book.add_format()}
+
+        if not export_header:
+            datas = datas[1:]
+        for rowx, row in enumerate(datas):
+            for colx, value in enumerate(row):
+                if export_header and rowx == 0:
+                    cell_style = styles['header']
+                else:
+                    if isinstance(value, datetime.datetime):
+                        cell_style = styles['datetime']
+                    elif isinstance(value, datetime.date):
+                        cell_style = styles['date']
+                    elif isinstance(value, datetime.time):
+                        cell_style = styles['time']
+                    else:
+                        cell_style = styles['default']
+                sheet.write(rowx, colx, value, cell_style)
+        book.close()
+
+        output.seek(0)
+        return output.getvalue()
+
     def get_xls_export(self, context):
-        results = self.get_results(context)
+        datas = self._get_datas(context)
         output = StringIO.StringIO()
         export_header = (
             self.request.GET.get('export_xls_header', 'off') == 'on')
@@ -110,9 +164,8 @@ class ExportPlugin(BaseAdminPlugin):
                   'header': xlwt.easyxf('font: name Times New Roman, color-index red, bold on', num_format_str='#,##0.00'),
                   'default': xlwt.Style.default_style}
 
-        datas = [row.values() for row in results]
-        if export_header:
-            datas.insert(0, results[0].keys())
+        if not export_header:
+            datas = datas[1:]
         for rowx, row in enumerate(datas):
             for colx, value in enumerate(row):
                 if export_header and rowx == 0:
@@ -141,15 +194,14 @@ class ExportPlugin(BaseAdminPlugin):
         return t
 
     def get_csv_export(self, context):
-        results = self.get_results(context)
+        datas = self._get_datas(context)
         stream = []
 
-        if self.request.GET.get('export_csv_header', 'off') == 'on':
-            stream.append(
-                ','.join(map(self._format_csv_text, results[0].keys())))
+        if self.request.GET.get('export_csv_header', 'off') != 'on':
+            datas = datas[1:]
 
-        for row in results:
-            stream.append(','.join(map(self._format_csv_text, row.values())))
+        for row in datas:
+            stream.append(','.join(map(self._format_csv_text, row)))
 
         return '\r\n'.join(stream)
 
@@ -161,6 +213,7 @@ class ExportPlugin(BaseAdminPlugin):
                 xml.endElement("row")
         elif isinstance(data, dict):
             for key, value in data.iteritems():
+                key = key.replace(' ', '_')
                 xml.startElement(key, {})
                 self._to_xml(xml, value)
                 xml.endElement(key)
@@ -168,7 +221,7 @@ class ExportPlugin(BaseAdminPlugin):
             xml.characters(smart_unicode(data))
 
     def get_xml_export(self, context):
-        results = self.get_results(context)
+        results = self._get_objects(context)
         stream = StringIO.StringIO()
 
         xml = SimplerXMLGenerator(stream, "utf-8")
@@ -183,7 +236,7 @@ class ExportPlugin(BaseAdminPlugin):
         return stream.getvalue().split('\n')[1]
 
     def get_json_export(self, context):
-        results = self.get_results(context)
+        results = self._get_objects(context)
         return json.dumps({'objects': results}, ensure_ascii=False,
                           indent=(self.request.GET.get('export_json_format', 'off') == 'on') and 4 or None)
 

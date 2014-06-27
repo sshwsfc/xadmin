@@ -3,7 +3,8 @@ import inspect
 from django import forms
 from django.forms.formsets import all_valid, DELETION_FIELD_NAME
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
-from django.template import loader, Context
+from django.contrib.contenttypes.generic import BaseGenericInlineFormSet, generic_inlineformset_factory
+from django.template import loader
 from django.template.loader import render_to_string
 from xadmin.layout import FormHelper, Layout, flatatt, Container, Column, Field, Fieldset
 from xadmin.sites import site
@@ -50,7 +51,7 @@ class InlineStyleManager(object):
     def register_style(self, name, style):
         self.inline_styles[name] = style
 
-    def get_style(self, name=None):
+    def get_style(self, name='stacked'):
         return self.inline_styles.get(name)
 
 style_manager = InlineStyleManager()
@@ -68,7 +69,7 @@ class InlineStyle(object):
 
     def get_attrs(self):
         return {}
-style_manager.register_style(None, InlineStyle)
+style_manager.register_style('stacked', InlineStyle)
 
 
 class OneInlineStyle(InlineStyle):
@@ -126,7 +127,7 @@ class InlineModelAdmin(ModelFormAdminView):
     can_delete = True
     fields = []
     admin_view = None
-    style = None
+    style = 'stacked'
 
     def init(self, admin_view):
         self.admin_view = admin_view
@@ -187,6 +188,7 @@ class InlineModelAdmin(ModelFormAdminView):
 
         style = style_manager.get_style(
             'one' if self.max_num == 1 else self.style)(self, instance)
+        style.name = self.style
 
         if len(instance):
             layout = copy.deepcopy(self.form_layout)
@@ -224,6 +226,9 @@ class InlineModelAdmin(ModelFormAdminView):
                         elif inspect.ismethod(getattr(inst, readonly_field, None)):
                             value = getattr(inst, readonly_field)()
                             label = getattr(getattr(inst, readonly_field), 'short_description', readonly_field)
+                        elif inspect.ismethod(getattr(self, readonly_field, None)):
+                            value = getattr(self, readonly_field)(inst)
+                            label = getattr(getattr(self, readonly_field), 'short_description', readonly_field)
                         if value:
                             form.readonly_fields.append({'label': label, 'contents': value})
         return instance
@@ -265,6 +270,40 @@ class InlineModelAdmin(ModelFormAdminView):
             self.opts.app_label + '.' + self.opts.get_delete_permission())
 
 
+class GenericInlineModelAdmin(InlineModelAdmin):
+    ct_field = "content_type"
+    ct_fk_field = "object_id"
+
+    formset = BaseGenericInlineFormSet
+
+    def get_formset(self, **kwargs):
+        if self.exclude is None:
+            exclude = []
+        else:
+            exclude = list(self.exclude)
+        exclude.extend(self.get_readonly_fields())
+        if self.exclude is None and hasattr(self.form, '_meta') and self.form._meta.exclude:
+            # Take the custom ModelForm's Meta.exclude into account only if the
+            # GenericInlineModelAdmin doesn't define its own.
+            exclude.extend(self.form._meta.exclude)
+        exclude = exclude or None
+        can_delete = self.can_delete and self.has_delete_permission()
+        defaults = {
+            "ct_field": self.ct_field,
+            "fk_field": self.ct_fk_field,
+            "form": self.form,
+            "formfield_callback": self.formfield_for_dbfield,
+            "formset": self.formset,
+            "extra": self.extra,
+            "can_delete": can_delete,
+            "can_order": False,
+            "max_num": self.max_num,
+            "exclude": exclude
+        }
+        defaults.update(kwargs)
+        return generic_inlineformset_factory(self.model, **defaults)
+
+
 class InlineFormset(Fieldset):
 
     def __init__(self, formset, allow_blank=False, **kwargs):
@@ -272,8 +311,10 @@ class InlineFormset(Fieldset):
         self.css_class = kwargs.pop('css_class', '')
         self.css_id = "%s-group" % formset.prefix
         self.template = formset.style.template
+        self.inline_style = formset.style.name
         if allow_blank and len(formset) == 0:
             self.template = 'xadmin/edit_inline/blank.html'
+            self.inline_style = 'blank'
         self.formset = formset
         self.model = formset.model
         self.opts = formset.model._meta
@@ -282,7 +323,7 @@ class InlineFormset(Fieldset):
 
     def render(self, form, form_style, context):
         return render_to_string(
-            self.template, dict({'formset': self, 'prefix': self.formset.prefix, 'form_style': form_style}, **self.extra_attrs),
+            self.template, dict({'formset': self, 'prefix': self.formset.prefix, 'inline_style': self.inline_style}, **self.extra_attrs),
             context_instance=context)
 
 
@@ -325,7 +366,8 @@ class InlineFormsetPlugin(BaseAdminPlugin):
             inline_instances = []
             for inline_class in self.inlines:
                 inline = self.admin_view.get_view(
-                    InlineModelAdmin, inline_class).init(self.admin_view)
+                    (getattr(inline_class, 'generic_inline', False) and GenericInlineModelAdmin or InlineModelAdmin),
+                    inline_class).init(self.admin_view)
                 if not (inline.has_add_permission() or
                         inline.has_change_permission() or
                         inline.has_delete_permission() or
@@ -367,8 +409,8 @@ class InlineFormsetPlugin(BaseAdminPlugin):
 
     def get_form_layout(self, layout):
         allow_blank = isinstance(self.admin_view, DetailAdminView)
-        fs = dict(
-            [(f.model, InlineFormset(f, allow_blank)) for f in self.formsets])
+        # fixed #176 bug, change dict to list
+        fs = [(f.model, InlineFormset(f, allow_blank)) for f in self.formsets]
         replace_inline_objects(layout, fs)
 
         if fs:
@@ -378,8 +420,9 @@ class InlineFormsetPlugin(BaseAdminPlugin):
             if not container:
                 container = layout
 
-            for fs in fs.values():
-                container.append(fs)
+            # fixed #176 bug, change dict to list
+            for key, value in fs:
+                container.append(value)
 
         return layout
 

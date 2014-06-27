@@ -68,7 +68,7 @@ class EditablePlugin(BaseAdminPlugin):
             item.wraps.insert(0, '<span class="editable-field">%s</span>')
             item.btns.append((
                 '<a class="editable-handler" title="%s" data-editable-field="%s" data-editable-loadurl="%s">'+
-                '<i class="icon-edit"></i></a>') %
+                '<i class="fa fa-edit"></i></a>') %
                  (_(u"Enter %s") % field_label, field_name, self.admin_view.model_admin_url('patch', pk) + '?fields=' + field_name))
 
             if field_name not in self.editable_need_fields:
@@ -147,7 +147,7 @@ class EditPatchView(ModelFormAdminView, ListAdminView):
         form.helper = helper
 
         s = '{% load i18n crispy_forms_tags %}<form method="post" action="{{action_url}}">{% crispy form %}'+ \
-            '<button type="submit" class="btn btn-success btn-block btn-small">{% trans "Apply" %}</button></form>'
+            '<button type="submit" class="btn btn-success btn-block btn-sm">{% trans "Apply" %}</button></form>'
         t = template.Template(s)
         c = template.Context({'form':form, 'action_url': self.model_admin_url('patch', self.org_obj.pk)})
 

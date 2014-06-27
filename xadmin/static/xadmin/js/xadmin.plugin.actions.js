@@ -63,7 +63,7 @@
 
         $(actionCheckboxes).bind('checker', function(e, checked){
             $(this).prop("checked", checked)
-                .parent().parent().toggleClass(options.selectedClass, checked);
+                .parentsUntil('.grid-item').parent().toggleClass(options.selectedClass, checked);
             updateCounter();
         });
 

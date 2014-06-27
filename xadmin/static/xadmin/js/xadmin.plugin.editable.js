@@ -64,18 +64,22 @@
 
   Editpop.prototype.beforeToggle = function() {
     var $el = this.$element
-    var that = this
 
-    $el.find('>i').removeClass('icon-edit').addClass('icon-spinner icon-spin')
-    $.ajax({
-      url: $el.data('editable-loadurl'),
-      success: function(content){
-        $el.find('>i').removeClass('icon-spinner icon-spin').addClass('icon-edit')
-        that.content = content
-        that.toggle()
-      },
-      dataType: 'html'
-    })
+    if(this.content == null){
+      var that = this
+      $el.find('>i').removeClass('fa fa-edit').addClass('fa-spinner fa-spin')
+      $.ajax({
+        url: $el.data('editable-loadurl'),
+        success: function(content){
+          $el.find('>i').removeClass('fa-spinner fa-spin').addClass('fa fa-edit')
+          that.content = content
+          that.toggle()
+        },
+        dataType: 'html'
+      })
+    } else {
+      this.toggle()
+    }
   }
 
   Editpop.prototype.setContent = function () {
@@ -90,13 +94,13 @@
     $form.submit($.proxy(this.submit, this))
 
     this.$form = $form
-    this.$mask = $('<div class="mask"><h2 style="text-align:center;"><i class="icon-spinner icon-spin icon-large"></i></h2></div>')
+    this.$mask = $('<div class="mask"><h2 style="text-align:center;"><i class="fa-spinner fa-spin fa fa-large"></i></h2></div>')
     $tip.find('.popover-content').prepend(this.$mask)
 
     $tip.removeClass('fade top bottom left right in')
 
     //bind events
-    $tip.find('[data-dismiss=editpop]').click($.proxy(this.hide, this))
+    $tip.find('[data-dismiss=editpop]').on('click.' + this.type, $.proxy(this.leave, this, this))
 
     var me = ((Math.random() * 10) + "").replace(/\D/g, '')
     var click_event_ns = "click." + me + " touchstart." + me
@@ -107,7 +111,7 @@
     // })
 
     $(document).bind('keyup.editpop', function(e) {
-      if (e.keyCode == 27) { that.hide() }
+      if (e.keyCode == 27) { that.leave(that) }
       return
     })
   }
@@ -152,7 +156,7 @@
 
     var off_check_box = Object();
     this.$form.find('input[type=checkbox]').each(function(){
-      if(!$(this).attr('checked')){
+      if(!$(this).is(':checked')){
         off_check_box[$(this).attr('name')] = ''
       }
     })

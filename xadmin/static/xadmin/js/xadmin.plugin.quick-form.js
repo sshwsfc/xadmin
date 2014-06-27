@@ -19,7 +19,7 @@
     constructor: AjaxForm
 
     , ainit: function(){
-      this.$mask = $('<div class="mask"><h2 style="text-align:center;"><i class="icon-spinner icon-spin icon-large"></i></h2></div>')
+      this.$mask = $('<div class="mask"><h1 style="text-align:center;"><i class="fa-spinner fa-spin fa fa-large"></i></h1></div>')
 
       this.$form.prepend(this.$mask)
       this.$form.submit($.proxy(this.submit, this))
@@ -169,41 +169,46 @@
         var modal = $('<div class="modal fade quick-form" role="dialog"><div class="modal-dialog"><div class="modal-content">'+
           '<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>'+ 
           this.$btn.attr('title') +'</h3></div><div class="modal-body"></div>'+
-          '<div class="modal-footer"><button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>'+
-          '<a class="btn btn-primary btn-submit">Add</a></div></div></div></div>')
+          '<div class="modal-footer" style="display: none;"><button class="btn btn-default" data-dismiss="modal" aria-hidden="true">'+gettext('Close')+'</button>'+
+          '<a class="btn btn-primary btn-submit">'+gettext('Add')+'</a></div></div></div></div>')
         $('body').append(modal)
 
         var self = this
-        modal.find('.modal-body').html('<h2 style="text-align:center;"><i class="icon-spinner icon-spin icon-large"></i></h2>')
+        modal.find('.modal-body').html('<h2 style="text-align:center;"><i class="fa-spinner fa-spin fa fa-large"></i></h2>')
         modal.find('.modal-body').load(this.add_url, function(form_html, status, xhr){
           var form = $(this).find('form')
           form.addClass('quick-form')
           form.on('post-success', $.proxy(self.post, self))
           form.exform()
-
+          
+          modal.find('.modal-footer').show()
           modal.find('.btn-submit').click(function(){form.submit()})
 
           self.$form = form
         })
         this.modal = modal
       }
-      this.modal.modal().css(
-          {
-              'margin-top': function () {
-                  return window.pageYOffset;
-              }
-          });
+      this.modal.modal();
 
       return false
     }
     , post: function(e, data){
-      this.$form.data('ajaxform').clean()
-      var wrap = this.$for_wrap
-      $.get(this.refresh_url + data['obj_id'], function(form_html, status, xhr){
-        wrap.html($('<body>' + form_html + '</body>').find('#' + wrap.attr('id')).html())
-        wrap.exform()
-      })
-      this.modal.modal('hide')
+      this.$form.data('ajaxform').clean();
+      var wrap = this.$for_wrap;
+      var input = this.$for_input;
+      var selected = [data['obj_id']];
+      if (input.attr('multiple')){
+          var opt = 'option';
+          if (input.hasClass('selectdropdown') || input.hasClass('select-multi')){
+              opt = 'option:selected';
+          }
+          selected.push($.map(input.find(opt) ,function(opt) { return opt.value; }));
+      }
+      $.get(this.refresh_url + selected.join() ,function(form_html, status, xhr){
+        wrap.html($('<body>' + form_html + '</body>').find('#' + wrap.attr('id')).html());
+        wrap.exform();
+      });
+      this.modal.modal('hide');
     }
 
   }

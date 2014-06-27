@@ -1,6 +1,4 @@
-from functools import partial
-
-from django.contrib.contenttypes.generic import GenericInlineModelAdmin, GenericRelation
+from django.contrib.contenttypes.generic import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
 from django.db import models
@@ -15,6 +13,7 @@ from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 from xadmin.layout import Field, render_field
+from xadmin.plugins.inline import Inline
 from xadmin.plugins.actions import BaseActionView
 from xadmin.plugins.inline import InlineModelAdmin
 from xadmin.sites import site
@@ -24,6 +23,7 @@ from xadmin.views.base import csrf_protect_m, filter_hook
 from xadmin.views.detail import DetailAdminUtil
 from reversion.models import Revision, Version
 from reversion.revisions import default_revision_manager, RegistrationError
+from functools import partial
 
 
 def _autoregister(admin, model, follow=None):
@@ -39,7 +39,7 @@ def _autoregister(admin, model, follow=None):
             model, follow=follow, format=admin.reversion_format)
 
 
-def _registe_model(admin, model):
+def _register_model(admin, model):
     if not hasattr(admin, 'revision_manager'):
         admin.revision_manager = default_revision_manager
     if not hasattr(admin, 'reversion_format'):
@@ -49,9 +49,9 @@ def _registe_model(admin, model):
         inline_fields = []
         for inline in getattr(admin, 'inlines', []):
             inline_model = inline.model
-            if issubclass(inline, GenericInlineModelAdmin):
-                ct_field = inline.ct_field
-                ct_fk_field = inline.ct_fk_field
+            if getattr(inline, 'generic_inline', False):
+                ct_field = getattr(inline, 'ct_field', 'content_type')
+                ct_fk_field = getattr(inline, 'ct_fk_field', 'object_id')
                 for field in model._meta.many_to_many:
                     if isinstance(field, GenericRelation) and field.rel.to == inline_model and field.object_id_field_name == ct_fk_field and field.content_type_field_name == ct_field:
                         inline_fields.append(field.name)
@@ -70,13 +70,13 @@ def _registe_model(admin, model):
         _autoregister(admin, model, inline_fields)
 
 
-def registe_models(admin_site=None):
+def register_models(admin_site=None):
     if admin_site is None:
         admin_site = site
 
     for model, admin in admin_site._registry.items():
         if getattr(admin, 'reversion_enable', False):
-            _registe_model(admin, model)
+            _register_model(admin, model)
 
 
 class ReversionPlugin(BaseAdminPlugin):
@@ -163,7 +163,15 @@ class ReversionPlugin(BaseAdminPlugin):
     # Block Views
     def block_top_toolbar(self, context, nodes):
         recoverlist_url = self.admin_view.model_admin_url('recoverlist')
-        nodes.append(mark_safe('<div class="btn-group"><a class="btn btn-default btn-small" href="%s"><i class="icon-trash"></i> %s</a></div>' % (recoverlist_url, _(u"Recover"))))
+        nodes.append(mark_safe('<div class="btn-group"><a class="btn btn-default btn-sm" href="%s"><i class="fa fa-trash-o"></i> %s</a></div>' % (recoverlist_url, _(u"Recover"))))
+
+    def block_nav_toggles(self, context, nodes):
+        obj = getattr(
+            self.admin_view, 'org_obj', getattr(self.admin_view, 'obj', None))
+        if obj:
+            revisionlist_url = self.admin_view.model_admin_url(
+                'revisionlist', quote(obj.pk))
+            nodes.append(mark_safe('<a href="%s" class="navbar-toggle pull-right"><i class="fa fa-time"></i></a>' % revisionlist_url))
 
     def block_nav_btns(self, context, nodes):
         obj = getattr(
@@ -171,7 +179,7 @@ class ReversionPlugin(BaseAdminPlugin):
         if obj:
             revisionlist_url = self.admin_view.model_admin_url(
                 'revisionlist', quote(obj.pk))
-            nodes.append(mark_safe('<a href="%s" class="btn btn-default"><i class="icon-time"></i> <span>%s</span></a>' % (revisionlist_url, _(u'History'))))
+            nodes.append(mark_safe('<a href="%s" class="btn btn-default"><i class="fa fa-time"></i> <span>%s</span></a>' % (revisionlist_url, _(u'History'))))
 
 
 class BaseReversionView(ModelAdminView):
@@ -614,14 +622,21 @@ class ActionRevisionPlugin(BaseAdminPlugin):
         return self.revision_context_manager.create_revision(manage_manually=False)(self.do_action_func(__))()
 
 
+class VersionInline(object):
+    model = Version
+    extra = 0
+    style = 'accordion'
+
 class ReversionAdmin(object):
-    model_icon = 'exchange'
+    model_icon = 'fa fa-exchange'
 
+    list_display = ('__str__', 'date_created', 'user', 'comment')
+    list_display_links = ('__str__',)
 
-class VersionAdmin(object):
-    model_icon = 'file'
+    list_filter = ('date_created', 'user')
+    inlines = [VersionInline]
+
 site.register(Revision, ReversionAdmin)
-site.register(Version, VersionAdmin)
 
 site.register_modelview(
     r'^recover/$', RecoverListView, name='%s_%s_recoverlist')

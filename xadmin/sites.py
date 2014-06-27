@@ -1,14 +1,10 @@
 # coding=utf-8
 import sys
 from functools import update_wrapper
-
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-from django.core.urlresolvers import reverse
 from django.db.models.base import ModelBase
-from django.http import HttpResponseRedirect
 from django.views.decorators.cache import never_cache
-from django.views.decorators.csrf import csrf_protect
 
 #设置系统的编码为utf-8
 reload(sys)
@@ -56,24 +52,13 @@ class AdminSite(object):
         * 注册的 ``model admin view class``
         * 注册的各种插件
     """
-    def __init__(self, name='admin', app_name='admin'):
-        """
-        AdminSite 的初始化方法，主要将 xadmin 需要的注册信息初始化。
-        """
+    def __init__(self, name='xadmin'):
         self.name = name
-        self.app_name = app_name
-    
-        #: 保存所有需要 xadmin 管理的 Model 信息
-        #    *key*   : Model 类 
-        #    *value* : Model Admin 类
-        self._registry = {}
+        self.app_name = 'xadmin'
 
-        #: 保存所有用户定义的 Admin View Class 信息
-        #    *key*   : Admin View 类 
-        #    *value* : Admin View 关联类
-        self._registry_avs = {}
-
-        #: 保存所有 Admin View Class
+        self._registry = {}  # model_class class -> admin_class class
+        self._registry_avs = {}  # admin_view_class class -> admin_class class
+        self._registry_settings = {}  # settings name -> admin_class class
         self._registry_views = []
 
         #: 保存所有 Model Base Admin View Class
@@ -102,6 +87,7 @@ class AdminSite(object):
             'models': copy.copy(self._registry),
             'avs': copy.copy(self._registry_avs),
             'views': copy.copy(self._registry_views),
+            'settings': copy.copy(self._registry_settings),
             'modelviews': copy.copy(self._registry_modelviews),
             'plugins': copy.copy(self._registry_plugins),
         }
@@ -113,6 +99,7 @@ class AdminSite(object):
         self._registry = data['models']
         self._registry_avs = data['avs']
         self._registry_views = data['views']
+        self._registry_settings = data['settings']
         self._registry_modelviews = data['modelviews']
         self._registry_plugins = data['plugins']
 
@@ -198,6 +185,9 @@ class AdminSite(object):
             raise ImproperlyConfigured(u'The registered plugin class %s isn\'t subclass of %s' %
                                       (plugin_class.__name__, BaseAdminPlugin.__name__))
 
+    def register_settings(self, name, admin_class):
+        self._registry_settings[name.lower()] = admin_class
+
     def register(self, model_or_iterable, admin_class=object, **options):
         """
         注册需要管理的 Model， 或是注册某 AdminView 的 OptionClass
@@ -271,6 +261,9 @@ class AdminSite(object):
                     raise NotRegistered('The admin_view_class %s is not registered' % model.__name__)
                 del self._registry_avs[model]
 
+    def set_loginview(self, login_view):
+        self.login_view = login_view
+
     def has_permission(self, request):
         """
         如果返回为 ``True`` 则说明 ``request.user`` 至少能够访问当前xadmin网站。否则无法访问xadmin的任何页面。
@@ -303,21 +296,12 @@ class AdminSite(object):
         :param cacheable: 默认情况下，所有的 AdminView 会通过 ``never_cache`` 标记成不做缓存，如果确实需要缓存，可以设置 cacheable=True
         """
         def inner(request, *args, **kwargs):
-            if not self.has_permission(request):
-                # 如果当前页面是登出页面，说明用户刚刚退出系统，没有必要自动跳转到登陆页面
-                if request.path == reverse('admin:logout',
-                                           current_app=self.name):
-                    index_path = reverse('admin:index', current_app=self.name)
-                    return HttpResponseRedirect(index_path)
-                from xadmin.views import LoginView
-                return self.create_admin_view(LoginView)(request, *args, **kwargs)
+            if not self.has_permission(request) and getattr(view, 'need_site_permission', True):
+                return self.create_admin_view(self.login_view)(request, *args, **kwargs)
             return view(request, *args, **kwargs)
 
         if not cacheable:
             inner = never_cache(inner)
-        if not getattr(view, 'csrf_exempt', False):
-            inner = csrf_protect(inner)
-
         return update_wrapper(inner, view)
 
     def _get_merge_attrs(self, option_class, plugin_class):
@@ -328,6 +312,18 @@ class AdminSite(object):
         """
         return dict([(name, getattr(option_class, name)) for name in dir(option_class)
                     if name[0] != '_' and not callable(getattr(option_class, name)) and hasattr(plugin_class, name)])
+
+    def _get_settings_class(self, admin_view_class):
+        name = admin_view_class.__name__.lower()
+
+        if name in self._registry_settings:
+            return self._registry_settings[name]
+        elif name.endswith('admin') and name[0:-5] in self._registry_settings:
+            return self._registry_settings[name[0:-5]]
+        elif name.endswith('adminview') and name[0:-9] in self._registry_settings:
+            return self._registry_settings[name[0:-9]]
+
+        return None
 
     def _create_plugin(self, option_classes):
         """
@@ -365,12 +361,14 @@ class AdminSite(object):
         for klass in admin_view_class.mro():
             # 列出 AdminViewClass 所有的集成类
             if klass == BaseAdminView or issubclass(klass, BaseAdminView):
-
-                # 首先找到 AdminViewClass 相应的 OptionCalss
+                merge_opts = []
                 reg_class = self._registry_avs.get(klass)
-                merge_opts = opts if reg_class is None else [reg_class] + opts
-
-                # 找到该 AdminViewClass 所有注册的插件
+                if reg_class:
+                    merge_opts.append(reg_class)
+                settings_class = self._get_settings_class(klass)
+                if settings_class:
+                    merge_opts.append(settings_class)
+                merge_opts.extend(opts)
                 ps = self._registry_plugins.get(klass, [])
                 # 如果有需要merge的 OptionClass 则使用 AdminSite._create_plugin 方法创建插件类，并且放入插件列表
                 plugins.extend(map(self._create_plugin(
@@ -387,16 +385,16 @@ class AdminSite(object):
             2. 根据 view_class 及其继承类找到相应的 plugins， 作为生成的 AdminViewClass 的 plugins 属性
 
         """
-        option_classes = [option_class]
+        merges = [option_class] if option_class else []
         for klass in view_class.mro():
             # 找到该 view_class 所有基类在 AdminSite 注册的 OptionClass
             reg_class = self._registry_avs.get(klass)
             if reg_class:
-                option_classes.append(reg_class)
-            option_classes.append(klass)
-        # 去掉空的 OptionClass
-        merges = filter(lambda x: x, option_classes)
-        # 生成新 Class 的名字，是所有 OptionClass 名字的拼接 
+                merges.append(reg_class)
+            settings_class = self._get_settings_class(klass)
+            if settings_class:
+                merges.append(settings_class)
+            merges.append(klass)
         new_class_name = ''.join([c.__name__ for c in merges])
 
         if new_class_name not in self._admin_view_cache:
@@ -486,7 +484,7 @@ class AdminSite(object):
             )
 
         """
-        return self.get_urls(), self.app_name, self.name
+        return self.get_urls(), self.name, self.app_name
 
     def i18n_javascript(self, request):
         if settings.USE_I18N:

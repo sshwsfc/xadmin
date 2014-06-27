@@ -10,17 +10,19 @@
 .editable form .btn-ajax{
   display: none;
 }
+.editable form .control-wrap{
+  padding-right: 0px;
+}
 .editable form{
   margin-bottom: 0px;
 }
-.editable form .control-group,
 .editable form .controls{
   margin: 0px;
-  padding: 0px;
+  padding: 0px !important;
   border: 0px;
 }
-.editable form .control-group {
-  margin-bottom: 10px;
+.editable form .form-group {
+  margin: 0px 0px 10px !important;
 }
 .editable form .control-label{
   display: none;
@@ -33,9 +35,6 @@
 .editable form .text-field, 
 .editable form .textinput {
     width: 200px;
-}
-.editable form .date-field {
-    width: 120px;
 }
 .editable form .int-field {
     width: 150px;

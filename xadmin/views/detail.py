@@ -14,7 +14,7 @@ from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from django.utils.html import conditional_escape
-from xadmin.layout import FormHelper, Layout, Fieldset, Container, Column, Field
+from xadmin.layout import FormHelper, Layout, Fieldset, Container, Column, Field, Col, TabHolder
 from xadmin.util import unquote, lookup_field, display_for_field, boolean_icon, label_for_field
 
 from base import ModelAdminView, filter_hook, csrf_protect_m
@@ -22,23 +22,40 @@ from base import ModelAdminView, filter_hook, csrf_protect_m
 # Text to display within change-list table cells if the value is blank.
 EMPTY_CHANGELIST_VALUE = _('Null')
 
+
 class ShowField(Field):
     template = "xadmin/layout/field_value.html"
 
     def __init__(self, callback, *args, **kwargs):
-        super(ShowField, self).__init__(*args, **kwargs)
+        super(ShowField, self).__init__(*args)
+
+        if 'attrs' in kwargs:
+            self.attrs = kwargs.pop('attrs')
+        if 'wrapper_class' in kwargs:
+            self.wrapper_class = kwargs.pop('wrapper_class')
+
         self.results = [(field, callback(field)) for field in self.fields]
 
     def render(self, form, form_style, context):
+        if hasattr(self, 'wrapper_class'):
+            context['wrapper_class'] = self.wrapper_class
+
+        if self.attrs:
+            if 'detail-class' in self.attrs:
+                context['input_class'] = self.attrs['detail-class']
+            elif 'class' in self.attrs:
+                context['input_class'] = self.attrs['class']
+
         html = ''
         for field, result in self.results:
+            context['result'] = result
             if field in form.fields:
                 if form.fields[field].widget != forms.HiddenInput:
-                    html += loader.render_to_string(
-                        self.template, {'field': form[field], 'result': result})
+                    context['field'] = form[field]
+                    html += loader.render_to_string(self.template, context)
             else:
-                html += loader.render_to_string(
-                    self.template, {'field': field, 'result': result})
+                context['field'] = field
+                html += loader.render_to_string(self.template, context)
         return html
 
 
@@ -91,7 +108,8 @@ class ResultField(object):
         text = mark_safe(
             self.text) if self.allow_tags else conditional_escape(self.text)
         if force_unicode(text) == '' or text == 'None' or text == EMPTY_CHANGELIST_VALUE:
-            text = mark_safe('<span class="muted">%s</span>' % EMPTY_CHANGELIST_VALUE)
+            text = mark_safe(
+                '<span class="text-muted">%s</span>' % EMPTY_CHANGELIST_VALUE)
         for wrap in self.wraps:
             text = mark_safe(wrap % text)
         return text
@@ -100,7 +118,8 @@ class ResultField(object):
 def replace_field_to_value(layout, cb):
     for i, lo in enumerate(layout.fields):
         if isinstance(lo, Field) or issubclass(lo.__class__, Field):
-            layout.fields[i] = ShowField(cb, *lo.fields, **lo.attrs)
+            layout.fields[i] = ShowField(
+                cb, *lo.fields, attrs=lo.attrs, wrapper_class=lo.wrapper_class)
         elif isinstance(lo, basestring):
             layout.fields[i] = ShowField(cb, lo)
         elif hasattr(lo, 'get_field_names'):
@@ -147,8 +166,9 @@ class DetailAdminView(ModelAdminView):
             raise PermissionDenied
 
         if self.obj is None:
-            raise Http404(_('%(name)s object with primary key %(key)r does not exist.') %
-                          {'name': force_unicode(self.opts.verbose_name), 'key': escape(object_id)})
+            raise Http404(
+                _('%(name)s object with primary key %(key)r does not exist.') %
+                {'name': force_unicode(self.opts.verbose_name), 'key': escape(object_id)})
         self.org_obj = self.obj
 
     @filter_hook
@@ -162,27 +182,29 @@ class DetailAdminView(ModelAdminView):
         layout = copy.deepcopy(self.detail_layout or self.form_layout)
 
         if layout is None:
-            layout = Layout(Container(
-                Fieldset("", *self.form_obj.fields.keys(), css_class="unsort no_title"), css_class="form-horizontal"
-            ))
+            layout = Layout(Container(Col('full',
+                                          Fieldset(
+                                              "", *self.form_obj.fields.keys(),
+                                              css_class="unsort no_title"), horizontal=True, span=12)
+                                      ))
         elif type(layout) in (list, tuple) and len(layout) > 0:
             # 如果设置的 layout 是一个列表，那么按以下方法生成
             if isinstance(layout[0], Column):
-                # 如果列表第一项是 Column ， 那么用 Container 包装
-                layout = Layout(Container(*layout))
-            elif isinstance(layout[0], Fieldset):
-                # 如果列表第一项是 Fieldset ， 那么用 Container 包装
-                layout = Layout(
-                    Container(*layout, css_class="form-horizontal"))
+                fs = layout
+            elif isinstance(layout[0], (Fieldset, TabHolder)):
+                fs = (Col('full', *layout, horizontal=True, span=12),)
             else:
-                # 那么用 Container > Fieldset 包装
-                layout = Layout(Container(Fieldset("", *layout, css_class="unsort no_title"), css_class="form-horizontal"))
+                fs = (
+                    Col('full', Fieldset("", *layout, css_class="unsort no_title"), horizontal=True, span=12),)
+
+            layout = Layout(Container(*fs))
 
             if self.detail_show_all:
                 # 显示没有在 Layout 中出现的字段
                 rendered_fields = [i[1] for i in layout.get_field_names()]
                 container = layout[0].fields
-                other_fieldset = Fieldset(_(u'Other Fields'), *[f for f in self.form_obj.fields.keys() if f not in rendered_fields])
+                other_fieldset = Fieldset(_(u'Other Fields'), *[
+                                          f for f in self.form_obj.fields.keys() if f not in rendered_fields])
 
                 if len(other_fieldset.fields):
                     if len(container) and isinstance(container[0], Column):
@@ -209,6 +231,7 @@ class DetailAdminView(ModelAdminView):
         exclude = exclude or None
         defaults = {
             "form": self.form,
+            "fields": self.fields and list(self.fields) or None,
             "exclude": exclude,
         }
         defaults.update(kwargs)
@@ -249,8 +272,6 @@ class DetailAdminView(ModelAdminView):
 
             ``object`` : 要显示的 Model 对象
         """
-        ordered_objects = self.opts.get_ordered_objects()
-
         new_context = {
             'title': _('%s Detail') % force_unicode(self.opts.verbose_name),
             'form': self.form_obj,
@@ -260,13 +281,21 @@ class DetailAdminView(ModelAdminView):
             'has_change_permission': self.has_change_permission(self.obj),
             'has_delete_permission': self.has_delete_permission(self.obj),
 
-            'ordered_objects': ordered_objects,
             'content_type_id': ContentType.objects.get_for_model(self.model).id,
         }
 
         context = super(DetailAdminView, self).get_context()
         context.update(new_context)
         return context
+
+    @filter_hook
+    def get_breadcrumb(self):
+        bcs = super(DetailAdminView, self).get_breadcrumb()
+        item = {'title': force_unicode(self.obj)}
+        if self.has_view_permission():
+            item['url'] = self.model_admin_url('detail', self.obj.pk)
+        bcs.append(item)
+        return bcs
 
     @filter_hook
     def get_media(self):
@@ -294,7 +323,9 @@ class DetailAdminView(ModelAdminView):
         context.update(kwargs or {})
 
         return TemplateResponse(self.request, self.detail_template or
-                                self.get_template_list('views/model_detail.html'), context, current_app=self.admin_site.name)
+                                self.get_template_list(
+                                    'views/model_detail.html'),
+                                context, current_app=self.admin_site.name)
 
 
 class DetailAdminUtil(DetailAdminView):

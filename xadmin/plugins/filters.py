@@ -153,6 +153,7 @@ class FilterPlugin(BaseAdminPlugin):
                                        self.model, self)
                 else:
                     field_path = None
+                    field_parts = []
                     if isinstance(list_filter, (tuple, list)):
                         # This is a custom FieldListFilter class for a given field.
                         field, field_list_filter_class = list_filter
@@ -163,11 +164,17 @@ class FilterPlugin(BaseAdminPlugin):
                         field, field_list_filter_class = list_filter, filter_manager.create
                     if not isinstance(field, models.Field):
                         field_path = field
-                        field = get_fields_from_path(
-                            self.model, field_path)[-1]
+                        field_parts = get_fields_from_path(
+                            self.model, field_path)
+                        field = field_parts[-1]
                     spec = field_list_filter_class(
                         field, self.request, lookup_params,
                         self.model, self.admin_view, field_path=field_path)
+
+                    if len(field_parts)>1:
+                        # Add related model name to title
+                        spec.title = "%s %s"%(field_parts[-2].name,spec.title)
+
                     # Check if we need to use distinct()
                     use_distinct = (use_distinct or
                                     lookup_needs_distinct(self.opts, field_path))
@@ -179,7 +186,6 @@ class FilterPlugin(BaseAdminPlugin):
                         self.admin_view.message_user(_("<b>Filtering error:</b> %s") % e.messages[0], 'error')
                     if new_qs is not None:
                         queryset = new_qs
-
 
                     self.filter_specs.append(spec)
 
@@ -241,7 +247,7 @@ class FilterPlugin(BaseAdminPlugin):
                                         'xadmin.widget.datetime.js')
         if bool(filter(lambda s: isinstance(s, RelatedFieldSearchFilter), self.filter_specs)):
             media = media + self.vendor(
-                'select2.js', 'select2.css', 'xadmin.widget.select.js')
+                'select.js', 'select.css', 'xadmin.widget.select.js')
         return media + self.vendor('xadmin.plugin.filters.js')
 
     # Block Views

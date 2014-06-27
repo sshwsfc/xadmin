@@ -36,7 +36,7 @@ def add_view_permissions(sender, **kwargs):
             # add it
             Permission.objects.create(content_type=content_type,
                                       codename=codename,
-                                      name=_("Can view %s") % content_type.name)
+                                      name="Can view %s" % content_type.name)
             #print "Added view permission for %s" % content_type.name
 
 # check for all our view permissions after a syncdb
@@ -49,7 +49,7 @@ class Bookmark(models.Model):
     url_name = models.CharField(_(u'Url Name'), max_length=64)
     content_type = models.ForeignKey(ContentType)
     query = models.CharField(_(u'Query String'), max_length=1000, blank=True)
-    is_share = models.BooleanField(_(u'Is Share'), default=False)
+    is_share = models.BooleanField(_(u'Is Shared'), default=False)
 
     @property
     def url(self):
@@ -124,7 +124,7 @@ class UserWidget(models.Model):
             try:
                 portal_pos = UserSettings.objects.get(
                     user=self.user, key="dashboard:%s:pos" % self.page_id)
-                portal_pos.value = "%s,%s" % (self.pk, portal_pos.value)
+                portal_pos.value = "%s,%s" % (self.pk, portal_pos.value) if portal_pos.value else self.pk
                 portal_pos.save()
             except Exception:
                 pass

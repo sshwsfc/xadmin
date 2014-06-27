@@ -5,7 +5,7 @@
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
-  <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
+  <li><a href="{% url 'xadmin:index' %}">{% trans 'Home' %}</a></li>
   <li><a href="{% url opts|admin_urlname:'changelist' %}">{{opts.verbose_name_plural|capfirst}}</a></li>
   <li><a href="{% url opts|admin_urlname:'change' object.pk %}">{{ object|truncatewords:"18" }}</a></li>
   <li class="active">{% trans 'History' %}</li>
@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block nav_title %}
-  <i class="icon-time"></i> {{title}}
+  <i class="fa fa-time"></i> {{title}}
 {% endblock %}
 
 {% block content %}
@@ -50,7 +50,7 @@
       {% endfor %}
     </tbody>
   </table>
-  <div class="form-actions well well-small">
+  <div class="form-actions well well-sm">
     <button class="btn btn-primary">{% trans "Diff Select Versions" %}</button>
   </div>
   </form>

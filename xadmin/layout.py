@@ -6,6 +6,8 @@ from crispy_forms.utils import render_field, flatatt
 from crispy_forms import layout
 from crispy_forms import bootstrap
 
+import math
+
 
 class Fieldset(layout.Fieldset):
     template = "xadmin/layout/fieldset.html"
@@ -19,8 +21,19 @@ class Fieldset(layout.Fieldset):
 class Row(layout.Div):
 
     def __init__(self, *fields, **kwargs):
-        css_class = 'form-row row num%d' % len(fields)
-        super(Row, self).__init__(css_class=css_class, *fields, **kwargs)
+        css_class = 'form-inline form-group'
+        new_fields = [self.convert_field(f, len(fields)) for f in fields]
+        super(Row, self).__init__(css_class=css_class, *new_fields, **kwargs)
+
+    def convert_field(self, f, counts):
+        col_class = "col-sm-%d" % int(math.ceil(12 / counts))
+        if not (isinstance(f, Field) or issubclass(f.__class__, Field)):
+            f = layout.Field(f)
+        if f.wrapper_class:
+            f.wrapper_class += " %s" % col_class
+        else:
+            f.wrapper_class = col_class
+        return f
 
 
 class Col(layout.Column):
@@ -49,7 +62,7 @@ class Container(layout.Div):
 # Override bootstrap3
 class InputGroup(layout.Field):
 
-    template = "bootstrap3/layout/input_group.html"
+    template = "xadmin/layout/input_group.html"
 
     def __init__(self, field, *args, **kwargs):
         self.field = field
@@ -60,23 +73,30 @@ class InputGroup(layout.Field):
         super(InputGroup, self).__init__(field, **kwargs)
 
     def render(self, form, form_style, context, template_pack='bootstrap'):
-        classes = form.fields[self.field].widget.attrs['class']
-        context.update({'inputs': self.inputs, 'classes': classes.replace('form-control', '')})
-        return render_field(self.field, form, form_style, context, template=self.template, attrs=self.attrs, template_pack=template_pack)
+        classes = form.fields[self.field].widget.attrs.get('class', '')
+        context.update(
+            {'inputs': self.inputs, 'classes': classes.replace('form-control', '')})
+        if hasattr(self, 'wrapper_class'):
+            context['wrapper_class'] = self.wrapper_class
+        return render_field(
+            self.field, form, form_style, context, template=self.template,
+            attrs=self.attrs, template_pack=template_pack)
+
 
 class PrependedText(InputGroup):
 
     def __init__(self, field, text, **kwargs):
         super(PrependedText, self).__init__(field, text, '@@', **kwargs)
 
+
 class AppendedText(InputGroup):
 
     def __init__(self, field, text, **kwargs):
         super(AppendedText, self).__init__(field, '@@', text, **kwargs)
 
+
 class PrependedAppendedText(InputGroup):
 
     def __init__(self, field, prepended_text=None, appended_text=None, *args, **kwargs):
-        super(PrependedAppendedText, self).__init__(field, prepended_text, '@@', appended_text, **kwargs)
-
-
+        super(PrependedAppendedText, self).__init__(
+            field, prepended_text, '@@', appended_text, **kwargs)

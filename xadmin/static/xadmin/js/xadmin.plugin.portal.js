@@ -23,11 +23,8 @@ jQuery(function() {
     });
 
     $( ".panel-heading .icon.chevron" ).click(function() {
-        $( this ).toggleClass( "icon-chevron-up" ).toggleClass( "icon-chevron-down" );
-        $( this ).parents( ".panel:first" ).find( ".panel-content" ).toggle('fast');
+        $( this ).toggleClass( "fa fa-chevron-up" ).toggleClass( "fa fa-chevron-down" );
+        $( this ).parents( ".panel:first" ).find( ".panel-body" ).toggle('fast');
     });
     
-    $( ".column" ).disableSelection();
-
-    // for dashboard
 });

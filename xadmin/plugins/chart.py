@@ -61,7 +61,7 @@ from django.utils.translation import ugettext_lazy as _, ugettext
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
 from xadmin.views.dashboard import ModelBaseWidget, widget_manager
-from xadmin.util import lookup_field, label_for_field, json
+from xadmin.util import lookup_field, label_for_field, force_unicode, json
 
 
 @widget_manager.register
@@ -69,6 +69,7 @@ class ChartWidget(ModelBaseWidget):
     widget_type = 'chart'
     description = _('Show models simple chart.')
     template = 'xadmin/widgets/chart.html'
+    widget_icon = 'fa fa-bar-chart-o'
 
     def convert(self, data):
         self.list_params = data.pop('params', {})
@@ -167,8 +168,8 @@ class ChartsView(ListAdminView):
         self.y_fields = (
             y_fields,) if type(y_fields) not in (list, tuple) else y_fields
 
-        datas = [{"data":[], "label": label_for_field(
-            i, self.model, model_admin=self)} for i in self.y_fields]
+        datas = [{"data":[], "label": force_unicode(label_for_field(
+            i, self.model, model_admin=self))} for i in self.y_fields]
 
         self.make_result_list()
 

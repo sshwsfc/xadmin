@@ -37,6 +37,7 @@ FORMFIELD_FOR_DBFIELD_DEFAULTS = {
     models.FileField: {'widget': widgets.AdminFileWidget},
     models.ForeignKey: {'widget': widgets.AdminSelectWidget},
     models.OneToOneField: {'widget': widgets.AdminSelectWidget},
+    models.ManyToManyField: {'widget': widgets.AdminSelectMultiple},
 }
 
 
@@ -103,6 +104,7 @@ class ModelFormAdminView(ModelAdminView):
 
     ``rich-textarea`` 可能是某插件提供的 Style，这样显示 ``content`` 字段时就会使用该插件的效果了
     """
+    exclude = None
     relfield_style = None      #: 当 Model 是其他 Model 的 ref model 时，其他 Model 在显示本 Model 的字段时使用的 Field Style
 
     save_as = False            #: 是否显示 ``另存为`` 按钮
@@ -159,7 +161,7 @@ class ModelFormAdminView(ModelAdminView):
         # 如果使用了非自动生成的 intermediary model 则不显示该字段
         if isinstance(db_field, models.ManyToManyField) and not db_field.rel.through._meta.auto_created:
             return None
-            
+
         attrs = self.get_field_attrs(db_field, **kwargs)
         return db_field.formfield(**dict(attrs, **kwargs))
 
@@ -175,7 +177,7 @@ class ModelFormAdminView(ModelAdminView):
         if style in ('radio', 'radio-inline') and (db_field.choices or isinstance(db_field, models.ForeignKey)):
             # fk 字段生成 radio 表单控件
             attrs = {'widget': widgets.AdminRadioSelect(
-                attrs={'class': 'inline' if style == 'radio-inline' else ""})}
+                attrs={'inline': style == 'radio-inline'})}
             if db_field.choices:
                 attrs['choices'] = db_field.get_choices(
                     include_blank=db_field.blank,
@@ -184,8 +186,7 @@ class ModelFormAdminView(ModelAdminView):
             return attrs
 
         if style in ('checkbox', 'checkbox-inline') and isinstance(db_field, models.ManyToManyField):
-            # m2m 字段生成 checkbox 表单控件
-            return {'widget': widgets.AdminCheckboxSelect(attrs={'class': 'inline' if style == 'checkbox-inline' else ""}),
+            return {'widget': widgets.AdminCheckboxSelect(attrs={'inline': style == 'checkbox-inline'}),
                     'help_text': None}
 
     @filter_hook
@@ -268,6 +269,7 @@ class ModelFormAdminView(ModelAdminView):
         exclude = exclude or None
         defaults = {
             "form": self.form,
+            "fields": self.fields and list(self.fields) or None,
             "exclude": exclude,
             "formfield_callback": self.formfield_for_dbfield,    # 设置生成表单字段的回调函数
         }
@@ -286,7 +288,7 @@ class ModelFormAdminView(ModelAdminView):
         fields = self.form_obj.fields.keys() + list(self.get_readonly_fields())
 
         if layout is None:
-            layout = Layout(Container(Col('full', 
+            layout = Layout(Container(Col('full',
                 Fieldset("", *fields, css_class="unsort no_title"), horizontal=True, span=12)
             ))
         elif type(layout) in (list, tuple) and len(layout) > 0:
@@ -441,7 +443,6 @@ class ModelFormAdminView(ModelAdminView):
 
             ``errors`` : Form 错误信息
         """
-        ordered_objects = self.opts.get_ordered_objects()
         add = self.org_obj is None
         change = self.org_obj is not None
 
@@ -460,7 +461,6 @@ class ModelFormAdminView(ModelAdminView):
 
             'has_file_field': True,  # FIXME - this should check if form or formsets have a FileField,
             'has_absolute_url': hasattr(self.model, 'get_absolute_url'),
-            'ordered_objects': ordered_objects,
             'form_url': '',
             'content_type_id': ContentType.objects.get_for_model(self.model).id,
             'save_as': self.save_as,
@@ -469,8 +469,7 @@ class ModelFormAdminView(ModelAdminView):
 
         # for submit line
         new_context.update({
-            'onclick_attrib': (self.opts.get_ordered_objects() and change
-                               and 'onclick="submitOrderForm();"' or ''),
+            'onclick_attrib': '',
             'show_delete_link': (new_context['has_delete_permission']
                                  and (change or new_context['show_delete'])),
             'show_save_as_new': change and self.save_as,
@@ -551,6 +550,15 @@ class CreateAdminView(ModelFormAdminView):
         return context
 
     @filter_hook
+    def get_breadcrumb(self):
+        bcs = super(ModelFormAdminView, self).get_breadcrumb()
+        item = {'title': _('Add %s') % force_unicode(self.opts.verbose_name)}
+        if self.has_add_permission():
+            item['url'] = self.model_admin_url('add')
+        bcs.append(item)
+        return bcs
+
+    @filter_hook
     def get_response(self):
         """
         返回显示表单页面的 Response ，子类或是 OptionClass 可以复写该方法
@@ -572,16 +580,15 @@ class CreateAdminView(ModelFormAdminView):
 
         msg = _(
             'The %(name)s "%(obj)s" was added successfully.') % {'name': force_unicode(self.opts.verbose_name),
-                                                                 'obj': "<a href='%s'>%s</a>" % (self.model_admin_url('change', self.new_obj._get_pk_val()), force_unicode(self.new_obj))}
+                                                                 'obj': "<a class='alert-link' href='%s'>%s</a>" % (self.model_admin_url('change', self.new_obj._get_pk_val()), force_unicode(self.new_obj))}
 
-        # 根据 ``request.POST`` 的参数跳转到不同的页面
-        if "_continue" in request.POST:
+        if "_continue" in request.REQUEST:
             self.message_user(
                 msg + ' ' + _("You may edit it again below."), 'success')
             # 继续编辑
             return self.model_admin_url('change', self.new_obj._get_pk_val())
 
-        if "_addanother" in request.POST:
+        if "_addanother" in request.REQUEST:
             self.message_user(msg + ' ' + (_("You may add another %s below.") % force_unicode(self.opts.verbose_name)), 'success')
             # 返回添加页面添加另外一个
             return request.path
@@ -589,7 +596,9 @@ class CreateAdminView(ModelFormAdminView):
             self.message_user(msg, 'success')
 
             # 如果没有查看列表的权限就跳转到主页
-            if self.has_view_permission():
+            if "_redirect" in request.REQUEST:
+                return request.REQUEST["_redirect"]
+            elif self.has_view_permission():
                 return self.model_admin_url('changelist')
             else:
                 return self.get_admin_url('index')
@@ -641,6 +650,17 @@ class UpdateAdminView(ModelFormAdminView):
         return context
 
     @filter_hook
+    def get_breadcrumb(self):
+        bcs = super(ModelFormAdminView, self).get_breadcrumb()
+
+        item = {'title': force_unicode(self.org_obj)}
+        if self.has_change_permission():
+            item['url'] = self.model_admin_url('change', self.org_obj.pk)
+        bcs.append(item)
+
+        return bcs
+
+    @filter_hook
     def get_response(self, *args, **kwargs):
         context = self.get_context()
         context.update(kwargs or {})
@@ -651,8 +671,7 @@ class UpdateAdminView(ModelFormAdminView):
             context, current_app=self.admin_site.name)
 
     def post(self, request, *args, **kwargs):
-        if "_saveasnew" in self.request.POST:
-            # 如果发现有 ``_saveasnew`` 参数, 则说明是另存为数据, 直接使用 :class:`CreateAdminView` 处理就可以
+        if "_saveasnew" in self.request.REQUEST:
             return self.get_model_view(CreateAdminView, self.model).post(request)
         return super(UpdateAdminView, self).post(request, *args, **kwargs)
 
@@ -664,33 +683,27 @@ class UpdateAdminView(ModelFormAdminView):
         opts = self.new_obj._meta
         obj = self.new_obj
         request = self.request
-
-        # Handle proxy models automatically created by .only() or .defer().
         verbose_name = opts.verbose_name
-        if obj._deferred:
-            opts_ = opts.proxy_for_model._meta
-            verbose_name = opts_.verbose_name
 
         pk_value = obj._get_pk_val()
 
-        msg = _('The %(name)s "%(obj)s" was changed successfully.') % {'name': force_unicode(verbose_name),
-            'obj': "<a href='%s'>%s</a>" % (self.model_admin_url('change', pk_value), force_unicode(obj))}
-
-        if "_continue" in request.POST:
+        msg = _('The %(name)s "%(obj)s" was changed successfully.') % {'name':
+                                                                       force_unicode(verbose_name), 'obj': force_unicode(obj)}
+        if "_continue" in request.REQUEST:
             self.message_user(
                 msg + ' ' + _("You may edit it again below."), 'success')
             # 返回原页面继续编辑
             return request.path
-        elif "_addanother" in request.POST:
-            self.message_user(msg + ' ' + (_("You may add another %s below.") 
-                             % force_unicode(verbose_name)), 'success')
-            # 跳转到添加页面
+        elif "_addanother" in request.REQUEST:
+            self.message_user(msg + ' ' + (_("You may add another %s below.")
+                              % force_unicode(verbose_name)), 'success')
             return self.model_admin_url('add')
         else:
             self.message_user(msg, 'success')
-
             # 如果没有查看列表的权限就跳转到主页
-            if self.has_view_permission():
+            if "_redirect" in request.REQUEST:
+                return request.REQUEST["_redirect"]
+            elif self.has_view_permission():
                 change_list_url = self.model_admin_url('changelist')
                 if 'LIST_QUERY' in self.request.session \
                 and self.request.session['LIST_QUERY'][0] == self.model_info:

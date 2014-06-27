@@ -41,6 +41,8 @@ nosetests.xml
 
 _build
 xadmin/static/xadmin/components/
+xadmin/static/xadmin/bower_components/
 
 .idea
 *~
+demo_app/data.db

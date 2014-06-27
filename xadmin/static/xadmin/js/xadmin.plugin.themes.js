@@ -25,16 +25,18 @@
 
   $(function(){
     var top_nav = $('#top-nav');
-    // $('body').css('padding-top', $('body>.container-fluid').offset().top + 'px');
-    // top_nav.css('position', 'fixed');
+    $('#body-content').css('margin-top', (top_nav.height() + 15) + 'px');
 
     if($("#g-theme-menu")){
       $('#g-theme-menu li>a').click(function(){
         var $el = $(this);
         var themeHref = $el.data('css-href');
+        
+        var topmenu = $('#top-nav .navbar-collapse');
+        if(topmenu.data('bs.collapse')) topmenu.collapse('hide');
 
         var modal = $('<div id="load-theme-modal" class="modal fade" role="dialog"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4>'+ 
-            'Loading theme</h4></div><div class="modal-body"><h2 style="text-align:center;"><i class="icon-spinner icon-spin icon-large"></i></h2></div></div></div></div>');
+            'Loading theme</h4></div><div class="modal-body"><h2 style="text-align:center;"><i class="fa-spinner fa-spin fa fa-large"></i></h2></div></div></div></div>');
         $('body').append(modal);
 
         modal.on('shown.bs.modal', function(){
@@ -57,10 +59,10 @@
             $(iframe).load(function () {
               $('#site-theme').attr('href', themeHref);
 
-              // setTimeout(function(){
-              //   var nav_height = $('#top-nav').height();
-              //   $('body').animate({'padding-top': (nav_height + 18)}, 500, 'easeOutBounce');
-              // }, 500);
+              setTimeout(function(){
+                var nav_height = $('#top-nav').height();
+                $('#body-content').animate({'margin-top': (nav_height + 15)}, 500, 'easeOutBounce');
+              }, 500);
 
               modal.modal('hide');
               iframe.parentNode.removeChild(iframe);

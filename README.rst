@@ -72,15 +72,18 @@ Install Requires
 
 -  `django-crispy-forms`_ >=1.2.3 (For xadmin crispy forms)
 
--  `django-reversion`_ (For object history and reversion feature, please select right version by your django, see `changelog`_ )
+-  `django-reversion`_ ([OPTION] For object history and reversion feature, please select right version by your django, see `changelog`_ )
 
--  `xlwt`_ (For export xls files, option)
+-  `xlwt`_ ([OPTION] For export xls files)
+
+-  `xlsxwriter`_ ([OPTION] For export xlsx files)
 
 .. _django: http://djangoproject.com
 .. _django-crispy-forms: http://django-crispy-forms.rtfd.org
 .. _django-reversion: https://github.com/etianen/django-reversion
 .. _changelog: https://github.com/etianen/django-reversion/blob/master/CHANGELOG.markdown
 .. _xlwt: http://www.python-excel.org/
+.. _xlsxwriter: https://github.com/jmcnamara/XlsxWriter
 
 Documentation
 -------------
@@ -89,6 +92,27 @@ Documentation
 -  `Chinese`_
 
 .. _Chinese: https://xadmin.readthedocs.org/en/latest/index.html
+
+Changelogs
+-------------
+
+0.5.0
+^^^^^
+    
+- Update fontawesome to 4.0.3
+- Update javascript files to compact fa icons new version
+- Update tests for the new instance method of the AdminSite class
+- Added demo graphs
+- Added quickfilter plugin.
+- Adding apps_icons with same logic of apps_label_title.
+- Add xlsxwriter for big data export.
+- Upgrade reversion models admin list page.
+- Fixed reverse many 2 many lookup giving FieldDoesNotExist error.
+- Fixed user permission check in inline model.
+
+`Detail`_
+
+.. _Detail: ./changelog.md
 
 Online Group
 ------------

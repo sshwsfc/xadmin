@@ -7,45 +7,71 @@ select.selectmultiple {
 .select2-container{
   width: 100%;
 }
+.select2-container.form-control{
+  padding: 0px;
+  border: 0px;
+}
 .select2-container .select2-choice {
   height: 35px;
   padding-top: 3px;
 }
 
 /* form css */
-.form-horizontal .control-group + .control-group{
-  margin-top: 20px;
+.form-container .column{
+  min-height: 60px;
+}
+.form-group {
+  margin-right: -15px;
+  margin-left: -15px;
 }
 .control-label {
-  padding: 6px 15px;
+  padding: 7px 10px;
   font-weight: bold;
+}
+.form-horizontal .control-label {
+  margin-bottom: 5px;
 }
 .controls {
   padding: 0px 15px 0px 15px;
+}
+.controls:before,
+.controls:after {
+  display: table;
+  content: " ";
+}
+.controls:after {
+  clear: both;
 }
 .control-wrap {
   display: block;
   width: 100%;
   padding-right: 45px;
 }
-.asterisk_field {
+.asteriskField, .asterisk-field {
   color: red;
 }
-
+.controls > .radio:first-child,
+.controls > .checkbox:first-child,
+.control-wrap > .radio:first-child,
+.control-wrap > .checkbox:first-child {
+  margin-top: -7px;
+}
 .controls > span {
   padding: 5px 0;
   display: inline-block;
 }
 
-.controls > .radio:first-child,
-.controls > .checkbox:first-child {
-  margin-top: 0px;
+.help-block {
+  margin-bottom: 0px;
 }
 
 .form-row .row {
   margin: 0px !important;
 }
 
+.fieldset .panel-body {
+  padding-bottom: 0px;
+}
 
 @media (min-width: 768px) {
 
@@ -74,7 +100,7 @@ select.selectmultiple {
   select.selectmultiple {
     max-width: 350px;
   }
-  .select2-container{
+  .select2-container, .selectize-control{
     max-width: 300px;
   }
 
@@ -91,8 +117,8 @@ select.selectmultiple {
   }
 
   .form-actions.fixed .pull-right{
-    float: none;
-    margin-left: 20px;
+    float: none !important;
+    margin-left: 10px;
   }
 
   .form-horizontal .control-label {
@@ -100,36 +126,42 @@ select.selectmultiple {
     float: left;
   }
   .form-horizontal .controls {
-    padding-left: 180px;
+    margin-left: 175px;
   }
-  .form-horizontal.short_label .control-label {
+  .form-horizontal.short_label .control-label,
+  .form-horizontal .short_label .control-label {
     width: 120px;
   }
-  .form-horizontal.short_label .controls {
-    padding-left: 130px;
+  .form-horizontal.short_label .controls,
+  .form-horizontal .short_label .controls {
+    margin-left: 120px;
   }
-  .form-horizontal .control-group + .form-row,
-  .form-horizontal .form-row + .form-row,
-  .form-horizontal .form-row + .control-group {
-    margin-top: 20px;
+  .form-horizontal .form-group {
+    margin-bottom: 24px;
   }
-  .form-horizontal .form-row .control-group{
-    display: inline-block;
-    width: 50%;
-    float: left;
+  .form-horizontal .form-inline .form-group {
+    margin: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
   }
-  .form-horizontal .form-row .control-label{
+  .form-horizontal .fieldset .panel-body {
+    padding-top: 24px;
+  }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  .form-horizontal .control-label {
+    width: 150px;
+  }
+  .form-horizontal .controls {
+    margin-left: 155px;
+  }
+  .form-horizontal.short_label .control-label,
+  .form-horizontal .short_label .control-label {
     width: 100px;
   }
-  .form-horizontal .form-row .controls {
-    padding-left: 105px;
-  }
-  .form-horizontal .form-row.num3 .control-group{width: 33.333%}
-  .form-horizontal .form-row.num4 .control-group{width: 25%}
-  .form-horizontal .form-row.num5 .control-group{width: 20%}
-  .form-horizontal .form-row::before, .form-horizontal .form-row::after{
-    display: table;
-    content: " ";
+  .form-horizontal.short_label .controls,
+  .form-horizontal .short_label .controls {
+    margin-left: 100px;
   }
 }
 @media (max-width: 767px) {
