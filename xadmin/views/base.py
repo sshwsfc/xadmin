@@ -550,12 +550,14 @@ class ModelAdminView(CommAdminView):
             "xadmin/%s" % template_name,
         )
 
+    @filter_hook
     def get_ordering(self):
         """
         Hook for specifying field ordering.
         """
         return self.ordering or ()  # otherwise we might try to *None, which is bad ;)
 
+    @filter_hook
     def queryset(self):
         """
         Returns a QuerySet of all model instances that can be edited by the
