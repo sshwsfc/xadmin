@@ -4,6 +4,7 @@ from models import IDC, Host, MaintainLog, HostGroup, AccessRecord
 from xadmin.layout import Main, TabHolder, Tab, Fieldset, Row, Col, AppendedText, Side
 from xadmin.plugins.inline import Inline
 from xadmin.plugins.batch import BatchChangeAction
+from django.db.models import Avg, Max, Min, Count, Sum
 
 class MainDashboard(object):
     widgets = [
@@ -22,8 +23,8 @@ xadmin.site.register(views.website.IndexView, MainDashboard)
 
 
 class BaseSetting(object):
-    enable_themes = True
-    use_bootswatch = True
+    enable_themes = False
+    use_bootswatch = False
 xadmin.site.register(views.BaseAdminView, BaseSetting)
 
 
@@ -172,24 +173,39 @@ class AccessRecordAdmin(object):
     avg_count.allow_tags = True
     avg_count.is_column = True
 
-    list_display = ('date', 'user_count', 'view_count', 'avg_count')
-    list_display_links = ('date',)
+    def user_count_sum(self, obj):
+      return obj
+    user_count_sum.short_description = "User Count Sum"
 
-    list_filter = ['date', 'user_count', 'view_count']
+    def view_count_sum(self, obj):
+      return obj
+    view_count_sum.short_description = "View Count Sum"
+
+    list_display = ('date', 'user_count_sum', 'view_count_sum')
+
+    list_filter = ['date']
     actions = None
-    aggregate_fields = {"user_count": "sum", 'view_count': "sum"}
 
-    refresh_times = (3, 5, 10)
-    data_charts = {
-        "user_count": {'title': u"User Report", "x-field": "date", "y-field": ("user_count", "view_count"), "order": ('date',)},
-        "avg_count": {'title': u"Avg Report", "x-field": "date", "y-field": ('avg_count',), "order": ('date',)},
-        "per_month": {'title': u"Monthly Users", "x-field": "_chart_month", "y-field": ("user_count", ), 
-                              "option": {
-                                         "series": {"bars": {"align": "center", "barWidth": 0.8,'show':True}}, 
-                                         "xaxis": {"aggregate": "sum", "mode": "categories"},
-                                         },
-                            },
+    pivot_fields = {
+      'values' : ['date',],
+      'annotate': {
+        'user_count_sum': Sum('user_count'),
+        'view_count_sum': Sum('view_count'),
+      }
     }
+    # aggregate_fields = {"user_count": "sum", 'view_count': "sum"}
+
+    # refresh_times = (3, 5, 10)
+    # data_charts = {
+    #     "user_count": {'title': u"User Report", "x-field": "date", "y-field": ("user_count", "view_count"), "order": ('date',)},
+    #     "avg_count": {'title': u"Avg Report", "x-field": "date", "y-field": ('avg_count',), "order": ('date',)},
+    #     "per_month": {'title': u"Monthly Users", "x-field": "_chart_month", "y-field": ("user_count", ), 
+    #                           "option": {
+    #                                      "series": {"bars": {"align": "center", "barWidth": 0.8,'show':True}}, 
+    #                                      "xaxis": {"aggregate": "sum", "mode": "categories"},
+    #                                      },
+    #                         },
+    # }
     
     def _chart_month(self,obj):
         return obj.date.strftime("%B")

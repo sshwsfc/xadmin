@@ -19,24 +19,19 @@ def mock_for_field_label(obj):
 
 class PivotChartPlugin(BaseAdminPlugin):
 
-    pivot_fields = []
+    pivot_fields = None
 
     def result_item(self, __, obj, field_name, row):
+        print obj
         item = ResultItem(field_name, row)
         item.text = obj[field_name]
         return item
 
-    def get_list_display(self, __):
-        self.admin_view.list_display = ['log_time', 'click_count_sum']
-        return __()
-
     def init_request(self, *args, **kwargs):
-        self.admin_view.click_count_sum = mock_for_field_label
-        self.admin_view.log_time = mock_for_field_label
         return bool(self.pivot_fields)
 
     def queryset(self, qs):
-        return qs.values('log_time').annotate(click_count_sum=Sum('click_count'))
+        return qs.values(*self.pivot_fields['values']).annotate(**self.pivot_fields['annotate'])
 
     # Media
     def get_media(self, media):
