@@ -110,7 +110,7 @@ class EditPatchView(ModelFormAdminView, ListAdminView):
         model_fields = [f.name for f in self.opts.fields]
         fields = [f for f in request.GET['fields'].split(',') if f in model_fields]
         defaults = {
-            "form": forms.ModelForm,
+            "form": self.form,
             "fields": fields,
             "formfield_callback": self.formfield_for_dbfield,
         }
@@ -136,7 +136,7 @@ class EditPatchView(ModelFormAdminView, ListAdminView):
         model_fields = [f.name for f in self.opts.fields]
         fields = [f for f in request.POST.keys() if f in model_fields]
         defaults = {
-            "form": forms.ModelForm,
+            "form": self.form,
             "fields": fields,
             "formfield_callback": self.formfield_for_dbfield,
         }
