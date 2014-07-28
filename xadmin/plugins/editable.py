@@ -1,4 +1,3 @@
-from django import forms
 from django import template
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.db import models, transaction
@@ -42,9 +41,9 @@ class EditablePlugin(BaseAdminPlugin):
 
             item.wraps.insert(0, '<span class="editable-field">%s</span>')
             item.btns.append((
-                '<a class="editable-handler" title="%s" data-editable-field="%s" data-editable-loadurl="%s">'+
+                '<a class="editable-handler" title="%s" data-editable-field="%s" data-editable-loadurl="%s">' +
                 '<i class="fa fa-edit"></i></a>') %
-                 (_(u"Enter %s") % field_label, field_name, self.admin_view.model_admin_url('patch', pk) + '?fields=' + field_name))
+                (_(u"Enter %s") % field_label, field_name, self.admin_view.model_admin_url('patch', pk) + '?fields=' + field_name))
 
             if field_name not in self.editable_need_fields:
                 self.editable_need_fields[field_name] = item.field
@@ -110,7 +109,7 @@ class EditPatchView(ModelFormAdminView, ListAdminView):
         model_fields = [f.name for f in self.opts.fields]
         fields = [f for f in request.GET['fields'].split(',') if f in model_fields]
         defaults = {
-            "form": forms.ModelForm,
+            "form": self.form,
             "fields": fields,
             "formfield_callback": self.formfield_for_dbfield,
         }
@@ -121,13 +120,12 @@ class EditPatchView(ModelFormAdminView, ListAdminView):
         helper.form_tag = False
         form.helper = helper
 
-        s = '{% load i18n crispy_forms_tags %}<form method="post" action="{{action_url}}">{% crispy form %}'+ \
+        s = '{% load i18n crispy_forms_tags %}<form method="post" action="{{action_url}}">{% crispy form %}' + \
             '<button type="submit" class="btn btn-success btn-block btn-sm">{% trans "Apply" %}</button></form>'
         t = template.Template(s)
-        c = template.Context({'form':form, 'action_url': self.model_admin_url('patch', self.org_obj.pk)})
+        c = template.Context({'form': form, 'action_url': self.model_admin_url('patch', self.org_obj.pk)})
 
         return HttpResponse(t.render(c))
-
 
     @filter_hook
     @csrf_protect_m
@@ -136,7 +134,7 @@ class EditPatchView(ModelFormAdminView, ListAdminView):
         model_fields = [f.name for f in self.opts.fields]
         fields = [f for f in request.POST.keys() if f in model_fields]
         defaults = {
-            "form": forms.ModelForm,
+            "form": self.form,
             "fields": fields,
             "formfield_callback": self.formfield_for_dbfield,
         }
