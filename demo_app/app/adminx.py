@@ -43,7 +43,7 @@ class MaintainInline(object):
 
 
 class IDCAdmin(object):
-    list_display = ('name', 'description', 'create_time')
+    list_display = ('name', 'description', 'create_time','host__name')
     list_display_links = ('name',)
     wizard_form_list = [
         ('First\'s Form', ('name', 'description')),

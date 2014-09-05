@@ -311,6 +311,12 @@ def model_ngettext(obj, n=None):
     singular, plural = d["verbose_name"], d["verbose_name_plural"]
     return ungettext(singular, plural, n or 0)
 
+def is_rel_field(name,model):
+    if hasattr(name,'split') and name.find("__")>0:
+        parts = name.split("__")
+        if parts[0] in model._meta.get_all_field_names():
+            return True
+    return False
 
 def lookup_field(name, obj, model_admin=None):
     opts = obj._meta
@@ -327,6 +333,12 @@ def lookup_field(name, obj, model_admin=None):
             attr = getattr(model_admin, name)
             value = attr(obj)
         else:
+            if is_rel_field(name,obj):
+                parts = name.split("__")
+                rel_name,sub_rel_name = parts[0],"__".join(parts[1:])
+                rel_obj =  getattr(obj,rel_name)
+                if rel_obj is not None:
+                    return lookup_field(sub_rel_name,rel_obj,model_admin)
             attr = getattr(obj, name)
             if callable(attr):
                 value = attr()
@@ -367,6 +379,23 @@ def label_for_field(name, model, model_admin=None, return_attr=False):
                 attr = getattr(model_admin, name)
             elif hasattr(model, name):
                 attr = getattr(model, name)
+            elif is_rel_field(name,model):
+                parts = name.split("__")
+                rel_name,name = parts[0],"__".join(parts[1:])
+                field = model._meta.get_field_by_name(rel_name)[0]
+                if isinstance(field, RelatedObject):
+                    label = field.opts.verbose_name
+                else:
+                    label = field.verbose_name
+                
+                rel_model = field.rel.to
+                rel_label = label_for_field(name, rel_model, model_admin=model_admin, return_attr=return_attr)
+                
+                if return_attr:
+                    rel_label,attr = rel_label
+                    return ("%s %s"%(label,rel_label), attr)
+                else:
+                    return "%s %s"%(label,rel_label)
             else:
                 message = "Unable to lookup '%s' on %s" % (
                     name, model._meta.object_name)
