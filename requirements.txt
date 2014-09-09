@@ -1,2 +1,2 @@
-django>=1.5
-django-crispy-forms>=1.4.0
+django==1.5
+django-crispy-forms==1.4.0
