@@ -182,7 +182,7 @@ class BaseAdminObject(object):
 
     def render_response(self, content, response_type='json'):
         if response_type == 'json':
-            response = HttpResponse(mimetype="application/json; charset=UTF-8")
+            response = HttpResponse(content_type="application/json; charset=UTF-8")
             response.write(
                 json.dumps(content, cls=JSONEncoder, ensure_ascii=False))
             return response
