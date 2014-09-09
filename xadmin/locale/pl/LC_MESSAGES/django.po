@@ -792,8 +792,8 @@ msgstr "Kliknij tutaj, aby wybrać wszystkie obiekty na wszystkich stronach"
 
 #: templates/xadmin/blocks/model_list.results_bottom.actions.html:19
 #, python-format
-msgid "Select all %(total_count)s %(module_name)s"
-msgstr "Wybierz wszystkie %(total_count)s %(module_name)s"
+msgid "Select all %(total_count)s %(model_name)s"
+msgstr "Wybierz wszystkie %(total_count)s %(model_name)s"
 
 #: templates/xadmin/blocks/model_list.results_bottom.actions.html:20
 msgid "Clear selection"

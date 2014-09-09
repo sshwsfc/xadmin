@@ -100,7 +100,7 @@ class FormAdminView(CommAdminView):
         return self.get_response()
 
     @csrf_protect_m
-    @transaction.commit_on_success
+    @transaction.atomic
     @filter_hook
     def post(self, request, *args, **kwargs):
         self.instance_forms()

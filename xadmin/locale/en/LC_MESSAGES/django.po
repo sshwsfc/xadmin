@@ -738,7 +738,7 @@ msgstr ""
 
 #: templates/xadmin/blocks/model_list.results_bottom.actions.html:19
 #, python-format
-msgid "Select all %(total_count)s %(module_name)s"
+msgid "Select all %(total_count)s %(model_name)s"
 msgstr ""
 
 #: templates/xadmin/blocks/model_list.results_bottom.actions.html:20

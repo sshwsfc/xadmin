@@ -221,7 +221,7 @@ class RecoverListView(BaseReversionView):
         context.update({
             "opts": opts,
             "app_label": opts.app_label,
-            "module_name": capfirst(opts.verbose_name),
+            "model_name": capfirst(opts.verbose_name),
             "title": _("Recover deleted %(name)s") % {"name": force_unicode(opts.verbose_name_plural)},
             "deleted": deleted,
             "changelist_url": self.model_admin_url("changelist"),
@@ -262,7 +262,7 @@ class RevisionListView(BaseReversionView):
         context.update({
             'title': _('Change history: %s') % force_unicode(self.obj),
             'action_list': action_list,
-            'module_name': capfirst(force_unicode(opts.verbose_name_plural)),
+            'model_name': capfirst(force_unicode(opts.verbose_name_plural)),
             'object': self.obj,
             'app_label': opts.app_label,
             "changelist_url": self.model_admin_url("changelist"),
@@ -580,7 +580,7 @@ class InlineRevisionPlugin(BaseAdminPlugin):
         if self.request.method == 'GET' and formset.helper and formset.helper.layout:
             helper = formset.helper
             helper.filter(basestring).wrap(InlineDiffField)
-            fake_admin_class = type(str('%s%sFakeAdmin' % (self.opts.app_label, self.opts.module_name)), (object, ), {'model': self.model})
+            fake_admin_class = type(str('%s%sFakeAdmin' % (self.opts.app_label, self.opts.model_name)), (object, ), {'model': self.model})
             for form in formset.forms:
                 instance = form.instance
                 if instance.pk:

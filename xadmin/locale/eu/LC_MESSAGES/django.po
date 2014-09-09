@@ -740,8 +740,8 @@ msgstr "Klikatu hemen orrialde guztiko objetuak aukeratzeko"
 
 #: templates/xadmin/blocks/model_list.results_bottom.actions.html:19
 #, python-format
-msgid "Select all %(total_count)s %(module_name)s"
-msgstr "Aukeratu %(total_count)s %(module_name)sak"
+msgid "Select all %(total_count)s %(model_name)s"
+msgstr "Aukeratu %(total_count)s %(model_name)sak"
 
 #: templates/xadmin/blocks/model_list.results_bottom.actions.html:20
 msgid "Clear selection"

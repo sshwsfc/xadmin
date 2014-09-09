@@ -735,8 +735,8 @@ msgstr "点击此处选择所有页面中包含的对象。"
 
 #: templates/xadmin/blocks/model_list.results_bottom.actions.html:19
 #, python-format
-msgid "Select all %(total_count)s %(module_name)s"
-msgstr "选中所有的 %(total_count)s 个 %(module_name)s"
+msgid "Select all %(total_count)s %(model_name)s"
+msgstr "选中所有的 %(total_count)s 个 %(model_name)s"
 
 #: templates/xadmin/blocks/model_list.results_bottom.actions.html:20
 msgid "Clear selection"

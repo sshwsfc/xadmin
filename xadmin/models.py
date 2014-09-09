@@ -75,7 +75,7 @@ class JSONEncoder(DjangoJSONEncoder):
         elif isinstance(o, decimal.Decimal):
             return str(o)
         elif isinstance(o, ModelBase):
-            return '%s.%s' % (o._meta.app_label, o._meta.module_name)
+            return '%s.%s' % (o._meta.app_label, o._meta.model_name)
         else:
             try:
                 return super(JSONEncoder, self).default(o)

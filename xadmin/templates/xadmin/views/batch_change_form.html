@@ -17,7 +17,7 @@
 {% endblock %}
 
 {% block content %}
-<form class="exform" {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="" method="post" id="{{ opts.module_name }}_form">{% csrf_token %}
+<form class="exform" {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="" method="post" id="{{ opts.model_name }}_form">{% csrf_token %}
   {% if errors %}
       <div class="alert alert-danger alert-dismissable">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
