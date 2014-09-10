@@ -81,7 +81,7 @@ Install Requires
 .. _django: http://djangoproject.com
 .. _django-crispy-forms: http://django-crispy-forms.rtfd.org
 .. _django-reversion: https://github.com/etianen/django-reversion
-.. _changelog: https://github.com/etianen/django-reversion/blob/master/CHANGELOG.markdown
+.. _changelog: https://github.com/etianen/django-reversion/blob/master/CHANGELOG.rst
 .. _xlwt: http://www.python-excel.org/
 .. _xlsxwriter: https://github.com/jmcnamara/XlsxWriter
 
