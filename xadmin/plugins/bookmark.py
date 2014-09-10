@@ -44,7 +44,7 @@ class BookmarkPlugin(BaseAdminPlugin):
             filter(lambda i: bool(i[1] and (i[0] in (COL_LIST_VAR, ORDER_VAR, SEARCH_VAR) or i[0].startswith(FILTER_PREFIX)
                                             or i[0].startswith(RELATE_PREFIX))), self.request.GET.items()))])
 
-        model_info = (self.opts.app_label, self.opts.module_name)
+        model_info = (self.opts.app_label, self.opts.model_name)
         has_selected = False
         menu_title = _(u"Bookmark")
         list_base_url = reverse('xadmin:%s_%s_changelist' %
@@ -75,7 +75,7 @@ class BookmarkPlugin(BaseAdminPlugin):
                 has_selected = True
 
         content_type = ContentType.objects.get_for_model(self.model)
-        bk_model_info = (Bookmark._meta.app_label, Bookmark._meta.module_name)
+        bk_model_info = (Bookmark._meta.app_label, Bookmark._meta.model_name)
         bookmarks_queryset = Bookmark.objects.filter(
             content_type=content_type,
             url_name='xadmin:%s_%s_changelist' % model_info
@@ -125,9 +125,9 @@ class BookmarkPlugin(BaseAdminPlugin):
 class BookmarkView(ModelAdminView):
 
     @csrf_protect_m
-    @transaction.commit_on_success
+    @transaction.atomic
     def post(self, request):
-        model_info = (self.opts.app_label, self.opts.module_name)
+        model_info = (self.opts.app_label, self.opts.model_name)
         url_name = 'xadmin:%s_%s_changelist' % model_info
         bookmark = Bookmark(
             content_type=ContentType.objects.get_for_model(self.model),

@@ -41,7 +41,7 @@ class DeleteAdminView(ModelAdminView):
                                 self.get_template_list("views/model_delete_confirm.html"), context, current_app=self.admin_site.name)
 
     @csrf_protect_m
-    @transaction.commit_on_success
+    @transaction.atomic
     @filter_hook
     def post(self, request, object_id):
         if self.perms_needed:

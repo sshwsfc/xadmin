@@ -39,12 +39,12 @@ class DetailsPlugin(BaseAdminPlugin):
                 try:
                     item_res_uri = reverse(
                         '%s:%s_%s_detail' % (self.admin_site.app_name,
-                                             opts.app_label, opts.module_name),
+                                             opts.app_label, opts.model_name),
                         args=(getattr(rel_obj, opts.pk.attname),))
                     if item_res_uri:
                         if has_change_perm:
                             edit_url = reverse(
-                                '%s:%s_%s_change' % (self.admin_site.app_name, opts.app_label, opts.module_name),
+                                '%s:%s_%s_change' % (self.admin_site.app_name, opts.app_label, opts.model_name),
                                 args=(getattr(rel_obj, opts.pk.attname),))
                         else:
                             edit_url = ''
