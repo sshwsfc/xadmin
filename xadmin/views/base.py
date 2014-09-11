@@ -10,6 +10,7 @@ from django import forms
 from django.utils.encoding import force_unicode
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import get_permission_codename
 from django.core.exceptions import ValidationError
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.urlresolvers import reverse
@@ -561,17 +562,23 @@ class ModelAdminView(CommAdminView):
         Returns a QuerySet of all model instances that can be edited by the
         admin site. This is used by changelist_view.
         """
-        return self.model._default_manager.get_query_set()
+        return self.model._default_manager.get_queryset()
 
     def has_view_permission(self, obj=None):
-        return ('view' not in self.remove_permissions) and (self.user.has_perm('%s.view_%s' % self.model_info) or \
-            self.user.has_perm('%s.change_%s' % self.model_info))
+        view_codename = get_permission_codename('view', self.opts)
+        change_codename = get_permission_codename('change', self.opts)
+
+        return ('view' not in self.remove_permissions) and (self.user.has_perm('%s.%s' % (self.app_label, view_codename)) or \
+            self.user.has_perm('%s.%s' % (self.app_label, change_codename)))
 
     def has_add_permission(self):
-        return ('add' not in self.remove_permissions) and self.user.has_perm('%s.add_%s' % self.model_info)
+        codename = get_permission_codename('add', self.opts)
+        return ('add' not in self.remove_permissions) and self.user.has_perm('%s.%s' % (self.app_label, codename))
 
     def has_change_permission(self, obj=None):
-        return ('change' not in self.remove_permissions) and self.user.has_perm('%s.change_%s' % self.model_info)
+        codename = get_permission_codename('change', self.opts)
+        return ('change' not in self.remove_permissions) and self.user.has_perm('%s.%s' % (self.app_label, codename))
 
     def has_delete_permission(self, obj=None):
-        return ('delete' not in self.remove_permissions) and self.user.has_perm('%s.delete_%s' % self.model_info)
+        codename = get_permission_codename('delete', self.opts)
+        return ('delete' not in self.remove_permissions) and self.user.has_perm('%s.%s' % (self.app_label, codename))

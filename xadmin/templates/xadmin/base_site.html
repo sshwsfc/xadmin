@@ -1,6 +1,7 @@
 {% extends 'xadmin/base.html' %}
 {% load i18n xadmin_tags %}
 {% load url from future %}
+{% load firstof from future %}
 
 {% block title %}{{ title }} | {{ site_title }}{% endblock %}
 
@@ -16,7 +17,7 @@
         {% if user.is_active and user.is_staff %}
           <li class="dropdown">
             <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-            <strong>{% trans 'Welcome,' %} {% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %}</strong> <span class="caret"></span></a>
+            <strong>{% trans 'Welcome,' %} {% firstof user.first_name user.username %}</strong> <span class="caret"></span></a>
             <ul id="g-account-menu" class="dropdown-menu" role="menu">
               {% view_block 'top_account_menu' %}
             </ul>

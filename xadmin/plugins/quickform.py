@@ -45,7 +45,6 @@ class RelatedFieldWidgetWrapper(forms.Widget):
     admin interface.
     """
     def __init__(self, widget, rel, add_url, rel_add_url):
-        self.is_hidden = widget.is_hidden
         self.needs_multipart_form = widget.needs_multipart_form
         self.attrs = widget.attrs
         self.choices = widget.choices
@@ -55,6 +54,9 @@ class RelatedFieldWidgetWrapper(forms.Widget):
 
         self.add_url = add_url
         self.rel_add_url = rel_add_url
+
+        if hasattr(self, 'input_type'):
+            self.input_type = widget.input_type
 
     def __deepcopy__(self, memo):
         obj = copy.copy(self)
