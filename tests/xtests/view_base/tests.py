@@ -1,7 +1,7 @@
 
 from django.contrib.auth.models import User
 
-from xtests.base import BaseTest
+from base import BaseTest
 from xadmin.views import BaseAdminView, BaseAdminPlugin, ModelAdminView, ListAdminView
 
 from models import ModelA, ModelB
