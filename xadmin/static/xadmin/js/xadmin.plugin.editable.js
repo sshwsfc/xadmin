@@ -127,7 +127,7 @@
       $.when(this.save())
       .done($.proxy(function(data) {
         this.$mask.hide()
-        $('.popover').hide()
+        this.$mask.parents('.popover').hide()
         if(data['result'] != 'success' && data['errors']){
           var err_html = []
           for (var i = data['errors'].length - 1; i >= 0; i--) {
@@ -145,7 +145,7 @@
       }, this))
       .fail($.proxy(function(xhr) {
         this.$mask.hide()
-        $('.popover').hide()
+        this.$mask.parents('.popover').hide()
         alert(typeof xhr === 'string' ? xhr : xhr.responseText || xhr.statusText || 'Unknown error!');
       }, this))
   }
