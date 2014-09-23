@@ -59,7 +59,7 @@ For using |xadmin|, `Django 1.4 <http://www.djangoproject.com>`_ needs to be ins
 
     # version模块自动注册需要版本控制的 Model
     from xadmin.plugins import xversion
-    xversion.registe_models()
+    xversion.register_models()
 
     urlpatterns = patterns('',
         url(r'xadmin/', include(xadmin.site.urls)),
