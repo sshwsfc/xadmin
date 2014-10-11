@@ -27,8 +27,8 @@
   {% view_block 'after_fieldsets' %}
 
   <div class="form-actions well well-sm clearfix">
-  <button type="submit" class="default btn btn-primary" name="_save" data-loading-text="{% trans "Saving.." %}"/><i class="fa fa-save"></i> {% trans 'Save' %}</button>
-  {% view_block 'submit_line' %}
+  <button type="submit" class="default btn btn-primary show-xs col-xs-12" name="_save" data-loading-text="{% trans "Saving.." %}"/><i class="fa fa-save"></i> {% trans 'Save' %}</button>
+  <button type="submit" class="default btn btn-primary hide-xs" name="_save" data-loading-text="{% trans "Saving.." %}"/><i class="fa fa-save"></i> {% trans 'Save' %}</button>
   </div>
 
 </form>
