@@ -557,6 +557,7 @@ class ModelAdminView(CommAdminView):
         """
         return self.ordering or ()  # otherwise we might try to *None, which is bad ;)
 
+    @filter_hook
     def queryset(self):
         """
         Returns a QuerySet of all model instances that can be edited by the
