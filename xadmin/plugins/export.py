@@ -215,7 +215,7 @@ class ExportPlugin(BaseAdminPlugin):
     def get_response(self, response, context, *args, **kwargs):
         file_type = self.request.GET.get('export_type', 'csv')
         response = HttpResponse(
-            mimetype="%s; charset=UTF-8" % self.export_mimes[file_type])
+            content_type="%s; charset=UTF-8" % self.export_mimes[file_type])
 
         file_name = self.opts.verbose_name.replace(' ', '_')
         response['Content-Disposition'] = ('attachment; filename=%s.%s' % (
