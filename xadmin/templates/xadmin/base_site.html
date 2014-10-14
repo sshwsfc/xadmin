@@ -7,6 +7,7 @@
 
 {% block body %}
   <!-- Header -->
+  {% block top-nav %}
   <div id="top-nav" class="navbar navbar-xs navbar-inverse navbar-fixed-top">
     <div class="navbar-header">
       <a class="navbar-brand" href="#">{% block branding %}{{ site_title }}{% endblock %}</a>
@@ -28,7 +29,7 @@
       {% view_block 'top_navbar' %}
     </div>
   </div>
-
+  {% endblock %}
   <div id="body-content" class="clearfix row">
     <div id="left-side" class="col-sm-1 col-md-2">
         {% block navbar %}
