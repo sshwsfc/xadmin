@@ -31,8 +31,9 @@ def _autoregister(admin, model, follow=None):
     if not admin.revision_manager.is_registered(model):
         follow = follow or []
         for parent_cls, field in model._meta.parents.items():
-            follow.append(field.name)
-            _autoregister(admin, parent_cls)
+            if field:
+                follow.append(field.name)
+                _autoregister(admin, parent_cls)
         admin.revision_manager.register(
             model, follow=follow, format=admin.reversion_format)
 
