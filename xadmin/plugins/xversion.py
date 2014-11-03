@@ -28,8 +28,6 @@ from functools import partial
 
 def _autoregister(admin, model, follow=None):
     """Registers a model with reversion, if required."""
-    if model._meta.proxy:
-        raise RegistrationError("Proxy models cannot be used with django-reversion, register the parent class instead")
     if not admin.revision_manager.is_registered(model):
         follow = follow or []
         for parent_cls, field in model._meta.parents.items():
