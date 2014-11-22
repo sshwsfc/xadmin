@@ -8,7 +8,7 @@ from django.utils import formats
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
-from django.utils.encoding import force_unicode, smart_unicode, smart_str
+from django.utils.encoding import force_text, smart_text, smart_str
 from django.utils.translation import ungettext
 from django.core.urlresolvers import reverse
 from django.conf import settings
@@ -42,7 +42,7 @@ except Exception:
 
 
 def xstatic(*tags):
-    from vendors import vendors
+    from xadmin.vendors import vendors
     node = vendors
 
     fs = []
@@ -52,7 +52,7 @@ def xstatic(*tags):
         try:
             for p in tag.split('.'):
                 node = node[p]
-        except Exception, e:
+        except Exception as e:
             if tag.startswith('xadmin'):
                 file_type = tag.split('.')[-1]
                 if file_type in ('css', 'js'):
@@ -62,7 +62,7 @@ def xstatic(*tags):
             else:
                 raise e
 
-        if type(node) in (str, unicode):
+        if type(node)==str:
             files = node
         else:
             mode = 'dev'
@@ -131,7 +131,7 @@ def quote(s):
     quoting is slightly different so that it doesn't get automatically
     unquoted by the Web browser.
     """
-    if not isinstance(s, basestring):
+    if not isinstance(s, str):
         return s
     res = list(s)
     for i in range(len(res)):
@@ -145,7 +145,7 @@ def unquote(s):
     """
     Undo the effects of quote(). Based heavily on urllib.unquote().
     """
-    if not isinstance(s, basestring):
+    if not isinstance(s, str):
         return s
     mychr = chr
     myatoi = int
@@ -239,7 +239,7 @@ class NestedObjects(Collector):
                 self.add_edge(None, obj)
         try:
             return super(NestedObjects, self).collect(objs, source_attr=source_attr, **kwargs)
-        except models.ProtectedError, e:
+        except models.ProtectedError as e:
             self.protected.update(e.protected_objects)
 
     def related_objects(self, related, objs):
@@ -288,8 +288,8 @@ def model_format_dict(obj):
     else:
         opts = obj
     return {
-        'verbose_name': force_unicode(opts.verbose_name),
-        'verbose_name_plural': force_unicode(opts.verbose_name_plural)
+        'verbose_name': force_text(opts.verbose_name),
+        'verbose_name_plural': force_text(opts.verbose_name_plural)
     }
 
 
@@ -367,7 +367,7 @@ def label_for_field(name, model, model_admin=None, return_attr=False):
             label = field.verbose_name
     except models.FieldDoesNotExist:
         if name == "__unicode__":
-            label = force_unicode(model._meta.verbose_name)
+            label = force_text(model._meta.verbose_name)
             attr = unicode
         elif name == "__str__":
             label = smart_str(model._meta.verbose_name)
@@ -423,7 +423,7 @@ def help_text_for_field(name, model):
         help_text = model._meta.get_field_by_name(name)[0].help_text
     except models.FieldDoesNotExist:
         help_text = ""
-    return smart_unicode(help_text)
+    return smart_text(help_text)
 
 
 def admin_urlname(value, arg):
@@ -455,9 +455,9 @@ def display_for_field(value, field):
     elif isinstance(field, models.FloatField):
         return formats.number_format(value)
     elif isinstance(field.rel, models.ManyToManyRel):
-        return ', '.join([smart_unicode(obj) for obj in value.all()])
+        return ', '.join([smart_text(obj) for obj in value.all()])
     else:
-        return smart_unicode(value)
+        return smart_text(value)
 
 
 def display_for_value(value, boolean=False):
@@ -474,7 +474,7 @@ def display_for_value(value, boolean=False):
     elif isinstance(value, (decimal.Decimal, float)):
         return formats.number_format(value)
     else:
-        return smart_unicode(value)
+        return smart_text(value)
 
 
 class NotRelationField(Exception):

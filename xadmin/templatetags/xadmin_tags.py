@@ -17,7 +17,7 @@ def view_block(context, block_name, *args, **kwargs):
         if hasattr(view, method_name) and callable(getattr(view, method_name)):
             block_func = getattr(view, method_name)
             result = block_func(context, nodes, *args, **kwargs)
-            if result and type(result) in (str, unicode):
+            if result and type(result)==str:
                 nodes.append(result)
     if nodes:
         return ''.join(nodes)

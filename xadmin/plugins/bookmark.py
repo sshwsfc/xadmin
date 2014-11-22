@@ -186,7 +186,7 @@ class BookmarkWidget(PartialBaseWidget):
         self.bookmark = bookmark
 
         if not self.title:
-            self.title = unicode(bookmark)
+            self.title = str(bookmark)
 
         req = self.make_get_request("", data.items())
         self.list_view = self.get_view_class(

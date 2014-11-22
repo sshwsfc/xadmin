@@ -73,7 +73,7 @@ class FilterPlugin(BaseAdminPlugin):
     def get_list_queryset(self, queryset):
         lookup_params = dict([(smart_str(k)[len(FILTER_PREFIX):], v) for k, v in self.admin_view.params.items()
                               if smart_str(k).startswith(FILTER_PREFIX) and v != ''])
-        for p_key, p_val in lookup_params.iteritems():
+        for p_key, p_val in iter(lookup_params.items()):
             if p_val == "False":
                 lookup_params[p_key] = False
         use_distinct = False
@@ -127,7 +127,7 @@ class FilterPlugin(BaseAdminPlugin):
                 if spec and spec.has_output():
                     try:
                         new_qs = spec.do_filte(queryset)
-                    except ValidationError, e:
+                    except ValidationError as e:
                         new_qs = None
                         self.admin_view.message_user(_("<b>Filtering error:</b> %s") % e.messages[0], 'error')
                     if new_qs is not None:
@@ -138,20 +138,20 @@ class FilterPlugin(BaseAdminPlugin):
         self.has_filters = bool(self.filter_specs)
         self.admin_view.filter_specs = self.filter_specs
         self.admin_view.used_filter_num = len(
-            filter(lambda f: f.is_used, self.filter_specs))
+            list(filter(lambda f: f.is_used, self.filter_specs)))
 
         try:
             for key, value in lookup_params.items():
                 use_distinct = (
                     use_distinct or lookup_needs_distinct(self.opts, key))
-        except FieldDoesNotExist, e:
+        except FieldDoesNotExist as e:
             raise IncorrectLookupParameters(e)
 
         try:
             queryset = queryset.filter(**lookup_params)
         except (SuspiciousOperation, ImproperlyConfigured):
             raise
-        except Exception, e:
+        except Exception as e:
             raise IncorrectLookupParameters(e)
 
         query = self.request.GET.get(SEARCH_VAR, '')
@@ -188,10 +188,10 @@ class FilterPlugin(BaseAdminPlugin):
 
     # Media
     def get_media(self, media):
-        if bool(filter(lambda s: isinstance(s, DateFieldListFilter), self.filter_specs)):
+        if bool(list(filter(lambda s: isinstance(s, DateFieldListFilter), self.filter_specs))):
             media = media + self.vendor('datepicker.css', 'datepicker.js',
                                         'xadmin.widget.datetime.js')
-        if bool(filter(lambda s: isinstance(s, RelatedFieldSearchFilter), self.filter_specs)):
+        if bool(list(filter(lambda s: isinstance(s, RelatedFieldSearchFilter), self.filter_specs))):
             media = media + self.vendor(
                 'select.js', 'select.css', 'xadmin.widget.select.js')
         return media + self.vendor('xadmin.plugin.filters.js')

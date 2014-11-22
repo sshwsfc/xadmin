@@ -113,7 +113,7 @@ def replace_field_to_value(layout, av):
         for i, lo in enumerate(layout.fields):
             if isinstance(lo, Field) or issubclass(lo.__class__, Field):
                 layout.fields[i] = ShowField(av, *lo.fields, **lo.attrs)
-            elif isinstance(lo, basestring):
+            elif isinstance(lo, str):
                 layout.fields[i] = ShowField(av, lo)
             elif hasattr(lo, 'get_field_names'):
                 replace_field_to_value(lo, av)
@@ -225,7 +225,7 @@ class InlineModelAdmin(ModelFormAdminView):
                         label = None
                         if readonly_field in inst._meta.get_all_field_names():
                             label = inst._meta.get_field_by_name(readonly_field)[0].verbose_name
-                            value = unicode(getattr(inst, readonly_field))
+                            value = str(getattr(inst, readonly_field))
                         elif inspect.ismethod(getattr(inst, readonly_field, None)):
                             value = getattr(inst, readonly_field)()
                             label = getattr(getattr(inst, readonly_field), 'short_description', readonly_field)
