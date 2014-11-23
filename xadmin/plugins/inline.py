@@ -432,7 +432,7 @@ class InlineFormsetPlugin(BaseAdminPlugin):
                 container = layout
 
             # fixed #176 bug, change dict to list
-            for key, value in fs:
+            for key, value in iter(fs.items()):
                 container.append(value)
 
         return layout
