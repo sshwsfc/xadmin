@@ -15,6 +15,7 @@ from xadmin.filters import manager as filter_manager, FILTER_PREFIX, SEARCH_VAR,
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
 
+from functools import reduce
 
 class IncorrectLookupParameters(Exception):
     pass
