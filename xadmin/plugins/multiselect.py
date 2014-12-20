@@ -7,16 +7,17 @@ from django.db.models import ManyToManyField
 from django.forms.util import flatatt
 from django.template import loader
 from django.utils.encoding import force_text
-from django.utils.html import escape, conditional_escape
+from django.utils.html import escape, conditional_escape, format_html
 from django.utils.safestring import mark_safe
 from xadmin.util import vendor
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView
 from django.test.client import RequestFactory
 from xadmin.views.list import ListAdminView
 from django.core.urlresolvers import reverse
-from django.utils.http import urlencode
 from django.template.context import RequestContext
-
+from django.utils.text import Truncator
+from django.utils.translation import gettext as _
+from xadmin.plugins.relfield import ForeignKeySearchWidget
 
 class SelectMultipleTransfer(forms.SelectMultiple):
 
@@ -90,6 +91,48 @@ class SelectMultipleDropdown(forms.SelectMultiple):
             attrs = {}
         attrs['class'] = 'selectmultiple selectdropdown'
         return super(SelectMultipleDropdown, self).render(name, value, attrs, choices)
+    
+    
+class SelectMultipleModelListSearchWidget(ForeignKeySearchWidget):
+    """ Requires the ajax plugin and relfield plugin (based on select2.js) """
+    def __init__(self, m2m_field, admin_view,list_display=None, attrs=None, using=None):
+        self.field = m2m_field
+        self.list_display = list_display
+        self.model = m2m_field.related.model
+        self.admin_view = admin_view
+        self.db = using
+        forms.TextInput.__init__(self,attrs)
+    
+    def render(self, name, value, attrs=None):
+        to_opts = self.model._meta
+        if attrs is None:
+            attrs = {}
+        if "class" not in attrs:
+            attrs['class'] = 'multiselect-list-search form-control'
+        else:
+            attrs['class'] = attrs['class'] + ' multiselect-list-search'
+        
+        if self.list_display is None:
+            self.list_display = self.admin_view.get_list_display()
+        
+        attrs['data-input-name'] = self.field.name
+        attrs['data-list-fields'] = ",".join(self.list_display)
+        attrs['data-search-url'] = self.admin_view.get_admin_url('%s_%s_changelist' % (to_opts.app_label, to_opts.model_name))
+        attrs['data-placeholder'] = _('Search %s') % to_opts.verbose_name
+        attrs['data-choices'] = '?'
+        
+        if hasattr(self.field,'limit_choices_to') and self.field.limit_choices_to:
+            for i in list(self.field.limit_choices_to):
+                attrs['data-choices'] += "&_p_%s=%s" % (i, self.field.limit_choices_to[i])
+            
+            attrs['data-choices'] = format_html(attrs['data-choices'])
+        #if value:
+        #    attrs['data-label'] = self.label_for_value(value)
+        return forms.TextInput.render(self,name, value, attrs)
+    
+    @property
+    def media(self):
+        return super(SelectMultipleModelListSearchWidget, self).media()+vendor('xadmin.widget.select-list.js')
 
 
 class SelectMultipleModelList(forms.SelectMultiple):
@@ -98,17 +141,18 @@ class SelectMultipleModelList(forms.SelectMultiple):
     model = None
     model_name = None
     model_perm = 'view'
-    widget_icon = 'fa fa-align-justify'
+    model_icon = ''
     list_params = {}
     list_count = 10
         
-    def __init__(self,plugin,model,attrs=None,choices=()):
+    def __init__(self,plugin,m2m_field,attrs=None,choices=()):
         super(SelectMultipleModelList, self).__init__(attrs,choices)
         
         self.admin_site = plugin.admin_site
         self.request = plugin.request
         self.user = plugin.request.user
-        self.model = model
+        self.field = m2m_field
+        self.model = m2m_field.related.model
         self.model_name = self.model._meta.model_name
         self.app_label = self.model._meta.app_label
         req = self.make_get_request("", self.get_list_params())
@@ -119,11 +163,10 @@ class SelectMultipleModelList(forms.SelectMultiple):
         
         if not self.title:
             self.title = self.model._meta.verbose_name_plural
+            
+        if not self.model_icon:
+            self.model_icon = self.admin_view.get_model_icon(self.model)
     
-    def get_list_params(self):
-        if self.list_params:
-            return self.list_params
-        return {'_p_id__in':self.choices}
         
     def has_perm(self):
         return self.admin_view.has_model_perm(self.model, self.model_perm)
@@ -154,32 +197,57 @@ class SelectMultipleModelList(forms.SelectMultiple):
     def make_post_request(self, path, data={}, **extra):
         req = self.get_request_factory().post(path, data, **extra)
         return self.setup_request(req)
-
-    #@property
-    #def media(self):
-    #    return vendor('xadmin.widget.select-transfer.js', 'xadmin.widget.select-transfer.css')
     
+    def get_list_params(self):
+        if self.list_params:
+            return self.list_params
+        return {'_p_id__in':self.choices}
     
-    def render(self, name, value, attrs=None, choices=()):
-        list_view = self.admin_view
-        list_view.make_result_list()
-
-        base_fields = list_view.base_list_display
+    def get_list_display(self):
+        base_fields = ['action_checkbox'] + list(self.admin_view.base_list_display)
         if len(base_fields) > 5:
             base_fields = base_fields[0:5]
-            
-        context = {'widget_id': '', 'widget_title': self.title, 'widget_icon': self.widget_icon,
-            'widget_type': 'list', 'form': [self], 'widget': [self]}
+        return base_fields
 
+    def render(self, name, value, attrs={}, choices=()):
+        if value is None:
+            value = []
+        selected_choices = set(force_text(v) for v in value)
+        
+        list_view = self.admin_view
+        list_view.make_result_list()
+        
+        base_fields = self.get_list_display()
+        
+
+        def select_checkbox(obj):
+            checkbox = forms.CheckboxInput({'class': 'action-select'}, lambda value: value in selected_choices)
+            return checkbox.render(name, force_text(obj.pk))
+        select_checkbox.short_description = mark_safe('<input type="checkbox" class="action-select-all" />')
+        select_checkbox.allow_tags = True
+        select_checkbox.allow_export = False
+        select_checkbox.is_column = False
+            
+        list_view.action_checkbox = select_checkbox
+            
+        context = {'title': self.title, 'model_icon': self.model_icon,'form': [self], 'widget': [self]}
+        
+        context['search_widget'] = SelectMultipleModelListSearchWidget(m2m_field=self.field,admin_view=list_view,list_display=base_fields).render(name="search_%s"%name, value='')
+        context['search_result_list_id'] = 'search_result_%s'%name
         context['result_headers'] = [c for c in list_view.result_headers().cells 
                                             if c.field_name in base_fields]
+        
         context['results'] = [[o for i, o in enumerate(filter(lambda c:c.field_name in base_fields, r.cells))]
                                         for r in list_view.results()]
         context['result_count'] = list_view.result_count
-        #context['page_url'] = self.model_admin_url('detail') + "?" + urlencode(self.list_params)
-        self.request.context = context
-        return loader.render_to_string(self.template, context, context_instance=RequestContext(self.request))
         
+        self.request.context = context
+        
+        return loader.render_to_string(self.template, context, context_instance=RequestContext(self.request))
+    
+    @property
+    def media(self):
+        return vendor('xadmin.widget.select-list.js')
 
 class M2MSelectPlugin(BaseAdminPlugin):
 
@@ -197,7 +265,7 @@ class M2MSelectPlugin(BaseAdminPlugin):
         if style == 'm2m_dropdown' and isinstance(db_field, ManyToManyField):
             return {'widget': SelectMultipleDropdown, 'help_text': ''}
         if style == 'm2m_list' and isinstance(db_field, ManyToManyField):
-            return {'widget': SelectMultipleModelList(plugin=self,model=db_field.related.model), 'help_text': ''}
+            return {'widget': SelectMultipleModelList(plugin=self,m2m_field=db_field), 'help_text': ''}
         return attrs
 
 

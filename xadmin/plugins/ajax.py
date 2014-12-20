@@ -4,6 +4,7 @@ from django.utils.html import escape
 from django.utils.encoding import force_text
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView, ModelFormAdminView, DetailAdminView
+from collections import OrderedDict
 
 
 NON_FIELD_ERRORS = '__all__'
@@ -27,10 +28,12 @@ class AjaxListPlugin(BaseAjaxPlugin):
     def get_result_list(self, response):
         av = self.admin_view
         base_fields = self.get_list_display(av.base_list_display)
-        headers = dict([(c.field_name, force_text(c.text)) for c in av.result_headers(
+        headers = OrderedDict([(c.field_name, force_text(c.text)) for c in av.result_headers(
         ).cells if c.field_name in base_fields])
-
-        objects = [dict([(o.field_name, escape(str(o.value))) for i, o in
+        
+        no_escape = self.request.GET.get('_no_escape')
+        
+        objects = [OrderedDict([(o.field_name, (lambda v:no_escape and v or escape(v))(str(o.value))) for i, o in
                          enumerate(filter(lambda c:c.field_name in base_fields, r.cells))])
                    for r in av.results()]
 
