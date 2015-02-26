@@ -1,5 +1,6 @@
 import StringIO
 import datetime
+import re
 import sys
 
 from django.http import HttpResponse
@@ -54,6 +55,8 @@ class ExportPlugin(BaseAdminPlugin):
                     'xls': 'application/vnd.ms-excel', 'csv': 'text/csv',
                     'xml': 'application/xhtml+xml', 'json': 'application/json'}
 
+    pattern = re.compile(r'<a.*?>(.+)</a>', re.IGNORECASE)
+
     def init_request(self, *args, **kwargs):
         return self.request.GET.get('_do_') == 'export'
 
@@ -63,6 +66,8 @@ class ExportPlugin(BaseAdminPlugin):
                 value = o.value
         elif str(o.text).startswith("<span class='text-muted'>"):
             value = escape(str(o.text)[25:-7])
+        elif re.match(self.pattern, str(o.text)):
+            value = re.match(self.pattern, str(o.text)).group(1)
         else:
             value = escape(str(o.text))
         return value
