@@ -322,7 +322,9 @@ class CommAdminView(BaseAdminView):
         for model, model_admin in self.admin_site._registry.items():
             if getattr(model_admin, 'hidden_menu', False):
                 continue
-            app_label = model._meta.app_label
+            app_label = model._meta.app_verbose_label \
+                        if hasattr(model._meta, 'app_verbose_label') \
+                        else model._meta.app_label
             app_icon = None
             model_dict = {
                 'title': unicode(capfirst(model._meta.verbose_name_plural)),
