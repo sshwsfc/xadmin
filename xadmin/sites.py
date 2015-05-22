@@ -3,10 +3,15 @@ from functools import update_wrapper
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.base import ModelBase
+from django.utils import six
 from django.views.decorators.cache import never_cache
 
-reload(sys)
-sys.setdefaultencoding("utf-8")
+if sys.version_info[0] == 2:
+    reload(sys)
+    sys.setdefaultencoding("utf-8")
+else:
+    from imp import reload
+    reload(sys)
 
 
 class AlreadyRegistered(Exception):
@@ -305,7 +310,7 @@ class AdminSite(object):
                                 )
 
         # Add in each model's views.
-        for model, admin_class in self._registry.iteritems():
+        for model, admin_class in six.iteritems(self._registry):
             view_urls = [url(
                 path, wrap(
                     self.create_model_admin_view(clz, model, admin_class)),

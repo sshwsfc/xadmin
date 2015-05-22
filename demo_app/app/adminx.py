@@ -1,6 +1,6 @@
 import xadmin
 from xadmin import views
-from models import IDC, Host, MaintainLog, HostGroup, AccessRecord
+from .models import IDC, Host, MaintainLog, HostGroup, AccessRecord
 from xadmin.layout import Main, TabHolder, Tab, Fieldset, Row, Col, AppendedText, Side
 from xadmin.plugins.inline import Inline
 from xadmin.plugins.batch import BatchChangeAction

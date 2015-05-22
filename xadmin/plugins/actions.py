@@ -5,10 +5,11 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.template.response import TemplateResponse
 from django.utils.datastructures import SortedDict
-from django.utils.encoding import force_unicode
+from xadmin.compatibility import force_unicode
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _, ungettext
 from django.utils.text import capfirst
+from django.utils import six
 from xadmin.sites import site
 from xadmin.util import model_format_dict, get_deleted_objects, model_ngettext
 from xadmin.views import BaseAdminPlugin, ListAdminView
@@ -237,7 +238,7 @@ class ActionPlugin(BaseAdminPlugin):
         tuple (name, description).
         """
         choices = []
-        for ac, name, description, icon in self.actions.itervalues():
+        for ac, name, description, icon in six.itervalues(self.actions):
             choice = (name, description % model_format_dict(self.opts), icon)
             choices.append(choice)
         return choices
