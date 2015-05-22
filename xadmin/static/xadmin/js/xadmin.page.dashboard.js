@@ -11,8 +11,8 @@ jQuery(function() {
     if(!btn.data('form-modal')){
       var modal = $('<div class="modal hide fade quick-form" role="dialog"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h3>'+ 
         btn.attr('title') +'</h3></div><div class="modal-body"></div>'+
-        '<div class="modal-footer"><button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>'+
-        '<a class="btn btn-primary btn-submit">Save changes</a></div></div>');
+        '<div class="modal-footer"><button class="btn btn-default" data-dismiss="modal" aria-hidden="true">'+gettext('Close')+'</button>'+
+        '<a class="btn btn-primary btn-submit">'+gettext('Save changes')+'</a></div></div>');
       $('body').append(modal);
       btn.data('form-modal', modal);
       modal.find('.modal-body').load(form_url, function(form_html, status, xhr){

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xadmin-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-22 15:35+0800\n"
+"POT-Creation-Date: 2015-05-22 15:54+0800\n"
 "PO-Revision-Date: 2013-11-20 10:21+0000\n"
 "Last-Translator: sshwsfc <sshwsfc@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/projects/p/xadmin/language/zh_CN/)\n"
@@ -215,7 +215,6 @@ msgstr "可查看%s"
 
 #: plugins/auth.py:24
 #, python-format
-#| msgid "Can delete %s"
 msgid "Can delete %s"
 msgstr "可以删除%s"
 
