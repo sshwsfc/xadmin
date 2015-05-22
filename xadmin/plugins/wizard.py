@@ -1,4 +1,4 @@
-import re
+import re, sys
 from django import forms
 from django.db import models
 from django.template import loader
@@ -13,6 +13,8 @@ from formtools.wizard.views import StepsHelper
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView
 
+if sys.version_info[0] == 3:
+    unicode = str
 
 def normalize_name(name):
     new = re.sub('(((?<=[a-z])[A-Z])|([A-Z](?![A-Z]|$)))', '_\\1', name)
@@ -34,14 +36,13 @@ class WizardFormPlugin(BaseAdminPlugin):
     def _get_form_prefix(self, step=None):
         if step is None:
             step = self.steps.current
-        return 'step_%d' % self.get_form_list().keys().index(step)
+        return 'step_%d' % list(self.get_form_list().keys()).index(step)
 
     def get_form_list(self):
         if not hasattr(self, '_form_list'):
             init_form_list = SortedDict()
 
-            assert len(
-                self.wizard_form_list) > 0, 'at least one form is needed'
+            assert len(self.wizard_form_list) > 0, 'at least one form is needed'
 
             for i, form in enumerate(self.wizard_form_list):
                 init_form_list[unicode(form[0])] = form[1]
@@ -76,16 +77,15 @@ class WizardFormPlugin(BaseAdminPlugin):
             # contains a valid step name. If one was found, render the requested
             # form. (This makes stepping back a lot easier).
             wizard_goto_step = self.request.POST.get('wizard_goto_step', None)
-            if wizard_goto_step and int(wizard_goto_step) < len(self.get_form_list()):
-                self.storage.current_step = self.get_form_list(
-                ).keys()[int(wizard_goto_step)]
+            formList = self.get_form_list()
+            if wizard_goto_step and int(wizard_goto_step) < len(formList):
+                self.storage.current_step = list(formList.keys())[int(wizard_goto_step)]
                 self.admin_view.model_form = self.get_step_form()
                 self.wizard_goto_step = True
                 return
 
             # Check if form was refreshed
-            management_form = ManagementForm(
-                self.request.POST, prefix=self.prefix)
+            management_form = ManagementForm(self.request.POST, prefix=self.prefix)
             if not management_form.is_valid():
                 raise ValidationError(
                     'ManagementForm data is missing or has been tampered.')

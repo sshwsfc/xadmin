@@ -9,7 +9,7 @@ from django.template import loader
 from django.http import Http404
 from django.template.context import RequestContext
 from django.test.client import RequestFactory
-from django.utils.encoding import force_str, smart_unicode
+from xadmin.compatibility import force_str, smart_unicode
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
@@ -79,8 +79,8 @@ class UserWidgetAdmin(object):
 
     wizard_form_list = (
         (_(u"Widget Type"), ('page_id', 'widget_type')),
-        (_(u"Widget Params"), {'callback':
-                               "get_widget_params_form", 'convert': "convert_widget_params"})
+        (_(u"Widget Params"), {'callback': "get_widget_params_form", \
+                               'convert': "convert_widget_params"})
     )
 
     def formfield_for_dbfield(self, db_field, **kwargs):
@@ -245,12 +245,9 @@ class BaseWidget(forms.Form):
 class HtmlWidget(BaseWidget):
     widget_type = 'html'
     widget_icon = 'fa fa-file-o'
-    description = _(
-        u'Html Content Widget, can write any html content in widget.')
+    description = _(u'Html Content Widget, can write any html content in widget.')
 
-    content = forms.CharField(label=_(
-        'Html Content'), widget=exwidgets.AdminTextareaWidget, required=False)
-
+    content = forms.CharField(label=_('Html Content'), widget=exwidgets.AdminTextareaWidget, required=False)
     def has_perm(self):
         return True
 
@@ -554,7 +551,9 @@ class Dashboard(CommAdminView):
                                 widget = user_widgets.get(int(wid))
                                 if widget:
                                     ws.append(self.get_widget(widget))
-                            except Exception, e:
+                            except Exception:
+                                import sys
+                                e = sys.exc_info()[1]
                                 import logging
                                 logging.error(e, exc_info=True)
                         widgets.append(ws)

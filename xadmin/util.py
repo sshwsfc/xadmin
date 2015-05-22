@@ -47,17 +47,15 @@ except Exception:
 
 
 def xstatic(*tags):
-    from vendors import vendors
-    node = vendors
-
     fs = []
     lang = get_language()
-
+    node = vendors
     for tag in tags:
         try:
             for p in tag.split('.'):
                 node = node[p]
-        except Exception, e:
+        except Exception:
+            e = sys.exc_info()[1]
             if tag.startswith('xadmin'):
                 file_type = tag.split('.')[-1]
                 if file_type in ('css', 'js'):

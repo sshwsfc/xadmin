@@ -9,7 +9,7 @@ from django.utils.safestring import mark_safe
 from django.utils.html import conditional_escape
 from django.utils.translation import ugettext as _
 
-from util import vendor
+from .util import vendor
 
 
 class AdminDateWidget(forms.DateInput):
