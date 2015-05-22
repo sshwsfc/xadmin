@@ -199,27 +199,22 @@ msgid "Count"
 msgstr "总数"
 
 #: plugins/auth.py:21
-#, fuzzy, python-format
 msgid "Can add %s"
 msgstr "可查看%s"
 
 #: plugins/auth.py:22
-#, fuzzy, python-format
 msgid "Can change %s"
-msgstr "修改 %s"
+msgstr "修改%s"
 
 #: plugins/auth.py:23
-#, fuzzy, python-format
 msgid "Can edit %s"
 msgstr "可查看%s"
 
 #: plugins/auth.py:24
-#, fuzzy, python-format
 msgid "Can delete %s"
-msgstr "无法删除 %(name)s"
+msgstr "无法删除%(name)s"
 
 #: plugins/auth.py:25
-#, python-format
 msgid "Can view %s"
 msgstr "可查看%s"
 
@@ -240,7 +235,6 @@ msgid "Status"
 msgstr "状态"
 
 #: plugins/auth.py:111
-#, fuzzy
 msgid "Permission Name"
 msgstr "权限"
 
@@ -322,13 +316,11 @@ msgid "Approve selected comments"
 msgstr ""
 
 #: plugins/comments.py:72
-#, fuzzy
 msgid "removed"
 msgid_plural "removed"
 msgstr[0] "删除"
 
 #: plugins/comments.py:73
-#, fuzzy
 msgid "Remove selected comments"
 msgstr "恢复删除的%(name)s"
 
@@ -1062,9 +1054,8 @@ msgid "Add %(name)s"
 msgstr "增加 %(name)s"
 
 #: templates/xadmin/views/model_list.html:39
-#, fuzzy
 msgid "Columns"
-msgstr "列"
+msgstr "显示列"
 
 #: templates/xadmin/views/model_list.html:42
 msgid "Restore Selected"
@@ -1235,7 +1226,6 @@ msgid "The %(name)s \"%(obj)s\" was changed successfully."
 msgstr "%(name)s \"%(obj)s\" 修改成功。"
 
 #: views/form.py:164
-#, fuzzy, python-format
 msgid "The %s was changed successfully."
 msgstr "%(name)s \"%(obj)s\" 修改成功。"
 
