@@ -54,7 +54,7 @@ class AdminSelectWidget(forms.Select):
     @property
     def media(self):
         return vendor('select.js', 'select.css', 'xadmin.widget.select.js') + \
-            Media(js=[static('xadmin/vendor/select2/select2_locale_%s.js' % get_language())])
+            Media(js=[static('xadmin/vendor/select2/select2_locale_%s.js' % get_language().replace('_','-'))])
 
 
 class AdminSplitDateTime(forms.SplitDateTimeWidget):
