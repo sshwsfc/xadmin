@@ -23,6 +23,7 @@
   <script type="text/javascript">
     window.__admin_media_prefix__ = "{% filter escapejs %}{% static "xadmin/" %}{% endfilter %}";
     window.__admin_path_prefix__ = "{% filter escapejs %}{{ indexurl }}{% endfilter %}";
+    window.__admin_language_code__ = "{{LANGUAGE_CODE}}";
   </script>
   <script type="text/javascript" src="{% url 'xadmin:jsi18n' %}"></script>
   {% block extrahead %}{% endblock %}
