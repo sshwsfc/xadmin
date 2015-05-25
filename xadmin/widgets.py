@@ -8,9 +8,8 @@ from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
 from django.utils.html import conditional_escape
 from django.utils.translation import ugettext as _
-from django.forms import Media
 
-from util import vendor, static, get_language
+from util import vendor
 
 
 class AdminDateWidget(forms.DateInput):
@@ -53,8 +52,7 @@ class AdminSelectWidget(forms.Select):
 
     @property
     def media(self):
-        return vendor('select.js', 'select.css', 'xadmin.widget.select.js') + \
-            Media(js=[static('xadmin/vendor/select2/select2_locale_%s.js' % get_language().replace('_','-'))])
+        return vendor('select.js', 'select.css', 'xadmin.widget.select.js')
 
 
 class AdminSplitDateTime(forms.SplitDateTimeWidget):
