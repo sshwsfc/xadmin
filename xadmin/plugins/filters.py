@@ -5,7 +5,7 @@ from xadmin.util import get_fields_from_path, lookup_needs_distinct
 from django.core.exceptions import SuspiciousOperation, ImproperlyConfigured, ValidationError
 from django.db import models
 from django.db.models.fields import FieldDoesNotExist
-from django.db.models.related import RelatedObject
+from django.db.models.fields.related import ForeignObjectRel
 from django.db.models.sql.query import LOOKUP_SEP, QUERY_TERMS
 from django.template import loader
 from django.utils.encoding import smart_str
@@ -49,15 +49,15 @@ class FilterPlugin(BaseAdminPlugin):
         rel_name = None
         for part in parts[:-1]:
             try:
-                field, _, _, _ = model._meta.get_field_by_name(part)
+                field = model._meta.get_field(part)
             except FieldDoesNotExist:
                 # Lookups on non-existants fields are ok, since they're ignored
                 # later.
                 return True
-            if hasattr(field, 'rel'):
-                model = field.rel.to
+            if field.is_relation:
+                model = field.related_model
                 rel_name = field.rel.get_related_field().name
-            elif isinstance(field, RelatedObject):
+            elif isinstance(field, ForeignObjectRel):
                 model = field.model
                 rel_name = model._meta.pk.name
             else:

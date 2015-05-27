@@ -15,7 +15,7 @@ from django.utils.translation import ugettext_lazy as _, ugettext
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
 from xadmin.views.dashboard import ModelBaseWidget, widget_manager
-from xadmin.util import lookup_field, label_for_field, force_unicode, json
+from xadmin.util import lookup_field, label_for_field, force_str, json
 
 
 @widget_manager.register
@@ -122,7 +122,7 @@ class ChartsView(ListAdminView):
         self.y_fields = (
             y_fields,) if type(y_fields) not in (list, tuple) else y_fields
 
-        datas = [{"data":[], "label": force_unicode(label_for_field(
+        datas = [{"data":[], "label": force_str(label_for_field(
             i, self.model, model_admin=self))} for i in self.y_fields]
 
         self.make_result_list()

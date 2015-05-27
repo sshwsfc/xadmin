@@ -7,7 +7,7 @@ from functools import update_wrapper
 from inspect import getargspec
 
 from django import forms
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_str
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_permission_codename
@@ -485,7 +485,7 @@ class ModelAdminView(CommAdminView):
             "opts": self.opts,
             "app_label": self.app_label,
             "model_name": self.model_name,
-            "verbose_name": force_unicode(self.opts.verbose_name),
+            "verbose_name": force_str(self.opts.verbose_name),
             'model_icon': self.get_model_icon(self.model),
         }
         context = super(ModelAdminView, self).get_context()

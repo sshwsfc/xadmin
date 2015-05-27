@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.fields.related import ForeignObjectRel, ManyToManyField
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.encoding import smart_unicode
 from django.utils.translation import ugettext_lazy as _
@@ -310,7 +311,7 @@ class RelatedFieldSearchFilter(FieldFilter):
 
     @classmethod
     def test(cls, field, request, params, model, admin_view, field_path):
-        if not (hasattr(field, 'rel') and bool(field.rel) or isinstance(field, models.related.RelatedObject)):
+        if not (hasattr(field, 'rel') and bool(field.rel) or isinstance(field, ForeignObjectRel)):
             return False
         related_modeladmin = admin_view.admin_site._registry.get(
             get_model_from_relation(field))
@@ -361,7 +362,7 @@ class RelatedFieldListFilter(ListFieldFilter):
 
     @classmethod
     def test(cls, field, request, params, model, admin_view, field_path):
-        return (hasattr(field, 'rel') and bool(field.rel) or isinstance(field, models.related.RelatedObject))
+        return (hasattr(field, 'rel') and bool(field.rel) or isinstance(field, ForeignObjectRel))
 
     def __init__(self, field, request, params, model, model_admin, field_path):
         other_model = get_model_from_relation(field)
@@ -383,7 +384,7 @@ class RelatedFieldListFilter(ListFieldFilter):
         self.title = self.lookup_title
 
     def has_output(self):
-        if (isinstance(self.field, models.related.RelatedObject)
+        if (isinstance(self.field, ForeignObjectRel)
                 and self.field.field.null or hasattr(self.field, 'rel')
                 and self.field.null):
             extra = 1
@@ -409,7 +410,7 @@ class RelatedFieldListFilter(ListFieldFilter):
                 }, [self.lookup_isnull_name]),
                 'display': val,
             }
-        if (isinstance(self.field, models.related.RelatedObject)
+        if (isinstance(self.field, ForeignObjectRel)
                 and self.field.field.null or hasattr(self.field, 'rel')
                 and self.field.null):
             yield {

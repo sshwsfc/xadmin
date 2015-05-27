@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.template.response import TemplateResponse
 from django.utils.datastructures import SortedDict
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_str
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _, ungettext
 from django.utils.text import capfirst
@@ -20,7 +20,7 @@ checkbox = forms.CheckboxInput({'class': 'action-select'}, lambda value: False)
 
 
 def action_checkbox(obj):
-    return checkbox.render(ACTION_CHECKBOX_NAME, force_unicode(obj.pk))
+    return checkbox.render(ACTION_CHECKBOX_NAME, force_str(obj.pk))
 action_checkbox.short_description = mark_safe(
     '<input type="checkbox" id="action-toggle" />')
 action_checkbox.allow_tags = True
@@ -84,7 +84,7 @@ class DeleteSelectedAction(BaseActionView):
 
         # Populate deletable_objects, a data structure of all related objects that
         # will also be deleted.
-        deletable_objects, perms_needed, protected = get_deleted_objects(
+        deletable_objects, model_count, perms_needed, protected = get_deleted_objects(
             queryset, self.opts, self.user, self.admin_site, using)
 
         # The user has already confirmed the deletion.
@@ -97,9 +97,9 @@ class DeleteSelectedAction(BaseActionView):
             return None
 
         if len(queryset) == 1:
-            objects_name = force_unicode(self.opts.verbose_name)
+            objects_name = force_str(self.opts.verbose_name)
         else:
-            objects_name = force_unicode(self.opts.verbose_name_plural)
+            objects_name = force_str(self.opts.verbose_name_plural)
 
         if perms_needed or protected:
             title = _("Cannot delete %(name)s") % {"name": objects_name}
@@ -111,6 +111,7 @@ class DeleteSelectedAction(BaseActionView):
             "title": title,
             "objects_name": objects_name,
             "deletable_objects": [deletable_objects],
+            "model_count": dict(model_count).items(),
             'queryset': queryset,
             "perms_lacking": perms_needed,
             "protected": protected,
