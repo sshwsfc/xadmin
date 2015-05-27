@@ -8,14 +8,20 @@ from django.utils import formats
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
-from django.utils.encoding import force_unicode, smart_unicode, smart_str
+from xadmin.compatibility import force_unicode, smart_unicode, smart_str
 from django.utils.translation import ungettext
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.forms import Media
 from django.utils.translation import get_language
+from xadmin.vendors import vendors
 import datetime
 import decimal
+import sys
+
+if sys.version_info[0] == 3:
+    unicode = str
+    basestring = str
 
 if 'django.contrib.staticfiles' in settings.INSTALLED_APPS:
     from django.contrib.staticfiles.templatetags.staticfiles import static
@@ -42,17 +48,15 @@ except Exception:
 
 
 def xstatic(*tags):
-    from vendors import vendors
-    node = vendors
-
     fs = []
     lang = get_language()
-
+    node = vendors
     for tag in tags:
         try:
             for p in tag.split('.'):
                 node = node[p]
-        except Exception, e:
+        except Exception:
+            e = sys.exc_info()[1]
             if tag.startswith('xadmin'):
                 file_type = tag.split('.')[-1]
                 if file_type in ('css', 'js'):
@@ -239,7 +243,9 @@ class NestedObjects(Collector):
                 self.add_edge(None, obj)
         try:
             return super(NestedObjects, self).collect(objs, source_attr=source_attr, **kwargs)
-        except models.ProtectedError, e:
+        except models.ProtectedError:
+            # @see http://stackoverflow.com/questions/10568653/python-compatibility-catching-exceptions
+            e = sys.exc_info()[1]
             self.protected.update(e.protected_objects)
 
     def related_objects(self, related, objs):

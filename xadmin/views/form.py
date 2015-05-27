@@ -1,22 +1,12 @@
 import copy
 
 from django import forms
-from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import PermissionDenied
-from django.db import models, transaction
-from django.forms.models import modelform_factory
-from django.http import Http404, HttpResponseRedirect
+from django.db import transaction
+from django.http import HttpResponseRedirect
 from django.template.response import TemplateResponse
-from django.utils.encoding import force_unicode
-from django.utils.html import escape
-from django.template import loader
 from django.utils.translation import ugettext as _
-from xadmin import widgets
 from xadmin.layout import FormHelper, Layout, Fieldset, TabHolder, Container, Column, Col, Field
-from xadmin.util import unquote
-from xadmin.views.detail import DetailAdminUtil
-
-from base import CommAdminView, filter_hook, csrf_protect_m
+from xadmin.views.base import CommAdminView, filter_hook, csrf_protect_m
 
 class FormAdminView(CommAdminView):
     form = forms.ModelForm

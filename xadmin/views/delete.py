@@ -2,7 +2,8 @@ from django.core.exceptions import PermissionDenied
 from django.db import transaction, router
 from django.http import Http404, HttpResponseRedirect
 from django.template.response import TemplateResponse
-from django.utils.encoding import force_unicode
+from django.utils import six
+from xadmin.compatibility import  force_unicode
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from xadmin.util import unquote, get_deleted_objects
@@ -50,7 +51,7 @@ class DeleteAdminView(ModelAdminView):
         self.delete_model()
 
         response = self.post_response()
-        if isinstance(response, basestring):
+        if isinstance(response, six.string_types):
             return HttpResponseRedirect(response)
         else:
             return response

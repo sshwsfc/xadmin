@@ -1,5 +1,5 @@
 import xadmin
-from models import UserSettings
+from xadmin.models import UserSettings
 from xadmin.layout import *
 
 
