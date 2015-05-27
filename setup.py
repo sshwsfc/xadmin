@@ -18,7 +18,6 @@ setup(
     packages=['xadmin', 'xadmin.plugins', 'xadmin.templatetags', 'xadmin.views'],
     include_package_data=True,
     install_requires=[
-        'setuptools',
         'django==1.7.8',
         'django-crispy-forms>=1.4.0',
     ],
