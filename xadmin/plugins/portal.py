@@ -23,7 +23,7 @@ def get_layout_objects(layout, clz, objects):
 class ModelFormPlugin(BasePortalPlugin):
 
     def _portal_key(self):
-        return '%s_%s_editform_portal' % (self.opts.app_label, self.opts.module_name)
+        return '%s_%s_editform_portal' % (self.opts.app_label, self.opts.model_name)
 
     def get_form_helper(self, helper):
         cs = []
@@ -64,7 +64,7 @@ class ModelFormPlugin(BasePortalPlugin):
 class ModelDetailPlugin(ModelFormPlugin):
 
     def _portal_key(self):
-        return '%s_%s_detail_portal' % (self.opts.app_label, self.opts.module_name)
+        return '%s_%s_detail_portal' % (self.opts.app_label, self.opts.model_name)
 
     def block_after_fieldsets(self, context, node):
         # put portal key and submit url to page

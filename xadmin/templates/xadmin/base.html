@@ -23,13 +23,18 @@
   <script type="text/javascript">
     window.__admin_media_prefix__ = "{% filter escapejs %}{% static "xadmin/" %}{% endfilter %}";
     window.__admin_path_prefix__ = "{% filter escapejs %}{{ indexurl }}{% endfilter %}";
+    window.__admin_language_code__ = "{{LANGUAGE_CODE}}";
   </script>
   <script type="text/javascript" src="{% url 'xadmin:jsi18n' %}"></script>
   {% block extrahead %}{% endblock %}
   {% view_block 'extrahead' %}
 </head>
 <body class="{% block bodyclass %}{% endblock %}">
-  {% block body %}{% endblock body %}
+  {% block body %}
+    <div id="content-block" class="col-sm-12">
+    {% block content %}{% endblock content %}
+    </div>
+  {% endblock body %}
   {% vendor 'jquery-ui-sortable.js' 'bootstrap.js' 'xadmin.main.js' 'xadmin.responsive.js' %}
   {{ media.js }}
   {% block extrabody %}{% endblock %}

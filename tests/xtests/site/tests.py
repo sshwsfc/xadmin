@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 
-from xtests.base import BaseTest
+from base import BaseTest
 from xadmin.sites import AdminSite
 from xadmin.views import BaseAdminView, BaseAdminPlugin, ModelAdminView, filter_hook
 

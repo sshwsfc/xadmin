@@ -137,7 +137,7 @@ INSTALLED_APPS = (
 
     'xadmin',
     'crispy_forms',
-    #'reversion',
+    'reversion',
 
     'app',
 )
@@ -145,6 +145,8 @@ INSTALLED_APPS = (
 DATE_FORMAT = 'Y-m-d'
 DATETIME_FORMAT = 'Y-m-d H:i'
 TIME_FORMAT = 'H:i'
+
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

@@ -25,7 +25,7 @@ class ForeignKeySearchWidget(forms.TextInput):
         else:
             attrs['class'] = attrs['class'] + ' select-search'
         attrs['data-search-url'] = self.admin_view.get_admin_url(
-            '%s_%s_changelist' % (to_opts.app_label, to_opts.module_name))
+            '%s_%s_changelist' % (to_opts.app_label, to_opts.model_name))
         attrs['data-placeholder'] = _('Search %s') % to_opts.verbose_name
         attrs['data-choices'] = '?'
         if self.rel.limit_choices_to:

@@ -333,7 +333,7 @@ class RelatedFieldSearchFilter(FieldFilter):
             self.lookup_title = other_model._meta.verbose_name
         self.title = self.lookup_title
         self.search_url = model_admin.get_admin_url('%s_%s_changelist' % (
-            other_model._meta.app_label, other_model._meta.module_name))
+            other_model._meta.app_label, other_model._meta.model_name))
         self.label = self.label_for_value(other_model, rel_name, self.lookup_exact_val) if self.lookup_exact_val else ""
         self.choices = '?'
         if field.rel.limit_choices_to:

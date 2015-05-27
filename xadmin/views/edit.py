@@ -2,9 +2,9 @@ import copy
 
 from django import forms
 from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, FieldError
 from django.db import models, transaction
-from django.forms.models import modelform_factory
+from django.forms.models import modelform_factory, modelform_defines_fields
 from django.http import Http404, HttpResponseRedirect
 from django.template.response import TemplateResponse
 from django.utils.encoding import force_unicode
@@ -93,7 +93,7 @@ class ModelFormAdminView(ModelAdminView):
     def get_field_style(self, db_field, style, **kwargs):
         if style in ('radio', 'radio-inline') and (db_field.choices or isinstance(db_field, models.ForeignKey)):
             attrs = {'widget': widgets.AdminRadioSelect(
-                attrs={'inline': style == 'radio-inline'})}
+                attrs={'inline': 'inline' if style == 'radio-inline' else ''})}
             if db_field.choices:
                 attrs['choices'] = db_field.get_choices(
                     include_blank=db_field.blank,
@@ -173,7 +173,17 @@ class ModelFormAdminView(ModelAdminView):
             "formfield_callback": self.formfield_for_dbfield,
         }
         defaults.update(kwargs)
+
+        if defaults['fields'] is None and not modelform_defines_fields(defaults['form']):
+            defaults['fields'] = forms.ALL_FIELDS
+
         return modelform_factory(self.model, **defaults)
+
+        try:
+            return modelform_factory(self.model, **defaults)
+        except FieldError as e:
+            raise FieldError('%s. Check fields/fieldsets/exclude attributes of class %s.'
+                             % (e, self.__class__.__name__))
 
     @filter_hook
     def get_form_layout(self):
@@ -250,7 +260,7 @@ class ModelFormAdminView(ModelAdminView):
         return self.get_response()
 
     @csrf_protect_m
-    @transaction.commit_on_success
+    @transaction.atomic
     @filter_hook
     def post(self, request, *args, **kwargs):
         self.instance_forms()

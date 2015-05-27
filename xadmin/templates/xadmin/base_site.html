@@ -1,11 +1,13 @@
 {% extends 'xadmin/base.html' %}
 {% load i18n xadmin_tags %}
 {% load url from future %}
+{% load firstof from future %}
 
 {% block title %}{{ title }} | {{ site_title }}{% endblock %}
 
 {% block body %}
   <!-- Header -->
+  {% block top-nav %}
   <div id="top-nav" class="navbar navbar-xs navbar-inverse navbar-fixed-top">
     <div class="navbar-header">
       <a class="navbar-brand" href="#">{% block branding %}{{ site_title }}{% endblock %}</a>
@@ -16,7 +18,7 @@
         {% if user.is_active and user.is_staff %}
           <li class="dropdown">
             <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-            <strong>{% trans 'Welcome,' %} {% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %}</strong> <span class="caret"></span></a>
+            <strong>{% trans 'Welcome,' %} {% firstof user.first_name user.username %}</strong> <span class="caret"></span></a>
             <ul id="g-account-menu" class="dropdown-menu" role="menu">
               {% view_block 'top_account_menu' %}
             </ul>
@@ -27,7 +29,7 @@
       {% view_block 'top_navbar' %}
     </div>
   </div>
-
+  {% endblock %}
   <div id="body-content" class="clearfix row">
     <div id="left-side" class="col-sm-1 col-md-2">
         {% block navbar %}

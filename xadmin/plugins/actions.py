@@ -56,6 +56,8 @@ class DeleteSelectedAction(BaseActionView):
     delete_confirmation_template = None
     delete_selected_confirmation_template = None
 
+    delete_models_batch = True
+
     model_perm = 'delete'
     icon = 'fa fa-times'
 
@@ -63,7 +65,11 @@ class DeleteSelectedAction(BaseActionView):
     def delete_models(self, queryset):
         n = queryset.count()
         if n:
-            queryset.delete()
+            if self.delete_models_batch:
+                queryset.delete()
+            else:
+                for obj in queryset:
+                    obj.delete()
             self.message_user(_("Successfully deleted %(count)d %(items)s.") % {
                 "count": n, "items": model_ngettext(self.opts, n)
             }, 'success')

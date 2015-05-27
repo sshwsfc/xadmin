@@ -4,7 +4,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
     }
 }
-
+MIDDLEWARE_CLASSES = ()
 # Required for Django 1.4+
 STATIC_URL = '/static/'
 

@@ -43,7 +43,7 @@ class RelateMenuPlugin(BaseAdminPlugin):
         links = []
         for r, view_perm, add_perm in self.get_related_list():
             label = r.opts.app_label
-            model_name = r.opts.module_name
+            model_name = r.opts.model_name
             f = r.field
             rel_name = f.rel.get_related_field().name
 
@@ -107,7 +107,7 @@ class RelateObject(object):
             self.rel_name = self.to_model._meta.pk.name
             self.is_m2m = False
 
-        to_qs = self.to_model._default_manager.get_query_set()
+        to_qs = self.to_model._default_manager.get_queryset()
         self.to_objs = to_qs.filter(**{self.rel_name: value}).all()
 
         self.field = field

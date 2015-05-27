@@ -107,7 +107,7 @@ class AdminSite(object):
                     # which causes issues later on.
                     options['__module__'] = __name__
 
-                admin_class = type(str("%s%sAdmin" % (model._meta.app_label, model._meta.module_name)), (admin_class,), options or {})
+                admin_class = type(str("%s%sAdmin" % (model._meta.app_label, model._meta.model_name)), (admin_class,), options or {})
                 admin_class.model = model
                 admin_class.order = self.model_admins_order
                 self.model_admins_order += 1
@@ -309,12 +309,12 @@ class AdminSite(object):
             view_urls = [url(
                 path, wrap(
                     self.create_model_admin_view(clz, model, admin_class)),
-                name=name % (model._meta.app_label, model._meta.module_name))
+                name=name % (model._meta.app_label, model._meta.model_name))
                 for path, clz, name in self._registry_modelviews]
             urlpatterns += patterns('',
                                     url(
                                     r'^%s/%s/' % (
-                                        model._meta.app_label, model._meta.module_name),
+                                        model._meta.app_label, model._meta.model_name),
                                     include(patterns('', *view_urls)))
                                     )
 

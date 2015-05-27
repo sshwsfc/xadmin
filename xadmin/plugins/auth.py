@@ -151,6 +151,12 @@ class ModelPermissionPlugin(BaseAdminPlugin):
             qs = qs.filter(**filters)
         return qs
 
+    def get_list_display(self, list_display):
+        if self.user_can_access_owned_objects_only and \
+                not self.user.is_superuser and \
+                self.user_owned_objects_field in list_display:
+            list_display.remove(self.user_owned_objects_field)
+        return list_display
 
 site.register_plugin(ModelPermissionPlugin, ModelAdminView)
 

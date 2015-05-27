@@ -8,7 +8,7 @@
 {{ title }}{% endblock %}
 
 {% block content %}
-<form class="exform" {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form">{% csrf_token %}
+<form class="exform" {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.model_name }}_form">{% csrf_token %}
   {% block form_top %}{% endblock %}
   {% view_block 'form_top' %}
 
@@ -27,8 +27,8 @@
   {% view_block 'after_fieldsets' %}
 
   <div class="form-actions well well-sm clearfix">
-  <button type="submit" class="default btn btn-primary" name="_save" data-loading-text="{% trans "Saving.." %}"/><i class="fa fa-save"></i> {% trans 'Save' %}</button>
-  {% view_block 'submit_line' %}
+  <button type="submit" class="default btn btn-primary show-xs col-xs-12" name="_save" data-loading-text="{% trans "Saving.." %}"/><i class="fa fa-save"></i> {% trans 'Save' %}</button>
+  <button type="submit" class="default btn btn-primary hide-xs" name="_save" data-loading-text="{% trans "Saving.." %}"/><i class="fa fa-save"></i> {% trans 'Save' %}</button>
   </div>
 
 </form>
