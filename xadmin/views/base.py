@@ -7,6 +7,7 @@ from functools import update_wrapper
 from inspect import getargspec
 
 from django import forms
+from django.utils import six
 from django.utils.encoding import force_str
 from django.conf import settings
 from django.contrib import messages
