@@ -28,6 +28,7 @@
 @media (min-width: 768px) {
   #content-block:not(.full-content) {
     padding-left: 5px;
+    min-height: 450px;
   }
   .form-actions .more-btns{
     display: inline-block !important;
