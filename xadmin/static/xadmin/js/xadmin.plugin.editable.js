@@ -67,11 +67,11 @@
 
     if(this.content == null){
       var that = this
-      $el.find('>i').removeClass('fa fa-edit').addClass('fa-spinner fa-spin')
+      $el.find('>i').removeClass('fa fa-edit').addClass('fa fa-spinner fa-spin')
       $.ajax({
         url: $el.data('editable-loadurl'),
         success: function(content){
-          $el.find('>i').removeClass('fa-spinner fa-spin').addClass('fa fa-edit')
+          $el.find('>i').removeClass('fa fa-spinner fa-spin').addClass('fa fa-edit')
           that.content = content
           that.toggle()
         },
