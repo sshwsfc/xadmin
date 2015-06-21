@@ -26,7 +26,12 @@
           $('body').append(modal);
         }
         modal.find('.modal-title').html(el.attr('title'));
-        modal.find('.edit-btn').attr('href', this.edit_uri);
+        var edit_btn = modal.find('.edit-btn');
+        if(this.edit_uri != ""){
+          edit_btn.attr('href', this.edit_uri);
+        }else{
+          edit_btn.remove();
+        }
         modal.find('.modal-body').html('<h1 style="text-align:center;"><i class="fa-spinner fa-spin fa fa-large"></i></h1>');
         modal.find('.modal-body').load(this.res_uri + '?_format=html', function(response, status, xhr) {
           if (status == "error") {
