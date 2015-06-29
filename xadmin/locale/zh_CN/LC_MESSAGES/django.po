@@ -201,27 +201,27 @@ msgstr "总数"
 #: plugins/auth.py:21
 #, python-format
 msgid "Can add %s"
-msgstr "可查看%s"
+msgstr "添加:%s"
 
 #: plugins/auth.py:22
 #, python-format
 msgid "Can change %s"
-msgstr "修改%s"
+msgstr "修改:%s"
 
 #: plugins/auth.py:23
 #, python-format
 msgid "Can edit %s"
-msgstr "可查看%s"
+msgstr "编辑:%s"
 
 #: plugins/auth.py:24
 #, python-format
 msgid "Can delete %s"
-msgstr "可以删除%s"
+msgstr "删除:%s"
 
 #: plugins/auth.py:25
 #, python-format
 msgid "Can view %s"
-msgstr "可查看%s"
+msgstr "查看:%s"
 
 #: plugins/auth.py:87
 msgid "Personal info"
