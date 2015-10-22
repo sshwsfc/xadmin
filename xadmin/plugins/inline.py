@@ -1,5 +1,7 @@
+import six
 import copy
 import inspect
+from collections import OrderedDict
 from django import forms
 from django.forms.formsets import all_valid, DELETION_FIELD_NAME
 from django.forms.models import inlineformset_factory, BaseInlineFormSet, modelform_defines_fields
@@ -10,9 +12,11 @@ from django.contrib.auth import get_permission_codename
 from xadmin.layout import FormHelper, Layout, flatatt, Container, Column, Field, Fieldset
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView, DetailAdminView, filter_hook
-from crispy_forms.utils import TEMPLATE_PACK
-from collections import OrderedDict
-import six
+
+try:
+    from crispy_forms.utils import TEMPLATE_PACK
+except:
+    TEMPLATE_PACK = 'bootstrap3'
 
 
 class ShowField(Field):
