@@ -1,9 +1,10 @@
 #!/usr/bin/env python
+from __future__ import print_function
+from __future__ import unicode_literals
 import os
 import shutil
 import sys
 import tempfile
-
 import django
 
 
@@ -31,7 +32,7 @@ ALWAYS_INSTALLED_APPS = [
 def get_test_modules():
     modules = []
     for f in os.listdir(RUNTESTS_DIR):
-        if (f.startswith('__init__') or
+        if (f.startswith('__') or
             f.startswith('.') or
             f.startswith('sql') or not os.path.isdir(os.path.join(RUNTESTS_DIR, f))):
             continue
@@ -85,13 +86,14 @@ def setup(verbosity, test_labels):
     test_modules = get_test_modules()
 
     for module_name in test_modules:
+        print(module_name)
         module_label = module_name
         # if the module was named on the command line, or
         # no modules were named (i.e., run all), import
         # this module and add it to the list to test.
         if not test_labels or module_name in test_labels_set:
             if verbosity >= 2:
-                print "Importing application %s" % module_name
+                print("Importing application %s" % module_name)
             mod = load_app(module_label)
             if mod:
                 if module_label not in settings.INSTALLED_APPS:
@@ -105,7 +107,7 @@ def teardown(state):
     # so that it will successfully remove temp trees containing
     # non-ASCII filenames on Windows. (We're assuming the temp dir
     # name itself does not contain non-ASCII characters.)
-    shutil.rmtree(unicode(TEMP_DIR))
+    shutil.rmtree(TEMP_DIR)
     # Restore the old settings.
     for key, value in state.items():
         setattr(settings, key, value)

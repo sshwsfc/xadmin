@@ -1,6 +1,4 @@
-import django
 from django.db import models
-
 from django.contrib.auth import get_permission_codename
 from django.core.exceptions import FieldDoesNotExist
 from django.core.urlresolvers import NoReverseMatch, reverse
@@ -10,13 +8,14 @@ from django.utils import formats, six, timezone
 from django.utils.encoding import force_str, force_text, smart_text
 from django.utils.html import format_html
 from django.utils.translation import ungettext
-from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
 from django.forms.forms import pretty_name
 from django.conf import settings
 from django.forms import Media
 from django.utils.translation import get_language
+from xadmin.vendors import vendors
+import json   # used by xadmin.views.base. I don't know why.
 
 import datetime
 import decimal
@@ -26,11 +25,6 @@ if 'django.contrib.staticfiles' in settings.INSTALLED_APPS:
     from django.contrib.staticfiles.templatetags.staticfiles import static
 else:
     from django.templatetags.static import static
-
-try:
-    import json
-except ImportError:
-    from django.utils import simplejson as json
 
 try:
     from django.utils.timezone import template_localtime as tz_localtime
@@ -47,17 +41,14 @@ except Exception:
 
 
 def xstatic(*tags):
-    from vendors import vendors
-    node = vendors
-
     fs = []
     lang = get_language()
-
+    node = vendors
     for tag in tags:
         try:
             for p in tag.split('.'):
                 node = node[p]
-        except Exception, e:
+        except Exception as e:
             if tag.startswith('xadmin'):
                 file_type = tag.split('.')[-1]
                 if file_type in ('css', 'js'):
@@ -67,7 +58,7 @@ def xstatic(*tags):
             else:
                 raise e
 
-        if type(node) in (str, unicode):
+        if isinstance(node, six.string_types):
             files = node
         else:
             mode = 'dev'

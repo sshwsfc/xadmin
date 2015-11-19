@@ -4,15 +4,14 @@ from django.db import models
 from django.http import HttpResponseRedirect
 from django.template.response import SimpleTemplateResponse, TemplateResponse
 from django.utils.datastructures import SortedDict
-from django.utils.encoding import force_str, smart_unicode
 from django.utils.html import escape, conditional_escape
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 
 from xadmin.util import lookup_field, display_for_field, label_for_field, boolean_icon
-
-from base import ModelAdminView, filter_hook, inclusion_tag, csrf_protect_m
+from xadmin.views.base import ModelAdminView, filter_hook, inclusion_tag, csrf_protect_m
+from xadmin.compatibility import force_str, smart_unicode
 
 # List settings
 ALL_VAR = 'all'
@@ -460,7 +459,7 @@ class ListAdminView(ModelAdminView):
         if field_name in ordering_field_columns:
             sorted = True
             order_type = ordering_field_columns.get(field_name).lower()
-            sort_priority = ordering_field_columns.keys().index(field_name) + 1
+            sort_priority = list(ordering_field_columns.keys()).index(field_name) + 1
             th_classes.append('sorted %sending' % order_type)
             new_order_type = {'asc': 'desc', 'desc': 'asc'}[order_type]
 

@@ -1,10 +1,8 @@
-import StringIO
 import datetime
-import sys
-
 from django.http import HttpResponse
 from django.template import loader
-from django.utils.encoding import force_str, smart_unicode
+from django.utils import six
+from xadmin.compatibility import force_str, smart_unicode
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.xmlutils import SimplerXMLGenerator
@@ -13,6 +11,11 @@ from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
 from xadmin.util import json
 from xadmin.views.list import ALL_VAR
+
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 try:
     import xlwt
@@ -161,7 +164,7 @@ class ExportPlugin(BaseAdminPlugin):
         if isinstance(t, bool):
             return _('Yes') if t else _('No')
         t = t.replace('"', '""').replace(',', '\,')
-        if isinstance(t, basestring):
+        if isinstance(t, six.string_types):
             t = '"%s"' % t
         return t
 
@@ -184,7 +187,7 @@ class ExportPlugin(BaseAdminPlugin):
                 self._to_xml(xml, item)
                 xml.endElement("row")
         elif isinstance(data, dict):
-            for key, value in data.iteritems():
+            for key, value in six.iteritems(data):
                 key = key.replace(' ', '_')
                 xml.startElement(key, {})
                 self._to_xml(xml, value)
@@ -227,7 +230,7 @@ class ExportPlugin(BaseAdminPlugin):
     # View Methods
     def get_result_list(self, __):
         if self.request.GET.get('all', 'off') == 'on':
-            self.admin_view.list_per_page = sys.maxint
+            self.admin_view.list_per_page = six.MAXSIZE
         return __()
 
     def result_header(self, item, field_name, row):

@@ -7,6 +7,7 @@ from functools import update_wrapper
 from inspect import getargspec
 
 from django import forms
+from django.utils import six
 from django.utils.encoding import force_str
 from django.conf import settings
 from django.contrib import messages
@@ -19,7 +20,7 @@ from django.template import Context, Template
 from django.template.response import TemplateResponse
 from django.utils.datastructures import SortedDict
 from django.utils.decorators import method_decorator, classonlymethod
-from django.utils.encoding import smart_unicode
+
 from django.utils.http import urlencode
 from django.utils.itercompat import is_iterable
 from django.utils.safestring import mark_safe
@@ -27,8 +28,11 @@ from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import View
+from xadmin.compatibility import filte_dict
 from xadmin.util import static, json, vendor, sortkeypicker
 
+if sys.version_info[0] == 3:
+    unicode = str
 
 csrf_protect_m = method_decorator(csrf_protect)
 
@@ -84,7 +88,7 @@ def inclusion_tag(file_name, context_class=Context, takes_context=False):
             from django.template.loader import get_template, select_template
             if isinstance(file_name, Template):
                 t = file_name
-            elif not isinstance(file_name, basestring) and is_iterable(file_name):
+            elif not isinstance(file_name, six.string_types) and is_iterable(file_name):
                 t = select_template(file_name)
             else:
                 t = get_template(file_name)
@@ -149,17 +153,14 @@ class BaseAdminObject(object):
             new_params = {}
         if remove is None:
             remove = []
-        p = dict(self.request.GET.items()).copy()
+
+        p = filte_dict(self.request.GET, lambda key, value: (value is not None) or (key not in new_params))
         for r in remove:
-            for k in p.keys():
-                if k.startswith(r):
-                    del p[k]
+            p = filte_dict(p, lambda key, value: not key.startswith(r) )
+
         for k, v in new_params.items():
-            if v is None:
-                if k in p:
-                    del p[k]
-            else:
-                p[k] = v
+            if v: p[k] = v
+
         return '?%s' % urlencode(p)
 
     def get_form_params(self, new_params=None, remove=None):
@@ -167,17 +168,14 @@ class BaseAdminObject(object):
             new_params = {}
         if remove is None:
             remove = []
-        p = dict(self.request.GET.items()).copy()
+
+        p = filte_dict(self.request.GET, lambda key, value: (value is not None) or (key not in new_params))
         for r in remove:
-            for k in p.keys():
-                if k.startswith(r):
-                    del p[k]
+            p = filte_dict(p, lambda key, value: not key.startswith(r) )
+
         for k, v in new_params.items():
-            if v is None:
-                if k in p:
-                    del p[k]
-            else:
-                p[k] = v
+            if v: p[k] = v
+
         return mark_safe(''.join(
             '<input type="hidden" name="%s" value="%s"/>' % (k, v) for k, v in p.items() if v))
 
@@ -231,10 +229,7 @@ class BaseAdminView(BaseAdminObject, View):
         self.request = request
         self.request_method = request.method.lower()
         self.user = request.user
-
-        self.base_plugins = [p(self) for p in getattr(self,
-                                                      "plugin_classes", [])]
-
+        self.base_plugins = [p(self) for p in getattr(self, "plugin_classes", [])]
         self.args = args
         self.kwargs = kwargs
         self.init_plugin(*args, **kwargs)
@@ -375,9 +370,8 @@ class CommAdminView(BaseAdminView):
         for menu in nav_menu.values():
             menu['menus'].sort(key=sortkeypicker(['order', 'title']))
 
-        nav_menu = nav_menu.values()
-        nav_menu.sort(key=lambda x: x['title'])
-
+        nav_menu = list(nav_menu.values())  # py3 compatibility
+        sorted(nav_menu, key=lambda x: x['title']) # py3 compatibility
         site_menu.extend(nav_menu)
 
         return site_menu
@@ -405,15 +399,14 @@ class CommAdminView(BaseAdminView):
             def filter_item(item):
                 if 'menus' in item:
                     before_filter_length = len(item['menus'])
-                    item['menus'] = [filter_item(
-                        i) for i in item['menus'] if check_menu_permission(i)]
+                    item['menus'] = [filter_item(i) for i in item['menus'] if check_menu_permission(i)]
                     after_filter_length = len(item['menus'])
                     if after_filter_length == 0 and before_filter_length > 0:
                         return None
                 return item
 
             nav_menu = [filter_item(item) for item in menus if check_menu_permission(item)]
-            nav_menu = filter(lambda x:x, nav_menu)
+            nav_menu = list(filter(lambda x:x, nav_menu))  # py3 compatibility
 
             if not settings.DEBUG:
                 self.request.session['nav_menu'] = json.dumps(nav_menu)

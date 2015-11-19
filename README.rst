@@ -34,7 +34,7 @@ Screenshots
 
 .. figure:: https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/docs/images/plugins/action.png
    :alt: Actions
-   
+
 .. figure:: https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/docs/images/plugins/filter.png
    :alt: Filter
 
@@ -65,7 +65,16 @@ or Install from github source:
 
     pip install git+git://github.com/sshwsfc/django-xadmin.git
 
-Install Requires 
+Test
+^^^^^^^
+
+.. code:: bash
+
+    pip install virtualenv
+    pip install tox
+    tox # or tox -l
+
+Install Requires
 ----------------
 
 -  `django`_ >=1.4
@@ -98,7 +107,7 @@ Changelogs
 
 0.5.0
 ^^^^^
-    
+
 - Update fontawesome to 4.0.3
 - Update javascript files to compact fa icons new version
 - Update tests for the new instance method of the AdminSite class
@@ -133,4 +142,3 @@ Help
 ----
 
 Help Translate : http://trans.xadmin.io
-

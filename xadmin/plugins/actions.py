@@ -4,6 +4,7 @@ from django.db import router
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.template.response import TemplateResponse
+from django.utils import six
 from django.utils.datastructures import SortedDict
 from django.utils.encoding import force_str
 from django.utils.safestring import mark_safe
@@ -238,7 +239,7 @@ class ActionPlugin(BaseAdminPlugin):
         tuple (name, description).
         """
         choices = []
-        for ac, name, description, icon in self.actions.itervalues():
+        for ac, name, description, icon in six.itervalues(self.actions):
             choice = (name, description % model_format_dict(self.opts), icon)
             choices.append(choice)
         return choices

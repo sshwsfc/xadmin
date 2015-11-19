@@ -7,7 +7,6 @@ from django.template import loader
 from django.http import HttpResponseNotFound
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse
-from django.utils.encoding import smart_unicode
 from django.db import models
 from django.utils.http import urlencode
 from django.utils.translation import ugettext_lazy as _, ugettext
@@ -116,14 +115,14 @@ class ChartsView(ListAdminView):
             return HttpResponseNotFound()
 
         self.chart = self.data_charts[name]
-
         self.x_field = self.chart['x-field']
-        y_fields = self.chart['y-field']
-        self.y_fields = (
-            y_fields,) if type(y_fields) not in (list, tuple) else y_fields
+        self.y_fields = self.chart['y-field']
+        if not isinstance(self.y_fields, (list, tuple)):
+            self.y_fields = (self.y_fields,)
 
-        datas = [{"data":[], "label": force_str(label_for_field(
-            i, self.model, model_admin=self))} for i in self.y_fields]
+        datas = []
+        for i in self.y_fields:
+            datas.append( {"data":[], "label": force_str(label_for_field(i, self.model, model_admin=self))} )
 
         self.make_result_list()
 
