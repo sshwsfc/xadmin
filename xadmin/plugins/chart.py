@@ -11,6 +11,7 @@ from django.db import models
 from django.utils.http import urlencode
 from django.utils.translation import ugettext_lazy as _, ugettext
 
+from xadmin.compatibility import smart_unicode
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
 from xadmin.views.dashboard import ModelBaseWidget, widget_manager
@@ -45,12 +46,14 @@ class ChartWidget(ModelBaseWidget):
             else:
                 self.charts = model_admin.data_charts
                 if self.title is None:
-                    self.title = ugettext(
-                        "%s Charts") % self.model._meta.verbose_name_plural
+                    self.title = ugettext("%s Charts") % self.model._meta.verbose_name_plural
+        pass
 
     def filte_choices_model(self, model, modeladmin):
-        return bool(getattr(modeladmin, 'data_charts', None)) and \
-            super(ChartWidget, self).filte_choices_model(model, modeladmin)
+        if not hasattr(modeladmin, 'data_charts'):
+            return None
+
+        return super(ChartWidget, self).filte_choices_model(model, modeladmin)
 
     def get_chart_url(self, name, v):
         return self.model_admin_url('chart', name) + "?" + urlencode(self.list_params)

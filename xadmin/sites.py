@@ -1,3 +1,5 @@
+# coding:utf-8
+from collections import OrderedDict
 import sys
 from functools import update_wrapper
 from django.conf import settings
@@ -12,7 +14,6 @@ if sys.version_info[0] == 2:
 else:
     from imp import reload
     reload(sys)
-
 
 class AlreadyRegistered(Exception):
     pass
@@ -33,7 +34,7 @@ class AdminSite(object):
         self.name = name
         self.app_name = 'xadmin'
 
-        self._registry = {}  # model_class class -> admin_class class
+        self._registry = OrderedDict()  # model_class class -> admin_class class
         self._registry_avs = {}  # admin_view_class class -> admin_class class
         self._registry_settings = {}  # settings name -> admin_class class
         self._registry_views = []
@@ -42,7 +43,7 @@ class AdminSite(object):
             # url instance contains (path, admin_view class, name)
         self._registry_plugins = {}  # view_class class -> plugin_class class
 
-        self._admin_view_cache = {}
+        self._admin_view_cache = OrderedDict()
 
         self.check_dependencies()
 
@@ -297,31 +298,28 @@ class AdminSite(object):
             return update_wrapper(wrapper, view)
 
         # Admin-site-wide views.
-        urlpatterns = patterns('',
-                               url(r'^jsi18n/$', wrap(self.i18n_javascript,
-                                                      cacheable=True), name='jsi18n')
-                               )
+        urlpatterns = patterns('', url(r'^jsi18n/$', wrap(self.i18n_javascript,cacheable=True), name='jsi18n'))
 
         # Registed admin views
         urlpatterns += patterns('',
                                 *[url(
-                                  path, wrap(self.create_admin_view(clz_or_func)) if type(clz_or_func) == type and issubclass(clz_or_func, BaseAdminView) else include(clz_or_func(self)),
-                                  name=name) for path, clz_or_func, name in self._registry_views]
-                                )
+                                    path,
+                                    wrap(self.create_admin_view(clz_or_func)) if type(clz_or_func) == type and issubclass(clz_or_func, BaseAdminView) else include(clz_or_func(self)),
+                                    name=name
+                                ) for path, clz_or_func, name in self._registry_views]
+                            )
 
         # Add in each model's views.
         for model, admin_class in six.iteritems(self._registry):
-            view_urls = [url(
-                path, wrap(
-                    self.create_model_admin_view(clz, model, admin_class)),
-                name=name % (model._meta.app_label, model._meta.model_name))
-                for path, clz, name in self._registry_modelviews]
-            urlpatterns += patterns('',
-                                    url(
-                                    r'^%s/%s/' % (
-                                        model._meta.app_label, model._meta.model_name),
-                                    include(patterns('', *view_urls)))
-                                    )
+            view_urls = []
+            for path, clz, name in self._registry_modelviews:
+                _url =  url(path,
+                            wrap(self.create_model_admin_view(clz, model, admin_class)),
+                            name = name % (model._meta.app_label, model._meta.model_name) )
+                view_urls.append(_url)
+
+            _url = url(r'^%s/%s/'%(model._meta.app_label, model._meta.model_name), include(patterns('', *view_urls)))
+            urlpatterns += patterns('', _url)
 
         return urlpatterns
 

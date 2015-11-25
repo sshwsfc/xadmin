@@ -16,11 +16,6 @@ if PY3:
 if PY2:
     from django.utils.encoding import smart_unicode, force_unicode
 
-if 4 < django.VERSION[1] < 7:
-    AUTH_USER_MODEL = django.contrib.auth.get_user_model()
-else:
-    AUTH_USER_MODEL = getattr(django.conf.settings, 'AUTH_USER_MODEL', 'auth.User')
-
 def get_auth_user_model():
     return AUTH_USER_MODEL
 
