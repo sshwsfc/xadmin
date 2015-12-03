@@ -1,3 +1,4 @@
+# coding:utf-8
 from django.contrib.contenttypes.generic import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
@@ -8,6 +9,7 @@ from django.forms.models import model_to_dict
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
+from django.utils import six
 from django.utils.encoding import force_str
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
@@ -578,7 +580,7 @@ class InlineRevisionPlugin(BaseAdminPlugin):
 
         if self.request.method == 'GET' and formset.helper and formset.helper.layout:
             helper = formset.helper
-            helper.filter(basestring).wrap(InlineDiffField)
+            helper.filter(six.string_types).wrap(InlineDiffField)
             fake_admin_class = type(str('%s%sFakeAdmin' % (self.opts.app_label, self.opts.model_name)), (object, ), {'model': self.model})
             for form in formset.forms:
                 instance = form.instance
