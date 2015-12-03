@@ -1,9 +1,10 @@
+# coding:utf-8
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.core.paginator import InvalidPage, Paginator
 from django.db import models
 from django.http import HttpResponseRedirect
 from django.template.response import SimpleTemplateResponse, TemplateResponse
-from django.utils.datastructures import SortedDict
+from collections import OrderedDict
 from django.utils.html import escape, conditional_escape
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
@@ -214,7 +215,10 @@ class ListAdminView(ModelAdminView):
         Get model queryset. The query has been filted and ordered.
         """
         # First, get queryset from base class.
-        queryset = self.queryset()
+        if self.base_queryset is not None:
+            queryset = self.base_queryset._clone()
+        else:
+            queryset = self.queryset()
 
         # Use select_related() if one of the list_display options is a field
         # with a relationship and the provided queryset doesn't already have
@@ -309,13 +313,13 @@ class ListAdminView(ModelAdminView):
     @filter_hook
     def get_ordering_field_columns(self):
         """
-        Returns a SortedDict of ordering field column numbers and asc/desc
+        Returns a OrderedDict of ordering field column numbers and asc/desc
         """
 
         # We must cope with more than one column having the same underlying sort
         # field, so we base things on column numbers.
         ordering = self._get_default_ordering()
-        ordering_fields = SortedDict()
+        ordering_fields = OrderedDict()
         if ORDER_VAR not in self.params or not self.params[ORDER_VAR]:
             # for ordering specified on ModelAdmin or model Meta, we don't know
             # the right column numbers absolutely, because there might be more

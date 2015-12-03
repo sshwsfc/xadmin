@@ -1,11 +1,9 @@
 # coding:utf-8
 __author__ = 'cupen@foxmail.com'
 import sys
-import django
-import django.contrib.auth
-import django.conf
-# from django.utils import six
+from django.utils import six
 from django.utils.encoding import smart_str, force_str
+
 PY2 = sys.version_info[0] == 2
 PY3 = sys.version_info[0] == 3
 
@@ -15,14 +13,6 @@ if PY3:
 
 if PY2:
     from django.utils.encoding import smart_unicode, force_unicode
-
-if 4 < django.VERSION[1] < 7:
-    AUTH_USER_MODEL = django.contrib.auth.get_user_model()
-else:
-    AUTH_USER_MODEL = getattr(django.conf.settings, 'AUTH_USER_MODEL', 'auth.User')
-
-def get_auth_user_model():
-    return AUTH_USER_MODEL
 
 def filte_dict(_dict, callback):
     """
@@ -50,3 +40,17 @@ def oh_my_filter(callback, iterable):
     return type(iterable)(_buindin_filter(callback, iterable))
 
 filter = oh_my_filter
+
+# used as py3 urllib.
+# @see https://pythonhosted.org/six/#module-six.moves
+urllib = six.moves.urllib
+
+def urlopen(*args, **kwargs):
+    return urllib.request.urlopen(*args, **kwargs)
+
+def http_get(url, encoding="utf-8"):
+    """
+    >>> None != http_get("https://www.google.com")
+    True
+    """
+    return urlopen(url).read().decode(encoding)

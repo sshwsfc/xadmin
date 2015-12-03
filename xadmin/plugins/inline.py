@@ -1,4 +1,3 @@
-import six
 import copy
 import inspect
 from collections import OrderedDict

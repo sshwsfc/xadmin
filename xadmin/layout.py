@@ -1,11 +1,10 @@
+# coding:utf-8
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import *
+from crispy_forms.layout import *     # duplicate Fieldset
 from crispy_forms.bootstrap import *
 from crispy_forms.utils import render_field, flatatt
-
 from crispy_forms import layout
 from crispy_forms import bootstrap
-
 import math
 
 
@@ -24,10 +23,11 @@ class Row(layout.Div):
         css_class = 'form-inline form-group'
         new_fields = [self.convert_field(f, len(fields)) for f in fields]
         super(Row, self).__init__(css_class=css_class, *new_fields, **kwargs)
+        pass
 
     def convert_field(self, f, counts):
         col_class = "col-sm-%d" % int(math.ceil(12 / counts))
-        if not (isinstance(f, Field) or issubclass(f.__class__, Field)):
+        if not (isinstance(f, bootstrap.Field) or issubclass(f.__class__, bootstrap.Field)):
             f = layout.Field(f)
         if f.wrapper_class:
             f.wrapper_class += " %s" % col_class
@@ -39,13 +39,12 @@ class Row(layout.Div):
 class Col(layout.Column):
 
     def __init__(self, id, *fields, **kwargs):
-        css_class = ['column', 'form-column', id, 'col col-sm-%d' %
-                     kwargs.get('span', 6)]
+        css_class = ['column', 'form-column', id, 'col col-sm-%d'%kwargs.get('span', 6)]
         if kwargs.get('horizontal'):
             css_class.append('form-horizontal')
-        super(Col, self).__init__(css_class=' '.join(css_class), *
-                                  fields, **kwargs)
 
+        super(Col, self).__init__(css_class=' '.join(css_class), *fields, **kwargs)
+        pass
 
 class Main(layout.Column):
     css_class = "column form-column main col col-sm-9 form-horizontal"

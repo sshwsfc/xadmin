@@ -33,13 +33,17 @@ except:
 class ExportMenuPlugin(BaseAdminPlugin):
 
     list_export = ('xlsx', 'xls', 'csv', 'xml', 'json')
-    export_names = {'xlsx': 'Excel 2007', 'xls': 'Excel', 'csv': 'CSV',
-                    'xml': 'XML', 'json': 'JSON'}
+    export_names = {'xlsx': 'Excel 2007',
+                    'xls': 'Excel',
+                    'csv': 'CSV',
+                    'xml': 'XML',
+                    'json': 'JSON'}
 
     def init_request(self, *args, **kwargs):
         self.list_export = [
             f for f in self.list_export
             if (f != 'xlsx' or has_xlsxwriter) and (f != 'xls' or has_xlwt)]
+        pass
 
     def block_top_toolbar(self, context, nodes):
         if self.list_export:
@@ -54,8 +58,10 @@ class ExportMenuPlugin(BaseAdminPlugin):
 class ExportPlugin(BaseAdminPlugin):
 
     export_mimes = {'xlsx': 'application/vnd.ms-excel',
-                    'xls': 'application/vnd.ms-excel', 'csv': 'text/csv',
-                    'xml': 'application/xhtml+xml', 'json': 'application/json'}
+                    'xls': 'application/vnd.ms-excel',
+                    'csv': 'text/csv',
+                    'xml': 'application/xhtml+xml',
+                    'json': 'application/json'}
 
     def init_request(self, *args, **kwargs):
         return self.request.GET.get('_do_') == 'export'
@@ -88,7 +94,7 @@ class ExportPlugin(BaseAdminPlugin):
 
     def get_xlsx_export(self, context):
         datas = self._get_datas(context)
-        output = StringIO.StringIO()
+        output = six.BytesIO()
         export_header = (
             self.request.GET.get('export_xlsx_header', 'off') == 'on')
 
@@ -125,7 +131,6 @@ class ExportPlugin(BaseAdminPlugin):
 
     def get_xls_export(self, context):
         datas = self._get_datas(context)
-        output = StringIO.StringIO()
         export_header = (
             self.request.GET.get('export_xls_header', 'off') == 'on')
 
@@ -155,6 +160,8 @@ class ExportPlugin(BaseAdminPlugin):
                     else:
                         cell_style = styles['default']
                 sheet.write(rowx, colx, value, style=cell_style)
+
+        output = six.BytesIO()
         book.save(output)
 
         output.seek(0)

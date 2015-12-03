@@ -1,5 +1,6 @@
-# coding=utf-8
+# coding:utf-8
 from django.core.urlresolvers import reverse
+from django.utils import six
 from django.utils.encoding import force_str
 from django.utils.encoding import smart_str
 from django.utils.safestring import mark_safe
@@ -180,7 +181,7 @@ class EditRelateDisplayPlugin(BaseRelateDisplayPlugin):
         return datas
 
     def post_response(self, response):
-        if isinstance(response, basestring) and response != self.get_admin_url('index'):
+        if isinstance(response, six.string_types) and response != self.get_admin_url('index'):
             return self._get_url(response)
         return response
 
@@ -196,7 +197,7 @@ class EditRelateDisplayPlugin(BaseRelateDisplayPlugin):
 class DeleteRelateDisplayPlugin(BaseRelateDisplayPlugin):
 
     def post_response(self, response):
-        if isinstance(response, basestring) and response != self.get_admin_url('index'):
+        if isinstance(response, six.string_types) and response != self.get_admin_url('index'):
             return self._get_url(response)
         return response
 

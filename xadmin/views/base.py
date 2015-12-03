@@ -1,3 +1,4 @@
+# coding:utf-8
 import sys
 import copy
 import functools
@@ -5,6 +6,7 @@ import datetime
 import decimal
 from functools import update_wrapper
 from inspect import getargspec
+from collections import OrderedDict
 
 from django import forms
 from django.utils import six
@@ -18,9 +20,8 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.template import Context, Template
 from django.template.response import TemplateResponse
-from django.utils.datastructures import SortedDict
-from django.utils.decorators import method_decorator, classonlymethod
 
+from django.utils.decorators import method_decorator, classonlymethod
 from django.utils.http import urlencode
 from django.utils.itercompat import is_iterable
 from django.utils.safestring import mark_safe
@@ -28,7 +29,7 @@ from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import View
-from xadmin.compatibility import filte_dict
+from xadmin.compatibility import filte_dict, smart_unicode
 from xadmin.util import static, json, vendor, sortkeypicker
 
 if sys.version_info[0] == 3:
@@ -313,7 +314,7 @@ class CommAdminView(BaseAdminView):
                     get_url(m, had_urls)
         get_url({'menus': site_menu}, had_urls)
 
-        nav_menu = SortedDict()
+        nav_menu = OrderedDict()
 
         for model, model_admin in self.admin_site._registry.items():
             if getattr(model_admin, 'hidden_menu', False):
@@ -371,7 +372,7 @@ class CommAdminView(BaseAdminView):
             menu['menus'].sort(key=sortkeypicker(['order', 'title']))
 
         nav_menu = list(nav_menu.values())  # py3 compatibility
-        sorted(nav_menu, key=lambda x: x['title']) # py3 compatibility
+        # sorted(nav_menu, key=lambda x: x['title']) # py3 compatibility
         site_menu.extend(nav_menu)
 
         return site_menu

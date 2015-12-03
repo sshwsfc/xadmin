@@ -1,12 +1,12 @@
-#coding:utf-8
-import urllib
+# coding:utf-8
 from django.template import loader
 from django.core.cache import cache
 from django.utils.translation import ugettext as _
+from xadmin.compatibility import urlopen, http_get
 from xadmin.sites import site
 from xadmin.models import UserSettings
 from xadmin.views import BaseAdminPlugin, BaseAdminView
-from xadmin.util import static, json
+from xadmin.util import static, json, unquote
 
 THEME_CACHE_KEY = 'xadmin_themes'
 
@@ -30,7 +30,7 @@ class ThemePlugin(BaseAdminPlugin):
             except Exception:
                 pass
         if '_theme' in self.request.COOKIES:
-            return urllib.unquote(self.request.COOKIES['_theme'])
+            return unquote(self.request.COOKIES['_theme'])
         return self.default_theme
 
     def get_context(self, context):
@@ -44,10 +44,18 @@ class ThemePlugin(BaseAdminPlugin):
     # Block Views
     def block_top_navmenu(self, context, nodes):
 
-        themes = [{'name': _(u"Default"), 'description': _(
-            u"Default bootstrap theme"), 'css': self.default_theme},
-            {'name': _(u"Bootstrap2"), 'description': _(u"Bootstrap 2.x theme"),
-            'css': self.bootstrap2_theme}]
+        themes = [
+            {
+                'name': _(u"Default"),
+                'description': _(u"Default bootstrap theme"),
+                'css': self.default_theme
+            },
+            {
+                'name': _(u"Bootstrap2"),
+                'description': _(u"Bootstrap 2.x theme"),
+                'css': self.bootstrap2_theme
+            }
+        ]
         select_css = context.get('site_theme', self.default_theme)
 
         if self.user_themes:
@@ -60,13 +68,14 @@ class ThemePlugin(BaseAdminPlugin):
             else:
                 ex_themes = []
                 try:
-                    watch_themes = json.loads(urllib.urlopen(
-                        'http://api.bootswatch.com/3/').read())['themes']
+                    _text = http_get('http://api.bootswatch.com/3/', encoding='utf-8')
+                    watch_themes = json.loads(_text)['themes']
                     ex_themes.extend([
                         {'name': t['name'], 'description': t['description'],
                             'css': t['cssMin'], 'thumbnail': t['thumbnail']}
                         for t in watch_themes])
                 except Exception:
+                    # import traceback;traceback.print_exc()
                     pass
 
                 cache.set(THEME_CACHE_KEY, json.dumps(ex_themes), 24 * 3600)

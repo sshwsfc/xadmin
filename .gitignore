@@ -43,3 +43,4 @@ xadmin/static/xadmin/bower_components/
 .idea
 *~
 demo_app/data.db
+/*.diff
