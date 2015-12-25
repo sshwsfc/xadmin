@@ -159,7 +159,7 @@ class BaseAdminObject(object):
             p = filte_dict(p, lambda key, value: not key.startswith(r) )
 
         for k, v in new_params.items():
-            if v: p[k] = v
+            if v != None: p[k] = v
 
         return '?%s' % urlencode(p)
 
@@ -174,7 +174,7 @@ class BaseAdminObject(object):
             p = filte_dict(p, lambda key, value: not key.startswith(r) )
 
         for k, v in new_params.items():
-            if v: p[k] = v
+            if v != None: p[k] = v
 
         return mark_safe(''.join(
             '<input type="hidden" name="%s" value="%s"/>' % (k, v) for k, v in p.items() if v))

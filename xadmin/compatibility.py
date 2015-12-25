@@ -12,8 +12,10 @@ PY3 = sys.version_info[0] == 3
 if PY3:
     smart_unicode = smart_str
     force_unicode = force_str
+    unicode = str
 
 if PY2:
+    unicode = unicode
     from django.utils.encoding import smart_unicode, force_unicode
 
 if 4 < django.VERSION[1] < 7:
@@ -26,14 +28,9 @@ def get_auth_user_model():
 
 def filte_dict(_dict, callback):
     """
-    >>> from django.conf import settings
-    >>> settings.configure()
+    # >>> from django.conf import settings; settings.configure()
     >>> d = {"a":1, "b":2, "c":3}
     >>> filte_dict(d, lambda k,v: k != "b")
-
-    :param _dict:
-    :param callback:
-    :return:
     """
     if not isinstance(_dict, dict):
         raise TypeError("Invalid dict:%s"%(_dict))
