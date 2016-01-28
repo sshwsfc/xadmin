@@ -201,23 +201,22 @@ class InlineModelAdmin(ModelFormAdminView):
             'one' if self.max_num == 1 else self.style)(self, instance)
         style.name = self.style
 
-        if len(instance):
-            layout = copy.deepcopy(self.form_layout)
+        layout = copy.deepcopy(self.form_layout)
 
-            if layout is None:
-                layout = Layout(*instance[0].fields.keys())
-            elif type(layout) in (list, tuple) and len(layout) > 0:
-                layout = Layout(*layout)
+        if layout is None:
+            layout = Layout(*instance.empty_form.fields.keys())
+        elif type(layout) in (list, tuple) and len(layout) > 0:
+            layout = Layout(*layout)
 
-                rendered_fields = [i[1] for i in layout.get_field_names()]
-                layout.extend([f for f in instance[0]
-                              .fields.keys() if f not in rendered_fields])
+            rendered_fields = [i[1] for i in layout.get_field_names()]
+            layout.extend([f for f in instance[0]
+                          .fields.keys() if f not in rendered_fields])
 
-            helper.add_layout(layout)
-            style.update_layout(helper)
+        helper.add_layout(layout)
+        style.update_layout(helper)
 
-            # replace delete field with Dynamic field, for hidden delete field when instance is NEW.
-            helper[DELETION_FIELD_NAME].wrap(DeleteField)
+        # replace delete field with Dynamic field, for hidden delete field when instance is NEW.
+        helper[DELETION_FIELD_NAME].wrap(DeleteField)
 
         instance.helper = helper
         instance.style = style
