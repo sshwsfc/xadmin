@@ -359,8 +359,10 @@ def replace_inline_objects(layout, fs):
     if not fs:
         return
     for i, layout_object in enumerate(layout.fields):
-        if isinstance(layout_object, Inline) and layout_object.model in fs:
-            layout.fields[i] = fs.pop(layout_object.model)
+        # fixed #232 bug - when fix for #176 has been applied, author forget to fix also method
+        # replace_inline_objects which before fix #176 operates on dicts, and after operates on lists
+        if isinstance(layout_object, Inline) and layout_object.model in tuple(x[0] for x in fs):
+            layout.fields[i] = fs.pop(tuple(x[0] for x in fs).index(layout_object.model))[1]
         elif hasattr(layout_object, 'get_field_names'):
             replace_inline_objects(layout_object, fs)
 
