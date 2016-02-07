@@ -42,12 +42,13 @@ class RelateMenuPlugin(BaseAdminPlugin):
     def related_link(self, instance):
         links = []
         for r, view_perm, add_perm in self.get_related_list():
-            label = r.opts.app_label
-            model_name = r.opts.model_name
+            opts = r.related_model()._meta
+            label = opts.app_label
+            model_name = opts.model_name
             f = r.field
             rel_name = f.rel.get_related_field().name
 
-            verbose_name = force_str(r.opts.verbose_name)
+            verbose_name = force_str(opts.verbose_name)
             lookup_name = '%s__%s__exact' % (f.name, rel_name)
 
             link = ''.join(('<li class="with_menu_btn">',
