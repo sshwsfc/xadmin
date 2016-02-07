@@ -1,4 +1,3 @@
-import six
 import copy
 import inspect
 from collections import OrderedDict
@@ -9,6 +8,7 @@ from django.contrib.contenttypes.generic import BaseGenericInlineFormSet, generi
 from django.template import loader
 from django.template.loader import render_to_string
 from django.contrib.auth import get_permission_codename
+from django.utils import six
 from xadmin.layout import FormHelper, Layout, flatatt, Container, Column, Field, Fieldset
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView, DetailAdminView, filter_hook
