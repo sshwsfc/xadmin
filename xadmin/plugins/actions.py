@@ -2,6 +2,7 @@ from django import forms
 from django.core.exceptions import PermissionDenied
 from django.db import router
 from django.http import HttpResponse, HttpResponseRedirect
+from django.http.response import HttpResponseBase
 from django.template import loader
 from django.template.response import TemplateResponse
 from django.utils import six
@@ -195,7 +196,7 @@ class ActionPlugin(BaseAdminPlugin):
                     # Actions may return an HttpResponse, which will be used as the
                     # response from the POST. If not, we'll be a good little HTTP
                     # citizen and redirect back to the changelist page.
-                    if isinstance(response, HttpResponse):
+                    if isinstance(response, HttpResponseBase):
                         return response
                     else:
                         return HttpResponseRedirect(request.get_full_path())
