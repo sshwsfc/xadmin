@@ -297,7 +297,7 @@ class AdminSite(object):
                                                       cacheable=True), name='jsi18n')
                                )
 
-        # Registed admin views
+        # Registered admin views
         urlpatterns += patterns('',
                                 *[url(
                                   path, wrap(self.create_admin_view(clz_or_func)) if type(clz_or_func) == type and issubclass(clz_or_func, BaseAdminView) else include(clz_or_func(self)),
