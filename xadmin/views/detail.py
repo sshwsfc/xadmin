@@ -17,6 +17,7 @@ from xadmin.layout import FormHelper, Layout, Fieldset, Container, Column, Field
 from xadmin.util import unquote, lookup_field, display_for_field, boolean_icon, label_for_field
 
 from base import ModelAdminView, filter_hook, csrf_protect_m
+from crispy_forms.utils import TEMPLATE_PACK
 
 # Text to display within change-list table cells if the value is blank.
 EMPTY_CHANGELIST_VALUE = _('Null')
@@ -35,7 +36,7 @@ class ShowField(Field):
 
         self.results = [(field, callback(field)) for field in self.fields]
 
-    def render(self, form, form_style, context):
+    def render(self, form, form_style, context,template_pack=TEMPLATE_PACK):
         if hasattr(self, 'wrapper_class'):
             context['wrapper_class'] = self.wrapper_class
 
@@ -197,9 +198,12 @@ class DetailAdminView(ModelAdminView):
         # if exclude is an empty list we pass None to be consistant with the
         # default on modelform_factory
         exclude = exclude or None
+        fields = self.fields and list(self.fields) or None
+        if fields is None and exclude is None:
+            fields = [f[0].name for f in self.model._meta.get_concrete_fields_with_model()]
         defaults = {
             "form": self.form,
-            "fields": self.fields and list(self.fields) or None,
+            "fields": fields,
             "exclude": exclude,
         }
         defaults.update(kwargs)
