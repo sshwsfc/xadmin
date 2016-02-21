@@ -94,7 +94,6 @@ class TabInlineStyle(InlineStyle):
     template = 'xadmin/edit_inline/tab.html'
 style_manager.register_style("tab", TabInlineStyle)
 
-
 class TableInlineStyle(InlineStyle):
     template = 'xadmin/edit_inline/tabular.html'
 
@@ -113,7 +112,6 @@ class TableInlineStyle(InlineStyle):
             'readonly_fields': readonly_fields
         }
 style_manager.register_style("table", TableInlineStyle)
-
 
 def replace_field_to_value(layout, av):
     if layout:
@@ -255,8 +253,11 @@ class InlineModelAdmin(ModelFormAdminView):
         queryset = super(InlineModelAdmin, self).queryset()
         if not self.has_change_permission() and not self.has_view_permission():
             queryset = queryset.none()
+        else:
+            # Then, set queryset ordering.
+            queryset = queryset.order_by(*self.get_ordering())
         return queryset
-
+    
     def has_add_permission(self):
         if self.opts.auto_created:
             return self.has_change_permission()
