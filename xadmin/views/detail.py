@@ -200,6 +200,7 @@ class DetailAdminView(ModelAdminView):
         exclude = exclude or None
         fields = self.fields and list(self.fields) or None
         if fields is None and exclude is None:
+            # Django 1.9+ does not support both fields being none
             fields = [f[0].name for f in self.model._meta.get_concrete_fields_with_model()]
         defaults = {
             "form": self.form,
@@ -228,6 +229,10 @@ class DetailAdminView(ModelAdminView):
         helper = self.get_form_helper()
         if helper:
             self.form_obj.helper = helper
+        
+        if hasattr(self.form_obj.Meta, 'fields'):
+            # delete these or crispy_forms displays duplicates 
+            del self.form_obj.Meta.fields
 
         return self.get_response()
 
