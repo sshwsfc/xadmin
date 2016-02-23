@@ -1,5 +1,5 @@
 from django import forms
-from django.utils.datastructures import SortedDict
+from collections import OrderedDict
 from django.utils.html import escape
 from django.utils.encoding import force_str
 from xadmin.sites import site
@@ -12,7 +12,7 @@ NON_FIELD_ERRORS = '__all__'
 class BaseAjaxPlugin(BaseAdminPlugin):
 
     def init_request(self, *args, **kwargs):
-        return bool(self.request.is_ajax() or self.request.REQUEST.get('_ajax'))
+        return bool(self.request.is_ajax() or self.request.GET.get('_ajax') or self.request.POST.get('_ajax'))
 
 
 class AjaxListPlugin(BaseAjaxPlugin):
@@ -92,7 +92,7 @@ class AjaxDetailPlugin(BaseAjaxPlugin):
             result = self.admin_view.get_field_result(f)
             results.append((result.label, result.val))
 
-        return self.render_response(SortedDict(results))
+        return self.render_response(OrderedDict(results))
 
 site.register_plugin(AjaxListPlugin, ListAdminView)
 site.register_plugin(AjaxFormPlugin, ModelFormAdminView)

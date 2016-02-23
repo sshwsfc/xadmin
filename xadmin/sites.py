@@ -5,6 +5,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.db.models.base import ModelBase
 from django.utils import six
 from django.views.decorators.cache import never_cache
+from django.apps import apps
 
 if sys.version_info[0] == 2:
     reload(sys)
@@ -43,8 +44,6 @@ class AdminSite(object):
         self._registry_plugins = {}  # view_class class -> plugin_class class
 
         self._admin_view_cache = {}
-
-        self.check_dependencies()
 
         self.model_admins_order = 0
 
@@ -165,9 +164,7 @@ class AdminSite(object):
         The default implementation checks that LogEntry, ContentType and the
         auth context processor are installed.
         """
-        from django.contrib.contenttypes.models import ContentType
-
-        if not ContentType._meta.installed:
+        if not apps.is_installed('django.contrib.contenttypes'):
             raise ImproperlyConfigured("Put 'django.contrib.contenttypes' in "
                                        "your INSTALLED_APPS setting in order to use the admin application.")
         if not ('django.contrib.auth.context_processors.auth' in settings.TEMPLATE_CONTEXT_PROCESSORS or
@@ -297,17 +294,11 @@ class AdminSite(object):
             return update_wrapper(wrapper, view)
 
         # Admin-site-wide views.
-        urlpatterns = patterns('',
-                               url(r'^jsi18n/$', wrap(self.i18n_javascript,
-                                                      cacheable=True), name='jsi18n')
-                               )
+        urlpatterns = [url(r'^jsi18n/$', wrap(self.i18n_javascript, cacheable=True), name='jsi18n')]
 
         # Registed admin views
-        urlpatterns += patterns('',
-                                *[url(
-                                  path, wrap(self.create_admin_view(clz_or_func)) if type(clz_or_func) == type and issubclass(clz_or_func, BaseAdminView) else include(clz_or_func(self)),
+        urlpatterns += [url(path, wrap(self.create_admin_view(clz_or_func)) if type(clz_or_func) == type and issubclass(clz_or_func, BaseAdminView) else include(clz_or_func(self)),
                                   name=name) for path, clz_or_func, name in self._registry_views]
-                                )
 
         # Add in each model's views.
         for model, admin_class in six.iteritems(self._registry):
@@ -316,12 +307,7 @@ class AdminSite(object):
                     self.create_model_admin_view(clz, model, admin_class)),
                 name=name % (model._meta.app_label, model._meta.model_name))
                 for path, clz, name in self._registry_modelviews]
-            urlpatterns += patterns('',
-                                    url(
-                                    r'^%s/%s/' % (
-                                        model._meta.app_label, model._meta.model_name),
-                                    include(patterns('', *view_urls)))
-                                    )
+            urlpatterns += [url(r'^%s/%s/' % (model._meta.app_label, model._meta.model_name), include(view_urls))]
 
         return urlpatterns
 

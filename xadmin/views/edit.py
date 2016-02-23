@@ -389,11 +389,12 @@ class CreateAdminView(ModelFormAdminView):
     def get_response(self):
         context = self.get_context()
         context.update(self.kwargs or {})
+        self.request.current_app = self.admin_site.name
 
         return TemplateResponse(
             self.request, self.add_form_template or self.get_template_list(
                 'views/model_form.html'),
-            context, current_app=self.admin_site.name)
+            context)
 
     @filter_hook
     def post_response(self):
@@ -476,11 +477,12 @@ class UpdateAdminView(ModelFormAdminView):
     def get_response(self, *args, **kwargs):
         context = self.get_context()
         context.update(kwargs or {})
+        self.request.current_app = self.admin_site.name
 
         return TemplateResponse(
             self.request, self.change_form_template or self.get_template_list(
                 'views/model_form.html'),
-            context, current_app=self.admin_site.name)
+            context)
 
     def post(self, request, *args, **kwargs):
         if "_saveasnew" in self.request.REQUEST:

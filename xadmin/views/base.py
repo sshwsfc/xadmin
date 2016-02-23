@@ -80,7 +80,7 @@ def filter_hook(func):
     return method
 
 
-def inclusion_tag(file_name, context_class=Context, takes_context=False):
+def inclusion_tag(file_name, context_class=dict, takes_context=False):
     def wrap(func):
         @functools.wraps(func)
         def method(self, context, nodes, *arg, **kwargs):
@@ -188,7 +188,8 @@ class BaseAdminObject(object):
         return HttpResponse(content)
 
     def template_response(self, template, context):
-        return TemplateResponse(self.request, template, context, current_app=self.admin_site.name)
+        self.request.current_app = self.admin_site.name
+        return TemplateResponse(self.request, template, context)
 
     def message_user(self, message, level='info'):
         """

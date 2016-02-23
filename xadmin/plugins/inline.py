@@ -5,7 +5,7 @@ from collections import OrderedDict
 from django import forms
 from django.forms.formsets import all_valid, DELETION_FIELD_NAME
 from django.forms.models import inlineformset_factory, BaseInlineFormSet, modelform_defines_fields
-from django.contrib.contenttypes.generic import BaseGenericInlineFormSet, generic_inlineformset_factory
+from django.contrib.contenttypes.forms import BaseGenericInlineFormSet, generic_inlineformset_factory
 from django.template import loader
 from django.template.loader import render_to_string
 from django.contrib.auth import get_permission_codename
@@ -346,9 +346,10 @@ class InlineFormset(Fieldset):
         return render_to_string(link_template, {'link': self})
     
     def render(self, form, form_style, context,template_pack=TEMPLATE_PACK):
+        cx = context.flatten()
+        cx.update(dict({'formset': self, 'prefix': self.formset.prefix, 'inline_style': self.inline_style}, **self.extra_attrs))
         return render_to_string(
-            self.template, dict({'formset': self, 'prefix': self.formset.prefix, 'inline_style': self.inline_style}, **self.extra_attrs),
-            context_instance=context)
+            self.template, cx, request=context.request)
 
 
 class Inline(Fieldset):

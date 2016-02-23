@@ -9,7 +9,7 @@ from django.template.context import Context
 from django.utils.safestring import mark_safe
 from django.utils.html import escape,format_html
 from django.utils.text import Truncator
-from django.core.cache import cache, get_cache
+from django.core.cache import cache, caches
 
 from xadmin.views.list import EMPTY_CHANGELIST_VALUE
 import datetime
@@ -70,7 +70,7 @@ class BaseFilter(object):
 
     def __str__(self):
         tpl = get_template(self.template)
-        return mark_safe(tpl.render(Context(self.get_context())))
+        return mark_safe(tpl.render(self.get_context()))
 
 
 class FieldFilterManager(object):
@@ -445,13 +445,13 @@ class MultiSelectFieldListFilter(ListFieldFilter):
     def get_cached_choices(self):
         if not self.cache_config['enabled']:
             return None
-        c = get_cache(self.cache_config['cache'])
+        c = caches(self.cache_config['cache'])
         return c.get(self.cache_config['key']%self.field_path)
     
     def set_cached_choices(self,choices):
         if not self.cache_config['enabled']:
             return
-        c = get_cache(self.cache_config['cache'])
+        c = caches(self.cache_config['cache'])
         return c.set(self.cache_config['key']%self.field_path,choices)
     
     def __init__(self, field, request, params, model, model_admin, field_path,field_order_by=None,field_limit=None,sort_key=None,cache_config=None):
