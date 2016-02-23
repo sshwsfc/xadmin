@@ -1,4 +1,5 @@
 from django.template import Library
+from django.utils.safestring import mark_safe
 from xadmin.util import static, vendor as util_vendor
 import sys
 
@@ -24,7 +25,7 @@ def view_block(context, block_name, *args, **kwargs):
             if result and type(result) in (str, unicode):
                 nodes.append(result)
     if nodes:
-        return ''.join(nodes)
+        return mark_safe(''.join(nodes))
     else:
         return ""
 

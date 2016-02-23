@@ -36,7 +36,7 @@ class ShowField(Field):
 
         self.results = [(field, callback(field)) for field in self.fields]
 
-    def render(self, form, form_style, context):
+    def render(self, form, form_style, context, template_pack=None, extra_context=None, **kwargs):
         if hasattr(self, 'wrapper_class'):
             context['wrapper_class'] = self.wrapper_class
 

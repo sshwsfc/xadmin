@@ -1,4 +1,4 @@
-from django.contrib.contenttypes.generic import GenericRelation
+from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
 from django.db import models
@@ -64,7 +64,7 @@ def _register_model(admin, model):
                 _autoregister(admin, inline_model, follow=[fk_name])
                 if not inline_model._meta.get_field(fk_name).rel.is_hidden():
                     accessor = inline_model._meta.get_field(
-                        fk_name).related.get_accessor_name()
+                        fk_name).remote_field.get_accessor_name()
                     inline_fields.append(accessor)
         _autoregister(admin, model, inline_fields)
 

@@ -1,6 +1,5 @@
 {% extends base_template %}
 {% load i18n l10n %}
-{% load url from future %}
 {% load xadmin_tags %}
 
 {% block breadcrumbs %}
@@ -34,7 +33,7 @@
     <div class="alert alert-warning">{% blocktrans %}Are you sure you want to delete the selected {{ objects_name }}? All of the following objects and their related items will be deleted:{% endblocktrans %}</div>
     {% for deletable_object in deletable_objects %}
     <ul class="model_ul">
-        {{ deletable_object|unordered_list }}
+        {% autoescape off %}{{ deletable_object|unordered_list }}{% endautoescape %}
     </ul>
     {% endfor %}
     <form action="" method="post">{% csrf_token %}

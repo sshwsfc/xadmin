@@ -1,6 +1,5 @@
 {% extends base_template %}
 {% load i18n %}
-{% load url from future %}
 {% load xadmin_tags %}
 
 {% block nav_title %}{{title}}{% endblock %}
@@ -25,7 +24,7 @@
     {% endif %}
 {% else %}
     <div class="alert alert-warning">{% blocktrans with escaped_object=object %}Are you sure you want to delete the {{ verbose_name }} "{{ escaped_object }}"? All of the following related items will be deleted:{% endblocktrans %}</div>
-    <ul class="model_ul">{{ deleted_objects|unordered_list }}</ul>
+    <ul class="model_ul">{% autoescape off %}{{ deleted_objects|unordered_list  }}{% endautoescape %}</ul>
     <form action="" method="post">{% csrf_token %}
     <div>
     <input type="hidden" name="post" value="yes" />

@@ -156,6 +156,6 @@ class QuickFilterPlugin(BaseAdminPlugin):
             return queryset
     
     def block_left_navbar(self, context, nodes):
-        nodes.append(loader.render_to_string('xadmin/blocks/modal_list.left_navbar.quickfilter.html',context))
+        nodes.append(loader.render_to_string('xadmin/blocks/modal_list.left_navbar.quickfilter.html', context=context.flatten(), request=context.request))
         
 site.register_plugin(QuickFilterPlugin, ListAdminView)

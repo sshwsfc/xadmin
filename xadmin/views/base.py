@@ -18,7 +18,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.template import Context, Template
 from django.template.response import TemplateResponse
-from django.utils.datastructures import SortedDict
+from collections import OrderedDict
 from django.utils.decorators import method_decorator, classonlymethod
 
 from django.utils.http import urlencode
@@ -80,7 +80,7 @@ def filter_hook(func):
     return method
 
 
-def inclusion_tag(file_name, context_class=Context, takes_context=False):
+def inclusion_tag(file_name, context_class=dict, takes_context=False):
     def wrap(func):
         @functools.wraps(func)
         def method(self, context, nodes, *arg, **kwargs):
@@ -188,7 +188,8 @@ class BaseAdminObject(object):
         return HttpResponse(content)
 
     def template_response(self, template, context):
-        return TemplateResponse(self.request, template, context, current_app=self.admin_site.name)
+        self.request.current_app = self.admin_site.name
+        return TemplateResponse(self.request, template, context)
 
     def message_user(self, message, level='info'):
         """
@@ -313,7 +314,7 @@ class CommAdminView(BaseAdminView):
                     get_url(m, had_urls)
         get_url({'menus': site_menu}, had_urls)
 
-        nav_menu = SortedDict()
+        nav_menu = OrderedDict()
 
         for model, model_admin in self.admin_site._registry.items():
             if getattr(model_admin, 'hidden_menu', False):
@@ -380,37 +381,30 @@ class CommAdminView(BaseAdminView):
     def get_context(self):
         context = super(CommAdminView, self).get_context()
 
-        if not settings.DEBUG and 'nav_menu' in self.request.session:
-            nav_menu = json.loads(self.request.session['nav_menu'])
-        else:
-            menus = copy.copy(self.get_nav_menu())
+        menus = copy.copy(self.get_nav_menu())
 
-            def check_menu_permission(item):
-                need_perm = item.pop('perm', None)
-                if need_perm is None:
-                    return True
-                elif callable(need_perm):
-                    return need_perm(self.user)
-                elif need_perm == 'super':
-                    return self.user.is_superuser
-                else:
-                    return self.user.has_perm(need_perm)
+        def check_menu_permission(item):
+            need_perm = item.pop('perm', None)
+            if need_perm is None:
+                return True
+            elif callable(need_perm):
+                return need_perm(self.user)
+            elif need_perm == 'super':
+                return self.user.is_superuser
+            else:
+                return self.user.has_perm(need_perm)
 
-            def filter_item(item):
-                if 'menus' in item:
-                    before_filter_length = len(item['menus'])
-                    item['menus'] = [filter_item(i) for i in item['menus'] if check_menu_permission(i)]
-                    after_filter_length = len(item['menus'])
-                    if after_filter_length == 0 and before_filter_length > 0:
-                        return None
-                return item
+        def filter_item(item):
+            if 'menus' in item:
+                before_filter_length = len(item['menus'])
+                item['menus'] = [filter_item(i) for i in item['menus'] if check_menu_permission(i)]
+                after_filter_length = len(item['menus'])
+                if after_filter_length == 0 and before_filter_length > 0:
+                    return None
+            return item
 
-            nav_menu = [filter_item(item) for item in menus if check_menu_permission(item)]
-            nav_menu = list(filter(lambda x:x, nav_menu))  # py3 compatibility
-
-            if not settings.DEBUG:
-                self.request.session['nav_menu'] = json.dumps(nav_menu)
-                self.request.session.modified = True
+        nav_menu = [filter_item(item) for item in menus if check_menu_permission(item)]
+        nav_menu = list(filter(lambda x:x, nav_menu))  # py3 compatibility
 
         def check_selected(menu, path):
             selected = False

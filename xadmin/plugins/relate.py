@@ -24,7 +24,13 @@ class RelateMenuPlugin(BaseAdminPlugin):
             return self._related_acts
 
         _related_acts = []
-        for r in self.opts.get_all_related_objects() + self.opts.get_all_related_many_to_many_objects():
+        fields = []
+        for f in self.opts.get_fields():
+            if (f.one_to_many or f.one_to_one) and f.auto_created:
+                fields += [f]
+            if f.many_to_many and f.auto_created:
+                fields += [f]
+        for r in fields:
             if self.related_list and (r.get_accessor_name() not in self.related_list):
                 continue
             if r.model not in self.admin_site._registry.keys():
@@ -128,7 +134,7 @@ class BaseRelateDisplayPlugin(BaseAdminPlugin):
 
     def init_request(self, *args, **kwargs):
         self.relate_obj = None
-        for k, v in self.request.REQUEST.items():
+        for k, v in self.request.GET.items()+self.request.POST.items():
             if smart_str(k).startswith(RELATE_PREFIX):
                 self.relate_obj = RelateObject(
                     self.admin_view, smart_str(k)[len(RELATE_PREFIX):], v)

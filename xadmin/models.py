@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models.base import ModelBase
 from xadmin.compatibility import  smart_unicode, AUTH_USER_MODEL
-from django.db.models.signals import post_syncdb
+from django.db.models.signals import post_migrate
 from django.contrib.auth.models import Permission
 import datetime, decimal, json
 
@@ -30,7 +30,7 @@ def add_view_permissions(sender, **kwargs):
             #print "Added view permission for %s" % content_type.name
 
 # check for all our view permissions after a syncdb
-post_syncdb.connect(add_view_permissions)
+post_migrate.connect(add_view_permissions)
 
 
 class Bookmark(models.Model):

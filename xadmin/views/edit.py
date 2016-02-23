@@ -389,11 +389,12 @@ class CreateAdminView(ModelFormAdminView):
     def get_response(self):
         context = self.get_context()
         context.update(self.kwargs or {})
+        self.request.current_app = self.admin_site.name
 
         return TemplateResponse(
             self.request, self.add_form_template or self.get_template_list(
                 'views/model_form.html'),
-            context, current_app=self.admin_site.name)
+            context)
 
     @filter_hook
     def post_response(self):
@@ -476,11 +477,12 @@ class UpdateAdminView(ModelFormAdminView):
     def get_response(self, *args, **kwargs):
         context = self.get_context()
         context.update(kwargs or {})
+        self.request.current_app = self.admin_site.name
 
         return TemplateResponse(
             self.request, self.change_form_template or self.get_template_list(
                 'views/model_form.html'),
-            context, current_app=self.admin_site.name)
+            context)
 
     def post(self, request, *args, **kwargs):
         if "_saveasnew" in self.request.REQUEST:
@@ -519,7 +521,7 @@ class UpdateAdminView(ModelFormAdminView):
             elif self.has_view_permission():
                 change_list_url = self.model_admin_url('changelist')
                 if 'LIST_QUERY' in self.request.session \
-                and self.request.session['LIST_QUERY'][0] == self.model_info:
+                and self.request.session['LIST_QUERY'][0] == list(self.model_info):
                     change_list_url += '?' + self.request.session['LIST_QUERY'][1]
                 return change_list_url
             else:

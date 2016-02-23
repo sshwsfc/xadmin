@@ -2,7 +2,7 @@ import re, sys
 from django import forms
 from django.db import models
 from django.template import loader
-from django.utils.datastructures import SortedDict
+from collections import OrderedDict
 from django.forms import ValidationError
 from django.forms.models import modelform_factory
 
@@ -40,7 +40,7 @@ class WizardFormPlugin(BaseAdminPlugin):
 
     def get_form_list(self):
         if not hasattr(self, '_form_list'):
-            init_form_list = SortedDict()
+            init_form_list = OrderedDict()
 
             assert len(self.wizard_form_list) > 0, 'at least one form is needed'
 
