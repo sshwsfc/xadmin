@@ -256,10 +256,8 @@ class DetailAdminView(ModelAdminView):
 
     @filter_hook
     def get_media(self):
-        media = super(DetailAdminView, self).get_media()
-        media = media + self.form_obj.media
-        media.add_css({'screen': [self.static('xadmin/css/xadmin.form.css')]})
-        return media
+        return super(DetailAdminView, self).get_media() + self.form_obj.media + \
+            self.vendor('xadmin.page.form.js', 'xadmin.form.css')
 
     @filter_hook
     def get_field_result(self, field_name):
