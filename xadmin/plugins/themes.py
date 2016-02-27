@@ -60,7 +60,7 @@ class ThemePlugin(BaseAdminPlugin):
             else:
                 ex_themes = []
                 try:
-                    h = httplib2.Http(".cache", disable_ssl_certificate_validation=True)
+                    h = httplib2.Http()
                     resp, content = h.request("http://bootswatch.com/api/3.json", 'GET', \
                         "", headers={"Accept": "application/json", "User-Agent": self.request.META['HTTP_USER_AGENT']})
                     watch_themes = json.loads(content)['themes']
