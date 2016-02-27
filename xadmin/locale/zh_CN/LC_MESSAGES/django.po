@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xadmin-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-22 15:54+0800\n"
+"POT-Creation-Date: 2016-02-27 11:53+0800\n"
 "PO-Revision-Date: 2013-11-20 10:21+0000\n"
 "Last-Translator: sshwsfc <sshwsfc@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/projects/p/xadmin/language/zh_CN/)\n"
@@ -335,7 +335,7 @@ msgid "1 comment was successfully %(action)s."
 msgid_plural "%(count)s comments were successfully %(action)s."
 msgstr[0] ""
 
-#: plugins/details.py:52 views/list.py:576
+#: plugins/details.py:52 views/list.py:579
 #, python-format
 msgid "Details of %s"
 msgstr "%s详情"
@@ -405,6 +405,11 @@ msgstr "关联数据"
 #, python-format
 msgid "Search %s"
 msgstr "搜索%s"
+
+#: plugins/relfield.py:67
+#, python-format
+msgid "Select %s"
+msgstr "选择%s"
 
 #: plugins/themes.py:47
 msgid "Default"
