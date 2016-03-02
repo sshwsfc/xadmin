@@ -1,5 +1,7 @@
 from django.db import models
+from django.forms.utils import flatatt
 from django.utils.html import escape, format_html
+from django.utils.safestring import mark_safe
 from django.utils.text import Truncator
 from django.utils.translation import ugettext as _
 from django import forms
@@ -8,7 +10,7 @@ from xadmin.views import BaseAdminPlugin, ModelFormAdminView
 from xadmin.util import vendor
 
 
-class ForeignKeySearchWidget(forms.TextInput):
+class ForeignKeySearchWidget(forms.Widget):
 
     def __init__(self, rel, admin_view, attrs=None, using=None):
         self.rel = rel
@@ -16,10 +18,8 @@ class ForeignKeySearchWidget(forms.TextInput):
         self.db = using
         super(ForeignKeySearchWidget, self).__init__(attrs)
 
-    def render(self, name, value, attrs=None):
+    def build_attrs(self, attrs={}, **kwargs):
         to_opts = self.rel.to._meta
-        if attrs is None:
-            attrs = {}
         if "class" not in attrs:
             attrs['class'] = 'select-search'
         else:
@@ -32,10 +32,16 @@ class ForeignKeySearchWidget(forms.TextInput):
             for i in list(self.rel.limit_choices_to):
                 attrs['data-choices'] += "&_p_%s=%s" % (i, self.rel.limit_choices_to[i])
             attrs['data-choices'] = format_html(attrs['data-choices'])
-        if value:
-            attrs['data-label'] = self.label_for_value(value)
 
-        return super(ForeignKeySearchWidget, self).render(name, value, attrs)
+        return super(ForeignKeySearchWidget, self).build_attrs(attrs, **kwargs)
+
+    def render(self, name, value, attrs=None):
+        final_attrs = self.build_attrs(attrs, name=name)
+        output = [format_html('<select{0}>', flatatt(final_attrs))]
+        if value:
+            output.append(format_html('<option selected="selected" value="{0}">{1}</option>', value, self.label_for_value(value)))
+        output.append('</select>')
+        return mark_safe('\n'.join(output))
 
     def label_for_value(self, value):
         key = self.rel.get_related_field().name
@@ -50,16 +56,27 @@ class ForeignKeySearchWidget(forms.TextInput):
     def media(self):
         return vendor('select.js', 'select.css', 'xadmin.widget.select.js')
 
+class ForeignKeySelectWidget(ForeignKeySearchWidget):
+
+    def build_attrs(self, attrs={}, **kwargs):
+        attrs = super(ForeignKeySelectWidget, self).build_attrs(attrs, **kwargs)
+        if "class" not in attrs:
+            attrs['class'] = 'select-preload'
+        else:
+            attrs['class'] = attrs['class'] + ' select-preload'
+        attrs['data-placeholder'] = _('Select %s') % self.rel.to._meta.verbose_name
+        return attrs
 
 class RelateFieldPlugin(BaseAdminPlugin):
 
     def get_field_style(self, attrs, db_field, style, **kwargs):
         # search able fk field
-        if style == 'fk-ajax' and isinstance(db_field, models.ForeignKey):
+        if style in ('fk-ajax', 'fk-select') and isinstance(db_field, models.ForeignKey):
             if (db_field.rel.to in self.admin_view.admin_site._registry) and \
                     self.has_model_perm(db_field.rel.to, 'view'):
                 db = kwargs.get('using')
-                return dict(attrs or {}, widget=ForeignKeySearchWidget(db_field.rel, self.admin_view, using=db))
+                return dict(attrs or {}, \
+                    widget=(style == 'fk-ajax' and ForeignKeySearchWidget or ForeignKeySelectWidget)(db_field.rel, self.admin_view, using=db))
         return attrs
 
 site.register_plugin(RelateFieldPlugin, ModelFormAdminView)

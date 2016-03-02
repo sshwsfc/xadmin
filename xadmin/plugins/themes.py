@@ -1,5 +1,5 @@
 #coding:utf-8
-import urllib
+import urllib, httplib2
 from django.template import loader
 from django.core.cache import cache
 from django.utils.translation import ugettext as _
@@ -60,14 +60,16 @@ class ThemePlugin(BaseAdminPlugin):
             else:
                 ex_themes = []
                 try:
-                    watch_themes = json.loads(urllib.urlopen(
-                        'http://api.bootswatch.com/3/').read())['themes']
+                    h = httplib2.Http()
+                    resp, content = h.request("http://bootswatch.com/api/3.json", 'GET', \
+                        "", headers={"Accept": "application/json", "User-Agent": self.request.META['HTTP_USER_AGENT']})
+                    watch_themes = json.loads(content)['themes']
                     ex_themes.extend([
                         {'name': t['name'], 'description': t['description'],
                             'css': t['cssMin'], 'thumbnail': t['thumbnail']}
                         for t in watch_themes])
-                except Exception:
-                    pass
+                except Exception, e:
+                    print e
 
                 cache.set(THEME_CACHE_KEY, json.dumps(ex_themes), 24 * 3600)
                 themes.extend(ex_themes)

@@ -1,64 +1,38 @@
 ;(function($){
-    // add select2 render
-    if(!window.__admin_ismobile__){
-        $.fn.exform.renders.push(function(f){
-          if($.fn.selectize){
-            f.find('select:not(.select-search):not([multiple=multiple])').selectize();
-            f.find('.select-search').each(function(){
-                var $el = $(this);
-                $el.select2({
-                    minimumInputLength: 1,
-                    initSelection: function(elem, callback){
-                        callback({id: elem.val(), '__str__': $el.data('label')});
-                    },
-                    ajax: {
+    // add select render
+    $.fn.exform.renders.push(function(f){
+      if($.fn.selectize){
+        f.find('select:not(.select-search):not([multiple=multiple])').selectize();
+        f.find('.select-search').each(function(){
+            var $el = $(this);
+            var preload = $el.hasClass('select-preload');
+            $el.selectize({
+                valueField: 'id',
+                labelField: '__str__',
+                searchField: '__str__',
+                create: false,
+                maxItems: 1,
+                preload: preload,
+                load: function(query, callback) {
+                    if(!preload && !query.length) return callback();
+                    $.ajax({
                         url: $el.data('search-url')+$el.data('choices'),
                         dataType: 'json',
-                        data: function (term, page) {
-                            return {
-                                '_q_' : term,
-                                '_cols': 'id.__str__',
-                                'p': page - 1
-                            };
+                        data: {
+                            '_q_' : query,
+                            '_cols': 'id.__str__'
                         },
-                        results: function (data, page) {
-                            return {results: data.objects, more: data.has_more};
-                        }
-                    },
-                    formatResult: function(item){return item['__str__']},
-                    formatSelection: function(item){return item['__str__']}
-                });
-            })
-        }});
-    } else {
-        $.fn.exform.renders.push(function(f){
-          if($.fn.select2){
-            f.find('.select-search').each(function(){
-                var $el = $(this);
-                $el.select2({
-                    minimumInputLength: 1,
-                    initSelection: function(elem, callback){
-                        callback({id: elem.val(), '__str__': $el.data('label')});
-                    },
-                    ajax: {
-                        url: $el.data('search-url')+$el.data('choices'),
-                        dataType: 'json',
-                        data: function (term, page) {
-                            return {
-                                '_q_' : term,
-                                '_cols': 'id.__str__',
-                                'p': page - 1
-                            };
+                        type: 'GET',
+                        error: function() {
+                            callback();
                         },
-                        results: function (data, page) {
-                            return {results: data.objects, more: data.has_more};
+                        success: function(res) {
+                            callback(res.objects);
                         }
-                    },
-                    formatResult: function(item){return item['__str__']},
-                    formatSelection: function(item){return item['__str__']}
-                });
-            })
-        }});
-    }
+                    });
+                }
+            });
+        })
+    }});
 })(jQuery)
 
