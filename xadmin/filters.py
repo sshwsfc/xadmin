@@ -1,6 +1,7 @@
 from django.db import models
+from django.db.models.fields.related import ForeignObjectRel, ManyToManyField
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.encoding import smart_unicode
+from xadmin.compatibility import smart_unicode
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.template.loader import get_template
@@ -16,8 +17,11 @@ import datetime
 FILTER_PREFIX = '_p_'
 SEARCH_VAR = '_q_'
 
-from util import (get_model_from_relation,
-    reverse_field_path, get_limit_choices_to_from_path, prepare_lookup_value)
+from xadmin.util import \
+    get_model_from_relation,\
+    reverse_field_path, \
+    get_limit_choices_to_from_path, \
+    prepare_lookup_value
 
 
 class BaseFilter(object):
@@ -36,9 +40,7 @@ class BaseFilter(object):
         self.admin_view = admin_view
 
         if self.title is None:
-            raise ImproperlyConfigured(
-                "The filter '%s' does not specify "
-                "a 'title'." % self.__class__.__name__)
+            raise ImproperlyConfigured("The filter '%s' does not specify a 'title'." % self.__class__.__name__)
 
     def query_string(self, new_params=None, remove=None):
         return self.admin_view.get_query_string(new_params, remove)
@@ -118,9 +120,13 @@ class FieldFilter(BaseFilter):
                 self.context_params["%s_val" % name] = value
             else:
                 self.context_params["%s_val" % name] = ''
-
-        map(lambda kv: setattr(
-            self, 'lookup_' + kv[0], kv[1]), self.context_params.items())
+        
+        # This code does'nt work in py3, the dict.items() was not list.
+        # map(lambda kv: setattr(self, 'lookup_' + kv[0], kv[1]),\
+        #     self.context_params.items())
+        for k, v in self.context_params.items():
+            setattr(self, 'lookup_' + k, v)
+        pass
 
     def get_context(self):
         context = super(FieldFilter, self).get_context()
@@ -310,7 +316,7 @@ class RelatedFieldSearchFilter(FieldFilter):
 
     @classmethod
     def test(cls, field, request, params, model, admin_view, field_path):
-        if not (hasattr(field, 'rel') and bool(field.rel) or isinstance(field, models.related.RelatedObject)):
+        if not (hasattr(field, 'rel') and bool(field.rel) or isinstance(field, ForeignObjectRel)):
             return False
         related_modeladmin = admin_view.admin_site._registry.get(
             get_model_from_relation(field))
@@ -361,7 +367,7 @@ class RelatedFieldListFilter(ListFieldFilter):
 
     @classmethod
     def test(cls, field, request, params, model, admin_view, field_path):
-        return (hasattr(field, 'rel') and bool(field.rel) or isinstance(field, models.related.RelatedObject))
+        return (hasattr(field, 'rel') and bool(field.rel) or isinstance(field, ForeignObjectRel))
 
     def __init__(self, field, request, params, model, model_admin, field_path):
         other_model = get_model_from_relation(field)
@@ -383,7 +389,7 @@ class RelatedFieldListFilter(ListFieldFilter):
         self.title = self.lookup_title
 
     def has_output(self):
-        if (isinstance(self.field, models.related.RelatedObject)
+        if (isinstance(self.field, ForeignObjectRel)
                 and self.field.field.null or hasattr(self.field, 'rel')
                 and self.field.null):
             extra = 1
@@ -409,7 +415,7 @@ class RelatedFieldListFilter(ListFieldFilter):
                 }, [self.lookup_isnull_name]),
                 'display': val,
             }
-        if (isinstance(self.field, models.related.RelatedObject)
+        if (isinstance(self.field, ForeignObjectRel)
                 and self.field.field.null or hasattr(self.field, 'rel')
                 and self.field.null):
             yield {

@@ -1,5 +1,7 @@
+import six
 import copy
 import inspect
+from collections import OrderedDict
 from django import forms
 from django.forms.formsets import all_valid, DELETION_FIELD_NAME
 from django.forms.models import inlineformset_factory, BaseInlineFormSet, modelform_defines_fields
@@ -7,9 +9,15 @@ from django.contrib.contenttypes.generic import BaseGenericInlineFormSet, generi
 from django.template import loader
 from django.template.loader import render_to_string
 from django.contrib.auth import get_permission_codename
+from django.utils import six
 from xadmin.layout import FormHelper, Layout, flatatt, Container, Column, Field, Fieldset
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView, DetailAdminView, filter_hook
+
+try:
+    from crispy_forms.utils import TEMPLATE_PACK
+except:
+    TEMPLATE_PACK = 'bootstrap3'
 
 
 class ShowField(Field):
@@ -21,7 +29,7 @@ class ShowField(Field):
         if admin_view.style == 'table':
             self.template = "xadmin/layout/field_value_td.html"
 
-    def render(self, form, form_style, context):
+    def render(self, form, form_style, context,template_pack=TEMPLATE_PACK):
         html = ''
         detail = form.detail
         for field in self.fields:
@@ -34,7 +42,7 @@ class ShowField(Field):
 
 class DeleteField(Field):
 
-    def render(self, form, form_style, context):
+    def render(self, form, form_style, context,template_pack=TEMPLATE_PACK):
         if form.instance.pk:
             self.attrs['type'] = 'hidden'
             return super(DeleteField, self).render(form, form_style, context)
@@ -113,7 +121,7 @@ def replace_field_to_value(layout, av):
         for i, lo in enumerate(layout.fields):
             if isinstance(lo, Field) or issubclass(lo.__class__, Field):
                 layout.fields[i] = ShowField(av, *lo.fields, **lo.attrs)
-            elif isinstance(lo, basestring):
+            elif isinstance(lo, six.string_types):
                 layout.fields[i] = ShowField(av, lo)
             elif hasattr(lo, 'get_field_names'):
                 replace_field_to_value(lo, av)
@@ -313,7 +321,8 @@ class GenericInlineModelAdmin(InlineModelAdmin):
 
 
 class InlineFormset(Fieldset):
-
+    link_template = '%s/layout/tab-link.html'
+    
     def __init__(self, formset, allow_blank=False, **kwargs):
         self.fields = []
         self.css_class = kwargs.pop('css_class', '')
@@ -329,7 +338,15 @@ class InlineFormset(Fieldset):
         self.flat_attrs = flatatt(kwargs)
         self.extra_attrs = formset.style.get_attrs()
 
-    def render(self, form, form_style, context):
+    def render_link(self, template_pack=TEMPLATE_PACK, **kwargs):
+        """
+        Render the link for the tab-pane. It must be called after render so css_class is updated
+        with active if needed.
+        """
+        link_template = self.link_template % template_pack
+        return render_to_string(link_template, {'link': self})
+    
+    def render(self, form, form_style, context,template_pack=TEMPLATE_PACK):
         return render_to_string(
             self.template, dict({'formset': self, 'prefix': self.formset.prefix, 'inline_style': self.inline_style}, **self.extra_attrs),
             context_instance=context)
@@ -341,7 +358,7 @@ class Inline(Fieldset):
         self.model = rel_model
         self.fields = []
 
-    def render(self, form, form_style, context):
+    def render(self, form, form_style, context, template_pack=TEMPLATE_PACK):
         return ""
 
 
@@ -418,7 +435,7 @@ class InlineFormsetPlugin(BaseAdminPlugin):
     def get_form_layout(self, layout):
         allow_blank = isinstance(self.admin_view, DetailAdminView)
         # fixed #176 bug, change dict to list
-        fs = [(f.model, InlineFormset(f, allow_blank)) for f in self.formsets]
+        fs = OrderedDict([(f.model, InlineFormset(f, allow_blank)) for f in self.formsets])
         replace_inline_objects(layout, fs)
 
         if fs:
@@ -429,7 +446,7 @@ class InlineFormsetPlugin(BaseAdminPlugin):
                 container = layout
 
             # fixed #176 bug, change dict to list
-            for key, value in fs:
+            for key, value in six.iteritems(fs):
                 container.append(value)
 
         return layout

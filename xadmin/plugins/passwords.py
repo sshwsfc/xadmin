@@ -4,6 +4,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import password_reset_confirm
 from django.template.response import TemplateResponse
 from django.utils.translation import ugettext as _
+from django.conf import settings
 
 from xadmin.sites import site
 from xadmin.views.base import BaseAdminPlugin, BaseAdminView, csrf_protect_m
@@ -19,7 +20,7 @@ class ResetPasswordSendView(BaseAdminView):
     password_reset_done_template = 'xadmin/auth/password_reset/done.html'
     password_reset_token_generator = default_token_generator
 
-    password_reset_from_email = None
+    password_reset_from_email = settings.EMAIL_HOST_USER
     password_reset_email_template = 'xadmin/auth/password_reset/email.html'
     password_reset_subject_template = None
 

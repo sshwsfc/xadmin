@@ -1,5 +1,9 @@
 from django.template import Library
 from xadmin.util import static, vendor as util_vendor
+import sys
+
+if sys.version_info[0] == 3:
+    unicode = str
 
 register = Library()
 

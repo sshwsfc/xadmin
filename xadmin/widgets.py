@@ -4,12 +4,12 @@ Form Widget classes specific to the Django admin site.
 from itertools import chain
 from django import forms
 from django.forms.widgets import RadioFieldRenderer, RadioChoiceInput
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_str
 from django.utils.safestring import mark_safe
 from django.utils.html import conditional_escape
 from django.utils.translation import ugettext as _
 
-from util import vendor
+from .util import vendor
 
 
 class AdminDateWidget(forms.DateInput):
@@ -81,7 +81,7 @@ class AdminRadioInput(RadioChoiceInput):
             label_for = ' for="%s_%s"' % (self.attrs['id'], self.index)
         else:
             label_for = ''
-        choice_label = conditional_escape(force_unicode(self.choice_label))
+        choice_label = conditional_escape(force_str(self.choice_label))
         if attrs.get('inline', False):
             return mark_safe(u'<label%s class="radio-inline">%s %s</label>' % (label_for, self.tag(), choice_label))
         else:
@@ -99,7 +99,7 @@ class AdminRadioFieldRenderer(RadioFieldRenderer):
         return AdminRadioInput(self.name, self.value, self.attrs.copy(), choice, idx)
 
     def render(self):
-        return mark_safe(u'\n'.join([force_unicode(w) for w in self]))
+        return mark_safe(u'\n'.join([force_str(w) for w in self]))
 
 
 class AdminRadioSelect(forms.RadioSelect):
@@ -114,7 +114,7 @@ class AdminCheckboxSelect(forms.CheckboxSelectMultiple):
         final_attrs = self.build_attrs(attrs, name=name)
         output = []
         # Normalize to strings
-        str_values = set([force_unicode(v) for v in value])
+        str_values = set([force_str(v) for v in value])
         for i, (option_value, option_label) in enumerate(chain(self.choices, choices)):
             # If an ID attribute was given, add a numeric index as a suffix,
             # so that the checkboxes don't all have the same ID attribute.
@@ -126,9 +126,9 @@ class AdminCheckboxSelect(forms.CheckboxSelectMultiple):
 
             cb = forms.CheckboxInput(
                 final_attrs, check_test=lambda value: value in str_values)
-            option_value = force_unicode(option_value)
+            option_value = force_str(option_value)
             rendered_cb = cb.render(name, option_value)
-            option_label = conditional_escape(force_unicode(option_label))
+            option_label = conditional_escape(force_str(option_label))
 
             if final_attrs.get('inline', False):
                 output.append(u'<label%s class="checkbox-inline">%s %s</label>' % (label_for, rendered_cb, option_label))
