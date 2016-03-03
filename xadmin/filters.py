@@ -314,7 +314,7 @@ class RelatedFieldSearchFilter(FieldFilter):
             return False
         related_modeladmin = admin_view.admin_site._registry.get(
             get_model_from_relation(field))
-        return related_modeladmin and getattr(related_modeladmin, 'relfield_style', None) == 'fk-ajax'
+        return related_modeladmin and getattr(related_modeladmin, 'relfield_style', None) in ('fk-ajax', 'fk-select')
 
     def __init__(self, field, request, params, model, model_admin, field_path):
         other_model = get_model_from_relation(field)
@@ -326,6 +326,9 @@ class RelatedFieldSearchFilter(FieldFilter):
         self.lookup_formats = {'in': '%%s__%s__in' % rel_name,'exact': '%%s__%s__exact' % rel_name}
         super(RelatedFieldSearchFilter, self).__init__(
             field, request, params, model, model_admin, field_path)
+
+        related_modeladmin = self.admin_view.admin_site._registry.get(other_model)
+        self.relfield_style = related_modeladmin.relfield_style
 
         if hasattr(field, 'verbose_name'):
             self.lookup_title = field.verbose_name
@@ -353,6 +356,7 @@ class RelatedFieldSearchFilter(FieldFilter):
         context['search_url'] = self.search_url
         context['label'] = self.label
         context['choices'] = self.choices
+        context['relfield_style'] = self.relfield_style
         return context
 
 

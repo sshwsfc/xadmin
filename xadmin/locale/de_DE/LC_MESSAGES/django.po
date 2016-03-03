@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xadmin-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-27 11:53+0800\n"
+"POT-Creation-Date: 2016-03-03 19:50+0800\n"
 "PO-Revision-Date: 2013-12-19 11:06+0000\n"
 "Last-Translator: Sebastian Morkisch <semox78@googlemail.com>\n"
 "Language-Team: German (Germany) (http://www.transifex.com/projects/p/xadmin/language/de_DE/)\n"
@@ -24,7 +24,7 @@ msgstr ""
 msgid "Administration"
 msgstr ""
 
-#: filters.py:158 filters.py:190 filters.py:402 filters.py:488 filters.py:526
+#: filters.py:158 filters.py:190 filters.py:406 filters.py:492 filters.py:530
 msgid "All"
 msgstr "Alle"
 
@@ -681,7 +681,7 @@ msgstr "Themeneinstellungen"
 #: templates/xadmin/blocks/model_list.nav_form.search_form.html:8
 #: templates/xadmin/filters/char.html:7
 #: templates/xadmin/filters/fk_search.html:7
-#: templates/xadmin/filters/fk_search.html:14
+#: templates/xadmin/filters/fk_search.html:17
 #: templates/xadmin/filters/number.html:7
 msgid "Search"
 msgstr "Suchen"
@@ -840,7 +840,7 @@ msgstr "Tag"
 
 #: templates/xadmin/filters/date.html:29 templates/xadmin/filters/date.html:46
 #: templates/xadmin/filters/date.html:54
-#: templates/xadmin/filters/fk_search.html:16
+#: templates/xadmin/filters/fk_search.html:21
 #: templates/xadmin/filters/number.html:37
 msgid "Apply"
 msgstr "Anwenden"
@@ -861,7 +861,13 @@ msgstr "Von"
 msgid "To"
 msgstr "Bis"
 
-#: templates/xadmin/filters/fk_search.html:18
+#: templates/xadmin/filters/fk_search.html:15
+#, fuzzy
+#| msgid "Select Date"
+msgid "Select"
+msgstr "Datum wählen"
+
+#: templates/xadmin/filters/fk_search.html:23
 #: templates/xadmin/filters/number.html:39
 msgid "Clean"
 msgstr "Entfernen"

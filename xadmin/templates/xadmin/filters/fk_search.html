@@ -9,9 +9,17 @@
     <div class="popover-content">
       <form class="exform" method="get" action="">
         {{ form_params|safe }}
-          <input name="{{exact_name}}" class="select-search" type="hidden" value="{{exact_val}}" 
-          data-search-url="{{search_url}}" data-label="{{label}} " data-choices="{{ choices }}"
-          data-placeholder="{% trans "Search" %} {{title}}…"/>
+          <select name="{{exact_name}}" class="select-search {% if relfield_style == 'fk-select' %}select-preload{% endif %}" data-search-url="{{search_url}}" data-choices="{{ choices }}"
+          {% if relfield_style == 'fk-select' %}
+          data-placeholder="{% trans "Select" %} {{title}}…"
+          {% else %}
+          data-placeholder="{% trans "Search" %} {{title}}…"
+          {% endif %}
+          >
+          {% if exact_val %}
+            <option value="{{exact_val}}" selected="selected">{{label}}</option>
+          {% endif %}
+          </select>
 
           <button type="submit" class="btn btn-success">{% trans "Apply" %}</button>
         {% if spec.used_params %}
