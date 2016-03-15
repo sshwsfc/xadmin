@@ -56,7 +56,7 @@ class IDCAdmin(object):
     reversion_enable = True
 
     actions = [BatchChangeAction, ]
-    batch_fields = ('contact', 'create_time')
+    batch_fields = ('contact', )
 
 
 class HostAdmin(object):
