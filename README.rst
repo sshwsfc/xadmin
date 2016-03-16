@@ -34,7 +34,7 @@ Screenshots
 
 .. figure:: https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/docs/images/plugins/action.png
    :alt: Actions
-   
+
 .. figure:: https://raw.github.com/sshwsfc/django-xadmin/docs-chinese/docs/images/plugins/filter.png
    :alt: Filter
 
@@ -65,7 +65,7 @@ or Install from github source:
 
     pip install git+git://github.com/sshwsfc/django-xadmin.git
 
-Install Requires 
+Install Requires
 ----------------
 
 -  `django`_ >=1.4
@@ -98,7 +98,7 @@ Changelogs
 
 0.5.0
 ^^^^^
-    
+
 - Update fontawesome to 4.0.3
 - Update javascript files to compact fa icons new version
 - Update tests for the new instance method of the AdminSite class
@@ -126,6 +126,8 @@ Run Demo Locally
 
     cd demo_app
     ./manage.py runserver
+
+必要配置参见: demo_app/README.md
 
 Open http://127.0.0.1:8000 in your browser, the admin user password is ``admin``
 
