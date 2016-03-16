@@ -74,7 +74,8 @@ class BatchChangeAction(BaseActionView):
         n = queryset.count()
 
         data = {}
-        for f in self.opts.fields:
+        fields = self.opts.fields + self.opts.many_to_many
+        for f in fields:
             if not f.editable or isinstance(f, models.AutoField) \
                     or not f.name in cleaned_data:
                 continue
