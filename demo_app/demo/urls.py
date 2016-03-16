@@ -1,14 +1,9 @@
 from django.conf.urls import patterns, include, url
-
-# Uncomment the next two lines to enable the admin:
-import xadmin
-
-from xadmin.plugins import xversion
-xversion.register_models()
-
 from django.contrib import admin
+import xadmin
+xadmin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^', include(xadmin.site.urls))
+    url(r'xadmin/', include(xadmin.site.urls, app_name='xadmin')),
 )

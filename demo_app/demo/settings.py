@@ -1,7 +1,8 @@
 # Django settings for wictrl project.
 
-import sys
 import os.path
+import sys
+
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
