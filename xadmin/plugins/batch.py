@@ -16,10 +16,10 @@ from xadmin.views.edit import ModelFormAdminView
 
 BATCH_CHECKBOX_NAME = '_batch_change_fields'
 
+
 class ChangeFieldWidgetWrapper(forms.Widget):
 
     def __init__(self, widget):
-        self.is_hidden = widget.is_hidden
         self.needs_multipart_form = widget.needs_multipart_form
         self.attrs = widget.attrs
         self.widget = widget
