@@ -181,12 +181,12 @@ class AdminSite(object):
             class MyAdminSite(AdminSite):
 
                 def get_urls(self):
-                    from django.conf.urls import patterns, url
+                    from django.conf.urls import url
 
                     urls = super(MyAdminSite, self).get_urls()
-                    urls += patterns('',
+                    urls += [
                         url(r'^my_view/$', self.admin_view(some_view))
-                    )
+                    ]
                     return urls
 
         By default, admin_views are marked non-cacheable using the
@@ -280,7 +280,7 @@ class AdminSite(object):
         return self.get_view_class(admin_view_class, option_class).as_view()
 
     def get_urls(self):
-        from django.conf.urls import patterns, url, include
+        from django.conf.urls import url, include
         from xadmin.views.base import BaseAdminView
 
         if settings.DEBUG:
@@ -292,17 +292,15 @@ class AdminSite(object):
             return update_wrapper(wrapper, view)
 
         # Admin-site-wide views.
-        urlpatterns = patterns('',
-                               url(r'^jsi18n/$', wrap(self.i18n_javascript,
-                                                      cacheable=True), name='jsi18n')
-                               )
+        urlpatterns = [
+                url(r'^jsi18n/$', wrap(self.i18n_javascript, cacheable=True), name='jsi18n')
+            ]
 
         # Registed admin views
-        urlpatterns += patterns('',
-                                *[url(
-                                  path, wrap(self.create_admin_view(clz_or_func)) if type(clz_or_func) == type and issubclass(clz_or_func, BaseAdminView) else include(clz_or_func(self)),
-                                  name=name) for path, clz_or_func, name in self._registry_views]
-                                )
+        urlpatterns += [
+                url(path, wrap(self.create_admin_view(clz_or_func)) if type(clz_or_func) == type and issubclass(clz_or_func, BaseAdminView) else include(clz_or_func(self)),
+                name=name) for path, clz_or_func, name in self._registry_views
+            ]
 
         # Add in each model's views.
         for model, admin_class in self._registry.iteritems():
@@ -311,12 +309,9 @@ class AdminSite(object):
                     self.create_model_admin_view(clz, model, admin_class)),
                 name=name % (model._meta.app_label, model._meta.model_name))
                 for path, clz, name in self._registry_modelviews]
-            urlpatterns += patterns('',
-                                    url(
-                                    r'^%s/%s/' % (
-                                        model._meta.app_label, model._meta.model_name),
-                                    include(patterns('', *view_urls)))
-                                    )
+            urlpatterns += [
+                    url(r'^%s/%s/' % ( model._meta.app_label, model._meta.model_name), include(view_urls))
+                ]
 
         return urlpatterns
 

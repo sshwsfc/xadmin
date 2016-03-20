@@ -4,7 +4,7 @@ from itertools import chain
 import xadmin
 from django import forms
 from django.db.models import ManyToManyField
-from django.forms.util import flatatt
+from django.forms.utils import flatatt
 from django.template import loader
 from django.utils.encoding import force_unicode
 from django.utils.html import escape, conditional_escape
@@ -104,4 +104,4 @@ class M2MSelectPlugin(BaseAdminPlugin):
         return attrs
 
 
-xadmin.site.register_plugin(M2MSelectPlugin, ModelFormAdminView)
+xadmin.sites.site.register_plugin(M2MSelectPlugin, ModelFormAdminView)

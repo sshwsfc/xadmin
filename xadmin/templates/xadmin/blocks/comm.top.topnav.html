@@ -1,4 +1,5 @@
 {% load i18n xadmin_tags %}
+{% autoescape off %}
 {% if search_models %}
 <form method="get" class="top-search-form navbar-form navbar-left" id="g-search">
   <div class="input-group">
@@ -27,3 +28,4 @@
   </ul>
 </li>
 {% endif %}
+{% endautoescape %}

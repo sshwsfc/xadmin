@@ -3,7 +3,7 @@ import inspect
 from django import forms
 from django.forms.formsets import all_valid, DELETION_FIELD_NAME
 from django.forms.models import inlineformset_factory, BaseInlineFormSet, modelform_defines_fields
-from django.contrib.contenttypes.generic import BaseGenericInlineFormSet, generic_inlineformset_factory
+from django.contrib.contenttypes.forms import BaseGenericInlineFormSet, generic_inlineformset_factory
 from django.template import loader
 from django.template.loader import render_to_string
 from django.contrib.auth import get_permission_codename
@@ -224,7 +224,7 @@ class InlineModelAdmin(ModelFormAdminView):
                         value = None
                         label = None
                         if readonly_field in inst._meta.get_all_field_names():
-                            label = inst._meta.get_field_by_name(readonly_field)[0].verbose_name
+                            label = inst._meta.get_field(readonly_field).verbose_name
                             value = unicode(getattr(inst, readonly_field))
                         elif inspect.ismethod(getattr(inst, readonly_field, None)):
                             value = getattr(inst, readonly_field)()
@@ -332,7 +332,7 @@ class InlineFormset(Fieldset):
     def render(self, form, form_style, context):
         return render_to_string(
             self.template, dict({'formset': self, 'prefix': self.formset.prefix, 'inline_style': self.inline_style}, **self.extra_attrs),
-            context_instance=context)
+            request=context.request)
 
 
 class Inline(Fieldset):
@@ -340,6 +340,7 @@ class Inline(Fieldset):
     def __init__(self, rel_model):
         self.model = rel_model
         self.fields = []
+        super(Inline,self).__init__(legend="")
 
     def render(self, form, form_style, context):
         return ""

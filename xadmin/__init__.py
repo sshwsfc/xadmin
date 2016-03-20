@@ -1,4 +1,3 @@
-from xadmin.sites import AdminSite, site
 
 VERSION = [0,5,0]
 
@@ -14,10 +13,10 @@ def autodiscover():
     may want.
     """
 
+    from importlib import import_module
     from django.conf import settings
-    from django.utils.importlib import import_module
     from django.utils.module_loading import module_has_submodule
-
+    from xadmin.sites import AdminSite, site
     setattr(settings, 'CRISPY_TEMPLATE_PACK', 'bootstrap3')
     setattr(settings, 'CRISPY_CLASS_CONVERTERS', {
         "textinput": "textinput textInput form-control",

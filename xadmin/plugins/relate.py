@@ -4,12 +4,13 @@ from django.utils.encoding import force_unicode
 from django.utils.encoding import smart_str
 from django.utils.safestring import mark_safe
 from django.db.models.sql.query import LOOKUP_SEP
-from django.db.models.related import RelatedObject
 from django.utils.translation import ugettext as _
 from django.db import models
 
+
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView, CreateAdminView, UpdateAdminView, DeleteAdminView
+from xadmin.util import is_related_field2
 
 RELATE_PREFIX = '_rel_'
 
@@ -24,7 +25,7 @@ class RelateMenuPlugin(BaseAdminPlugin):
             return self._related_acts
 
         _related_acts = []
-        for r in self.opts.get_all_related_objects() + self.opts.get_all_related_many_to_many_objects():
+        for r in list(self.opts.get_fields()) + list(self.opts.get_fields()):
             if self.related_list and (r.get_accessor_name() not in self.related_list):
                 continue
             if r.model not in self.admin_site._registry.keys():
@@ -93,9 +94,9 @@ class RelateObject(object):
         self.value = value
 
         parts = lookup.split(LOOKUP_SEP)
-        field = self.opts.get_field_by_name(parts[0])[0]
+        field = self.opts.get_field(parts[0])
 
-        if not hasattr(field, 'rel') and not isinstance(field, RelatedObject):
+        if not is_related_field2(field):
             raise Exception(u'Relate Lookup field must a related field')
 
         if hasattr(field, 'rel'):
@@ -128,7 +129,7 @@ class BaseRelateDisplayPlugin(BaseAdminPlugin):
 
     def init_request(self, *args, **kwargs):
         self.relate_obj = None
-        for k, v in self.request.REQUEST.items():
+        for k, v in self.request.GET.items():
             if smart_str(k).startswith(RELATE_PREFIX):
                 self.relate_obj = RelateObject(
                     self.admin_view, smart_str(k)[len(RELATE_PREFIX):], v)

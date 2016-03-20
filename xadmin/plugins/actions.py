@@ -1,10 +1,10 @@
+from collections import OrderedDict
 from django import forms
 from django.core.exceptions import PermissionDenied
 from django.db import router
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.template.response import TemplateResponse
-from django.utils.datastructures import SortedDict
 from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _, ungettext
@@ -209,7 +209,7 @@ class ActionPlugin(BaseAdminPlugin):
 
     def get_actions(self):
         if self.actions is None:
-            return SortedDict()
+            return OrderedDict()
 
         actions = [self.get_action(action) for action in self.global_actions]
 
@@ -223,8 +223,8 @@ class ActionPlugin(BaseAdminPlugin):
         # get_action might have returned None, so filter any of those out.
         actions = filter(None, actions)
 
-        # Convert the actions into a SortedDict keyed by name.
-        actions = SortedDict([
+        # Convert the actions into a OrderedDict keyed by name.
+        actions = OrderedDict([
             (name, (ac, name, desc, icon))
             for ac, name, desc, icon in actions
         ])
@@ -285,7 +285,7 @@ class ActionPlugin(BaseAdminPlugin):
     # Block Views
     def block_results_bottom(self, context, nodes):
         if self.actions and self.admin_view.result_count:
-            nodes.append(loader.render_to_string('xadmin/blocks/model_list.results_bottom.actions.html', context_instance=context))
+            nodes.append(loader.render_to_string('xadmin/blocks/model_list.results_bottom.actions.html', request=context.request))
 
 
 site.register_plugin(ActionPlugin, ListAdminView)

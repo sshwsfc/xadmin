@@ -2,7 +2,7 @@ import django
 from django.db import models
 from django.db.models.sql.query import LOOKUP_SEP
 from django.db.models.deletion import Collector
-from django.db.models.related import RelatedObject
+from django.db.models.fields.related import ForeignObjectRel
 from django.forms.forms import pretty_name
 from django.utils import formats
 from django.utils.html import escape
@@ -99,10 +99,10 @@ def lookup_needs_distinct(opts, lookup_path):
     Returns True if 'distinct()' should be used to query the given lookup path.
     """
     field_name = lookup_path.split('__', 1)[0]
-    field = opts.get_field_by_name(field_name)[0]
+    field = opts.get_field(field_name)
     if ((hasattr(field, 'rel') and
          isinstance(field.rel, models.ManyToManyRel)) or
-        (isinstance(field, models.related.RelatedObject) and
+        (is_related_field(field) and
          not field.field.unique)):
         return True
     return False
@@ -360,8 +360,8 @@ def label_for_field(name, model, model_admin=None, return_attr=False):
     """
     attr = None
     try:
-        field = model._meta.get_field_by_name(name)[0]
-        if isinstance(field, RelatedObject):
+        field = model._meta.get_field(name)
+        if is_related_field2(field):
             label = field.opts.verbose_name
         else:
             label = field.verbose_name
@@ -382,15 +382,15 @@ def label_for_field(name, model, model_admin=None, return_attr=False):
             elif is_rel_field(name,model):
                 parts = name.split("__")
                 rel_name,name = parts[0],"__".join(parts[1:])
-                field = model._meta.get_field_by_name(rel_name)[0]
-                if isinstance(field, RelatedObject):
+                field = model._meta.get_field(rel_name)
+                if is_related_field2(field):
                     label = field.opts.verbose_name
                 else:
                     label = field.verbose_name
-                
+
                 rel_model = field.rel.to
                 rel_label = label_for_field(name, rel_model, model_admin=model_admin, return_attr=return_attr)
-                
+
                 if return_attr:
                     rel_label,attr = rel_label
                     return ("%s %s"%(label,rel_label), attr)
@@ -420,7 +420,7 @@ def label_for_field(name, model, model_admin=None, return_attr=False):
 
 def help_text_for_field(name, model):
     try:
-        help_text = model._meta.get_field_by_name(name)[0].help_text
+        help_text = model._meta.get_field(name).help_text
     except models.FieldDoesNotExist:
         help_text = ""
     return smart_unicode(help_text)
@@ -482,7 +482,7 @@ class NotRelationField(Exception):
 
 
 def get_model_from_relation(field):
-    if isinstance(field, models.related.RelatedObject):
+    if is_related_field(field):
         return field.model
     elif getattr(field, 'rel'):  # or isinstance?
         return field.rel.to
@@ -503,7 +503,8 @@ def reverse_field_path(model, path):
     parent = model
     pieces = path.split(LOOKUP_SEP)
     for piece in pieces:
-        field, model, direct, m2m = parent._meta.get_field_by_name(piece)
+        field = parent._meta.get_field(piece)
+        direct = not field.auto_created or field.concrete
         # skip trailing data field if extant:
         if len(reversed_path) == len(pieces) - 1:  # final iteration
             try:
@@ -536,7 +537,7 @@ def get_fields_from_path(model, path):
             parent = get_model_from_relation(fields[-1])
         else:
             parent = model
-        fields.append(parent._meta.get_field_by_name(piece)[0])
+        fields.append(parent._meta.get_field(piece))
     return fields
 
 
@@ -568,7 +569,6 @@ def get_limit_choices_to_from_path(model, path):
     else:
         return models.Q(**limit_choices_to)  # convert dict to Q
 
-
 def sortkeypicker(keynames):
     negate = set()
     for i, k in enumerate(keynames):
@@ -582,3 +582,9 @@ def sortkeypicker(keynames):
                 composite[i] = -v
         return composite
     return getit
+
+def is_related_field(field):
+    return isinstance(field,ForeignObjectRel)
+
+def is_related_field2(field):
+    return (hasattr(field,'rel') and field.rel!=None) or is_related_field(field)

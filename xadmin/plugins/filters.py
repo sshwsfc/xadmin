@@ -5,7 +5,6 @@ from xadmin.util import get_fields_from_path, lookup_needs_distinct
 from django.core.exceptions import SuspiciousOperation, ImproperlyConfigured, ValidationError
 from django.db import models
 from django.db.models.fields import FieldDoesNotExist
-from django.db.models.related import RelatedObject
 from django.db.models.sql.query import LOOKUP_SEP, QUERY_TERMS
 from django.template import loader
 from django.utils.encoding import smart_str
@@ -14,6 +13,7 @@ from django.utils.translation import ugettext as _
 from xadmin.filters import manager as filter_manager, FILTER_PREFIX, SEARCH_VAR, DateFieldListFilter, RelatedFieldSearchFilter
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
+from xadmin.util import is_related_field
 
 
 class IncorrectLookupParameters(Exception):
@@ -49,7 +49,7 @@ class FilterPlugin(BaseAdminPlugin):
         rel_name = None
         for part in parts[:-1]:
             try:
-                field, _, _, _ = model._meta.get_field_by_name(part)
+                field = model._meta.get_field(part)
             except FieldDoesNotExist:
                 # Lookups on non-existants fields are ok, since they're ignored
                 # later.
@@ -57,7 +57,7 @@ class FilterPlugin(BaseAdminPlugin):
             if hasattr(field, 'rel'):
                 model = field.rel.to
                 rel_name = field.rel.get_related_field().name
-            elif isinstance(field, RelatedObject):
+            elif is_related_field(field):
                 model = field.model
                 rel_name = model._meta.pk.name
             else:
@@ -199,7 +199,7 @@ class FilterPlugin(BaseAdminPlugin):
     # Block Views
     def block_nav_menu(self, context, nodes):
         if self.has_filters:
-            nodes.append(loader.render_to_string('xadmin/blocks/model_list.nav_menu.filters.html', context_instance=context))
+            nodes.append(loader.render_to_string('xadmin/blocks/model_list.nav_menu.filters.html', request=context.request))
 
     def block_nav_form(self, context, nodes):
         if self.search_fields:
@@ -209,6 +209,6 @@ class FilterPlugin(BaseAdminPlugin):
                     {'search_var': SEARCH_VAR,
                         'remove_search_url': self.admin_view.get_query_string(remove=[SEARCH_VAR]),
                         'search_form_params': self.admin_view.get_form_params(remove=[SEARCH_VAR])},
-                    context_instance=context))
+                    request=context.request))
 
 site.register_plugin(FilterPlugin, ListAdminView)
