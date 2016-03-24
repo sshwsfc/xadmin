@@ -19,6 +19,8 @@
   {{ media.css }}
   {% block extrastyle %}{% endblock %}
   {% vendor 'jquery.js' %}
+  {% vendor 'jquery-ui-sortable.js' 'bootstrap.js' 'xadmin.main.js' 'xadmin.responsive.js' %}
+  {{ media.js }}
   {% url 'xadmin:index' as indexurl %}
   <script type="text/javascript">
     window.__admin_media_prefix__ = "{% filter escapejs %}{% static "xadmin/" %}{% endfilter %}";
@@ -35,8 +37,6 @@
     {% block content %}{% endblock content %}
     </div>
   {% endblock body %}
-  {% vendor 'jquery-ui-sortable.js' 'bootstrap.js' 'xadmin.main.js' 'xadmin.responsive.js' %}
-  {{ media.js }}
   {% block extrabody %}{% endblock %}
   {% view_block 'extrabody' %}
 </body>

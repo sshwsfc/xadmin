@@ -91,10 +91,9 @@ def setup(verbosity, test_labels):
         # this module and add it to the list to test.
         if not test_labels or module_name in test_labels_set:
             if verbosity >= 2:
-                print "Importing application %s" % module_name
+                print("Importing application %s" % module_name)
             #mod = load_app(module_label)
             #TODO by gkiwi @2016-03-21 02:48:12
-
             app_config = AppConfig.create(module_label)
             app_config.import_models(apps.all_models[app_config.label])
             apps.app_configs[app_config.label] = app_config
@@ -172,7 +171,6 @@ if __name__ == "__main__":
 
     if options.liveserver is not None:
         os.environ['DJANGO_LIVE_TEST_SERVER_ADDRESS'] = options.liveserver
-
     failures = django_tests(int(options.verbosity), options.interactive,
                             options.failfast, args)
     if failures:

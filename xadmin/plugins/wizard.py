@@ -3,11 +3,20 @@ from collections import OrderedDict
 from django import forms
 from django.db import models
 from django.template import loader
-from formtools.wizard.storage import get_storage
-from formtools.wizard.forms import ManagementForm
-from formtools.wizard.views import StepsHelper
+try:
+    from formtools.wizard.storage import get_storage
+    from formtools.wizard.forms import ManagementForm
+    from formtools.wizard.views import StepsHelper
+except:
+    ##work for django<1.8
+    from django.contrib.formtools.wizard.storage import get_storage
+    from django.contrib.formtools.wizard.forms import ManagementForm
+    from django.contrib.formtools.wizard.views import StepsHelper
+
+from django.utils.module_loading import import_string
 from django.forms import ValidationError
 from django.forms.models import modelform_factory
+
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView
 
@@ -22,7 +31,7 @@ class WizardFormPlugin(BaseAdminPlugin):
     wizard_form_list = None
     wizard_for_update = False
 
-    storage_name = 'django.contrib.formtools.wizard.storage.session.SessionStorage'
+    storage_name = 'formtools.wizard.storage.session.SessionStorage'
     form_list = None
     initial_dict = None
     instance_dict = None
@@ -84,6 +93,7 @@ class WizardFormPlugin(BaseAdminPlugin):
             # Check if form was refreshed
             management_form = ManagementForm(
                 self.request.POST, prefix=self.prefix)
+
             if not management_form.is_valid():
                 raise ValidationError(
                     'ManagementForm data is missing or has been tampered.')
@@ -306,13 +316,13 @@ class WizardFormPlugin(BaseAdminPlugin):
                 'current_step': self.steps.current,
             }),
         }
-        nodes.append(loader.render_to_string('xadmin/blocks/model_form.before_fieldsets.wizard.html', context_instance=context))
+        nodes.append(loader.render_to_string('xadmin/blocks/model_form.before_fieldsets.wizard.html'))
 
     def block_submit_line(self, context, nodes):
         context.update(dict(self.storage.extra_data))
         context['wizard'] = {
             'steps': self.steps
         }
-        nodes.append(loader.render_to_string('xadmin/blocks/model_form.submit_line.wizard.html', context_instance=context))
+        nodes.append(loader.render_to_string('xadmin/blocks/model_form.submit_line.wizard.html'))
 
 site.register_plugin(WizardFormPlugin, ModelFormAdminView)

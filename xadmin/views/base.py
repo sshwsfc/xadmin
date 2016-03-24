@@ -189,7 +189,7 @@ class BaseAdminObject(object):
         return HttpResponse(content)
 
     def template_response(self, template, context):
-        return TemplateResponse(self.request, template, context, current_app=self.admin_site.name)
+        return TemplateResponse(self.request, template, context)
 
     def message_user(self, message, level='info'):
         """
