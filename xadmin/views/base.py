@@ -294,8 +294,9 @@ class CommAdminView(BaseAdminView):
     base_template = 'xadmin/base_site.html'
     menu_template = 'xadmin/includes/sitemenu_default.html'
 
-    site_title = None
-    site_footer = None
+    site_title = getattr(settings,"XADMIN_TITLE",_(u"Django Xadmin"))
+    site_footer = getattr(settings,"XADMIN_FOOTER_TITLE",_(u"my-company.inc"))
+
     global_models_icon = {}
     default_model_icon = None
     apps_label_title = {}
@@ -440,8 +441,8 @@ class CommAdminView(BaseAdminView):
         context.update({
             'menu_template': self.menu_template,
             'nav_menu': nav_menu,
-            'site_title': self.site_title or _(u'Django Xadmin'),
-            'site_footer': self.site_footer or _(u'my-company.inc'),
+            'site_title': self.site_title,
+            'site_footer': self.site_footer,
             'breadcrumbs': self.get_breadcrumb()
         })
 
