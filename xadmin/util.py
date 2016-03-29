@@ -14,6 +14,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.forms import Media
 from django.utils.translation import get_language
+from django.contrib.admin.utils import label_for_field
 import datetime
 import decimal
 
@@ -349,74 +350,6 @@ def lookup_field(name, obj, model_admin=None):
         attr = None
         value = getattr(obj, name)
     return f, attr, value
-
-
-def label_for_field(name, model, model_admin=None, return_attr=False):
-    """
-    Returns a sensible label for a field name. The name can be a callable or the
-    name of an object attributes, as well as a genuine fields. If return_attr is
-    True, the resolved attribute (which could be a callable) is also returned.
-    This will be None if (and only if) the name refers to a field.
-    """
-    attr = None
-    try:
-        field = model._meta.get_field(name)
-        if is_related_field2(field):
-            label = field.opts.verbose_name
-        else:
-            label = field.verbose_name
-    except models.FieldDoesNotExist:
-        if name == "__unicode__":
-            label = force_unicode(model._meta.verbose_name)
-            attr = unicode
-        elif name == "__str__":
-            label = smart_str(model._meta.verbose_name)
-            attr = str
-        else:
-            if callable(name):
-                attr = name
-            elif model_admin is not None and hasattr(model_admin, name):
-                attr = getattr(model_admin, name)
-            elif hasattr(model, name):
-                attr = getattr(model, name)
-            elif is_rel_field(name,model):
-                parts = name.split("__")
-                rel_name,name = parts[0],"__".join(parts[1:])
-                field = model._meta.get_field(rel_name)
-                if is_related_field2(field):
-                    label = field.opts.verbose_name
-                else:
-                    label = field.verbose_name
-
-                rel_model = field.rel.to
-                rel_label = label_for_field(name, rel_model, model_admin=model_admin, return_attr=return_attr)
-
-                if return_attr:
-                    rel_label,attr = rel_label
-                    return ("%s %s"%(label,rel_label), attr)
-                else:
-                    return "%s %s"%(label,rel_label)
-            else:
-                message = "Unable to lookup '%s' on %s" % (
-                    name, model._meta.object_name)
-                if model_admin:
-                    message += " or %s" % (model_admin.__class__.__name__,)
-                raise AttributeError(message)
-
-            if hasattr(attr, "short_description"):
-                label = attr.short_description
-            elif callable(attr):
-                if attr.__name__ == "<lambda>":
-                    label = "--"
-                else:
-                    label = pretty_name(attr.__name__)
-            else:
-                label = pretty_name(name)
-    if return_attr:
-        return (label, attr)
-    else:
-        return label
-
 
 def help_text_for_field(name, model):
     try:
