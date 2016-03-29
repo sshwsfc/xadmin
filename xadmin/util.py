@@ -178,51 +178,6 @@ def flatten_fieldsets(fieldsets):
     return field_names
 
 
-def get_deleted_objects(objs, opts, user, admin_site, using):
-    """
-    Find all objects related to ``objs`` that should also be deleted. ``objs``
-    must be a homogenous iterable of objects (e.g. a QuerySet).
-
-    Returns a nested list of strings suitable for display in the
-    template with the ``unordered_list`` filter.
-
-    """
-    collector = NestedObjects(using=using)
-    collector.collect(objs)
-    perms_needed = set()
-
-    def format_callback(obj):
-        has_admin = obj.__class__ in admin_site._registry
-        opts = obj._meta
-
-        if has_admin:
-            admin_url = reverse('%s:%s_%s_change'
-                                % (admin_site.name,
-                                   opts.app_label,
-                                   opts.object_name.lower()),
-                                None, (quote(obj._get_pk_val()),))
-            p = '%s.%s' % (opts.app_label,
-                           opts.get_delete_permission())
-            if not user.has_perm(p):
-                perms_needed.add(opts.verbose_name)
-            # Display a link to the admin page.
-            return mark_safe(u'<span class="label label-info">%s:</span> <a href="%s">%s</a>' %
-                             (escape(capfirst(opts.verbose_name)),
-                              admin_url,
-                              escape(obj)))
-        else:
-            # Don't display link to edit, because it either has no
-            # admin or is edited inline.
-            return mark_safe(u'<span class="label label-info">%s:</span> %s' %
-                             (escape(capfirst(opts.verbose_name)),
-                              escape(obj)))
-
-    to_delete = collector.nested(format_callback)
-    protected = [format_callback(obj) for obj in collector.protected]
-
-    return to_delete, perms_needed, protected
-
-
 class NestedObjects(Collector):
     def __init__(self, *args, **kwargs):
         super(NestedObjects, self).__init__(*args, **kwargs)

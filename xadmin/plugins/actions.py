@@ -9,8 +9,11 @@ from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _, ungettext
 from django.utils.text import capfirst
+
+from django.contrib.admin.utils import get_deleted_objects
+
 from xadmin.sites import site
-from xadmin.util import model_format_dict, get_deleted_objects, model_ngettext
+from xadmin.util import model_format_dict, model_ngettext
 from xadmin.views import BaseAdminPlugin, ListAdminView
 from xadmin.views.base import filter_hook, ModelAdminView
 
@@ -26,7 +29,6 @@ action_checkbox.short_description = mark_safe(
 action_checkbox.allow_tags = True
 action_checkbox.allow_export = False
 action_checkbox.is_column = False
-
 
 class BaseActionView(ModelAdminView):
     action_name = None
@@ -84,7 +86,7 @@ class DeleteSelectedAction(BaseActionView):
 
         # Populate deletable_objects, a data structure of all related objects that
         # will also be deleted.
-        deletable_objects, perms_needed, protected = get_deleted_objects(
+        deletable_objects, model_count, perms_needed, protected = get_deleted_objects(
             queryset, self.opts, self.user, self.admin_site, using)
 
         # The user has already confirmed the deletion.
