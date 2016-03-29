@@ -209,6 +209,6 @@ class FilterPlugin(BaseAdminPlugin):
                     {'search_var': SEARCH_VAR,
                         'remove_search_url': self.admin_view.get_query_string(remove=[SEARCH_VAR]),
                         'search_form_params': self.admin_view.get_form_params(remove=[SEARCH_VAR])},
-                    context=context))
+                    ))
 
 site.register_plugin(FilterPlugin, ListAdminView)
