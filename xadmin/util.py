@@ -14,7 +14,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.forms import Media
 from django.utils.translation import get_language
-from django.contrib.admin.utils import label_for_field
+from django.contrib.admin.utils import label_for_field,help_text_for_field
 import datetime
 import decimal
 
@@ -351,12 +351,6 @@ def lookup_field(name, obj, model_admin=None):
         value = getattr(obj, name)
     return f, attr, value
 
-def help_text_for_field(name, model):
-    try:
-        help_text = model._meta.get_field(name).help_text
-    except models.FieldDoesNotExist:
-        help_text = ""
-    return smart_unicode(help_text)
 
 
 def admin_urlname(value, arg):
