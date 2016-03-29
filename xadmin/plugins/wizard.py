@@ -316,13 +316,13 @@ class WizardFormPlugin(BaseAdminPlugin):
                 'current_step': self.steps.current,
             }),
         }
-        nodes.append(loader.render_to_string('xadmin/blocks/model_form.before_fieldsets.wizard.html'))
+        nodes.append(loader.render_to_string('xadmin/blocks/model_form.before_fieldsets.wizard.html',context))
 
     def block_submit_line(self, context, nodes):
         context.update(dict(self.storage.extra_data))
         context['wizard'] = {
             'steps': self.steps
         }
-        nodes.append(loader.render_to_string('xadmin/blocks/model_form.submit_line.wizard.html'))
+        nodes.append(loader.render_to_string('xadmin/blocks/model_form.submit_line.wizard.html',context))
 
 site.register_plugin(WizardFormPlugin, ModelFormAdminView)

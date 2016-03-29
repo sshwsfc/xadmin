@@ -28,7 +28,7 @@ class ShowField(Field):
             if not isinstance(form.fields[field].widget, forms.HiddenInput):
                 result = detail.get_field_result(field)
                 html += loader.render_to_string(
-                    self.template, {'field': form[field], 'result': result})
+                    self.template, context={'field': form[field], 'result': result})
         return html
 
 
@@ -332,7 +332,7 @@ class InlineFormset(Fieldset):
     def render(self, form, form_style, context):
         return render_to_string(
             self.template, dict({'formset': self, 'prefix': self.formset.prefix, 'inline_style': self.inline_style}, **self.extra_attrs),
-            request=context.request)
+            context=context)
 
 
 class Inline(Fieldset):

@@ -30,7 +30,7 @@ class SortablePlugin(BaseAdminPlugin):
             #         'selected': str(r) == current_refresh,
             #     } for r in self.refresh_times],
             # })
-            # nodes.append(loader.render_to_string('xadmin/blocks/refresh.html', request=context.request))
+            # nodes.append(loader.render_to_string('xadmin/blocks/refresh.html', context))
 
 
 site.register_plugin(SortablePlugin, ListAdminView)
