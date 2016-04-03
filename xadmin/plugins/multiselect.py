@@ -104,4 +104,4 @@ class M2MSelectPlugin(BaseAdminPlugin):
         return attrs
 
 
-xadmin.sites.site.register_plugin(M2MSelectPlugin, ModelFormAdminView)
+xadmin.site.register_plugin(M2MSelectPlugin, ModelFormAdminView)

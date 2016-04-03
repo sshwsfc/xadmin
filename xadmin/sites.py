@@ -39,7 +39,7 @@ class AdminSite(object):
 
         self._admin_view_cache = {}
 
-        self.check_dependencies()
+        #self.check_dependencies()
 
         self.model_admins_order = 0
 

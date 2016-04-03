@@ -362,7 +362,6 @@ def display_for_value(value, boolean=False):
 class NotRelationField(Exception):
     pass
 
-
 def get_model_from_relation(field):
     if is_related_field(field):
         return field.model

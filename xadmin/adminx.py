@@ -7,4 +7,4 @@ class UserSettingsAdmin(object):
     model_icon = 'fa fa-cog'
     hidden_menu = True
 
-xadmin.sites.site.register(UserSettings, UserSettingsAdmin)
+xadmin.site.register(UserSettings, UserSettingsAdmin)

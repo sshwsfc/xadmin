@@ -91,4 +91,4 @@ class CommentsAdmin(object):
 # Only register the default admin if the model is the built-in comment model
 # (this won't be true if there's a custom comment app).
 if 'django.contrib.comments' in settings.INSTALLED_APPS and (get_model() is Comment):
-    xadmin.sites.site.register(Comment, CommentsAdmin)
+    xadmin.site.register(Comment, CommentsAdmin)
