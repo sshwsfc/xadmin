@@ -387,6 +387,7 @@ class InlineFormsetPlugin(BaseAdminPlugin):
                     inline.max_num = 0
                 inline_instances.append(inline)
             self._inline_instances = inline_instances
+
         return self._inline_instances
 
     def instance_forms(self, ret):
