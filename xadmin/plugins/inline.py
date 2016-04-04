@@ -7,6 +7,8 @@ from django.contrib.contenttypes.forms import BaseGenericInlineFormSet, generic_
 from django.template import loader
 from django.template.loader import render_to_string
 from django.contrib.auth import get_permission_codename
+from crispy_forms.utils import TEMPLATE_PACK
+
 from xadmin.layout import FormHelper, Layout, flatatt, Container, Column, Field, Fieldset
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView, DetailAdminView, filter_hook
@@ -21,7 +23,7 @@ class ShowField(Field):
         if admin_view.style == 'table':
             self.template = "xadmin/layout/field_value_td.html"
 
-    def render(self, form, form_style, context):
+    def render(self, form, form_style, context, template_pack=TEMPLATE_PACK, **kwargs):
         html = ''
         detail = form.detail
         for field in self.fields:
@@ -34,10 +36,10 @@ class ShowField(Field):
 
 class DeleteField(Field):
 
-    def render(self, form, form_style, context):
+    def render(self, form, form_style, context, template_pack=TEMPLATE_PACK, **kwargs):
         if form.instance.pk:
             self.attrs['type'] = 'hidden'
-            return super(DeleteField, self).render(form, form_style, context)
+            return super(DeleteField, self).render(form, form_style, context, template_pack=TEMPLATE_PACK, **kwargs)
         else:
             return ""
 
@@ -329,10 +331,9 @@ class InlineFormset(Fieldset):
         self.flat_attrs = flatatt(kwargs)
         self.extra_attrs = formset.style.get_attrs()
 
-    def render(self, form, form_style, context):
+    def render(self, form, form_style, context, template_pack=TEMPLATE_PACK, **kwargs):
         return render_to_string(
-            self.template, dict({'formset': self, 'prefix': self.formset.prefix, 'inline_style': self.inline_style}, **self.extra_attrs),
-            context=context)
+            self.template, dict({'formset': self, 'prefix': self.formset.prefix, 'inline_style': self.inline_style}, **self.extra_attrs))
 
 
 class Inline(Fieldset):
@@ -342,7 +343,7 @@ class Inline(Fieldset):
         self.fields = []
         super(Inline,self).__init__(legend="")
 
-    def render(self, form, form_style, context):
+    def render(self, form, form_style, context, template_pack=TEMPLATE_PACK, **kwargs):
         return ""
 
 
