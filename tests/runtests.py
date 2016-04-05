@@ -77,8 +77,6 @@ def setup(verbosity, test_labels):
     # (This import statement is intentionally delayed until after we
     # access settings because of the USE_I18N dependency.)
 
-    django.setup()
-    [a.models_module for a in apps.get_app_configs()]
 
     # Load all the test model apps.
     test_labels_set = set([label.split('.')[0] for label in test_labels])
@@ -92,18 +90,11 @@ def setup(verbosity, test_labels):
         if not test_labels or module_name in test_labels_set:
             if verbosity >= 2:
                 print("Importing application %s" % module_name)
-            #mod = load_app(module_label)
-            #TODO by gkiwi @2016-03-21 02:48:12
-            app_config = AppConfig.create(module_label)
-            app_config.import_models(apps.all_models[app_config.label])
-            apps.app_configs[app_config.label] = app_config
-            apps.clear_cache()
-            mod = app_config.models_module
+            if module_label not in settings.INSTALLED_APPS:
+                settings.INSTALLED_APPS.append(module_label)
 
-            if mod:
-                if module_label not in settings.INSTALLED_APPS:
-                    settings.INSTALLED_APPS.append(module_label)
-
+    django.setup()
+    [a.models_module for a in apps.get_app_configs()]
     return state
 
 def teardown(state):
