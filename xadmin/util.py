@@ -2,7 +2,7 @@ import django
 from django.db import models
 from django.db.models.sql.query import LOOKUP_SEP
 from django.db.models.deletion import Collector
-from django.db.models.related import RelatedObject
+from django.db.models.fields.related import ForeignObjectRel
 from django.forms.forms import pretty_name
 from django.utils import formats
 from django.utils.html import escape
@@ -14,6 +14,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.forms import Media
 from django.utils.translation import get_language
+from django.contrib.admin.utils import label_for_field,help_text_for_field
 import datetime
 import decimal
 
@@ -99,10 +100,10 @@ def lookup_needs_distinct(opts, lookup_path):
     Returns True if 'distinct()' should be used to query the given lookup path.
     """
     field_name = lookup_path.split('__', 1)[0]
-    field = opts.get_field_by_name(field_name)[0]
+    field = opts.get_field(field_name)
     if ((hasattr(field, 'rel') and
          isinstance(field.rel, models.ManyToManyRel)) or
-        (isinstance(field, models.related.RelatedObject) and
+        (is_related_field(field) and
          not field.field.unique)):
         return True
     return False
@@ -175,51 +176,6 @@ def flatten_fieldsets(fieldsets):
             else:
                 field_names.append(field)
     return field_names
-
-
-def get_deleted_objects(objs, opts, user, admin_site, using):
-    """
-    Find all objects related to ``objs`` that should also be deleted. ``objs``
-    must be a homogenous iterable of objects (e.g. a QuerySet).
-
-    Returns a nested list of strings suitable for display in the
-    template with the ``unordered_list`` filter.
-
-    """
-    collector = NestedObjects(using=using)
-    collector.collect(objs)
-    perms_needed = set()
-
-    def format_callback(obj):
-        has_admin = obj.__class__ in admin_site._registry
-        opts = obj._meta
-
-        if has_admin:
-            admin_url = reverse('%s:%s_%s_change'
-                                % (admin_site.name,
-                                   opts.app_label,
-                                   opts.object_name.lower()),
-                                None, (quote(obj._get_pk_val()),))
-            p = '%s.%s' % (opts.app_label,
-                           opts.get_delete_permission())
-            if not user.has_perm(p):
-                perms_needed.add(opts.verbose_name)
-            # Display a link to the admin page.
-            return mark_safe(u'<span class="label label-info">%s:</span> <a href="%s">%s</a>' %
-                             (escape(capfirst(opts.verbose_name)),
-                              admin_url,
-                              escape(obj)))
-        else:
-            # Don't display link to edit, because it either has no
-            # admin or is edited inline.
-            return mark_safe(u'<span class="label label-info">%s:</span> %s' %
-                             (escape(capfirst(opts.verbose_name)),
-                              escape(obj)))
-
-    to_delete = collector.nested(format_callback)
-    protected = [format_callback(obj) for obj in collector.protected]
-
-    return to_delete, perms_needed, protected
 
 
 class NestedObjects(Collector):
@@ -351,80 +307,6 @@ def lookup_field(name, obj, model_admin=None):
     return f, attr, value
 
 
-def label_for_field(name, model, model_admin=None, return_attr=False):
-    """
-    Returns a sensible label for a field name. The name can be a callable or the
-    name of an object attributes, as well as a genuine fields. If return_attr is
-    True, the resolved attribute (which could be a callable) is also returned.
-    This will be None if (and only if) the name refers to a field.
-    """
-    attr = None
-    try:
-        field = model._meta.get_field_by_name(name)[0]
-        if isinstance(field, RelatedObject):
-            label = field.opts.verbose_name
-        else:
-            label = field.verbose_name
-    except models.FieldDoesNotExist:
-        if name == "__unicode__":
-            label = force_unicode(model._meta.verbose_name)
-            attr = unicode
-        elif name == "__str__":
-            label = smart_str(model._meta.verbose_name)
-            attr = str
-        else:
-            if callable(name):
-                attr = name
-            elif model_admin is not None and hasattr(model_admin, name):
-                attr = getattr(model_admin, name)
-            elif hasattr(model, name):
-                attr = getattr(model, name)
-            elif is_rel_field(name,model):
-                parts = name.split("__")
-                rel_name,name = parts[0],"__".join(parts[1:])
-                field = model._meta.get_field_by_name(rel_name)[0]
-                if isinstance(field, RelatedObject):
-                    label = field.opts.verbose_name
-                else:
-                    label = field.verbose_name
-                
-                rel_model = field.rel.to
-                rel_label = label_for_field(name, rel_model, model_admin=model_admin, return_attr=return_attr)
-                
-                if return_attr:
-                    rel_label,attr = rel_label
-                    return ("%s %s"%(label,rel_label), attr)
-                else:
-                    return "%s %s"%(label,rel_label)
-            else:
-                message = "Unable to lookup '%s' on %s" % (
-                    name, model._meta.object_name)
-                if model_admin:
-                    message += " or %s" % (model_admin.__class__.__name__,)
-                raise AttributeError(message)
-
-            if hasattr(attr, "short_description"):
-                label = attr.short_description
-            elif callable(attr):
-                if attr.__name__ == "<lambda>":
-                    label = "--"
-                else:
-                    label = pretty_name(attr.__name__)
-            else:
-                label = pretty_name(name)
-    if return_attr:
-        return (label, attr)
-    else:
-        return label
-
-
-def help_text_for_field(name, model):
-    try:
-        help_text = model._meta.get_field_by_name(name)[0].help_text
-    except models.FieldDoesNotExist:
-        help_text = ""
-    return smart_unicode(help_text)
-
 
 def admin_urlname(value, arg):
     return 'xadmin:%s_%s_%s' % (value.app_label, value.model_name, arg)
@@ -480,9 +362,8 @@ def display_for_value(value, boolean=False):
 class NotRelationField(Exception):
     pass
 
-
 def get_model_from_relation(field):
-    if isinstance(field, models.related.RelatedObject):
+    if is_related_field(field):
         return field.model
     elif getattr(field, 'rel'):  # or isinstance?
         return field.rel.to
@@ -503,7 +384,8 @@ def reverse_field_path(model, path):
     parent = model
     pieces = path.split(LOOKUP_SEP)
     for piece in pieces:
-        field, model, direct, m2m = parent._meta.get_field_by_name(piece)
+        field = parent._meta.get_field(piece)
+        direct = not field.auto_created or field.concrete
         # skip trailing data field if extant:
         if len(reversed_path) == len(pieces) - 1:  # final iteration
             try:
@@ -536,7 +418,7 @@ def get_fields_from_path(model, path):
             parent = get_model_from_relation(fields[-1])
         else:
             parent = model
-        fields.append(parent._meta.get_field_by_name(piece)[0])
+        fields.append(parent._meta.get_field(piece))
     return fields
 
 
@@ -568,7 +450,6 @@ def get_limit_choices_to_from_path(model, path):
     else:
         return models.Q(**limit_choices_to)  # convert dict to Q
 
-
 def sortkeypicker(keynames):
     negate = set()
     for i, k in enumerate(keynames):
@@ -582,3 +463,9 @@ def sortkeypicker(keynames):
                 composite[i] = -v
         return composite
     return getit
+
+def is_related_field(field):
+    return isinstance(field,ForeignObjectRel)
+
+def is_related_field2(field):
+    return (hasattr(field,'rel') and field.rel!=None) or is_related_field(field)

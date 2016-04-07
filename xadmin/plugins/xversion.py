@@ -1,9 +1,8 @@
-from django.contrib.contenttypes.generic import GenericRelation
+from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
 from django.db import models
 from django.db.models.query import QuerySet
-from django.db.models.related import RelatedObject
 from django.forms.models import model_to_dict
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -17,7 +16,7 @@ from xadmin.plugins.inline import Inline
 from xadmin.plugins.actions import BaseActionView
 from xadmin.plugins.inline import InlineModelAdmin
 from xadmin.sites import site
-from xadmin.util import unquote, quote, model_format_dict
+from xadmin.util import unquote, quote, model_format_dict,is_related_field
 from xadmin.views import BaseAdminPlugin, ModelAdminView, CreateAdminView, UpdateAdminView, DetailAdminView, ModelFormAdminView, DeleteAdminView, ListAdminView
 from xadmin.views.base import csrf_protect_m, filter_hook
 from xadmin.views.detail import DetailAdminUtil
@@ -53,7 +52,10 @@ def _register_model(admin, model):
                 ct_field = getattr(inline, 'ct_field', 'content_type')
                 ct_fk_field = getattr(inline, 'ct_fk_field', 'object_id')
                 for field in model._meta.many_to_many:
-                    if isinstance(field, GenericRelation) and field.rel.to == inline_model and field.object_id_field_name == ct_fk_field and field.content_type_field_name == ct_field:
+                    if isinstance(field, GenericRelation) \
+                            and field.rel.to == inline_model \
+                            and field.object_id_field_name == ct_fk_field \
+                            and field.content_type_field_name == ct_field:
                         inline_fields.append(field.name)
                 _autoregister(admin, inline_model)
             else:
@@ -64,8 +66,7 @@ def _register_model(admin, model):
                             fk_name = field.name
                 _autoregister(admin, inline_model, follow=[fk_name])
                 if not inline_model._meta.get_field(fk_name).rel.is_hidden():
-                    accessor = inline_model._meta.get_field(
-                        fk_name).related.get_accessor_name()
+                    accessor = inline_model._meta.get_field(fk_name).remote_field.get_accessor_name()
                     inline_fields.append(accessor)
         _autoregister(admin, model, inline_fields)
 
@@ -330,7 +331,7 @@ class RevisionListView(BaseReversionView):
         obj_b, detail_b = self.get_version_object(version_b)
 
         for f in (self.opts.fields + self.opts.many_to_many):
-            if isinstance(f, RelatedObject):
+            if is_related_field(f):
                 label = f.opts.verbose_name
             else:
                 label = f.verbose_name

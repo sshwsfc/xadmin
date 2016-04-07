@@ -57,8 +57,3 @@ class CommAdminTest(BaseTest):
     def test_model_icon(self):  
         self.assertEqual(self.test_view.get_model_icon(ModelA), 'flag')
         self.assertEqual(self.test_view.get_model_icon(ModelB), 'test')
-
-
-
-
-

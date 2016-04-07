@@ -8,9 +8,10 @@ from django.template.context import Context
 from django.utils.safestring import mark_safe
 from django.utils.html import escape,format_html
 from django.utils.text import Truncator
-from django.core.cache import cache, get_cache
+from django.core.cache import cache, caches
 
 from xadmin.views.list import EMPTY_CHANGELIST_VALUE
+from xadmin.util import is_related_field,is_related_field2
 import datetime
 
 FILTER_PREFIX = '_p_'
@@ -310,7 +311,7 @@ class RelatedFieldSearchFilter(FieldFilter):
 
     @classmethod
     def test(cls, field, request, params, model, admin_view, field_path):
-        if not (hasattr(field, 'rel') and bool(field.rel) or isinstance(field, models.related.RelatedObject)):
+        if not is_related_field2(field):
             return False
         related_modeladmin = admin_view.admin_site._registry.get(
             get_model_from_relation(field))
@@ -365,7 +366,7 @@ class RelatedFieldListFilter(ListFieldFilter):
 
     @classmethod
     def test(cls, field, request, params, model, admin_view, field_path):
-        return (hasattr(field, 'rel') and bool(field.rel) or isinstance(field, models.related.RelatedObject))
+        return is_related_field2(field)
 
     def __init__(self, field, request, params, model, model_admin, field_path):
         other_model = get_model_from_relation(field)
@@ -387,7 +388,7 @@ class RelatedFieldListFilter(ListFieldFilter):
         self.title = self.lookup_title
 
     def has_output(self):
-        if (isinstance(self.field, models.related.RelatedObject)
+        if (is_related_field(self.field)
                 and self.field.field.null or hasattr(self.field, 'rel')
                 and self.field.null):
             extra = 1
@@ -413,7 +414,7 @@ class RelatedFieldListFilter(ListFieldFilter):
                 }, [self.lookup_isnull_name]),
                 'display': val,
             }
-        if (isinstance(self.field, models.related.RelatedObject)
+        if (is_related_field(self.field)
                 and self.field.field.null or hasattr(self.field, 'rel')
                 and self.field.null):
             yield {
@@ -443,13 +444,13 @@ class MultiSelectFieldListFilter(ListFieldFilter):
     def get_cached_choices(self):
         if not self.cache_config['enabled']:
             return None
-        c = get_cache(self.cache_config['cache'])
+        c = caches(self.cache_config['cache'])
         return c.get(self.cache_config['key']%self.field_path)
     
     def set_cached_choices(self,choices):
         if not self.cache_config['enabled']:
             return
-        c = get_cache(self.cache_config['cache'])
+        c = caches(self.cache_config['cache'])
         return c.set(self.cache_config['key']%self.field_path,choices)
     
     def __init__(self, field, request, params, model, model_admin, field_path,field_order_by=None,field_limit=None,sort_key=None,cache_config=None):

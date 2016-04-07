@@ -8,7 +8,7 @@ xversion.register_models()
 
 from django.contrib import admin
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^', include(xadmin.site.urls))
-)
+]
