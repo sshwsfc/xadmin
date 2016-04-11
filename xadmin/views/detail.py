@@ -188,6 +188,9 @@ class DetailAdminView(ModelAdminView):
         add_view and change_view.
         """
         if self.exclude is None:
+            # Since Django 1.8, modelform_factory requires either the `fields` or `exclude`
+            # parameter to set explicitly. We include all model fields by default, thus the
+            # the exclude parameter should be a empty list instead of `None`(Django 1.7 behavior)
             exclude = []
         else:
             exclude = list(self.exclude)
@@ -195,9 +198,7 @@ class DetailAdminView(ModelAdminView):
             # Take the custom ModelForm's Meta.exclude into account only if the
             # ModelAdmin doesn't define its own.
             exclude.extend(self.form._meta.exclude)
-        # if exclude is an empty list we pass None to be consistant with the
-        # default on modelform_factory
-        exclude = exclude or None
+
         defaults = {
             "form": self.form,
             "fields": self.fields and list(self.fields) or None,
