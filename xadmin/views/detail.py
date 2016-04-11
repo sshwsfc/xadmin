@@ -19,8 +19,16 @@ from xadmin.util import unquote, lookup_field, display_for_field, boolean_icon, 
 
 from .base import ModelAdminView, filter_hook, csrf_protect_m
 
+try:
+    from crispy_forms.utils import TEMPLATE_PACK
+except:
+    TEMPLATE_PACK = 'bootstrap3'
+
+
 # Text to display within change-list table cells if the value is blank.
 EMPTY_CHANGELIST_VALUE = _('Null')
+
+
 
 
 class ShowField(Field):
@@ -36,7 +44,7 @@ class ShowField(Field):
 
         self.results = [(field, callback(field)) for field in self.fields]
 
-    def render(self, form, form_style, context):
+    def render(self, form, form_style, context, template_pack=TEMPLATE_PACK, **kwargs):
         if hasattr(self, 'wrapper_class'):
             context['wrapper_class'] = self.wrapper_class
 
