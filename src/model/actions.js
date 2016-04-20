@@ -1,23 +1,25 @@
 
+import _ from 'lodash'
 import adapter from './adapter/apicloud'
 
 const MODEL = 'car'
 const api = adapter(MODEL)
 
 export const REQUEST_ITEMS = 'REQUEST_ITEMS'
+export const RECEIVE_ITEMS = 'RECEIVE_ITEMS'
+export const DELETED_ITEM = 'DELETED_ITEM'
+export const SELECT_ITEMS = 'SELECT_ITEMS'
+
 function requestItems (filter) {
   return {
     type: REQUEST_ITEMS,
-    model: MODEL,
     filter
   }
 }
 
-export const RECEIVE_ITEMS = 'RECEIVE_ITEMS'
 function receiveItems (filter, items, count) {
   return {
     type: RECEIVE_ITEMS,
-    model: MODEL,
     filter,
     count,
     items
@@ -36,7 +38,6 @@ export function fetchItems (filter) {
   }
 }
 
-export const DELETED_ITEM = 'DELETED_ITEM'
 export function deleteItem (item) {
   return (dispatch) => {
     api.delete(item.id).then(res => {
@@ -49,11 +50,9 @@ export function deleteItem (item) {
   }
 }
 
-export const SELECT_ITEMS = 'SELECT_ITEMS'
 export function selecteItem (item, selected) {
   return {
     type: SELECT_ITEMS,
-    model: MODEL,
     item,
     selected
   }
@@ -67,3 +66,15 @@ export function changeOrder (field, order) {
   }
 }
 
+export function changeField (field, select) {
+  return (dispatch, getState) => {
+    const fields = [].concat(getState().filter.fields || [])
+    const index = _.indexOf(fields, field)
+    if (select) {
+      if (index === -1) fields.push(field)
+    } else {
+      _.remove(fields, (i) => { return i === field })
+    }
+    return dispatch(fetchItems({fields}))
+  }
+}

@@ -1,5 +1,4 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import { Icon } from '../../components'
 import { Link } from 'react-router'
 import { Pagination } from 'react-bootstrap'
@@ -9,16 +8,35 @@ import _ from 'lodash'
 import { fetchItems } from '../../model/actions'
 
 const ModelPagination = React.createClass({
+  mixins: [ModelMixin],
 
   propTypes: {
-    items: React.PropTypes.number.isRequired,
-    activePage: React.PropTypes.number.isRequired,
-    bsSize: React.PropTypes.string,
-    onChangePage: React.PropTypes.func.isRequired
+    bsSize: React.PropTypes.string
+  },
+
+  getStateMap (state) {
+    const count = state.count
+    const { limit, skip } = state.filter
+    
+    return {
+      items: Math.ceil(count / limit),
+      activePage: Math.floor(skip / limit) + 1
+    }
+  },
+
+  onChangePage (e, selectedEvent) {
+    e.preventDefault()
+
+    const page = selectedEvent.eventKey
+      , state = this.store.getState()
+      , pageSize = state.filter.limit
+      , skip = pageSize * (page - 1)
+
+    this.dispatch(fetchItems({skip}))
   },
 
   render() {
-    if(this.props.items > 1) {
+    if(this.state.items > 1) {
       return <Pagination
             style={{marginTop: 0}}
             bsSize={this.props.bsSize}
@@ -28,9 +46,9 @@ const ModelPagination = React.createClass({
             last
             ellipsis
             boundaryLinks
-            items={this.props.items}
-            activePage={this.props.activePage}
-            onSelect={this.props.onChangePage}
+            items={this.state.items}
+            activePage={this.state.activePage}
+            onSelect={this.onChangePage}
             maxButtons={5} />
     } else {
       return (
@@ -43,28 +61,4 @@ const ModelPagination = React.createClass({
 
 })
 
-const stateMap = (state) => {
-  const count = state.count
-  const { limit, skip } = state.filter
-  
-  return {
-    items: Math.ceil(count / limit),
-    activePage: Math.floor(skip / limit) + 1
-  }
-}
-
-const dispatchMap = (dispatch) => {
-  return { 
-    onChangePage: (e, selectedEvent) => {
-      e.preventDefault()
-      const page = selectedEvent.eventKey
-
-      return dispatch((dispatch, getState) => {
-        const pageSize = getState().filter.limit
-        return dispatch(fetchItems({skip: pageSize * (page - 1)}))
-      })
-    }
-  }
-}
-
-module.exports = connect(stateMap, dispatchMap)(ModelPagination)
+module.exports = ModelPagination

@@ -1,18 +1,20 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import { Link } from 'react-router'
-import { Icon } from '../../components'
 import { Well, DropdownButton, MenuItem } from 'react-bootstrap'
 import { block } from '../../plugin'
+import { ModelMixin } from '../base'
+
 
 const ActionBar = React.createClass({
+  mixins: [ModelMixin],
 
-  propTypes: {
-    selected: React.PropTypes.array.isRequired
+  getStateMap (storeState) {
+    return {
+      selected: storeState.selected
+    }
   },
 
   render() {
-    const selectedItems = this.props.selected
+    const selectedItems = this.state.selected
       , count = selectedItems.length
     return (
       <Well bsSize="small">
@@ -25,10 +27,4 @@ const ActionBar = React.createClass({
   }
 })
 
-const stateMap = (state) => {
-  return {
-    selected: state.selected
-  }
-}
-
-module.exports = connect(stateMap)(ActionBar)
+module.exports = ActionBar

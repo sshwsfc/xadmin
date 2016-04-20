@@ -1,5 +1,4 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { Button, Nav } from 'react-bootstrap'
 
@@ -19,8 +18,7 @@ const ModelList = React.createClass({
   mixins: [ModelMixin],
 
   componentDidMount() {
-    const { dispatch } = this.props
-    dispatch(fetchItems({}))
+    this.dispatch(fetchItems({}))
   },
 
   renderNav() {
@@ -50,6 +48,4 @@ const ModelList = React.createClass({
 
 })
 
-module.exports = connect(state => {
-  return {}
-})(ModelList)
+module.exports = ModelList

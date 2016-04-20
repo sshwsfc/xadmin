@@ -1,34 +1,33 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import _ from 'lodash'
 import { Icon } from '../../components'
 import { Table, OverlayTrigger, Popover, Button, Input, Dropdown, MenuItem } from 'react-bootstrap'
 import { deleteItem, selecteItem, changeOrder } from '../../model/actions'
 import { block } from '../../plugin'
+import { ModelMixin } from '../base'
 
 const Header = React.createClass({
+  mixins: [ModelMixin],
 
   propTypes: {
-    model: React.PropTypes.object.isRequired,
-    field: React.PropTypes.string.isRequired,
-    changeOrder: React.PropTypes.func.isRequired
+    field: React.PropTypes.string.isRequired
   },
 
-  getInitialState() {
+  getStateMap (storeState) {
+    const field = this.props.field
+      , orders = storeState.filter.order
     return {
-      order: ''
+      order: orders !== undefined ? (orders[field] || '') : ''
     }
   },
 
-  handleOrder(order) {
-    const { model, field } = this.props
-    this.setState({order})
-    this.props.changeOrder(field, order)
+  handleOrder (order) {
+    this.dispatch(changeOrder(this.props.field, order))
   },
 
-  render() {
-    const { model, field } = this.props
+  render () {
+    const { field } = this.props
       , order = this.state.order
       , icon = {
         'ASC' : <Icon name="sort-asc" />,
@@ -54,27 +53,33 @@ const Header = React.createClass({
 })
 
 const Row = React.createClass({
+  mixins: [ModelMixin],
 
   propTypes: {
     item: React.PropTypes.object.isRequired,
-    model: React.PropTypes.object.isRequired,
-    fields: React.PropTypes.array.isRequired,
-    selected: React.PropTypes.bool.isRequired,
-    deleteItem: React.PropTypes.func.isRequired,
-    selectItem: React.PropTypes.func.isRequired
+    fields: React.PropTypes.array.isRequired
   },
 
-  getInitialState() {
-    return {
-      selected: this.props.selected || false
+  getStateMap (storeState) {
+    let selected = false
+    for (let item of storeState.selected) {
+      if (item.id === this.props.item.id) {
+        selected = true
+        break
+      }
     }
+    return { selected }
   },
 
-  handleChange(e) {
+  handleChange (e) {
     const item = this.props.item
       , selected = this.refs.selector.checked
-    this.setState({selected: selected})
-    this.props.selectItem(item, selected)
+    this.dispatch(selecteItem(item, selected))
+  },
+
+  deleteItem () {
+    const item = this.props.item
+    this.dispatch(deleteItem(item))
   },
 
   render() {
@@ -93,7 +98,7 @@ const Row = React.createClass({
             <Popover title="Comfirm Delete" id="delete-item-popover">
             <p><strong>您确定要删除？</strong></p>
             <p className="text-center">
-              <Button bsStyle="danger" onClick={e=>{ this.props.deleteItem(item)} }>确定</Button>
+              <Button bsStyle="danger" onClick={this.deleteItem}>确定</Button>
             </p>
             </Popover>
           }>
@@ -106,24 +111,17 @@ const Row = React.createClass({
 })
 
 const ModelGrid = React.createClass({
+  mixins: [ModelMixin],
 
-  propTypes: {
-    items: React.PropTypes.array.isRequired,
-    deleteItem: React.PropTypes.func.isRequired,
-    selectItem: React.PropTypes.func.isRequired,
-    changeOrder: React.PropTypes.func.isRequired
-  },
-
-  contextTypes: {
-    store: React.PropTypes.object.isRequired,
-    model: React.PropTypes.object.isRequired
+  getStateMap (storeState) {
+    return {
+      items: storeState.items,
+      fields: storeState.filter.fields
+    }
   },
 
   render() {
-    const store = this.context.store
-      , selectedItems = store.getState().selected.map(item=>{return item.id})
-      , model = this.context.model
-      , fields = model.list_display || []
+    const fields = this.state.fields
 
     return (
       <Table striped bordered hover>
@@ -131,14 +129,14 @@ const ModelGrid = React.createClass({
           <tr>
             <th>#</th>
             {fields.map(field=>{
-              return <Header key={`model-list-header-${field}`} model={model} field={field} changeOrder={this.props.changeOrder}  />
+              return <Header key={`model-list-header-${field}`} field={field}  />
             })}
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {this.props.items.map((item)=>{
-            return <Row key={item.id} selected={_.indexOf(selectedItems, item.id)!==-1} model={model} fields={fields} item={item} deleteItem={this.props.deleteItem} selectItem={this.props.selectItem} />
+          {this.state.items.map((item)=>{
+            return <Row key={item.id} fields={fields} item={item} />
           })}
         </tbody>
       </Table>
@@ -146,24 +144,4 @@ const ModelGrid = React.createClass({
   }
 })
 
-const stateMap = (state) => {
-  return {
-    items: state.items
-  }
-}
-
-const dispatchMap = (dispatch) => {
-  return { 
-    deleteItem: (item) => {
-       dispatch(deleteItem(item))
-    },
-    selectItem: (item, selected) => {
-      dispatch(selecteItem(item, selected))
-    },
-    changeOrder: (field, order) => {
-      dispatch(changeOrder(field, order))
-    }
-  }
-}
-
-module.exports = connect(stateMap, dispatchMap)(ModelGrid)
+module.exports = ModelGrid

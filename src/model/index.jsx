@@ -4,25 +4,26 @@ import Form from './components/Form'
 import { Nav, NavItem } from 'react-bootstrap'
 
 import { model, ModelMixin } from './base'
-
-const ModelList = model(List)
-const ModelForm = model(Form)
+import models from './models'
 
 module.exports = {
   model,
   ModelMixin,
   use (pm) {
     // route
-    pm.ctx['routes'] = pm.ctx['routes'].concat([{
-      path: 'model/:model/list',
-      component: ModelList
-    }, {
-      path: 'model/:model/add',
-      component: ModelForm
-    }, {
-      path: 'model/:model/:id/edit',
-      component: ModelForm
-    }])
-
+    let routes = []
+    for (name in models){
+      routes = routes.concat([{
+        path: `model/${name}/list`,
+        component: model(name, List)
+      }, {
+        path: `model/${name}/add`,
+        component: model(name, Form)
+      }, {
+        path: `model/${name}/:id/edit`,
+        component: model(name, Form)
+      }])
+    }
+    pm.ctx['routes'] = pm.ctx['routes'].concat(routes)
   }
 }

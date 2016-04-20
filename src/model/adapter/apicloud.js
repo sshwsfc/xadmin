@@ -40,6 +40,13 @@ module.exports = (model) => {
           f.order = order[0]
         }
       }
+      if (f.fields !== undefined) {
+        let fields = {id: true}
+        for (let field of f.fields) {
+          fields[field] = true
+        }
+        f.fields = fields
+      }
       return f
     },
     query (filter = {}) {
