@@ -5,8 +5,9 @@ from django.template.response import TemplateResponse
 from django.utils.encoding import force_unicode
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
-from xadmin.util import unquote, get_deleted_objects
+from django.contrib.admin.utils import get_deleted_objects
 
+from xadmin.util import unquote
 from xadmin.views.edit import UpdateAdminView
 from xadmin.views.detail import DetailAdminView
 from xadmin.views.base import ModelAdminView, filter_hook, csrf_protect_m
@@ -29,7 +30,7 @@ class DeleteAdminView(ModelAdminView):
 
         # Populate deleted_objects, a data structure of all related objects that
         # will also be deleted.
-        (self.deleted_objects, self.perms_needed, self.protected) = get_deleted_objects(
+        (self.deleted_objects, model_count, self.perms_needed, self.protected) = get_deleted_objects(
             [self.obj], self.opts, self.request.user, self.admin_site, using)
 
     @csrf_protect_m

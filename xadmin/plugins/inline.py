@@ -3,10 +3,12 @@ import inspect
 from django import forms
 from django.forms.formsets import all_valid, DELETION_FIELD_NAME
 from django.forms.models import inlineformset_factory, BaseInlineFormSet, modelform_defines_fields
-from django.contrib.contenttypes.generic import BaseGenericInlineFormSet, generic_inlineformset_factory
+from django.contrib.contenttypes.forms import BaseGenericInlineFormSet, generic_inlineformset_factory
 from django.template import loader
 from django.template.loader import render_to_string
 from django.contrib.auth import get_permission_codename
+from crispy_forms.utils import TEMPLATE_PACK
+
 from xadmin.layout import FormHelper, Layout, flatatt, Container, Column, Field, Fieldset
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView, DetailAdminView, filter_hook
@@ -21,23 +23,23 @@ class ShowField(Field):
         if admin_view.style == 'table':
             self.template = "xadmin/layout/field_value_td.html"
 
-    def render(self, form, form_style, context):
+    def render(self, form, form_style, context, template_pack=TEMPLATE_PACK, **kwargs):
         html = ''
         detail = form.detail
         for field in self.fields:
             if not isinstance(form.fields[field].widget, forms.HiddenInput):
                 result = detail.get_field_result(field)
                 html += loader.render_to_string(
-                    self.template, {'field': form[field], 'result': result})
+                    self.template, context={'field': form[field], 'result': result})
         return html
 
 
 class DeleteField(Field):
 
-    def render(self, form, form_style, context):
+    def render(self, form, form_style, context, template_pack=TEMPLATE_PACK, **kwargs):
         if form.instance.pk:
             self.attrs['type'] = 'hidden'
-            return super(DeleteField, self).render(form, form_style, context)
+            return super(DeleteField, self).render(form, form_style, context, template_pack=TEMPLATE_PACK, **kwargs)
         else:
             return ""
 
@@ -224,7 +226,7 @@ class InlineModelAdmin(ModelFormAdminView):
                         value = None
                         label = None
                         if readonly_field in inst._meta.get_all_field_names():
-                            label = inst._meta.get_field_by_name(readonly_field)[0].verbose_name
+                            label = inst._meta.get_field(readonly_field).verbose_name
                             value = unicode(getattr(inst, readonly_field))
                         elif inspect.ismethod(getattr(inst, readonly_field, None)):
                             value = getattr(inst, readonly_field)()
@@ -329,10 +331,9 @@ class InlineFormset(Fieldset):
         self.flat_attrs = flatatt(kwargs)
         self.extra_attrs = formset.style.get_attrs()
 
-    def render(self, form, form_style, context):
+    def render(self, form, form_style, context, template_pack=TEMPLATE_PACK, **kwargs):
         return render_to_string(
-            self.template, dict({'formset': self, 'prefix': self.formset.prefix, 'inline_style': self.inline_style}, **self.extra_attrs),
-            context_instance=context)
+            self.template, dict({'formset': self, 'prefix': self.formset.prefix, 'inline_style': self.inline_style}, **self.extra_attrs))
 
 
 class Inline(Fieldset):
@@ -340,8 +341,9 @@ class Inline(Fieldset):
     def __init__(self, rel_model):
         self.model = rel_model
         self.fields = []
+        super(Inline,self).__init__(legend="")
 
-    def render(self, form, form_style, context):
+    def render(self, form, form_style, context, template_pack=TEMPLATE_PACK, **kwargs):
         return ""
 
 
@@ -385,6 +387,7 @@ class InlineFormsetPlugin(BaseAdminPlugin):
                     inline.max_num = 0
                 inline_instances.append(inline)
             self._inline_instances = inline_instances
+
         return self._inline_instances
 
     def instance_forms(self, ret):

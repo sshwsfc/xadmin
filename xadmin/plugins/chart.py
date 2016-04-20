@@ -98,7 +98,7 @@ class ChartsPlugin(BaseAdminPlugin):
         context.update({
             'charts': [{"name": name, "title": v['title'], 'url': self.get_chart_url(name, v)} for name, v in self.data_charts.items()],
         })
-        nodes.append(loader.render_to_string('xadmin/blocks/model_list.results_top.charts.html', context_instance=context))
+        nodes.append(loader.render_to_string('xadmin/blocks/model_list.results_top.charts.html', context=context))
 
 
 class ChartsView(ListAdminView):
