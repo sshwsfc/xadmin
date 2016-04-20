@@ -12,7 +12,7 @@ const FilterNav = React.createClass({
   renderFilter () {
     var ctx = this.props.context
       , model = ctx.model
-      , filters = model.filters
+      , filters = model.filters || []
     return filters.map(filter => {
       var field = model.schema.properties[filter]
         , title = field.title || _.capitalize(filter)

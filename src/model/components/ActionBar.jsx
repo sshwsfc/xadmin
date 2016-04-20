@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
-import Icon from '../Icon'
+import { Icon } from '../../components'
 import { Well, DropdownButton, MenuItem } from 'react-bootstrap'
 import { block } from '../../plugin'
 
@@ -27,7 +27,7 @@ const ActionBar = React.createClass({
 
 const stateMap = (state) => {
   return {
-    selected: state.models$car$selected
+    selected: state.selected
   }
 }
 

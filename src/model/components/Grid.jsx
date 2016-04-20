@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import _ from 'lodash'
-import Icon from '../Icon'
+import { Icon } from '../../components'
 import { Table, OverlayTrigger, Popover, Button, Input, Dropdown, MenuItem } from 'react-bootstrap'
 import { deleteItem, selecteItem, changeOrder } from '../../model/actions'
 import { block } from '../../plugin'
@@ -121,7 +121,7 @@ const ModelGrid = React.createClass({
 
   render() {
     const store = this.context.store
-      , selectedItems = store.getState().models$car$selected.map(item=>{return item.id})
+      , selectedItems = store.getState().selected.map(item=>{return item.id})
       , model = this.context.model
       , fields = model.list_display || []
 
@@ -148,7 +148,7 @@ const ModelGrid = React.createClass({
 
 const stateMap = (state) => {
   return {
-    items: state.models$car$items
+    items: state.items
   }
 }
 

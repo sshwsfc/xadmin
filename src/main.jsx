@@ -26,14 +26,13 @@ const routes = {
 }
 
 const loggerMiddleware = createLogger()
-const store = createStore(...PM.ctx['reducers'], {}, compose(
-  applyMiddleware(thunkMiddleware, ...(PM.ctx['redux-middleware']||[])),
-  window.devToolsExtension ? window.devToolsExtension() : f => f
-))
-
+if (PM.ctx['reducers'].length > 0) {
+  const store = createStore(...PM.ctx['reducers'], {}, compose(
+    applyMiddleware(thunkMiddleware, ...(PM.ctx['redux-middleware']||[])),
+    window.devToolsExtension ? window.devToolsExtension() : f => f
+  ))
+}
 render(
-  <Provider store={store}>
-    <Router history={browserHistory} routes={routes}/>
-  </Provider>,
+  <Router history={browserHistory} routes={routes}/>,
   document.getElementById('app')
 )

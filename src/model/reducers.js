@@ -46,10 +46,10 @@ let modelCount = (model) => (state = 0, action) => {
 }
 
 const rootReducer = combineReducers({
-  models$car$items: modelItems('car'),
-  models$car$selected: modelSelectdItems('car'),
-  models$car$filter: modelFilter('car'),
-  models$car$count: modelCount('car')
+  items: modelItems('car'),
+  selected: modelSelectdItems('car'),
+  filter: modelFilter('car'),
+  count: modelCount('car')
 })
 
 export default rootReducer

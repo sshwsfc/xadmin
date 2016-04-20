@@ -1,13 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
-import Icon from '../Icon'
+import { Icon } from '../../components'
 import { ButtonToolbar, ButtonGroup, Button, DropdownButton, MenuItem } from 'react-bootstrap'
 import { block } from '../../plugin'
 
 const CountButton = connect(state => {
   return {
-    count: state.models$car$count
+    count: state.count
   }
 })(React.createClass({
   propTypes: {

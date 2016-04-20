@@ -1,14 +1,13 @@
 import React from 'react'
-import Page from '../Page'
-import Icon from '../Icon'
+import { Page, Icon } from '../../components'
 import {Navbar, Nav, NavItem, NavDropdown, MenuItem, Panel, Well, Button} from 'react-bootstrap'
-import modelMixin from './base'
+import { ModelMixin } from '../base'
 import XForm from '../../xform'
 import utils from 'react-schema-form/lib/utils'
 
 module.exports = React.createClass({
 
-  mixins: [modelMixin],
+  mixins: [ModelMixin],
 
   componentDidMount() {
     var model_id = this.props.params.id

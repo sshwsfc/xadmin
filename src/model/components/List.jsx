@@ -3,17 +3,16 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { Button, Nav } from 'react-bootstrap'
 
-import Page from '../Page'
-import Icon from '../Icon'
-import ModelMixin from './base'
+import { Page, Icon } from '../../components'
 import { block } from '../../plugin'
+import { ModelMixin } from '../base'
 
 import Pagination from './Pagination'
 import Grid from './Grid'
 import SubMenu from './SubMenu'
 import ActionBar from './ActionBar'
 
-import { fetchItems } from '../../model/actions'
+import { fetchItems } from '../actions'
 
 const ModelList = React.createClass({
 
@@ -31,7 +30,7 @@ const ModelList = React.createClass({
           {block('model.list.nav', this)}
         </Nav>
         <div className="navbar-btn pull-right hide-xs">
-          <Button bsStyle="primary" onClick={()=>{this.context.router.push(this.model.$link.add.path)}}><Icon name="plus"/> Add Car</Button>
+          <Button bsStyle="primary" onClick={()=>{this.router.push(this.model.$link.add.path)}}><Icon name="plus"/> Add Car</Button>
         </div>
       </div>
       )

@@ -1,10 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import Icon from '../Icon'
+import { Icon } from '../../components'
 import { Link } from 'react-router'
 import { Pagination } from 'react-bootstrap'
 import { block } from '../../plugin'
-import modelMixin from './base'
+import { ModelMixin } from '../base'
 import _ from 'lodash'
 import { fetchItems } from '../../model/actions'
 
@@ -44,8 +44,8 @@ const ModelPagination = React.createClass({
 })
 
 const stateMap = (state) => {
-  const count = state.models$car$count
-  const { limit, skip } = state.models$car$filter
+  const count = state.count
+  const { limit, skip } = state.filter
   
   return {
     items: Math.ceil(count / limit),
@@ -60,7 +60,7 @@ const dispatchMap = (dispatch) => {
       const page = selectedEvent.eventKey
 
       return dispatch((dispatch, getState) => {
-        const pageSize = getState().models$car$filter.limit
+        const pageSize = getState().filter.limit
         return dispatch(fetchItems({skip: pageSize * (page - 1)}))
       })
     }

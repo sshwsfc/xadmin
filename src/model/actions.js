@@ -26,7 +26,7 @@ function receiveItems (filter, items, count) {
 
 export function fetchItems (filter) {
   return (dispatch, getState) => {
-    const newFilter = Object.assign({}, getState().models$car$filter, filter)
+    const newFilter = Object.assign({}, getState().filter, filter)
     dispatch(requestItems(newFilter))
     api.count(newFilter).then(count => {
       api.query(newFilter).then(items => {
@@ -61,7 +61,7 @@ export function selecteItem (item, selected) {
 
 export function changeOrder (field, order) {
   return (dispatch, getState) => {
-    const orders = getState().models$car$filter.order || {}
+    const orders = getState().filter.order || {}
     orders[field] = order
     return dispatch(fetchItems({order: orders}))
   }
