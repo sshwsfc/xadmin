@@ -28,7 +28,7 @@ class XForm extends React.Component {
     this.props.onModelChange(key, val)
   }
 
-  builder (form, model, index, onChange, mapper) {
+  builder (form, model, onChange, mapper) {
     var type = form.type
     let Field = this.mapper[type]
     if (!Field) {
@@ -38,7 +38,7 @@ class XForm extends React.Component {
     // if (form.condition && eval(form.condition) === false) {
     //   return null
     // }
-    return <Field model={model} form={form} key={index} onChange={onChange} mapper={mapper} builder={this.builder}/>
+    return <Field model={model} form={form} key={form.key[0]} onChange={onChange} mapper={mapper} builder={this.builder}/>
   }
 
   render () {
@@ -48,8 +48,8 @@ class XForm extends React.Component {
     if (this.props.mapper) {
       mapper = _.merge(this.mapper, this.props.mapper)
     }
-    let forms = merged.map(function (form, index) {
-      return this.builder(form, this.props.model, index, this.onChange, mapper)
+    let forms = merged.map(function (form) {
+      return this.builder(form, this.props.model, this.onChange, mapper)
     }.bind(this))
 
     return (

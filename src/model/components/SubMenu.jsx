@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router'
 import { Icon } from '../../components'
-import { ButtonToolbar, ButtonGroup, Button, DropdownButton, MenuItem } from 'react-bootstrap'
+import { ButtonToolbar, OverlayTrigger, Popover, Clearfix, ButtonGroup, Button, Dropdown, MenuItem, Panel, ListGroup, ListGroupItem } from 'react-bootstrap'
 import { block } from '../../plugin'
 import { ModelMixin } from '../base'
 import { changeField } from '../../model/actions'
@@ -25,7 +25,8 @@ const ColsDropdown = React.createClass({
 
   getStateMap (storeState) {
     return {
-      selected: storeState.filter.fields
+      selected: storeState.filter.fields,
+      open: false
     }
   },
 
@@ -43,12 +44,22 @@ const ColsDropdown = React.createClass({
         , title = field.title || name
         , fieldSelected = _.indexOf(selected, name) !== -1
         , icon = fieldSelected ? <Icon name="check-square-o" /> : <Icon name="square-o" />
-      items.push(<MenuItem key={name} onClick={() => this.changeFieldDisplay(fieldName, !fieldSelected)}>{icon} {title}</MenuItem>)
+      items.push(<ListGroupItem key={name} onClick={(e) => {
+        this.changeFieldDisplay(fieldName, !fieldSelected)
+      }}>{icon} {title}</ListGroupItem>)
     }
+
+    const DropdownBtn = Dropdown.ControlledComponent
     return (
-      <DropdownButton bsSize="small" title="显示列" pullRight={true} id="model-list-cols">
-        {items}
-      </DropdownButton>
+      <OverlayTrigger trigger="click" rootClose placement="bottom" overlay={
+        <Popover id="model-cols-select-popover">
+          <ListGroup fill style={{marginBottom: 0}}>
+            {items}
+          </ListGroup>
+        </Popover>
+      }>
+        <Button bsSize="small">显示列</Button>
+      </OverlayTrigger>
       )
   }
 })

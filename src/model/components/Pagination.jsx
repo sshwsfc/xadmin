@@ -24,11 +24,10 @@ const ModelPagination = React.createClass({
     }
   },
 
-  onChangePage (e, selectedEvent) {
+  onChangePage (page, e) {
     e.preventDefault()
 
-    const page = selectedEvent.eventKey
-      , state = this.store.getState()
+    const state = this.store.getState()
       , pageSize = state.filter.limit
       , skip = pageSize * (page - 1)
 

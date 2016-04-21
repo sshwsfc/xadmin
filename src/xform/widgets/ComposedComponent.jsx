@@ -79,6 +79,6 @@ export default ComposedComponent => class extends React.Component {
   }
 
   render() {
-    return <ComposedComponent {...this.props} {...this.state} onChangeValidate={this.onChangeValidate}/>
+    return <ComposedComponent key={this.props.form.key[0]} {...this.props} {...this.state} onChangeValidate={this.onChangeValidate}/>
   }
 }
