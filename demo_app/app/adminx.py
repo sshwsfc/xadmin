@@ -18,13 +18,13 @@ class MainDashboard(object):
             {"type": "addform", "model": MaintainLog},
         ]
     ]
-xadmin.site.register(views.website.IndexView, MainDashboard)
+xadmin.sites.site.register(views.website.IndexView, MainDashboard)
 
 
 class BaseSetting(object):
     enable_themes = True
     use_bootswatch = True
-xadmin.site.register(views.BaseAdminView, BaseSetting)
+xadmin.sites.site.register(views.BaseAdminView, BaseSetting)
 
 
 class GlobalSetting(object):
@@ -33,7 +33,7 @@ class GlobalSetting(object):
         Host: 'fa fa-laptop', IDC: 'fa fa-cloud'
     }
     menu_style = 'default'#'accordion'
-xadmin.site.register(views.CommAdminView, GlobalSetting)
+xadmin.sites.site.register(views.CommAdminView, GlobalSetting)
 
 
 class MaintainInline(object):
@@ -195,8 +195,8 @@ class AccessRecordAdmin(object):
         return obj.date.strftime("%B")
         
 
-xadmin.site.register(Host, HostAdmin)
-xadmin.site.register(HostGroup, HostGroupAdmin)
-xadmin.site.register(MaintainLog, MaintainLogAdmin)
-xadmin.site.register(IDC, IDCAdmin)
-xadmin.site.register(AccessRecord, AccessRecordAdmin)
+xadmin.sites.site.register(Host, HostAdmin)
+xadmin.sites.site.register(HostGroup, HostGroupAdmin)
+xadmin.sites.site.register(MaintainLog, MaintainLogAdmin)
+xadmin.sites.site.register(IDC, IDCAdmin)
+xadmin.sites.site.register(AccessRecord, AccessRecordAdmin)

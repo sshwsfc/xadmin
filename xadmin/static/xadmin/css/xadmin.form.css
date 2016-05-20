@@ -85,7 +85,7 @@ select.selectmultiple {
    {
     max-width: 300px;
   }
-  .input-group.date{ max-width: 220px;}
+  .input-group.date{ max-width: 300px;}
   .input-group.time{ max-width: 180px;}
   .int-field {
     max-width: 100px;
@@ -143,6 +143,10 @@ select.selectmultiple {
     margin: 0px;
     padding-left: 0px;
     padding-right: 0px;
+  }
+  .form-horizontal .form-inline .form-control{
+    min-width:200px;
+    max-width:300px;
   }
   .form-horizontal .fieldset .panel-body {
     padding-top: 24px;

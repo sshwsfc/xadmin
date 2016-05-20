@@ -17,7 +17,6 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.template import Context, Template
 from django.template.response import TemplateResponse
-from django.utils.datastructures import SortedDict
 from django.utils.decorators import method_decorator, classonlymethod
 from django.utils.encoding import smart_unicode
 from django.utils.http import urlencode
@@ -27,6 +26,7 @@ from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import View
+from collections import OrderedDict
 from xadmin.util import static, json, vendor, sortkeypicker
 
 
@@ -88,17 +88,16 @@ def inclusion_tag(file_name, context_class=Context, takes_context=False):
                 t = select_template(file_name)
             else:
                 t = get_template(file_name)
-            new_context = context_class(_dict, **{
-                'autoescape': context.autoescape,
-                'current_app': context.current_app,
-                'use_l10n': context.use_l10n,
-                'use_tz': context.use_tz,
-            })
-            new_context['admin_view'] = context['admin_view']
+
+            _dict['autoescape'] = context.autoescape
+            _dict['use_l10n'] = context.use_l10n
+            _dict['use_tz'] = context.use_tz
+            _dict['admin_view'] = context['admin_view']
+
             csrf_token = context.get('csrf_token', None)
             if csrf_token is not None:
-                new_context['csrf_token'] = csrf_token
-            nodes.append(t.render(new_context))
+                _dict['csrf_token'] = csrf_token
+            nodes.append(t.render(_dict))
 
         return method
     return wrap
@@ -190,7 +189,7 @@ class BaseAdminObject(object):
         return HttpResponse(content)
 
     def template_response(self, template, context):
-        return TemplateResponse(self.request, template, context, current_app=self.admin_site.name)
+        return TemplateResponse(self.request, template, context)
 
     def message_user(self, message, level='info'):
         """
@@ -295,8 +294,9 @@ class CommAdminView(BaseAdminView):
     base_template = 'xadmin/base_site.html'
     menu_template = 'xadmin/includes/sitemenu_default.html'
 
-    site_title = None
-    site_footer = None
+    site_title = getattr(settings,"XADMIN_TITLE",_(u"Django Xadmin"))
+    site_footer = getattr(settings,"XADMIN_FOOTER_TITLE",_(u"my-company.inc"))
+
     global_models_icon = {}
     default_model_icon = None
     apps_label_title = {}
@@ -318,7 +318,7 @@ class CommAdminView(BaseAdminView):
                     get_url(m, had_urls)
         get_url({'menus': site_menu}, had_urls)
 
-        nav_menu = SortedDict()
+        nav_menu = OrderedDict()
 
         for model, model_admin in self.admin_site._registry.items():
             if getattr(model_admin, 'hidden_menu', False):
@@ -441,8 +441,8 @@ class CommAdminView(BaseAdminView):
         context.update({
             'menu_template': self.menu_template,
             'nav_menu': nav_menu,
-            'site_title': self.site_title or _(u'Django Xadmin'),
-            'site_footer': self.site_footer or _(u'my-company.inc'),
+            'site_title': self.site_title,
+            'site_footer': self.site_footer,
             'breadcrumbs': self.get_breadcrumb()
         })
 

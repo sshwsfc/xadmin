@@ -7,11 +7,8 @@
 }
 
 .widget {
-  position: relative;
 }
 .widget_options {
-  overflow: visible;
-  position: absolute;
 }
 
 /* Quick Buttons

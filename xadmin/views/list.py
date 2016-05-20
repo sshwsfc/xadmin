@@ -1,9 +1,9 @@
+from collections import OrderedDict
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.core.paginator import InvalidPage, Paginator
 from django.db import models
 from django.http import HttpResponseRedirect
 from django.template.response import SimpleTemplateResponse, TemplateResponse
-from django.utils.datastructures import SortedDict
 from django.utils.encoding import force_unicode, smart_unicode
 from django.utils.html import escape, conditional_escape
 from django.utils.safestring import mark_safe
@@ -310,13 +310,13 @@ class ListAdminView(ModelAdminView):
     @filter_hook
     def get_ordering_field_columns(self):
         """
-        Returns a SortedDict of ordering field column numbers and asc/desc
+        Returns a OrderedDict of ordering field column numbers and asc/desc
         """
 
         # We must cope with more than one column having the same underlying sort
         # field, so we base things on column numbers.
         ordering = self._get_default_ordering()
-        ordering_fields = SortedDict()
+        ordering_fields = OrderedDict()
         if ORDER_VAR not in self.params or not self.params[ORDER_VAR]:
             # for ordering specified on ModelAdmin or model Meta, we don't know
             # the right column numbers absolutely, because there might be more
@@ -370,9 +370,8 @@ class ListAdminView(ModelAdminView):
         Prepare the context for templates.
         """
         self.title = _('%s List') % force_unicode(self.opts.verbose_name)
-
         model_fields = [(f, f.name in self.list_display, self.get_check_field_url(f))
-                        for f in (self.opts.fields + self.get_model_method_fields()) if f.name not in self.list_exclude]
+                        for f in (list(self.opts.fields) + self.get_model_method_fields()) if f.name not in self.list_exclude]
 
         new_context = {
             'model_name': force_unicode(self.opts.verbose_name_plural),
@@ -410,9 +409,8 @@ class ListAdminView(ModelAdminView):
         context.update(kwargs or {})
 
         response = self.get_response(context, *args, **kwargs)
-
         return response or TemplateResponse(request, self.object_list_template or
-                                            self.get_template_list('views/model_list.html'), context, current_app=self.admin_site.name)
+                                            self.get_template_list('views/model_list.html'), context)
 
     @filter_hook
     def post_response(self, *args, **kwargs):

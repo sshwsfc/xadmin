@@ -1,10 +1,11 @@
 from django import forms
+from django.apps import apps
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db import models
 from django.db.models.base import ModelBase
 from django.forms.forms import DeclarativeFieldsMetaclass
-from django.forms.util import flatatt
+from django.forms.utils import flatatt
 from django.template import loader
 from django.http import Http404
 from django.template.context import RequestContext
@@ -292,7 +293,7 @@ class ModelChoiceField(forms.ChoiceField):
         if isinstance(value, ModelBase):
             return value
         app_label, model_name = value.lower().split('.')
-        return models.get_model(app_label, model_name)
+        return apps.get_model(app_label, model_name)
 
     def prepare_value(self, value):
         if isinstance(value, ModelBase):
@@ -375,7 +376,7 @@ class QuickBtnWidget(BaseWidget):
         if isinstance(model_or_label, ModelBase):
             return model_or_label
         else:
-            return models.get_model(*model_or_label.lower().split('.'))
+            return apps.get_model(*model_or_label.lower().split('.'))
 
     def context(self, context):
         btns = []
