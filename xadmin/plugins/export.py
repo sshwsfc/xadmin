@@ -8,7 +8,7 @@ from django.utils.encoding import force_unicode, smart_unicode
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.xmlutils import SimplerXMLGenerator
-from django.db.models import BooleanField, NullBooleanField
+from django.db.models import BooleanField, NullBooleanField, DateField, DateTimeField
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
 from xadmin.util import json
@@ -59,7 +59,7 @@ class ExportPlugin(BaseAdminPlugin):
 
     def _format_value(self, o):
         if (o.field is None and getattr(o.attr, 'boolean', False)) or \
-           (o.field and isinstance(o.field, (BooleanField, NullBooleanField))):
+           (o.field and isinstance(o.field, (BooleanField, NullBooleanField, DateTimeField, DateField))):
                 value = o.value
         elif str(o.text).startswith("<span class='text-muted'>"):
             value = escape(str(o.text)[25:-7])
