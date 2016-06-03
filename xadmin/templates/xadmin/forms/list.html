@@ -1,0 +1,41 @@
+{% load i18n xadmin_tags %}
+
+
+
+
+
+{% block content %}
+{% if results %}
+<table class="table table-bordered table-condensed table-hover table-striped multiselect-list">
+  <thead>
+    <tr>
+      <th colspan="{{result_headers|length}}">
+        {% block result_search_row %}
+	    <div class="input-group input-group-sm search-group pull-left">    
+	    	{{search_widget}}<span class="input-group-addon"><i class="fa fa-search"></i></span>
+		</div>
+		{% endblock result_search_row %}
+		 <a href="{{page_url}}" class="pull-right"><span class="badge badge-info">{{ result_count }}</span></a>
+	  </th>
+	</tr>
+    <tr>
+      {% for o in result_headers %}
+      <th>{{ o.text }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody id="{{search_result_list_id}}">
+  {% for row in results %}
+    <tr>{% for o in row %}
+      <td>
+          {{ o.label }}
+      </td>
+    {% endfor %}
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+  <span class="text-muted">{% trans "Empty list" %}</span>
+{% endif %}
+{% endblock content %}

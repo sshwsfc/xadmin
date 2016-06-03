@@ -101,4 +101,24 @@ vendors = {
             'dev': 'xadmin/vendor/snapjs/snap.js',
         }
     },
+    "bootstrap-wysihtml5": {
+        "css": {
+            'dev': 'xadmin/vendor/bootstrap-wysihtml5/bootstrap3-wysihtml5.css',
+        },
+        "js": {
+            'dev': ['xadmin/vendor/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.js'],
+            'production':['xadmin/vendor/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js'],
+        }
+    },
+   "bootstrap-wysiwyg": {
+        "css": {
+            'dev': 'xadmin/vendor/bootstrap-wysiwyg/bootstrap-wysiwyg.css',
+        },                    
+        "js": {
+            'dev': ['xadmin/vendor/bootstrap-wysiwyg/bootstrap-wysiwyg.js',
+                    'xadmin/vendor/bootstrap-wysiwyg/external/jquery.hotkeys.js',
+                    'xadmin/vendor/bootstrap-wysiwyg/external/google-code-prettify/prettify.js'
+                    ],
+        }
+    },
 }

@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models.base import ModelBase
-from django.utils.encoding import smart_unicode
+from django.utils.encoding import smart_text
 
 from django.db.models.signals import post_syncdb
 from django.contrib.auth.models import Permission
@@ -80,7 +80,7 @@ class JSONEncoder(DjangoJSONEncoder):
             try:
                 return super(JSONEncoder, self).default(o)
             except Exception:
-                return smart_unicode(o)
+                return smart_text(o)
 
 
 class UserSettings(models.Model):
