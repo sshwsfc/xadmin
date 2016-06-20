@@ -19,8 +19,16 @@ from xadmin.util import unquote, lookup_field, display_for_field, boolean_icon, 
 
 from .base import ModelAdminView, filter_hook, csrf_protect_m
 
+try:
+    from crispy_forms.utils import TEMPLATE_PACK
+except:
+    TEMPLATE_PACK = 'bootstrap3'
+
+
 # Text to display within change-list table cells if the value is blank.
 EMPTY_CHANGELIST_VALUE = _('Null')
+
+
 
 
 class ShowField(Field):
@@ -36,7 +44,7 @@ class ShowField(Field):
 
         self.results = [(field, callback(field)) for field in self.fields]
 
-    def render(self, form, form_style, context):
+    def render(self, form, form_style, context, template_pack=TEMPLATE_PACK, **kwargs):
         if hasattr(self, 'wrapper_class'):
             context['wrapper_class'] = self.wrapper_class
 
@@ -188,6 +196,9 @@ class DetailAdminView(ModelAdminView):
         add_view and change_view.
         """
         if self.exclude is None:
+            # Since Django 1.8, modelform_factory requires either the `fields` or `exclude`
+            # parameter to set explicitly. We include all model fields by default, thus the
+            # the exclude parameter should be a empty list instead of `None`(Django 1.7 behavior)
             exclude = []
         else:
             exclude = list(self.exclude)
@@ -195,9 +206,7 @@ class DetailAdminView(ModelAdminView):
             # Take the custom ModelForm's Meta.exclude into account only if the
             # ModelAdmin doesn't define its own.
             exclude.extend(self.form._meta.exclude)
-        # if exclude is an empty list we pass None to be consistant with the
-        # default on modelform_factory
-        exclude = exclude or None
+
         defaults = {
             "form": self.form,
             "fields": self.fields and list(self.fields) or None,
