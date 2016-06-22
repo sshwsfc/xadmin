@@ -16,6 +16,7 @@ from xadmin.layout import Fieldset, Main, Side, Row, FormHelper
 from xadmin.sites import site
 from xadmin.util import unquote, User
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView, ModelAdminView, CommAdminView, csrf_protect_m
+from xadmin.compatibility import unicode
 
 
 ACTION_NAME = {
@@ -196,7 +197,7 @@ class ChangePasswordView(ModelAdminView):
         self.form.helper = helper
 
         context.update({
-            'title': _('Change password: %s') % escape(six.u(self.obj)),
+            'title': _('Change password: %s') % escape(unicode(self.obj)),
             'form': self.form,
             'has_delete_permission': False,
             'has_change_permission': True,
