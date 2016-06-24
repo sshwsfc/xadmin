@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.core.paginator import InvalidPage, Paginator
+from django.core.urlresolvers import NoReverseMatch
 from django.db import models
 from django.http import HttpResponseRedirect
 from django.template.response import SimpleTemplateResponse, TemplateResponse
@@ -532,7 +533,7 @@ class ListAdminView(ModelAdminView):
         item = ResultItem(field_name, row)
         try:
             f, attr, value = lookup_field(field_name, obj, self)
-        except (AttributeError, ObjectDoesNotExist):
+        except (AttributeError, ObjectDoesNotExist, NoReverseMatch):
             item.text = mark_safe("<span class='text-muted'>%s</span>" % EMPTY_CHANGELIST_VALUE)
         else:
             if f is None:
