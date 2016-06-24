@@ -30,8 +30,9 @@
 
 {% block box_extra %}
 {% if not formset.formset.detail_page %}
-<script type="text/x-xadmin" id="{{ prefix }}-empty">
-{% block formset_empty %}{% endblock formset_empty %}
-</script>
+<span style="display: none" id="{{ prefix }}-empty">
+{% blockcapture inline_html %}{% block formset_empty %}{% endblock formset_empty %}{% endblockcapture %}
+{{inline_html}} {# html escaped #}
+</span>
 {% endif %}
 {% endblock box_extra %}
