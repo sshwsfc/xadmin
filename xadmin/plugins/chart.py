@@ -12,6 +12,7 @@ from django.db import models
 from django.utils.http import urlencode
 from django.utils.translation import ugettext_lazy as _, ugettext
 
+from xadmin.plugins.utils import get_context_dict
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
 from xadmin.views.dashboard import ModelBaseWidget, widget_manager
@@ -98,7 +99,8 @@ class ChartsPlugin(BaseAdminPlugin):
         context.update({
             'charts': [{"name": name, "title": v['title'], 'url': self.get_chart_url(name, v)} for name, v in self.data_charts.items()],
         })
-        nodes.append(loader.render_to_string('xadmin/blocks/model_list.results_top.charts.html', context=context))
+        nodes.append(loader.render_to_string('xadmin/blocks/model_list.results_top.charts.html',
+                                             context=get_context_dict(context)))
 
 
 class ChartsView(ListAdminView):

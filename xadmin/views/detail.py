@@ -268,11 +268,11 @@ class DetailAdminView(ModelAdminView):
     def get_response(self, *args, **kwargs):
         context = self.get_context()
         context.update(kwargs or {})
-
-        return TemplateResponse(self.request, self.detail_template or
-                                self.get_template_list(
-                                    'views/model_detail.html'),
-                                context, current_app=self.admin_site.name)
+        self.request.current_app = self.admin_site.name
+        response = TemplateResponse(self.request, self.detail_template or
+                                    self.get_template_list('views/model_detail.html'),
+                                    context)
+        return response
 
 
 class DetailAdminUtil(DetailAdminView):

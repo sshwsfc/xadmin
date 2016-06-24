@@ -10,6 +10,7 @@ from django.db.models import Q
 from django.forms import ModelChoiceField
 from django.http import QueryDict
 
+from xadmin.plugins.utils import get_context_dict
 from xadmin.sites import site
 from xadmin.views import ModelAdminView, BaseAdminPlugin, ListAdminView
 from xadmin.views.list import COL_LIST_VAR, ORDER_VAR
@@ -119,7 +120,8 @@ class BookmarkPlugin(BaseAdminPlugin):
     # Block Views
     def block_nav_menu(self, context, nodes):
         if self.show_bookmarks:
-            nodes.insert(0, loader.render_to_string('xadmin/blocks/model_list.nav_menu.bookmarks.html', context=context))
+            nodes.insert(0, loader.render_to_string('xadmin/blocks/model_list.nav_menu.bookmarks.html',
+                                                    context=get_context_dict(context)))
 
 
 class BookmarkView(ModelAdminView):

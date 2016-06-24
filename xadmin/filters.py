@@ -69,7 +69,7 @@ class BaseFilter(object):
 
     def __str__(self):
         tpl = get_template(self.template)
-        return mark_safe(tpl.render(Context(self.get_context())))
+        return mark_safe(tpl.render(context=self.get_context()))
 
 
 class FieldFilterManager(object):
