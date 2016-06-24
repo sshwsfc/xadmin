@@ -1,5 +1,8 @@
 # coding=UTF-8
+from itertools import chain
+
 from django.core.urlresolvers import reverse
+from django.db.models.options import PROXY_PARENTS
 from django.utils.encoding import force_unicode
 from django.utils.encoding import smart_str
 from django.utils.safestring import mark_safe
@@ -20,22 +23,46 @@ class RelateMenuPlugin(BaseAdminPlugin):
     related_list = []
     use_related_menu = True
 
+    def _get_all_related_objects(self, local_only=False, include_hidden=False,
+                                 include_proxy_eq=False):
+        """
+        Returns a list of related fields (also many to many)
+        :param local_only:
+        :param include_hidden:
+        :return: list
+        """
+        include_parents = True if local_only is False else PROXY_PARENTS
+        fields = self.opts._get_fields(
+            forward=False, reverse=True,
+            include_parents=include_parents,
+            include_hidden=include_hidden
+        )
+        if include_proxy_eq:
+            children = chain.from_iterable(c._relation_tree
+                                           for c in self.opts.concrete_model._meta.proxied_children
+                                           if c is not self.opts)
+            relations = (f.remote_field for f in children
+                         if include_hidden or not f.remote_field.field.remote_field.is_hidden())
+            fields = chain(fields, relations)
+        return list(fields)
+
+
     def get_related_list(self):
         if hasattr(self, '_related_acts'):
             return self._related_acts
 
         _related_acts = []
-        for r in self.opts.get_all_related_objects() + self.opts.get_all_related_many_to_many_objects():
-            if self.related_list and (r.get_accessor_name() not in self.related_list):
+        for rel in self._get_all_related_objects():
+            if self.related_list and (rel.get_accessor_name() not in self.related_list):
                 continue
-            if r.model not in self.admin_site._registry.keys():
+            if rel.model not in self.admin_site._registry.keys():
                 continue
-            has_view_perm = self.has_model_perm(r.model, 'view')
-            has_add_perm = self.has_model_perm(r.model, 'add')
+            has_view_perm = self.has_model_perm(rel.model, 'view')
+            has_add_perm = self.has_model_perm(rel.model, 'add')
             if not (has_view_perm or has_add_perm):
                 continue
 
-            _related_acts.append((r, has_view_perm, has_add_perm))
+            _related_acts.append((rel, has_view_perm, has_add_perm))
 
         self._related_acts = _related_acts
         return self._related_acts
