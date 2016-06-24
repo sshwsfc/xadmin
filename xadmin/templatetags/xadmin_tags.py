@@ -1,3 +1,4 @@
+from django import template
 from django.template import Library
 from django.utils.safestring import mark_safe
 
@@ -35,3 +36,28 @@ static = register.simple_tag(static)
 @register.simple_tag(takes_context=True)
 def vendor(context, *tags):
     return util_vendor(*tags).render()
+
+
+class BlockcaptureNode(template.Node):
+    """https://chriskief.com/2013/11/06/conditional-output-of-a-django-block/"""
+    def __init__(self, nodelist, varname):
+        self.nodelist = nodelist
+        self.varname = varname
+
+    def render(self, context):
+        output = self.nodelist.render(context)
+        context[self.varname] = str(output)
+        return ''
+
+
+@register.tag(name='blockcapture')
+def do_blockcapture(parser, token):
+    try:
+        tag_name, args = token.contents.split(None, 1)
+    except ValueError:
+        raise template.TemplateSyntaxError("'blockcapture' node requires a variable name.")
+
+    nodelist = parser.parse(('endblockcapture',))
+    parser.delete_first_token()
+
+    return BlockcaptureNode(nodelist, args)
