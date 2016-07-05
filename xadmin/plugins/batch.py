@@ -16,10 +16,10 @@ from xadmin.views.edit import ModelFormAdminView
 
 BATCH_CHECKBOX_NAME = '_batch_change_fields'
 
+
 class ChangeFieldWidgetWrapper(forms.Widget):
 
     def __init__(self, widget):
-        self.is_hidden = widget.is_hidden
         self.needs_multipart_form = widget.needs_multipart_form
         self.attrs = widget.attrs
         self.widget = widget
@@ -74,7 +74,8 @@ class BatchChangeAction(BaseActionView):
         n = queryset.count()
 
         data = {}
-        for f in self.opts.fields:
+        fields = self.opts.fields + self.opts.many_to_many
+        for f in fields:
             if not f.editable or isinstance(f, models.AutoField) \
                     or not f.name in cleaned_data:
                 continue

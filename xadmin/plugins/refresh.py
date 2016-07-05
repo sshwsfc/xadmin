@@ -1,6 +1,7 @@
 # coding=utf-8
 from django.template import loader
 
+from xadmin.plugins.utils import get_context_dict
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
 
@@ -31,7 +32,8 @@ class RefreshPlugin(BaseAdminPlugin):
                     'selected': str(r) == current_refresh,
                 } for r in self.refresh_times],
             })
-            nodes.append(loader.render_to_string('xadmin/blocks/model_list.top_toolbar.refresh.html', context))
+            nodes.append(loader.render_to_string('xadmin/blocks/model_list.top_toolbar.refresh.html',
+                                                 get_context_dict(context)))
 
 
 site.register_plugin(RefreshPlugin, ListAdminView)

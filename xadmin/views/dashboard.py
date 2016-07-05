@@ -2,13 +2,12 @@ from django import forms
 from django.apps import apps
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse, NoReverseMatch
-from django.db import models
+from django.template.context_processors import csrf
 from django.db.models.base import ModelBase
 from django.forms.forms import DeclarativeFieldsMetaclass
 from django.forms.utils import flatatt
 from django.template import loader
 from django.http import Http404
-from django.template.context import RequestContext
 from django.test.client import RequestFactory
 from django.utils.encoding import force_unicode, smart_unicode
 from django.utils.html import escape
@@ -19,6 +18,7 @@ from django.views.decorators.cache import never_cache
 from xadmin import widgets as exwidgets
 from xadmin.layout import FormHelper
 from xadmin.models import UserSettings, UserWidget
+from xadmin.plugins.utils import get_context_dict
 from xadmin.sites import site
 from xadmin.views.base import CommAdminView, ModelAdminView, filter_hook, csrf_protect_m
 from xadmin.views.edit import CreateAdminView
@@ -213,9 +213,10 @@ class BaseWidget(forms.Form):
     @property
     def widget(self):
         context = {'widget_id': self.id, 'widget_title': self.title, 'widget_icon': self.widget_icon,
-            'widget_type': self.widget_type, 'form': self, 'widget': self}
+                   'widget_type': self.widget_type, 'form': self, 'widget': self}
+        context.update(csrf(self.request))
         self.context(context)
-        return loader.render_to_string(self.template, context, context_instance=RequestContext(self.request))
+        return loader.render_to_string(self.template, context)
 
     def context(self, context):
         pass

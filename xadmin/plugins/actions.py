@@ -12,6 +12,7 @@ from django.utils.text import capfirst
 
 from django.contrib.admin.utils import get_deleted_objects
 
+from xadmin.plugins.utils import get_context_dict
 from xadmin.sites import site
 from xadmin.util import model_format_dict, model_ngettext
 from xadmin.views import BaseAdminPlugin, ListAdminView
@@ -287,7 +288,8 @@ class ActionPlugin(BaseAdminPlugin):
     # Block Views
     def block_results_bottom(self, context, nodes):
         if self.actions and self.admin_view.result_count:
-            nodes.append(loader.render_to_string('xadmin/blocks/model_list.results_bottom.actions.html', context=context))
+            nodes.append(loader.render_to_string('xadmin/blocks/model_list.results_bottom.actions.html',
+                                                 context=get_context_dict(context)))
 
 
 site.register_plugin(ActionPlugin, ListAdminView)

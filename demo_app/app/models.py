@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import Group
 
 
 SERVER_STATUS = (
@@ -28,6 +29,7 @@ class IDC(models.Model):
     telphone = models.CharField(max_length=32)
     address = models.CharField(max_length=128)
     customer_id = models.CharField(max_length=128)
+    groups = models.ManyToManyField(Group)  # many
 
     create_time = models.DateField(auto_now=True)
 

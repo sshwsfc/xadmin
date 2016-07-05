@@ -9,6 +9,8 @@ from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.xmlutils import SimplerXMLGenerator
 from django.db.models import BooleanField, NullBooleanField
+
+from xadmin.plugins.utils import get_context_dict
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
 from xadmin.util import json
@@ -45,7 +47,8 @@ class ExportMenuPlugin(BaseAdminPlugin):
                 'form_params': self.admin_view.get_form_params({'_do_': 'export'}, ('export_type',)),
                 'export_types': [{'type': et, 'name': self.export_names[et]} for et in self.list_export],
             })
-            nodes.append(loader.render_to_string('xadmin/blocks/model_list.top_toolbar.exports.html', context=context))
+            nodes.append(loader.render_to_string('xadmin/blocks/model_list.top_toolbar.exports.html',
+                                                 context=get_context_dict(context)))
 
 
 class ExportPlugin(BaseAdminPlugin):

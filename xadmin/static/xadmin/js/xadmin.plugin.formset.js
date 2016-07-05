@@ -63,12 +63,18 @@
         });
 
         if ($$.length) {
-            var template = $('#' + options.prefix + '-empty');
-            if(template.is('textarea')){
-                template = $(template.val());
-            }else if(template.is('script')){
-                template = $(template.html());
+            var template, el = $('#' + options.prefix + '-empty');
+            if(el.is('textarea')) {
+                template = el.val();
+            } else if(el.is('span')) {
+                template = el.html();
+            }else if(el.is('script')) {
+                template = el.html();
             }
+
+            template = el.html(template).text(); // decoded
+            template = $($.parseHTML(template));
+
             template.removeAttr('id');
             if(template.data("replace-id")){
                 template.attr('id', template.data("replace-id"));
@@ -91,7 +97,7 @@
         }
 
         return $$;
-    }
+    };
 
     $.fn.formset.styles = {
         'tab': {
@@ -129,11 +135,11 @@
                 }
             }
         }
-    }
+    };
 
     $(function(){
         $('.formset-content').each(function(){
             $(this).formset();
         });
     });
-})(jQuery)
+})(jQuery);

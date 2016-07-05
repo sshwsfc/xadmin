@@ -4,6 +4,7 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.base import ModelBase
 from django.views.decorators.cache import never_cache
+import inspect
 
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -297,8 +298,10 @@ class AdminSite(object):
             ]
 
         # Registed admin views
+        # inspect[isclass]: Only checks if the object is a class. With it lets you create an custom view that
+        # inherits from multiple views and have more of a metaclass.
         urlpatterns += [
-                url(path, wrap(self.create_admin_view(clz_or_func)) if type(clz_or_func) == type and issubclass(clz_or_func, BaseAdminView) else include(clz_or_func(self)),
+                url(path, wrap(self.create_admin_view(clz_or_func)) if inspect.isclass(clz_or_func) and issubclass(clz_or_func, BaseAdminView) else include(clz_or_func(self)),
                 name=name) for path, clz_or_func, name in self._registry_views
             ]
 

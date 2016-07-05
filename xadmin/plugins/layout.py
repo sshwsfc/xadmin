@@ -2,6 +2,7 @@
 from django.template import loader
 from django.utils.translation import ugettext_lazy as _
 
+from xadmin.plugins.utils import get_context_dict
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
 from xadmin.util import label_for_field
@@ -73,7 +74,8 @@ class GridLayoutPlugin(BaseAdminPlugin):
                 'layouts': self._active_layouts,
                 'current_icon': self._current_icon,
             })
-            nodes.append(loader.render_to_string('xadmin/blocks/model_list.top_toolbar.layouts.html', context=context))
+            nodes.append(loader.render_to_string('xadmin/blocks/model_list.top_toolbar.layouts.html',
+                                                 context=get_context_dict(context)))
 
 
 site.register_plugin(GridLayoutPlugin, ListAdminView)

@@ -1,5 +1,6 @@
 import copy
 
+from crispy_forms.utils import TEMPLATE_PACK
 from django import forms
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
@@ -35,7 +36,7 @@ class ShowField(Field):
 
         self.results = [(field, callback(field)) for field in self.fields]
 
-    def render(self, form, form_style, context):
+    def render(self, form, form_style, context, template_pack=TEMPLATE_PACK, **kwargs):
         if hasattr(self, 'wrapper_class'):
             context['wrapper_class'] = self.wrapper_class
 
@@ -199,7 +200,7 @@ class DetailAdminView(ModelAdminView):
         exclude = exclude or None
         defaults = {
             "form": self.form,
-            "fields": self.fields and list(self.fields) or None,
+            "fields": self.fields and list(self.fields) or '__all__',
             "exclude": exclude,
         }
         defaults.update(kwargs)
@@ -267,11 +268,11 @@ class DetailAdminView(ModelAdminView):
     def get_response(self, *args, **kwargs):
         context = self.get_context()
         context.update(kwargs or {})
-
-        return TemplateResponse(self.request, self.detail_template or
-                                self.get_template_list(
-                                    'views/model_detail.html'),
-                                context, current_app=self.admin_site.name)
+        self.request.current_app = self.admin_site.name
+        response = TemplateResponse(self.request, self.detail_template or
+                                    self.get_template_list('views/model_detail.html'),
+                                    context)
+        return response
 
 
 class DetailAdminUtil(DetailAdminView):
