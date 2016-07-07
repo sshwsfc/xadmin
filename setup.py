@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 from setuptools import setup
 
-version_tuple = __import__('xadmin').VERSION
-version = ".".join([str(v) for v in version_tuple])
+# version_tuple = __import__('xadmin').VERSION
+# version = ".".join([str(v) for v in version_tuple])
 
 setup(
-    name='django-xadmin',
-    version=version,
+    name='xadmin',
+    version='0.6.1',
     description='Drop-in replacement of Django admin comes with lots of goodies, fully extensible with plugin support, pretty UI based on Twitter Bootstrap.',
     long_description=open('README.rst').read(),
     author='sshwsfc',
