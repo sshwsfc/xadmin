@@ -72,11 +72,11 @@ class RelateFieldPlugin(BaseAdminPlugin):
     def get_field_style(self, attrs, db_field, style, **kwargs):
         # search able fk field
         if style in ('fk-ajax', 'fk-select') and isinstance(db_field, models.ForeignKey):
-            if (db_field.rel.to in self.admin_view.admin_site._registry) and \
-                    self.has_model_perm(db_field.rel.to, 'view'):
+            if (db_field.remote_field.to in self.admin_view.admin_site._registry) and \
+                    self.has_model_perm(db_field.remote_field.to, 'view'):
                 db = kwargs.get('using')
                 return dict(attrs or {}, \
-                    widget=(style == 'fk-ajax' and ForeignKeySearchWidget or ForeignKeySelectWidget)(db_field.rel, self.admin_view, using=db))
+                    widget=(style == 'fk-ajax' and ForeignKeySearchWidget or ForeignKeySelectWidget)(db_field.remote_field, self.admin_view, using=db))
         return attrs
 
 site.register_plugin(RelateFieldPlugin, ModelFormAdminView)
