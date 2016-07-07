@@ -1,7 +1,7 @@
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import *
 from crispy_forms.bootstrap import *
-from crispy_forms.utils import render_field, flatatt
+from crispy_forms.utils import render_field, flatatt, TEMPLATE_PACK
 
 from crispy_forms import layout
 from crispy_forms import bootstrap
@@ -70,17 +70,28 @@ class InputGroup(layout.Field):
         if '@@' not in args:
             self.inputs.append('@@')
 
+        self.input_size = None
+        css_class = kwargs.get('css_class', '')
+        if 'input-lg' in css_class:
+            self.input_size = 'input-lg'
+        if 'input-sm' in css_class:
+            self.input_size = 'input-sm'
+
         super(InputGroup, self).__init__(field, **kwargs)
 
-    def render(self, form, form_style, context, template_pack='bootstrap', **kwargs):
+    def render(self, form, form_style, context, template_pack=TEMPLATE_PACK, **kwargs):
         classes = form.fields[self.field].widget.attrs.get('class', '')
-        context.update(
-            {'inputs': self.inputs, 'classes': classes.replace('form-control', '')})
+        extra_context = {
+            'inputs': self.inputs, 
+            'input_size': self.input_size,
+            'classes': classes.replace('form-control', '')
+        }
         if hasattr(self, 'wrapper_class'):
-            context['wrapper_class'] = self.wrapper_class
+            extra_context['wrapper_class'] = self.wrapper_class
+            
         return render_field(
             self.field, form, form_style, context, template=self.template,
-            attrs=self.attrs, template_pack=template_pack)
+            attrs=self.attrs, template_pack=template_pack, extra_context=extra_context, **kwargs)
 
 
 class PrependedText(InputGroup):
