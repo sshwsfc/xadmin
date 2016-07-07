@@ -188,3 +188,8 @@ img.field_img {
 .nav.nav-tabs {
   margin-bottom: 15px;
 }
+
+/** selectize **/
+.selectize-input {
+  vertical-align: bottom;
+}
