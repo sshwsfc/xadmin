@@ -465,7 +465,7 @@ def sortkeypicker(keynames):
     return getit
 
 def is_related_field(field):
-    return isinstance(field,ForeignObjectRel)
+    return isinstance(field, ForeignObjectRel)
 
 def is_related_field2(field):
-    return (hasattr(field,'rel') and field.rel!=None) or is_related_field(field)
+    return (hasattr(field, 'rel') and field.rel!=None) or is_related_field(field)

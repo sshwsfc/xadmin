@@ -55,10 +55,10 @@ class RelateMenuPlugin(BaseAdminPlugin):
         for rel in self._get_all_related_objects():
             if self.related_list and (rel.get_accessor_name() not in self.related_list):
                 continue
-            if rel.model not in self.admin_site._registry.keys():
+            if rel.related_model not in self.admin_site._registry.keys():
                 continue
-            has_view_perm = self.has_model_perm(rel.model, 'view')
-            has_add_perm = self.has_model_perm(rel.model, 'add')
+            has_view_perm = self.has_model_perm(rel.related_model, 'view')
+            has_add_perm = self.has_model_perm(rel.related_model, 'add')
             if not (has_view_perm or has_add_perm):
                 continue
 
@@ -76,7 +76,7 @@ class RelateMenuPlugin(BaseAdminPlugin):
             model_name = opts.model_name
 
             field = rel.field
-            rel_name = field.rel.get_related_field().name
+            rel_name = rel.get_related_field().name
 
             verbose_name = force_unicode(opts.verbose_name)
             lookup_name = '%s__%s__exact' % (field.name, rel_name)
@@ -129,14 +129,9 @@ class RelateObject(object):
         if not is_related_field2(field):
             raise Exception(u'Relate Lookup field must a related field')
 
-        if hasattr(field, 'rel'):
-            self.to_model = field.rel.to
-            self.rel_name = field.rel.get_related_field().name
-            self.is_m2m = isinstance(field.rel, models.ManyToManyRel)
-        else:
-            self.to_model = field.model
-            self.rel_name = self.to_model._meta.pk.name
-            self.is_m2m = False
+        self.to_model = field.related_model
+        self.rel_name = field.remote_field.name
+        self.is_m2m = bool(field.many_to_many)
 
         to_qs = self.to_model._default_manager.get_queryset()
         self.to_objs = to_qs.filter(**{self.rel_name: value}).all()
