@@ -44,7 +44,7 @@ LANGUAGE_CODE = 'en-us'
 
 LANGUAGES = (
     ('en', gettext('English')),
-    ('zh-cn', gettext('Chinese')),
+    ('zh-hans', gettext('Chinese')),
 )
 
 SITE_ID = 1

@@ -52,7 +52,7 @@ class IDCAdmin(object):
     ]
 
     search_fields = ['name']
-    relfield_style = 'fk-ajax'
+    relfield_style = 'fk-select'
     reversion_enable = True
 
     actions = [BatchChangeAction, ]
