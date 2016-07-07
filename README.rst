@@ -1,4 +1,4 @@
-django-xadmin |Build Status| |Build Status2|
+Xadmin |Build Status| |Build Status2|
 ============================================
 
 .. |Build Status| image:: https://travis-ci.org/sshwsfc/xadmin.png?branch=master
@@ -57,13 +57,13 @@ Xadmin is best installed via PyPI. To install the latest version, run:
 
 .. code:: bash
 
-    pip install django-xadmin
+    pip install xadmin
 
 or Install from github source:
 
 .. code:: bash
 
-    pip install git+git://github.com/sshwsfc/django-xadmin.git
+    pip install git+git://github.com/sshwsfc/xadmin.git
 
 Install Requires 
 ----------------
