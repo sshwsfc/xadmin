@@ -1,8 +1,8 @@
 django-xadmin |Build Status| |Build Status2|
 ============================================
 
-.. |Build Status| image:: https://travis-ci.org/sshwsfc/django-xadmin.png?branch=master
-   :target: https://travis-ci.org/sshwsfc/django-xadmin
+.. |Build Status| image:: https://travis-ci.org/sshwsfc/xadmin.png?branch=master
+   :target: https://travis-ci.org/sshwsfc/xadmin
 
 .. |Build Status2| image:: https://drone.io/github.com/sshwsfc/django-xadmin/status.png
    :target: https://drone.io/github.com/sshwsfc/django-xadmin/latest
