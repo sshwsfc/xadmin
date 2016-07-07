@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import Group
+from django.conf import settings
 
+AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 SERVER_STATUS = (
     (0, u"Normal"),
@@ -67,6 +69,8 @@ class Host(models.Model):
     guarantee_date = models.DateField()
     service_type = models.CharField(max_length=32, choices=SERVICE_TYPES)
     description = models.TextField()
+
+    administrator = models.ForeignKey(AUTH_USER_MODEL, verbose_name="Admin")
 
     def __unicode__(self):
         return self.name
