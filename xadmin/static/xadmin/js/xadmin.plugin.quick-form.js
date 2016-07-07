@@ -135,13 +135,11 @@
 
   $.fn.ajaxform.Constructor = AjaxForm
 
-  $(function(){
-    $.fn.exform.renders.push(function(f){
-      if (f.is('.quick-form')) {
-        f.ajaxform()
-      }
-    })
-  });
+  $.fn.exform.renders.push(function(f){
+    if (f.is('.quick-form')) {
+      f.ajaxform()
+    }
+  })
 
   var QuickAddBtn = function(element, options) {
     var that = this;
@@ -226,10 +224,8 @@
 
   $.fn.ajax_addbtn.Constructor = QuickAddBtn
 
-  $(function(){
-    $.fn.exform.renders.push(function(f){
-      f.find('a.btn-ajax').ajax_addbtn()
-    })
+  $.fn.exform.renders.push(function(f){
+    f.find('a.btn-ajax').ajax_addbtn()
   })
 
 })(jQuery)
