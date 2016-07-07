@@ -45,6 +45,7 @@
 
     $.fn.datepicker.dates['xadmin'] = $.date_local;
 
+  $(function(){
     $.fn.exform.renders.push(function(f){
       f.find('.input-group.date input').each(function(e){
         var dp = $(this).datepicker({format: $.date_local.dateJSFormat, language: 'xadmin', todayBtn: "linked", autoclose: true})
@@ -71,5 +72,6 @@
         })
       }
     });
-
+  });
+  
 })(jQuery)

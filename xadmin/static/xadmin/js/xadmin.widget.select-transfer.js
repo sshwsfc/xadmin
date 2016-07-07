@@ -234,8 +234,10 @@
     });
   };
 
-  $.fn.exform.renders.push(function(f){
-    f.find('.select-transfer').select_transfer();
+  $(function(){
+    $.fn.exform.renders.push(function(f){
+      f.find('.select-transfer').select_transfer();
+    });
   });
 
 })(jQuery)

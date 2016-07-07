@@ -97,7 +97,7 @@
         }
 
         return $$;
-    };
+    }
 
     $.fn.formset.styles = {
         'tab': {

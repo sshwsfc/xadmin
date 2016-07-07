@@ -10,7 +10,7 @@
       <a class="navbar-brand" href="#">{% block branding %}{{ site_title }}{% endblock %}</a>
     </div>
     <div class="navbar-collapse collapse">
-      <ul class="nav navbar-nav navbar-right">
+      <ul class="nav navbar-nav pull-right">
         {% view_block 'top_navmenu' %}
         {% if user.is_active and user.is_staff %}
           <li class="dropdown">
@@ -76,7 +76,7 @@
           </ul>
           {% view_block 'nav_form' %}
           {% block nav_form %}{% endblock %}
-          <div class="navbar-btn navbar-right hide-xs">
+          <div class="navbar-btn pull-right hide-xs">
             {% view_block 'nav_btns' %}
             {% block nav_btns %}{% endblock %}
           </div>

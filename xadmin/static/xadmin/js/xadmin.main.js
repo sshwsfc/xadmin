@@ -81,7 +81,7 @@
     var el = $(this);
     el.find('.btn-remove').click(function(){
       el.find('input[name=_delete]').val('on');
-      return true;
+      el.submit();
     });
   });
 

@@ -144,10 +144,6 @@ select.selectmultiple {
     padding-left: 0px;
     padding-right: 0px;
   }
-  .form-horizontal .form-inline .form-control{
-    min-width:200px;
-    max-width:300px;
-  }
   .form-horizontal .fieldset .panel-body {
     padding-top: 24px;
   }
