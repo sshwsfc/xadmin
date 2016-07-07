@@ -148,10 +148,6 @@ INSTALLED_APPS = (
     'app',
 )
 
-DATE_FORMAT = 'Y-m-d'
-DATETIME_FORMAT = 'Y-m-d H:i'
-TIME_FORMAT = 'H:i'
-
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 # A sample logging configuration. The only tangible logging
