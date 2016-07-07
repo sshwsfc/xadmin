@@ -68,11 +68,13 @@ or Install from github source:
 Install Requires 
 ----------------
 
--  `django`_ >=1.4
+-  `django`_ >=1.9
 
--  `django-crispy-forms`_ >=1.2.3 (For xadmin crispy forms)
+-  `django-crispy-forms`_ >=1.6.0 (For xadmin crispy forms)
 
 -  `django-reversion`_ ([OPTION] For object history and reversion feature, please select right version by your django, see `changelog`_ )
+
+-  `django-formtools`_ ([OPTION] For wizward form)
 
 -  `xlwt`_ ([OPTION] For export xls files)
 
@@ -82,6 +84,7 @@ Install Requires
 .. _django-crispy-forms: http://django-crispy-forms.rtfd.org
 .. _django-reversion: https://github.com/etianen/django-reversion
 .. _changelog: https://github.com/etianen/django-reversion/blob/master/CHANGELOG.rst
+.. _django-formtools: https://github.com/django/django-formtools
 .. _xlwt: http://www.python-excel.org/
 .. _xlsxwriter: https://github.com/jmcnamara/XlsxWriter
 
@@ -95,6 +98,12 @@ Documentation
 
 Changelogs
 -------------
+
+0.6.0
+^^^^^
+- Compact with Django1.9.
+- Add Clock Picker widget for timepicker.
+- Fixed some userface errors.
 
 0.5.0
 ^^^^^
@@ -125,6 +134,7 @@ Run Demo Locally
 .. code:: bash
 
     cd demo_app
+    ./manage.py migrate
     ./manage.py runserver
 
 Open http://127.0.0.1:8000 in your browser, the admin user password is ``admin``
