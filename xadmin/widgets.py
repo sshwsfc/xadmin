@@ -34,7 +34,7 @@ class AdminTimeWidget(forms.TimeInput):
 
     @property
     def media(self):
-        return vendor('datepicker.js','timepicker.js', 'timepicker.css', 'xadmin.widget.datetime.js')
+        return vendor('datepicker.js', 'clockpicker.js', 'clockpicker.css', 'xadmin.widget.datetime.js')
 
     def __init__(self, attrs=None, format=None):
         final_attrs = {'class': 'time-field', 'size': '8'}
@@ -44,7 +44,7 @@ class AdminTimeWidget(forms.TimeInput):
 
     def render(self, name, value, attrs=None):
         input_html = super(AdminTimeWidget, self).render(name, value, attrs)
-        return mark_safe('<div class="input-group time bootstrap-timepicker"><span class="input-group-addon"><i class="fa fa-clock-o">'
+        return mark_safe('<div class="input-group time bootstrap-clockpicker"><span class="input-group-addon"><i class="fa fa-clock-o">'
                          '</i></span>%s<span class="input-group-btn"><button class="btn btn-default" type="button">%s</button></span></div>' % (input_html, _(u'Now')))
 
 

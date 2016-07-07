@@ -52,6 +52,16 @@ vendors = {
             'production': 'xadmin/vendor/bootstrap-timepicker/js/bootstrap-timepicker.min.js',
         }
     },
+    "clockpicker": {
+        "css": {
+            'dev': 'xadmin/vendor/bootstrap-clockpicker/bootstrap-clockpicker.css',
+            'production': 'xadmin/vendor/bootstrap-clockpicker/bootstrap-clockpicker.min.css',
+        },
+        "js": {
+            'dev': 'xadmin/vendor/bootstrap-clockpicker/bootstrap-clockpicker.js',
+            'production': 'xadmin/vendor/bootstrap-clockpicker/bootstrap-clockpicker.min.js',
+        }
+    },
     "datepicker": {
         "css": {
             'dev': 'xadmin/vendor/bootstrap-datepicker/css/datepicker.css'

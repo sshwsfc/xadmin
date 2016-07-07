@@ -53,8 +53,23 @@
           dp.update(new Date());
         })
       })
+      if($.fn.clockpicker){
+        f.find('.input-group.bootstrap-clockpicker').each(function(e){
+          var el = $(this).find('input');
+          var tp = el.clockpicker({
+              autoclose: true,
+              'default': 'now'
+          });
+
+          $(this).find('button').click(function(e){
+            var now = new Date()
+              , value = now.getHours() + ':' + now.getMinutes();
+            el.attr('value', value);
+          })
+        })
+      }
       if($.fn.timepicker){
-        f.find('.input-group.time').each(function(e){
+        f.find('.input-group.bootstrap-timepicker').each(function(e){
           var el = $(this).find('input');
           var value = el.val();
           var tp = el.timepicker({
