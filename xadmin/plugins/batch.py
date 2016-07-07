@@ -122,6 +122,7 @@ class BatchChangeAction(BaseActionView):
 
         helper = FormHelper()
         helper.form_tag = False
+        helper.include_media = False
         helper.add_layout(Layout(Container(Col('full',
             Fieldset("", *self.form_obj.fields.keys(), css_class="unsort no_title"), horizontal=True, span=12)
         )))

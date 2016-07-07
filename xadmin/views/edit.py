@@ -221,6 +221,7 @@ class ModelFormAdminView(ModelAdminView):
     def get_form_helper(self):
         helper = FormHelper()
         helper.form_tag = False
+        helper.include_media = False
         helper.add_layout(self.get_form_layout())
 
         # deal with readonly fields

@@ -202,6 +202,7 @@ class BaseWidget(forms.Form):
     def setup(self):
         helper = FormHelper()
         helper.form_tag = False
+        helper.include_media = False
         self.helper = helper
 
         self.id = self.cleaned_data['id']
@@ -471,6 +472,7 @@ class AddFormWidget(ModelBaseWidget, PartialBaseWidget):
     def context(self, context):
         helper = FormHelper()
         helper.form_tag = False
+        helper.include_media = False
 
         context.update({
             'addform': self.add_view.form_obj,
