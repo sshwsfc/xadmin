@@ -112,7 +112,7 @@
     {% block results_grid_body %}
     <tbody>
     {% for row in results %}
-      <tr class="grid-item{% if row.css_class %} {{row.css_class}}{%endif%}">{% for o in row.cells %}
+      <tr class="grid-item{% if row.css_class %} {{row.css_class}}{%endif%}" {{ row.tagattrs }}>{% for o in row.cells %}
         <td {{o.tagattrs}}>
           {% if o.btns %}
             <div class="btn-group pull-right">

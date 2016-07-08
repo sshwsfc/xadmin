@@ -790,6 +790,10 @@ msgstr "清除自动刷新"
 msgid "Every %(t)s seconds"
 msgstr "每 %(t)s 秒"
 
+#: templates/xadmin/blocks/model_list.top_toolbar.saveorder.html:4
+msgid "Save Order"
+msgstr "保存排序"
+
 #: templates/xadmin/edit_inline/blank.html:5 views/detail.py:22
 #: views/edit.py:100 views/list.py:28
 msgid "Null"
