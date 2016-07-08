@@ -8,6 +8,7 @@ from inspect import getargspec
 
 from django import forms
 from django.utils.encoding import force_unicode
+from django.apps import apps
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_permission_codename
@@ -344,15 +345,7 @@ class CommAdminView(BaseAdminView):
                 if app_label.lower() in self.apps_label_title:
                     app_title = self.apps_label_title[app_label.lower()]
                 else:
-                    mods = model.__module__.split('.')
-                    if len(mods) > 1:
-                        mod = '.'.join(mods[0:-1])
-                        if mod in sys.modules:
-                            mod = sys.modules[mod]
-                            if 'verbose_name' in dir(mod):
-                                app_title = getattr(mod, 'verbose_name')
-                            elif 'app_title' in dir(mod):
-                                app_title = getattr(mod, 'app_title')
+                    app_title = apps.get_app_config(app_label).verbose_name
                 #find app icon
                 if app_label.lower() in self.apps_icons:
                     app_icon = self.apps_icons[app_label.lower()]
