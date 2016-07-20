@@ -7,7 +7,7 @@ from functools import update_wrapper
 from inspect import getargspec
 
 from django import forms
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_unicode, force_text
 from django.apps import apps
 from django.conf import settings
 from django.contrib import messages
@@ -30,6 +30,7 @@ from django.views.generic import View
 from collections import OrderedDict
 from xadmin.util import static, json, vendor, sortkeypicker
 
+from xadmin.models import Log
 
 csrf_protect_m = method_decorator(csrf_protect)
 
@@ -37,6 +38,9 @@ csrf_protect_m = method_decorator(csrf_protect)
 class IncorrectPluginArg(Exception):
     pass
 
+def get_content_type_for_model(obj):
+    from django.contrib.contenttypes.models import ContentType
+    return ContentType.objects.get_for_model(obj, for_concrete_model=False)
 
 def filter_chain(filters, token, func, *args, **kwargs):
     if token == -1:
@@ -205,6 +209,19 @@ class BaseAdminObject(object):
 
     def vendor(self, *tags):
         return vendor(*tags)
+
+    def log(self, flag, message, obj=None):
+        log = Log(
+            user=self.user, 
+            ip_addr=self.request.META['REMOTE_ADDR'],
+            action_flag=flag,
+            message=message
+        )
+        if obj:
+            log.content_type = get_content_type_for_model(obj)
+            log.object_id = obj.pk
+            log.object_repr = force_text(obj)
+        log.save()
 
 
 class BaseAdminPlugin(BaseAdminObject):

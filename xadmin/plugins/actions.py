@@ -69,9 +69,11 @@ class DeleteSelectedAction(BaseActionView):
         n = queryset.count()
         if n:
             if self.delete_models_batch:
+                self.log('delete', _('Batch delete %(count)d %(items)s.') % { "count": n, "items": model_ngettext(self.opts, n) })
                 queryset.delete()
             else:
                 for obj in queryset:
+                    self.log('delete', '', obj)
                     obj.delete()
             self.message_user(_("Successfully deleted %(count)d %(items)s.") % {
                 "count": n, "items": model_ngettext(self.opts, n)

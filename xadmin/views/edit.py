@@ -10,6 +10,7 @@ from django.http import Http404, HttpResponseRedirect
 from django.template.response import TemplateResponse
 from django.utils.encoding import force_unicode
 from django.utils.html import escape
+from django.utils.text import capfirst, get_text_list
 from django.template import loader
 from django.utils.translation import ugettext as _
 from xadmin import widgets
@@ -246,8 +247,21 @@ class ModelFormAdminView(ModelAdminView):
         self.new_obj = self.form_obj.save(commit=False)
 
     @filter_hook
+    def change_message(self):
+        change_message = []
+        if self.org_obj is None:
+            change_message.append(_('Added.'))
+        elif self.form_obj.changed_data:
+            change_message.append(_('Changed %s.') % get_text_list(self.form_obj.changed_data, _('and')))
+
+        change_message = ' '.join(change_message)
+        return change_message or _('No fields changed.')
+
+    @filter_hook
     def save_models(self):
         self.new_obj.save()
+        flag = self.org_obj is None and 'create' or 'change'
+        self.log(flag, self.change_message(), self.new_obj)
 
     @filter_hook
     def save_related(self):
