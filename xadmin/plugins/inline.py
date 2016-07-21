@@ -10,6 +10,7 @@ from django.contrib.auth import get_permission_codename
 from crispy_forms.utils import TEMPLATE_PACK
 
 from xadmin.layout import FormHelper, Layout, flatatt, Container, Column, Field, Fieldset
+from xadmin.plugins.utils import get_context_dict
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView, DetailAdminView, filter_hook
 
@@ -333,8 +334,13 @@ class InlineFormset(Fieldset):
         self.extra_attrs = formset.style.get_attrs()
 
     def render(self, form, form_style, context, template_pack=TEMPLATE_PACK, **kwargs):
-        return render_to_string(
-            self.template, dict({'formset': self, 'prefix': self.formset.prefix, 'inline_style': self.inline_style}, **self.extra_attrs))
+        context = get_context_dict(context)
+        context.update({
+            'formset': self,
+            'prefix': self.formset.prefix,
+            'inline_style': self.inline_style
+        })
+        return render_to_string(self.template, context, **self.extra_attrs)
 
 
 class Inline(Fieldset):
