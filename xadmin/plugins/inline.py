@@ -334,7 +334,7 @@ class InlineFormset(Fieldset):
 
     def render(self, form, form_style, context, template_pack=TEMPLATE_PACK, **kwargs):
         return render_to_string(
-            self.template, dict({'formset': self, 'prefix': self.formset.prefix, 'inline_style': self.inline_style}, **self.extra_attrs))
+            self.template, dict({'formset': self, 'prefix': self.formset.prefix, 'inline_style': self.inline_style}, **self.extra_attrs), context_instance=context)
 
 
 class Inline(Fieldset):
