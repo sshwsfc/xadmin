@@ -257,7 +257,7 @@ class ChangeAccountPasswordView(ChangePasswordView):
         else:
             return self.get_response()
 
-site.register_view(r'^auth/user/(.+)/update/password/$',
+site.register_view(r'^auth/user/(.+)/password/$',
                    ChangePasswordView, name='user_change_password')
 site.register_view(r'^account/password/$', ChangeAccountPasswordView,
                    name='account_password')
