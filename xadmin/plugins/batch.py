@@ -144,9 +144,9 @@ class BatchChangeAction(BaseActionView):
             "app_label": self.app_label,
             'action_checkbox_name': ACTION_CHECKBOX_NAME,
         })
-
+        self.request.current_app = self.admin_site.name
         return TemplateResponse(self.request, self.batch_change_form_template or
-                                self.get_template_list('views/batch_change_form.html'), context, current_app=self.admin_site.name)
+                                self.get_template_list('views/batch_change_form.html'), context)
 
     @filter_hook
     def get_media(self):

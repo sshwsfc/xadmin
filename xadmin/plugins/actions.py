@@ -123,8 +123,9 @@ class DeleteSelectedAction(BaseActionView):
         })
 
         # Display the confirmation page
+        self.request.current_app=self.admin_site.name
         return TemplateResponse(self.request, self.delete_selected_confirmation_template or
-                                self.get_template_list('views/model_delete_selected_confirm.html'), context, current_app=self.admin_site.name)
+                                self.get_template_list('views/model_delete_selected_confirm.html'), context)
 
 
 class ActionPlugin(BaseAdminPlugin):
