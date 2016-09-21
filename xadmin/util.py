@@ -14,7 +14,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.forms import Media
 from django.utils.translation import get_language
-from django.contrib.admin.utils import label_for_field,help_text_for_field
+from django.contrib.admin.utils import label_for_field, help_text_for_field
 import datetime
 import decimal
 

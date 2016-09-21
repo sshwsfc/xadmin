@@ -19,7 +19,7 @@ from django.http import HttpResponse
 from django.template import Context, Template
 from django.template.response import TemplateResponse
 from django.utils.decorators import method_decorator, classonlymethod
-from django.utils.encoding import smart_unicode
+from django.utils.encoding import force_unicode, smart_unicode, smart_str
 from django.utils.http import urlencode
 from django.utils.itercompat import is_iterable
 from django.utils.safestring import mark_safe
@@ -362,7 +362,7 @@ class CommAdminView(BaseAdminView):
                 if app_label.lower() in self.apps_label_title:
                     app_title = self.apps_label_title[app_label.lower()]
                 else:
-                    app_title = apps.get_app_config(app_label).verbose_name
+                    app_title = unicode(apps.get_app_config(app_label).verbose_name)
                 #find app icon
                 if app_label.lower() in self.apps_icons:
                     app_icon = self.apps_icons[app_label.lower()]
