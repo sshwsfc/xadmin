@@ -33,14 +33,6 @@ try:
 except ImportError:
     from django.utils.timezone import localtime as tz_localtime
 
-try:
-    from django.contrib.auth import get_user_model
-    User = get_user_model()
-    username_field = User.USERNAME_FIELD
-except Exception:
-    from django.contrib.auth.models import User
-    username_field = 'username'
-
 
 def xstatic(*tags):
     from vendors import vendors

@@ -5,7 +5,7 @@ from django.contrib.auth.forms import AuthenticationForm
 
 from django.utils.translation import ugettext_lazy, ugettext as _
 
-from xadmin.util import User
+from django.contrib.auth import get_user_model
 
 ERROR_MESSAGE = ugettext_lazy("Please enter the correct username and password "
                               "for a staff account. Note that both fields are case-sensitive.")
@@ -30,6 +30,7 @@ class AdminAuthenticationForm(AuthenticationForm):
                 username=username, password=password)
             if self.user_cache is None:
                 if u'@' in username:
+                    User = get_user_model()
                     # Mistakenly entered e-mail address instead of username? Look it up.
                     try:
                         user = User.objects.get(email=username)

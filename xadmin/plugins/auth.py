@@ -11,9 +11,10 @@ from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.views.decorators.debug import sensitive_post_parameters
 from django.forms import ModelMultipleChoiceField
+from django.contrib.auth.models import User
 from xadmin.layout import Fieldset, Main, Side, Row, FormHelper
 from xadmin.sites import site
-from xadmin.util import unquote, User
+from xadmin.util import unquote
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView, ModelAdminView, CommAdminView, csrf_protect_m
 
 

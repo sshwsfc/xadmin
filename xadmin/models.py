@@ -17,11 +17,7 @@ import datetime
 import decimal
 from xadmin.util import quote
 
-if 4 < django.VERSION[1] < 7:
-    AUTH_USER_MODEL = django.contrib.auth.get_user_model()
-else:
-    AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
-
+AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 def add_view_permissions(sender, **kwargs):
     """
