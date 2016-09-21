@@ -1,11 +1,8 @@
-Xadmin |Build Status| |Build Status2|
+Xadmin |Build Status|
 ============================================
 
 .. |Build Status| image:: https://travis-ci.org/sshwsfc/xadmin.png?branch=master
    :target: https://travis-ci.org/sshwsfc/xadmin
-
-.. |Build Status2| image:: https://drone.io/github.com/sshwsfc/django-xadmin/status.png
-   :target: https://drone.io/github.com/sshwsfc/django-xadmin/latest
 
 Drop-in replacement of Django admin comes with lots of goodies, fully extensible with plugin support, pretty UI based on Twitter Bootstrap.
 
