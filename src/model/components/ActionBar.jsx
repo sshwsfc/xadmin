@@ -1,6 +1,6 @@
 import React from 'react'
 import { Well, DropdownButton, MenuItem } from 'react-bootstrap'
-import { block } from '../../plugin'
+import { Block } from '../../index'
 import { ModelMixin } from '../base'
 
 

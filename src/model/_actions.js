@@ -1,23 +1,18 @@
-
 import _ from 'lodash'
-import adapter from './adapter/apicloud'
-
-const MODEL = 'car'
-const api = adapter(MODEL)
 
 export const REQUEST_ITEMS = 'REQUEST_ITEMS'
 export const RECEIVE_ITEMS = 'RECEIVE_ITEMS'
 export const DELETED_ITEM = 'DELETED_ITEM'
 export const SELECT_ITEMS = 'SELECT_ITEMS'
 
-function requestItems (filter) {
+function requestItems(filter) {
   return {
     type: REQUEST_ITEMS,
     filter
   }
 }
 
-function receiveItems (filter, items, count) {
+function receiveItems(filter, items, count) {
   return {
     type: RECEIVE_ITEMS,
     filter,
@@ -26,19 +21,7 @@ function receiveItems (filter, items, count) {
   }
 }
 
-export function fetchItems (filter) {
-  return (dispatch, getState) => {
-    const newFilter = Object.assign({}, getState().filter, filter)
-    dispatch(requestItems(newFilter))
-    api.count(newFilter).then(count => {
-      api.query(newFilter).then(items => {
-        dispatch(receiveItems(newFilter, items, count))
-      })
-    })
-  }
-}
-
-export function deleteItem (item) {
+export function deleteItem(item) {
   return (dispatch) => {
     api.delete(item.id).then(res => {
       dispatch({
@@ -50,23 +33,24 @@ export function deleteItem (item) {
   }
 }
 
-export function selecteItem (item, selected) {
+export function selecteItem(item, selected, model) {
   return {
     type: SELECT_ITEMS,
     item,
-    selected
+    selected,
+    model
   }
 }
 
-export function changeOrder (field, order) {
+export function changeOrder(field, order) {
   return (dispatch, getState) => {
     const orders = getState().filter.order || {}
     orders[field] = order
-    return dispatch(fetchItems({order: orders}))
+    return dispatch(fetchItems({ order: orders }))
   }
 }
 
-export function changeField (field, select) {
+export function changeField(field, select) {
   return (dispatch, getState) => {
     const fields = [].concat(getState().filter.fields || [])
     const index = _.indexOf(fields, field)
@@ -75,6 +59,6 @@ export function changeField (field, select) {
     } else {
       _.remove(fields, (i) => { return i === field })
     }
-    return dispatch(fetchItems({fields}))
+    return dispatch(fetchItems({ fields }))
   }
 }

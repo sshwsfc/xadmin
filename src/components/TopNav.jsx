@@ -1,5 +1,6 @@
 import React from 'react'
 import {Navbar, Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap'
+import { Block } from '../index'
 
 let TopNav = React.createClass({
 
@@ -10,6 +11,7 @@ let TopNav = React.createClass({
   render() {
     return (
       <Navbar inverse fixedTop fluid>
+        { Block('main.top', this) }
         <Navbar.Header>
           <Navbar.Brand>
             <a href="#">{this.props.site_title}</a>

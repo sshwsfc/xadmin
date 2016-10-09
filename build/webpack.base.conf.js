@@ -2,7 +2,7 @@ var path = require('path')
 
 module.exports = {
   entry: {
-    app: './src/main.jsx'
+    app: './src/main.js'
   },
   output: {
     path: path.resolve(__dirname, '../dist/static'),
@@ -31,10 +31,7 @@ module.exports = {
       {
         test: /\.js[x]?$/,
         exclude: /node_modules/,
-        loader: 'babel',
-        query: {
-          presets: ['es2015', 'react']
-        }
+        loader: 'babel'
       },
       {
         test: /\.json$/,

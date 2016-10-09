@@ -1,45 +1,46 @@
-import { combineReducers } from 'redux'
-import {
-  RECEIVE_ITEMS, SELECT_ITEMS, DELETED_ITEM
-} from './actions'
 
-export default combineReducers({
-  items (state = [], action) {
-    switch (action.type) {
-      case RECEIVE_ITEMS:
-        return action.items
-      default:
-        return state
-    }
-  },
-  selected (state = [], action) {
-    switch (action.type) {
-      case SELECT_ITEMS:
-        let selectedItems = state.filter(item => { return item.id !== action.item.id })
-        if (action.selected) {
-          selectedItems.push(action.item)
+export default (model) => {
+  return {
+    items: (model) => (state = [], action) => {
+      if(!action.model || action.model.name != model.name) return state
+      switch (action.type) {
+        case 'GET_ITEMS':
+          return action.items || state
+        default:
+          return state
+      }
+    },
+    selected: (model) => (state = [], action) => {
+      if(!action.model || action.model.name != model.name) return state
+      switch (action.type) {
+        case 'SELECT_ITEMS': {
+          let selectedItems = state.filter(item => { return item.id !== action.item.id })
+          if (action.selected) {
+            selectedItems.push(action.item)
+          }
+          return selectedItems
         }
-        return selectedItems
-      case DELETED_ITEM:
-        return state.filter(item => { return item.id !== action.item.id })
-      default:
-        return state
-    }
-  },
-  filter (state = {}, action) {
-    switch (action.type) {
-      case RECEIVE_ITEMS:
-        return action.filter
-      default:
-        return state
-    }
-  },
-  count (state = 0, action) {
-    switch (action.type) {
-      case RECEIVE_ITEMS:
-        return action.count
-      default:
-        return state
+        default:
+          return state
+      }
+    },
+    filter: (model) => (state = { fields: [].concat(model.list_display), limit: 50, skip: 0 }, action) => {
+      if(!action.model || action.model.name != model.name) return state
+      switch (action.type) {
+        case 'GET_ITEMS':
+          return action.items && action.filter || state
+        default:
+          return state
+      }
+    },
+    count: (model) => (state = 0, action) => {
+      if(!action.model || action.model.name != model.name) return state
+      switch (action.type) {
+        case 'GET_ITEMS':
+          return action.count === undefined ? state : action.count
+        default:
+          return state
+      }
     }
   }
-})
+}

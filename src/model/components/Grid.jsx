@@ -3,8 +3,7 @@ import { Link } from 'react-router'
 import _ from 'lodash'
 import { Icon } from '../../components'
 import { Table, OverlayTrigger, Popover, Button, Input, Dropdown, MenuItem } from 'react-bootstrap'
-import { deleteItem, selecteItem, changeOrder } from '../../model/actions'
-import { block } from '../../plugin'
+import { Block } from '../../index'
 import { ModelMixin } from '../base'
 
 const Header = React.createClass({
@@ -23,7 +22,11 @@ const Header = React.createClass({
   },
 
   handleOrder (order) {
-    this.dispatch(changeOrder(this.props.field, order))
+    const filter = this.getModelState().filter
+    const orders = filter.order || {}
+    orders[this.props.field] = order
+
+    this.dispatch({ type: 'GET_ITEMS', filter: { ...filter, order: orders }})
   },
 
   render () {
@@ -74,12 +77,12 @@ const Row = React.createClass({
   handleChange (e) {
     const item = this.props.item
       , selected = this.refs.selector.checked
-    this.dispatch(selecteItem(item, selected))
+    this.dispatch({ type: 'SELECT_ITEMS', item, selected })
   },
 
   deleteItem () {
     const item = this.props.item
-    this.dispatch(deleteItem(item))
+    this.dispatch({ type: 'DELETE_ITEM', item })
   },
 
   render() {

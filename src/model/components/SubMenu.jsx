@@ -1,10 +1,10 @@
 import React from 'react'
+import _ from 'lodash'
 import { Link } from 'react-router'
 import { Icon } from '../../components'
 import { ButtonToolbar, OverlayTrigger, Popover, Clearfix, ButtonGroup, Button, Dropdown, MenuItem, Panel, ListGroup, ListGroupItem } from 'react-bootstrap'
-import { block } from '../../plugin'
+import { Block } from '../../index'
 import { ModelMixin } from '../base'
-import { changeField } from '../../model/actions'
 
 const CountButton = React.createClass({
   mixins: [ModelMixin],
@@ -30,8 +30,16 @@ const ColsDropdown = React.createClass({
     }
   },
 
-  changeFieldDisplay (fieldName, select) {
-    this.dispatch(changeField(fieldName, select))
+  changeFieldDisplay (field, select) {
+    const filter = this.getModelState().filter
+    const fields = [].concat(filter.fields || [])
+    const index = _.indexOf(fields, field)
+    if (select) {
+      if (index === -1) fields.push(field)
+    } else {
+      _.remove(fields, (i) => { return i === field })
+    }
+    this.dispatch({ type: 'GET_ITEMS', filter: { ...filter, fields }})
   },
 
   render() {
@@ -70,10 +78,10 @@ const SubMenu = React.createClass({
     return (
       <ButtonToolbar className="pull-right">
         <CountButton />
-        { block('model.list.submenu.btngroup', this) }
+        { Block('model.list.submenu.btngroup', this) }
 
         <ButtonGroup bsSize="small">
-          { block('model.list.submenu.btn', this) }
+          { Block('model.list.submenu.btn', this) }
         </ButtonGroup>
 
         <ColsDropdown />

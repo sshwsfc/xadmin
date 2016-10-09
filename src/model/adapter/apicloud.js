@@ -4,8 +4,8 @@ import _ from 'lodash'
 
 module.exports = (model) => {
   let headers = () => {
-    var now = Date.now()
-    var appKey = CryptoJS.SHA1('A6902408240122UZ5509984D-0109-C69E-FBC2-BE7885A75CE8UZ' + now) + '.' + now
+    let now = Date.now()
+    let appKey = CryptoJS.SHA1('A6902408240122UZ5509984D-0109-C69E-FBC2-BE7885A75CE8UZ' + now) + '.' + now
 
     return {
       'Content-Type': 'application/json',
@@ -14,8 +14,8 @@ module.exports = (model) => {
     }
   }
   return {
-    count (filter = {}) {
-      var filter_string = encodeURIComponent(JSON.stringify({where: filter['where'] || {}}))
+    count(filter = {}) {
+      let filter_string = encodeURIComponent(JSON.stringify({ where: filter['where'] || {} }))
       return fetch(`https://d.apicloud.com/mcm/api/${model}/count?filter=${filter_string}`, {
         headers: headers()
       }).then((resp) => {
@@ -24,7 +24,7 @@ module.exports = (model) => {
         return data['count']
       })
     },
-    convert (filter) {
+    convert(filter) {
       const f = _.cloneDeep(filter)
       if (f.order !== undefined) {
         let order = []
@@ -41,7 +41,7 @@ module.exports = (model) => {
         }
       }
       if (f.fields !== undefined) {
-        let fields = {id: true}
+        let fields = { id: true }
         for (let field of f.fields) {
           fields[field] = true
         }
@@ -49,25 +49,25 @@ module.exports = (model) => {
       }
       return f
     },
-    query (filter = {}) {
+    query(filter = {}) {
       if (filter['limit'] === undefined) {
         filter['limit'] = 50
       }
-      var filter_string = encodeURIComponent(JSON.stringify(this.convert(filter)))
+      let filter_string = encodeURIComponent(JSON.stringify(this.convert(filter)))
       return fetch(`https://d.apicloud.com/mcm/api/${model}?filter=${filter_string}`, {
         headers: headers()
       }).then((resp) => {
         return resp.json()
       })
     },
-    get (id = '') {
+    get(id = '') {
       return fetch(`https://d.apicloud.com/mcm/api/${model}/${id}`, {
         headers: headers()
       }).then((resp) => {
         return resp.json()
       })
     },
-    delete (id) {
+    delete(id) {
       return fetch(`https://d.apicloud.com/mcm/api/${model}/${id}`, {
         method: 'DELETE',
         headers: headers()
@@ -75,9 +75,9 @@ module.exports = (model) => {
         return resp.json()
       })
     },
-    save (data) {
+    save(data) {
       if (data.id) {
-        var id = data.id
+        let id = data.id
         return fetch(`https://d.apicloud.com/mcm/api/${model}/${id}`, {
           method: 'PUT',
           body: JSON.stringify(data),

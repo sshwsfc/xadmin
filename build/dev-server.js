@@ -1,6 +1,7 @@
 var express = require('express')
 var webpack = require('webpack')
 var config = require('./webpack.dev.conf')
+var DashboardPlugin = require('webpack-dashboard/plugin')
 
 var app = express()
 var compiler = webpack(config)
@@ -22,6 +23,8 @@ compiler.plugin('compilation', function (compilation) {
   })
 })
 
+compiler.apply(new DashboardPlugin())
+
 // handle fallback for HTML5 history API
 app.use(require('connect-history-api-fallback')())
 // serve webpack bundle output
@@ -34,8 +37,6 @@ app.use('/static', express.static('./static'))
 
 app.listen(8080, function (err) {
   if (err) {
-    console.log(err)
     return
   }
-  console.log('Listening at http://localhost:8080')
 })

@@ -9,12 +9,12 @@ const FilterNav = React.createClass({
     context: React.PropTypes.object
   },
 
-  renderFilter () {
-    var ctx = this.props.context
+  renderFilter() {
+    let ctx = this.props.context
       , model = ctx.model
       , filters = model.filters || []
     return filters.map(filter => {
-      var field = model.schema.properties[filter]
+      let field = model.schema.properties[filter]
         , title = field.title || _.capitalize(filter)
         , FilterComponent = filterManager.create(field, filter)
       return <FilterComponent key={`${model.name}-${filter}`} context={ctx} field={field} filter={filter} />
@@ -30,8 +30,8 @@ const FilterNav = React.createClass({
 
 })
 
-module.exports = {
-  use (pm) {
-    pm.regCom('model.list.nav', FilterNav)
+export default {
+  blocks: {
+    'model.list.nav': FilterNav
   }
 }

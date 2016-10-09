@@ -2,14 +2,12 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import _ from 'lodash'
-import { Input, NavItem, NavDropdown, MenuItem, OverlayTrigger, Popover, Button, Overlay } from 'react-bootstrap'
+import { InputGroup, FormControl, NavItem, NavDropdown, MenuItem, OverlayTrigger, Popover, Button, Overlay } from 'react-bootstrap'
 import DateTimeField from 'react-bootstrap-datetimepicker'
 require('react-bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css')
 import DateRangePicker from 'react-bootstrap-daterangepicker'
 require('react-bootstrap-daterangepicker/css/daterangepicker.css')
 import moment from 'moment'
-
-import { fetchItems } from '../model/actions'
 
 class FieldFilterManager {
   constructor() {
@@ -21,8 +19,8 @@ class FieldFilterManager {
     return filterComponent
   }
   create(field, filter) {
-    for (var i = 0; i < this._field_list_filters.length; i++) {
-      var filterComponent = this._field_list_filters[i]
+    for (let i = 0; i < this._field_list_filters.length; i++) {
+      const filterComponent = this._field_list_filters[i]
       if(filterComponent.test(field, filter)) {
         return filterComponent
       }
@@ -36,11 +34,17 @@ class BaseFilter extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = {value: props.value || ''}
+    this.state = { value: props.value || '' }
+  }
+
+  changeFilter(where) {
+    const ctx = this.props.context
+    let filter = ctx.getModelState().filter
+    filter = { ...filter, where: { ...(filter.where || {}), ...where }, skip: 0 }
+    ctx.dispatch({ type: 'GET_ITEMS', filter })
   }
 
   render() {}
-
 }
 
 BaseFilter.propTypes = {
@@ -52,40 +56,35 @@ BaseFilter.propTypes = {
 
 class ListFilter extends BaseFilter {
 
-  static test (field, filter) {
+  static test(field, filter) {
     return field.enum !== undefined
   }
 
-  onFilte (value) {
-    const ctx = this.props.context
-      , dispatch = this.props.dispatch
-      , filter = this.props.filter
-      , where = {}
-    where[filter] = value
-    dispatch(fetchItems({where}))
+  onFilte(value) {
+    const filter = this.props.filter
+    this.changeFilter({ [filter]: value })
   }
 
-  deFilte () {
-    const ctx = this.props.context
-      , dispatch = this.props.dispatch
-    dispatch(fetchItems({where: {}}))
+  deFilte() {
+    const filter = this.props.filter
+    this.changeFilter({ [filter]: null })
   }
 
   choices() {
-    var field = this.props.field
+    let field = this.props.field
       , items = field.enum || []
-    return items.map(item=>{
-      return {value: item, title: _.capitalize(item)}
+    return items.map(item => {
+      return { value: item, title: _.capitalize(item) }
     })
   }
 
   render() {
-    var ctx = this.props.context
+    let ctx = this.props.context
       , model = ctx.model
       , field = this.props.field
       , filter = this.props.filter
       , title = field.name || _.capitalize(filter)
-      , overlay = this.choices().map((item)=>{
+      , overlay = this.choices().map((item) => {
         return <MenuItem key={`${model.name}-${filter}-filter-dropdown-${item.value}`} onClick={this.onFilte.bind(this, item.value)}>{item.title}</MenuItem>
       })
     return (
@@ -93,43 +92,39 @@ class ListFilter extends BaseFilter {
         {overlay}
       </NavDropdown>)
   }
-
 }
 
 const ConnListFilter = connect(state => {
-  return {
-
-  }
+  return {}
 })(ListFilter)
 
 class StringFilter extends BaseFilter {
 
-  static test (field, filter) {
+  static test(field, filter) {
     return true
   }
 
-  onFilte () {
-    var ctx = this.props.context
+  onFilte() {
+    const ctx = this.props.context
       , value = this.state.value
       , filter = this.props.filter
-      , where = {}
-    where[filter] = {like: `%${value}%`}
-    ctx.changeFilter({where})
+    this.changeFilter({ [filter]: { like: `%${value}%` } })
   }
 
-  deFilte () {
-    var ctx = this.props.context
-    ctx.changeFilter({where: {}})
+  deFilte() {
+    const ctx = this.props.context
+      , filter = this.props.filter
+    this.changeFilter({ [filter]: null })
   }
 
   handleChange() {
     this.setState({
       value: this.refs.input.getValue()
-    });
+    })
   }
 
   render() {
-    var ctx = this.props.context
+    let ctx = this.props.context
       , model = ctx.model
       , field = this.props.field
       , filter = this.props.filter
@@ -138,31 +133,33 @@ class StringFilter extends BaseFilter {
     return (
       <OverlayTrigger trigger="click" rootClose placement="right" overlay={
           <Popover id={`${model.name}-${filter}-popover`} title={`${title}`}>
-            <Input value={this.state.value} type="text" ref="input" onChange={this.handleChange.bind(this)} buttonAfter={searchBtn} />
+            <InputGroup>
+              <FormControl value={this.state.value} type="text" ref="input" onChange={this.handleChange.bind(this)} />
+              <InputGroup.Button>{searchBtn}</InputGroup.Button>
+            </InputGroup>
           </Popover>}>
         <MenuItem>{title}</MenuItem>
       </OverlayTrigger>)
   }
-
 }
 
 class DateFilter extends BaseFilter {
 
-  static test (field, filter) {
+  static test(field, filter) {
     return field.type == 'date'
   }
 
   constructor(props) {
     super(props)
-    this.state = _.merge(this.state, {show: false})
+    this.state = _.merge(this.state, { show: false })
   }
 
   toggle() {
-    this.setState({ show: !this.state.show });
+    this.setState({ show: !this.state.show })
   }
 
   render() {
-    var ctx = this.props.context
+    let ctx = this.props.context
       , model = ctx.model
       , field = this.props.field
       , filter = this.props.filter
@@ -182,7 +179,6 @@ class DateFilter extends BaseFilter {
         </Overlay>
       </MenuItem>)
   }
-
 }
 
 manager.register(DateFilter)

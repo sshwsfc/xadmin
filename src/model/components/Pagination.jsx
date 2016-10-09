@@ -2,10 +2,9 @@ import React from 'react'
 import { Icon } from '../../components'
 import { Link } from 'react-router'
 import { Pagination } from 'react-bootstrap'
-import { block } from '../../plugin'
+import { Block } from '../../index'
 import { ModelMixin } from '../base'
 import _ from 'lodash'
-import { fetchItems } from '../../model/actions'
 
 const ModelPagination = React.createClass({
   mixins: [ModelMixin],
@@ -27,11 +26,11 @@ const ModelPagination = React.createClass({
   onChangePage (page, e) {
     e.preventDefault()
 
-    const state = this.store.getState()
+    const state = this.getModelState()
       , pageSize = state.filter.limit
       , skip = pageSize * (page - 1)
 
-    this.dispatch(fetchItems({skip}))
+    this.dispatch({ type: 'GET_ITEMS', filter: { ...state.filter, skip: skip }})
   },
 
   render() {

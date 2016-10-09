@@ -1,7 +1,9 @@
 
 module.exports = {
-  user: {
-    title: 'User',
+  driver: {
+    name: 'driver',
+    title: 'Driver',
+    icon: 'user',
     schema: {
       type: 'object',
       properties: {
@@ -29,10 +31,11 @@ module.exports = {
     form: [
       '*'
     ],
-    filters: ['name', 'gender', 'age', 'createdAt'],
-    list_display: ['name', 'gender', 'age', 'createdAt']
+    filters: [ 'name', 'gender', 'age', 'createdAt' ],
+    list_display: [ 'name', 'gender', 'age', 'createdAt' ]
   },
   car: {
+    name: 'car',
     title: 'Car',
     schema: {
       type: 'object',
@@ -80,7 +83,7 @@ module.exports = {
     form: [
       '*'
     ],
-    filters: ['name', 'brand', 'color', 'createdAt'],
-    list_display: ['name', 'brand', 'color', 'createdAt']
+    filters: [ 'name', 'brand', 'color', 'createdAt' ],
+    list_display: [ 'name', 'brand', 'color', 'createdAt' ]
   }
 }

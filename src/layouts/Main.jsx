@@ -1,11 +1,9 @@
 import React from 'react'
-import {Row, Col} from 'react-bootstrap'
-import {TopNav, Bread, MainMenu, Footer} from '../components'
+import { Row, Col } from 'react-bootstrap'
+import { TopNav, Bread, MainMenu, Footer } from '../components'
+import { Block } from '../index'
 
-let MainApp = React.createClass({
-
-  propTypes: {
-  },
+export default React.createClass({
 
   render() {
     return (
@@ -26,5 +24,3 @@ let MainApp = React.createClass({
   }
 
 })
-
-module.exports = MainApp

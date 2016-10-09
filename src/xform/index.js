@@ -1,11 +1,11 @@
 import React from 'react'
 import utils from 'react-schema-form/lib/utils'
 import _ from 'lodash'
-import {Text, Select} from './widgets'
+import { Text, Select } from './widgets'
 
 class XForm extends React.Component {
 
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.onChange = this.onChange.bind(this)
     this.mapper = {
@@ -23,13 +23,13 @@ class XForm extends React.Component {
     }
   }
 
-  onChange (key, val) {
+  onChange(key, val) {
     // console.log('SchemaForm.onChange', key, val);
     this.props.onModelChange(key, val)
   }
 
-  builder (form, model, onChange, mapper) {
-    var type = form.type
+  builder(form, model, onChange, mapper) {
+    let type = form.type
     let Field = this.mapper[type]
     if (!Field) {
       console.log('Invalid field: \'' + form.key[0] + '\'!')
@@ -41,7 +41,7 @@ class XForm extends React.Component {
     return <Field model={model} form={form} key={form.key[0]} onChange={onChange} mapper={mapper} builder={this.builder}/>
   }
 
-  render () {
+  render() {
     let merged = utils.merge(this.props.schema, this.props.form, this.props.ignore, this.props.option)
     // console.log('SchemaForm merged = ', JSON.stringify(merged, undefined, 2));
     let mapper = this.mapper
@@ -53,7 +53,7 @@ class XForm extends React.Component {
     }.bind(this))
 
     return (
-      <form className='form-horizontal'>{forms}</form>
+      <form className="form-horizontal">{forms}</form>
     )
   }
 }
