@@ -30,7 +30,6 @@ from django.views.generic import View
 from collections import OrderedDict
 from xadmin.util import static, json, vendor, sortkeypicker
 from django.utils.functional import Promise
-from django.utils.encoding import force_text
 
 from xadmin.models import Log
 
