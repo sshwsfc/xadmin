@@ -29,6 +29,8 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.generic import View
 from collections import OrderedDict
 from xadmin.util import static, json, vendor, sortkeypicker
+from django.utils.functional import Promise
+from django.utils.encoding import force_text
 
 from xadmin.models import Log
 
@@ -116,6 +118,8 @@ class JSONEncoder(DjangoJSONEncoder):
             return o.strftime('%Y-%m-%d %H:%M:%S')
         elif isinstance(o, decimal.Decimal):
             return str(o)
+        elif isinstance(o, Promise):
+            return force_text(o)
         else:
             try:
                 return super(JSONEncoder, self).default(o)
@@ -426,7 +430,7 @@ class CommAdminView(BaseAdminView):
             nav_menu = filter(lambda x:x, nav_menu)
 
             if not settings.DEBUG:
-                self.request.session['nav_menu'] = json.dumps(nav_menu)
+                self.request.session['nav_menu'] = json.dumps(nav_menu, cls=JSONEncoder)
                 self.request.session.modified = True
 
         def check_selected(menu, path):
