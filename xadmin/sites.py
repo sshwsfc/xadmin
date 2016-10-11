@@ -6,8 +6,10 @@ from django.db.models.base import ModelBase
 from django.views.decorators.cache import never_cache
 import inspect
 
-reload(sys)
-sys.setdefaultencoding("utf-8")
+if sys.version_info.major < 3 and sys.getdefaultencoding()=='ascii':
+    import imp
+    imp.reload(sys)
+    sys.setdefaultencoding("utf-8")
 
 
 class AlreadyRegistered(Exception):

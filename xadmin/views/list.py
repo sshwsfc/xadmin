@@ -5,7 +5,7 @@ from django.core.urlresolvers import NoReverseMatch
 from django.db import models
 from django.http import HttpResponseRedirect
 from django.template.response import SimpleTemplateResponse, TemplateResponse
-from django.utils.encoding import force_unicode, smart_unicode
+from django.utils.encoding import force_text, smart_text
 from django.utils.html import escape, conditional_escape
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
@@ -66,7 +66,7 @@ class ResultItem(object):
     def label(self):
         text = mark_safe(
             self.text) if self.allow_tags else conditional_escape(self.text)
-        if force_unicode(text) == '':
+        if force_text(text) == '':
             text = mark_safe('&nbsp;')
         for wrap in self.wraps:
             text = mark_safe(wrap % text)
@@ -370,12 +370,12 @@ class ListAdminView(ModelAdminView):
         """
         Prepare the context for templates.
         """
-        self.title = _('%s List') % force_unicode(self.opts.verbose_name)
+        self.title = _('%s List') % force_text(self.opts.verbose_name)
         model_fields = [(f, f.name in self.list_display, self.get_check_field_url(f))
                         for f in (list(self.opts.fields) + self.get_model_method_fields()) if f.name not in self.list_exclude]
 
         new_context = {
-            'model_name': force_unicode(self.opts.verbose_name_plural),
+            'model_name': force_text(self.opts.verbose_name_plural),
             'title': self.title,
             'cl': self,
             'model_fields': model_fields,
@@ -543,7 +543,7 @@ class ListAdminView(ModelAdminView):
                     item.allow_tags = True
                     item.text = boolean_icon(value)
                 else:
-                    item.text = smart_unicode(value)
+                    item.text = smart_text(value)
             else:
                 if isinstance(f.rel, models.ManyToOneRel):
                     field_val = getattr(obj, f.name)

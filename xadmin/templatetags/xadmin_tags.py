@@ -1,3 +1,4 @@
+import sys
 from django import template
 from django.template import Library
 from django.utils.safestring import mark_safe
@@ -19,7 +20,10 @@ def view_block(context, block_name, *args, **kwargs):
         if hasattr(view, method_name) and callable(getattr(view, method_name)):
             block_func = getattr(view, method_name)
             result = block_func(context, nodes, *args, **kwargs)
-            if result and type(result) in (str, unicode):
+            if result and (
+                    isinstance(result, str)
+                    or sys.version_info.major < 3 and isinstance(result, unicode)
+                    ):
                 nodes.append(result)
     if nodes:
         return mark_safe(''.join(nodes))

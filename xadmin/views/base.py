@@ -7,7 +7,6 @@ from functools import update_wrapper
 from inspect import getargspec
 
 from django import forms
-from django.utils.encoding import force_unicode, force_text
 from django.apps import apps
 from django.conf import settings
 from django.contrib import messages
@@ -19,7 +18,7 @@ from django.http import HttpResponse
 from django.template import Context, Template
 from django.template.response import TemplateResponse
 from django.utils.decorators import method_decorator, classonlymethod
-from django.utils.encoding import force_unicode, smart_unicode, smart_str
+from django.utils.encoding import force_text, smart_text, smart_str
 from django.utils.http import urlencode
 from django.utils.itercompat import is_iterable
 from django.utils.safestring import mark_safe
@@ -120,7 +119,7 @@ class JSONEncoder(DjangoJSONEncoder):
             try:
                 return super(JSONEncoder, self).default(o)
             except Exception:
-                return smart_unicode(o)
+                return smart_text(o)
 
 
 class BaseAdminObject(object):
@@ -344,7 +343,7 @@ class CommAdminView(BaseAdminView):
             app_label = model._meta.app_label
             app_icon = None
             model_dict = {
-                'title': unicode(capfirst(model._meta.verbose_name_plural)),
+                'title': smart_text(capfirst(model._meta.verbose_name_plural)),
                 'url': self.get_model_url(model, "changelist"),
                 'icon': self.get_model_icon(model),
                 'perm': self.get_model_perm(model, 'view'),
@@ -358,11 +357,11 @@ class CommAdminView(BaseAdminView):
                 nav_menu[app_key]['menus'].append(model_dict)
             else:
                 # Find app title
-                app_title = unicode(app_label.title())
+                app_title = smart_text(app_label.title())
                 if app_label.lower() in self.apps_label_title:
                     app_title = self.apps_label_title[app_label.lower()]
                 else:
-                    app_title = unicode(apps.get_app_config(app_label).verbose_name)
+                    app_title = smart_text(apps.get_app_config(app_label).verbose_name)
                 #find app icon
                 if app_label.lower() in self.apps_icons:
                     app_icon = self.apps_icons[app_label.lower()]
@@ -495,7 +494,7 @@ class ModelAdminView(CommAdminView):
             "opts": self.opts,
             "app_label": self.app_label,
             "model_name": self.model_name,
-            "verbose_name": force_unicode(self.opts.verbose_name),
+            "verbose_name": force_text(self.opts.verbose_name),
             'model_icon': self.get_model_icon(self.model),
         }
         context = super(ModelAdminView, self).get_context()

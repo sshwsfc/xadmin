@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.encoding import smart_unicode
+from django.utils.encoding import smart_text
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.template.loader import get_template
@@ -192,7 +192,7 @@ class ChoicesFieldListFilter(ListFieldFilter):
         }
         for lookup, title in self.field.flatchoices:
             yield {
-                'selected': smart_unicode(lookup) == self.lookup_exact_val,
+                'selected': smart_text(lookup) == self.lookup_exact_val,
                 'query_string': self.query_string({self.lookup_exact_name: lookup}),
                 'display': title,
             }
@@ -408,7 +408,7 @@ class RelatedFieldListFilter(ListFieldFilter):
         }
         for pk_val, val in self.lookup_choices:
             yield {
-                'selected': self.lookup_exact_val == smart_unicode(pk_val),
+                'selected': self.lookup_exact_val == smart_text(pk_val),
                 'query_string': self.query_string({
                     self.lookup_exact_name: pk_val,
                 }, [self.lookup_isnull_name]),
@@ -494,7 +494,7 @@ class MultiSelectFieldListFilter(ListFieldFilter):
         }
         for val in self.lookup_choices:
             yield {
-                'selected': smart_unicode(val) in self.lookup_in_val,
+                'selected': smart_text(val) in self.lookup_in_val,
                 'query_string': self.query_string({self.lookup_in_name: ",".join([val]+self.lookup_in_val),}),
                 'remove_query_string': self.query_string({self.lookup_in_name: ",".join([v for v in self.lookup_in_val if v != val]),}),
                 'display': val,
@@ -535,7 +535,7 @@ class AllValuesFieldListFilter(ListFieldFilter):
             if val is None:
                 include_none = True
                 continue
-            val = smart_unicode(val)
+            val = smart_text(val)
             yield {
                 'selected': self.lookup_exact_val == val,
                 'query_string': self.query_string({self.lookup_exact_name: val},

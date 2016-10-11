@@ -13,6 +13,7 @@ except:
     from django.contrib.formtools.wizard.forms import ManagementForm
     from django.contrib.formtools.wizard.views import StepsHelper
 
+from django.utils.encoding import smart_text
 from django.utils.module_loading import import_string
 from django.forms import ValidationError
 from django.forms.models import modelform_factory
@@ -51,7 +52,7 @@ class WizardFormPlugin(BaseAdminPlugin):
                 self.wizard_form_list) > 0, 'at least one form is needed'
 
             for i, form in enumerate(self.wizard_form_list):
-                init_form_list[unicode(form[0])] = form[1]
+                init_form_list[smart_text(form[0])] = form[1]
 
             self._form_list = init_form_list
 
