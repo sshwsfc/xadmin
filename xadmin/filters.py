@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from django.db import models
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.encoding import smart_text
@@ -17,7 +18,7 @@ import datetime
 FILTER_PREFIX = '_p_'
 SEARCH_VAR = '_q_'
 
-from util import (get_model_from_relation,
+from .util import (get_model_from_relation,
     reverse_field_path, get_limit_choices_to_from_path, prepare_lookup_value)
 
 

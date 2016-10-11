@@ -136,7 +136,7 @@ class QuickFilterPlugin(BaseAdminPlugin):
                 if spec and spec.has_output():
                     try:
                         new_qs = spec.do_filte(queryset)
-                    except ValidationError, e:
+                    except ValidationError as e:
                         new_qs = None
                         self.admin_view.message_user(_("<b>Filtering error:</b> %s") % e.messages[0], 'error')
                     if new_qs is not None:

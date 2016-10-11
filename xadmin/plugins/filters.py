@@ -15,6 +15,7 @@ from xadmin.filters import manager as filter_manager, FILTER_PREFIX, SEARCH_VAR,
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
 from xadmin.util import is_related_field
+from functools import reduce
 
 
 class IncorrectLookupParameters(Exception):
@@ -128,7 +129,7 @@ class FilterPlugin(BaseAdminPlugin):
                 if spec and spec.has_output():
                     try:
                         new_qs = spec.do_filte(queryset)
-                    except ValidationError, e:
+                    except ValidationError as e:
                         new_qs = None
                         self.admin_view.message_user(_("<b>Filtering error:</b> %s") % e.messages[0], 'error')
                     if new_qs is not None:
@@ -145,14 +146,14 @@ class FilterPlugin(BaseAdminPlugin):
             for key, value in lookup_params.items():
                 use_distinct = (
                     use_distinct or lookup_needs_distinct(self.opts, key))
-        except FieldDoesNotExist, e:
+        except FieldDoesNotExist as e:
             raise IncorrectLookupParameters(e)
 
         try:
             queryset = queryset.filter(**lookup_params)
         except (SuspiciousOperation, ImproperlyConfigured):
             raise
-        except Exception, e:
+        except Exception as e:
             raise IncorrectLookupParameters(e)
 
         query = self.request.GET.get(SEARCH_VAR, '')

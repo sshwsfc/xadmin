@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import copy
 
 from crispy_forms.utils import TEMPLATE_PACK
@@ -18,7 +19,7 @@ from xadmin.layout import FormHelper, Layout, Fieldset, TabHolder, Container, Co
 from xadmin.util import unquote
 from xadmin.views.detail import DetailAdminUtil
 
-from base import ModelAdminView, filter_hook, csrf_protect_m
+from .base import ModelAdminView, filter_hook, csrf_protect_m
 
 
 FORMFIELD_FOR_DBFIELD_DEFAULTS = {

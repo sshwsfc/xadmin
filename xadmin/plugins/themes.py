@@ -1,4 +1,5 @@
 #coding:utf-8
+from __future__ import print_function
 import urllib, httplib2
 from django.template import loader
 from django.core.cache import cache
@@ -68,8 +69,8 @@ class ThemePlugin(BaseAdminPlugin):
                         {'name': t['name'], 'description': t['description'],
                             'css': t['cssMin'], 'thumbnail': t['thumbnail']}
                         for t in watch_themes])
-                except Exception, e:
-                    print e
+                except Exception as e:
+                    print(e)
 
                 cache.set(THEME_CACHE_KEY, json.dumps(ex_themes), 24 * 3600)
                 themes.extend(ex_themes)

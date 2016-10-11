@@ -230,7 +230,7 @@ class ExportPlugin(BaseAdminPlugin):
     # View Methods
     def get_result_list(self, __):
         if self.request.GET.get('all', 'off') == 'on':
-            self.admin_view.list_per_page = sys.maxint
+            self.admin_view.list_per_page = sys.maxsize
         return __()
 
     def result_header(self, item, field_name, row):

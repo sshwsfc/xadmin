@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import copy
 
 from crispy_forms.utils import TEMPLATE_PACK
@@ -17,7 +18,7 @@ from django.utils.html import conditional_escape
 from xadmin.layout import FormHelper, Layout, Fieldset, Container, Column, Field, Col, TabHolder
 from xadmin.util import unquote, lookup_field, display_for_field, boolean_icon, label_for_field
 
-from base import ModelAdminView, filter_hook, csrf_protect_m
+from .base import ModelAdminView, filter_hook, csrf_protect_m
 
 # Text to display within change-list table cells if the value is blank.
 EMPTY_CHANGELIST_VALUE = _('Null')

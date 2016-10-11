@@ -558,7 +558,7 @@ class Dashboard(CommAdminView):
                                 widget = user_widgets.get(int(wid))
                                 if widget:
                                     ws.append(self.get_widget(widget))
-                            except Exception, e:
+                            except Exception as e:
                                 import logging
                                 logging.error(e, exc_info=True)
                         widgets.append(ws)
