@@ -34,9 +34,13 @@ ALWAYS_INSTALLED_APPS = [
 def get_test_modules():
     modules = []
     for f in os.listdir(RUNTESTS_DIR):
-        if (f.startswith('__init__') or
-            f.startswith('.') or
-            f.startswith('sql') or not os.path.isdir(os.path.join(RUNTESTS_DIR, f))):
+        if (
+                f.startswith('__init__')
+                or f.startswith('__pycache__')
+                or f.startswith('.')
+                or f.startswith('sql')
+                or not os.path.isdir(os.path.join(RUNTESTS_DIR, f))
+                ):
             continue
         modules.append(f)
     return modules
@@ -83,7 +87,6 @@ def setup(verbosity, test_labels):
     # Load all the test model apps.
     test_labels_set = set([label.split('.')[0] for label in test_labels])
     test_modules = get_test_modules()
-
     for module_name in test_modules:
         module_label = module_name
         # if the module was named on the command line, or
