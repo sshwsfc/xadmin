@@ -153,8 +153,9 @@ class BaseAdminObject(object):
         if remove is None:
             remove = []
         p = dict(self.request.GET.items()).copy()
+        arr_keys = list(p.keys())
         for r in remove:
-            for k in p.keys():
+            for k in arr_keys:
                 if k.startswith(r):
                     del p[k]
         for k, v in new_params.items():
@@ -171,8 +172,9 @@ class BaseAdminObject(object):
         if remove is None:
             remove = []
         p = dict(self.request.GET.items()).copy()
+        arr_keys = list(p.keys())
         for r in remove:
-            for k in p.keys():
+            for k in arr_keys:
                 if k.startswith(r):
                     del p[k]
         for k, v in new_params.items():

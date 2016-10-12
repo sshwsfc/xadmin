@@ -1,0 +1,11 @@
+暂时无法解决的问题:
+
+1. 模板渲染时, 语言参数丢失.
+    ~/src/env/py3/lib/python3.4/site-packages/django/utils/translation/__init__.py
+    临时解决办法:
+        在get_language_info()中,增加2行:
+        def get_language_info(lang_code):
+            if not lang_code:
+                lang_code = 'en'
+
+

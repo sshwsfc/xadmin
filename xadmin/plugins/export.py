@@ -1,6 +1,7 @@
 import io
 import datetime
 import sys
+from future.utils import iteritems
 
 from django.http import HttpResponse
 from django.template import loader
@@ -187,7 +188,7 @@ class ExportPlugin(BaseAdminPlugin):
                 self._to_xml(xml, item)
                 xml.endElement("row")
         elif isinstance(data, dict):
-            for key, value in data.iteritems():
+            for key, value in iteritems(data):
                 key = key.replace(' ', '_')
                 xml.startElement(key, {})
                 self._to_xml(xml, value)
