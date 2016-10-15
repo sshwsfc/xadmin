@@ -1,3 +1,4 @@
+import copy
 from django.template.context import RequestContext
 
 
@@ -9,8 +10,7 @@ def get_context_dict(context):
     :return: dict
     """
     if isinstance(context, RequestContext):
-        ctx = {}
-        map(ctx.update, context.dicts)
+        ctx = context.flatten()
     else:
         ctx = context
     return ctx

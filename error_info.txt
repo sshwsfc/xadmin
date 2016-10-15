@@ -1,14 +1,5 @@
 xadmin for py3中, 暂时无法解决的问题:
 
-1. demo_app在渲染模板时, 语言参数丢失.
-    ~/src/env/py3/lib/python3.4/site-packages/django/utils/translation/__init__.py
-    临时解决办法:
-        在get_language_info()中,增加2行:
-        def get_language_info(lang_code):
-            if not lang_code:
-                lang_code = 'en'
-
-
 2. demo_app中,
 
   File "/mnt/backup/data/src/code/Django/xadmin-wy/demo_app/../xadmin/filters.py", line 270, in __init__
@@ -18,5 +9,7 @@ AttributeError: 'DateFieldListFilter' object has no attribute 'lookup_isnull_nam
 [12/Oct/2016 18:54:52] "GET /favicon.ico HTTP/1.1" 404 6219
 ^C(py3)u01@asus:~/src/env/py3/xadmin-wy/demo_app$ 
 
+
+3. 看到 xadmin-wy/xadmin/filters.py 的 DateFieldListFilter.__init__()
 
 
