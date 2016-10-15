@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+import sys
 from collections import OrderedDict
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.core.paginator import InvalidPage, Paginator
@@ -460,7 +461,10 @@ class ListAdminView(ModelAdminView):
         if field_name in ordering_field_columns:
             sorted = True
             order_type = ordering_field_columns.get(field_name).lower()
-            sort_priority = ordering_field_columns.keys().index(field_name) + 1
+            arr = ordering_field_columns.keys()
+            if 2 < sys.version_info.major:
+                arr = list(arr)
+            sort_priority = arr.index(field_name) + 1
             th_classes.append('sorted %sending' % order_type)
             new_order_type = {'asc': 'desc', 'desc': 'asc'}[order_type]
 

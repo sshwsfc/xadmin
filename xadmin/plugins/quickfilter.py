@@ -3,6 +3,7 @@ Created on Mar 26, 2014
 
 @author: LAB_ADM
 '''
+import sys
 from future.utils import iteritems
 from django.utils.translation import ugettext_lazy as _
 from xadmin.filters import manager,MultiSelectFieldListFilter
@@ -147,7 +148,10 @@ class QuickFilterPlugin(BaseAdminPlugin):
  
         self.has_filters = bool(self.filter_specs)
         self.admin_view.quickfilter['filter_specs'] = self.filter_specs
-        self.admin_view.quickfilter['used_filter_num'] = len(filter(lambda f: f.is_used, self.filter_specs))
+        obj = filter(lambda f: f.is_used, self.filter_specs)
+        if 2 < sys.version_info.major:
+            obj = list(obj)
+        self.admin_view.quickfilter['used_filter_num'] = len(obj)
  
         if use_distinct:
             return queryset.distinct()

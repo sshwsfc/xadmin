@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+import sys
 from django.db import models
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.encoding import smart_text
@@ -46,8 +47,10 @@ class BaseFilter(object):
         return self.admin_view.get_query_string(new_params, remove)
 
     def form_params(self):
-        return self.admin_view.get_form_params(
-            remove=map(lambda k: FILTER_PREFIX + k, self.used_params.keys()))
+        arr = map(lambda k: FILTER_PREFIX + k, self.used_params.keys())
+        if 2 < sys.version_info.major:
+            arr = list(arr)
+        return self.admin_view.get_form_params(remove=arr)
 
     def has_output(self):
         """
@@ -121,14 +124,20 @@ class FieldFilter(BaseFilter):
             else:
                 self.context_params["%s_val" % name] = ''
 
-        map(lambda kv: setattr(
-            self, 'lookup_' + kv[0], kv[1]), self.context_params.items())
+        arr = map(
+                lambda kv: setattr(self, 'lookup_' + kv[0], kv[1]),
+                self.context_params.items()
+                )
+        if 2 < sys.version_info.major:
+            list(arr)
 
     def get_context(self):
         context = super(FieldFilter, self).get_context()
         context.update(self.context_params)
-        context['remove_url'] = self.query_string(
-            {}, map(lambda k: FILTER_PREFIX + k, self.used_params.keys()))
+        obj = map(lambda k: FILTER_PREFIX + k, self.used_params.keys())
+        if 2 < sys.version_info.major:
+            obj = list(obj)
+        context['remove_url'] = self.query_string({}, obj)
         return context
 
     def has_output(self):

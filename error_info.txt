@@ -1,15 +1,11 @@
 xadmin for py3中, 暂时无法解决的问题:
 
-2. demo_app中,
+3. 启动时报错.
+xadmin/sites.py --> AdminSite.admin_view(): ...
+	view: <function MainDashboardIndexViewDashboardGlobalSettingCommAdminViewBaseSettingBaseAdminViewBaseAdminObjectViewobject at 0x7f2f24397d90>
+	cacheable: False
+the JSON object must be str, not 'bytes'
+[15/Oct/2016 02:51:08] "GET / HTTP/1.1" 200 25380
 
-  File "/mnt/backup/data/src/code/Django/xadmin-wy/demo_app/../xadmin/filters.py", line 270, in __init__
-    self.lookup_isnull_name: False
-AttributeError: 'DateFieldListFilter' object has no attribute 'lookup_isnull_name'
-[12/Oct/2016 18:54:52] "GET /app/accessrecord/chart/user_count/?_p_date__lt=2013-01-29&p=1&_p_date__gte=2013-01-08 HTTP/1.1" 500 15756
-[12/Oct/2016 18:54:52] "GET /favicon.ico HTTP/1.1" 404 6219
-^C(py3)u01@asus:~/src/env/py3/xadmin-wy/demo_app$ 
-
-
-3. 看到 xadmin-wy/xadmin/filters.py 的 DateFieldListFilter.__init__()
-
+4. 左边栏, 没有内容.
 

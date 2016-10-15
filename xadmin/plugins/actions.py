@@ -1,3 +1,4 @@
+import sys
 from collections import OrderedDict
 from django import forms
 from django.core.exceptions import PermissionDenied
@@ -227,6 +228,8 @@ class ActionPlugin(BaseAdminPlugin):
 
         # get_action might have returned None, so filter any of those out.
         actions = filter(None, actions)
+        if 2 < sys.version_info.major:
+            actions = list(actions)
 
         # Convert the actions into a OrderedDict keyed by name.
         actions = OrderedDict([
@@ -242,7 +245,7 @@ class ActionPlugin(BaseAdminPlugin):
         tuple (name, description).
         """
         choices = []
-        for ac, name, description, icon in self.actions.itervalues():
+        for ac, name, description, icon in self.actions.values():
             choice = (name, description % model_format_dict(self.opts), icon)
             choices.append(choice)
         return choices

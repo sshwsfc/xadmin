@@ -1,4 +1,5 @@
 import operator
+import sys
 from future.utils import iteritems
 from xadmin import widgets
 from xadmin.plugins.utils import get_context_dict
@@ -140,8 +141,10 @@ class FilterPlugin(BaseAdminPlugin):
 
         self.has_filters = bool(self.filter_specs)
         self.admin_view.filter_specs = self.filter_specs
-        self.admin_view.used_filter_num = len(
-            filter(lambda f: f.is_used, self.filter_specs))
+        obj = filter(lambda f: f.is_used, self.filter_specs)
+        if 2 < sys.version_info.major:
+            obj = list(obj)
+        self.admin_view.used_filter_num = len(obj)
 
         try:
             for key, value in lookup_params.items():
@@ -191,10 +194,16 @@ class FilterPlugin(BaseAdminPlugin):
 
     # Media
     def get_media(self, media):
-        if bool(filter(lambda s: isinstance(s, DateFieldListFilter), self.filter_specs)):
+        arr = filter(lambda s: isinstance(s, DateFieldListFilter), self.filter_specs)
+        if 2 < sys.version_info.major:
+            arr = list(arr)
+        if bool(arr):
             media = media + self.vendor('datepicker.css', 'datepicker.js',
                                         'xadmin.widget.datetime.js')
-        if bool(filter(lambda s: isinstance(s, RelatedFieldSearchFilter), self.filter_specs)):
+        arr = filter(lambda s: isinstance(s, RelatedFieldSearchFilter), self.filter_specs)
+        if 2 < sys.version_info.major:
+            arr = list(arr)
+        if bool(arr):
             media = media + self.vendor(
                 'select.js', 'select.css', 'xadmin.widget.select.js')
         return media + self.vendor('xadmin.plugin.filters.js')
