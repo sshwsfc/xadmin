@@ -67,10 +67,10 @@ class Bookmark(models.Model):
 
 class JSONEncoder(DjangoJSONEncoder):
     def default(self, o):
-        if isinstance(o, datetime.date):
-            return o.strftime('%Y-%m-%d')
-        elif isinstance(o, datetime.datetime):
+        if isinstance(o, datetime.datetime):
             return o.strftime('%Y-%m-%d %H:%M:%S')
+        elif isinstance(o, datetime.date):
+            return o.strftime('%Y-%m-%d')
         elif isinstance(o, decimal.Decimal):
             return str(o)
         elif isinstance(o, ModelBase):
