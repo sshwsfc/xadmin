@@ -1,4 +1,3 @@
-import copy
 from django.template.context import RequestContext
 
 

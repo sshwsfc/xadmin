@@ -168,22 +168,28 @@ class BooleanFieldListFilter(ListFieldFilter):
         for lookup, title in (
                 ('', _('All')),
                 ('1', _('Yes')),
-                ('0', _('No'))):
+                ('0', _('No')),
+                ):
             yield {
-                'selected': self.lookup_exact_val == lookup and not self.lookup_isnull_val,
-                'query_string': self.query_string({
-                self.lookup_exact_name: lookup,
-                }, [self.lookup_isnull_name]),
-                'display': title,
-            }
+                    'selected': (
+                            self.lookup_exact_val == lookup
+                            and not self.lookup_isnull_val
+                            ),
+                    'query_string': self.query_string(
+                            {self.lookup_exact_name: lookup},
+                            [self.lookup_isnull_name],
+                            ),
+                    'display': title,
+                    }
         if isinstance(self.field, models.NullBooleanField):
             yield {
-                'selected': self.lookup_isnull_val == 'True',
-                'query_string': self.query_string({
-                self.lookup_isnull_name: 'True',
-                }, [self.lookup_exact_name]),
-                'display': _('Unknown'),
-            }
+                    'selected': self.lookup_isnull_val == 'True',
+                    'query_string': self.query_string(
+                                {self.lookup_isnull_name: 'True'},
+                                [self.lookup_exact_name],
+                                ),
+                    'display': _('Unknown'),
+                    }
 
 
 @manager.register
@@ -211,11 +217,15 @@ class ChoicesFieldListFilter(ListFieldFilter):
 @manager.register
 class TextFieldListFilter(FieldFilter):
     template = 'xadmin/filters/char.html'
-    lookup_formats = {'in': '%s__in','search': '%s__contains'}
+    lookup_formats = {'in': '%s__in', 'search': '%s__contains'}
 
     @classmethod
     def test(cls, field, request, params, model, admin_view, field_path):
-        return (isinstance(field, models.CharField) and field.max_length > 20) or isinstance(field, models.TextField)
+        return (
+                isinstance(field, models.CharField)
+                and field.max_length > 20
+                or isinstance(field, models.TextField)
+               )
 
 
 @manager.register
