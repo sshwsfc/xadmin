@@ -1,3 +1,4 @@
+import sys
 from django.core.exceptions import PermissionDenied
 from django.db import transaction, router
 from django.http import Http404, HttpResponseRedirect
@@ -51,10 +52,10 @@ class DeleteAdminView(ModelAdminView):
         self.delete_model()
 
         response = self.post_response()
-        if isinstance(response, basestring):
-            return HttpResponseRedirect(response)
-        else:
-            return response
+        cls_str = str if 2 < sys.version_info.major else basestring
+        if isinstance(response, cls_str):
+            response = HttpResponseRedirect(response)
+        return response
 
     @filter_hook
     def delete_model(self):

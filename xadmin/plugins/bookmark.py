@@ -42,9 +42,17 @@ class BookmarkPlugin(BaseAdminPlugin):
 
         bookmarks = []
 
-        current_qs = '&'.join(['%s=%s' % (k, v) for k, v in sorted(
-            filter(lambda i: bool(i[1] and (i[0] in (COL_LIST_VAR, ORDER_VAR, SEARCH_VAR) or i[0].startswith(FILTER_PREFIX)
-                                            or i[0].startswith(RELATE_PREFIX))), self.request.GET.items()))])
+        current_qs = '&'.join([
+                '%s=%s' % (k, v)
+                for k, v in sorted(filter(
+                        lambda i: bool(i[1] and (
+                                i[0] in (COL_LIST_VAR, ORDER_VAR, SEARCH_VAR)
+                                or i[0].startswith(FILTER_PREFIX)
+                                or i[0].startswith(RELATE_PREFIX)
+                                )),
+                        self.request.GET.items()
+                        ))
+                ])
 
         model_info = (self.opts.app_label, self.opts.model_name)
         has_selected = False
@@ -55,8 +63,10 @@ class BookmarkPlugin(BaseAdminPlugin):
         # local bookmarks
         for bk in self.list_bookmarks:
             title = bk['title']
-            params = dict(
-                [(FILTER_PREFIX + k, v) for (k, v) in bk['query'].items()])
+            params = dict([
+                    (FILTER_PREFIX + k, v)
+                    for (k, v) in bk['query'].items()
+                    ])
             if 'order' in bk:
                 params[ORDER_VAR] = '.'.join(bk['order'])
             if 'cols' in bk:
@@ -65,7 +75,10 @@ class BookmarkPlugin(BaseAdminPlugin):
                 params[SEARCH_VAR] = bk['search']
             def check_item(i):
                 return bool(i[1]) or i[1] == False
-            bk_qs = '&'.join(['%s=%s' % (k, v) for k, v in sorted(filter(check_item, params.items()))])
+            bk_qs = '&'.join([
+                    '%s=%s' % (k, v)
+                    for k, v in sorted(filter(check_item, params.items()))
+                    ])
 
             url = list_base_url + '?' + bk_qs
             selected = (current_qs == bk_qs)
@@ -208,9 +221,13 @@ class BookmarkWidget(PartialBaseWidget):
 
         context['result_headers'] = [c for c in list_view.result_headers(
         ).cells if c.field_name in base_fields]
-        context['results'] = [[o for i, o in
-                               enumerate(filter(lambda c:c.field_name in base_fields, r.cells))]
-                              for r in list_view.results()]
+        context['results'] = [
+                [o for i, o in enumerate(filter(
+                            lambda c: c.field_name in base_fields,
+                            r.cells
+                            ))]
+                for r in list_view.results()
+                ]
         context['result_count'] = list_view.result_count
         context['page_url'] = self.bookmark.url
 

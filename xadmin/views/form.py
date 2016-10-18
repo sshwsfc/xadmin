@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 import copy
+import sys
 
 from django import forms
 from django.contrib.contenttypes.models import ContentType
@@ -111,7 +112,8 @@ class FormAdminView(CommAdminView):
         if self.valid_forms():
             self.save_forms()
             response = self.post_response()
-            if isinstance(response, basestring):
+            cls_str = str if 2 < sys.version_info.major else basestring
+            if isinstance(response, cls_str):
                 return HttpResponseRedirect(response)
             else:
                 return response

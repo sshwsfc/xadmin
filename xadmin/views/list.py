@@ -293,11 +293,14 @@ class ListAdminView(ModelAdminView):
                         or self._get_default_ordering())
         if ORDER_VAR in self.params and self.params[ORDER_VAR]:
             # Clear ordering and used params
-            ordering = [pfx + self.get_ordering_field(field_name) for n, pfx, field_name in
-                        map(
-                        lambda p: p.rpartition('-'),
-                        self.params[ORDER_VAR].split('.'))
-                        if self.get_ordering_field(field_name)]
+            ordering = [
+                    pfx + self.get_ordering_field(field_name)
+                    for n, pfx, field_name in map(
+                            lambda p: p.rpartition('-'),
+                            self.params[ORDER_VAR].split('.')
+                            )
+                        if self.get_ordering_field(field_name)
+                    ]
 
         # Ensure that the primary key is systematically present in the list of
         # ordering fields so we can guarantee a deterministic order across all

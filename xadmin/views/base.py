@@ -86,13 +86,10 @@ def inclusion_tag(file_name, context_class=Context, takes_context=False):
         def method(self, context, nodes, *arg, **kwargs):
             _dict = func(self, context, nodes, *arg, **kwargs)
             from django.template.loader import get_template, select_template
-            if 2 < sys.version_info.major:
-                cls_string = str
-            else:
-                cls_string = basestring
+            cls_str = str if 2 < sys.version_info.major else basestring
             if isinstance(file_name, Template):
                 t = file_name
-            elif not isinstance(file_name, cls_string) and is_iterable(file_name):
+            elif not isinstance(file_name, cls_str) and is_iterable(file_name):
                 t = select_template(file_name)
             else:
                 t = get_template(file_name)

@@ -165,7 +165,8 @@ class ExportPlugin(BaseAdminPlugin):
         if isinstance(t, bool):
             return _('Yes') if t else _('No')
         t = t.replace('"', '""').replace(',', '\,')
-        if isinstance(t, basestring):
+        cls_str = str if 2 < sys.version_info.major else basestring
+        if isinstance(t, cls_str):
             t = '"%s"' % t
         return t
 

@@ -1,4 +1,5 @@
 # coding=UTF-8
+import sys
 from itertools import chain
 
 from django.core.urlresolvers import reverse
@@ -206,7 +207,8 @@ class EditRelateDisplayPlugin(BaseRelateDisplayPlugin):
         return datas
 
     def post_response(self, response):
-        if isinstance(response, basestring) and response != self.get_admin_url('index'):
+        cls_str = str if 2 < sys.version_info.major else basestring
+        if isinstance(response, cls_str) and response != self.get_admin_url('index'):
             return self._get_url(response)
         return response
 
@@ -222,7 +224,8 @@ class EditRelateDisplayPlugin(BaseRelateDisplayPlugin):
 class DeleteRelateDisplayPlugin(BaseRelateDisplayPlugin):
 
     def post_response(self, response):
-        if isinstance(response, basestring) and response != self.get_admin_url('index'):
+        cls_str = str if 2 < sys.version_info.major else basestring
+        if isinstance(response, cls_str) and response != self.get_admin_url('index'):
             return self._get_url(response)
         return response
 

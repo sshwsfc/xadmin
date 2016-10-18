@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 import copy
+import sys
 
 from crispy_forms.utils import TEMPLATE_PACK
 from django import forms
@@ -118,10 +119,14 @@ class ResultField(object):
 
 def replace_field_to_value(layout, cb):
     for i, lo in enumerate(layout.fields):
+        if sys.version_info.major < 3:
+            cls_str = basestring
+        else:
+            cls_str = str
         if isinstance(lo, Field) or issubclass(lo.__class__, Field):
             layout.fields[i] = ShowField(
                 cb, *lo.fields, attrs=lo.attrs, wrapper_class=lo.wrapper_class)
-        elif isinstance(lo, basestring):
+        elif sys.version_info.major < 3 and isinstance(lo, cls_str):
             layout.fields[i] = ShowField(cb, lo)
         elif hasattr(lo, 'get_field_names'):
             replace_field_to_value(lo, cb)
@@ -215,8 +220,8 @@ class DetailAdminView(ModelAdminView):
         layout = self.get_form_layout()
         replace_field_to_value(layout, self.get_field_result)
         helper.add_layout(layout)
-        helper.filter(
-            basestring, max_level=20).wrap(ShowField, admin_view=self)
+        cls_str = str if 2 < sys.version_info.major else basestring
+        helper.filter(cls_str, max_level=20).wrap(ShowField, admin_view=self)
         return helper
 
     @csrf_protect_m

@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 import copy
+import sys
 
 from crispy_forms.utils import TEMPLATE_PACK
 from django import forms
@@ -191,7 +192,10 @@ class ModelFormAdminView(ModelAdminView):
     @filter_hook
     def get_form_layout(self):
         layout = copy.deepcopy(self.form_layout)
-        fields = self.form_obj.fields.keys() + list(self.get_readonly_fields())
+        arr = self.form_obj.fields.keys()
+        if 2 < sys.version_info.major:
+            arr = [k for k in arr]
+        fields = arr + list(self.get_readonly_fields())
 
         if layout is None:
             layout = Layout(Container(Col('full',
@@ -288,7 +292,8 @@ class ModelFormAdminView(ModelAdminView):
             self.save_models()
             self.save_related()
             response = self.post_response()
-            if isinstance(response, basestring):
+            cls_str = str if 2 < sys.version_info.major else basestring
+            if isinstance(response, cls_str):
                 return HttpResponseRedirect(response)
             else:
                 return response
