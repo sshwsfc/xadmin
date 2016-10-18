@@ -298,26 +298,35 @@ class AdminSite(object):
         # Admin-site-wide views.
         urlpatterns = [
                 url(r'^jsi18n/$', wrap(self.i18n_javascript, cacheable=True), name='jsi18n')
-            ]
+                ]
 
         # Registed admin views
         # inspect[isclass]: Only checks if the object is a class. With it lets you create an custom view that
         # inherits from multiple views and have more of a metaclass.
         urlpatterns += [
-                url(path, wrap(self.create_admin_view(clz_or_func)) if inspect.isclass(clz_or_func) and issubclass(clz_or_func, BaseAdminView) else include(clz_or_func(self)),
-                name=name) for path, clz_or_func, name in self._registry_views
-            ]
+                url(
+                    path,
+                    wrap(self.create_admin_view(clz_or_func))
+                        if inspect.isclass(clz_or_func) and issubclass(clz_or_func, BaseAdminView)
+                        else include(clz_or_func(self)),
+                    name=name
+                    )
+                for path, clz_or_func, name in self._registry_views
+                ]
 
         # Add in each model's views.
         for model, admin_class in iteritems(self._registry):
-            view_urls = [url(
-                path, wrap(
-                    self.create_model_admin_view(clz, model, admin_class)),
-                name=name % (model._meta.app_label, model._meta.model_name))
-                for path, clz, name in self._registry_modelviews]
+            view_urls = [
+                    url(
+                        path,
+                        wrap(self.create_model_admin_view(clz, model, admin_class)),
+                        name=name % (model._meta.app_label, model._meta.model_name)
+                        )
+                    for path, clz, name in self._registry_modelviews
+                    ]
             urlpatterns += [
-                    url(r'^%s/%s/' % ( model._meta.app_label, model._meta.model_name), include(view_urls))
-                ]
+                    url(r'^%s/%s/' % (model._meta.app_label, model._meta.model_name), include(view_urls))
+                    ]
 
         return urlpatterns
 
