@@ -1,0 +1,45 @@
+import React, { createClass, PropTypes } from 'react'
+import { Icon } from '../../components'
+import { Link } from 'react-router'
+import { Pagination } from 'react-bootstrap'
+import { Block } from '../../index'
+import { ModelWrap } from '../base'
+
+const ModelPagination = createClass({
+
+  propTypes: {
+    bsSize: PropTypes.string,
+    items: PropTypes.number,
+    activePage: PropTypes.number,
+    changePage: PropTypes.func
+  },
+
+  render() {
+    if(this.props.items > 1) {
+      return (
+        <Pagination
+            style={{ marginTop: 0 }}
+            bsSize={this.props.bsSize}
+            prev
+            next
+            first
+            last
+            ellipsis
+            boundaryLinks
+            items={this.props.items}
+            activePage={this.props.activePage}
+            onSelect={this.props.changePage}
+            maxButtons={5} />
+        )
+    } else {
+      return (
+        <ul style={{ marginTop: 0 }} className="pagination pagination-sm">
+          <li className="disabled"><a>无分页</a></li>
+        </ul>
+        )
+    }
+  }
+
+})
+
+module.exports = ModelWrap('model.list.pagination')(ModelPagination)

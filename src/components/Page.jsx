@@ -8,10 +8,6 @@ module.exports = React.createClass({
     nav: React.PropTypes.node
   },
 
-  renderNav() {
-    return
-  },
-
   render() {
     return (
       <div>

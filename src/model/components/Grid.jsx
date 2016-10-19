@@ -46,8 +46,7 @@ const Header = React.createClass({
             <MenuItem onSelect={e=>{ this.handleOrder('ASC') }} active={order==='ASC'}>正序</MenuItem>
             <MenuItem onSelect={e=>{ this.handleOrder('DESC') }} active={order==='DESC'}>倒序</MenuItem>
             {order == ''?'':(<MenuItem onSelect={e=>{ this.handleOrder('') }}>清除排序</MenuItem>)}
-            <MenuItem divider />
-            <MenuItem>其他</MenuItem>
+            { Block('model.list.header.menu', this) }
           </Dropdown.Menu>
         </Dropdown>
       </th>

@@ -17,9 +17,7 @@ const ModelList = React.createClass({
 
   componentDidMount() {
     const {items, filter} = this.getModelState()
-    if(items == undefined){
-      this.dispatch({ type: 'GET_ITEMS', filter })
-    }
+    //this.dispatch({ type: 'GET_ITEMS', filter })
   },
 
   renderNav() {
