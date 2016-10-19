@@ -9,11 +9,12 @@ import { model, ModelMixin } from './base'
 import models from './models'
 import get_reducers from './reducers'
 import effects from './effects'
+import mappers from './mappers'
 
 const createModelReducers = (model, app) => {
   const model_reducers = {
     ...get_reducers(model),
-    ...app.load_apps_dict('model_reducer')
+    ...app.load_dict('model_reducer')
   }
   return combineReducers(Object.keys(model_reducers).reduce((prev, key) => {
     prev[key] = model_reducers[key](model)
@@ -71,5 +72,6 @@ export default {
       }, {}))
     }
   },
-  effects: (app) => effects
+  effects: (app) => effects,
+  mappers
 }

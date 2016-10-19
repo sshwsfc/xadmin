@@ -4,6 +4,7 @@ import _ from 'lodash'
 import { PropTypes, createElement } from 'react'
 import adapter from './adapter/apicloud'
 
+import { Block, Wrap } from '../index'
 import models from './models'
 import { Icon } from '../components'
 
@@ -79,6 +80,16 @@ module.exports.model = (modelName, component) => {
 
   return Model
 }
+
+module.exports.ModelWrap = Wrap({
+  contextTypes: {
+    model: React.PropTypes.object.isRequired
+  },
+  getState: (context) => {
+    const { store, model } = context
+    return { modelState: store.getState().model[model.name], model }
+  }
+})
 
 module.exports.ModelMixin = {
   contextTypes: {

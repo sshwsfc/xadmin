@@ -3,10 +3,12 @@ import core from './core'
 import model from './model'
 import filter from './plugins/filter'
 import loading from './plugins/loading'
+import test from './plugins/test'
 
-app.load(core)
-app.load(model)
-app.load(filter)
-app.load(loading)
-
-app.start('#app')
+app
+.use(core)
+.use(model)
+//.use(filter)
+.use(loading)
+.use(test)
+.start({ container: '#app' })

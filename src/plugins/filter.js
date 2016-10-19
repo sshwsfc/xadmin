@@ -6,11 +6,11 @@ import filterManager from './filters'
 const FilterNav = React.createClass({
 
   propTypes: {
-    context: React.PropTypes.object
+    parent: React.PropTypes.object
   },
 
   renderFilter() {
-    let ctx = this.props.context
+    let ctx = this.props.parent
       , model = ctx.model
       , filters = model.filters || []
     return filters.map(filter => {

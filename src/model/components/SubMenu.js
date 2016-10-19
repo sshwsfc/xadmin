@@ -4,47 +4,32 @@ import { Link } from 'react-router'
 import { Icon } from '../../components'
 import { ButtonToolbar, OverlayTrigger, Popover, Clearfix, ButtonGroup, Button, Dropdown, MenuItem, Panel, ListGroup, ListGroupItem } from 'react-bootstrap'
 import { Block } from '../../index'
-import { ModelMixin } from '../base'
+import { ModelWrap } from '../base'
 
-const CountButton = React.createClass({
-  mixins: [ModelMixin],
-
-  getStateMap (storeState) {
-    return {
-      count: storeState.count
-    }
+const CountButton = ModelWrap('model.list.btn.count')(React.createClass({
+  propTypes: {
+    count: React.PropTypes.number.isRequired
   },
 
   render() {
-    return <Button bsSize="small">共{this.state.count}条记录</Button>
+    return <Button bsSize="small">共{this.props.count}条记录</Button>
   }
-})
+}))
 
-const ColsDropdown = React.createClass({
-  mixins: [ModelMixin],
+const ColsDropdown = ModelWrap('model.list.btn.cols')(React.createClass({
 
-  getStateMap (storeState) {
-    return {
-      selected: storeState.filter.fields,
-      open: false
-    }
+  propTypes: {
+    selected: React.PropTypes.array.isRequired,
+    fields: React.PropTypes.object.isRequired,
+    changeFieldDisplay: React.PropTypes.func.isRequired
   },
 
-  changeFieldDisplay (field, select) {
-    const filter = this.getModelState().filter
-    const fields = [].concat(filter.fields || [])
-    const index = _.indexOf(fields, field)
-    if (select) {
-      if (index === -1) fields.push(field)
-    } else {
-      _.remove(fields, (i) => { return i === field })
-    }
-    this.dispatch({ type: 'GET_ITEMS', filter: { ...filter, fields }})
+  getInitialState() {
+    return { open: false }
   },
 
   render() {
-    const fields = this.model.schema.properties
-    const selected = this.state.selected
+    const { selected, fields } = this.props
     let items = []
     for (let name in fields) {
       let field = fields[name]
@@ -53,7 +38,7 @@ const ColsDropdown = React.createClass({
         , fieldSelected = _.indexOf(selected, name) !== -1
         , icon = fieldSelected ? <Icon name="check-square-o" /> : <Icon name="square-o" />
       items.push(<ListGroupItem key={name} onClick={(e) => {
-        this.changeFieldDisplay(fieldName, !fieldSelected)
+        this.props.changeFieldDisplay([ fieldName, !fieldSelected ])
       }}>{icon} {title}</ListGroupItem>)
     }
 
@@ -61,7 +46,7 @@ const ColsDropdown = React.createClass({
     return (
       <OverlayTrigger trigger="click" rootClose placement="bottom" overlay={
         <Popover id="model-cols-select-popover">
-          <ListGroup fill style={{marginBottom: 0}}>
+          <ListGroup fill style={{ marginBottom: 0 }}>
             {items}
           </ListGroup>
         </Popover>
@@ -70,7 +55,7 @@ const ColsDropdown = React.createClass({
       </OverlayTrigger>
       )
   }
-})
+}))
 
 const SubMenu = React.createClass({
 

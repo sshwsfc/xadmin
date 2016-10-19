@@ -1,25 +1,29 @@
 import React from 'react'
-import { Provider } from 'react-redux'
+import { Provider, connect } from 'react-redux'
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
 import createSagaMiddleware, { takeEvery, takeLatest } from 'redux-saga'
 import { Router, DefaultRoute, browserHistory } from 'react-router'
 import { fork } from 'redux-saga/effects'
+import isPlainObject from 'lodash/isPlainObject'
+import hoistStatics from 'hoist-non-react-statics'
 import invariant from 'invariant'
 import warning from 'warning'
 
-class PackageManager {
+class App {
 
   constructor() {
     this.apps = []
+    this.context = {}
     this._cache = {}
   }
 
-  load(app) {
+  use(app) {
     this.apps.push(app)
+    return this
   }
 
   get_value(value) {
-    if(typeof value == 'function') {
+    if(typeof value == 'function' && value.length == 1) {
       return value(this)
     } else {
       return value
@@ -35,21 +39,21 @@ class PackageManager {
     return this._cache[key]
   }
 
-  load_apps_dict(key) {
+  load_dict(key) {
     const self = this
     return this.load_apps(key, (prev, value) => {
       return { ...prev, ...self.get_value(value) }
     }, {})
   }
 
-  load_apps_list(key) {
+  load_list(key) {
     const self = this
     return this.load_apps(key, (prev, value) => {
       return prev.concat(self.get_value(value))
     }, [])
   }
 
-  load_apps_dict_list(key) {
+  load_dict_list(key) {
     const self = this
     return this.load_apps(key, (prev, value) => {
       const values = self.get_value(value)
@@ -66,125 +70,359 @@ class PackageManager {
     }, {})
   }
 
-  create_reducers() {
-    const reducers_map = this.load_apps_dict('reducers')
-    let reducers = {}
-    for(const key in reducers_map) {
-      reducers[key] = this.enhance_reducer(key, reducers_map[key])
-    }
-    return combineReducers(reducers)
-  }
+  start(init_context={}) {
+    const self = this
+    this.context = this.load_list('context').reduce((prev, creater) => {
+      return { ...prev, ...creater(prev, self) }
+    }, init_context)
 
-  enhance_reducer(key, reducer) {
-    const reducer_enhance = this.load_apps_dict_list('reducer_enhance')
-    if(reducer_enhance[key] !== undefined) {
-      const reducers = [ reducer, ...reducer_enhance[key] ]
-      return (state, action) => {
-        reducers.reduce((prev, reducer) => { reducer(prev, action) }, state)
+    this.load_list('start').forEach((starter) => {
+      starter(self)
+    })
+  }
+}
+
+const app = new App()
+
+// redux app
+const redux_app = {
+  context: (app) => (prev) => {
+
+    const devtools = window.devToolsExtension || (() => noop => noop)
+    const enhancers = [
+      applyMiddleware(...app.load_list('middlewares')),
+      ...app.load_list('store_enhancers'),
+      devtools()
+    ]
+
+    const enhance_reducer = (key, reducer) => {
+      const reducer_enhance = app.load_dict_list('reducer_enhance')
+      if(reducer_enhance[key] !== undefined) {
+        const reducers = [ reducer, ...reducer_enhance[key] ]
+        return (state, action) => {
+          reducers.reduce((prev, reducer) => { reducer(prev, action) }, state)
+        }
       }
+      return reducer
     }
-    return reducer
-  }
+    
+    const create_reducers = () => {
+      const reducers_map = app.load_dict('reducers')
+      let reducers = {}
+      for(const key in reducers_map) {
+        reducers[key] = enhance_reducer(key, reducers_map[key])
+      }
+      return combineReducers(reducers)
+    }
 
-  get_blocks() {
-    return this.load_apps_dict_list('blocks')
-  }
+    // create store
+    const store = createStore(
+      create_reducers(),
+      prev['initial_state'] || {},
+      compose(...enhancers)
+    )
 
-  get_block(tag) {
-    return this.get_blocks()[tag] || []
+    return { store }
+  },
+  start: (app) => () => {
+    // store change
+    const { store } = app.context
+    const listeners = app.load_list('subscribe')
+    for (const listener of listeners) {
+      store.subscribe(listener)
+    }
+    app.load_list('on_create_store').forEach((callback) => callback(store))
   }
+}
 
-  start(container, initial_state={}) {
+// saga app
+const sagaMiddleware = createSagaMiddleware()
+const sage_app = {
+  start: (app) => () => {
+    // extend store
+    const { store } = app.context
+    store.runSaga = sagaMiddleware.run
+
+    // start saga
+    const effects = app.load_list('effects')
+    effects.forEach(sagaMiddleware.run)
+  },
+  middlewares: (app) => { return sagaMiddleware }
+}
+
+// react & react-router app
+const react_app = {
+  start: (app) => () => {
     // init container
+    let { container } = app.context
     if (typeof container === 'string') {
       container = document.querySelector(container)
       invariant(container, 'app.start: could not query selector: ' + container)
     }
 
-    // create middlewares
-    const sagaMiddleware = createSagaMiddleware()
-    let middlewares = [
-      sagaMiddleware,
-      ...this.load_apps_list('middlewares')
-    ]
-    // if (routerMiddleware) {
-    //   middlewares = [routerMiddleware(history), ...middlewares]
-    // }
-    const devtools = window.devToolsExtension || (() => noop => noop)
-    const enhancers = [
-      applyMiddleware(...middlewares),
-      ...this.load_apps_list('store_enhancers'),
-      devtools()
-    ]
-    
-    // create store
-    const store = this._store = createStore(
-      this.create_reducers(),
-      initial_state,
-      compose(...enhancers)
-    )
-
-    // extend store
-    store.runSaga = sagaMiddleware.run
-    store.asyncReducers = {}
-
-    // store change
-    const listeners = this.load_apps_list('subscribe')
-    for (const listener of listeners) {
-      store.subscribe(listener)
-    }
-    this.load_apps_list('on_create_store').forEach((callback) => callback(store))
-
-    // start saga
-    const effects = this.load_apps_list('effects')
-    effects.forEach(sagaMiddleware.run)
-
-    // get routers
-    const routers = this.make_routers()
-
-    // If has container, render; else, return react component
-    if (container) {
-      this.render(container, store, routers)
-    } else {
-      return this.get_provider(store, routers)
-    }
-  }
-
-  make_routers() {
-    const rs = this.load_apps_dict_list('routers')
+    const rs = app.load_dict_list('routers')
     const find_childs = (path) => {
       return (rs[path] || []).map((r) => {
         const childs = find_childs((path == '@' ? '' : path) + r.path)
         return childs.length > 0 ? { ...r, childRoutes: childs } : r
       })
     }
-    return find_childs('@')[0]
-  }
+    const routers = find_childs('@')[0]
 
-  get_provider(store, routers) {
+    const ReactDOM = require('react-dom')
+    const RootComponent = app.load_list('root_component').reduce((PrevComponent, render) => {
+      return render(PrevComponent)
+    }, () => <Router history={browserHistory} routes={routers}/>)
+
+    ReactDOM.render(<RootComponent />, container)
+  }
+}
+
+// react-redux app
+const react_redux_app = {
+  root_component: (app) => (PrevComponent) => {
+    const { store } = app.context
     return () => (
-      <Provider store={store}>
-        <Router history={browserHistory} routes={routers}/>
-      </Provider>
+      <Provider store={store}><PrevComponent /></Provider>
     )
   }
+}
 
-  render(container, store, routers) {
-    const ReactDOM = require('react-dom')
-    ReactDOM.render(React.createElement(this.get_provider(store, routers)), container)
+app.use(redux_app).use(sage_app).use(react_app).use(react_redux_app)
+
+const Block = (tag, element) => {
+  const exposedProps = element.props || {}
+  const blocks = app.load_dict_list('blocks')
+  if(blocks[tag] !== undefined) {
+    return blocks[tag].map((SubComponent)=>{
+      return <SubComponent key={SubComponent.displayName} parent={element} {...exposedProps} />
+    })
   }
 }
 
-const app = new PackageManager()
+// Helps track hot reloading.
+let nextVersion = 0
 
-const Block = (tag, context) => {
-  let exposedProps = context.props || {}
-  return app.get_block(tag).map((SubComponent)=>{
-    return <SubComponent key={SubComponent.displayName} context={context} {...exposedProps} />
-  })
+function getDisplayName(WrappedComponent) {
+  return WrappedComponent.displayName || WrappedComponent.name || 'Component'
 }
+
+const shallowEqual = (objA, objB) => {
+  if (objA === objB) {
+    return true
+  }
+  const keysA = Object.keys(objA)
+  const keysB = Object.keys(objB)
+
+  if (keysA.length !== keysB.length) {
+    return false
+  }
+  // Test for A's keys different from B.
+  const hasOwn = Object.prototype.hasOwnProperty
+  for (let i = 0; i < keysA.length; i++) {
+    if (!hasOwn.call(objB, keysA[i]) ||
+        objA[keysA[i]] !== objB[keysA[i]]) {
+      return false
+    }
+  }
+  return true
+}
+
+const _wrap_component = (tag, WrappedComponent, wrappers) => {
+  const connectDisplayName = `Connect(${getDisplayName(WrappedComponent)})`
+  // Helps track hot reloading.
+  const version = nextVersion++
+
+  class Connect extends React.Component {
+
+    constructor(props, context) {
+      super(props, context)
+      this.version = version
+      this.stateContext = this.getState()
+      this.clearCache()
+    }
+
+    getState() {
+      const context = this.context
+      return wrappers.reduce((prev, wrapper) => {
+        if(wrapper.getState !== undefined) {
+          return { ...prev, ...wrapper.getState(context) }
+        } else {
+          return prev
+        }
+      }, {})
+    }
+
+    isSubscribed() {
+      return isPlainObject(this.unsubscribe)
+    }
+
+    trySubscribe() {
+      if (!this.unsubscribe) {
+        const callback = this.handleChange.bind(this)
+        const context = this.context
+        this.unsubscribe = wrappers.reduce((prev, wrapper) => {
+          if(wrapper.subscribe !== undefined) {
+            return { ...prev, ...wrapper.subscribe(context, callback) }
+          } else {
+            return prev
+          }
+        }, {})
+        //this.handleChange()
+      }
+    }
+
+    tryUnsubscribe() {
+      if (this.unsubscribe) {
+        const unsubscribe = this.unsubscribe
+        wrappers.forEach((wrapper) => {
+          if(wrapper.unsubscribe !== undefined) {
+            wrapper.unsubscribe(unsubscribe)
+          }
+        })
+        this.unsubscribe = null
+      }
+    }
+
+    componentDidMount() {
+      this.trySubscribe()
+    }
+
+    componentWillUnmount() {
+      this.tryUnsubscribe()
+      this.clearCache()
+    }
+
+    clearCache() {
+      this.methodProps = null
+      this.dataProps = null
+    }
+
+    computeDataProps() {
+      const { stateContext, props } = this
+      const mappers = app.load_dict_list('mappers')[tag] || []
+      return mappers.reduce((prev, mapper) => {
+        if(mapper.data === undefined) {
+          return prev
+        }
+        return { ...prev, ...mapper.data(stateContext, props, prev) }
+      }, {})
+    }
+
+    runBindMethod(method) {
+      const { stateContext, props } = this
+      return method(stateContext, props)
+    }
+
+    computeMethodProps() {
+      const bindMethod = this.runBindMethod.bind(this)
+      const mappers = app.load_dict_list('mappers')[tag] || []
+      return mappers.reduce((prev, mapper) => {
+        if(mapper.method === undefined) {
+          return prev
+        }
+        const methods = mapper.method
+        let bindMethods = {}
+        for(let key in methods) {
+          const method = methods[key]
+          bindMethods[key] = (e) => {
+            return bindMethod(method)(e)
+          }
+        }
+        return { ...prev, ...bindMethods }
+      }, {})
+    }
+
+    updateDataProps() {
+      const nextDataProps = this.computeDataProps()
+      if (this.dataProps && shallowEqual(nextDataProps, this.dataProps)) {
+        return false
+      }
+      this.dataProps = nextDataProps
+      return true
+    }
+
+    handleChange() {
+      if (!this.unsubscribe) {
+        return
+      }
+      const newState = this.getState()
+      if (shallowEqual(newState, this.stateContext)) {
+        return
+      }
+      this.stateContext = newState
+
+      const haveDataPropsChanged = this.updateDataProps()
+      if(haveDataPropsChanged) {
+        this.forceUpdate()
+      }
+    }
+
+    render() {
+      if(this.dataProps == null) {
+        this.dataProps = this.computeDataProps()
+      }
+      if(this.methodProps == null) {
+        this.methodProps = this.computeMethodProps()
+      }
+      return React.createElement(WrappedComponent,
+        { ...this.props, ...this.dataProps,  ...this.methodProps }
+      )
+    }
+  }
+
+  Connect.displayName = connectDisplayName
+  Connect.WrappedComponent = WrappedComponent
+  Connect.contextTypes = wrappers.reduce((prev, wrapper) => {
+    return { ...prev, ...wrapper.contextTypes }
+  }, {})
+
+  if (process.env.NODE_ENV !== 'production') {
+    Connect.prototype.componentWillUpdate = function componentWillUpdate() {
+      if (this.version === version) {
+        return
+      }
+      // We are hot reloading!
+      this.version = version
+      this.trySubscribe()
+      this.clearCache()
+    }
+  }
+
+  return hoistStatics(Connect, WrappedComponent)
+}
+
+const _wrap = (magic, wrappers=[]) => {
+  if(isPlainObject(magic)) {
+    wrappers.push(magic)
+    return (arg) => { return _wrap(arg, wrappers) }
+  } else {
+    return (component) => {
+      return _wrap_component(magic, component, wrappers)
+    }
+  }
+}
+
+const Wrap = _wrap({
+  contextTypes: {
+    router: React.PropTypes.object.isRequired,
+    store: React.PropTypes.object.isRequired
+  },
+  getState: (context) => {
+    const { store, router } = context
+    return { state: store.getState(), dispatch: store.dispatch, router }
+  },
+  subscribe: (context, callback) => {
+    const { store } = context
+    return { store: store.subscribe(callback) }
+  },
+  unsubscribe: (unsubscribe) => {
+    unsubscribe['store']()
+  }
+})
 
 module.exports = {
   app,
-  Block
+  Block,
+  Wrap
 }
