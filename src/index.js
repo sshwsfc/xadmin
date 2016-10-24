@@ -24,7 +24,20 @@ class App {
 
   get_value(value) {
     if(typeof value == 'function' && value.length == 1) {
-      return value(this)
+      if(value.constructor.name == 'GeneratorFunction') {
+        const it = value(this)
+        const go = (result) => {
+          if (result.done) return result.value
+          return result.value.then((v) => {
+            return go(it.next(v))
+          }, (error) => {
+            return go(it.throw(error))
+          })
+        }
+        return it
+      } else {
+        return value(this)
+      }
     } else {
       return value
     }
@@ -152,6 +165,9 @@ const sage_app = {
 
 // react & react-router app
 const react_app = {
+  context: (app) => (prev) => {
+    return { router: browserHistory }
+  },
   start: (app) => () => {
     // init container
     let { container } = app.context
@@ -240,6 +256,8 @@ const _wrap_component = (tag, WrappedComponent, wrappers) => {
       this.version = version
       this.stateContext = this.getState()
       this.clearCache()
+
+      this.trySubscribe()
     }
 
     getState() {
@@ -284,10 +302,6 @@ const _wrap_component = (tag, WrappedComponent, wrappers) => {
       }
     }
 
-    componentDidMount() {
-      this.trySubscribe()
-    }
-
     componentWillUnmount() {
       this.tryUnsubscribe()
       this.clearCache()
@@ -306,7 +320,7 @@ const _wrap_component = (tag, WrappedComponent, wrappers) => {
           return prev
         }
         return { ...prev, ...mapper.data(stateContext, props, prev) }
-      }, {})
+      }, this.dataProps || {})
     }
 
     runBindMethod(method) {
@@ -394,8 +408,7 @@ const _wrap_component = (tag, WrappedComponent, wrappers) => {
 
 const _wrap = (magic, wrappers=[]) => {
   if(isPlainObject(magic)) {
-    wrappers.push(magic)
-    return (arg) => { return _wrap(arg, wrappers) }
+    return (arg) => { return _wrap(arg, [ ...wrappers, magic ]) }
   } else {
     return (component) => {
       return _wrap_component(magic, component, wrappers)
@@ -405,12 +418,21 @@ const _wrap = (magic, wrappers=[]) => {
 
 const Wrap = _wrap({
   contextTypes: {
-    router: React.PropTypes.object.isRequired,
+    router: React.PropTypes.object.isRequired
+  },
+  getState: (context) => {
+    const { router } = context
+    return { router }
+  }
+})
+
+const StoreWrap = Wrap({
+  contextTypes: {
     store: React.PropTypes.object.isRequired
   },
   getState: (context) => {
-    const { store, router } = context
-    return { state: store.getState(), dispatch: store.dispatch, router }
+    const { store } = context
+    return { state: store.getState(), dispatch: store.dispatch }
   },
   subscribe: (context, callback) => {
     const { store } = context
@@ -424,5 +446,6 @@ const Wrap = _wrap({
 module.exports = {
   app,
   Block,
-  Wrap
+  Wrap,
+  StoreWrap
 }

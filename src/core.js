@@ -14,9 +14,9 @@ export default {
     root: (state=[], action) => {
       return state
     }
-  },
-  store_enhancers: (app) => autoRehydrate(),
-  on_create_store: (app) => (store) => {
-    persistStore(store, { storage: localForage })
+  // },
+  // store_enhancers: (app) => autoRehydrate(),
+  // on_create_store: (app) => (store) => {
+  //   persistStore(store, { storage: localForage })
   }
 }

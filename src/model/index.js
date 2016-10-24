@@ -11,6 +11,8 @@ import get_reducers from './reducers'
 import effects from './effects'
 import mappers from './mappers'
 
+import adapter from './adapter/apicloud'
+
 const createModelReducers = (model, app) => {
   const model_reducers = {
     ...get_reducers(model),

@@ -48,4 +48,4 @@ const ModelList = React.createClass({
 
 })
 
-module.exports = ModelWrap('model.list')(ModelList)
+export default ModelWrap('model.list')(ModelList)

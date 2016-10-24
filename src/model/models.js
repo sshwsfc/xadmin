@@ -70,10 +70,6 @@ module.exports = {
           maxLength: 20,
           validationMessage: 'Don\'t be greedy!',
           description: 'Please write your comment here.'
-        },
-        createdAt: {
-          title: 'Date',
-          type: 'date'
         }
       },
       required: [

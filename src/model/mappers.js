@@ -33,9 +33,11 @@ export default {
     }
   },
   'model.list.grid': {
-    data: ({ modelState, model }) => {
+    data: ({ modelState, model }, props, prev) => {
+      const { items, ids } = modelState
       return {
-        items: modelState.items,
+        ids,
+        items: ids === prev['ids'] ? prev['items'] : ids.map(id => items[id]),
         fields: modelState.filter.fields
       }
     }
@@ -111,6 +113,25 @@ export default {
           _.remove(fields, (i) => { return i === field })
         }
         dispatch({ model, type: 'GET_ITEMS', filter: { ...filter, fields } })
+      }
+    }
+  },
+  'model.form': {
+    data: ({ modelState, model }, { params }) => {
+      return {
+        ...modelState.form,
+        id: params.id,
+        data: modelState.items[params.id],
+        schema: model.schema,
+        form: model.form
+      }
+    },
+    method: {
+      getItem: ({ dispatch, model }) => (id) => {
+        dispatch({ model, type: 'GET_ITEM', id })
+      },
+      updateItem: ({ dispatch, model }) => (item) => {
+        dispatch({ model, type: 'SAVE_ITEM', item })
       }
     }
   }

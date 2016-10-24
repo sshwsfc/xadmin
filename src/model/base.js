@@ -4,7 +4,7 @@ import _ from 'lodash'
 import { PropTypes, createElement } from 'react'
 import adapter from './adapter/apicloud'
 
-import { Block, Wrap } from '../index'
+import { Block, StoreWrap } from '../index'
 import models from './models'
 import { Icon } from '../components'
 
@@ -81,7 +81,7 @@ module.exports.model = (modelName, component) => {
   return Model
 }
 
-module.exports.ModelWrap = Wrap({
+module.exports.ModelWrap = StoreWrap({
   contextTypes: {
     model: React.PropTypes.object.isRequired
   },
@@ -90,65 +90,3 @@ module.exports.ModelWrap = Wrap({
     return { modelState: store.getState().model[model.name], model }
   }
 })
-
-module.exports.ModelMixin = {
-  contextTypes: {
-    router: React.PropTypes.object.isRequired,
-    model: React.PropTypes.object.isRequired,
-    store: React.PropTypes.object.isRequired
-  },
-
-  componentWillMount() {
-    this.model = this.context.model
-    this.router = this.context.router
-    this.store = this.context.store
-  },
-
-  dispatch(action) {
-    this.store.dispatch({ model: this.model, ...action })
-  },
-
-  componentDidMount() {
-    if(typeof this.getStateMap === 'function' && !this.unsubscribe) {
-      this.unsubscribe = this.store.subscribe(this.handleStoreChange)
-    }
-  },
-
-  componentWillUnmount() {
-    this.tryUnsubscribe()
-  },
-
-  isSubscribed() {
-    return typeof this.unsubscribe === 'function'
-  },
-
-  tryUnsubscribe() {
-    if(this.unsubscribe) {
-      this.unsubscribe()
-      this.unsubscribe = null
-    }
-  },
-
-  getModelState() {
-    return this.store.getState().model[this.model.name]
-  },
-
-  handleStoreChange() {
-    if(!this.unsubscribe) {
-      return
-    }
-
-    const storeState = this.store.getState().model[this.model.name]
-    const newState = this.getStateMap(storeState)
-    if(!shallowEqual(newState, this.state)) {
-      this.setState(newState)
-    }
-  },
-
-  getInitialState() {
-    if(typeof this.getStateMap === 'function')
-      return this.getStateMap(this.context.store.getState().model[this.context.model.name])
-    else
-      return {}
-  }
-}
