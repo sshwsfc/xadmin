@@ -25,7 +25,7 @@ class XForm extends React.Component {
 
   onChange(key, val) {
     // console.log('SchemaForm.onChange', key, val);
-    this.props.onModelChange(key, val)
+    this.props.onChange(key, val)
   }
 
   builder(form, model, onChange, mapper) {

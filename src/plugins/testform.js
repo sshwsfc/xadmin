@@ -13,7 +13,7 @@ class ContactForm extends Component {
   field(name) {
     return ({ input, label, meta: { touched, error }, ...custom }) => {
       return (
-        <FormGroup controlId={`formContorl${name}`}>
+        <FormGroup controlId={`formContorl${name}`} {...custom}>
           <Col componentClass={ControlLabel} sm={2}>
             {label}
           </Col>
@@ -31,21 +31,23 @@ class ContactForm extends Component {
   render() {
     const { handleSubmit } = this.props
     return (
-      <form onSubmit={handleSubmit} className="form-horizontal">
-        <div>
-          <label htmlFor="firstName">First Name</label>
-          <Field name="firstName" component={this.field('first_name')} type="text"/>
-        </div>
-        <div>
-          <label htmlFor="lastName">Last Name</label>
-          <Field name="lastName" component={this.field('last_name')} type="text"/>
-        </div>
-        <div>
-          <label htmlFor="email">Email</label>
-          <Field name="email" component={this.field('email')} type="email"/>
-        </div>
-        <Button type="submit">Submit</Button>
-      </form>
+      <Panel>
+        <form onSubmit={handleSubmit} className="form-horizontal">
+          <div>
+            <label htmlFor="firstName">First Name</label>
+            <Field name="firstName" component={this.field('first_name')} type="text"/>
+          </div>
+          <div>
+            <label htmlFor="lastName">Last Name</label>
+            <Field name="lastName" component={this.field('last_name')} type="text"/>
+          </div>
+          <div>
+            <label htmlFor="email">Email</label>
+            <Field name="email" component={this.field('email')} type="email"/>
+          </div>
+          <Button type="submit">Submit</Button>
+        </form>
+      </Panel>
     )
   }
 }

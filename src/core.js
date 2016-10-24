@@ -1,6 +1,6 @@
 import React from 'react'
 import { persistStore, autoRehydrate } from 'redux-persist'
-import localForage from 'localForage'
+//import localforage from 'localforage'
 import MainApp from './layouts/Main'
 
 export default {
@@ -17,6 +17,6 @@ export default {
   // },
   // store_enhancers: (app) => autoRehydrate(),
   // on_create_store: (app) => (store) => {
-  //   persistStore(store, { storage: localForage })
+  //   persistStore(store, { storage: localforage })
   }
 }
