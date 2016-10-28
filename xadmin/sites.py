@@ -198,8 +198,6 @@ class AdminSite(object):
         cacheable=True.
         """
         def inner(request, *args, **kwargs):
-            # print('xadmin/sites.py --> AdminSite.inner(): ...')
-            # print(u'\targs: {}\n\tkwargs: {}'.format(args, kwargs))
             if not self.has_permission(request) and getattr(view, 'need_site_permission', True):
                 return self.create_admin_view(self.login_view)(request, *args, **kwargs)
             return view(request, *args, **kwargs)
