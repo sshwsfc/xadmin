@@ -2,8 +2,9 @@
 
 import sys
 import os.path
+from django.utils import six
 
-if sys.version_info.major < 3 and sys.getdefaultencoding()=='ascii':
+if six.PY2 and sys.getdefaultencoding()=='ascii':
     import imp
     imp.reload(sys)
     sys.setdefaultencoding('utf-8')

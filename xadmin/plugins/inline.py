@@ -1,6 +1,5 @@
 import copy
 import inspect
-import sys
 from django import forms
 from django.forms.formsets import all_valid, DELETION_FIELD_NAME
 from django.forms.models import inlineformset_factory, BaseInlineFormSet, modelform_defines_fields
@@ -8,6 +7,7 @@ from django.contrib.contenttypes.forms import BaseGenericInlineFormSet, generic_
 from django.template import loader
 from django.template.loader import render_to_string
 from django.contrib.auth import get_permission_codename
+from django.utils import six
 from django.utils.encoding import smart_text
 from crispy_forms.utils import TEMPLATE_PACK
 
@@ -115,7 +115,7 @@ style_manager.register_style("table", TableInlineStyle)
 
 def replace_field_to_value(layout, av):
     if layout:
-        cls_str = str if 2 < sys.version_info.major else basestring
+        cls_str = str if six.PY3 else basestring
         for i, lo in enumerate(layout.fields):
             if isinstance(lo, Field) or issubclass(lo.__class__, Field):
                 layout.fields[i] = ShowField(av, *lo.fields, **lo.attrs)

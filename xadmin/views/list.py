@@ -1,5 +1,4 @@
 from __future__ import absolute_import
-import sys
 from collections import OrderedDict
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.core.paginator import InvalidPage, Paginator
@@ -7,6 +6,7 @@ from django.core.urlresolvers import NoReverseMatch
 from django.db import models
 from django.http import HttpResponseRedirect
 from django.template.response import SimpleTemplateResponse, TemplateResponse
+from django.utils import six
 from django.utils.encoding import force_text, smart_text
 from django.utils.html import escape, conditional_escape
 from django.utils.safestring import mark_safe
@@ -465,7 +465,7 @@ class ListAdminView(ModelAdminView):
             sorted = True
             order_type = ordering_field_columns.get(field_name).lower()
             arr = ordering_field_columns.keys()
-            if 2 < sys.version_info.major:
+            if six.PY3:
                 arr = list(arr)
             sort_priority = arr.index(field_name) + 1
             th_classes.append('sorted %sending' % order_type)

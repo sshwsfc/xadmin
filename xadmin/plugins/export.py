@@ -5,6 +5,7 @@ from future.utils import iteritems
 
 from django.http import HttpResponse
 from django.template import loader
+from django.utils import six
 from django.utils.encoding import force_text, smart_text
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
@@ -165,7 +166,7 @@ class ExportPlugin(BaseAdminPlugin):
         if isinstance(t, bool):
             return _('Yes') if t else _('No')
         t = t.replace('"', '""').replace(',', '\,')
-        cls_str = str if 2 < sys.version_info.major else basestring
+        cls_str = str if six.PY3 else basestring
         if isinstance(t, cls_str):
             t = '"%s"' % t
         return t

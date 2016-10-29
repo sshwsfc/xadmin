@@ -1,4 +1,3 @@
-import sys
 import copy
 import functools
 import datetime
@@ -17,6 +16,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.template import Context, Template
 from django.template.response import TemplateResponse
+from django.utils import six
 from django.utils.decorators import method_decorator, classonlymethod
 from django.utils.encoding import force_text, smart_text, smart_str
 from django.utils.http import urlencode
@@ -86,7 +86,7 @@ def inclusion_tag(file_name, context_class=Context, takes_context=False):
         def method(self, context, nodes, *arg, **kwargs):
             _dict = func(self, context, nodes, *arg, **kwargs)
             from django.template.loader import get_template, select_template
-            cls_str = str if 2 < sys.version_info.major else basestring
+            cls_str = str if six.PY3 else basestring
             if isinstance(file_name, Template):
                 t = file_name
             elif not isinstance(file_name, cls_str) and is_iterable(file_name):

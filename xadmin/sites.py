@@ -4,10 +4,11 @@ from future.utils import iteritems
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.base import ModelBase
+from django.utils import six
 from django.views.decorators.cache import never_cache
 import inspect
 
-if sys.version_info.major < 3 and sys.getdefaultencoding()=='ascii':
+if six.PY2 and sys.getdefaultencoding()=='ascii':
     import imp
     imp.reload(sys)
     sys.setdefaultencoding("utf-8")

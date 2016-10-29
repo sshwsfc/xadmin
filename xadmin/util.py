@@ -1,12 +1,11 @@
 from __future__ import absolute_import
-import sys
 import django
 from django.db import models
 from django.db.models.sql.query import LOOKUP_SEP
 from django.db.models.deletion import Collector
 from django.db.models.fields.related import ForeignObjectRel
 from django.forms.forms import pretty_name
-from django.utils import formats
+from django.utils import formats, six
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
@@ -43,6 +42,7 @@ def xstatic(*tags):
     fs = []
     lang = get_language()
 
+    cls_str = str if six.PY3 else basestring
     for tag in tags:
         try:
             for p in tag.split('.'):
@@ -57,10 +57,7 @@ def xstatic(*tags):
             else:
                 raise e
 
-        if (
-                isinstance(node, str)
-                or sys.version_info.major < 3 and isinstance(node, unicode)
-                ):
+        if isinstance(node, cls_str):
             files = node
         else:
             mode = 'dev'
@@ -129,7 +126,7 @@ def quote(s):
     quoting is slightly different so that it doesn't get automatically
     unquoted by the Web browser.
     """
-    cls_str = str if 2 < sys.version_info.major else basestring
+    cls_str = str if six.PY3 else basestring
     if not isinstance(s, cls_str):
         return s
     res = list(s)
@@ -144,7 +141,7 @@ def unquote(s):
     """
     Undo the effects of quote(). Based heavily on urllib.unquote().
     """
-    cls_str = str if 2 < sys.version_info.major else basestring
+    cls_str = str if six.PY3 else basestring
     if not isinstance(s, cls_str):
         return s
     mychr = chr

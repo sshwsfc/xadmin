@@ -1,5 +1,4 @@
 import operator
-import sys
 from future.utils import iteritems
 from xadmin import widgets
 from xadmin.plugins.utils import get_context_dict
@@ -10,6 +9,7 @@ from django.db import models
 from django.db.models.fields import FieldDoesNotExist
 from django.db.models.sql.query import LOOKUP_SEP, QUERY_TERMS
 from django.template import loader
+from django.utils import six
 from django.utils.encoding import smart_str
 from django.utils.translation import ugettext as _
 
@@ -142,7 +142,7 @@ class FilterPlugin(BaseAdminPlugin):
         self.has_filters = bool(self.filter_specs)
         self.admin_view.filter_specs = self.filter_specs
         obj = filter(lambda f: f.is_used, self.filter_specs)
-        if 2 < sys.version_info.major:
+        if six.PY3:
             obj = list(obj)
         self.admin_view.used_filter_num = len(obj)
 
@@ -195,13 +195,13 @@ class FilterPlugin(BaseAdminPlugin):
     # Media
     def get_media(self, media):
         arr = filter(lambda s: isinstance(s, DateFieldListFilter), self.filter_specs)
-        if 2 < sys.version_info.major:
+        if six.PY3:
             arr = list(arr)
         if bool(arr):
             media = media + self.vendor('datepicker.css', 'datepicker.js',
                                         'xadmin.widget.datetime.js')
         arr = filter(lambda s: isinstance(s, RelatedFieldSearchFilter), self.filter_specs)
-        if 2 < sys.version_info.major:
+        if six.PY3:
             arr = list(arr)
         if bool(arr):
             media = media + self.vendor(

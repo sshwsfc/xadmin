@@ -1,9 +1,9 @@
 #coding:utf-8
 from __future__ import print_function
-import sys
 import urllib, httplib2
 from django.template import loader
 from django.core.cache import cache
+from django.utils import six
 from django.utils.translation import ugettext as _
 from xadmin.sites import site
 from xadmin.models import UserSettings
@@ -65,7 +65,7 @@ class ThemePlugin(BaseAdminPlugin):
                     h = httplib2.Http()
                     resp, content = h.request("http://bootswatch.com/api/3.json", 'GET', '',
                         headers={"Accept": "application/json", "User-Agent": self.request.META['HTTP_USER_AGENT']})
-                    if 2 < sys.version_info.major:
+                    if six.PY3:
                         content = content.decode()
                     watch_themes = json.loads(content)['themes']
                     ex_themes.extend([

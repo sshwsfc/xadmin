@@ -1,6 +1,5 @@
 from __future__ import absolute_import
 import copy
-import sys
 
 from crispy_forms.utils import TEMPLATE_PACK
 from django import forms
@@ -10,6 +9,7 @@ from django.db import models, transaction
 from django.forms.models import modelform_factory, modelform_defines_fields
 from django.http import Http404, HttpResponseRedirect
 from django.template.response import TemplateResponse
+from django.utils import six
 from django.utils.encoding import force_text
 from django.utils.html import escape
 from django.utils.text import capfirst, get_text_list
@@ -193,7 +193,7 @@ class ModelFormAdminView(ModelAdminView):
     def get_form_layout(self):
         layout = copy.deepcopy(self.form_layout)
         arr = self.form_obj.fields.keys()
-        if 2 < sys.version_info.major:
+        if six.PY3:
             arr = [k for k in arr]
         fields = arr + list(self.get_readonly_fields())
 
@@ -292,7 +292,7 @@ class ModelFormAdminView(ModelAdminView):
             self.save_models()
             self.save_related()
             response = self.post_response()
-            cls_str = str if 2 < sys.version_info.major else basestring
+            cls_str = str if six.PY3 else basestring
             if isinstance(response, cls_str):
                 return HttpResponseRedirect(response)
             else:
