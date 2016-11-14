@@ -1,4 +1,6 @@
 
+import _ from 'lodash'
+import { combineReducers } from 'redux'
 
 const cacheDuration = 10 * 60 * 1000 // ten minutes
 
@@ -82,12 +84,30 @@ export default (model) => {
           return state
       }
     },
-    filter: (model) => (state = { fields: [].concat(model.list_display), limit: 50, skip: 0 }, action) => {
+    filter: (model) => (state = { fields: [].concat(model.list_display), limit: 15, skip: 0 }, action) => {
       if(!action.model || action.model.name != model.name) return state
 
       switch (action.type) {
+        case 'UPDATE_FILTER':
+          return { ...state, ...action.payload }
         case 'GET_ITEMS':
           return action.items && action.filter || state
+        default:
+          return state
+      }
+    },
+    wheres: (model) => (state = {}, action) => {
+      if(!action.model || action.model.name != model.name) return state
+
+      switch (action.type) {
+        case 'UPDATE_WHERE':
+          if(action.payload) {
+            return { ...state, [action.key]: action.payload }
+          } else {
+            return _.omit(state, action.key)
+          }
+        case 'GET_ITEMS':
+          return action.items && action.wheres || state
         default:
           return state
       }

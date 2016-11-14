@@ -18,7 +18,7 @@ class App {
   }
 
   use(app) {
-    this.apps.push(app)
+    this.apps.push(app.app || app)
     return this
   }
 
@@ -113,17 +113,27 @@ const redux_app = {
       if(reducer_enhance[key] !== undefined) {
         const reducers = [ reducer, ...reducer_enhance[key] ]
         return (state, action) => {
-          reducers.reduce((prev, reducer) => { reducer(prev, action) }, state)
+          return reducers.reduce((prev, reducer) => reducer(prev, action), state)
         }
       }
       return reducer
     }
+
+    const combine_reducer = (key, reducers) => {
+      if(reducers.length > 1) {
+        return (state, action) => {
+          return reducers.reduce((prev, reducer) => reducer(prev, action) , state)
+        }
+      } else {
+        return reducers[0]
+      }
+    }
     
     const create_reducers = () => {
-      const reducers_map = app.load_dict('reducers')
+      const reducers_map = app.load_dict_list('reducers')
       let reducers = {}
       for(const key in reducers_map) {
-        reducers[key] = enhance_reducer(key, reducers_map[key])
+        reducers[key] = combine_reducer(key, reducers_map[key])
       }
       return combineReducers(reducers)
     }
@@ -166,6 +176,9 @@ const sage_app = {
 // react & react-router app
 const react_app = {
   context: (app) => (prev) => {
+    app.go = (uri) => {
+      browserHistory.push(uri)
+    }
     return { router: browserHistory }
   },
   start: (app) => () => {
@@ -207,12 +220,39 @@ const react_redux_app = {
 app.use(redux_app).use(sage_app).use(react_app).use(react_redux_app)
 
 const Block = (tag, element) => {
-  const exposedProps = element.props || {}
   const blocks = app.load_dict_list('blocks')
   if(blocks[tag] !== undefined) {
-    return blocks[tag].map((SubComponent)=>{
-      return <SubComponent key={SubComponent.displayName} parent={element} {...exposedProps} />
-    })
+    return blocks[tag].reduce((prev, block) => {
+      const ret = block({ nodes: prev, ...element.props })
+      if(ret !== undefined && ret != prev) {
+        if(Array.isArray(ret)) {
+          prev = prev.concat(ret)
+        } else {
+          prev.push(ret)
+        }
+      }
+      return prev
+    }, [])
+  }
+}
+
+const BlockTag = (props) => {
+  const { tag, children } = props
+  const blocks = app.load_dict_list('blocks')[tag]
+  if(children !== undefined) {
+    if(blocks !== undefined) {
+      return blocks.reduce((prev, SubComponent)=>{
+        return <SubComponent key={SubComponent.displayName} {...props}>{prev}</SubComponent>
+      }, children)
+    } else {
+      return children
+    }
+  } else {
+    if(blocks !== undefined) {
+      return blocks.map((SubComponent)=>{
+        return <SubComponent key={SubComponent.displayName} {...props} />
+      })
+    }
   }
 }
 
@@ -310,17 +350,46 @@ const _wrap_component = (tag, WrappedComponent, wrappers) => {
     clearCache() {
       this.methodProps = null
       this.dataProps = null
+      this.computeProps = null
+      this.wrapProps = null
+      this.mappers = null
+    }
+
+    getMappers() {
+      if(this.mappers == null) {
+        this.mappers = app.load_dict_list('mappers')[tag] || []
+      }
+      return this.mappers
     }
 
     computeDataProps() {
       const { stateContext, props } = this
-      const mappers = app.load_dict_list('mappers')[tag] || []
-      return mappers.reduce((prev, mapper) => {
+      return this.getMappers().reduce((prev, mapper) => {
         if(mapper.data === undefined) {
           return prev
         }
         return { ...prev, ...mapper.data(stateContext, props, prev) }
       }, this.dataProps || {})
+    }
+
+    computeComputeProps() {
+      const { stateContext, props } = this
+      return this.getMappers().reduce((prev, mapper) => {
+        if(mapper.compute === undefined) {
+          return prev
+        }
+        return { ...prev, ...mapper.compute(stateContext, { ...props, ...this.dataProps }, prev) }
+      }, this.computeProps || {})
+    }
+
+    computeWrapProps() {
+      const { stateContext, props } = this
+      return wrappers.reduce((prev, wrapper) => {
+        if(wrapper.computeProps === undefined) {
+          return prev
+        }
+        return { ...prev, ...wrapper.computeProps(tag, stateContext, { ...props, ...this.dataProps }, prev) }
+      }, this.wrapProps || {})
     }
 
     runBindMethod(method) {
@@ -330,8 +399,7 @@ const _wrap_component = (tag, WrappedComponent, wrappers) => {
 
     computeMethodProps() {
       const bindMethod = this.runBindMethod.bind(this)
-      const mappers = app.load_dict_list('mappers')[tag] || []
-      return mappers.reduce((prev, mapper) => {
+      return this.getMappers().reduce((prev, mapper) => {
         if(mapper.method === undefined) {
           return prev
         }
@@ -376,11 +444,15 @@ const _wrap_component = (tag, WrappedComponent, wrappers) => {
       if(this.dataProps == null) {
         this.dataProps = this.computeDataProps()
       }
+      this.computeProps = this.computeComputeProps()
       if(this.methodProps == null) {
         this.methodProps = this.computeMethodProps()
       }
+      if(this.wrapProps == null) {
+        this.wrapProps = this.computeWrapProps()
+      }
       return React.createElement(WrappedComponent,
-        { ...this.props, ...this.dataProps,  ...this.methodProps }
+        { ...this.props, ...this.wrapProps, ...this.methodProps, ...this.dataProps, ...this.computeProps }
       )
     }
   }
@@ -443,8 +515,13 @@ const StoreWrap = Wrap({
   }
 })
 
+const config = (key, default_value) => {
+  return app.load_dict('config')[key] || default_value
+}
+
 module.exports = {
   app,
+  config,
   Block,
   Wrap,
   StoreWrap

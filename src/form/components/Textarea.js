@@ -1,0 +1,15 @@
+import React from 'react'
+import { Field } from 'redux-form'
+import { FieldGroup } from './base'
+
+export default ({ input, label, meta: { touched, error }, field }) => {
+  return (
+    <FieldGroup
+      id={input.name}
+      label={label}
+      error={error}
+      help={field.description || field.help}
+      control={{ componentClass: 'textarea', ...input, ...field.attrs }}
+      />
+  )
+}

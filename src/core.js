@@ -2,6 +2,7 @@ import React from 'react'
 import { persistStore, autoRehydrate } from 'redux-persist'
 //import localforage from 'localforage'
 import MainApp from './layouts/Main'
+import './main.css'
 
 export default {
   routers: {

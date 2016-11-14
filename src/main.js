@@ -1,16 +1,21 @@
 import { app } from './index'
 import core from './core'
 import model from './model'
-import filter from './plugins/filter'
+import relate from './model/relate'
+import form from './form'
+import filter from './filter'
 import loading from './plugins/loading'
-import test from './plugins/test'
-import form from './plugins/testform'
+import search from './plugins/search'
+
+import tracs from './tracs'
 
 app
 .use(core)
-.use(model)
-//.use(filter)
-.use(loading)
-.use(test)
 .use(form)
+.use(model)
+.use(relate)
+.use(filter)
+.use(search)
+.use(loading)
+.use(tracs)
 .start({ container: '#app' })

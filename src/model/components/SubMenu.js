@@ -79,4 +79,4 @@ const SubMenu = React.createClass({
   }
 })
 
-module.exports = SubMenu
+export default SubMenu

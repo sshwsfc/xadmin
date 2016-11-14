@@ -13,7 +13,7 @@ const ActionBar = React.createClass({
     const count = this.props.count
     return (
       <Well bsSize="small">
-        <DropdownButton title={ count > 0 ? `已选择 ${count} 条数据` : '未选择任何数据'} id="model-list-actions" bsStyle="success" dropup>
+        <DropdownButton title={ count > 0 ? `Selected ${count} count data` : 'No Data Selected'} id="model-list-actions" bsStyle="success" dropup>
           { Block('model.list.actions', this) }
         </DropdownButton>
       </Well>
@@ -21,4 +21,4 @@ const ActionBar = React.createClass({
   }
 })
 
-module.exports = ModelWrap('model.list.actions')(ActionBar)
+export default ModelWrap('model.list.actions')(ActionBar)

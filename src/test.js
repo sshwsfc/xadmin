@@ -1,10 +1,11 @@
-var CryptoJS = require('crypto-js')
-var fetch = require('isomorphic-fetch')
-var random = require('random-name')
+'use strict'
+const CryptoJS = require('crypto-js')
+const fetch = require('isomorphic-fetch')
+const Mock = require('mockjs')
 
-var headers = function() {
-  var now = Date.now()
-  var appKey = CryptoJS.SHA1('A6902408240122UZ5509984D-0109-C69E-FBC2-BE7885A75CE8UZ' + now) + '.' + now
+const headers = () => {
+  let now = Date.now()
+  let appKey = CryptoJS.SHA1('A6902408240122UZ5509984D-0109-C69E-FBC2-BE7885A75CE8UZ' + now) + '.' + now
 
   return {
     'Content-Type': 'application/json',
@@ -13,8 +14,8 @@ var headers = function() {
   }
 }
 
-var save = function(data, index) {
-  fetch('https://d.apicloud.com/mcm/api/car', {
+const save = (data, index) => {
+  fetch('https://d.apicloud.com/mcm/api/review', {
     'method': 'POST',
     'body': JSON.stringify(data),
     'headers': headers()
@@ -23,10 +24,13 @@ var save = function(data, index) {
   })
 }
 
-for (var i = 200; i >= 0; i--) {
-  save({
-    'name': random.first(),
-    'brand': ['bmw', 'benz', 'audi'][i%3],
-    'color': ['red', 'blank', 'white', 'blue', 'gray'][i%5]
-  }, i)
+for (let i = 200; i >= 0; i--) {
+  save(Mock.mock({
+    'document': /1_1524-[A-Z]{3}16[1-9]{4}_1ENG/,
+    'version': /P[A-H]/,
+    'reviewer': '@first',
+    'active|1-49': false, 
+    //'content': '@sentence(9,15)',
+    'create_time': '@now(yyyy-MM-dd HH:mm:ss)'
+  }), i)
 }

@@ -185,4 +185,4 @@ manager.register(DateFilter)
 manager.register(ConnListFilter)
 manager.register(StringFilter)
 
-module.exports = manager
+export default manager

@@ -1,3 +1,4 @@
+import React from 'react'
 import LoadingBar, { loadingBarReducer, showLoading, hideLoading } from 'react-redux-loading-bar'
 import { REHYDRATE } from 'redux-persist/constants'
 import { fork, put, call, cancelled } from 'redux-saga/effects'
@@ -5,7 +6,7 @@ import { takeEvery, takeLatest, delay } from 'redux-saga'
 
 export default {
   blocks: {
-    'main.top': LoadingBar
+    'top.left': () => <LoadingBar style={{ margin: '0 -15px' }} />
   },
   reducers: {
     loadingBar: (state=0, action) => {

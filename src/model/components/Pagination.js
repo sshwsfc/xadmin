@@ -42,4 +42,4 @@ const ModelPagination = createClass({
 
 })
 
-module.exports = ModelWrap('model.list.pagination')(ModelPagination)
+export default ModelWrap('model.list.pagination')(ModelPagination)

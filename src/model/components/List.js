@@ -7,7 +7,7 @@ import { Block } from '../../index'
 import { ModelWrap } from '../base'
 
 import Pagination from './Pagination'
-import Grid from './Grid'
+import { Grid } from './Items'
 import SubMenu from './SubMenu'
 import ActionBar from './ActionBar'
 
@@ -16,30 +16,40 @@ const ModelList = React.createClass({
   propTypes: {
     icon: React.PropTypes.string.isRequired,
     title: React.PropTypes.string.isRequired,
-    addModel: React.PropTypes.func.isRequired
+    canAdd: React.PropTypes.bool.isRequired,
+    getItems: React.PropTypes.func.isRequired,
+    addItem: React.PropTypes.func.isRequired
+  },
+
+  componentDidMount() {
+    this.props.getItems()
   },
 
   renderNav() {
-    const { title } = this.props
+    const { title, canAdd, addItem } = this.props
     return (
       <div>
         <Nav>
           { Block('model.list.nav', this) }
         </Nav>
         <div className="navbar-btn pull-right hide-xs">
-          <Button bsStyle="primary" onClick={this.props.addModel}><Icon name="plus"/> Add {title}</Button>
+          { canAdd ?
+          (<Button bsStyle="primary" onClick={addItem}><Icon name="plus"/> Add {title}</Button>) : null
+          }
         </div>
       </div>
       )
   },
 
   render() {
-    const { icon, title } = this.props
+    const { icon, title, componentClass } = this.props
+    const ItemsComponent = componentClass || Grid
     return (
       <Page title={(<span><Icon name={icon}/> {title}</span>)} nav={this.renderNav()}>
+        { Block('model.list.submenu', this) }
         <Pagination bsSize="small" />
         <SubMenu />
-        <Grid />
+        <ItemsComponent />
         <ActionBar />
         <Pagination bsSize="" />
       </Page>

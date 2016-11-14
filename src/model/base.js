@@ -2,36 +2,10 @@ import React from 'react'
 
 import _ from 'lodash'
 import { PropTypes, createElement } from 'react'
-import adapter from './adapter/apicloud'
+import adapter from './adapter'
 
-import { Block, StoreWrap } from '../index'
-import models from './models'
+import { Block, StoreWrap, app } from '../index'
 import { Icon } from '../components'
-
-const shallowEqual = (objA, objB) => {
-  if (objA === objB) {
-    return true
-  }
-
-  const keysA = Object.keys(objA)
-  const keysB = Object.keys(objB)
-
-  if (keysA.length !== keysB.length) {
-    return false
-  }
-
-  // Test for A's keys different from B.
-  const hasOwn = Object.prototype.hasOwnProperty
-  for (let i = 0; i < keysA.length; i++) {
-    if (!hasOwn.call(objB, keysA[i]) ||
-        objA[keysA[i]] !== objB[keysA[i]]) {
-      return false
-    }
-  }
-
-  return true
-}
-
 
 module.exports.model = (modelName, component) => {
   const Model = React.createClass({
@@ -53,11 +27,13 @@ module.exports.model = (modelName, component) => {
     },
 
     getModel(name) {
-      return Object.assign({
-        name: name,
+      const model = app.load_dict('models')[name]
+      model.name = model.name || name
+      return model ? {
+        ...model,
         $link: {
           list: {
-            path: `/model/${name}`
+            path: `/model/${name}/list`
           },
           add: {
             path: `/model/${name}/add`
@@ -73,8 +49,8 @@ module.exports.model = (modelName, component) => {
             }
           }
         },
-        $res: adapter(name)
-      }, models[name])
+        $api: adapter(model)
+      } : null
     }
   })
 
@@ -88,5 +64,10 @@ module.exports.ModelWrap = StoreWrap({
   getState: (context) => {
     const { store, model } = context
     return { modelState: store.getState().model[model.name], model }
+  },
+  computeProps: (tag, { model }) => {
+    if(model.components && model.components[tag]) {
+      return { componentClass: model.components[tag] }
+    }
   }
 })

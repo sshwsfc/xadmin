@@ -1,82 +1,101 @@
+import { Radios, Textarea } from '../form/components'
 
-module.exports = {
-  driver: {
-    name: 'driver',
-    title: 'Driver',
-    icon: 'user',
-    schema: {
-      type: 'object',
-      properties: {
-        name: {
-          type: 'string',
-          minLength: 3
-        },
-        gender: {
-          type: 'string',
-          minLength: 3
-        },
-        age: {
-          type: 'number',
-          max: 30
-        },
-        createdAt: {
-          title: 'Date',
-          type: 'date'
-        }
-      },
-      required: [
-        'name'
-      ]
-    },
-    form: [
-      '*'
-    ],
-    filters: [ 'name', 'gender', 'age', 'createdAt' ],
-    list_display: [ 'name', 'gender', 'age', 'createdAt' ]
-  },
+export default {
   car: {
     name: 'car',
     title: 'Car',
-    schema: {
-      type: 'object',
-      properties: {
-        name: {
-          type: 'string',
-          minLength: 3
-        },
-        color: {
-          type: 'string',
-          minLength: 3
-        },
-        count: {
-          type: 'number',
-          max: 30
-        },
-        active: {
-          type: 'boolean'
-        },
-        brand: {
-          title: 'Car Brand',
-          type: 'string',
-          enum: [
-            'benz',
-            'BMW',
-            'audi'
-          ]
-        },
-        comment: {
-          title: 'Comment',
-          type: 'string',
-          maxLength: 20,
-          validationMessage: 'Don\'t be greedy!',
-          description: 'Please write your comment here.'
+    type: 'object',
+    properties: {
+      name: {
+        type: 'string',
+        minLength: 3
+      },
+      color: {
+        type: 'string',
+        minLength: 3
+      },
+      count: {
+        type: 'number',
+        maximum: 30
+      },
+      active: {
+        type: 'boolean'
+      },
+      saleDate: {
+        title: '售卖日期',
+        type: 'string',
+        format: 'date'
+      },
+      brand: {
+        title: 'Car Brand',
+        type: 'string',
+        enum: [
+          'benz',
+          'BMW',
+          'audi'
+        ]
+      },
+      comment: {
+        title: 'Comment',
+        type: 'string',
+        maxLength: 20,
+        validationMessage: 'Don\'t be greedy!',
+        description: 'Please write your comment here.'
+      },
+      othercar: {
+        name: 'othercar',
+        title: 'Other Car',
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            minLength: 3
+          },
+          color: {
+            type: 'string',
+            minLength: 3
+          }
         }
       },
-      required: [
-        'name'
-      ]
+      cars: {
+        title: 'Chlid Cars',
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            name: {
+              type: 'string',
+              minLength: 3
+            },
+            color: {
+              type: 'string',
+              minLength: 3
+            },
+            saleDate: {
+              title: '售卖日期',
+              type: 'string',
+              format: 'date'
+            }
+          }
+        }
+      },
+      items: {
+        title: 'Chlid Items',
+        type: 'array',
+        items: {
+          type: 'string',
+          minLength: 3
+        }
+      }
     },
-    form: [
+    permission: { view: true, add: true, edit: true, delete: true },
+    required: [ 'name' ],
+    form: [ 
+      { key: 'name', attrs: { bsSize: 'lg' } }, 
+      'color', 
+      'saleDate',
+      { key: 'brand', component: Radios, attrs: { inline: true } }, 
+      { key: 'comment', component: Textarea, attrs: { rows: 5 } },
       '*'
     ],
     filters: [ 'name', 'brand', 'color', 'createdAt' ],
