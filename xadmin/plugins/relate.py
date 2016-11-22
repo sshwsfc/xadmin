@@ -130,7 +130,7 @@ class RelateObject(object):
             raise Exception(u'Relate Lookup field must a related field')
 
         self.to_model = field.related_model
-        self.rel_name = field.remote_field.name
+        self.rel_name = '__'.join(parts[1:])
         self.is_m2m = bool(field.many_to_many)
 
         to_qs = self.to_model._default_manager.get_queryset()
@@ -184,6 +184,8 @@ class ListRelateDisplayPlugin(BaseRelateDisplayPlugin):
     def get_context(self, context):
         context['brand_name'] = self.relate_obj.get_brand_name()
         context['rel_objs'] = self.relate_obj.to_objs
+        if len(self.relate_obj.to_objs) == 1:
+            context['rel_obj'] = self.relate_obj.to_objs[0]
         if 'add_url' in context:
             context['add_url'] = self._get_url(context['add_url'])
         return context
