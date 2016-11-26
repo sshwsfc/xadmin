@@ -83,6 +83,8 @@ export default (model) => {
         headers: headers()
       }).then((resp) => {
         return resp.json()
+      }).then(items => {
+        return { total: 2, items }
       })
     },
     get(id = '') {

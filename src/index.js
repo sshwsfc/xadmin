@@ -193,7 +193,7 @@ const react_app = {
     const find_childs = (path) => {
       return (rs[path] || []).map((r) => {
         const childs = find_childs((path == '@' ? '' : path) + r.path)
-        return childs.length > 0 ? { ...r, childRoutes: childs } : r
+        return childs.length > 0 ? { ...r, childRoutes: [ ...(r.childRoutes||[]), ...childs ] } : r
       })
     }
     const routers = find_childs('@')[0]

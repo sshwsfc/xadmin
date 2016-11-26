@@ -37,7 +37,7 @@ function *handle_save_item({ model, item, promise }) {
   }
   yield put({ type: 'END_LOADING', model })
   const { router } = app.context
-  router.push(`/model/${model.name}/list`)
+  router.goBack()
 }
 
 export default function *() {

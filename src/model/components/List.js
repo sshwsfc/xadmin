@@ -33,6 +33,7 @@ const ModelList = React.createClass({
           { Block('model.list.nav', this) }
         </Nav>
         <div className="navbar-btn pull-right hide-xs">
+          { Block('model.list.navbtn', this) }
           { canAdd ?
           (<Button bsStyle="primary" onClick={addItem}><Icon name="plus"/> Add {title}</Button>) : null
           }

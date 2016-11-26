@@ -71,11 +71,11 @@ const Header = ModelWrap('model.list.header')(React.createClass({
 
     if(field.type != 'object' && field.type != 'array') {
       orderItems = [
-        <MenuItem onSelect={e=>{ this.props.changeOrder('ASC') }} active={order==='ASC'}>Small first</MenuItem>,
-        <MenuItem onSelect={e=>{ this.props.changeOrder('DESC') }} active={order==='DESC'}>Big first</MenuItem>
+        <MenuItem onSelect={e=>{ this.props.changeOrder('ASC') }} active={order==='ASC'}><Icon name="sort-amount-asc" /> Sort ASC</MenuItem>,
+        <MenuItem onSelect={e=>{ this.props.changeOrder('DESC') }} active={order==='DESC'}><Icon name="sort-amount-desc" /> Sort DESC</MenuItem>
       ]
       if(order != '') {
-        orderItems.push(<MenuItem onSelect={e=>{ this.props.changeOrder('') }}>Clear Order</MenuItem>)
+        orderItems.push(<MenuItem onSelect={e=>{ this.props.changeOrder('') }}>Clear order</MenuItem>)
       }
     }
     return orderItems

@@ -7,8 +7,9 @@ import adapter from './adapter'
 import { Block, StoreWrap, app } from '../index'
 import { Icon } from '../components'
 
-module.exports.model = (modelName, component) => {
-  const Model = React.createClass({
+const Model = (modelName) => {
+
+  const ModelComponent = React.createClass({
 
     childContextTypes: {
       model: PropTypes.object.isRequired
@@ -23,7 +24,7 @@ module.exports.model = (modelName, component) => {
     },
 
     render() {
-      return createElement(component, this.props)
+      return this.props.children
     },
 
     getModel(name) {
@@ -54,10 +55,10 @@ module.exports.model = (modelName, component) => {
     }
   })
 
-  return Model
+  return ModelComponent
 }
 
-module.exports.ModelWrap = StoreWrap({
+const ModelWrap = StoreWrap({
   contextTypes: {
     model: React.PropTypes.object.isRequired
   },
@@ -71,3 +72,8 @@ module.exports.ModelWrap = StoreWrap({
     }
   }
 })
+
+export default {
+  ModelWrap,
+  Model
+}

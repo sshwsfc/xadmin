@@ -84,7 +84,7 @@ export default (model) => {
           return state
       }
     },
-    filter: (model) => (state = { fields: [].concat(model.list_display), limit: 15, skip: 0 }, action) => {
+    filter: (model) => (state = { fields: [].concat(model.list_display), order: model.orders || {}, limit: 15, skip: 0 }, action) => {
       if(!action.model || action.model.name != model.name) return state
 
       switch (action.type) {

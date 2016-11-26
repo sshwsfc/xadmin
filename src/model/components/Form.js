@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import _ from 'lodash'
 import { Page, Icon } from '../../components'
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Panel, Well, Button } from 'react-bootstrap'
 import { ModelWrap } from '../base'
@@ -24,7 +25,7 @@ const ModelForm = React.createClass({
 
   componentWillReceiveProps(nextProps) {
     if (this.props.data !== nextProps.data) {
-      this.setState({ record: { ...nextProps.data } })
+      this.setState({ record: _.omitBy({ ...nextProps.data }, _.isNil) })
     }
     if (this.props.id !== nextProps.id) {
       this.props.getItem(nextProps.id)
@@ -33,7 +34,7 @@ const ModelForm = React.createClass({
 
   getInitialState() {
     return {
-      record: { ...this.props.data }
+      record: _.omitBy({ ...this.props.data }, _.isNil)
     }
   },
 

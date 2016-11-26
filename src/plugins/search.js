@@ -24,12 +24,13 @@ const SearchBar = ModelWrap('model.searchbar')(React.createClass({
   render() {
     const { searchFields, searchValue } = this.props
     if(searchFields && searchFields.length > 0) {
+      const placeholder = 'Search ' + searchFields.join(', ')
       return (
         <Navbar.Form pullLeft>
           <form onSubmit={this.onSearch}>
 
           <InputGroup>
-            <FormControl ref="searchInput" value={this.state.value} type="text" placeholder="Search" onChange={(e)=>{this.setState({ value: e.target.value })}} />
+            <FormControl ref="searchInput" value={this.state.value} type="text" placeholder={placeholder} onChange={(e)=>{this.setState({ value: e.target.value })}} />
             <InputGroup.Button>
               <Button type="submit"><Icon name="search" /></Button>
             </InputGroup.Button>

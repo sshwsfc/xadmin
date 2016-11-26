@@ -31,9 +31,19 @@ export default {
       }
     },
     method: {
-      addItem: ({ router, model }) => () => router.push(model.$link.add.path),
+      addItem: ({ router, model }, { location: { query } }) => () => {
+        router.push({ pathname: model.$link.add.path, query })
+      },
       getItems: ({ dispatch, modelState, model }, { location: { query } }) => () => {
-        const wheres = Object.keys(query).length > 0 ? { ...modelState.wheres, param_filter: query } : undefined
+        let wheres
+        if(Object.keys(query).length > 0) {
+          wheres = { ...modelState.wheres, param_filter: query }
+        } else {
+          wheres = _.omit(modelState.wheres, 'param_filter')
+        }
+        if(!_.isEqual(wheres, modelState.wheres)) {
+          dispatch({ model, type: 'GET_ITEMS', items: [], filter: { ...modelState.filter, skip: 0 }, success: true })
+        }
         dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter }, wheres })
       }
     }
@@ -158,16 +168,17 @@ export default {
     data: ({ modelState, model }, { params }) => {
       return {
         loading: modelState.form.loading,
-        data: params.id ? modelState.items[params.id] : undefined
+        item: params && params.id ? modelState.items[params.id] : undefined
       }
     },
-    compute: ({ modelState, model }, { params }) => {
+    compute: ({ modelState, model }, { params, location: { query }, item }) => {
       return {
         ...modelState.form,
-        id: params.id,
-        title: params.id ? `Edit ${model.title}` : `Create ${model.title}`,
+        id: params ? params.id : undefined,
+        title: params && params.id ? `Edit ${model.title}` : `Create ${model.title}`,
         formKey: `model.${model.name}`,
-        schema: model
+        schema: model,
+        data: item || (_.isEmpty(query) ? undefined : query)
       }
     },
     method: {

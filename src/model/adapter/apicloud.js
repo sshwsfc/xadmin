@@ -47,8 +47,9 @@ export default (model) => {
         for (let field of f.fields) {
           const property = model.properties[field]
           if(property) {
-            if(property.type == 'object') {
+            if(property.type == 'object' && property.name != undefined) {
               include.push(field + 'Pointer')
+              fields[field + 'Pointer'] = true
             } else if(property.type == 'array' && property.items.type == 'object') {
               include.push(field)
             } else {

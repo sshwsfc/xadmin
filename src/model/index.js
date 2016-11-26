@@ -5,7 +5,7 @@ import List from './components/List'
 import Form from './components/Form'
 import { Nav, NavItem } from 'react-bootstrap'
 
-import { model as modelWrap, ModelMixin } from './base'
+import { Model } from './base'
 import get_reducers from './reducers'
 import effects from './effects'
 import mappers from './mappers'
@@ -48,28 +48,37 @@ const app = {
     let routes = []
     for (name in models) {
       const model = models[name]
-      let model_routes = []
+      const model_routes = []
 
       if(!model.permission || model.permission.view) {
         model_routes.push({
-          path: `model/${name}/list`,
-          component: modelWrap(name, List),
-          onEnter: (props) => { }
+          path: 'list',
+          component: List
         })
       }
       if(model.permission && model.permission.add) {
         model_routes.push({
-          path: `model/${name}/add`,
-          component: modelWrap(name, Form)
+          path: ':id/detail',
+          component: Form
+        })
+      }
+      if(model.permission && model.permission.add) {
+        model_routes.push({
+          path: 'add',
+          component: Form
         })
       }
       if(model.permission && model.permission.edit) {
         model_routes.push({
-          path: `model/${name}/:id/edit`,
-          component: modelWrap(name, Form)
+          path: ':id/edit',
+          component: Form
         })
       }
-      routes = routes.concat(model_routes)
+      routes = routes.concat({
+        path: `model/${name}/`,
+        component: Model(name),
+        childRoutes: model_routes
+      })
     }
     return {
       '/': routes
