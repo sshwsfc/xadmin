@@ -2,21 +2,33 @@ import React from 'react'
 
 import _ from 'lodash'
 import { PropTypes, createElement } from 'react'
-import adapter from './adapter'
 
 import { Block, StoreWrap, app } from '../index'
 import { Icon } from '../components'
 
-const Model = (modelName) => {
-
+const Model = (modelName, props={}) => {
+  const { key, persist, initialValues } = props
   const ModelComponent = React.createClass({
+
+    contextTypes: {
+      store: React.PropTypes.object.isRequired
+    },
 
     childContextTypes: {
       model: PropTypes.object.isRequired
     },
 
     componentWillMount() {
+      const { store } = this.context
       this.model = this.getModel(modelName)
+      store.dispatch({ type: 'INITIALIZE', model: this.model, initial: initialValues })
+    },
+
+    componentWillUnmount() {
+      if(!persist) {
+        const { store } = this.context
+        //store.dispatch({ type: 'DESTROY', model: this.model })
+      } 
     },
 
     getChildContext() {
@@ -32,25 +44,7 @@ const Model = (modelName) => {
       model.name = model.name || name
       return model ? {
         ...model,
-        $link: {
-          list: {
-            path: `/model/${name}/list`
-          },
-          add: {
-            path: `/model/${name}/add`
-          },
-          get(id) {
-            return {
-              path: `/model/${name}/${id}`
-            }
-          },
-          edit(id) {
-            return {
-              path: `/model/${name}/${id}/edit`
-            }
-          }
-        },
-        $api: adapter(model)
+        key: key || model.name
       } : null
     }
   })
@@ -64,7 +58,7 @@ const ModelWrap = StoreWrap({
   },
   getState: (context) => {
     const { store, model } = context
-    return { modelState: store.getState().model[model.name], model }
+    return { modelState: store.getState().model[model.key], model }
   },
   computeProps: (tag, { model }) => {
     if(model.components && model.components[tag]) {

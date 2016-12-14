@@ -7,11 +7,10 @@ import { Nav, NavItem } from 'react-bootstrap'
 
 import { Model } from './base'
 import get_reducers from './reducers'
+import modelReducer from './reducer'
 import effects from './effects'
 import mappers from './mappers'
 import field_render from './fields'
-
-import adapter from './adapter/apicloud'
 
 const createModelReducers = (model, app) => {
   const model_reducers = {
@@ -76,7 +75,7 @@ const app = {
       }
       routes = routes.concat({
         path: `model/${name}/`,
-        component: Model(name),
+        component: Model(name, name, true),
         childRoutes: model_routes
       })
     }
@@ -84,16 +83,8 @@ const app = {
       '/': routes
     }
   },
-  reducers: (app) => {
-    const models = app.load_dict('models')
-    return {
-      model: combineReducers(Object.keys(models).reduce((prev, name) => {
-        return {
-          ...prev,
-          [name]: createModelReducers(models[name], app)
-        }
-      }, {}))
-    }
+  reducers: {
+    model: modelReducer
   },
   effects: (app) => effects,
   mappers,

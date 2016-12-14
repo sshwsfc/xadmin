@@ -1,30 +1,31 @@
 var path = require('path')
+var paths = require('./paths')
 
 module.exports = {
   entry: {
-    app: './src/main.js'
+    app: [ 'babel-polyfill', paths.appIndexJs ]
   },
   output: {
-    path: path.resolve(__dirname, '../dist/static'),
+    path: paths.appStatic,
     publicPath: '/static/',
     filename: '[name].js'
   },
   resolve: {
     extensions: ['', '.js', '.jsx'],
-    fallback: [path.join(__dirname, '../node_modules')],
+    fallback: [paths.appNodeModules],
     alias: {
-      'src': path.resolve(__dirname, '../src')
+      'src': paths.appSrc
     }
   },
   resolveLoader: {
-    fallback: [path.join(__dirname, '../node_modules')]
+    fallback: [paths.appNodeModules]
   },
   module: {
     preLoaders: [
       {
         test: /\.js$/,
         loader: 'eslint',
-        exclude: /node_modules/
+        exclude: [ /node_modules/, /xadmin/ ]
       }
     ],
     loaders: [

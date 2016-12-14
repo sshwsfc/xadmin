@@ -90,7 +90,7 @@ const Header = ModelWrap('model.list.header')(React.createClass({
     return (
       <Dropdown id="nav-dropdown">
         <a href="#" bsRole="toggle" onClick={e => {e.preventDefault()}}>
-          {_.capitalize(title)} {icon}
+          {title} {icon}
         </a>
         <Dropdown.Menu>
           {this.renderOrder()}
@@ -112,7 +112,7 @@ const Item = ModelWrap('model.list.item')(React.createClass({
   render() {
     const { item, field, schema, componentClass, wrap } = this.props
     const WrapComponent = wrap || (({ children }) => <span>{children}</span>)
-    if(!item) {
+    if(item == undefined || item == null) {
       return <WrapComponent>Null</WrapComponent>
     }
     let value = item[field]
@@ -142,7 +142,7 @@ class GridRowComponent extends BaseRow {
         {fields.map(field=>{
           return (
             <Item item={item} field={field} selected={selected} wrap={
-              ({ children })=><td className={selected?'bg-warning':''}>{children}</td>
+              ({ children, ...props })=><td className={selected?'bg-warning':''} {...props}>{children}</td>
             } />
           )
         })}
@@ -165,29 +165,32 @@ const ModelGrid = React.createClass({
   },
 
   render() {
-    const { fields, items } = this.props
-
-    if(items.length > 0) {
-      return (
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>#</th>
-              {fields.map(field=>{
-                return <th><Header key={`model-list-header-${field}`} field={field}  /></th>
-              })}
-              <th style={{ textAlign: 'center' }}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((item)=>{
-              return <GridRow key={item.id} fields={fields} item={item} />
-            })}
-          </tbody>
-        </Table>
-      )
+    const { fields, items, loading } = this.props
+    if(loading) {
+      return <Panel><div className="text-center"><Icon name="spinner fa-spin fa-4x"/></div></Panel>
     } else {
-      return (<Well>No Data</Well>)
+      if(items.length > 0) {
+        return (
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>#</th>
+                {fields.map(field=>{
+                  return <th><Header key={`model-list-header-${field}`} field={field}  /></th>
+                })}
+                <th style={{ textAlign: 'center' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.map((item)=>{
+                return <GridRow key={item.id} fields={fields} item={item} />
+              })}
+            </tbody>
+          </Table>
+        )
+      } else {
+        return (<Well>No Data</Well>)
+      }
     }
   }
 })
@@ -211,7 +214,7 @@ class ListRowComponent extends BaseRow {
             {fields.slice(1).map(field=>{
               return (
                 <Item item={item} field={field} selected={selected} wrap={
-                  ({ children })=><p key={`item-${item.id}-${field}`}>{children}</p>
+                  ({ children, ...props })=><p key={`item-${item.id}-${field}`} {...props}>{children}</p>
                 } />
               )
             })}
@@ -231,20 +234,24 @@ const ModelList = React.createClass({
   },
 
   render() {
-    const { fields, items } = this.props
+    const { fields, items, loading } = this.props
 
-    if(items.length > 0) {
-      return (
-        <div>
-          <ButtonGroup bsStyle="xs" style={{ marginBottom: 10 }}>
-          {fields.map(field=>{
-            return <Button><Header key={`model-list-header-${field}`} field={field}  /></Button>
-          })}
-          </ButtonGroup>
-          {items.map(item => <ListRow key={item.id} fields={fields} item={item} />)}
-        </div>)
+    if(loading) {
+      return <Panel><div className="text-center"><Icon name="spinner fa-spin fa-4x"/></div></Panel>
     } else {
-      return (<Well>No Data</Well>)
+      if(items.length > 0) {
+        return (
+          <div>
+            <ButtonGroup bsStyle="xs" style={{ marginBottom: 10 }}>
+            {fields.map(field=>{
+              return <Button><Header key={`model-list-header-${field}`} field={field}  /></Button>
+            })}
+            </ButtonGroup>
+            {items.map(item => <ListRow key={item.id} fields={fields} item={item} />)}
+          </div>)
+      } else {
+        return (<Well>No Data</Well>)
+      }
     }
   }
 })

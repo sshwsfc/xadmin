@@ -12,7 +12,7 @@ const CountButton = ModelWrap('model.list.btn.count')(React.createClass({
   },
 
   render() {
-    return <Button bsSize="small">共{this.props.count}条记录</Button>
+    return <Button bsSize="small">{this.props.count} record</Button>
   }
 }))
 
@@ -51,7 +51,7 @@ const ColsDropdown = ModelWrap('model.list.btn.cols')(React.createClass({
           </ListGroup>
         </Popover>
       }>
-        <Button bsSize="small">显示列</Button>
+        <Button bsSize="small">Columns</Button>
       </OverlayTrigger>
       )
   }

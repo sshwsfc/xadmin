@@ -17,12 +17,7 @@ const ModelList = React.createClass({
     icon: React.PropTypes.string.isRequired,
     title: React.PropTypes.string.isRequired,
     canAdd: React.PropTypes.bool.isRequired,
-    getItems: React.PropTypes.func.isRequired,
     addItem: React.PropTypes.func.isRequired
-  },
-
-  componentDidMount() {
-    this.props.getItems()
   },
 
   renderNav() {

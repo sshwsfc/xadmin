@@ -7,7 +7,7 @@ export default ({ input, label, meta: { touched, error }, field }) => {
     <FieldGroup
       id={input.name}
       label={label}
-      error={error}
+      error={touched && error}
       help={field.description || field.help}
       control={{ ...input, ...field.attrs }}
     />

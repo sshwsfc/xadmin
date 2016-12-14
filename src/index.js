@@ -95,8 +95,6 @@ class App {
   }
 }
 
-const app = new App()
-
 // redux app
 const redux_app = {
   context: (app) => (prev) => {
@@ -217,7 +215,12 @@ const react_redux_app = {
   }
 }
 
-app.use(redux_app).use(sage_app).use(react_app).use(react_redux_app)
+
+if(window._app == undefined) {
+  window._app = new App()
+  window._app.use(redux_app).use(sage_app).use(react_app).use(react_redux_app)
+}
+const app = window._app
 
 const Block = (tag, element) => {
   const blocks = app.load_dict_list('blocks')
@@ -342,8 +345,21 @@ const _wrap_component = (tag, WrappedComponent, wrappers) => {
       }
     }
 
+    componentDidMount() {
+      this.getMappers().forEach(mapper => {
+        if(mapper.event && mapper.event.mount) {
+          this.runBindMethod(mapper.event.mount)
+        }
+      })
+    }
+
     componentWillUnmount() {
       this.tryUnsubscribe()
+      this.getMappers().forEach(mapper => {
+        if(mapper.event && mapper.event.unmount) {
+          this.runBindMethod(mapper.event.unmount)
+        }
+      })
       this.clearCache()
     }
 
@@ -519,7 +535,7 @@ const config = (key, default_value) => {
   return app.load_dict('config')[key] || default_value
 }
 
-module.exports = {
+export default {
   app,
   config,
   Block,

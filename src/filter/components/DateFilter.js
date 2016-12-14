@@ -3,7 +3,7 @@ import _ from 'lodash'
 import moment from 'moment'
 import { Field } from 'redux-form'
 import { FieldGroup } from './base'
-import { FormControl, Nav, NavItem, Label, Button, OverlayTrigger, Popover } from 'react-bootstrap'
+import { FormControl, ButtonGroup, Nav, NavItem, Label, Button, OverlayTrigger, Popover } from 'react-bootstrap'
 
 import { DateRange } from 'react-date-range'
 
@@ -64,20 +64,20 @@ export default React.createClass({
     const ranges = field.dateRanges || defaultRanges
     const { value } = this.state
     return (
-      <div>
-        <Button { ...field.attrs } bsStyle={!value.rule?'primary':'default'} onClick={()=>this.clear()} style={{ marginRight: '5px' }}>All</Button>
+      <ButtonGroup bsSize="xs">
+        <Button { ...field.attrs } bsStyle={!value.rule?'primary':'default'} onClick={()=>this.clear()}>All</Button>
         <OverlayTrigger trigger="click" rootClose placement="bottom" overlay={
           <Popover style={{ maxWidth: 600 }}>
             {this.renderCalender()}
           </Popover>}>
-          <Button { ...field.attrs } bsStyle={value.rule=='range'?'primary' : 'default'} style={{ marginRight: '5px' }}>
+          <Button { ...field.attrs } bsStyle={value.rule=='range'?'primary' : 'default'}>
             {value.rule == 'range' && value.gte && value.lt ? `${value.gte} ~ ${value.lt}` : 'Select Range' }
           </Button>
         </OverlayTrigger>
         {Object.keys(ranges).map(r => (
-          <Button { ...field.attrs } bsStyle={value.rule==r?'primary':'default'} onClick={()=>this.onSelectRange(r, ranges[r])} style={{ marginRight: '5px' }}>{ranges[r].title}</Button>
+          <Button { ...field.attrs } bsStyle={value.rule==r?'primary':'default'} onClick={()=>this.onSelectRange(r, ranges[r])}>{ranges[r].title}</Button>
         ))}
-      </div>
+      </ButtonGroup>
     )
   },
 
@@ -86,20 +86,20 @@ export default React.createClass({
     const ranges = field.dateRanges || defaultRanges
     const { value } = this.state
     return (
-      <div>
-        <Button { ...field.attrs } bsStyle={!value.rule?'primary':'default'} onClick={()=>this.clear()} style={{ marginRight: '5px' }}>All</Button>
+      <ButtonGroup bsSize="small">
+        <Button { ...field.attrs } bsStyle={!value.rule?'primary':'default'} onClick={()=>this.clear()}>All</Button>
         <OverlayTrigger trigger="click" rootClose placement="bottom" overlay={
           <Popover style={{ maxWidth: 600 }}>
             {this.renderCalender()}
           </Popover>}>
-          <Button { ...field.attrs } bsStyle={value.rule=='range'?'primary' : 'default'} style={{ marginRight: '5px' }}>
+          <Button { ...field.attrs } bsStyle={value.rule=='range'?'primary' : 'default'}>
             {value.rule == 'range' && value.gte && value.lt ? `${value.gte} ~ ${value.lt}` : 'Select Range' }
           </Button>
         </OverlayTrigger>
         {Object.keys(ranges).map(r => (
-          <Button { ...field.attrs } bsStyle={value.rule==r?'primary':'default'} onClick={()=>this.onSelectRange(r, ranges[r])} style={{ marginRight: '5px' }}>{ranges[r].title}</Button>
+          <Button { ...field.attrs } bsStyle={value.rule==r?'primary':'default'} onClick={()=>this.onSelectRange(r, ranges[r])}>{ranges[r].title}</Button>
         ))}
-      </div>
+      </ButtonGroup>
     )
   },
 

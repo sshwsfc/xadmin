@@ -34,7 +34,7 @@ const ModelPagination = createClass({
     } else {
       return (
         <ul style={{ marginTop: 0 }} className="pagination pagination-sm">
-          <li className="disabled"><a>无分页</a></li>
+          <li className="disabled"><a>No paging</a></li>
         </ul>
         )
     }

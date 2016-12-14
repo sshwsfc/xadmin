@@ -38,6 +38,10 @@ const ModelForm = React.createClass({
     }
   },
 
+  onSubmit() {
+    event.preventDefault()
+  },
+
   render() {
     const { schema, title, formKey, loading, updateItem } = this.props
     const FormLayout = (props) => {
@@ -56,7 +60,7 @@ const ModelForm = React.createClass({
     return (
       <Page title={title}>
       {loading ? 
-        (<Panel><div className="text-center"><Icon name="spinner fa-spin fa-4x"/> Loading..</div></Panel>) : 
+        (<Panel><div className="text-center"><Icon name="spinner fa-spin fa-4x"/></div></Panel>) : 
         (<SchemaForm 
           formKey={formKey}
           schema={schema}

@@ -8,7 +8,7 @@ module.exports = React.createClass({
 
   render() {
     return (
-      <i className={'fa fa-fw fa-' + this.props.name}></i>
+      <i className={'fa fa-fw fa-' + this.props.name} {...this.props}></i>
     )
   }
 

@@ -13,7 +13,7 @@ const ActionBar = React.createClass({
     const count = this.props.count
     return (
       <Well bsSize="small">
-        <DropdownButton title={ count > 0 ? `Selected ${count} count data` : 'No Data Selected'} id="model-list-actions" bsStyle="success" dropup>
+        <DropdownButton title={ count > 0 ? `${count} record selected` : 'No data selected'} id="model-list-actions" bsStyle="success" dropup>
           { Block('model.list.actions', this) }
         </DropdownButton>
       </Well>

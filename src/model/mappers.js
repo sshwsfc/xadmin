@@ -31,12 +31,15 @@ export default {
       }
     },
     method: {
-      addItem: ({ router, model }, { location: { query } }) => () => {
-        router.push({ pathname: model.$link.add.path, query })
-      },
-      getItems: ({ dispatch, modelState, model }, { location: { query } }) => () => {
+      addItem: ({ router, model }, { location }) => () => {
+        router.push({ pathname: `/model/${model.name}/add`, query: (location && location.query) || {} })
+      }
+    },
+    event: {
+      mount: ({ dispatch, modelState, model }, { location }) => {
         let wheres
-        if(Object.keys(query).length > 0) {
+        const query = location && location.query
+        if(query && Object.keys(query).length > 0) {
           wheres = { ...modelState.wheres, param_filter: query }
         } else {
           wheres = _.omit(modelState.wheres, 'param_filter')
@@ -49,12 +52,18 @@ export default {
     }
   },
   'model.list.grid': {
-    data: ({ modelState, model }, props, prev) => {
-      const { items, ids } = modelState
+    data: ({ modelState, model, state }, props, prev) => {
+      const { ids } = modelState
       return {
         ids,
-        items: ids === prev['ids'] ? prev['items'] : ids.map(id => items[id]),
-        fields: modelState.filter.fields
+        fields: modelState.filter.fields,
+        loading: state.loading[`${model.name}.items`]
+      }
+    },
+    compute: ({ modelState, model }, props, prev) => {
+      const { items, ids } = modelState
+      return {
+        items: ids === prev['ids'] ? prev['items'] : ids.map(id => items[id])
       }
     }
   },
@@ -63,7 +72,7 @@ export default {
       const orders = modelState.filter.order
         , property = model.properties[field] || {}
       return {
-        title: property.title || field,
+        title: property.title || _.startCase(field),
         order: orders !== undefined ? (orders[field] || '') : ''
       }
     },

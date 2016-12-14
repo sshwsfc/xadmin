@@ -1,3 +1,4 @@
+// this file is e.g. for models
 import { Radios, Textarea } from '../form/components'
 
 export default {

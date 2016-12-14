@@ -59,8 +59,8 @@ const converters = [
     const fieldKey = path.length > 0 ? path[path.length - 1] : undefined
     f.key = path.join('.')
 
-    f.name = schema.name || f.key
-    f.label = schema.title || fieldKey
+    f.name = f.key
+    f.label = schema.title || _.startCase(fieldKey)
 
     if(fieldKey !== undefined) {
       if (readonly && readonly.indexOf(fieldKey) !== -1) { f.readonly  = true }

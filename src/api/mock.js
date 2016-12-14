@@ -3,7 +3,7 @@ import fetch from 'isomorphic-fetch'
 import _ from 'lodash'
 
 export default (model) => {
-  const host = '/api'
+  const host = 'http://127.0.0.1:3000'
   let headers = () => {
     return {
       'Content-Type': 'application/json'

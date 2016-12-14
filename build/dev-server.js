@@ -3,7 +3,7 @@ var webpack = require('webpack')
 var config = require('./webpack.dev.conf')
 var DashboardPlugin = require('webpack-dashboard/plugin')
 var proxy = require('express-http-proxy')
-
+var path = require('path')
 var app = express()
 var compiler = webpack(config)
 
@@ -27,9 +27,10 @@ compiler.plugin('compilation', function (compilation) {
 compiler.apply(new DashboardPlugin())
 
 // serve pure static assets
-app.use('/static', express.static('./static'))
+app.use('/static', express.static(path.resolve(__dirname, '../static')))
 // proxy
-app.use('/api', proxy('http://192.168.1.115:8088'))
+//app.use('/api', proxy('http://localhost:3000'))
+app.use('/api', proxy('http://139.224.192.230:8089'))
 // handle fallback for HTML5 history API
 app.use(require('connect-history-api-fallback')())
 // serve webpack bundle output

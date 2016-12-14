@@ -1,8 +1,10 @@
 import React from 'react'
 import { FormGroup, ControlLabel, FormControl, Col, HelpBlock } from 'react-bootstrap'
+import { FormWrap } from '../base'
 
-const FieldGroup = ({ id, label, help, error, control, children }) => {
+const FieldGroup = ({ id, label, help, error, control, children, groupSize }) => {
   let groupProps = {}
+  const size = groupSize || { label: 2, field: 10 }
   if (error) {
     groupProps['validationState'] = 'error'
   }
@@ -17,10 +19,10 @@ const FieldGroup = ({ id, label, help, error, control, children }) => {
   const controlComponent = children ? children : (<FormControl {...control} />)
   return (
     <FormGroup controlId={id} {...groupProps}>
-      <Col key={0} componentClass={ControlLabel} sm={2}>
+      <Col key={0} componentClass={ControlLabel} sm={size.label}>
         {label}
       </Col>
-      <Col key={1} sm={10}>
+      <Col key={1} sm={size.field}>
         {controlComponent}
         <FormControl.Feedback />
         {help && <HelpBlock>{help}</HelpBlock>}
@@ -31,5 +33,5 @@ const FieldGroup = ({ id, label, help, error, control, children }) => {
 }
 
 export default {
-  FieldGroup
+  FieldGroup: FormWrap('form.fieldgroup')(FieldGroup)
 }

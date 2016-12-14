@@ -1,4 +1,5 @@
 import React from 'react'
+import _ from 'lodash'
 import LoadingBar, { loadingBarReducer, showLoading, hideLoading } from 'react-redux-loading-bar'
 import { REHYDRATE } from 'redux-persist/constants'
 import { fork, put, call, cancelled } from 'redux-saga/effects'
@@ -15,6 +16,19 @@ export default {
           return 0
         default:
           return loadingBarReducer(state, action)
+      }
+    },
+    loading: (state={}, { type, key }) => {
+      if(!key) {
+        return state
+      }
+      switch (type) {
+        case 'START_LOADING':
+          return { ...state, [key]: true }
+        case 'END_LOADING':
+          return _.omit(state, key)
+        default:
+          return state
       }
     }
   },

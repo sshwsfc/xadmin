@@ -9,13 +9,14 @@ import { Checkbox, FormControl } from 'react-bootstrap'
 import { Icon } from '../components'
 import List from './components/List'
 import Form from './components/Form'
+import { FormWrap } from '../form'
 import { Model, ModelWrap } from './base'
-import adapter from './adapter'
+import api from '../api'
 import { Block, StoreWrap, app } from '../index'
 import { SimpleSelect, MultiSelect } from 'react-selectize'
 import 'react-selectize/themes/index.css'
 
-const Checkboxes = ModelWrap('model.form.relates')(React.createClass({
+const Checkboxes = FormWrap('model.form.relates')(React.createClass({
 
   componentDidMount() {
     const { input, options, field } = this.props
@@ -35,21 +36,22 @@ const Checkboxes = ModelWrap('model.form.relates')(React.createClass({
 
   renderOptions() {
     const { input, options, field } = this.props
+    const displayField = field.displayField || 'name'
     const checkedIds = input.value ? input.value.map(item => item.id) : []
     return options.map(option=>{
       const checked = checkedIds.indexOf(option.id) >= 0
-      return <Checkbox onChange={()=>{this.onChange(!checked, option)}} checked={checked} {...field.attrs} >{option.name}</Checkbox>
+      return <Checkbox onChange={()=>{this.onChange(!checked, option)}} checked={checked} {...field.attrs} >{option[displayField]}</Checkbox>
     })
   },
 
   render() {
-    const { input, options, label, meta: { error }, field } = this.props
+    const { input, options, label, meta: { touched, error }, field } = this.props
     const { items } = field
     return (
       <FieldGroup
         id={items.name}
         label={label}
-        error={error}
+        error={touched && error}
         help={field.description || field.help}
         control={{ ...field.attrs }}
         >
@@ -60,7 +62,7 @@ const Checkboxes = ModelWrap('model.form.relates')(React.createClass({
 
 }))
 
-const RelateMultiSelect = ModelWrap('model.form.relates')(React.createClass({
+const RelateMultiSelect = FormWrap('model.form.relates')(React.createClass({
 
   componentDidMount() {
     const { input, options, field } = this.props
@@ -85,24 +87,25 @@ const RelateMultiSelect = ModelWrap('model.form.relates')(React.createClass({
 
   renderOptions() {
     const { input, options, field } = this.props
-    const checkedValues = input.value ? input.value.map(item => { return { label: item.name, value: item.id, item }}) : []
+    const displayField = field.displayField || 'name'
+    const checkedValues = input.value ? input.value.map(item => { return { label: item[displayField] || 'null', value: item.id, item }}) : []
     return (<MultiSelect theme="bootstrap3" ref = "select"
         placeholder={`Select ${field.label}`}
         values={checkedValues}
-        options={options.map(option=>{ return { label: option.name || 'null', value: option.id, item: option } })}
+        options={options.map(option=>{ return { label: option[displayField] || 'null', value: option.id, item: option } })}
         onValuesChange={this.onValuesChange}
         renderNoResultsFound={()=>{ return (<div className="no-results-found">No results found</div>)}}
       />)
   },
 
   render() {
-    const { input, options, label, meta: { error }, field } = this.props
+    const { input, options, label, meta: { touched, error }, field } = this.props
     const { items } = field
     return (
       <FieldGroup
         id={items.name}
         label={label}
-        error={error}
+        error={touched && error}
         help={field.description || field.help}
         control={{ ...field.attrs }}
         >
@@ -113,7 +116,7 @@ const RelateMultiSelect = ModelWrap('model.form.relates')(React.createClass({
 
 }))
 
-const RelateSelect = ModelWrap('model.form.fkselect')(React.createClass({
+const RelateSelect = FormWrap('model.form.fkselect')(React.createClass({
 
   getInitialState() {
     return { search: '' }
@@ -133,45 +136,62 @@ const RelateSelect = ModelWrap('model.form.fkselect')(React.createClass({
   },
 
   componentDidMount() {
-    const { input: { value, onChange }, options, getValue } = this.props
+    const { input: { value, onChange }, options, getValue, field } = this.props
     if(options && options.length > 0) {
       this.refs.select.highlightFirstSelectableOption()
     }
     if(value && typeof value == 'string') {
       getValue(value)
+      const displayField = field.displayField || 'name'
       setTimeout(()=>{
-        onChange({ name: 'loading...', id: value })
+        onChange({ [displayField]: 'loading...', id: value })
       }, 10)
+    }
+    if(field.lazyLoad == false) {
+      this.props.searchRelatedItems()
+    }
+  },
+
+  componentWillReceiveProps(nextProps) {
+    const { field } = this.props
+    if(field.limit && nextProps.values != this.props.values) {
+      this.props.searchRelatedItems()
     }
   },
 
   renderOptions() {
     const { input: { value }, options, field } = this.props
-    const selectValue = value ? { label: value.name, value: value.id } : null
+    const displayField = field.displayField || 'name'
+    const selectValue = value ? { label: value[displayField] || 'null', value: value.id } : null
+    const searchProps = field.lazyLoad == false ? {
+      placeholder: `Select ${field.label}`
+    } : {
+      placeholder: `Search ${field.label}`,
+      search: this.state.search,
+      onSearchChange: this.onSearchChange
+    }
     return (<SimpleSelect theme="bootstrap3" ref="select"
         placeholder={`Search ${field.label}`}
         value={selectValue}
-        options={(options||[]).map(option=>{ return { label: option.name || 'null', value: option.id, item: option } })}
+        options={(options||[]).map(option=>{ return { label: option[displayField] || 'null', value: option.id, item: option } })}
         onValueChange={this.onValueChange}
-        search = {this.state.search}
         renderNoResultsFound={(value, search)=>{ 
           return (<div className="no-results-found" style={{ fontSize: 13 }}>
-            {search.length == 0 ? 'type a few characters to kick off remote search':'No results found'}
+            {(search.length == 0 && field.lazyLoad != false) ? 'type a few characters to kick off remote search':'No results found'}
             </div>)
         }}
-        onSearchChange={this.onSearchChange}
-        filterOptions={(options, search)=>options}
+        {...searchProps}
       />)
   },
 
   render() {
-    const { input: { value }, options, label, meta: { error }, field } = this.props
+    const { input: { value }, options, label, meta: { touched, error }, field } = this.props
     const loading = (value && typeof value == 'string')
     return (
       <FieldGroup
         id={field.name}
         label={label}
-        error={error}
+        error={touched && error}
         help={field.description || field.help}
         control={{ ...field.attrs }}
         >
@@ -190,8 +210,12 @@ const schema_converter = [
     return f
   },
   (f, schema, options) => {
-    if(schema.type == 'object' && schema.name) {
-      f.type = 'fkselect'
+    if(schema.type == 'object' && (schema.resource_name || schema.name)) {
+      const models = app.load_dict('models')
+      const name = schema.resource_name || schema.name
+      if(models[name]) {
+        f.type = 'fkselect'
+      }
     }
     return f
   }
@@ -208,40 +232,57 @@ const form_fields = {
 
 const mappers = {
   'model.form.relates': {
-    data: ({ state, model, modelState }, { input: { value }, field }) => {
+    data: ({ state, form, formState }, { input: { value }, field }) => {
       const data = {}
-      const formState = _.get(state.form, `model.${model.name}`)
       if(formState) {
-        data['options'] = formState.relates ? formState.relates[field.name] : null
+        data['options'] = formState.relates ? _.get(formState.relates, field.name) : null
       }
       return data
     },
     method: {
-      getRelatedItems: ({ dispatch, model }, { field }) => () => {
-        dispatch({ type: 'GET_RELATED_ITEMS', meta: { form: `model.${model.name}`, field, model: field.items.schema } })
+      getRelatedItems: ({ dispatch, form }, { field }) => () => {
+        const key = `form.${form.formKey}.${field.name}.relates`
+        dispatch({ type: 'GET_RELATED_ITEMS', key, meta: { form: form.formKey, field, model: field.items.schema } })
       }
     }
   },
   'model.form.fkselect': {
-    data: ({ state, model, modelState, dispatch }, { input: { value }, field }) => {
-      const formState = _.get(state.form, `model.${model.name}`)
+    data: ({ state, form, formState, dispatch }, { input: { value }, field }) => {
       return {
-        options: (formState && formState.relates) ? formState.relates[field.name] : []
+        options: (formState && formState.relates) ? _.get(formState.relates, field.name) : [],
+        values: formState && formState.values
       }
     },
     method: {
-      getValue: ({ state, model, modelState, dispatch }, { field }) => (value) => {
+      getValue: ({ state, form, formState, dispatch }, { field }) => (value) => {
         dispatch({ 
           type: 'GET_RELATED_ITEM', 
-          meta: { form: `model.${model.name}`, field, model: field.schema }, 
+          meta: { form: form.formKey, field, model: field.schema }, 
           id: value 
         })
       },
-      searchRelatedItems: ({ dispatch, model }, { field }) => (name) => {
+      searchRelatedItems: ({ dispatch, form, formState }, { field }) => (search) => {
+        const displayField = field.displayField || 'name'
+        const wheres = search ? { search: { [displayField]: { like: search } } } : {}
+
+        if(field.limit) {
+          const limit = field.limit(formState.values)
+          if(limit == null) {
+            dispatch({
+              type: 'GET_RELATED_ITEMS',
+              meta: { form: form.formKey, field, model: field.schema },
+              success: true, items: []
+            })
+            return 
+          } else {
+            wheres['limit'] = limit
+          }
+        }
+
         dispatch({ 
           type: 'GET_RELATED_ITEMS', 
-          meta: { form: `model.${model.name}`, field, model: field.schema },
-          wheres: { search: { name: { like: name } } } 
+          meta: { form: form.formKey, field, model: field.schema },
+          wheres: { ...wheres }
         })
       }
     }
@@ -263,21 +304,29 @@ const reducers = {
 }
 
 function *handle_get_relates(action) {
-  const { meta: { form, field, model } } = action
-  const api = adapter(model)
+  const { key, meta: { form, field, model } } = action
   try {
-    const { items } = yield api.query(action.filter, action.wheres)
+    yield put({ type: 'START_LOADING', key })
+    const { items } = yield api(model).query(action.filter, action.wheres)
     yield put({ ...action, items, success: true })
   } catch(err) {
     yield put({ ...action, items: [], success: true })
+  } finally {
+    yield put({ type: 'END_LOADING', key })
   }
 }
 
 function *handle_get_relate(action) {
-  const { meta: { form, field, model }, id } = action
-  const api = adapter(model)
-  const item = yield api.get(id)
-  yield put({ ...action, item, success: true })
+  const { key, meta: { form, field, model }, id } = action
+  try {
+    yield put({ type: 'START_LOADING', key })
+    const item = yield api(model).get(id)
+    yield put({ ...action, item, success: true })
+  } catch(err) {
+    yield put({ ...action, item: null, success: true })
+  } finally {
+    yield put({ type: 'END_LOADING', key })
+  }
 }
 
 function *effects() {
@@ -326,11 +375,12 @@ const RelateObject = ModelWrap('model.form')(React.createClass({
 
   render() {
     const { data, loading, schema } = this.props
+    const displayField = schema.displayField || 'name'
     return loading || data == undefined ? 
       (<div className="text-center"><Icon name="spinner fa-spin fa-4x"/> Loading..</div>) : 
       (
         <div>
-          <h4><Icon name={schema.icon} /> {data.name}</h4>
+          <h4><Icon name={schema.icon} /> {data[displayField]}</h4>
           <hr/>
           {this.props.children}
         </div>

@@ -1,43 +1,41 @@
 {
-  "name": "xadmin3",
+  "name": "xadmin",
   "version": "0.0.1",
   "description": "Xadmin",
   "private": false,
+  "main": "./lib/index.js",
   "dependencies": {
     "ajv": "^4.8.2",
     "babel-runtime": "^6.11.6",
     "crypto-js": "^3.1.6",
     "flatten": "^1.0.2",
-    "install": "^0.8.2",
     "invariant": "^2.2.1",
-    "isomorphic-fetch": "^2.2.1",
-    "jquery": "^2.2.1",
     "localforage": "^1.4.3",
+    "lodash": "^4.16.4",
     "moment": "^2.15.1",
-    "npm": "^3.10.9",
-    "react": "15.x",
-    "react-bootstrap": "^0.29.0",
+    "react-addons-shallow-compare": "^15.4.1",
     "react-bootstrap-daterangepicker": "^3.0.0",
     "react-bootstrap-datetimepicker": "0.0.22",
+    "react-bs-notifier": "^4.1.3",
     "react-date-range": "^0.2.4",
+    "react-daterange-picker": "^1.1.0",
     "react-dom": "15.x",
     "react-redux": "^4.4.5",
     "react-redux-loading-bar": "^2.3.3",
     "react-router": "2.0.0",
-    "react-router-redux": "^4.0.5",
-    "react-schema-form": "^0.2.7",
-    "react-select": "^1.0.0-rc.2",
+    "react-selectize": "^2.0.3",
     "redux": "^3.4.0",
     "redux-actions": "^0.12.0",
+    "redux-devtools": "^3.2.0",
+    "redux-form": "^6.1.1",
     "redux-logger": "^2.6.1",
     "redux-persist": "^3.5.0",
     "redux-saga": "^0.11.1",
-    "warning": "^3.0.0",
     "whatwg-fetch": "^1.0.0"
   },
   "peerDependencies": {
     "react": "15.x",
-    "react-dom": "15.x"
+    "react-bootstrap": "^0.30.7"
   },
   "devDependencies": {
     "babel-cli": "6.5.1",
@@ -52,6 +50,7 @@
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-0": "~6.5.0",
     "babel-register": "~6.14.0",
+    "babel-polyfill": "^6.20.0",
     "connect-history-api-fallback": "^1.1.0",
     "css": "^2.2.1",
     "css-loader": "^0.23.1",
@@ -83,14 +82,7 @@
     "karma-webpack": "1.7.0",
     "less": "^2.6.1",
     "less-loader": "^2.2.2",
-    "lodash": "^4.16.4",
     "mocha": "2.4.5",
-    "react-addons-css-transition-group": "^15.3.2",
-    "react-addons-shallow-compare": "^15.3.2",
-    "react-daterange-picker": "^1.1.0",
-    "react-selectize": "^2.0.3",
-    "redux-devtools": "^3.2.0",
-    "redux-form": "^6.1.1",
     "sass-loader": "^3.2.0",
     "style": "0.0.3",
     "style-loader": "^0.13.0",
@@ -99,17 +91,31 @@
     "webpack-dashboard": "^0.2.0",
     "webpack-dev-middleware": "^1.4.0",
     "webpack-dev-server": "1.14.1",
-    "webpack-hot-middleware": "^2.6.0"
+    "webpack-hot-middleware": "^2.6.0",
+    "react": "15.x"
   },
   "scripts": {
-    "dev": "webpack-dashboard -- node build/dev-server.js",
-    "build": "rimraf dist && mkdirp dist && cp -r static dist/static && export NODE_ENV=production && webpack --progress --hide-modules --config build/webpack.prod.conf.js",
-    "test": "karma start build/karma.conf.js --single-run"
+    "test": "karma start build/karma.conf.js --single-run",
+    "build": "npm run build:lib && npm run build:es && npm run build:umd && npm run build:umd:min",
+    "build:lib": "babel src --out-dir lib",
+    "build:es": "cross-env BABEL_ENV=es babel src --out-dir es",
+    "build:umd": "cross-env NODE_ENV=development webpack src/index.js dist/xadmin.js",
+    "build:umd:min": "cross-env NODE_ENV=production webpack src/index.js dist/xadmin.min.js",
+    "clean": "rimraf dist lib"
   },
   "keywords": [
     "admin",
     "react",
     "json"
+  ],
+  "npmName": "xadmin",
+  "npmFileMap": [
+    {
+      "basePath": "/dist/",
+      "files": [
+        "*.js"
+      ]
+    }
   ],
   "author": "sshwsfc@gmail.com",
   "repository": "https://github.com/sshwsfc/xadmin",

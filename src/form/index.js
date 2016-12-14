@@ -1,60 +1,26 @@
 import React from 'react'
 import { Field, reduxForm, reducer as formReducer } from 'redux-form'
 import Ajv from 'ajv'
-import { app, StoreWrap } from '../index'
 import default_fields from './fields'
-import { convert as schemaConvert, converters } from './schema'
-import { objectBuilder, fieldBuilder } from './builder'
+import { converters } from './schema'
+
+import {
+  BaseForm,
+  Form,
+  SchemaForm,
+  FormWrap,
+  fieldBuilder,
+  objectBuilder,
+  schemaConvert
+} from './base'
 
 const ajv = new Ajv({ allErrors: true })
-
-const BaseForm = (props) => {
-  const { fields, render, option, component } = props
-  const build_fields = objectBuilder(fields, render, option)
-  if(component) {
-    const FormComponent = component
-    return <FormComponent {...props} >{build_fields}</FormComponent>
-  } else {
-    return (
-      <form className="form-horizontal">{build_fields}</form>
-    )
-  }
-}
-
-const Form = (props) => {
-  const { formKey, validate } = props
-  const WrapForm = reduxForm({ 
-    form: formKey,
-    validate
-  })(BaseForm)
-  return <WrapForm {...props}/>
-}
-
-const SchemaForm = (props) => {
-  const { formKey, schema } = props
-  const ajValidate = ajv.compile(schema)
-  const fields = schemaConvert(schema).fields
-  
-  const WrapForm = reduxForm({ 
-    form: formKey,
-    validate: (values) => {
-      const valid = ajValidate(values)
-      let errors = valid ? {} : ajValidate.errors.reduce((prev, err) => {
-        if(err.dataPath.length > 1) {
-          prev[err.dataPath.substr(1)] = err.message
-        }
-        return prev
-      }, {})
-      return errors
-    }
-  })(BaseForm)
-  return <WrapForm fields={fields} {...props}/>
-}
 
 export default {
   BaseForm,
   Form,
   SchemaForm,
+  FormWrap,
   fieldBuilder,
   objectBuilder,
   schemaConvert,
@@ -71,6 +37,13 @@ export default {
     reducers: (app) => {
       const plugins = app.load_dict('form_reducer')
       return { form: formReducer.plugin(plugins) }
+    },
+    mappers: {
+      'form.fieldgroup': {
+        data: ({ form }) => {
+          return { groupSize: form.groupSize }
+        }
+      }
     },
     form_fields: default_fields,
     schema_converter: converters

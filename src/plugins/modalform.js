@@ -32,15 +32,21 @@ const AddModelBtn = ModelWrap('model.form')(React.createClass({
 
   render() {
     const { schema, title, data, formKey, loading, updateItem } = this.props
+
     const FormLayout = (props) => {
-      const { children, invalid, handleSubmit, submitting } = props
+      const { children, invalid, handleSubmit, submitting, onClose } = props
       const icon = submitting ? 'spinner fa-spin' : 'floppy-o'
       return (
         <form className="form-horizontal">
-          {children}
+          <Modal.Body>{children}</Modal.Body>
+          <Modal.Footer>
+            <Button onClick={onClose}>Close</Button>
+            <Button bsStyle="primary" onClick={handleSubmit}>Create</Button>
+          </Modal.Footer>
         </form>
       )
     }
+    
     return (
       <span>
         <Button bsStyle="primary" onClick={this.showModal}>
@@ -55,17 +61,13 @@ const AddModelBtn = ModelWrap('model.form')(React.createClass({
           <Modal.Header closeButton>
             <Modal.Title>{title}</Modal.Title>
           </Modal.Header>
-          <Modal.Body>
             <SchemaForm 
             formKey={formKey}
             schema={schema}
             onSubmit={updateItem}
+            onClose={this.hideModal}
             initialValues={data}
             component={FormLayout} />
-          </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={this.hideModal}>Close</Button>
-          </Modal.Footer>
         </Modal>
       </span>
     )

@@ -6,7 +6,7 @@ import { objectBuilder } from '../builder'
 import Icon from '../../components/Icon'
 import { app } from '../../index'
 
-const defaultItemsRender = ({ fields, meta: { error }, field, fieldsBuilder }) => {
+const defaultItemsRender = ({ fields, meta: { touched, error }, field, fieldsBuilder }) => {
   const { items, label } = field
   return (
     <div>
@@ -26,7 +26,7 @@ const defaultItemsRender = ({ fields, meta: { error }, field, fieldsBuilder }) =
           )
         })}
       </PanelGroup>
-      {error}
+      {(touched && error) ? error : null}
     </div>
   )
 }

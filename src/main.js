@@ -8,16 +8,15 @@ import loading from './plugins/loading'
 import search from './plugins/search'
 import modalform from './plugins/modalform'
 
-import tracs from './tracs'
-
-app
-.use(core)
-.use(form)
-.use(model)
-.use(relate)
-.use(filter)
-.use(search)
-.use(loading)
-.use(tracs)
-//.use(modalform)
-.start({ container: '#app' })
+export default (module) => {
+  app
+    .use(core)
+    .use(form)
+    .use(model)
+    .use(relate)
+    .use(filter)
+    .use(search)
+    .use(loading)
+    .use(module)
+    .start({ container: '#app' })
+}
