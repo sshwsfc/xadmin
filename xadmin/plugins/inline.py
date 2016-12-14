@@ -238,7 +238,7 @@ class InlineModelAdmin(ModelFormAdminView):
                         elif inspect.ismethod(getattr(self, readonly_field, None)):
                             value = getattr(self, readonly_field)(inst)
                             label = getattr(getattr(self, readonly_field), 'short_description', readonly_field)
-                        if value:
+                        if label is not None: # Allow values of False/0 to show up
                             form.readonly_fields.append({'label': label, 'contents': value})
         return instance
 
