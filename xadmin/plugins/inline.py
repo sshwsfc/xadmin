@@ -224,10 +224,12 @@ class InlineModelAdmin(ModelFormAdminView):
                 form.readonly_fields = []
                 inst = form.save(commit=False)
                 if inst:
+                    field_names = [f.name for f in inst._meta.get_fields()]
                     for readonly_field in readonly_fields:
                         value = None
                         label = None
-                        if readonly_field in inst._meta.get_all_field_names():
+                        
+                        if readonly_field in field_names:
                             label = inst._meta.get_field(readonly_field).verbose_name
                             value = unicode(getattr(inst, readonly_field))
                         elif inspect.ismethod(getattr(inst, readonly_field, None)):
