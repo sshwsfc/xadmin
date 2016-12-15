@@ -1,27 +1,14 @@
 import React from 'react'
 import { combineReducers } from 'redux'
 import Icon from '../components/Icon'
-import List from './components/List'
-import Form from './components/Form'
+import ModelPages from './components/Pages'
 import { Nav, NavItem } from 'react-bootstrap'
 
 import { Model } from './base'
-import get_reducers from './reducers'
 import modelReducer from './reducer'
 import effects from './effects'
 import mappers from './mappers'
 import field_render from './fields'
-
-const createModelReducers = (model, app) => {
-  const model_reducers = {
-    ...get_reducers(model),
-    ...app.load_dict('model_reducer')
-  }
-  return combineReducers(Object.keys(model_reducers).reduce((prev, key) => {
-    prev[key] = model_reducers[key](model)
-    return prev
-  }, {}))
-}
 
 const app = {
   blocks: (app) => {
@@ -52,25 +39,25 @@ const app = {
       if(!model.permission || model.permission.view) {
         model_routes.push({
           path: 'list',
-          component: List
+          component: ModelPages.ModelListPage
         })
       }
       if(model.permission && model.permission.add) {
         model_routes.push({
           path: ':id/detail',
-          component: Form
+          component: ModelPages.ModelDetailPage
         })
       }
       if(model.permission && model.permission.add) {
         model_routes.push({
           path: 'add',
-          component: Form
+          component: ModelPages.ModelFormPage
         })
       }
       if(model.permission && model.permission.edit) {
         model_routes.push({
           path: ':id/edit',
-          component: Form
+          component: ModelPages.ModelFormPage
         })
       }
       routes = routes.concat({

@@ -8,6 +8,7 @@ import { ModelWrap } from '../base'
 
 import Pagination from './Pagination'
 import { Grid } from './Items'
+import Form from './Form'
 import SubMenu from './SubMenu'
 import ActionBar from './ActionBar'
 
@@ -38,14 +39,15 @@ const ModelList = React.createClass({
   },
 
   render() {
-    const { icon, title, componentClass } = this.props
+    const { icon, title, componentClass, location } = this.props
     const ItemsComponent = componentClass || Grid
+    const query = location && location.query
     return (
       <Page title={(<span><Icon name={icon}/> {title}</span>)} nav={this.renderNav()}>
         { Block('model.list.submenu', this) }
         <Pagination bsSize="small" />
         <SubMenu />
-        <ItemsComponent />
+        <ItemsComponent query={query} />
         <ActionBar />
         <Pagination bsSize="" />
       </Page>
@@ -54,4 +56,31 @@ const ModelList = React.createClass({
 
 })
 
-export default ModelWrap('model.list')(ModelList)
+
+const ModelForm = React.createClass({
+
+  propTypes: {
+    title: React.PropTypes.string.isRequired,
+    onSuccess: React.PropTypes.func.isRequired
+  },
+
+  render() {
+    const { params, location: { query }, title, onSuccess, componentClass } = this.props
+    const FormComponent = componentClass || Form
+    return (
+      <Page title={title}>
+        { Block('model.form.before', this) }
+        <FormComponent id={params && params.id} query={query} onSubmitSuccess={onSuccess} />
+        { Block('model.form.after', this) }
+      </Page>
+    )
+  }
+
+})
+
+export default {
+  ModelListPage: ModelWrap('model.page.list')(ModelList),
+  ModelFormPage: ModelWrap('model.page.form')(ModelForm),
+  ModelDetailPage: ModelWrap('model.page.detail')(ModelForm)
+}
+

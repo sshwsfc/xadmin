@@ -216,11 +216,11 @@ const react_redux_app = {
 }
 
 
-if(window._app == undefined) {
-  window._app = new App()
-  window._app.use(redux_app).use(sage_app).use(react_app).use(react_redux_app)
+if(window.__app == undefined) {
+  window.__app = new App()
+  window.__app.use(redux_app).use(sage_app).use(react_app).use(react_redux_app)
 }
-const app = window._app
+const app = window.__app
 
 const Block = (tag, element) => {
   const blocks = app.load_dict_list('blocks')
@@ -363,6 +363,17 @@ const _wrap_component = (tag, WrappedComponent, wrappers) => {
       this.clearCache()
     }
 
+    componentWillReceiveProps(nextProps) {
+      if(shallowEqual(nextProps, this.props)) {
+        return
+      }
+      this.getMappers().forEach(mapper => {
+        if(mapper.event && mapper.event.receiveProps) {
+          this.runBindMethod(mapper.event.receiveProps, nextProps)
+        }
+      })
+    }
+
     clearCache() {
       this.methodProps = null
       this.dataProps = null
@@ -408,9 +419,9 @@ const _wrap_component = (tag, WrappedComponent, wrappers) => {
       }, this.wrapProps || {})
     }
 
-    runBindMethod(method) {
+    runBindMethod(method, args) {
       const { stateContext, props } = this
-      return method(stateContext, props)
+      return method(stateContext, props, args)
     }
 
     computeMethodProps() {

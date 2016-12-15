@@ -7,6 +7,7 @@ import filter from './filter'
 import loading from './plugins/loading'
 import search from './plugins/search'
 import modalform from './plugins/modalform'
+import notice from './plugins/notice'
 
 export default (module) => {
   app
@@ -18,5 +19,6 @@ export default (module) => {
     .use(search)
     .use(loading)
     .use(module)
+    .use(notice)
     .start({ container: '#app' })
 }

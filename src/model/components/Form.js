@@ -9,18 +9,12 @@ const ModelForm = React.createClass({
 
   propTypes: {
     id: PropTypes.string,
-    title: React.PropTypes.string.isRequired,
-    params: PropTypes.object.isRequired,
     data: PropTypes.object,
     loading: PropTypes.bool.isRequired,
     schema: PropTypes.object.isRequired,
-    formKey: PropTypes.string.isRequired,
+    key: PropTypes.string.isRequired,
     getItem: PropTypes.func.isRequired,
     updateItem: PropTypes.func.isRequired
-  },
-
-  componentDidMount() {
-    this.props.getItem(this.props.id)
   },
 
   componentWillReceiveProps(nextProps) {
@@ -38,12 +32,8 @@ const ModelForm = React.createClass({
     }
   },
 
-  onSubmit() {
-    event.preventDefault()
-  },
-
   render() {
-    const { schema, title, formKey, loading, updateItem } = this.props
+    const { title, model, loading, updateItem, ...formProps } = this.props
     const FormLayout = (props) => {
       const { children, invalid, handleSubmit, submitting } = props
       const icon = submitting ? 'spinner fa-spin' : 'floppy-o'
@@ -57,22 +47,18 @@ const ModelForm = React.createClass({
         </form>
       )
     }
-    return (
-      <Page title={title}>
-      {loading ? 
-        (<Panel><div className="text-center"><Icon name="spinner fa-spin fa-4x"/></div></Panel>) : 
-        (<SchemaForm 
-          formKey={formKey}
-          schema={schema}
-          initialValues={this.state.record}
-          onSubmit={updateItem}
-          component={FormLayout} />
-        )
-      }
-      </Page>
-    )
+    return loading ? 
+      (<Panel><div className="text-center"><Icon name="spinner fa-spin fa-4x"/></div></Panel>) : 
+      (<SchemaForm 
+        formKey={`model.${model.key}`}
+        schema={model}
+        initialValues={this.state.record}
+        onSubmit={updateItem}
+        component={FormLayout}
+        {...formProps} />
+      )
   }
 
 })
 
-export default ModelWrap('model.form')(ModelForm)
+export default ModelWrap('model.item')(ModelForm)

@@ -62,14 +62,15 @@ const Header = ModelWrap('model.list.header')(React.createClass({
     field: React.PropTypes.string.isRequired,
     title: React.PropTypes.string.isRequired,
     order: React.PropTypes.string.isRequired,
+    canOrder: React.PropTypes.bool.isRequired,
     changeOrder: React.PropTypes.func.isRequired
   },
 
   renderOrder() {
-    const { field, order } = this.props
+    const { field, order, canOrder } = this.props
     let orderItems = []
 
-    if(field.type != 'object' && field.type != 'array') {
+    if(canOrder) {
       orderItems = [
         <MenuItem onSelect={e=>{ this.props.changeOrder('ASC') }} active={order==='ASC'}><Icon name="sort-amount-asc" /> Sort ASC</MenuItem>,
         <MenuItem onSelect={e=>{ this.props.changeOrder('DESC') }} active={order==='DESC'}><Icon name="sort-amount-desc" /> Sort DESC</MenuItem>
@@ -257,7 +258,7 @@ const ModelList = React.createClass({
 })
 
 export default {
-  Grid: ModelWrap('model.list.grid')(ModelGrid),
-  List: ModelWrap('model.list.grid')(ModelList),
+  Grid: ModelWrap('model.items')(ModelGrid),
+  List: ModelWrap('model.items')(ModelList),
   Header, GridRow, Item
 }

@@ -7,8 +7,7 @@ import { takeEvery, takeLatest, delay } from 'redux-saga'
 import { FieldGroup } from '../form/components/base'
 import { Checkbox, FormControl } from 'react-bootstrap'
 import { Icon } from '../components'
-import List from './components/List'
-import Form from './components/Form'
+import ModelPages from './components/Pages'
 import { FormWrap } from '../form'
 import { Model, ModelWrap } from './base'
 import api from '../api'
@@ -336,14 +335,13 @@ function *effects() {
   ]
 }
 
-const RelateObject = ModelWrap('model.form')(React.createClass({
+const RelateObject = ModelWrap('model.item')(React.createClass({
 
   propTypes: {
     id: PropTypes.string,
-    params: PropTypes.object.isRequired,
     data: PropTypes.object,
     loading: PropTypes.bool.isRequired,
-    schema: PropTypes.object.isRequired,
+    model: PropTypes.object.isRequired,
     getItem: PropTypes.func.isRequired
   },
 
@@ -360,13 +358,6 @@ const RelateObject = ModelWrap('model.form')(React.createClass({
     return { relateObj: this.props.data, relateModel: this.context.model }
   },
 
-  componentDidMount() {
-    const { data, getItem, params } = this.props
-    if(data == undefined) {
-      getItem(params.id)
-    }
-  },
-
   componentWillReceiveProps(nextProps) {
     if (this.props.id !== nextProps.id) {
       this.props.getItem(nextProps.id)
@@ -374,13 +365,13 @@ const RelateObject = ModelWrap('model.form')(React.createClass({
   },
 
   render() {
-    const { data, loading, schema } = this.props
-    const displayField = schema.displayField || 'name'
+    const { data, loading, model } = this.props
+    const displayField = model.displayField || 'name'
     return loading || data == undefined ? 
       (<div className="text-center"><Icon name="spinner fa-spin fa-4x"/> Loading..</div>) : 
       (
         <div>
-          <h4><Icon name={schema.icon} /> {data[displayField]}</h4>
+          <h4><Icon name={model.icon} /> {data[displayField]}</h4>
           <hr/>
           {this.props.children}
         </div>
@@ -416,7 +407,9 @@ const routers = (app) => {
     // 每个model都加上relations页面
     routes[`/model/${name}/`] = {
       path: ':id/relations/',
-      component: RelateObject
+      component: ({ params: { id }, children }) => {
+        return <RelateObject id={id}>{children}</RelateObject>
+      }
     }
 
     // 循环判断每个Model的properties中的object对象
@@ -431,13 +424,13 @@ const routers = (app) => {
         if(!model.permission || model.permission.view) {
           model_routes.push({
             path: 'list',
-            component: RelateWrap(List)
+            component: RelateWrap(ModelPages.ModelListPage)
           })
         }
         if(model.permission && model.permission.add) {
           model_routes.push({
             path: 'add',
-            component: RelateWrap(Form)
+            component: RelateWrap(ModelPages.ModelFormPage)
           })
         }
         const key = `/model/${relateName}/:id/relations/`

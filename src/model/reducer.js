@@ -67,12 +67,25 @@ const reducers = combineReducers({
   selected: (state = [], action) => {
     switch (action.type) {
       case 'SELECT_ITEMS': {
-        let selectedItems = state.filter(item => { return item.id !== action.item.id })
-        if (action.selected) {
-          selectedItems.push(action.item)
+        let selectedItems = state
+        if(action.item) {
+          selectedItems = state.filter(item => { return item.id !== action.item.id })
+          if (action.selected) {
+            selectedItems.push(action.item)
+          }
+        } 
+        if(action.items) {
+          if (action.selected) {
+            selectedItems = _.unionWith(selectedItems, action.items, (a, b) => a.id == b.id)
+          } else {
+            const ids = action.items.map(i=>i.id)
+            selectedItems = _.dropWhile(selectedItems, (i) => ids.indexOf(i.id) > -1)
+          }
         }
         return selectedItems
       }
+      case 'SELECT_CLEAR':
+        return []
       default:
         return state
     }

@@ -3,6 +3,71 @@ import _ from 'lodash'
 import { app } from '../index'
 
 export default {
+  'model.item': {
+    data: ({ modelState, model, state }, { id }) => {
+      return {
+        loading: state.loading[`${model.key}.get`],
+        item: id ? modelState.items[id] : undefined
+      }
+    },
+    compute: ({ modelState, model }, { id, query, item }) => {
+      return {
+        ...modelState.form,
+        title: id ? `Edit ${model.title}` : `Create ${model.title}`,
+        model,
+        data: item || (_.isEmpty(query) ? undefined : query)
+      }
+    },
+    method: {
+      getItem: ({ dispatch, model }) => (id) => {
+        if(id) {
+          dispatch({ model, type: 'GET_ITEM', id })
+        }
+      },
+      updateItem: ({ dispatch, model }) => (item) => {
+        return new Promise((resolve, reject) => {
+          dispatch({ model, type: 'SAVE_ITEM', item, promise: { resolve, reject } })
+        })
+      }
+    },
+    event: {
+      mount: ({ dispatch, modelState, model }, { id, data }) => {
+        if(data == undefined && id) {
+          dispatch({ model, type: 'GET_ITEM', id })
+        }
+      }
+    }
+  },
+  'model.items': {
+    data: ({ modelState, model, state }, props, prev) => {
+      const { ids } = modelState
+      return {
+        ids,
+        fields: modelState.filter.fields,
+        loading: state.loading[`${model.key}.items`]
+      }
+    },
+    compute: ({ modelState, model }, props, prev) => {
+      const { items, ids } = modelState
+      return {
+        items: ids === prev['ids'] ? prev['items'] : ids.map(id => items[id])
+      }
+    },
+    event: {
+      mount: ({ dispatch, modelState, model }, { query }) => {
+        let wheres
+        if(query && Object.keys(query).length > 0) {
+          wheres = { ...modelState.wheres, param_filter: query }
+        } else {
+          wheres = _.omit(modelState.wheres, 'param_filter')
+        }
+        if(!_.isEqual(wheres, modelState.wheres)) {
+          dispatch({ model, type: 'GET_ITEMS', items: [], filter: { ...modelState.filter, skip: 0 }, success: true })
+        }
+        dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter }, wheres })
+      }
+    }
+  },
   'model.list.pagination': {
     data: ({ modelState }) => {
       const count = modelState.count
@@ -21,57 +86,13 @@ export default {
       }
     }
   },
-  'model.list': {
-    data: ({ model }) => {
-      return {
-        icon: model.icon || model.name,
-        title: model.title,
-        component: model.list_component,
-        canAdd: !!model.permission && !!model.permission.add
-      }
-    },
-    method: {
-      addItem: ({ router, model }, { location }) => () => {
-        router.push({ pathname: `/model/${model.name}/add`, query: (location && location.query) || {} })
-      }
-    },
-    event: {
-      mount: ({ dispatch, modelState, model }, { location }) => {
-        let wheres
-        const query = location && location.query
-        if(query && Object.keys(query).length > 0) {
-          wheres = { ...modelState.wheres, param_filter: query }
-        } else {
-          wheres = _.omit(modelState.wheres, 'param_filter')
-        }
-        if(!_.isEqual(wheres, modelState.wheres)) {
-          dispatch({ model, type: 'GET_ITEMS', items: [], filter: { ...modelState.filter, skip: 0 }, success: true })
-        }
-        dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter }, wheres })
-      }
-    }
-  },
-  'model.list.grid': {
-    data: ({ modelState, model, state }, props, prev) => {
-      const { ids } = modelState
-      return {
-        ids,
-        fields: modelState.filter.fields,
-        loading: state.loading[`${model.name}.items`]
-      }
-    },
-    compute: ({ modelState, model }, props, prev) => {
-      const { items, ids } = modelState
-      return {
-        items: ids === prev['ids'] ? prev['items'] : ids.map(id => items[id])
-      }
-    }
-  },
   'model.list.header': {
     data: ({ modelState, model }, { field }) => {
       const orders = modelState.filter.order
         , property = model.properties[field] || {}
+        , canOrder = (property.canOrder == undefined ? true : property.canOrder) && property.type != 'object' && property.type != 'array'
       return {
+        canOrder,
         title: property.title || _.startCase(field),
         order: orders !== undefined ? (orders[field] || '') : ''
       }
@@ -173,33 +194,30 @@ export default {
       }
     }
   },
-  'model.form': {
-    data: ({ modelState, model }, { params }) => {
+  'model.page.list': {
+    data: ({ model }) => {
       return {
-        loading: modelState.form.loading,
-        item: params && params.id ? modelState.items[params.id] : undefined
-      }
-    },
-    compute: ({ modelState, model }, { params, location: { query }, item }) => {
-      return {
-        ...modelState.form,
-        id: params ? params.id : undefined,
-        title: params && params.id ? `Edit ${model.title}` : `Create ${model.title}`,
-        formKey: `model.${model.name}`,
-        schema: model,
-        data: item || (_.isEmpty(query) ? undefined : query)
+        icon: model.icon || model.name,
+        title: model.title,
+        component: model.list_component,
+        canAdd: !!model.permission && !!model.permission.add
       }
     },
     method: {
-      getItem: ({ dispatch, model }) => (id) => {
-        if(id) {
-          dispatch({ model, type: 'GET_ITEM', id })
-        }
-      },
-      updateItem: ({ dispatch, model }) => (item) => {
-        return new Promise((resolve, reject) => {
-          dispatch({ model, type: 'SAVE_ITEM', item, promise: { resolve, reject } })
-        })
+      addItem: ({ router, model }, { location }) => () => {
+        router.push({ pathname: `/model/${model.name}/add`, query: (location && location.query) || {} })
+      }
+    }
+  },
+  'model.page.form': {
+    data: ({ modelState, model }, { params }) => {
+      return {
+        title: params && params.id ? `Edit ${model.title}` : `Create ${model.title}`
+      }
+    },
+    method: {
+      onSuccess: ({ dispatch, router }) => () => {
+        router.goBack()
       }
     }
   }
