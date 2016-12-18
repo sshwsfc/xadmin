@@ -19,6 +19,7 @@ from django.template.response import TemplateResponse
 from django.utils import six
 from django.utils.decorators import method_decorator, classonlymethod
 from django.utils.encoding import force_text, smart_text, smart_str
+from django.utils.functional import Promise
 from django.utils.http import urlencode
 from django.utils.itercompat import is_iterable
 from django.utils.safestring import mark_safe
@@ -116,6 +117,8 @@ class JSONEncoder(DjangoJSONEncoder):
             return o.strftime('%Y-%m-%d')
         elif isinstance(o, decimal.Decimal):
             return str(o)
+        elif isinstance(obj, Promise):
+            return force_text(obj)
         else:
             try:
                 return super(JSONEncoder, self).default(o)
@@ -428,7 +431,7 @@ class CommAdminView(BaseAdminView):
             nav_menu = list(filter(lambda x:x, nav_menu))
 
             if not settings.DEBUG:
-                self.request.session['nav_menu'] = json.dumps(nav_menu)
+                self.request.session['nav_menu'] = json.dumps(nav_menu, cls=JSONEncoder, ensure_ascii=False)
                 self.request.session.modified = True
 
         def check_selected(menu, path):
