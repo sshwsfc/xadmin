@@ -117,8 +117,8 @@ class JSONEncoder(DjangoJSONEncoder):
             return o.strftime('%Y-%m-%d')
         elif isinstance(o, decimal.Decimal):
             return str(o)
-        elif isinstance(obj, Promise):
-            return force_text(obj)
+        elif isinstance(o, Promise):
+            return force_text(o)
         else:
             try:
                 return super(JSONEncoder, self).default(o)
