@@ -1,6 +1,6 @@
 #coding:utf-8
 from __future__ import print_function
-import urllib, httplib2
+import httplib2
 from django.template import loader
 from django.core.cache import cache
 from django.utils import six
@@ -9,6 +9,11 @@ from xadmin.sites import site
 from xadmin.models import UserSettings
 from xadmin.views import BaseAdminPlugin, BaseAdminView
 from xadmin.util import static, json
+import six
+if six.PY2:
+    import urllib
+else:
+    import urllib.parse
 
 THEME_CACHE_KEY = 'xadmin_themes'
 
@@ -32,7 +37,11 @@ class ThemePlugin(BaseAdminPlugin):
             except Exception:
                 pass
         if '_theme' in self.request.COOKIES:
-            return urllib.unquote(self.request.COOKIES['_theme'])
+            if six.PY2:
+                func = urllib.unquote
+            else:
+                func = urllib.parse.unquote
+            return func(self.request.COOKIES['_theme'])
         return self.default_theme
 
     def get_context(self, context):
