@@ -405,7 +405,7 @@ const routers = (app) => {
   for(let name of names) {
     const model = models[name]
     // 每个model都加上relations页面
-    routes[`/model/${name}/`] = {
+    routes[`/app/model/${name}/`] = {
       path: ':id/relations/',
       component: ({ params: { id }, children }) => {
         return <RelateObject id={id}>{children}</RelateObject>
@@ -413,7 +413,7 @@ const routers = (app) => {
     }
 
     // 循环判断每个Model的properties中的object对象
-    for(let pname of Object.keys(model.properties)) {
+    for(let pname of Object.keys(model.properties || {})) {
       const prop = model.properties[pname]
       if(prop.type == 'object' && names.indexOf(prop.name) > -1) {
         // 找到relate对象
@@ -433,7 +433,7 @@ const routers = (app) => {
             component: RelateWrap(ModelPages.ModelFormPage)
           })
         }
-        const key = `/model/${relateName}/:id/relations/`
+        const key = `/app/model/${relateName}/:id/relations/`
         routes[key] = [ ...(routes[key] || []), {
           path: `${name}/`,
           component: Model(name),
@@ -446,6 +446,7 @@ const routers = (app) => {
 }
 
 export default {
+  name: 'xadmin.model.relate',
   effects: (app) => effects,
   mappers,
   reducers,

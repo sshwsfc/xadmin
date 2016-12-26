@@ -1,14 +1,20 @@
 import React from 'react'
 import { persistStore, autoRehydrate } from 'redux-persist'
 //import localforage from 'localforage'
-import MainApp from './layouts/Main'
+import Main from './layouts/Main'
+import App from './layouts/App'
 import './main.css'
 
 export default {
+  name: 'xadmin.core',
   routers: {
     '@' : {
       path: '/',
-      component: MainApp
+      component: Main
+    },
+    '/' : {
+      path: 'app/',
+      component: App
     }
   },
   reducers: {

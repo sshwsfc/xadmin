@@ -29,7 +29,7 @@ compiler.apply(new DashboardPlugin())
 // serve pure static assets
 app.use('/static', express.static(path.resolve(__dirname, '../static')))
 // proxy
-//app.use('/api', proxy('http://localhost:3000'))
+//app.use('/api', proxy('http://localhost:8000'))
 app.use('/api', proxy('http://139.224.192.230:8089'))
 // handle fallback for HTML5 history API
 app.use(require('connect-history-api-fallback')())

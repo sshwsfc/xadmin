@@ -4,17 +4,32 @@ import { Page, Icon } from '../../components'
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Panel, Well, Button } from 'react-bootstrap'
 import { ModelWrap } from '../base'
 import { SchemaForm } from '../../form'
+import { app } from '../../index'
+
+const DefaultLayout = (props) => {
+  const { children, invalid, handleSubmit, submitting } = props
+  const icon = submitting ? 'spinner fa-spin' : 'floppy-o'
+  const { _t } = app.context
+  return (
+    <form className="form-horizontal">
+      <Panel>{children}</Panel>
+      <Well bsSize="small">
+        <Button disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary">
+          <Icon name={icon}/> {_t('Save')}</Button>
+      </Well>
+    </form>
+  )
+}
 
 const ModelForm = React.createClass({
 
   propTypes: {
     id: PropTypes.string,
     data: PropTypes.object,
-    loading: PropTypes.bool.isRequired,
-    schema: PropTypes.object.isRequired,
-    key: PropTypes.string.isRequired,
+    loading: PropTypes.bool,
+    model: PropTypes.object.isRequired,
     getItem: PropTypes.func.isRequired,
-    updateItem: PropTypes.func.isRequired
+    saveItem: PropTypes.func.isRequired
   },
 
   componentWillReceiveProps(nextProps) {
@@ -33,27 +48,15 @@ const ModelForm = React.createClass({
   },
 
   render() {
-    const { title, model, loading, updateItem, ...formProps } = this.props
-    const FormLayout = (props) => {
-      const { children, invalid, handleSubmit, submitting } = props
-      const icon = submitting ? 'spinner fa-spin' : 'floppy-o'
-      return (
-        <form className="form-horizontal">
-          <Panel>{children}</Panel>
-          <Well bsSize="small">
-            <Button disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary">
-              <Icon name={icon}/> Save</Button>
-          </Well>
-        </form>
-      )
-    }
+    const { title, model, loading, saveItem, componentClass, ...formProps } = this.props
+    const FormLayout = componentClass || DefaultLayout
     return loading ? 
       (<Panel><div className="text-center"><Icon name="spinner fa-spin fa-4x"/></div></Panel>) : 
       (<SchemaForm 
         formKey={`model.${model.key}`}
         schema={model}
         initialValues={this.state.record}
-        onSubmit={updateItem}
+        onSubmit={saveItem}
         component={FormLayout}
         {...formProps} />
       )

@@ -125,16 +125,6 @@ const reducers = combineReducers({
       default:
         return state
     }
-  },
-  form: (state = { loading: false, saveing: false }, action) => {
-    switch (action.type) {
-      case 'GET_ITEM':
-        return { ...state, loading: action.success !== true }
-      case 'SAVE_ITEM':
-        return { ...state, saveing: action.success !== true }
-      default:
-        return state
-    }
   }
 })
 

@@ -6,6 +6,7 @@ import { fork, put, call, cancelled } from 'redux-saga/effects'
 import { takeEvery, takeLatest, delay } from 'redux-saga'
 
 export default {
+  name: 'xadmin.loading',
   blocks: {
     'top.left': () => <LoadingBar style={{ margin: '0 -15px' }} />
   },

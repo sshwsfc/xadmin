@@ -6,7 +6,7 @@ import { PropTypes, createElement } from 'react'
 import { Block, StoreWrap, app } from '../index'
 import { Icon } from '../components'
 
-const Model = (modelName, props={}) => {
+const Model = (modelOrName, props={}) => {
   const { key, persist, initialValues } = props
   const ModelComponent = React.createClass({
 
@@ -20,7 +20,10 @@ const Model = (modelName, props={}) => {
 
     componentWillMount() {
       const { store } = this.context
-      this.model = this.getModel(modelName)
+      this.model = _.isString(modelOrName) ? this.getModel(modelOrName) : {
+        ...modelOrName,
+        key: key || modelOrName.name
+      }
       store.dispatch({ type: 'INITIALIZE', model: this.model, initial: initialValues })
     },
 

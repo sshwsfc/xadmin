@@ -174,6 +174,7 @@ const FilterSubMenu = ModelWrap('mode.list.filter')(React.createClass({
 }))
 
 export default {
+  name: 'xadmin.filter',
   blocks: {
     'model.list.nav': () => <FilterNav name="nav" />,
     'model.list.submenu': () => <FilterSubMenu name="submenu" />,

@@ -1,6 +1,20 @@
 import CryptoJS from 'crypto-js'
-import fetch from 'isomorphic-fetch'
+import _fetch from 'isomorphic-fetch'
 import _ from 'lodash'
+
+const handleErrors = (resp) => {
+  if (resp.ok) {
+    return resp
+  }
+  const error = new Error()
+  error.status = resp.status
+  throw error
+}
+
+const fetch = (url, init) => {
+  return _fetch(url, init)
+    .then(handleErrors)
+}
 
 export default (model) => {
   let headers = () => {
@@ -144,7 +158,9 @@ export default (model) => {
           body: JSON.stringify(data),
           headers: headers()
         }).then((resp) => {
-          return { ...data, ...resp.json() }
+          return resp.json()
+        }).then((item) => {
+          return { ...data, ...item }
         })
       } else {
         return fetch(`https://d.apicloud.com/mcm/api/${resource}`, {
@@ -152,7 +168,9 @@ export default (model) => {
           body: JSON.stringify(data),
           headers: headers()
         }).then((resp) => {
-          return { ...data, ...resp.json() }
+          return resp.json()
+        }).then((item) => {
+          return { ...data, ...item }
         })
       }
     }

@@ -6,9 +6,15 @@
   "main": "./lib/index.js",
   "dependencies": {
     "ajv": "^4.8.2",
+    "ajv-i18n": "^1.3.0",
+    "async": "^2.1.4",
     "babel-runtime": "^6.11.6",
     "crypto-js": "^3.1.6",
     "flatten": "^1.0.2",
+    "i18next": "^4.1.4",
+    "i18next-browser-languagedetector": "^1.0.1",
+    "i18next-localstorage-cache": "^0.3.0",
+    "i18next-xhr-backend": "^1.2.1",
     "invariant": "^2.2.1",
     "localforage": "^1.4.3",
     "lodash": "^4.16.4",
@@ -25,6 +31,7 @@
     "react-selectize": "^2.0.3",
     "redux": "^3.4.0",
     "redux-actions": "^0.12.0",
+    "redux-auth-wrapper": "^0.9.0",
     "redux-devtools": "^3.2.0",
     "redux-form": "^6.1.1",
     "redux-logger": "^2.6.1",
@@ -98,10 +105,11 @@
   "scripts": {
     "test": "karma start build/karma.conf.js --single-run",
     "build": "npm run build:lib && npm run build:es && npm run build:umd && npm run build:umd:min",
-    "build:lib": "babel src --out-dir lib",
+    "build:lib": "babel src --out-dir lib -w",
     "build:es": "cross-env BABEL_ENV=es babel src --out-dir es",
     "build:umd": "cross-env NODE_ENV=development webpack src/index.js dist/xadmin.js",
     "build:umd:min": "cross-env NODE_ENV=production webpack src/index.js dist/xadmin.min.js",
+    "i18n": "i18next ./src -o ./lib/locales -f _t -r -l zh_Hans",
     "clean": "rimraf dist lib"
   },
   "keywords": [

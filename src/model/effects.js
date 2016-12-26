@@ -7,6 +7,7 @@ function *handle_get_list({ model, filter, wheres }) {
   yield put({ type: 'START_LOADING', model, key: `${model.key}.items` })
   const { store } = app.context
   const modelState = store.getState().model[model.key]
+
   try {
     const { items, total } = yield api(model).query(filter || modelState.filter, wheres || modelState.wheres)
     yield put({ type: 'GET_ITEMS', model: model, items, filter, wheres, count: total })
@@ -14,40 +15,66 @@ function *handle_get_list({ model, filter, wheres }) {
     console.error(err)
     yield put({ type: 'GET_ITEMS', model: model, items: [], filter, wheres, count: 0 })
   }
+
   yield put({ type: 'END_LOADING', model, key: `${model.key}.items` })
 }
 
-function *handle_delete_item({ model, item }) {
+function *handle_delete_item({ model, item, message }) {
   yield put({ type: 'START_LOADING', model, key: `${model.key}.delete` })
-  yield api(model).delete(item.id)
-  yield put({ type: 'SELECT_ITEMS', selected: false, item, model })
-  yield put({ type: '@@xadmin/ADD_NOTICE', payload: {
-    type: 'success', headline: 'Success', message: `Delete ${model.name} success.`
-  } })
-  yield put({ type: 'GET_ITEMS', model })
+  const { _t } = app.context
+
+  try {
+    yield api(model).delete(item.id)
+    yield put({ type: 'SELECT_ITEMS', selected: false, item, model })
+    yield put({ type: '@@xadmin/ADD_NOTICE', payload: {
+      type: 'success', headline: 'Success', message: message || _t('Delete {{object}} success.', { object: model.title || model.name })
+    } })
+    yield put({ type: 'GET_ITEMS', model })
+  } catch(err) {
+    console.error(err)
+  }
+
   yield put({ type: 'END_LOADING', model, key: `${model.key}.delete` })
 }
 
 function *handle_get_item({ model, id }) {
   yield put({ type: 'START_LOADING', model, key: `${model.key}.get` })
-  const item = yield api(model).get(id)
-  if(item) {
-    yield put({ type: 'GET_ITEM', model, item, success: true })
+  const { _t } = app.context
+
+  try {
+    const item = yield api(model).get(id)
+    if(item) {
+      yield put({ type: 'GET_ITEM', model, item, success: true })
+    }
+  } catch(err) {
+    console.error(err)
   }
+
   yield put({ type: 'END_LOADING', model, key: `${model.key}.get` })
 }
 
-function *handle_save_item({ model, item, promise }) {
+function *handle_save_item({ model, item, promise, message }) {
   yield put({ type: 'START_LOADING', model, key: `${model.key}.save` })
-  const data = yield api(model).save(item)
-  yield put({ type: 'SAVE_ITEM', model, item: data || item, success: true })
-  if(promise) {
-    promise.resolve(data)
+  const { _t } = app.context
+
+  try {
+    const data = yield api(model).save(item)
+    yield put({ type: 'SAVE_ITEM', model, item: data || item, success: true })
+    if(promise) {
+      promise.resolve(data)
+    }
+    const object = model.title || model.name
+    const noticeMessage = message || (item.id == undefined ? 
+      _t('Create {{object}} success.', { object }) : 
+      _t('Save {{object}} success.', { object }))
+    yield put({ type: '@@xadmin/ADD_NOTICE', payload: {
+      type: 'success', headline: 'Success', message: noticeMessage
+    } }) 
+  } catch(err) {
+    if(promise) {
+      promise.reject(err)
+    }
   }
-  const message = item.id == undefined ? `Create ${model.name} success.` : `Save ${model.name} success.`
-  yield put({ type: '@@xadmin/ADD_NOTICE', payload: {
-    type: 'success', headline: 'Success', message
-  } })
   yield put({ type: 'END_LOADING', model , key: `${model.key}.save` })
 }
 

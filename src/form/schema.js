@@ -11,10 +11,10 @@ const stripNullType = (type) => {
   return type
 }
 
-const enumToTitleMap = (enm) => {
+const enumToTitleMap = (enm, title) => {
   let titleMap = []
   enm.forEach(name => {
-    titleMap.push({ name: name, value: name })
+    titleMap.push({ name: title[name] || name, value: name })
   })
   return titleMap
 }
@@ -149,7 +149,7 @@ const converters = [
       } else {
         f.type = 'select'
         if (!f.titleMap) {
-          f.titleMap = enumToTitleMap(schema['enum'])
+          f.titleMap = enumToTitleMap(schema['enum'], schema['enum_title'] || {})
         }
       }
       switch(schema.format) {

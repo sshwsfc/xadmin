@@ -3,28 +3,29 @@ import { Link } from 'react-router'
 import _ from 'lodash'
 import { Icon } from '../../components'
 import { Table, OverlayTrigger, Popover, Button, ButtonGroup, Input, Dropdown, MenuItem, Well, Panel, Media } from 'react-bootstrap'
-import { Block } from '../../index'
+import { Block, app } from '../../index'
 import { ModelWrap } from '../base'
 
 class BaseRow extends React.Component {
 
   actions() {
     const { canEdit, canDelete } = this.props
+    const { _t } = app.context
     let actions = (this.props.actions || []).map(Action => <Action {...this.props} />)
     if(canEdit) {
-      actions.push(<Button bsSize="xsmall" onClick={this.props.editItem}>edit</Button>)
+      actions.push(<Button bsSize="xsmall" onClick={this.props.editItem}>{_t('Edit')}</Button>)
     }
     if(canDelete) {
       actions.push((
         <OverlayTrigger trigger="click" rootClose placement="top" overlay={
-          <Popover title="Comfirm Delete" id="delete-item-popover">
-          <p><strong>Comfirm Delete？</strong></p>
+          <Popover title={_t('Comfirm')} id="delete-item-popover">
+          <p><strong>{_t('Comfirm Delete')}？</strong></p>
           <p className="text-center">
-            <Button bsStyle="danger" onClick={this.props.deleteItem}>Delete</Button>
+            <Button bsStyle="danger" onClick={this.props.deleteItem}>{_t('Delete')}</Button>
           </p>
           </Popover>
         }>
-          <Button bsSize="xsmall">delete</Button>
+          <Button bsSize="xsmall">{_t('Delete')}</Button>
         </OverlayTrigger>
       ))
     }
@@ -68,15 +69,16 @@ const Header = ModelWrap('model.list.header')(React.createClass({
 
   renderOrder() {
     const { field, order, canOrder } = this.props
+    const { _t } = app.context
     let orderItems = []
 
     if(canOrder) {
       orderItems = [
-        <MenuItem onSelect={e=>{ this.props.changeOrder('ASC') }} active={order==='ASC'}><Icon name="sort-amount-asc" /> Sort ASC</MenuItem>,
-        <MenuItem onSelect={e=>{ this.props.changeOrder('DESC') }} active={order==='DESC'}><Icon name="sort-amount-desc" /> Sort DESC</MenuItem>
+        <MenuItem onSelect={e=>{ this.props.changeOrder('ASC') }} active={order==='ASC'}><Icon name="sort-amount-asc" /> {_t('Sort ASC')}</MenuItem>,
+        <MenuItem onSelect={e=>{ this.props.changeOrder('DESC') }} active={order==='DESC'}><Icon name="sort-amount-desc" /> {_t('Sort DESC')}</MenuItem>
       ]
       if(order != '') {
-        orderItems.push(<MenuItem onSelect={e=>{ this.props.changeOrder('') }}>Clear order</MenuItem>)
+        orderItems.push(<MenuItem onSelect={e=>{ this.props.changeOrder('') }}>{_t('Clear order')}</MenuItem>)
       }
     }
     return orderItems
@@ -167,6 +169,7 @@ const ModelGrid = React.createClass({
 
   render() {
     const { fields, items, loading } = this.props
+    const { _t } = app.context
     if(loading) {
       return <Panel><div className="text-center"><Icon name="spinner fa-spin fa-4x"/></div></Panel>
     } else {
@@ -179,7 +182,7 @@ const ModelGrid = React.createClass({
                 {fields.map(field=>{
                   return <th><Header key={`model-list-header-${field}`} field={field}  /></th>
                 })}
-                <th style={{ textAlign: 'center' }}>Actions</th>
+                <th style={{ textAlign: 'center' }}>{_t('Actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -190,7 +193,7 @@ const ModelGrid = React.createClass({
           </Table>
         )
       } else {
-        return (<Well>No Data</Well>)
+        return (<Well>{_t('No Data')}</Well>)
       }
     }
   }
@@ -236,6 +239,7 @@ const ModelList = React.createClass({
 
   render() {
     const { fields, items, loading } = this.props
+    const { _t } = app.context
 
     if(loading) {
       return <Panel><div className="text-center"><Icon name="spinner fa-spin fa-4x"/></div></Panel>
@@ -251,7 +255,7 @@ const ModelList = React.createClass({
             {items.map(item => <ListRow key={item.id} fields={fields} item={item} />)}
           </div>)
       } else {
-        return (<Well>No Data</Well>)
+        return (<Well>{_t('No Data')}</Well>)
       }
     }
   }

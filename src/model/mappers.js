@@ -1,4 +1,5 @@
 import React from 'react'
+import { SubmissionError } from 'redux-form'
 import _ from 'lodash'
 import { app } from '../index'
 
@@ -10,10 +11,10 @@ export default {
         item: id ? modelState.items[id] : undefined
       }
     },
-    compute: ({ modelState, model }, { id, query, item }) => {
+    compute: ({ model }, { id, query, item }) => {
+      const { _t } = app.context
       return {
-        ...modelState.form,
-        title: id ? `Edit ${model.title}` : `Create ${model.title}`,
+        title: id ? _t('Edit {{title}}', { title: model.title }) : _t('Create {{title}}', { title: model.title }),
         model,
         data: item || (_.isEmpty(query) ? undefined : query)
       }
@@ -24,14 +25,16 @@ export default {
           dispatch({ model, type: 'GET_ITEM', id })
         }
       },
-      updateItem: ({ dispatch, model }) => (item) => {
+      saveItem: ({ dispatch, model }) => (item) => {
         return new Promise((resolve, reject) => {
           dispatch({ model, type: 'SAVE_ITEM', item, promise: { resolve, reject } })
+        }).catch(err => {
+          throw new SubmissionError(err.json)
         })
       }
     },
     event: {
-      mount: ({ dispatch, modelState, model }, { id, data }) => {
+      mount: ({ dispatch, model }, { id, data }) => {
         if(data == undefined && id) {
           dispatch({ model, type: 'GET_ITEM', id })
         }
@@ -134,7 +137,7 @@ export default {
         dispatch({ model, type: 'SELECT_ITEMS', item, selected })
       },
       editItem: ({ router, model }, { item }) => () => {
-        router.push(`/model/${model.name}/${item.id}/edit`)
+        router.push(`/app/model/${model.name}/${item.id}/edit`)
       },
       deleteItem: ({ dispatch, model }, { item }) => () => {
         dispatch({ model, type: 'DELETE_ITEM', item })
@@ -205,14 +208,15 @@ export default {
     },
     method: {
       addItem: ({ router, model }, { location }) => () => {
-        router.push({ pathname: `/model/${model.name}/add`, query: (location && location.query) || {} })
+        router.push({ pathname: `/app/model/${model.name}/add`, query: (location && location.query) || {} })
       }
     }
   },
   'model.page.form': {
     data: ({ modelState, model }, { params }) => {
+      const { _t } = app.context
       return {
-        title: params && params.id ? `Edit ${model.title}` : `Create ${model.title}`
+        title: params && params.id ?  _t('Edit {{title}}', { title: model.title }) : _t('Create {{title}}', { title: model.title })
       }
     },
     method: {

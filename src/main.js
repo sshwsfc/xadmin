@@ -8,9 +8,12 @@ import loading from './plugins/loading'
 import search from './plugins/search'
 import modalform from './plugins/modalform'
 import notice from './plugins/notice'
+import auth from './auth'
+import i18n from './locales'
 
-export default (module) => {
-  app
+export default () => {
+  return app
+    .use(i18n)
     .use(core)
     .use(form)
     .use(model)
@@ -18,7 +21,7 @@ export default (module) => {
     .use(filter)
     .use(search)
     .use(loading)
-    .use(module)
     .use(notice)
-    .start({ container: '#app' })
+    //.use(modalform)
+    .use(auth)
 }

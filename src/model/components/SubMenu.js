@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { Link } from 'react-router'
 import { Icon } from '../../components'
 import { ButtonToolbar, OverlayTrigger, Popover, Clearfix, ButtonGroup, Button, Dropdown, MenuItem, Panel, ListGroup, ListGroupItem } from 'react-bootstrap'
-import { Block } from '../../index'
+import { Block, app } from '../../index'
 import { ModelWrap } from '../base'
 
 const CountButton = ModelWrap('model.list.btn.count')(React.createClass({
@@ -12,7 +12,9 @@ const CountButton = ModelWrap('model.list.btn.count')(React.createClass({
   },
 
   render() {
-    return <Button bsSize="small">{this.props.count} record</Button>
+    const { _t } = app.context
+    const { count } = this.props
+    return <Button bsSize="small">{_t('{{count}} records', { count })}</Button>
   }
 }))
 
@@ -29,6 +31,7 @@ const ColsDropdown = ModelWrap('model.list.btn.cols')(React.createClass({
   },
 
   render() {
+    const { _t } = app.context
     const { selected, fields } = this.props
     let items = []
     for (let name in fields) {
@@ -51,7 +54,7 @@ const ColsDropdown = ModelWrap('model.list.btn.cols')(React.createClass({
           </ListGroup>
         </Popover>
       }>
-        <Button bsSize="small">Columns</Button>
+        <Button bsSize="small">{_t('Columns')}</Button>
       </OverlayTrigger>
       )
   }

@@ -7,7 +7,17 @@ import { ModelWrap } from '../model/base'
 import { SchemaForm } from '../form'
 import { Block, StoreWrap, app } from '../index'
 
-const AddModelBtn = ModelWrap('model.form')(React.createClass({
+const AddModelBtn = ModelWrap('modalform.modal')(ModelWrap('model.item')(React.createClass({
+
+  propTypes: {
+    id: PropTypes.string,
+    data: PropTypes.object,
+    loading: PropTypes.bool.isRequired,
+    model: PropTypes.object.isRequired,
+    key: PropTypes.string.isRequired,
+    getItem: PropTypes.func.isRequired,
+    saveItem: PropTypes.func.isRequired
+  },
 
   getInitialState() {
     return { show: false }
@@ -21,17 +31,13 @@ const AddModelBtn = ModelWrap('model.form')(React.createClass({
     this.setState({ show: false })
   },
 
-  propTypes: {
-    id: PropTypes.string,
-    title: React.PropTypes.string.isRequired,
-    data: PropTypes.object,
-    schema: PropTypes.object.isRequired,
-    formKey: PropTypes.string.isRequired,
-    updateItem: PropTypes.func.isRequired
+  onSubmitSuccess(item) {
+    this.props.onSuccess(item)
+    this.hideModal()
   },
 
   render() {
-    const { schema, title, data, formKey, loading, updateItem } = this.props
+    const { model, title, loading, saveItem, canAdd, ...formProps } = this.props
 
     const FormLayout = (props) => {
       const { children, invalid, handleSubmit, submitting, onClose } = props
@@ -41,44 +47,55 @@ const AddModelBtn = ModelWrap('model.form')(React.createClass({
           <Modal.Body>{children}</Modal.Body>
           <Modal.Footer>
             <Button onClick={onClose}>Close</Button>
-            <Button bsStyle="primary" onClick={handleSubmit}>Create</Button>
+            <Button bsStyle="primary" disabled={invalid || submitting} onClick={handleSubmit}><Icon name={icon}/> Save</Button>
           </Modal.Footer>
         </form>
       )
     }
     
-    return (
+    return canAdd ? (
       <span>
         <Button bsStyle="primary" onClick={this.showModal}>
-          Add
+          Add {model.title}
         </Button>
         {' '}
         <Modal
-          {...this.props}
+          {...formProps}
           show={this.state.show}
           onHide={this.hideModal}
         >
           <Modal.Header closeButton>
             <Modal.Title>{title}</Modal.Title>
           </Modal.Header>
-            <SchemaForm 
-            formKey={formKey}
-            schema={schema}
-            onSubmit={updateItem}
+          <SchemaForm 
+            formKey={`model.${model.key}`}
+            schema={model}
+            onSubmit={saveItem}
             onClose={this.hideModal}
-            initialValues={data}
-            component={FormLayout} />
+            component={FormLayout}
+            onSubmitSuccess={this.onSubmitSuccess}
+          />
         </Modal>
       </span>
-    )
+    ) : null
   }
 
-}))
+})))
 
 export default {
+  name: 'xadmin.model.modalform',
   blocks: {
     'model.list.navbtn': ({ nodes, ...props }) => {
       return <AddModelBtn {...props} />
+    }
+  },
+  mappers: {
+    'modalform.modal': {
+      method: {
+        onSuccess: ({ model, dispatch }) => (item) => {
+          dispatch({ model, type: 'GET_ITEMS' })
+        }
+      }
     }
   }
 }

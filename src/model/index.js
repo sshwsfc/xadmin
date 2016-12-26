@@ -11,6 +11,7 @@ import mappers from './mappers'
 import field_render from './fields'
 
 const app = {
+  name: 'xadmin.model',
   blocks: (app) => {
     const models = app.load_dict('models')
     return {
@@ -20,7 +21,7 @@ const app = {
           if((!model.permission || model.permission.view) && 
             (!model.ui || model.ui.show_menu)) {
             return (
-              <NavItem key={`main-menu-item-model-${name}`} onSelect={()=>app.go(`/model/${name}/list`)}>
+              <NavItem key={`main-menu-item-model-${name}`} onSelect={()=>app.go(`/app/model/${name}/list`)}>
                 <Icon name={model.icon || name}/> {model.title}
               </NavItem>
               )
@@ -67,7 +68,7 @@ const app = {
       })
     }
     return {
-      '/': routes
+      '/app/': routes
     }
   },
   reducers: {

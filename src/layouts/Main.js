@@ -8,15 +8,9 @@ export default React.createClass({
   render() {
     return (
       <div className="container-fluid" style={{ paddingTop: '65px' }}>
+        { Block('main', this)}
         <TopNav site_title={_c('site.title', 'Admin')}/>
-        <Row>
-          <Col key={0.1} sm={1} md={2}>
-            <MainMenu/>
-          </Col>
-          <Col key={0.2} sm={11} md={10}>
-            {this.props.children}
-          </Col>
-        </Row>
+        {this.props.children}
         <Footer/>
       </div>
     )

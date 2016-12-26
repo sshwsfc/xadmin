@@ -3,7 +3,7 @@ import { Link } from 'react-router'
 import { Button, Nav } from 'react-bootstrap'
 
 import { Page, Icon } from '../../components'
-import { Block } from '../../index'
+import { Block, app } from '../../index'
 import { ModelWrap } from '../base'
 
 import Pagination from './Pagination'
@@ -23,6 +23,7 @@ const ModelList = React.createClass({
 
   renderNav() {
     const { title, canAdd, addItem } = this.props
+    const { _t } = app.context
     return (
       <div>
         <Nav>
@@ -31,7 +32,7 @@ const ModelList = React.createClass({
         <div className="navbar-btn pull-right hide-xs">
           { Block('model.list.navbtn', this) }
           { canAdd ?
-          (<Button bsStyle="primary" onClick={addItem}><Icon name="plus"/> Add {title}</Button>) : null
+          (<Button bsStyle="primary" onClick={addItem}><Icon name="plus"/> {_t('Add {{object}}', { object: title })}</Button>) : null
           }
         </div>
       </div>

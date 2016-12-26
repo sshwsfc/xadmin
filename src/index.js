@@ -5,6 +5,7 @@ import createSagaMiddleware, { takeEvery, takeLatest } from 'redux-saga'
 import { Router, DefaultRoute, browserHistory } from 'react-router'
 import { fork } from 'redux-saga/effects'
 import isPlainObject from 'lodash/isPlainObject'
+import waterfall from 'async/waterfall'
 import hoistStatics from 'hoist-non-react-statics'
 import invariant from 'invariant'
 import warning from 'warning'
@@ -19,6 +20,11 @@ class App {
 
   use(app) {
     this.apps.push(app.app || app)
+    return this
+  }
+
+  unuse(name) {
+    this.apps = this.apps.filter(app => app.name != name)
     return this
   }
 
@@ -85,19 +91,20 @@ class App {
 
   start(init_context={}) {
     const self = this
-    this.context = this.load_list('context').reduce((prev, creater) => {
-      return { ...prev, ...creater(prev, self) }
-    }, init_context)
 
-    this.load_list('start').forEach((starter) => {
-      starter(self)
-    })
+    waterfall([ (cb) => { cb(null, init_context) }, ...this.load_list('context') ],
+      (err, context) => {
+        self.context = context
+        self.load_list('start').forEach((starter) => {
+          starter(self)
+        })
+      })
   }
 }
 
 // redux app
 const redux_app = {
-  context: (app) => (prev) => {
+  context: (app) => (context, cb) => {
 
     const devtools = window.devToolsExtension || (() => noop => noop)
     const enhancers = [
@@ -139,11 +146,11 @@ const redux_app = {
     // create store
     const store = createStore(
       create_reducers(),
-      prev['initial_state'] || {},
+      context['initial_state'] || {},
       compose(...enhancers)
     )
 
-    return { store }
+    cb(null, { ...context, store })
   },
   start: (app) => () => {
     // store change
@@ -173,11 +180,11 @@ const sage_app = {
 
 // react & react-router app
 const react_app = {
-  context: (app) => (prev) => {
+  context: (app) => (context, cb) => {
     app.go = (uri) => {
       browserHistory.push(uri)
     }
-    return { router: browserHistory }
+    cb(null, { ...context, router: browserHistory })
   },
   start: (app) => () => {
     // init container

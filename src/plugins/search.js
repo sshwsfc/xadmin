@@ -46,6 +46,7 @@ const SearchBar = ModelWrap('model.searchbar')(React.createClass({
 }))
 
 export default {
+  name: 'xadmin.model.search',
   blocks: {
     'model.list.nav': (props) => <SearchBar {...props} />
   },

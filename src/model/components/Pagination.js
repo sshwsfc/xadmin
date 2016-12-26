@@ -2,7 +2,7 @@ import React, { createClass, PropTypes } from 'react'
 import { Icon } from '../../components'
 import { Link } from 'react-router'
 import { Pagination } from 'react-bootstrap'
-import { Block } from '../../index'
+import { Block, app } from '../../index'
 import { ModelWrap } from '../base'
 
 const ModelPagination = createClass({
@@ -15,6 +15,7 @@ const ModelPagination = createClass({
   },
 
   render() {
+    const { _t } = app.context
     if(this.props.items > 1) {
       return (
         <Pagination
@@ -34,7 +35,7 @@ const ModelPagination = createClass({
     } else {
       return (
         <ul style={{ marginTop: 0 }} className="pagination pagination-sm">
-          <li className="disabled"><a>No paging</a></li>
+          <li className="disabled"><a>{_t('No paging')}</a></li>
         </ul>
         )
     }

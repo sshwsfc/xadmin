@@ -35,7 +35,7 @@ const ModelDetail = React.createClass({
   },
 
   render() {
-    const { schema, title, formKey, loading, updateItem } = this.props
+    const { schema, title, formKey, loading } = this.props
     return (
       <Page title={title}>
       {loading ? 
