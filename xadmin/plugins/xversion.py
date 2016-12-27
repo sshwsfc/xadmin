@@ -200,11 +200,11 @@ class RecoverListView(BaseReversionView):
     @csrf_protect_m
     def get(self, request, *args, **kwargs):
         context = self.get_context()
-
+        self.request.current_app = self.admin_site.name
         return TemplateResponse(
             request, self.recover_list_template or self.get_template_list(
                 "views/recover_list.html"),
-            context, current_app=self.admin_site.name)
+            context)
 
 
 class RevisionListView(BaseReversionView):
@@ -257,9 +257,9 @@ class RevisionListView(BaseReversionView):
 
     def get_response(self):
         context = self.get_context()
-
+        self.request.current_app = self.admin_site.name
         return TemplateResponse(self.request, self.object_history_template or
-                                self.get_template_list('views/model_history.html'), context, current_app=self.admin_site.name)
+                                self.get_template_list('views/model_history.html'), context)
 
     def get_version_object(self, version):
         obj_version = version._object_version
@@ -337,10 +337,10 @@ class RevisionListView(BaseReversionView):
             'revision_b_url': self.model_admin_url('revision', quote(version_b.object_id), version_b.id),
             'diffs': diffs
         })
-
+        self.request.current_app = self.admin_site.name
         return TemplateResponse(
             self.request, self.revision_diff_template or self.get_template_list('views/revision_diff.html'),
-            context, current_app=self.admin_site.name)
+            context)
 
     @filter_hook
     def get_media(self):
@@ -401,7 +401,7 @@ class RevisionView(BaseRevisionView):
         helper = super(RevisionView, self).get_form_helper()
         diff_fields = {}
         version_data = self.version.field_dict
-        
+
         for f in self.opts.fields:
             fvalue = f.value_from_object(self.org_obj)
             vvalue = version_data.get(f.name, None)
@@ -430,10 +430,11 @@ class RevisionView(BaseRevisionView):
         context.update(self.kwargs or {})
 
         form_template = self.revision_form_template
+        self.request.current_app = self.admin_site.name
         return TemplateResponse(
             self.request, form_template or self.get_template_list(
                 'views/revision_form.html'),
-            context, current_app=self.admin_site.name)
+            context)
 
     @filter_hook
     def post_response(self):
@@ -467,10 +468,11 @@ class RecoverView(BaseRevisionView):
         context.update(self.kwargs or {})
 
         form_template = self.recover_form_template
+        self.request.current_app = self.admin_site.name
         return TemplateResponse(
             self.request, form_template or self.get_template_list(
                 'views/recover_form.html'),
-            context, current_app=self.admin_site.name)
+            context)
 
     @filter_hook
     def post_response(self):
