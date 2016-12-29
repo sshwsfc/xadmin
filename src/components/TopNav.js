@@ -4,14 +4,18 @@ import { Block } from '../index'
 import UserMenu from '../auth/components/UserMenu'
 import { ShowAuthenticated } from '../auth/wrap'
 
-const NavRight = ShowAuthenticated(() => {
-  return (
-    <Nav pullRight>
-      { Block('top.right', this) }
-      <UserMenu />
-    </Nav>
-  )
-})
+const NavRight = ShowAuthenticated(React.createClass({
+
+  render() {
+    return (
+      <Nav pullRight>
+        { Block('top.right', this) }
+        <UserMenu />
+      </Nav>
+    )
+  }
+
+}))
 
 export default React.createClass({
 

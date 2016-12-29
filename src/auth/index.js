@@ -12,6 +12,13 @@ import './auth.css'
 
 export default {
   name: 'xadmin.auth',
+  config: {
+    auth: {
+      can_reset_password: true,
+      can_change_password: true,
+      can_signup: true
+    }
+  },
   context: (app) => (context, cb) => {
     const { store } = context
     if(localStorage.user) {
@@ -36,20 +43,29 @@ export default {
     })
     cb(null, context)
   },
-  routers: {
-    '/' : [ {
+  routers: (app) => {
+    const { auth } = app.load_dict('config')
+    const routes = [ {
       path: 'login',
       component: SignInForm
-    }, {
-      path: 'signup',
-      component: SignUpForm
-    }, {
-      path: 'forget_password',
-      component: ForgetPasswordForm
-    }, {
-      path: 'password_reset_confirm',
-      component: ResetPasswordForm
     } ]
+    if(auth.can_signup) {
+      routes.push({
+        path: 'signup',
+        component: SignUpForm
+      })
+    }
+    if(auth.can_reset_password) {
+      routes.push({
+        path: 'forget_password',
+        component: ForgetPasswordForm
+      })
+      routes.push({
+        path: 'password_reset_confirm',
+        component: ResetPasswordForm
+      })
+    }
+    return { '/' : routes }
   },
   models,
   effects,

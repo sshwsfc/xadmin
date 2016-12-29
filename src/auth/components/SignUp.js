@@ -16,15 +16,17 @@ const SignUpForm = StoreWrap('auth.sign_up')(({ onSuccess }) => {
     <div className="container">
       <UserSignUpModel>
         <Form 
+          successMessage={_t('Register success')}
           onSubmitSuccess={onSuccess} groupSize={{ label: 3, field: 9 }}
           componentClass={({ children, invalid, handleSubmit, submitting }) => {
             const icon = submitting ? 'spinner fa-spin' : 'floppy-o'
             return (
-              <form className="form-horizontal">
+              <form className="form-horizontal" onSubmit={handleSubmit}>
                 <Panel header={<h1 style={{ fontSize: 24 }}>{_t('Please Signup')}</h1>} className="panel-single" style={{ maxWidth: 550 }}>
                   {children}
                   <Button disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary" bsSize="large" block>
                     <Icon name={icon}/> {_t('Signup')}</Button>
+                  <div style={{ marginTop: 20 }}>{_t('Have account')}? <Link to="/login">{_t('please login')}</Link></div>
                 </Panel>
               </form>
             )

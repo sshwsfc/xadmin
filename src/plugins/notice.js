@@ -9,7 +9,7 @@ const Notices = StoreWrap('xadmin.notice')(({ notices, onDismiss }) => {
 export default {
   name: 'xadmin.notice',
   blocks: {
-    'top.left': () => <Notices />
+    'main': () => <Notices />
   },
   mappers: {
     'xadmin.notice': {

@@ -18,9 +18,9 @@ export default {
   },
   date: {
     component: widgets.DateTime,
-    format: 'YYYY-MM-DD',
     attrs: {
-      mode: 'date'
+      mode: 'date',
+      format: 'YYYY-MM-DD'
     }
   },
   time: {

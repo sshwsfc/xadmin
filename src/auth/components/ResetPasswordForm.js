@@ -17,11 +17,12 @@ export default StoreWrap('auth.reset_password')(({ onSuccess, location: { query 
       <ResetPasswordModel>
         <Form 
           initialValues={query}
+          successMessage={_t('Reset password success')}
           onSubmitSuccess={onSuccess} groupSize={{ label: 3, field: 9 }}
           componentClass={({ children, invalid, handleSubmit, submitting }) => {
             const icon = submitting ? 'spinner fa-spin' : 'floppy-o'
             return (
-              <form className="form-horizontal">
+              <form className="form-horizontal" onSubmit={handleSubmit}>
                 <Panel header={<h1 style={{ fontSize: 24 }}>{_t('Reset Password')}</h1>} className="panel-single" style={{ maxWidth: 450 }}>
                   {children}
                   <Button disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary" bsSize="large" block>

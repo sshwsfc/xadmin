@@ -1,22 +1,22 @@
 import React from 'react'
 import { Field, reduxForm, reducer as formReducer } from 'redux-form'
 import Ajv from 'ajv'
-import ajvLocalize from 'ajv-i18n'
-import { StoreWrap } from '../index'
+import ajvLocalize from './locales'
+import { StoreWrap, app } from '../index'
 import { convert as schemaConvert } from './schema'
 import { objectBuilder, fieldBuilder } from './builder'
 
-const ajv = new Ajv({ allErrors: true, v5: true })
+const ajv = new Ajv({ allErrors: true, v5: true, verbose: true })
 
 const BaseForm = (props) => {
-  const { fields, render, option, component } = props
+  const { fields, render, option, component, handleSubmit } = props
   const build_fields = objectBuilder(fields, render, option)
   if(component) {
     const FormComponent = component
     return <FormComponent {...props} >{build_fields}</FormComponent>
   } else {
     return (
-      <form className="form-horizontal">{build_fields}</form>
+      <form className="form-horizontal" onSubmit={handleSubmit}>{build_fields}</form>
     )
   }
 }
@@ -40,7 +40,10 @@ const SchemaForm = (props) => {
     validate: (values) => {
       const valid = ajValidate(values)
       if(!valid) {
-        ajvLocalize.zh(ajValidate.errors)
+        const { i18n } = app.context
+        if(ajvLocalize[i18n.language]) {
+          ajvLocalize[i18n.language](ajValidate.errors)
+        }
       }
       let errors = valid ? {} : ajValidate.errors.reduce((prev, err) => {
         if(err.dataPath.length > 1) {

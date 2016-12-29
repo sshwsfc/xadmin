@@ -11,7 +11,7 @@ const DefaultLayout = (props) => {
   const icon = submitting ? 'spinner fa-spin' : 'floppy-o'
   const { _t } = app.context
   return (
-    <form className="form-horizontal">
+    <form className="form-horizontal" onSubmit={handleSubmit}>
       <Panel>{children}</Panel>
       <Well bsSize="small">
         <Button disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary">

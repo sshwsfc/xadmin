@@ -16,6 +16,7 @@ export default {
   name: 'xadmin.i18n',
   context: (app) => (context, cb) => {
     const resources = app.load_dict_list('locales')
+    const { locale } = app.load_dict('config')
     for(let ln in resources) {
       resources[ln] = _.merge({}, ...resources[ln])
     }
@@ -25,13 +26,14 @@ export default {
       .use(LanguageDetector) // or any other implementation
       .init({
         debug: true,
-        lng: 'zh_Hans',
+        lng: 'en',
         fallbackLng: false,
         keySeparator: false,
         nsSeparator: false,
-        resources
+        resources,
+        ...(locale || {})
       }, (err, t) => {
-        cb(null, { ...context, _t: t })
+        cb(null, { ...context, _t: t, i18n: i18next })
       })
   },
   locales

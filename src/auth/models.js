@@ -47,13 +47,12 @@ const UserResetPassword = ({ context: { _t } }) => ({
   properties: {
     new_password1: {
       title: _t('New Password'),
-      type: 'string',
-      format: 'password'
+      type: 'string'
     },
     new_password2: {
       title: _t('Repeat Password'),
       type: 'string',
-      format: 'password'
+      constant: { $data: '1/new_password1', constantName: _t('New Password') }
     },
     token: {
       type: 'string'
@@ -81,13 +80,12 @@ const UserChangePassword = ({ context: { _t } }) => ({
     },
     new_password1: {
       title: 'New Password',
-      type: 'string',
-      format: 'password'
+      type: 'string'
     },
     new_password2: {
       title: 'Repeat Password',
       type: 'string',
-      format: 'password'
+      constant: { $data: '1/new_password1', constantName: _t('New Password') }
     }
   },
   form: [ 
@@ -100,7 +98,7 @@ const UserChangePassword = ({ context: { _t } }) => ({
 const UserSignUp = ({ context: { _t } }) => ({ 
   type: 'object',
   name: 'user_sign_up',
-  resource_name: 'user',
+  resource_name: 'auth/registration',
   title: _t('Sign Up'),
   properties: {
     username: {
@@ -111,23 +109,23 @@ const UserSignUp = ({ context: { _t } }) => ({
       title: _t('Email'),
       type: 'string'
     },
-    password: {
+    password1: {
       title: _t('Password'),
       type: 'string'
     },
-    repassword: {
+    password2: {
       title: _t('Repeat Password'),
       type: 'string',
-      constant: { $data: '1/password' }
+      constant: { $data: '1/password1', constantName: _t('Password') }
     }
   },
   permission: { add: true },
-  required: [ 'username', 'email', 'password', 'repassword' ],
+  required: [ 'username', 'email', 'password1', 'password2' ],
   form: [ 
     'username', 
     'email', 
-    { key: 'password', attrs: { type: 'password' } },
-    { key: 'repassword', attrs: { type: 'password' } } 
+    { key: 'password1', attrs: { type: 'password' } },
+    { key: 'password2', attrs: { type: 'password' } } 
   ]
 })
 

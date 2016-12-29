@@ -19,10 +19,12 @@ function *handle_user_signin({ payload: user }) {
 }
 
 function *handle_user_signout() {
+  const { _t } = app.context
   try{
     yield api({ resource_name: 'auth/logout' }).save()
+    yield put({ type: '@@xadmin/AUTH_SIGN_OUT_FINISH' })
     yield put({ type: '@@xadmin/ADD_NOTICE', payload: {
-      type: 'success', headline: 'Success', message: 'Successfully logged out.'
+      type: 'success', headline: 'Success', message: _t('Successfully logged out')
     } })
   } catch(err) { 
     console.error(err)
@@ -30,14 +32,14 @@ function *handle_user_signout() {
 }
 
 function *handle_verify_email({ payload }) {
+  const { _t } = app.context
   try {
-    yield api({ resource_name: 'user/verifyEmail' }).save({
-      username: payload.username,
-      email: payload.email,
-      language: 'zh_CN'
+    yield api({ resource_name: 'auth/registration/verify-email' }).save({
+      language: 'zh_CN',
+      ...payload
     })
     yield put({ type: '@@xadmin/ADD_NOTICE', payload: {
-      type: 'success', headline: 'Success', message: 'Send verify code to your email, please check.'
+      type: 'success', headline: 'Success', message: _t('Send verify code to your email, please check')
     } })
   } catch(err) {
     console.error(err)

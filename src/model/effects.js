@@ -63,13 +63,15 @@ function *handle_save_item({ model, item, promise, message }) {
     if(promise) {
       promise.resolve(data)
     }
-    const object = model.title || model.name
-    const noticeMessage = message || (item.id == undefined ? 
-      _t('Create {{object}} success.', { object }) : 
-      _t('Save {{object}} success.', { object }))
-    yield put({ type: '@@xadmin/ADD_NOTICE', payload: {
-      type: 'success', headline: 'Success', message: noticeMessage
-    } }) 
+    if( message !== false) {
+      const object = model.title || model.name
+      const noticeMessage = message || (item.id == undefined ? 
+        _t('Create {{object}} success.', { object }) : 
+        _t('Save {{object}} success.', { object }))
+      yield put({ type: '@@xadmin/ADD_NOTICE', payload: {
+        type: 'success', headline: 'Success', message: noticeMessage
+      } }) 
+    }
   } catch(err) {
     if(promise) {
       promise.reject(err)
