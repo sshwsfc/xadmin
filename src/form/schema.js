@@ -13,8 +13,9 @@ const stripNullType = (type) => {
 
 const enumToTitleMap = (enm, title) => {
   let titleMap = []
-  enm.forEach(name => {
-    titleMap.push({ name: title[name] || name, value: name })
+  enm.forEach((name, index) => {
+    titleMap.push({ name: 
+      title != undefined ? (( _.isArray(title) ? title[index] : title[name] )  || name) : name, value: name })
   })
   return titleMap
 }

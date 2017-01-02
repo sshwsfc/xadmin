@@ -13,7 +13,7 @@ const DefaultLayout = (props) => {
   return (
     <form className="form-horizontal" onSubmit={handleSubmit}>
       <Panel>{children}</Panel>
-      <Well bsSize="small">
+      <Well bsSize="small" style={{ textAlign: 'right' }}>
         <Button disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary">
           <Icon name={icon}/> {_t('Save')}</Button>
       </Well>

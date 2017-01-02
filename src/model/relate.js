@@ -161,7 +161,7 @@ const RelateSelect = FormWrap('model.form.fkselect')(React.createClass({
   renderOptions() {
     const { input: { value }, options, field } = this.props
     const displayField = field.displayField || 'name'
-    const selectValue = value ? { label: value[displayField] || 'null', value: value.id } : null
+    const selectValue = value ? { label: value[displayField] || '', value: value.id } : null
     const searchProps = field.lazyLoad == false ? {
       placeholder: `Select ${field.label}`
     } : {

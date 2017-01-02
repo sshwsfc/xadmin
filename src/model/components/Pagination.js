@@ -16,6 +16,8 @@ const ModelPagination = createClass({
 
   render() {
     const { _t } = app.context
+    const { emptyComponent } = this.props
+
     if(this.props.items > 1) {
       return (
         <Pagination
@@ -33,7 +35,7 @@ const ModelPagination = createClass({
             maxButtons={5} />
         )
     } else {
-      return (
+      return emptyComponent !== undefined ? emptyComponent : (
         <ul style={{ marginTop: 0 }} className="pagination pagination-sm">
           <li className="disabled"><a>{_t('No paging')}</a></li>
         </ul>

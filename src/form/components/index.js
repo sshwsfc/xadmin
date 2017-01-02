@@ -2,6 +2,7 @@ import Text from './Text'
 import Select from './Select'
 import Checkbox from './Checkbox'
 import Radios from './Radios'
+import RadioBtn from './RadioBtn'
 import Textarea from './Textarea'
 import DateTime from './DateTime'
 import Fieldset from './Fieldset'
@@ -12,6 +13,7 @@ export default {
   Select,
   Checkbox,
   Radios,
+  RadioBtn,
   Textarea,
   DateTime,
   Fieldset,

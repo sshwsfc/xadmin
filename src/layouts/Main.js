@@ -7,7 +7,7 @@ export default React.createClass({
 
   render() {
     return (
-      <div className="container-fluid" style={{ paddingTop: '65px' }}>
+      <div className="container-fluid" style={{ paddingTop: this.props.paddingTop || 70 }}>
         { Block('main', this)}
         <TopNav site_title={_c('site.title', 'Admin')}/>
         {this.props.children}

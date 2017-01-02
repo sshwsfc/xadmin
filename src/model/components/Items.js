@@ -264,5 +264,5 @@ const ModelList = React.createClass({
 export default {
   Grid: ModelWrap('model.items')(ModelGrid),
   List: ModelWrap('model.items')(ModelList),
-  Header, GridRow, Item
+  Header, GridRow, ListRow, Item, BaseRow
 }

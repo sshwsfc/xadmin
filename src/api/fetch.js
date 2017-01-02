@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch'
+import { app } from '../index'
 
 export default (url, options = {}) => {
   let status, statusText, headers = {}, body, json
@@ -19,6 +20,10 @@ export default (url, options = {}) => {
         json = JSON.parse(text)
       } catch (e) {
         // not json, no big deal
+      }
+      if (status == 401) {
+        const { store } = app.context
+        store.dispatch({ type: '@@xadmin/AUTH_SIGN_OUT_FINISH' })
       }
       if (status < 200 || status >= 300) {
         return Promise.reject({ message: body || statusText, status, headers, json })

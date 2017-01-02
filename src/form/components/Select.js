@@ -14,7 +14,7 @@ export default ({ input, label, meta: { touched, error }, field }) => {
       >
       <FormControl componentClass="select" 
         {...input} >
-        {[ { name: '----', value: null }, ...field.titleMap ].map(option => { return (<option key={option.name} value={option.value}>{option.name}</option>) })}
+        {[ { name: '----', value: '' }, ...field.titleMap ].map(option => { return (<option key={option.name} value={option.value}>{option.name}</option>) })}
       </FormControl>
     </FieldGroup>
   )

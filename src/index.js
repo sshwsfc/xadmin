@@ -229,11 +229,11 @@ if(window.__app == undefined) {
 }
 const app = window.__app
 
-const Block = (tag, element) => {
+const Block = (tag, element, props) => {
   const blocks = app.load_dict_list('blocks')
   if(blocks[tag] !== undefined) {
     return blocks[tag].reduce((prev, block) => {
-      const ret = block({ nodes: prev, ...element.props })
+      const ret = block({ nodes: prev, ...element.props, ...props })
       if(ret !== undefined && ret != prev) {
         if(Array.isArray(ret)) {
           prev = prev.concat(ret)

@@ -38,7 +38,7 @@ const AddModelBtn = ModelWrap('modalform.modal')(ModelWrap('model.item')(React.c
 
   render() {
     const { model, title, loading, saveItem, canAdd, ...formProps } = this.props
-
+    const { _t } = app.context
     const FormLayout = (props) => {
       const { children, invalid, handleSubmit, submitting, onClose } = props
       const icon = submitting ? 'spinner fa-spin' : 'floppy-o'
@@ -46,8 +46,8 @@ const AddModelBtn = ModelWrap('modalform.modal')(ModelWrap('model.item')(React.c
         <form className="form-horizontal">
           <Modal.Body>{children}</Modal.Body>
           <Modal.Footer>
-            <Button onClick={onClose}>Close</Button>
-            <Button bsStyle="primary" disabled={invalid || submitting} onClick={handleSubmit}><Icon name={icon}/> Save</Button>
+            <Button onClick={onClose}>{_t('Close')}</Button>
+            <Button bsStyle="primary" disabled={invalid || submitting} onClick={handleSubmit}><Icon name={icon}/> {_t('Save')}</Button>
           </Modal.Footer>
         </form>
       )
@@ -56,7 +56,7 @@ const AddModelBtn = ModelWrap('modalform.modal')(ModelWrap('model.item')(React.c
     return canAdd ? (
       <span>
         <Button bsStyle="primary" onClick={this.showModal}>
-          Add {model.title}
+          {_t('Add {{object}}', { object: model.title })}
         </Button>
         {' '}
         <Modal
@@ -83,17 +83,20 @@ const AddModelBtn = ModelWrap('modalform.modal')(ModelWrap('model.item')(React.c
 })))
 
 export default {
-  name: 'xadmin.model.modalform',
-  blocks: {
-    'model.list.navbtn': ({ nodes, ...props }) => {
-      return <AddModelBtn {...props} />
-    }
-  },
-  mappers: {
-    'modalform.modal': {
-      method: {
-        onSuccess: ({ model, dispatch }) => (item) => {
-          dispatch({ model, type: 'GET_ITEMS' })
+  AddModelBtn,
+  app: {
+    name: 'xadmin.model.modalform',
+    blocks: {
+      'model.list.navbtn': ({ nodes, ...props }) => {
+        return <AddModelBtn {...props} />
+      }
+    },
+    mappers: {
+      'modalform.modal': {
+        method: {
+          onSuccess: ({ model, dispatch }) => (item) => {
+            dispatch({ model, type: 'GET_ITEMS' })
+          }
         }
       }
     }

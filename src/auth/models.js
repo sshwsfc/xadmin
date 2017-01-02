@@ -145,7 +145,8 @@ const Permission = ({ context: { _t } }) => ({
       title: _t('Description'),
       type: 'string'
     }
-  }
+  },
+  ui: { show_menu: false }
 })
 
 const Role = (app) => {
@@ -166,7 +167,8 @@ const Role = (app) => {
         type: 'array',
         items: Permission(app)
       }
-    }
+    },
+    ui: { show_menu: false }
   }
 }
 
@@ -213,7 +215,8 @@ const User = (app) => {
     },
     list_display: [ 'username', 'email', 'is_superuser', 'date_joined' ],
     form: [ 'username', 'email', 'is_superuser' ],
-    permission: { view: true, add: true, edit: true, delete: true }
+    permission: { view: true, add: true, edit: true, delete: true },
+    ui: { show_menu: false }
   }
 }
 

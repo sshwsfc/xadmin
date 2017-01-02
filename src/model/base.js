@@ -7,7 +7,7 @@ import { Block, StoreWrap, app } from '../index'
 import { Icon } from '../components'
 
 const Model = (modelOrName, props={}) => {
-  const { key, persist, initialValues } = props
+  const { key, persist, initialValues, modelProps } = props
   const ModelComponent = React.createClass({
 
     contextTypes: {
@@ -22,7 +22,8 @@ const Model = (modelOrName, props={}) => {
       const { store } = this.context
       this.model = _.isString(modelOrName) ? this.getModel(modelOrName) : {
         ...modelOrName,
-        key: key || modelOrName.name
+        key: key || modelOrName.name,
+        ...modelProps
       }
       store.dispatch({ type: 'INITIALIZE', model: this.model, initial: initialValues })
     },
@@ -47,7 +48,8 @@ const Model = (modelOrName, props={}) => {
       model.name = model.name || name
       return model ? {
         ...model,
-        key: key || model.name
+        key: key || model.name,
+        ...modelProps
       } : null
     }
   })

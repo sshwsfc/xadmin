@@ -1,5 +1,6 @@
 import React from 'react'
 import moment from 'moment'
+import _ from 'lodash'
 import { Item } from './components/Items'
 import { Icon } from '../components'
 
@@ -10,9 +11,16 @@ export default [
         const time = moment(value)
         return <WrapComponent>{time.format('YYYY-MM-DD')}</WrapComponent>
       }
-    } else if(schema.type == 'string' && schema.enum_title) {
+    } else if(schema.type == 'string' && schema.enum && schema.enum_title) {
       return ({ value, wrap: WrapComponent }) => {
-        return <WrapComponent>{schema.enum_title[value] || value}</WrapComponent>
+        let result = null
+        let index = schema.enum.indexOf(value)
+        if(_.isArray(schema.enum_title) && index > -1) {
+          result = schema.enum_title[index]
+        } else {
+          result = schema.enum_title[value]
+        }
+        return <WrapComponent>{result || value}</WrapComponent>
       }
     } else if(schema.type == 'boolean') {
       return ({ value, wrap: WrapComponent }) => {
