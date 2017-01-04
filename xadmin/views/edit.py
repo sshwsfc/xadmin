@@ -407,7 +407,7 @@ class CreateAdminView(ModelFormAdminView):
         return TemplateResponse(
             self.request, self.add_form_template or self.get_template_list(
                 'views/model_form.html'),
-            context, current_app=self.admin_site.name)
+            context)
 
     @filter_hook
     def post_response(self):
@@ -494,7 +494,7 @@ class UpdateAdminView(ModelFormAdminView):
         return TemplateResponse(
             self.request, self.change_form_template or self.get_template_list(
                 'views/model_form.html'),
-            context, current_app=self.admin_site.name)
+            context)
 
     def post(self, request, *args, **kwargs):
         if "_saveasnew" in self.request.POST:
