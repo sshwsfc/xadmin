@@ -156,7 +156,7 @@ class FormAdminView(CommAdminView):
 
         return TemplateResponse(
             self.request, self.form_template,
-            context, current_app=self.admin_site.name)
+            context)
 
     @filter_hook
     def post_response(self):
