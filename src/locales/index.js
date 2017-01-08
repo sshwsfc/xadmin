@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import moment from 'moment'
 import i18next from 'i18next'
 import XHR from 'i18next-xhr-backend'
 import Cache from 'i18next-localstorage-cache'
@@ -33,6 +34,7 @@ export default {
         resources,
         ...(locale || {})
       }, (err, t) => {
+        moment.locale('zh-cn')
         cb(null, { ...context, _t: t, i18n: i18next })
       })
   },

@@ -111,21 +111,21 @@ export default {
     }
   },
   'model.list.row': {
-    data: ({ modelState, model }, { item }) => {
+    data: ({ modelState, model }, { id }) => {
       let selected = false
       for (let i of modelState.selected) {
-        if (i.id === item.id) {
+        if (i.id === id) {
           selected = true
           break
         }
       }
       return { 
-        selected
+        selected,
+        item: modelState.items[id]
       }
     },
     compute: ({ model }, { item }) => {
       return {
-        item: item,
         actions: model.item_actions,
         component: model.item_component,
         canEdit: !!model.permission && !!model.permission.edit && item._canEdit !== false,
@@ -133,13 +133,15 @@ export default {
       }
     },
     method: {
-      changeSelect: ({ dispatch, model }, { item }) => (selected) => {
+      changeSelect: ({ dispatch, model, modelState }, { id }) => (selected) => {
+        const item = modelState.items[id]
         dispatch({ model, type: 'SELECT_ITEMS', item, selected })
       },
-      editItem: ({ router, model }, { item }) => () => {
-        router.push(`/app/model/${model.name}/${item.id}/edit`)
+      editItem: ({ router, model, modelState }, { id }) => () => {
+        router.push(`/app/model/${model.name}/${id}/edit`)
       },
-      deleteItem: ({ dispatch, model }, { item }) => () => {
+      deleteItem: ({ dispatch, model, modelState }, { id }) => () => {
+        const item = modelState.items[id]
         dispatch({ model, type: 'DELETE_ITEM', item })
       }
     }

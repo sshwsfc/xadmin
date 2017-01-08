@@ -4,7 +4,6 @@ import _ from 'lodash'
 import { FieldArray } from 'redux-form'
 import { fork, put, call, cancelled } from 'redux-saga/effects'
 import { takeEvery, takeLatest, delay } from 'redux-saga'
-import { FieldGroup } from '../form/components/base'
 import { Checkbox, FormControl } from 'react-bootstrap'
 import { Icon } from '../components'
 import ModelPages from './components/Pages'
@@ -44,15 +43,13 @@ const Checkboxes = FormWrap('model.form.relates')(React.createClass({
   },
 
   render() {
-    const { input, options, label, meta: { touched, error }, field } = this.props
+    const { input, options, label, meta: { touched, error }, field, group: FieldGroup } = this.props
     const { items } = field
     return (
       <FieldGroup
-        id={items.name}
         label={label}
         error={touched && error}
-        help={field.description || field.help}
-        control={{ ...field.attrs }}
+        input={input} field={field}
         >
         {options?this.renderOptions():<div>loading...</div>}
       </FieldGroup>
@@ -98,15 +95,13 @@ const RelateMultiSelect = FormWrap('model.form.relates')(React.createClass({
   },
 
   render() {
-    const { input, options, label, meta: { touched, error }, field } = this.props
+    const { input, options, label, meta: { touched, error }, field, group: FieldGroup } = this.props
     const { items } = field
     return (
       <FieldGroup
-        id={items.name}
         label={label}
         error={touched && error}
-        help={field.description || field.help}
-        control={{ ...field.attrs }}
+        input={input} field={field}
         >
         {options?this.renderOptions():<FormControl.Static>loading...</FormControl.Static>}
       </FieldGroup>
@@ -184,15 +179,13 @@ const RelateSelect = FormWrap('model.form.fkselect')(React.createClass({
   },
 
   render() {
-    const { input: { value }, options, label, meta: { touched, error }, field } = this.props
-    const loading = (value && typeof value == 'string')
+    const { input, options, label, meta: { touched, error }, field, group: FieldGroup } = this.props
+    const loading = (input.value && typeof input.value == 'string')
     return (
       <FieldGroup
-        id={field.name}
         label={label}
         error={touched && error}
-        help={field.description || field.help}
-        control={{ ...field.attrs }}
+        input={input} field={field}
         >
         {!loading?this.renderOptions():<FormControl.Static>loading...</FormControl.Static>}
       </FieldGroup>

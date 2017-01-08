@@ -6,10 +6,11 @@ import { Icon } from '../components'
 
 export default [
   (SubPrev, schema) => {
-    if(schema.type == 'string' && schema.format == 'time') {
+    if(schema.type == 'string' && [ 'time', 'date', 'datetime' ].indexOf(schema.format) > -1) {
+      const format = schema.dateFormat || { time: 'LT', date: 'LL', datetime: 'LLL' }[schema.format]
       return ({ value, wrap: WrapComponent }) => {
         const time = moment(value)
-        return <WrapComponent>{time.format('YYYY-MM-DD')}</WrapComponent>
+        return <WrapComponent>{time.format(format)}</WrapComponent>
       }
     } else if(schema.type == 'string' && schema.enum && schema.enum_title) {
       return ({ value, wrap: WrapComponent }) => {

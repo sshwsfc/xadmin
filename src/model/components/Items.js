@@ -187,7 +187,7 @@ const ModelGrid = React.createClass({
             </thead>
             <tbody>
               {items.map((item)=>{
-                return <GridRow key={item.id} fields={fields} item={item} />
+                return <GridRow key={item.id} fields={fields} id={item.id} />
               })}
             </tbody>
           </Table>
@@ -252,7 +252,7 @@ const ModelList = React.createClass({
               return <Button><Header key={`model-list-header-${field}`} field={field}  /></Button>
             })}
             </ButtonGroup>
-            {items.map(item => <ListRow key={item.id} fields={fields} item={item} />)}
+            {items.map(item => <ListRow key={item.id} fields={fields} id={item.id} />)}
           </div>)
       } else {
         return (<Well>{_t('No Data')}</Well>)

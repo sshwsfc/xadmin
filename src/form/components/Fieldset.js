@@ -1,6 +1,5 @@
 import React from 'react'
 import { Field } from 'redux-form'
-import { FieldGroup } from './base'
 import { Panel } from 'react-bootstrap'
 import { objectBuilder } from '../builder'
 

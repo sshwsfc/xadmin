@@ -1,4 +1,5 @@
 import React from 'react'
+import _ from 'lodash'
 import { Field, reduxForm, reducer as formReducer } from 'redux-form'
 import Ajv from 'ajv'
 import ajvLocalize from './locales'
@@ -21,11 +22,29 @@ const BaseForm = (props) => {
   }
 }
 
+const validateByFields = (errors, values, fields) => {
+  fields.forEach(field => {
+    if(_.isFunction(field.validate)) {
+      const name = field.name
+      const err = field.validate(values[name] || null, values)
+      if(_.isArray(err)) {
+        errors[name] = [ ...(errors[name] || []), ...err ]
+      } else if(err) {
+        errors[name] = [ ...(errors[name] || []), err ]
+      }
+    }
+  })
+  return errors
+}
+
 const Form = (props) => {
-  const { formKey, validate } = props
+  const { formKey, validate, fields } = props
   const WrapForm = reduxForm({ 
     form: formKey,
-    validate
+    validate: (values) => {
+      let errors = validate ? validate(values) : {}
+      return validateByFields(errors, values, fields)
+    }
   })(BaseForm)
   return <WrapForm {...props}/>
 }
@@ -53,6 +72,7 @@ const SchemaForm = (props) => {
         }
         return prev
       }, {})
+      errors = validateByFields(errors, values, fields)
       return errors
     }
   })(BaseForm)

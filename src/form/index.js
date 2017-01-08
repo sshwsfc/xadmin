@@ -38,13 +38,6 @@ export default {
       const plugins = app.load_dict('form_reducer')
       return { form: formReducer.plugin(plugins) }
     },
-    mappers: {
-      'form.fieldgroup': {
-        data: ({ form }) => {
-          return { groupSize: form.groupSize }
-        }
-      }
-    },
     form_fields: default_fields,
     schema_converter: converters
   }

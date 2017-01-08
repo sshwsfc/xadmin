@@ -1,5 +1,6 @@
 import Text from './Text'
 import Select from './Select'
+import Selectize from './Selectize'
 import Checkbox from './Checkbox'
 import Radios from './Radios'
 import RadioBtn from './RadioBtn'
@@ -10,7 +11,7 @@ import ArrayWidget from './Array'
 
 export default {
   Text,
-  Select,
+  Select, Selectize,
   Checkbox,
   Radios,
   RadioBtn,

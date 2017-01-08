@@ -66,9 +66,11 @@ const ModelWrap = StoreWrap({
     return { modelState: store.getState().model[model.key], model }
   },
   computeProps: (tag, { model }) => {
+    const ret = { model }
     if(model.components && model.components[tag]) {
-      return { componentClass: model.components[tag] }
+      ret['componentClass'] = model.components[tag]
     }
+    return ret
   }
 })
 

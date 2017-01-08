@@ -19,20 +19,26 @@ export default {
   date: {
     component: widgets.DateTime,
     attrs: {
-      mode: 'date',
-      format: 'YYYY-MM-DD'
+      dateFormat: true,
+      timeFormat: false,
+      valueFormat: 'L'
     }
   },
   time: {
     component: widgets.DateTime,
     attrs: {
-      mode: 'time'
+      dateFormat: false,
+      timeFormat: true,
+      viewMode: 'time',
+      valueFormat: 'LT'
     }
   },
   datetime: {
     component: widgets.DateTime,
     attrs: {
-      mode: 'datetime'
+      dateFormat: true,
+      timeFormat: true,
+      valueFormat: 'L LT'
     }
   },
   bool: {

@@ -1,16 +1,13 @@
 import React from 'react'
 import { Field } from 'redux-form'
-import { FieldGroup } from './base'
 import { FormControl, Checkbox } from 'react-bootstrap'
 
-export default ({ input, label, meta: { touched, error }, field }) => {
+export default ({ input, label, meta: { touched, error }, field, group: FieldGroup }) => {
   return (
     <FieldGroup
-      id={input.name}
       label={''}
       error={touched && error}
-      help={field.description || field.help}
-      control={{ ...field.attrs }}
+      input={input} field={field}
       >
       <Checkbox checked={!!input.value} {...input} {...field.attrs} >{label}</Checkbox>
     </FieldGroup>

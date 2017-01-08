@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import _ from 'lodash'
 import { Page, Icon } from '../../components'
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Panel, Well, Button } from 'react-bootstrap'
+import { AutoAffix } from 'react-overlays'
 import { ModelWrap } from '../base'
 import { SchemaForm } from '../../form'
 import { app } from '../../index'
@@ -13,10 +14,12 @@ const DefaultLayout = (props) => {
   return (
     <form className="form-horizontal" onSubmit={handleSubmit}>
       <Panel>{children}</Panel>
+      <AutoAffix offsetBottom={20}>
       <Well bsSize="small" style={{ textAlign: 'right' }}>
         <Button disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary">
           <Icon name={icon}/> {_t('Save')}</Button>
       </Well>
+      </AutoAffix>
     </form>
   )
 }

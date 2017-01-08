@@ -1,15 +1,15 @@
 import React from 'react'
 import { Field } from 'redux-form'
-import { FieldGroup } from './base'
+import { FormControl } from 'react-bootstrap'
 
-export default ({ input, label, meta: { touched, error }, field }) => {
+export default ({ input, label, meta: { touched, error }, field, group: FieldGroup }) => {
   return (
     <FieldGroup
-      id={input.name}
       label={label}
       error={touched && error}
-      help={field.description || field.help}
-      control={{ componentClass: 'textarea', ...input, ...field.attrs }}
-      />
+      input={input} field={field}
+      >
+      <FormControl componentClass="textarea" {...input} {...field.attrs} />
+    </FieldGroup>
   )
 }

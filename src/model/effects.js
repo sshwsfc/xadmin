@@ -10,7 +10,7 @@ function *handle_get_list({ model, filter, wheres }) {
 
   try {
     const { items, total } = yield api(model).query(filter || modelState.filter, wheres || modelState.wheres)
-    yield put({ type: 'GET_ITEMS', model: model, items, filter, wheres, count: total })
+    yield put({ type: 'GET_ITEMS', model: model, items: items || [], filter, wheres, count: total })
   } catch(err) {
     console.error(err)
     yield put({ type: 'GET_ITEMS', model: model, items: [], filter, wheres, count: 0 })
