@@ -29,35 +29,32 @@ class ShowField(Field):
     template = "xadmin/layout/field_value.html"
 
     def __init__(self, callback, *args, **kwargs):
-        super(ShowField, self).__init__(*args)
-
-        if 'attrs' in kwargs:
-            self.attrs = kwargs.pop('attrs')
-        if 'wrapper_class' in kwargs:
-            self.wrapper_class = kwargs.pop('wrapper_class')
-
+        super(ShowField, self).__init__(*args, **kwargs)
         self.results = [(field, callback(field)) for field in self.fields]
 
-    def render(self, form, form_style, context, template_pack=TEMPLATE_PACK, **kwargs):
+    def render(self, form, form_style, context, template_pack=TEMPLATE_PACK, extra_context=None, **kwargs):
+        super(ShowField, self).render(form, form_style, context, template_pack, extra_context, **kwargs)
+        if extra_context is None:
+            extra_context = {}
         if hasattr(self, 'wrapper_class'):
-            context['wrapper_class'] = self.wrapper_class
+            extra_context['wrapper_class'] = self.wrapper_class
 
         if self.attrs:
             if 'detail-class' in self.attrs:
-                context['input_class'] = self.attrs['detail-class']
+                extra_context['input_class'] = self.attrs['detail-class']
             elif 'class' in self.attrs:
-                context['input_class'] = self.attrs['class']
+                extra_context['input_class'] = self.attrs['class']
 
         html = ''
         for field, result in self.results:
-            context['result'] = result
+            extra_context['result'] = result
             if field in form.fields:
                 if form.fields[field].widget != forms.HiddenInput:
-                    context['field'] = form[field]
-                    html += loader.render_to_string(self.template, context)
+                    extra_context['field'] = form[field]
+                    html += loader.render_to_string(self.template, extra_context)
             else:
-                context['field'] = field
-                html += loader.render_to_string(self.template, context)
+                extra_context['field'] = field
+                html += loader.render_to_string(self.template, extra_context)
         return html
 
 

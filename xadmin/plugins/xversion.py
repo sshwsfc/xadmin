@@ -205,7 +205,7 @@ class RecoverListView(BaseReversionView):
         return TemplateResponse(
             request, self.recover_list_template or self.get_template_list(
                 "views/recover_list.html"),
-            context, current_app=self.admin_site.name)
+            context)
 
 
 class RevisionListView(BaseReversionView):
@@ -260,7 +260,7 @@ class RevisionListView(BaseReversionView):
         context = self.get_context()
 
         return TemplateResponse(self.request, self.object_history_template or
-                                self.get_template_list('views/model_history.html'), context, current_app=self.admin_site.name)
+                                self.get_template_list('views/model_history.html'), context)
 
     def get_version_object(self, version):
         obj_version = version._object_version
@@ -341,7 +341,7 @@ class RevisionListView(BaseReversionView):
 
         return TemplateResponse(
             self.request, self.revision_diff_template or self.get_template_list('views/revision_diff.html'),
-            context, current_app=self.admin_site.name)
+            context)
 
     @filter_hook
     def get_media(self):
@@ -434,7 +434,7 @@ class RevisionView(BaseRevisionView):
         return TemplateResponse(
             self.request, form_template or self.get_template_list(
                 'views/revision_form.html'),
-            context, current_app=self.admin_site.name)
+            context)
 
     @filter_hook
     def post_response(self):
@@ -471,7 +471,7 @@ class RecoverView(BaseRevisionView):
         return TemplateResponse(
             self.request, form_template or self.get_template_list(
                 'views/recover_form.html'),
-            context, current_app=self.admin_site.name)
+            context)
 
     @filter_hook
     def post_response(self):

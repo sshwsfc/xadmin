@@ -6,6 +6,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.db.models.base import ModelBase
 from django.utils import six
 from django.views.decorators.cache import never_cache
+from django.template.engine import Engine
 import inspect
 
 if six.PY2 and sys.getdefaultencoding()=='ascii':
@@ -170,8 +171,11 @@ class AdminSite(object):
         if not ContentType._meta.installed:
             raise ImproperlyConfigured("Put 'django.contrib.contenttypes' in "
                                        "your INSTALLED_APPS setting in order to use the admin application.")
-        if not ('django.contrib.auth.context_processors.auth' in settings.TEMPLATE_CONTEXT_PROCESSORS or
-                'django.core.context_processors.auth' in settings.TEMPLATE_CONTEXT_PROCESSORS):
+
+
+        default_template_engine = Engine.get_default()
+        if not ('django.contrib.auth.context_processors.auth' in default_template_engine.context_processors or
+                'django.core.context_processors.auth' in default_template_engine.context_processors):
             raise ImproperlyConfigured("Put 'django.contrib.auth.context_processors.auth' "
                                        "in your TEMPLATE_CONTEXT_PROCESSORS setting in order to use the admin application.")
 

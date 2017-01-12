@@ -90,7 +90,7 @@ class ExportPlugin(BaseAdminPlugin):
 
     def get_xlsx_export(self, context):
         datas = self._get_datas(context)
-        output = io.StringIO()
+        output = io.BytesIO()
         export_header = (
             self.request.GET.get('export_xlsx_header', 'off') == 'on')
 
@@ -127,7 +127,7 @@ class ExportPlugin(BaseAdminPlugin):
 
     def get_xls_export(self, context):
         datas = self._get_datas(context)
-        output = io.StringIO()
+        output = io.BytesIO()
         export_header = (
             self.request.GET.get('export_xls_header', 'off') == 'on')
 
