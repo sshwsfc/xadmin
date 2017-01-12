@@ -8,16 +8,47 @@ from xadmin.sites import site
 from xadmin.util import get_model_from_relation, vendor
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView
 from xadmin.layout import Layout
+import re
 
 
 class QuickFormPlugin(BaseAdminPlugin):
+    inline_field_pattern = re.compile('\w+-\d+-(?P<field>\w+)')
 
     def init_request(self, *args, **kwargs):
         if self.request.method == 'GET' and self.request.is_ajax() or self.request.GET.get('_ajax'):
+            self.patch_request_get()
             self.admin_view.add_form_template = 'xadmin/views/quick_form.html'
             self.admin_view.change_form_template = 'xadmin/views/quick_form.html'
             return True
         return False
+
+    def resolve_field_if_inline(self, field):
+        match = self.inline_field_pattern.match(field)
+        return match.groupdict()['field'] if match else field
+
+    def patch_request_get(self):
+        """Need to convert the inline field format to the value that a template field.
+        Ex: model-0-field -> field
+        """
+        data = self.request.GET.copy()
+        field_key = '_field'
+        if field_key in data:
+            _fields = data[field_key].split(',')
+            data[field_key] = []
+            fields = []
+            for field in _fields:
+                field_name = self.resolve_field_if_inline(field)
+
+                data[field_key].append(field_name)
+                data[field_name] = data[field]
+
+                # Save the original field name to restore there in the widget
+                data['_field_inline_' + field_name] = field
+
+                fields.append(field_name)
+
+            data[field_key] = ','.join(data[field_key])
+        self.request.GET = data
 
     def get_model_form(self, __, **kwargs):
         if '_field' in self.request.GET:
@@ -44,7 +75,7 @@ class RelatedFieldWidgetWrapper(forms.Widget):
     This class is a wrapper to a given widget to add the add icon for the
     admin interface.
     """
-    def __init__(self, widget, rel, add_url, rel_add_url):
+    def __init__(self, widget, rel, add_url, rel_add_url, **kwargs):
         self.needs_multipart_form = widget.needs_multipart_form
         self.attrs = widget.attrs
         self.choices = widget.choices
@@ -58,6 +89,8 @@ class RelatedFieldWidgetWrapper(forms.Widget):
         if hasattr(self, 'input_type'):
             self.input_type = widget.input_type
 
+        self.kwargs = kwargs
+
     def __deepcopy__(self, memo):
         obj = copy.copy(self)
         obj.widget = copy.deepcopy(self.widget, memo)
@@ -70,16 +103,25 @@ class RelatedFieldWidgetWrapper(forms.Widget):
         media = self.widget.media + vendor('xadmin.plugin.quick-form.js')
         return media
 
+    def resolve_field_name_if_inline(self, name):
+        """When the original field is an inline the name should be changed to the original."""
+        new_name = self.kwargs.get('_field_inline_' + name)
+        return (new_name and new_name[0]) or name
+
     def render(self, name, value, *args, **kwargs):
+        name = self.resolve_field_name_if_inline(name)
         self.widget.choices = self.choices
         output = []
         if self.add_url:
             output.append(u'<a href="%s" title="%s" class="btn btn-primary btn-sm btn-ajax pull-right" data-for-id="id_%s" data-refresh-url="%s"><i class="fa fa-plus"></i></a>'
                           % (
                               self.add_url, (_('Create New %s') % self.rel.to._meta.verbose_name), name,
-                              "%s?_field=%s&%s=" % (self.rel_add_url, name, name)))
-        output.extend(['<div class="control-wrap" id="id_%s_wrap_container">' % name,
-                  self.widget.render(name, value, *args, **kwargs), '</div>'])
+                              "{0.rel_add_url}?_field={1:s}&{1:s}=".format(self, name)
+                          ))
+        output.extend([
+            '<div class="control-wrap" id="id_{0:s}_wrap_container">'.format(name),
+            self.widget.render(name, value, *args, **kwargs), '</div>'
+        ])
         return mark_safe(u''.join(output))
 
     def build_attrs(self, extra_attrs=None, **kwargs):
@@ -102,7 +144,8 @@ class QuickAddBtnPlugin(BaseAdminPlugin):
             if rel_model in self.admin_site._registry and self.has_model_perm(rel_model, 'add'):
                 add_url = self.get_model_url(rel_model, 'add')
                 formfield.widget = RelatedFieldWidgetWrapper(
-                    formfield.widget, db_field.rel, add_url, self.get_model_url(self.model, 'add'))
+                    formfield.widget, db_field.rel, add_url, self.get_model_url(self.model, 'add'),
+                    **self.request.GET)
         return formfield
 
 site.register_plugin(QuickFormPlugin, ModelFormAdminView)
