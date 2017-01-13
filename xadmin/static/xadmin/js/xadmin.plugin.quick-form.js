@@ -68,9 +68,15 @@
               var errdiv = this.$form.find('#div_' + e['id'])
               if(errdiv.length){
                 errdiv.addClass('has-error')
-                var err_html = []
+                var err_html = [];
+                var err_id;
                 for (var j = e['errors'].length - 1; j >= 0; j--) {
-                  err_html.push('<span id="error_'+j+'_'+ e['id'] +'" class="text-danger">'+e['errors'][j]+'</span>')
+                  err_id = 'error_' + j + '_' + e['id'];
+
+                  // Prevent the message from being repeated several times.
+                  errdiv.find("#"+err_id).remove();
+
+                  err_html.push('<span id="'+ err_id + '" class="text-danger">' + e['errors'][j] + '</span>')
                 }
                 errdiv.find('.controls').append(err_html.join('\n'))
               } else {
