@@ -7,7 +7,10 @@ import filter from './filter'
 import loading from './plugins/loading'
 import search from './plugins/search'
 import modalform from './plugins/modalform'
+import modeltabs from './plugins/modeltabs'
+import reldetail from './plugins/reldetail'
 import notice from './plugins/notice'
+import splashscreen from './plugins/splashscreen'
 import auth from './auth'
 import i18n from './locales'
 
@@ -23,5 +26,8 @@ export default () => {
     .use(loading)
     .use(notice)
     //.use(modalform)
+    .use(modeltabs)
+    .use(reldetail)
     .use(auth)
+    .use(splashscreen)
 }

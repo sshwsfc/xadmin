@@ -26,7 +26,7 @@ export default {
       .use(Cache) // or any other cache implementation
       .use(LanguageDetector) // or any other implementation
       .init({
-        debug: true,
+        debug: false,
         lng: 'en',
         fallbackLng: false,
         keySeparator: false,

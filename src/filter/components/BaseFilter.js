@@ -1,7 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
 import { Field } from 'redux-form'
-import { FieldGroup } from './base'
 import { FormControl, Checkbox } from 'react-bootstrap'
 
 export default React.createClass({
@@ -33,15 +32,13 @@ export default React.createClass({
   },
 
   render() {
-    const { input: { name, value, onBlur, onChange, ...inputProps }, label, meta: { touched, error }, field } = this.props
+    const { input: { name, value, onBlur, onChange, ...inputProps }, label, meta: { touched, error }, field, group: FieldGroup } = this.props
     const { newValue } = this.state
     return (
       <FieldGroup
-        id={name}
         label={label}
-        error={error}
-        help={field.description || field.help}
-        control={{ ...field.attrs }} >
+        error={touched && error}
+        input={this.props.input} field={field} >
         
       </FieldGroup>
     )

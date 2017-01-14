@@ -213,12 +213,24 @@ const schema_converter = [
   }
 ]
 
+const FilterRelateSelect = FormWrap('model.form.fkselect')(({ input, options, ...props }) => {
+  const value = options ? _.find(options, item => item.id == input.value) : null
+  const newProps = { ...props, options, input: { ...input, value,
+    onChange: (value) => {
+      input.onChange(value.id)
+    } } }
+  return <RelateSelect.WrappedComponent {...newProps} />
+})
+
 const form_fields = {
   relates: {
     component: RelateMultiSelect
   },
   fkselect: {
     component: RelateSelect
+  },
+  filter_relate: {
+    component: FilterRelateSelect
   }
 }
 

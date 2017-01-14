@@ -24,7 +24,7 @@ const SignUpForm = StoreWrap('auth.sign_up')(({ onSuccess }) => {
               <form className="form-horizontal" onSubmit={handleSubmit}>
                 <Panel header={<h1 style={{ fontSize: 24 }}>{_t('Please Signup')}</h1>} className="panel-single" style={{ maxWidth: 550 }}>
                   {children}
-                  <Button disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary" bsSize="large" block>
+                  <Button type="submit" disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary" bsSize="large" block>
                     <Icon name={icon}/> {_t('Signup')}</Button>
                   <div style={{ marginTop: 20 }}>{_t('Have account')}? <Link to="/login">{_t('please login')}</Link></div>
                 </Panel>

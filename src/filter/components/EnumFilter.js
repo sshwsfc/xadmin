@@ -63,16 +63,14 @@ export default React.createClass({
   },
 
   render() {
-    const { input: { name, value, onBlur, onChange, ...inputProps }, label, meta: { touched, error }, field } = this.props
+    const { input: { name, value, onBlur, onChange, ...inputProps }, label, meta: { touched, error }, field, group: FieldGroup } = this.props
     const { checks } = this.state
     const inline = true
     return (
       <FieldGroup
-        id={name}
         label={label}
-        error={error}
-        help={field.description || field.help}
-        control={{ ...field.attrs }} >
+        error={touched && error}
+        input={this.props.input} field={field} >
         <Checkbox key="check-clear" 
           checked={checks.length==0} 
           onChange={(e)=>{

@@ -67,16 +67,10 @@ const SubMenu = React.createClass({
       <ButtonToolbar className="pull-right">
         <CountButton />
         { Block('model.list.submenu.btngroup', this) }
-
         <ButtonGroup bsSize="small">
           { Block('model.list.submenu.btn', this) }
         </ButtonGroup>
-
         <ColsDropdown />
-
-        <ButtonGroup bsSize="small">
-          <Button><Icon name="arrows-alt" /></Button>
-        </ButtonGroup>
       </ButtonToolbar>
     )
   }

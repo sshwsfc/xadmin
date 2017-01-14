@@ -24,7 +24,7 @@ export default StoreWrap('auth.forget_password')(({ onSuccess }) => {
               <form className="form-horizontal" onSubmit={handleSubmit}>
                 <Panel header={<h1 style={{ fontSize: 24 }}>{_t('Reset Password')}</h1>} className="panel-single" style={{ maxWidth: 450 }}>
                   {children}
-                  <Button disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary" bsSize="large" block>
+                  <Button type="submit" disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary" bsSize="large" block>
                     <Icon name={icon}/> {_t('Send Email to Reset Password')}</Button>
                 </Panel>
               </form>

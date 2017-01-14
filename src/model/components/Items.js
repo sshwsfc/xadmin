@@ -178,7 +178,7 @@ const ModelGrid = React.createClass({
           <Table striped bordered hover>
             <thead>
               <tr>
-                <th>#</th>
+                <th></th>
                 {fields.map(field=>{
                   return <th><Header key={`model-list-header-${field}`} field={field}  /></th>
                 })}

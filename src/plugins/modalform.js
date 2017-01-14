@@ -47,7 +47,7 @@ const AddModelBtn = ModelWrap('modalform.modal')(ModelWrap('model.item')(React.c
           <Modal.Body>{children}</Modal.Body>
           <Modal.Footer>
             <Button onClick={onClose}>{_t('Close')}</Button>
-            <Button bsStyle="primary" disabled={invalid || submitting} onClick={handleSubmit}><Icon name={icon}/> {_t('Save')}</Button>
+            <Button type="submit" bsStyle="primary" disabled={invalid || submitting} onClick={handleSubmit}><Icon name={icon}/> {_t('Save')}</Button>
           </Modal.Footer>
         </form>
       )

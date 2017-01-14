@@ -19,13 +19,13 @@ const SignInForm = StoreWrap('auth.sign_in')(({ onSignIn }) => {
         <Form 
           onSubmit={onSignIn} groupSize={{ label: 3, field: 9 }}
           componentClass={({ error, children, invalid, handleSubmit, submitting }) => {
-            const icon = submitting ? 'spinner fa-spin' : 'floppy-o'
+            const icon = submitting ? 'spinner fa-spin' : 'sign-in'
             return (
               <form className="form-horizontal" onSubmit={handleSubmit}>
                 <Panel header={<h1 style={{ fontSize: 24 }}>{_t('Please Login')}</h1>} className="panel-single" style={{ maxWidth: 450 }}>
                   {children}
                   {error && <strong>{error}</strong>}
-                  <Button disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary" bsSize="large" block>
+                  <Button type="submit" disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary" bsSize="large" block>
                     <Icon name={icon}/> {_t('Login')}</Button>
                   { auth.can_signup && (<div style={{ marginTop: 20 }}>{_t('Not registed')}? <Link to="/signup">{_t('please signup')}</Link></div>) }
                   { auth.can_reset_password && (<div style={{ marginTop: 10 }}>{_t('Forgot password')}? <Link to="/forget_password">{_t('reset password')}</Link></div>) }

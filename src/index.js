@@ -508,8 +508,8 @@ const _wrap_component = (tag, WrappedComponent, wrappers) => {
       this.clearCache()
     }
   }
-
-  return hoistStatics(Connect, WrappedComponent)
+  return Connect
+  //return hoistStatics(Connect, WrappedComponent) // will invoke the error "cannot call class as a function" in IE<=10
 }
 
 const _wrap = (magic, wrappers=[]) => {

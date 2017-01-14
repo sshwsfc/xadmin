@@ -16,7 +16,7 @@ const DefaultLayout = (props) => {
       <Panel>{children}</Panel>
       <AutoAffix offsetBottom={20}>
       <Well bsSize="small" style={{ textAlign: 'right' }}>
-        <Button disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary">
+        <Button type="submit" disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary">
           <Icon name={icon}/> {_t('Save')}</Button>
       </Well>
       </AutoAffix>

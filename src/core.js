@@ -10,11 +10,17 @@ export default {
   routers: {
     '@' : {
       path: '/',
-      component: Main
+      component: Main,
+      indexRoute: {
+        onEnter: (_, replace) => replace({ pathname: '/app/' })
+      }
     },
     '/' : {
       path: 'app/',
-      component: App
+      component: App,
+      indexRoute: {
+        onEnter: (_, replace) => replace({ pathname: '/app/dashboard' })
+      }
     }
   },
   reducers: {

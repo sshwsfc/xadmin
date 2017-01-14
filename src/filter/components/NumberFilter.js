@@ -54,15 +54,13 @@ export default React.createClass({
   },
 
   render() {
-    const { input: { name, value, onBlur, onChange, ...inputProps }, label, meta: { touched, error }, field } = this.props
+    const { input: { name, value, onBlur, onChange, ...inputProps }, label, meta: { touched, error }, field, group: FieldGroup } = this.props
     const { gte, lte } = this.state
     return (
       <FieldGroup
-        id={name}
         label={label}
-        error={error}
-        help={field.description || field.help}
-        control={{ ...field.attrs }} >
+        error={touched && error}
+        input={this.props.input} field={field} >
         <InputGroup>
           <FormControl type="number" { ...inputProps} {...field.attrs} value={gte}
             placeholder={field.minimum ? `Minimum(${field.minimum})` : 'No limit'}

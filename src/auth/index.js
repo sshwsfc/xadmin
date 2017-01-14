@@ -1,4 +1,5 @@
 
+import localforage from 'localforage'
 import mappers from './mappers'
 import SignInForm from './components/SignIn'
 import SignUpForm from './components/SignUp'
@@ -21,27 +22,32 @@ export default {
   },
   context: (app) => (context, cb) => {
     const { store } = context
-    if(localStorage.user) {
-      try {
-        const user = JSON.parse(localStorage.user)
-        store.dispatch({ type: '@@xadmin/AUTH_SIGN_IN', payload: user })
-      } catch(err) {
-        localStorage.user = null
-      }
-    }
+
     let user = null
     store.subscribe(() => {
       const state = store.getState()
       if(state.user !== user) {
         if(state.user) {
-          localStorage.user = JSON.stringify(state.user)
+          localforage.setItem('user', JSON.stringify(state.user))
         } else {
-          localStorage.user = null
+          localforage.removeItem('user')
         }
         user = state.user
       }
     })
-    cb(null, context)
+
+    localforage.getItem('user', function (err, value) {
+      if(err == null && value) {
+        try {
+          const user = JSON.parse(value)
+          store.dispatch({ type: '@@xadmin/AUTH_SIGN_IN', payload: user })
+        } catch(err) {
+          localforage.removeItem('user')
+        }
+      }
+      cb(null, context)
+    })
+
   },
   routers: (app) => {
     const { auth } = app.load_dict('config')
