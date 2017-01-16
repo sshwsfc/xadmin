@@ -6,14 +6,22 @@
             prefix: $$.data('prefix')
         }, $.fn.formset.styles[$$.data('style')], opts),
 
-            updateElementIndex = function(elem, prefix, ndx) {
-                var idRegex = new RegExp(prefix + '-(\\d+|__prefix__)-'),
-                    replacement = prefix + '-' + ndx + '-';
-                if (elem.attr("for")) elem.attr("for", elem.attr("for").replace(idRegex, replacement));
-                if (elem.attr('id')) elem.attr('id', elem.attr('id').replace(idRegex, replacement));
-                if (elem.attr('name')) elem.attr('name', elem.attr('name').replace(idRegex, replacement));
-                if (elem.attr('href')) elem.attr('href', elem.attr('href').replace(idRegex, replacement));
-                elem.find('.formset-num').html(ndx + 1);
+            updateElementIndex = function (elem, prefix, ndx) {
+              var idRegex = new RegExp(prefix + '-(\\d+|__prefix__)-', "g"),
+                replacement = prefix + '-' + ndx + '-';
+              var attrs = [
+                  "for", "id", "name", "href",
+                  // quick-form ...
+                  "data-for-id",
+                  "data-refresh-url"
+              ];
+              var index, name;
+              for (index = 0; index < attrs.length; index++) {
+                  name = attrs[index];
+                  if (elem.attr(name))
+                      elem.attr(name, elem.attr(name).replace(idRegex, replacement));
+              }
+              elem.find('.formset-num').html(ndx + 1);
             },
 
             hasChildElements = function(row) {
