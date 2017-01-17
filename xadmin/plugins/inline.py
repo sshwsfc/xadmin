@@ -13,6 +13,7 @@ from xadmin.layout import FormHelper, Layout, flatatt, Container, Column, Field,
 from xadmin.plugins.utils import get_context_dict
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView, DetailAdminView, filter_hook
+from collections import OrderedDict
 
 
 class ShowField(Field):
@@ -428,8 +429,8 @@ class InlineFormsetPlugin(BaseAdminPlugin):
 
     def get_form_layout(self, layout):
         allow_blank = isinstance(self.admin_view, DetailAdminView)
-        # fixed #176 bug, change dict to list
-        fs = [(f.model, InlineFormset(f, allow_blank)) for f in self.formsets]
+        # fixed #176, #363 bugs, change dict to list
+        fs = OrderedDict([(f.model, InlineFormset(f, allow_blank)) for f in self.formsets])
         replace_inline_objects(layout, fs)
 
         if fs:
@@ -439,8 +440,8 @@ class InlineFormsetPlugin(BaseAdminPlugin):
             if not container:
                 container = layout
 
-            # fixed #176 bug, change dict to list
-            for key, value in fs:
+            # fixed #176, #363 bugs, change dict to list
+            for key, value in fs.items():
                 container.append(value)
 
         return layout
