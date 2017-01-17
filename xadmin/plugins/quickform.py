@@ -35,7 +35,6 @@ class QuickFormPlugin(BaseAdminPlugin):
         if field_key in data:
             _fields = data[field_key].split(',')
             data[field_key] = []
-            fields = []
             for field in _fields:
                 field_name = self.resolve_field_if_inline(field)
 
@@ -44,9 +43,6 @@ class QuickFormPlugin(BaseAdminPlugin):
 
                 # Save the original field name to restore there in the widget
                 data['_field_inline_' + field_name] = field
-
-                fields.append(field_name)
-
             data[field_key] = ','.join(data[field_key])
         self.request.GET = data
 
