@@ -10,7 +10,8 @@ export default {
       return value == '' ? '' : parseFloat(value) || previousValue
     },
     attrs: {
-      type: 'number'
+      type: 'number',
+      style: { maxWidth: 200 }
     }
   },
   select: {
