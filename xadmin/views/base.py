@@ -327,6 +327,19 @@ class CommAdminView(BaseAdminView):
         return None
 
     @filter_hook
+    def hidden_model_menu(self, model, model_admin):
+        """Hook that lets you configure menus dynamically through plugins
+        'hidden_menu' when defined in model-admin, represents a static configuration
+        and this creates problems in a multithreads environment.
+        Example usage:
+            class MenuHiddenPlugin(BaseAdminPlugin):
+                # Example of a plugin that changes the default setting given in model-admin
+                def hidden_model_menu(self, hidden_menu, model, model_admin):
+                    return not hidden_menu
+        """
+        return getattr(model_admin, 'hidden_menu', False)
+
+    @filter_hook
     def get_nav_menu(self):
         site_menu = list(self.get_site_menu() or [])
         had_urls = []
@@ -342,7 +355,8 @@ class CommAdminView(BaseAdminView):
         nav_menu = OrderedDict()
 
         for model, model_admin in self.admin_site._registry.items():
-            if getattr(model_admin, 'hidden_menu', False):
+            # Menus will be shown based on model-admin configuration or plugins.
+            if self.hidden_model_menu(model, model_admin):
                 continue
             app_label = model._meta.app_label
             app_icon = None
