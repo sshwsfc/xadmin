@@ -1,7 +1,9 @@
 import StringIO
+from io import BytesIO
 import datetime
 import sys
 
+from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponse
 from django.template import loader
 from django.utils.encoding import force_unicode, smart_unicode
@@ -15,6 +17,11 @@ from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
 from xadmin.util import json
 from xadmin.views.list import ALL_VAR
+
+try:
+    import unicodecsv
+except ImportError:
+    unicodecsv = None
 
 try:
     import xlwt
@@ -56,6 +63,9 @@ class ExportPlugin(BaseAdminPlugin):
     export_mimes = {'xlsx': 'application/vnd.ms-excel',
                     'xls': 'application/vnd.ms-excel', 'csv': 'text/csv',
                     'xml': 'application/xhtml+xml', 'json': 'application/json'}
+
+    export_unicode_csv = False
+    export_unicode_csv_encoding = "utf-8"
 
     def init_request(self, *args, **kwargs):
         return self.request.GET.get('_do_') == 'export'
@@ -169,6 +179,9 @@ class ExportPlugin(BaseAdminPlugin):
         return t
 
     def get_csv_export(self, context):
+        if self.export_unicode_csv:
+            return self.get_unicode_csv_export(context)
+
         datas = self._get_datas(context)
         stream = []
 
@@ -179,6 +192,17 @@ class ExportPlugin(BaseAdminPlugin):
             stream.append(','.join(map(self._format_csv_text, row)))
 
         return '\r\n'.join(stream)
+
+    def get_unicode_csv_export(self, context):
+        """Exports the data in the configured encoding. Default utf8"""
+        if unicodecsv is None:
+            raise ImproperlyConfigured("Need to install module \"unicodecsv\" "
+                                       "in order to export csv as unicode.")
+        datas = self._get_datas(context)
+        stream = BytesIO()
+        writer = unicodecsv.writer(stream, encoding=self.export_unicode_csv_encoding)
+        writer.writerows(datas)
+        return stream.getvalue()
 
     def _to_xml(self, xml, data):
         if isinstance(data, (list, tuple)):
