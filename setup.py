@@ -20,6 +20,7 @@ setup(
         'setuptools',
         'django>=1.9.0,<2.0.0',
         'django-crispy-forms>=1.6.0',
+        'django-reversion>=2.0.0',
         'django-formtools>=1.0',
         'httplib2==0.9.2'
     ],
