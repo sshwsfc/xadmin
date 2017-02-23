@@ -65,7 +65,7 @@ class ExportPlugin(BaseAdminPlugin):
                     'xml': 'application/xhtml+xml', 'json': 'application/json'}
 
     export_unicode_csv = False
-    export_unicode_csv_encoding = "utf-8"
+    export_unicode_encoding = "utf-8"
 
     def init_request(self, *args, **kwargs):
         return self.request.GET.get('_do_') == 'export'
@@ -136,13 +136,11 @@ class ExportPlugin(BaseAdminPlugin):
     def get_xls_export(self, context):
         datas = self._get_datas(context)
         output = StringIO.StringIO()
-        export_header = (
-            self.request.GET.get('export_xls_header', 'off') == 'on')
+        export_header = (self.request.GET.get('export_xls_header', 'off') == 'on')
 
         model_name = self.opts.verbose_name
-        book = xlwt.Workbook(encoding='utf8')
-        sheet = book.add_sheet(
-            u"%s %s" % (_(u'Sheet'), force_unicode(model_name)))
+        book = xlwt.Workbook(encoding=self.export_unicode_encoding)
+        sheet = book.add_sheet(u"%s %s" % (_(u'Sheet'), force_unicode(model_name)))
         styles = {'datetime': xlwt.easyxf(num_format_str='yyyy-mm-dd hh:mm:ss'),
                   'date': xlwt.easyxf(num_format_str='yyyy-mm-dd'),
                   'time': xlwt.easyxf(num_format_str='hh:mm:ss'),
@@ -200,7 +198,7 @@ class ExportPlugin(BaseAdminPlugin):
                                        "in order to export csv as unicode.")
         datas = self._get_datas(context)
         stream = BytesIO()
-        writer = unicodecsv.writer(stream, encoding=self.export_unicode_csv_encoding)
+        writer = unicodecsv.writer(stream, encoding=self.export_unicode_encoding)
         writer.writerows(datas)
         return stream.getvalue()
 
@@ -223,7 +221,7 @@ class ExportPlugin(BaseAdminPlugin):
         results = self._get_objects(context)
         stream = StringIO.StringIO()
 
-        xml = SimplerXMLGenerator(stream, "utf-8")
+        xml = SimplerXMLGenerator(stream, self.export_unicode_encoding)
         xml.startDocument()
         xml.startElement("objects", {})
 
@@ -241,12 +239,12 @@ class ExportPlugin(BaseAdminPlugin):
 
     def get_response(self, response, context, *args, **kwargs):
         file_type = self.request.GET.get('export_type', 'csv')
-        response = HttpResponse(
-            content_type="%s; charset=UTF-8" % self.export_mimes[file_type])
-
+        response = HttpResponse(content_type="{0:s}; charset={1:s}".format(self.export_mimes[file_type],
+                                                                           self.export_unicode_encoding))
         file_name = self.opts.verbose_name.replace(' ', '_')
-        response['Content-Disposition'] = ('attachment; filename=%s.%s' % (
-            file_name, file_type)).encode('utf-8')
+
+        filename_format = u'attachment; filename={0:s}.{1:s}'.format(file_name, file_type)
+        response['Content-Disposition'] = filename_format.encode(self.export_unicode_encoding)
 
         response.write(getattr(self, 'get_%s_export' % file_type)(context))
         return response
