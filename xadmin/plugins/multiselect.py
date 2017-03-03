@@ -128,7 +128,7 @@ class ForeignKeyRawIdWidget(forms.TextInput):
             extra.append('<a href="%s%s" class="related-lookup" id="lookup_id_%s" onclick="return showRelatedObjectLookupPopup(this);"> '
                             % (related_url, url, name))
             extra.append('<img src="%s" width="16" height="16" alt="%s" /></a>'
-                            % (static('admin/img/selector-search.gif'), _('Lookup')))
+                            % (static('admin/img/search.svg'), _('Lookup')))
         output = [super(ForeignKeyRawIdWidget, self).render(name, value, attrs)] + extra
         if value:
             output.append(self.label_for_value(value))
@@ -163,6 +163,10 @@ class SelectMultipleRawid(ForeignKeyRawIdWidget):
     A Widget for displaying ManyToMany ids in the "raw_id" interface rather than
     in a <select multiple> box.
     """
+    @property
+    def media(self):
+        return vendor('multiselect.js', 'multiselect.css', 'xadmin.widget.multiselect_rawid.js')
+
     def render(self, name, value, attrs=None):
         if attrs is None:
             attrs = {}
