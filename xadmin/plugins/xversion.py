@@ -8,7 +8,10 @@ from django.forms.models import model_to_dict
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
-from django.utils.encoding import force_unicode
+try:
+    from django.utils.encoding import force_text as force_unicode
+except ImportError:
+    from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
@@ -401,7 +404,7 @@ class RevisionView(BaseRevisionView):
         helper = super(RevisionView, self).get_form_helper()
         diff_fields = {}
         version_data = self.version.field_dict
-        
+
         for f in self.opts.fields:
             fvalue = f.value_from_object(self.org_obj)
             vvalue = version_data.get(f.name, None)

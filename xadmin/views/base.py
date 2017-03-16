@@ -7,7 +7,7 @@ from functools import update_wrapper
 from inspect import getargspec
 
 from django import forms
-from django.utils.encoding import force_unicode, force_text
+from django.utils.encoding import force_text
 from django.apps import apps
 from django.conf import settings
 from django.contrib import messages
@@ -19,7 +19,15 @@ from django.http import HttpResponse
 from django.template import Context, Template
 from django.template.response import TemplateResponse
 from django.utils.decorators import method_decorator, classonlymethod
-from django.utils.encoding import force_unicode, smart_unicode, smart_str
+from django.utils.encoding import smart_str
+import sys
+import collections
+if sys.version_info[0] == 3:
+    from django.utils.encoding import smart_text as smart_unicode
+    from django.utils.encoding import force_text as force_unicode
+else:
+    from django.utils.encoding import smart_unicode
+    from django.utils.encoding import force_unicode
 from django.utils.http import urlencode
 from django.utils.itercompat import is_iterable
 from django.utils.safestring import mark_safe
@@ -55,7 +63,7 @@ def filter_chain(filters, token, func, *args, **kwargs):
                 if result is None:
                     return fm()
                 else:
-                    raise IncorrectPluginArg(u'Plugin filter method need a arg to receive parent method result.')
+                    raise IncorrectPluginArg('Plugin filter method need a arg to receive parent method result.')
             else:
                 return fm(func if fargs[1] == '__' else func(), *args, **kwargs)
         return filter_chain(filters, token - 1, _inner_method, *args, **kwargs)
@@ -73,7 +81,7 @@ def filter_hook(func):
 
         if self.plugins:
             filters = [(getattr(getattr(p, tag), 'priority', 10), getattr(p, tag))
-                       for p in self.plugins if callable(getattr(p, tag, None))]
+                       for p in self.plugins if isinstance(getattr(p, tag, None), collections.Callable)]
             filters = [f for p, f in sorted(filters, key=lambda x:x[0])]
             return filter_chain(filters, len(filters) - 1, _inner_method, *args, **kwargs)
         else:
@@ -87,9 +95,13 @@ def inclusion_tag(file_name, context_class=Context, takes_context=False):
         def method(self, context, nodes, *arg, **kwargs):
             _dict = func(self, context, nodes, *arg, **kwargs)
             from django.template.loader import get_template, select_template
+            if sys.version_info[0] == 3:
+                str_type = str
+            else:
+                str_type = basestring
             if isinstance(file_name, Template):
                 t = file_name
-            elif not isinstance(file_name, basestring) and is_iterable(file_name):
+            elif not isinstance(file_name, str_type) and is_iterable(file_name):
                 t = select_template(file_name)
             else:
                 t = get_template(file_name)
@@ -153,7 +165,7 @@ class BaseAdminObject(object):
             new_params = {}
         if remove is None:
             remove = []
-        p = dict(self.request.GET.items()).copy()
+        p = dict(list(self.request.GET.items())).copy()
         for r in remove:
             for k in p.keys():
                 if k.startswith(r):
@@ -171,7 +183,7 @@ class BaseAdminObject(object):
             new_params = {}
         if remove is None:
             remove = []
-        p = dict(self.request.GET.items()).copy()
+        p = dict(list(self.request.GET.items())).copy()
         for r in remove:
             for k in p.keys():
                 if k.startswith(r):
@@ -183,7 +195,7 @@ class BaseAdminObject(object):
             else:
                 p[k] = v
         return mark_safe(''.join(
-            '<input type="hidden" name="%s" value="%s"/>' % (k, v) for k, v in p.items() if v))
+            '<input type="hidden" name="%s" value="%s"/>' % (k, v) for k, v in list(p.items()) if v))
 
     def render_response(self, content, response_type='json'):
         if response_type == 'json':
@@ -201,7 +213,7 @@ class BaseAdminObject(object):
         Send a message to the user. The default implementation
         posts a message using the django.contrib.messages backend.
         """
-        if hasattr(messages, level) and callable(getattr(messages, level)):
+        if hasattr(messages, level) and isinstance(getattr(messages, level), collections.Callable):
             getattr(messages, level)(self.request, message)
 
     def static(self, path):
@@ -212,7 +224,7 @@ class BaseAdminObject(object):
 
     def log(self, flag, message, obj=None):
         log = Log(
-            user=self.user, 
+            user=self.user,
             ip_addr=self.request.META['REMOTE_ADDR'],
             action_flag=flag,
             message=message
@@ -312,8 +324,8 @@ class CommAdminView(BaseAdminView):
     base_template = 'xadmin/base_site.html'
     menu_template = 'xadmin/includes/sitemenu_default.html'
 
-    site_title = getattr(settings,"XADMIN_TITLE",_(u"Django Xadmin"))
-    site_footer = getattr(settings,"XADMIN_FOOTER_TITLE",_(u"my-company.inc"))
+    site_title = getattr(settings,"XADMIN_TITLE",_("Django Xadmin"))
+    site_footer = getattr(settings,"XADMIN_FOOTER_TITLE",_("my-company.inc"))
 
     global_models_icon = {}
     default_model_icon = None
@@ -343,8 +355,12 @@ class CommAdminView(BaseAdminView):
                 continue
             app_label = model._meta.app_label
             app_icon = None
+            if sys.version_info[0] == 3:
+                _title = str(capfirst(model._meta.verbose_name_plural))
+            else:
+                _title = unicode(capfirst(model._meta.verbose_name_plural))
             model_dict = {
-                'title': unicode(capfirst(model._meta.verbose_name_plural)),
+                'title': _title,
                 'url': self.get_model_url(model, "changelist"),
                 'icon': self.get_model_icon(model),
                 'perm': self.get_model_perm(model, 'view'),
@@ -358,11 +374,17 @@ class CommAdminView(BaseAdminView):
                 nav_menu[app_key]['menus'].append(model_dict)
             else:
                 # Find app title
-                app_title = unicode(app_label.title())
+                if sys.version_info[0] == 3:
+                    app_title = str(app_label.title())
+                else:
+                    app_title = unicode(app_label.title())
                 if app_label.lower() in self.apps_label_title:
                     app_title = self.apps_label_title[app_label.lower()]
                 else:
-                    app_title = unicode(apps.get_app_config(app_label).verbose_name)
+                    if sys.version_info[0] == 3:
+                        app_title = str(apps.get_app_config(app_label).verbose_name)
+                    else:
+                        app_title = unicode(apps.get_app_config(app_label).verbose_name)
                 #find app icon
                 if app_label.lower() in self.apps_icons:
                     app_icon = self.apps_icons[app_label.lower()]
@@ -385,7 +407,7 @@ class CommAdminView(BaseAdminView):
         for menu in nav_menu.values():
             menu['menus'].sort(key=sortkeypicker(['order', 'title']))
 
-        nav_menu = nav_menu.values()
+        nav_menu = list(nav_menu.values())
         nav_menu.sort(key=lambda x: x['title'])
 
         site_menu.extend(nav_menu)
@@ -405,7 +427,7 @@ class CommAdminView(BaseAdminView):
                 need_perm = item.pop('perm', None)
                 if need_perm is None:
                     return True
-                elif callable(need_perm):
+                elif isinstance(need_perm, collections.Callable):
                     return need_perm(self.user)
                 elif need_perm == 'super':
                     return self.user.is_superuser
@@ -423,7 +445,7 @@ class CommAdminView(BaseAdminView):
                 return item
 
             nav_menu = [filter_item(item) for item in menus if check_menu_permission(item)]
-            nav_menu = filter(lambda x:x, nav_menu)
+            nav_menu = [x for x in nav_menu if x]
 
             if not settings.DEBUG:
                 self.request.session['nav_menu'] = json.dumps(nav_menu)

@@ -1,7 +1,10 @@
 from collections import OrderedDict
 from django.forms.utils import ErrorDict
 from django.utils.html import escape
-from django.utils.encoding import force_unicode
+try:
+    from django.utils.encoding import force_text as force_unicode
+except ImportError:
+    from django.utils.encoding import force_unicode
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView, ModelFormAdminView, DetailAdminView
 
@@ -16,9 +19,9 @@ class BaseAjaxPlugin(BaseAdminPlugin):
 
 
 class AjaxListPlugin(BaseAjaxPlugin):
-    
+
     def get_list_display(self,list_display):
-        list_fields = [field for field in self.request.GET.get('_fields',"").split(",") 
+        list_fields = [field for field in self.request.GET.get('_fields',"").split(",")
                                 if field.strip() != ""]
         if list_fields:
             return list_fields

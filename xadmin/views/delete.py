@@ -2,7 +2,11 @@ from django.core.exceptions import PermissionDenied
 from django.db import transaction, router
 from django.http import Http404, HttpResponseRedirect
 from django.template.response import TemplateResponse
-from django.utils.encoding import force_unicode
+import sys
+if sys.version_info[0] == 3:
+    from django.utils.encoding import force_text as force_unicode
+else:
+    from django.utils.encoding import force_unicode
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.contrib.admin.utils import get_deleted_objects

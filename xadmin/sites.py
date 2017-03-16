@@ -6,9 +6,12 @@ from django.db.models.base import ModelBase
 from django.views.decorators.cache import never_cache
 from django.template.engine import Engine
 import inspect
+import collections
 
-reload(sys)
-sys.setdefaultencoding("utf-8")
+import sys
+if sys.version_info[0] != 3:
+    reload(sys)
+    sys.setdefaultencoding("utf-8")
 
 
 class AlreadyRegistered(Exception):
@@ -69,7 +72,7 @@ class AdminSite(object):
         if issubclass(admin_view_class, BaseAdminView):
             self._registry_modelviews.append((path, admin_view_class, name))
         else:
-            raise ImproperlyConfigured(u'The registered view class %s isn\'t subclass of %s' %
+            raise ImproperlyConfigured('The registered view class %s isn\'t subclass of %s' %
                                       (admin_view_class.__name__, BaseAdminView.__name__))
 
     def register_view(self, path, admin_view_class, name):
@@ -81,7 +84,7 @@ class AdminSite(object):
             self._registry_plugins.setdefault(
                 admin_view_class, []).append(plugin_class)
         else:
-            raise ImproperlyConfigured(u'The registered plugin class %s isn\'t subclass of %s' %
+            raise ImproperlyConfigured('The registered plugin class %s isn\'t subclass of %s' %
                                       (plugin_class.__name__, BaseAdminPlugin.__name__))
 
     def register_settings(self, name, admin_class):
@@ -208,7 +211,7 @@ class AdminSite(object):
 
     def _get_merge_attrs(self, option_class, plugin_class):
         return dict([(name, getattr(option_class, name)) for name in dir(option_class)
-                    if name[0] != '_' and not callable(getattr(option_class, name)) and hasattr(plugin_class, name)])
+                    if name[0] != '_' and not isinstance(getattr(option_class, name), collections.Callable) and hasattr(plugin_class, name)])
 
     def _get_settings_class(self, admin_view_class):
         name = admin_view_class.__name__.lower()
@@ -254,8 +257,8 @@ class AdminSite(object):
                     merge_opts.append(settings_class)
                 merge_opts.extend(opts)
                 ps = self._registry_plugins.get(klass, [])
-                plugins.extend(map(self._create_plugin(
-                    merge_opts), ps) if merge_opts else ps)
+                plugins.extend(list(map(self._create_plugin(
+                    merge_opts), ps)) if merge_opts else ps)
         return plugins
 
     def get_view_class(self, view_class, option_class=None, **opts):
@@ -310,7 +313,7 @@ class AdminSite(object):
             ]
 
         # Add in each model's views.
-        for model, admin_class in self._registry.iteritems():
+        for model, admin_class in list(self._registry.items()):
             view_urls = [url(
                 path, wrap(
                     self.create_model_admin_view(clz, model, admin_class)),

@@ -8,7 +8,11 @@ from django.utils.translation import ugettext_lazy as _, ugettext
 from django.core.urlresolvers import NoReverseMatch, reverse
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models.base import ModelBase
-from django.utils.encoding import python_2_unicode_compatible, smart_text, smart_unicode
+from django.utils.encoding import python_2_unicode_compatible, smart_text
+try:
+    from django.utils.encoding import smart_text as smart_unicode
+except ImportError:
+    from django.utils.encoding import smart_unicode
 
 from django.db.models.signals import post_migrate
 from django.contrib.auth.models import Permission
@@ -180,4 +184,3 @@ class Log(models.Model):
     def get_edited_object(self):
         "Returns the edited object represented by this log entry"
         return self.content_type.get_object_for_this_type(pk=self.object_id)
-
