@@ -2,13 +2,9 @@ import React from 'react'
 import { Field } from 'redux-form'
 import { Radio, Button, ButtonToolbar } from 'react-bootstrap'
 
-export default ({ input, label, meta: { touched, error }, field, group: FieldGroup }) => {
+export default ({ input, label, meta, field, group: FieldGroup }) => {
   return (
-    <FieldGroup
-      label={label}
-      error={touched && error}
-      input={input} field={field}
-    >
+    <FieldGroup label={label} meta={meta} input={input} field={field}>
       <ButtonToolbar>
       {field.titleMap.map(option => { 
         return (<Button key={option.value} 

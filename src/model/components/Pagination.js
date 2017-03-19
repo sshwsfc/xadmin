@@ -22,7 +22,7 @@ const ModelPagination = createClass({
       return (
         <Pagination
             style={{ marginTop: 0 }}
-            bsSize={this.props.bsSize}
+            bsSize={this.props.bsSize || ''}
             prev
             next
             first

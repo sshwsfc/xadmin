@@ -70,7 +70,7 @@ const UserResetPassword = ({ context: { _t } }) => ({
 const UserChangePassword = ({ context: { _t } }) => ({ 
   type: 'object',
   name: 'user_change_password',
-  resource_name: 'auth/password/change',
+  resource_name: 'user/password',
   title: 'Reset Password',
   properties: {
     old_password: {
@@ -78,19 +78,20 @@ const UserChangePassword = ({ context: { _t } }) => ({
       type: 'string',
       format: 'password'
     },
-    new_password1: {
+    new_password: {
       title: 'New Password',
       type: 'string'
     },
     new_password2: {
       title: 'Repeat Password',
       type: 'string',
-      constant: { $data: '1/new_password1', constantName: _t('New Password') }
+      constant: { $data: '1/new_password', constantName: _t('New Password') }
     }
   },
+  required: [ 'old_password', 'new_password', 'new_password2' ],
   form: [ 
     { key: 'old_password', attrs: { type: 'password' } },
-    { key: 'new_password1', attrs: { type: 'password' } },
+    { key: 'new_password', attrs: { type: 'password' } },
     { key: 'new_password2', attrs: { type: 'password' } } 
   ]
 })

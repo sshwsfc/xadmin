@@ -17,7 +17,7 @@ const SignInForm = StoreWrap('auth.sign_in')(({ onSignIn }) => {
     <div className="container">
       <UserSignInModel>
         <Form 
-          onSubmit={onSignIn} groupSize={{ label: 3, field: 9 }}
+          onSubmit={onSignIn} option={{ groupSize : { label: { sm: 3 }, control: { sm: 9 } } }}
           componentClass={({ error, children, invalid, handleSubmit, submitting }) => {
             const icon = submitting ? 'spinner fa-spin' : 'sign-in'
             return (

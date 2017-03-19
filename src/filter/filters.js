@@ -40,8 +40,9 @@ const canonicalTitleMap = (titleMap, originalEnum) => {
 
 export default [
   // all form field
-  (f, schema, options) => {
-    f.name = schema.name || options.key
+  (f, fschema, options) => {
+    const schema = f.schema || fschema
+    f.name = options.key || schema.name
     f.label = schema.title || f.name
 
     if (schema.description) { f.description = schema.description }

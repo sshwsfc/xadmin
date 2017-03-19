@@ -45,17 +45,17 @@ export default React.createClass({
       }
     }
     if(newChecks != checks) {
-      this.setState({ checks: newChecks }, (()=>{
+      this.setState({ checks: newChecks }, ()=>{
         onChange(this.getValue())
-      }).bind(this))
+      })
     }
   },
 
   clear() {
     const { onChange } = this.props.input
-    this.setState({ checks: [] }, (()=>{
+    this.setState({ checks: [] }, ()=>{
       onChange(this.getValue())
-    }).bind(this))
+    })
   },
 
   shouldComponentUpdate(nextProps) {
@@ -63,14 +63,11 @@ export default React.createClass({
   },
 
   render() {
-    const { input: { name, value, onBlur, onChange, ...inputProps }, label, meta: { touched, error }, field, group: FieldGroup } = this.props
+    const { input: { name, value, onBlur, onChange, ...inputProps }, label, meta, field, group: FieldGroup } = this.props
     const { checks } = this.state
     const inline = true
     return (
-      <FieldGroup
-        label={label}
-        error={touched && error}
-        input={this.props.input} field={field} >
+      <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
         <Checkbox key="check-clear" 
           checked={checks.length==0} 
           onChange={(e)=>{

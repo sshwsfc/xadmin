@@ -119,7 +119,7 @@ const converters = [
 
       const fields = keys.filter(key => opts.ignore.indexOf(key) === -1).map(key => {
         opts.path = [ ...options.path, key ]
-        return _.merge(convert(props[key], opts), form[key] || {})
+        return props[key] !== undefined ? _.merge(convert(props[key], opts), form[key] || {}) : form[key]
       })
 
       f.render = schema.form_render
@@ -165,7 +165,23 @@ const converters = [
           break
       }
     } else if(schema_type === 'number') {
-      f.type = 'number'
+      if(!schema['enum']) {
+        f.type = 'number'
+      } else {
+        f.type = 'numselect'
+        if (!f.titleMap) {
+          f.titleMap = enumToTitleMap(schema['enum'], schema['enum_title'] || {})
+        }
+      }
+    } else if(schema_type === 'integer') {
+      if(!schema['enum']) {
+        f.type = 'integer'
+      } else {
+        f.type = 'numselect'
+        if (!f.titleMap) {
+          f.titleMap = enumToTitleMap(schema['enum'], schema['enum_title'] || {})
+        }
+      }
     } else if(schema_type === 'boolean') {
       f.type = 'checkbox'
     }

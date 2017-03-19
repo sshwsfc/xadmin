@@ -1,5 +1,6 @@
 import React from 'react'
-import { Well, DropdownButton } from 'react-bootstrap'
+import _ from 'lodash'
+import { Well, DropdownButton, ButtonToolbar, MenuItem } from 'react-bootstrap'
 import { Block, app } from '../../index'
 import { ModelWrap } from '../base'
 
@@ -12,13 +13,16 @@ const ActionBar = React.createClass({
   render() {
     const count = this.props.count
     const { _t } = app.context
-    return (
+    const actions = Block('model.list.actions', this)
+    return (actions !== undefined && _.isArray(actions) && actions.filter(act=>!_.isNil(act)).length>0) ? (
       <Well bsSize="small">
-        <DropdownButton title={ count > 0 ? _t('{{count}} record selected', { count }) : _t('No data selected')} id="model-list-actions" bsStyle="success" dropup>
-          { Block('model.list.actions', this) }
-        </DropdownButton>
+        <ButtonToolbar>
+          <DropdownButton title={ count > 0 ? _t('{{count}} record selected', { count }) : _t('No data selected')} id="model-list-actions" bsStyle="success" dropup>
+            { actions }
+          </DropdownButton>
+        </ButtonToolbar>
       </Well>
-    )
+    ) : null
   }
 })
 

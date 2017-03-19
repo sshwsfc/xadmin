@@ -61,7 +61,8 @@ const ModelForm = React.createClass({
         initialValues={this.state.record}
         onSubmit={saveItem}
         component={FormLayout}
-        {...formProps} />
+        {...formProps}
+        {...model.form_props} />
       )
   }
 

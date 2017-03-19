@@ -8,9 +8,18 @@ import { FormControl, ButtonGroup, Nav, NavItem, Label, Button, OverlayTrigger, 
 import { DateRange } from 'react-date-range'
 
 const defaultRanges = {
-  today: { title: 'Today' },
-  yestday: { title: 'Yestday' },
-  last_month: { title: 'Last Month' }
+  today: { title: 'Today', value: (format) => ({
+    gte: moment().startOf('day').format(format), 
+    lte: moment().endOf('day').format(format)
+  }) },
+  yestday: { title: 'Yestday', value: (format) => ({
+    gte: moment().subtract(1, 'days').startOf('day').format(format), 
+    lte: moment().subtract(1, 'days').endOf('day').format(format)
+  }) },
+  this_month: { title: 'This Month', value: (format) => ({
+    gte: moment().startOf('month').format(format), 
+    lte: moment().endOf('month').format(format)
+  }) }
 }
 
 export default React.createClass({
@@ -33,30 +42,31 @@ export default React.createClass({
   clear(rule, range) {
     const { onChange } = this.props.input
     const { value } = this.state
-    this.setState({ value: {} }, (()=>{
+    this.setState({ value: {} }, ()=>{
       onChange(this.getValue())
-    }).bind(this))
+    })
   },
 
   onSelectRange(rule, range) {
     const { onChange } = this.props.input
+    const format = this.props.field.datetimeFormat || 'YYYY-MM-DD HH:mm:ss'
     const { value } = this.state
-    this.setState({ value: { rule } }, (()=>{
+    this.setState({ value: { rule, ...range.value(format) } }, ()=>{
       onChange(this.getValue())
-    }).bind(this))
+    })
   },
 
   handleSelectRange(dates) {
     const { onChange } = this.props.input
-    const format = this.props.field.dateFormat || 'YYYY-MM-DD'
+    const format = this.props.field.datetimeFormat || 'YYYY-MM-DD HH:mm:ss'
     const { value } = this.state
     this.setState({ value: { 
       rule: 'range', 
-      gte: dates['startDate'].format(format).toString(), 
-      lt: dates['endDate'].format(format).toString() } 
-    }, (()=>{
+      gte: moment(dates['startDate']).startOf('day').format(format).toString(), 
+      lte: moment(dates['endDate']).endOf('day').format(format).toString() } 
+    }, ()=>{
       onChange(this.getValue())
-    }).bind(this))
+    })
   },
 
   renderMini() {
@@ -116,14 +126,11 @@ export default React.createClass({
   },
 
   render() {
-    const { input: { name, value, onBlur, onChange, ...inputProps }, label, meta: { touched, error }, field, group: FieldGroup } = this.props
+    const { input, label, meta, field, group: FieldGroup } = this.props
     const { newValue } = this.state
 
     return (
-      <FieldGroup
-        label={label}
-        error={touched && error}
-        input={this.props.input} field={field} >
+      <FieldGroup label={label} meta={meta} input={input} field={field}>
         {field.mode == 'mini' ? this.renderMini() : this.renderBase()}
       </FieldGroup>
     )

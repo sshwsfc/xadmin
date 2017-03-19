@@ -62,8 +62,8 @@ export default (model) => {
           const property = model.properties[field]
           if(property) {
             if(property.type == 'object' && property.name != undefined) {
-              include.push(field + 'Pointer')
-              fields[field + 'Pointer'] = true
+              include.push(field)
+              fields[field] = true
             } else if(property.type == 'array' && property.items.type == 'object') {
               include.push(field)
             } else {

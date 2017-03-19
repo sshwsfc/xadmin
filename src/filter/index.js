@@ -1,7 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import { Field, reduxForm, reducer as formReducer } from 'redux-form'
-import { Nav, Well, NavItem, NavDropdown, MenuItem, OverlayTrigger, Popover, Button, Col, Row, FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap'
+import { Nav, Well, NavItem, NavDropdown, MenuItem, OverlayTrigger, Popover, Badge, Button, Col, Row, FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap'
 import { ModelWrap } from '../model/base'
 import { BaseForm } from '../form'
 import filter_converter from './filters'
@@ -31,9 +31,9 @@ const FilterForm = (props) => {
 const FilterDiv = React.createClass({
 
   render() {
-    const { filters, formKey, data, changeFilter } = this.props
+    const { filters, formKey, data, changeFilter, resetFilter } = this.props
     const FormLayout = (props) => {
-      const { children, invalid, pristine, handleSubmit, reset, submitting } = props
+      const { children, invalid, pristine, handleSubmit, submitting } = props
       return (
         <form className="form-horizontal" onSubmit={handleSubmit}>
           {children}
@@ -41,7 +41,7 @@ const FilterDiv = React.createClass({
             <Col sm={9} xsOffset={3} >
               <Button disabled={invalid || pristine || submitting} onClick={handleSubmit} bsStyle="primary">Search</Button>
               {' '}
-              <Button disabled={submitting} onClick={reset} bsStyle="default">Clear</Button>
+              <Button disabled={submitting} onClick={resetFilter} bsStyle="default">Clear</Button>
             </Col>
           </Row>
         </form>
@@ -62,10 +62,10 @@ const FilterDiv = React.createClass({
 const FilterInline = React.createClass({
 
   render() {
-    const { filters, formKey, data, changeFilter } = this.props
+    const { filters, formKey, data, changeFilter, resetFilter } = this.props
 
     const FormLayout = (props) => {
-      const { children, invalid, pristine, handleSubmit, reset, submitting } = props
+      const { children, invalid, pristine, handleSubmit, submitting } = props
       return (
         <form className="form-horizontal" onSubmit={handleSubmit}>
           <Row style={{ marginBottom: '-15px' }}>
@@ -75,7 +75,7 @@ const FilterInline = React.createClass({
             <Col style={{ textAlign: 'center' }} sm={12}>
             <Button disabled={invalid || pristine || submitting} bsSize="sm" onClick={handleSubmit} bsStyle="primary">Search</Button>
             {' '}
-            <Button disabled={submitting} onClick={reset} bsSize="sm" bsStyle="default">Clear</Button>
+            <Button disabled={submitting} onClick={resetFilter} bsSize="sm" bsStyle="default">Clear</Button>
             </Col>
           </Row>
         </form>
@@ -110,19 +110,19 @@ const FilterInline = React.createClass({
 
 })
 
-const FilterMenu = ModelWrap('mode.list.filter')(React.createClass({
+const FilterMenu = ModelWrap('model.list.filter')(React.createClass({
 
   render() {
-    const { filters, formKey, data, changeFilter } = this.props
+    const { filters, formKey, data, changeFilter, resetFilter } = this.props
 
     const FormLayout = (props) => {
-      const { children, invalid, pristine, handleSubmit, reset, submitting } = props
+      const { children, invalid, pristine, handleSubmit, submitting } = props
       return (
         <form className="form-horizontal" onSubmit={handleSubmit}>
           {children}
           <Button disabled={invalid || pristine || submitting} onClick={handleSubmit} bsStyle="primary">Search</Button>
           {' '}
-          <Button disabled={submitting} onClick={reset} bsStyle="default">Clear</Button>
+          <Button disabled={submitting} onClick={resetFilter} bsStyle="default">Clear</Button>
         </form>
       )
     }
@@ -147,17 +147,17 @@ const FilterMenu = ModelWrap('mode.list.filter')(React.createClass({
 
 }))
 
-const FilterNav = ModelWrap('mode.list.filter')(React.createClass({
+const FilterNav = ModelWrap('model.list.filter')(React.createClass({
 
   render() {
-    const { filters } = this.props
+    const { filters, data } = this.props
     if(filters && filters.length) {
       return (
-        <OverlayTrigger trigger="click" placement="bottom" overlay={
+        <OverlayTrigger trigger="click" rootClose={false} placement="bottom" overlay={
           <Popover style={{ maxWidth: 580 }}>
             <FilterDiv {...this.props}/>
           </Popover>}>
-          <NavItem><Icon name="filter" /> Filter</NavItem>
+          <NavItem><Icon name="filter" /> Filter {(data && Object.keys(data).length) ? (<Badge>{Object.keys(data).length}</Badge>) : null}</NavItem>
         </OverlayTrigger>)
     } else {
       return null
@@ -166,7 +166,7 @@ const FilterNav = ModelWrap('mode.list.filter')(React.createClass({
 
 }))
 
-const FilterSubMenu = ModelWrap('mode.list.filter')(React.createClass({
+const FilterSubMenu = ModelWrap('model.list.filter')(React.createClass({
   render() {
     const { filters } = this.props
     return filters && filters.length ? (<Well><FilterInline {...this.props}/></Well>) : null
@@ -174,68 +174,76 @@ const FilterSubMenu = ModelWrap('mode.list.filter')(React.createClass({
 }))
 
 export default {
-  name: 'xadmin.filter',
-  blocks: {
-    'model.list.nav': () => <FilterNav name="nav" />,
-    'model.list.submenu': () => <FilterSubMenu name="submenu" />,
-    'model.list.sidemenu': () => <FilterMenu name="sidemenu" />
-  },
-  mappers: {
-    'mode.list.filter': {
-      data: ({ model, modelState }, { name }) => {
-        return {
-          data: modelState.wheres.filters
-        }
-      },
-      compute: ({ model, modelState }, { name }) => {
-        const filters = (model.filters ? (model.filters[name] || []) : []).map(filter => {
-          const key = typeof filter == 'string' ? filter : filter.key
-          return {
-            key,
-            schema: model.properties[key],
-            field: typeof filter == 'string' ? { } : filter
-          }
-        })
-        return {
-          filters,
-          formKey: `filter.${model.name}`
-        }
-      },
-      method: {
-        changeFilter: ({ dispatch, model, modelState }, { name }) => (values) => {
-          const where = Object.keys(values).reduce((prev, key) => {
-            if(values[key]) {
-              prev[key] = values[key]
-            } else {
-              prev = _.omit(prev, key)
-            }
-            return prev
-          }, modelState.wheres.filters || {})
-          const wheres = (Object.keys(where).length > 0 ? 
-            { ...modelState.wheres, filters: where } : _.omit(modelState.wheres, 'filters'))
-          dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres })
-        }
-      }
+  FilterSubMenu,
+  FilterNav,
+  FilterMenu,
+  app: {
+    name: 'xadmin.filter',
+    blocks: {
+      'model.list.nav': () => <FilterNav name="nav" />,
+      'model.list.submenu': () => <FilterSubMenu name="submenu" />,
+      'model.list.sidemenu': () => <FilterMenu name="sidemenu" />
     },
-    'model.list.item': {
-      data: ({ model, modelState }, { item }) => {
-        if(modelState.wheres.filters && modelState.wheres.filters.name) {
-          if(modelState.wheres.filters.name.like) {
-            const like = modelState.wheres.filters.name.like
-            if(item.name) {
-              const name = item.name
-              const i = name.indexOf(like)
-              if(i >= 0) {
-                const newItem = { ...item, name: (<span>{name.substring(0,i)}<span style={{ backgroundColor:'yellow' }}>{like}</span>{name.substring(i + like.length)}</span>) }
-                return { item: newItem }
+    mappers: {
+      'model.list.filter': {
+        data: ({ model, modelState }, { name }) => {
+          return {
+            data: modelState.wheres.filters
+          }
+        },
+        compute: ({ model, modelState }, { name }) => {
+          const filters = (model.filters ? (model.filters[name] || []) : []).map(filter => {
+            const key = typeof filter == 'string' ? filter : filter.key
+            return {
+              key,
+              schema: model.properties[key],
+              field: typeof filter == 'string' ? { } : filter
+            }
+          })
+          return {
+            filters,
+            formKey: `filter.${model.name}`
+          }
+        },
+        method: {
+          resetFilter: ({ dispatch, model, modelState }) => (e) => {
+            dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres: _.omit(modelState.wheres, 'filters') })
+          },
+          changeFilter: ({ dispatch, model, modelState }, { name }) => (values) => {
+            const where = Object.keys(values).reduce((prev, key) => {
+              if(values[key]) {
+                prev[key] = values[key]
+              } else {
+                prev = _.omit(prev, key)
+              }
+              return prev
+            }, { ...modelState.wheres.filters })
+            const wheres = (Object.keys(where).length > 0 ? 
+              { ...modelState.wheres, filters: where } : _.omit(modelState.wheres, 'filters'))
+            dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres })
+          }
+        }
+      },
+      'model.list.item': {
+        data: ({ model, modelState }, { item }) => {
+          if(item && modelState.wheres.filters && modelState.wheres.filters.name) {
+            if(modelState.wheres.filters.name.like) {
+              const like = modelState.wheres.filters.name.like
+              if(item.name) {
+                const name = item.name
+                const i = name.indexOf(like)
+                if(i >= 0) {
+                  const newItem = { ...item, name: (<span>{name.substring(0,i)}<span style={{ backgroundColor:'yellow' }}>{like}</span>{name.substring(i + like.length)}</span>) }
+                  return { item: newItem }
+                }
               }
             }
           }
+          return {}
         }
-        return {}
       }
-    }
-  },
-  form_fields: filter_fields,
-  filter_converter
+    },
+    form_fields: filter_fields,
+    filter_converter
+  }
 }

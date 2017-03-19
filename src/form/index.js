@@ -1,5 +1,5 @@
 import React from 'react'
-import { Field, reduxForm, reducer as formReducer } from 'redux-form'
+import { Field, reduxForm, reducer as formReducer, SubmissionError } from 'redux-form'
 import Ajv from 'ajv'
 import default_fields from './fields'
 import { converters } from './schema'
@@ -24,7 +24,8 @@ export default {
   fieldBuilder,
   objectBuilder,
   schemaConvert,
-
+  SubmissionError,
+  
   app: {
     start: (app) => () => {
       app.load_list('ajv_key').forEach(args => {

@@ -18,7 +18,7 @@ export default StoreWrap('auth.reset_password')(({ onSuccess, location: { query 
         <Form 
           initialValues={query}
           successMessage={_t('Reset password success')}
-          onSubmitSuccess={onSuccess} groupSize={{ label: 3, field: 9 }}
+          onSubmitSuccess={onSuccess} option={{ groupSize : { label: { sm: 3 }, control: { sm: 9 } } }}
           componentClass={({ children, invalid, handleSubmit, submitting }) => {
             const icon = submitting ? 'spinner fa-spin' : 'floppy-o'
             return (

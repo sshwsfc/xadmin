@@ -5,6 +5,7 @@ import SignInForm from './components/SignIn'
 import SignUpForm from './components/SignUp'
 import ForgetPasswordForm from './components/ForgetPassword'
 import ResetPasswordForm from './components/ResetPasswordForm'
+import ChangePasswordForm from './components/ChangePasswordForm'
 import reducers from './reducer'
 import models from './models'
 import effects from './effects'
@@ -71,7 +72,13 @@ export default {
         component: ResetPasswordForm
       })
     }
-    return { '/' : routes }
+    return { 
+      '/' : routes,
+      '/app/': {
+        path: 'change_password',
+        component: ChangePasswordForm
+      }
+    }
   },
   models,
   effects,

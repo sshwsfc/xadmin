@@ -1,10 +1,10 @@
 import React from 'react'
 import { FormGroup, ControlLabel, FormControl, Col, HelpBlock } from 'react-bootstrap'
+import { Item } from './Items'
 
-const FieldGroup = ({ label, meta, input, field, children }) => {
+const FieldGroup = ({ label, error, input, field, children }) => {
   const groupProps = {}
   const attrs = field.attrs || {}
-  const error = meta.touched && meta.error
   const help = field.description || field.help
   const size = (field.option && field.option.groupSize) || attrs.groupSize || { 
     label: {
@@ -26,6 +26,7 @@ const FieldGroup = ({ label, meta, input, field, children }) => {
   }
 
   const controlComponent = children ? children : (<FormControl {...input} {...attrs} />)
+  
   return (
     <FormGroup controlId={input.name} {...groupProps}>
       <Col key={0} componentClass={ControlLabel} {...size.label}>
@@ -41,6 +42,4 @@ const FieldGroup = ({ label, meta, input, field, children }) => {
     )
 }
 
-export default {
-  FieldGroup: FieldGroup
-}
+export default FieldGroup

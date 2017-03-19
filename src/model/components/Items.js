@@ -2,8 +2,9 @@ import React from 'react'
 import { Link } from 'react-router'
 import _ from 'lodash'
 import { Icon } from '../../components'
-import { Table, OverlayTrigger, Popover, Button, ButtonGroup, Input, Dropdown, MenuItem, Well, Panel, Media } from 'react-bootstrap'
+import { FormGroup, ControlLabel, FormControl, Col, HelpBlock, Table, OverlayTrigger, Popover, Button, ButtonGroup, Input, Dropdown, MenuItem, Well, Panel, Media } from 'react-bootstrap'
 import { Block, app } from '../../index'
+import { SchemaForm } from '../../form/base'
 import { ModelWrap } from '../base'
 
 class BaseRow extends React.Component {
@@ -78,54 +79,146 @@ const Header = ModelWrap('model.list.header')(React.createClass({
         <MenuItem onSelect={e=>{ this.props.changeOrder('DESC') }} active={order==='DESC'}><Icon name="sort-amount-desc" /> {_t('Sort DESC')}</MenuItem>
       ]
       if(order != '') {
-        orderItems.push(<MenuItem onSelect={e=>{ this.props.changeOrder('') }}>{_t('Clear order')}</MenuItem>)
+        orderItems.push(<MenuItem onSelect={e=>{ this.props.changeOrder('') }}><Icon name="close" /> {_t('Clear order')}</MenuItem>)
       }
     }
     return orderItems
   },
 
   render() {
-    const { title, order } = this.props
+    const { title, order, showText } = this.props
       , icon = {
         'ASC' : <Icon name="sort-asc" />,
         'DESC' : <Icon name="sort-desc" />
       }[order] || ''
-    return (
+    const items = [ ...this.renderOrder(), ...(Block('model.list.header.menu', this) || []) ]
+    return (items.filter(item=>!_.isNil(item)).length>0) ? (
       <Dropdown id="nav-dropdown">
-        <a href="#" bsRole="toggle" onClick={e => {e.preventDefault()}}>
+        <a style={{ cursor: 'pointer' }} bsRole="toggle" onClick={e => {e.preventDefault()}}>
           {title} {icon}
         </a>
         <Dropdown.Menu>
-          {this.renderOrder()}
-          {Block('model.list.header.menu', this)}
+          {items}
         </Dropdown.Menu>
       </Dropdown>
-      )
+      ) : ( showText === false ? null : <span>{title} {icon}</span>)
   }
 }))
+
+const ItemEditFieldGroup = ({ label, meta, input, field, children }) => {
+  const groupProps = {}
+  const attrs = field.attrs || {}
+  const error = meta.error
+  const help = field.description || field.help
+
+  if (error) {
+    groupProps['validationState'] = 'error'
+  }
+  if (attrs.bsSize) {
+    groupProps['bsSize'] = attrs.bsSize
+  }
+  if (attrs.bsStyle) {
+    groupProps['bsStyle'] = attrs.bsStyle
+  }
+
+  const controlComponent = children ? children : (<FormControl {...input} {...attrs} />)
+  return (
+    <FormGroup controlId={input.name} {...groupProps}>
+      <Col sm={12} style={{ marginBottom: -5 }}>
+        {controlComponent}
+        <FormControl.Feedback />
+        {help && <HelpBlock style={{ marginBottom: 0 }}>{help}</HelpBlock>}
+        {error && <HelpBlock style={{ marginBottom: 0 }}>{error}</HelpBlock>}
+      </Col>
+    </FormGroup>
+    )
+}
+
+const ItemEditFormLayout = (props) => {
+  const { children, pristine, invalid, handleSubmit, submitting, onClose } = props
+  const icon = submitting ? 'spinner fa-spin' : 'floppy-o'
+  const { _t } = app.context
+  return (
+    <form className="form-horizontal inline-form" onSubmit={handleSubmit}>
+      {children}
+      <Button block type="submit" disabled={pristine || invalid || submitting} bsStyle="primary" bsSize="xs" onClick={handleSubmit}>{_t('Change')}</Button>
+    </form>
+  )
+}
+
+const ItemEditForm = ModelWrap('model.item')(({ item, field, schema, model, onClose, saveItem }) => {
+  const formField = _.find(model.form || [], obj => obj && obj.key == field ) || { key: field }
+  return (
+    <SchemaForm formKey="ChangeDataForm" 
+      initialValues={item}
+      schema={{
+        type: 'object',
+        properties: {
+          [field]: schema
+        },
+        required: [ field ],
+        form: [ { ...formField, attrs: { ...formField.attrs, autoFocus: true } } ]
+      }}
+      option={{ group : ItemEditFieldGroup }}
+      onSubmit={(values) => {
+        saveItem(values)
+        onClose()
+      }}
+      onClose={onClose}
+      component={ItemEditFormLayout}/>
+    )
+})
 
 const Item = ModelWrap('model.list.item')(React.createClass({
 
   propTypes: {
-    item: React.PropTypes.object.isRequired,
+    item: React.PropTypes.object,
     field: React.PropTypes.string.isRequired,
     schema: React.PropTypes.object.isRequired
   },
 
+  getInitialState() { return { over: false } },
+
   render() {
-    const { item, field, schema, componentClass, wrap } = this.props
-    const WrapComponent = wrap || (({ children }) => <span>{children}</span>)
+    const { item, field, schema, componentClass, wrap, nest, model: { editable_fields } } = this.props
+    const { _t } = app.context
+    const RawWrapComponent = wrap || (({ children }) => <span>{children}</span>)
+    const WrapComponent = (nest == true || editable_fields == undefined || editable_fields.indexOf(field) < 0) ? RawWrapComponent : ({ children, ...props }) => {
+      return (
+        <OverlayTrigger trigger="click" rootClose placement="top" overlay={
+          <Popover id="table-item-edit-popover">
+            <ItemEditForm item={item} field={field} schema={schema} onClose={()=>{}} />
+          </Popover>
+        }>
+          <RawWrapComponent {...props}>{children}</RawWrapComponent>
+        </OverlayTrigger>
+      )
+    }
     if(item == undefined || item == null) {
-      return <WrapComponent>Null</WrapComponent>
+      return <WrapComponent><span className="text-muted">{_t('Null')}</span></WrapComponent>
     }
     let value = item[field]
     if(componentClass) {
       const ItemComponent = componentClass
       return <ItemComponent item={item} value={value} field={field} schema={schema} wrap={WrapComponent} />
     } else {
-      return <WrapComponent>{value?value:'Null'}</WrapComponent>
+      return <WrapComponent>{value == undefined || value == null?<span className="text-muted">{_t('Null')}</span>:value}</WrapComponent>
     }
   }
+}))
+
+const AllCheck = ModelWrap('model.checkall')(React.createClass({
+
+  handleSelect(e) {
+    const selected = this.refs.selector.checked
+    this.props.changeAllSelect(selected)
+  },
+
+  render() {
+    const { selecteall } = this.props
+    return <input type="checkbox" ref="selector" checked={selecteall} onChange={this.handleSelect} />
+  }
+
 }))
 
 class GridRowComponent extends BaseRow {
@@ -178,7 +271,7 @@ const ModelGrid = React.createClass({
           <Table striped bordered hover>
             <thead>
               <tr>
-                <th></th>
+                <th><AllCheck /></th>
                 {fields.map(field=>{
                   return <th><Header key={`model-list-header-${field}`} field={field}  /></th>
                 })}
@@ -249,7 +342,7 @@ const ModelList = React.createClass({
           <div>
             <ButtonGroup bsStyle="xs" style={{ marginBottom: 10 }}>
             {fields.map(field=>{
-              return <Button><Header key={`model-list-header-${field}`} field={field}  /></Button>
+              return <Button><Header key={`model-list-header-${field}`} field={field} /></Button>
             })}
             </ButtonGroup>
             {items.map(item => <ListRow key={item.id} fields={fields} id={item.id} />)}

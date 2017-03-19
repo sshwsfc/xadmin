@@ -26,13 +26,10 @@ export default React.createClass({
   },
 
   render() {
-    const { input: { name, value, onBlur, onChange, ...inputProps }, label, meta: { touched, error }, field, group: FieldGroup } = this.props
+    const { input: { name, value, onBlur, onChange, ...inputProps }, label, meta, field, group: FieldGroup } = this.props
     const { text, like } = value
     return (
-      <FieldGroup
-        label={label}
-        error={touched && error}
-        input={this.props.input} field={field} >
+      <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
       <InputGroup { ...field.attrs }>
         <InputGroup.Button>
           <Button active={like} onClick={()=>this.onLikeChange(!like)}><Icon name="magic" /></Button>

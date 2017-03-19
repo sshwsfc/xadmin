@@ -15,16 +15,16 @@ export default React.createClass({
 
   onChange(e) {
     const { onChange } = this.props.input
-    this.setState({ value: [] }, (()=>{
+    this.setState({ value: [] }, ()=>{
       onChange(this.getValue())
-    }).bind(this))
+    })
   },
 
   clear() {
     const { onChange } = this.props.input
-    this.setState({ value: [] }, (()=>{
+    this.setState({ value: [] }, ()=>{
       onChange(this.getValue())
-    }).bind(this))
+    })
   },
 
   shouldComponentUpdate(nextProps) {
@@ -32,13 +32,10 @@ export default React.createClass({
   },
 
   render() {
-    const { input: { name, value, onBlur, onChange, ...inputProps }, label, meta: { touched, error }, field, group: FieldGroup } = this.props
+    const { input, label, meta, field, group: FieldGroup } = this.props
     const { newValue } = this.state
     return (
-      <FieldGroup
-        label={label}
-        error={touched && error}
-        input={this.props.input} field={field} >
+      <FieldGroup label={label} meta={meta} input={input} field={field}>
         
       </FieldGroup>
     )

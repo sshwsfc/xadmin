@@ -1,4 +1,5 @@
 import widgets from './components'
+Number.isNaN
 
 export default {
   text: {
@@ -7,7 +8,19 @@ export default {
   number: {
     component: widgets.Text,
     normalize: (value, previousValue) => {
-      return value == '' ? '' : parseFloat(value) || previousValue
+      const ret = parseFloat(value)
+      return Number.isNaN(ret) ? value : ret
+    },
+    attrs: {
+      type: 'number',
+      style: { maxWidth: 200 }
+    }
+  },
+  integer: {
+    component: widgets.Text,
+    normalize: (value, previousValue) => {
+      const ret = parseInt(value)
+      return Number.isNaN(ret) ? value : ret
     },
     attrs: {
       type: 'number',
@@ -17,8 +30,18 @@ export default {
   select: {
     component: widgets.Select
   },
+  numselect: {
+    component: widgets.Select,
+    normalize: (value, previousValue) => {
+      const ret = parseInt(value)
+      return Number.isNaN(ret) ? value : ret
+    }
+  },
   date: {
     component: widgets.DateTime,
+    normalize: (value, previousValue) => {
+      return (value && value.format) ? value.format('YYYY-MM-DD') : value || previousValue
+    },
     attrs: {
       dateFormat: true,
       timeFormat: false,
@@ -27,6 +50,9 @@ export default {
   },
   time: {
     component: widgets.DateTime,
+    normalize: (value, previousValue) => {
+      return (value && value.format) ? value.format('HH:mm:ss') : value || previousValue
+    },
     attrs: {
       dateFormat: false,
       timeFormat: true,
@@ -36,6 +62,9 @@ export default {
   },
   datetime: {
     component: widgets.DateTime,
+    normalize: (value, previousValue) => {
+      return (value && value.format) ? value.format('YYYY-MM-DD HH:mm:ss') : value || previousValue
+    },
     attrs: {
       dateFormat: true,
       timeFormat: true,

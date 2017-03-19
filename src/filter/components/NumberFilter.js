@@ -30,23 +30,23 @@ export default React.createClass({
 
   onBlur(e, key) {
     const { onBlur } = this.props.input
-    this.setState({ [key]: e.target.value }, (()=>{
+    this.setState({ [key]: e.target.value }, ()=>{
       onBlur(this.getValue())
-    }).bind(this))
+    })
   },
 
   onChange(e, key) {
     const { onChange } = this.props.input
-    this.setState({ [key]: e.target.value }, (()=>{
+    this.setState({ [key]: e.target.value }, ()=>{
       onChange(this.getValue())
-    }).bind(this))
+    })
   },
 
   clear() {
     const { onChange } = this.props.input
-    this.setState({ }, (()=>{
+    this.setState({ }, ()=>{
       onChange(this.getValue())
-    }).bind(this))
+    })
   },
 
   shouldComponentUpdate(nextProps) {
@@ -54,13 +54,10 @@ export default React.createClass({
   },
 
   render() {
-    const { input: { name, value, onBlur, onChange, ...inputProps }, label, meta: { touched, error }, field, group: FieldGroup } = this.props
+    const { input: { name, value, onBlur, onChange, ...inputProps }, label, meta, field, group: FieldGroup } = this.props
     const { gte, lte } = this.state
     return (
-      <FieldGroup
-        label={label}
-        error={touched && error}
-        input={this.props.input} field={field} >
+      <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
         <InputGroup>
           <FormControl type="number" { ...inputProps} {...field.attrs} value={gte}
             placeholder={field.minimum ? `Minimum(${field.minimum})` : 'No limit'}

@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { SubmissionError } from 'redux-form'
-import { UserSignIn } from './models'
+import { UserSignIn, UserChangePassword } from './models'
 import { app } from '../index'
 
 export default {
@@ -13,6 +13,9 @@ export default {
     method: {
       onLogout: ({ dispatch }) => () => {
         dispatch({ type: '@@xadmin/AUTH_SIGN_OUT' })
+      },
+      onChangePassword: ({ router }) => () => {
+        router.push('/app/change_password')
       }
     }
   },
@@ -60,6 +63,21 @@ export default {
     method: {
       onSuccess: ({ dispatch, router }) => (user) => {
         router.push('/login')
+      }
+    }
+  },
+  'auth.change_password': {
+    method: {
+      onChange: ({ dispatch, router }) => (item) => {
+        const { _t } = app.context
+        return new Promise((resolve, reject) => {
+          dispatch({ model: UserChangePassword(app), type: 'SAVE_ITEM', item, promise: { resolve, reject }, 
+            message: _t('Change password success.') })
+        }).then(user => {
+          router.push('/app/')
+        }).catch(error => {
+          throw new SubmissionError({ old_password: _t('Incorrect old password') })
+        })
       }
     }
   },

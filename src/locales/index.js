@@ -34,7 +34,7 @@ export default {
         resources,
         ...(locale || {})
       }, (err, t) => {
-        moment.locale('zh-cn')
+        moment.locale((locale && locale.moment) || 'en')
         cb(null, { ...context, _t: t, i18n: i18next })
       })
   },

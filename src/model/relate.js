@@ -43,14 +43,10 @@ const Checkboxes = FormWrap('model.form.relates')(React.createClass({
   },
 
   render() {
-    const { input, options, label, meta: { touched, error }, field, group: FieldGroup } = this.props
+    const { input, options, label, meta, field, group: FieldGroup } = this.props
     const { items } = field
     return (
-      <FieldGroup
-        label={label}
-        error={touched && error}
-        input={input} field={field}
-        >
+      <FieldGroup label={label} meta={meta} input={input} field={field}>
         {options?this.renderOptions():<div>loading...</div>}
       </FieldGroup>
       )
@@ -91,18 +87,15 @@ const RelateMultiSelect = FormWrap('model.form.relates')(React.createClass({
         options={options.map(option=>{ return { label: option[displayField] || 'null', value: option.id, item: option } })}
         onValuesChange={this.onValuesChange}
         renderNoResultsFound={()=>{ return (<div className="no-results-found">No results found</div>)}}
+        {...field.attrs}
       />)
   },
 
   render() {
-    const { input, options, label, meta: { touched, error }, field, group: FieldGroup } = this.props
+    const { input, options, label, meta, field, group: FieldGroup } = this.props
     const { items } = field
     return (
-      <FieldGroup
-        label={label}
-        error={touched && error}
-        input={input} field={field}
-        >
+      <FieldGroup label={label} meta={meta} input={input} field={field}>
         {options?this.renderOptions():<FormControl.Static>loading...</FormControl.Static>}
       </FieldGroup>
       )
@@ -132,7 +125,7 @@ const RelateSelect = FormWrap('model.form.fkselect')(React.createClass({
   componentDidMount() {
     const { input: { value, onChange }, options, getValue, field } = this.props
     if(options && options.length > 0) {
-      this.refs.select.highlightFirstSelectableOption()
+      //this.refs.select.highlightFirstSelectableOption()
     }
     if(value && typeof value == 'string') {
       getValue(value)
@@ -141,7 +134,7 @@ const RelateSelect = FormWrap('model.form.fkselect')(React.createClass({
         onChange({ [displayField]: 'loading...', id: value })
       }, 10)
     }
-    if(field.lazyLoad == false) {
+    if(!(options && options.length > 0) && field.lazyLoad == false) {
       this.props.searchRelatedItems()
     }
   },
@@ -175,18 +168,15 @@ const RelateSelect = FormWrap('model.form.fkselect')(React.createClass({
             </div>)
         }}
         {...searchProps}
+        {...field.attrs}
       />)
   },
 
   render() {
-    const { input, options, label, meta: { touched, error }, field, group: FieldGroup } = this.props
+    const { input, options, label, meta, field, group: FieldGroup } = this.props
     const loading = (input.value && typeof input.value == 'string')
     return (
-      <FieldGroup
-        label={label}
-        error={touched && error}
-        input={input} field={field}
-        >
+      <FieldGroup label={label} meta={meta} input={input} field={field}>
         {!loading?this.renderOptions():<FormControl.Static>loading...</FormControl.Static>}
       </FieldGroup>
       )
@@ -196,8 +186,15 @@ const RelateSelect = FormWrap('model.form.fkselect')(React.createClass({
 
 const schema_converter = [
   (f, schema, options) => {
-    if(schema.type == 'array' && schema.items.type == 'object') {
-      f.type = 'relates'
+    if(schema.type == 'array' && schema.items.type == 'object' && (schema.items.resource_name || schema.items.name)) {
+      const models = app.load_dict('models')
+      const name = schema.items.resource_name || schema.items.name
+      if(models[name]) {
+        const model = models[name]
+        f.type = 'relates'
+        f.schema = model
+        f.displayField = model.display_field || 'name'
+      }
     }
     return f
   },
@@ -206,12 +203,30 @@ const schema_converter = [
       const models = app.load_dict('models')
       const name = schema.resource_name || schema.name
       if(models[name]) {
+        const model = models[name]
         f.type = 'fkselect'
+        f.schema = model
+        f.displayField = model.display_field || 'name'
       }
     }
     return f
   }
 ]
+
+const filter_converter = [
+  (f, schema, options) => {
+    if(schema.type == 'object' && (schema.resource_name || schema.name)) {
+      const models = app.load_dict('models')
+      const name = schema.resource_name || schema.name
+      if(models[name]) {
+        const model = models[name]
+        f.type = 'filter_relate'
+        f.schema = model
+        f.displayField = model.display_field || 'name'
+      }
+    }
+    return f
+  } ]
 
 const FilterRelateSelect = FormWrap('model.form.fkselect')(({ input, options, ...props }) => {
   const value = options ? _.find(options, item => item.id == input.value) : null
@@ -266,8 +281,8 @@ const mappers = {
         })
       },
       searchRelatedItems: ({ dispatch, form, formState }, { field }) => (search) => {
-        const displayField = field.displayField || 'name'
-        const wheres = search ? { search: { [displayField]: { like: search } } } : {}
+        const searchField = field.searchField || field.displayField || 'name'
+        const wheres = search ? { search: { [searchField]: { like: search } } } : {}
 
         if(field.limit) {
           const limit = field.limit(formState.values)
@@ -371,7 +386,7 @@ const RelateObject = ModelWrap('model.item')(React.createClass({
 
   render() {
     const { data, loading, model } = this.props
-    const displayField = model.displayField || 'name'
+    const displayField = model.display_field || 'name'
     return loading || data == undefined ? 
       (<div className="text-center"><Icon name="spinner fa-spin fa-4x"/> Loading..</div>) : 
       (
@@ -457,5 +472,6 @@ export default {
   reducers,
   form_fields,
   schema_converter,
+  filter_converter,
   routers
 }

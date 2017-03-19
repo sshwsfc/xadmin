@@ -1,8 +1,9 @@
 import React from 'react'
 import { FormGroup, ControlLabel, FormControl, Col, HelpBlock } from 'react-bootstrap'
 
-const FieldGroup = ({ id, label, help, error, control, children }) => {
+const FieldGroup = ({ id, label, help, meta, control, children }) => {
   let groupProps = {}
+  const error = meta.touched && meta.error
   if (error) {
     groupProps['validationState'] = 'error'
   }
@@ -16,7 +17,7 @@ const FieldGroup = ({ id, label, help, error, control, children }) => {
   const controlComponent = children ? children : (<FormControl {...controlProps} />)
   if(groupComponent) {
     const GroupComponent = groupComponent
-    return (<GroupComponent id={id} groupProps={groupProps} {...{ label, help, error }} >{controlComponent}</GroupComponent>)
+    return (<GroupComponent id={id} groupProps={groupProps} {...{ label, help, meta }} >{controlComponent}</GroupComponent>)
   } else {
     return (
       <FormGroup controlId={id} {...groupProps}>

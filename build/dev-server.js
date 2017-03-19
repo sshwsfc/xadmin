@@ -4,6 +4,7 @@ var config = require('./webpack.dev.conf')
 var DashboardPlugin = require('webpack-dashboard/plugin')
 var proxy = require('express-http-proxy')
 var path = require('path')
+var argv = require('yargs').argv
 var app = express()
 var compiler = webpack(config)
 
@@ -30,7 +31,9 @@ compiler.apply(new DashboardPlugin())
 app.use('/static', express.static(path.resolve(__dirname, '../static')))
 // proxy
 //app.use('/api', proxy('http://localhost:8000'))
-app.use('/api', proxy('http://139.224.192.230:8089'))
+if(argv.proxy) {
+  app.use('/api', proxy(argv.proxy, { reqBodyEncoding: null }))
+}
 // handle fallback for HTML5 history API
 app.use(require('connect-history-api-fallback')())
 // serve webpack bundle output
@@ -39,7 +42,7 @@ app.use(devMiddleware)
 // compilation error display
 app.use(hotMiddleware)
 
-app.listen(8080, function (err) {
+app.listen(parseInt(argv.port || '8080'), function (err) {
   if (err) {
     return
   }

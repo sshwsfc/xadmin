@@ -76,7 +76,7 @@ export default {
         return ({ value, wrap }) => {
           const displayField = schema.display_field || 'name'
           
-          if(value.id !== undefined && schema.name && schema.show_detail === true && Object.keys(app.load_dict('models')).indexOf(schema.name) >= 0) {
+          if(value && value.id !== undefined && schema.name && schema.show_detail === true && Object.keys(app.load_dict('models')).indexOf(schema.name) >= 0) {
             const RelModel = Model(schema.name)
             const newWrap = ({ children }) => {
               return (

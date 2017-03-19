@@ -1,21 +1,20 @@
 import React from 'react'
 import { SubmissionError } from 'redux-form'
 import _ from 'lodash'
-import { app } from '../index'
+import { app, config } from '../index'
 
 export default {
   'model.item': {
-    data: ({ modelState, model, state }, { id }) => {
+    data: ({ modelState, model, state }, { id, item }) => {
       return {
         loading: state.loading[`${model.key}.get`],
-        item: id ? modelState.items[id] : undefined
+        item: item || (id ? modelState.items[id] : undefined)
       }
     },
     compute: ({ model }, { id, query, item }) => {
       const { _t } = app.context
       return {
         title: id ? _t('Edit {{title}}', { title: model.title }) : _t('Create {{title}}', { title: model.title }),
-        model,
         data: item || (_.isEmpty(query) ? undefined : query)
       }
     },
@@ -53,7 +52,7 @@ export default {
     compute: ({ modelState, model }, props, prev) => {
       const { items, ids } = modelState
       return {
-        items: ids === prev['ids'] ? prev['items'] : ids.map(id => items[id])
+        items: ids === prev['ids'] ? prev['items'] : ids.map(id => items[id]).filter(item => !_.isNil(item))
       }
     },
     event: {
@@ -68,6 +67,29 @@ export default {
           dispatch({ model, type: 'GET_ITEMS', items: [], filter: { ...modelState.filter, skip: 0 }, success: true })
         }
         dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter }, wheres })
+      }
+    }
+  },
+  'model.checkall': {
+    data: ({ modelState, model, state }, props, prev) => {
+      const { selected, items } = modelState
+      return { selected, items }
+    },
+    compute: ({ modelState, model }, props, prev) => {
+      const { selected, ids } = modelState
+      const selects = selected.map(item => item.id)
+      return {
+        selecteall: _.every(ids, id => selects.indexOf(id) >= 0)
+      }
+    },
+    method: {
+      changeAllSelect: ({ dispatch, modelState, model }) => (selected) => {
+        if(selected) {
+          const items = modelState.items
+          dispatch({ model, type: 'SELECT_ITEMS', items: modelState.ids.map(id=>items[id]), selected })
+        } else {
+          dispatch({ model, type: 'SELECT_CLEAR' })
+        }
       }
     }
   },
@@ -167,12 +189,22 @@ export default {
   },
   'model.list.actions': {
     data: ({ modelState }) => {
-      return { count: modelState.selected.length }
+      return { count: modelState.selected.length, selected: modelState.selected }
     }
   },
   'model.list.btn.count': {
     data: ({ modelState }) => {
       return { count: modelState.count }
+    }
+  },
+  'model.list.btn.pagesize': {
+    data: ({ modelState }) => {
+      return { size: modelState.filter.limit, sizes: config('pageSizes', [ 15, 30, 50, 100 ]) }
+    },
+    method: {
+      setPageSize: ({ dispatch, model, modelState }) => (size) => {
+        dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, limit: size, skip: 0 } })
+      }
     }
   },
   'model.list.btn.cols': {

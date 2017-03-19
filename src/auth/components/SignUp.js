@@ -17,7 +17,7 @@ const SignUpForm = StoreWrap('auth.sign_up')(({ onSuccess }) => {
       <UserSignUpModel>
         <Form 
           successMessage={_t('Register success')}
-          onSubmitSuccess={onSuccess} groupSize={{ label: 3, field: 9 }}
+          onSubmitSuccess={onSuccess} option={{ groupSize : { label: { sm: 3 }, control: { sm: 9 } } }}
           componentClass={({ children, invalid, handleSubmit, submitting }) => {
             const icon = submitting ? 'spinner fa-spin' : 'floppy-o'
             return (

@@ -14,7 +14,7 @@ module.exports = React.createClass({
         <Navbar fluid>
           <Navbar.Header>
             <Navbar.Brand>
-              <a href="#">{ this.props.title }</a>
+              <a>{ this.props.title }</a>
             </Navbar.Brand>
           </Navbar.Header>
           {this.props.nav}

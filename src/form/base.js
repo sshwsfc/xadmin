@@ -10,8 +10,8 @@ import { objectBuilder, fieldBuilder } from './builder'
 const ajv = new Ajv({ allErrors: true, v5: true, verbose: true })
 
 const BaseForm = (props) => {
-  const { fields, render, option, component, handleSubmit } = props
-  const build_fields = objectBuilder(fields, render, option)
+  const { fields, render, option, component, handleSubmit, ...formProps } = props
+  const build_fields = objectBuilder(fields, render, { ...option, ...formProps })
   if(component) {
     const FormComponent = component
     return <FormComponent {...props} >{build_fields}</FormComponent>
@@ -26,7 +26,7 @@ const validateByFields = (errors, values, fields) => {
   fields.forEach(field => {
     if(_.isFunction(field.validate)) {
       const name = field.name
-      const err = field.validate(values[name] || null, values)
+      const err = field.validate(_.get(values, field.name) || null, values)
       if(_.isArray(err)) {
         errors[name] = [ ...(errors[name] || []), ...err ]
       } else if(err) {
