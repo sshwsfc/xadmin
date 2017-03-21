@@ -37,7 +37,7 @@ const PageSizeButton = ModelWrap('model.list.btn.pagesize')(React.createClass({
 
   showCustomize() {
     const { _t } = app.context
-    const { size, sizes } = this.props
+    const { size, sizes, setPageSize } = this.props
     return (
       <Modal bsSize="small" show={this.state.show} onHide={()=>this.setState({ show: false })}>
         <Modal.Header closeButton>
@@ -59,7 +59,7 @@ const PageSizeButton = ModelWrap('model.list.btn.pagesize')(React.createClass({
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={()=>this.setState({ show: false })}>{_t('Close')}</Button>
-          <Button type="submit" bsStyle="primary" disabled={this.state.size==size}>{_t('Set page size')}</Button>
+          <Button type="submit" bsStyle="primary" disabled={this.state.size==size} onClick={this.setPageSize}>{_t('Set page size')}</Button>
         </Modal.Footer>
         </form>
       </Modal>

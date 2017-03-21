@@ -47,6 +47,10 @@ export default [
         }) : null
         return <WrapComponent>{renderValue}</WrapComponent>
       }
+    } else if(schema.type == 'string' && schema.format == 'email') {
+      return ({ value, wrap: WrapComponent }) => {
+        return <WrapComponent>{value ? <a href={`mailto:${value}`}>{value}</a> : ''}</WrapComponent>
+      }
     } else if(schema.type == 'object') {
       return ({ value, wrap }) => {
         const displayField = schema.display_field || 'name'

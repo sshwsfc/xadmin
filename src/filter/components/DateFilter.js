@@ -81,7 +81,7 @@ export default React.createClass({
             {this.renderCalender()}
           </Popover>}>
           <Button { ...field.attrs } bsStyle={value.rule=='range'?'primary' : 'default'}>
-            {value.rule == 'range' && value.gte && value.lt ? `${value.gte} ~ ${value.lt}` : 'Select Range' }
+            {value.rule == 'range' && value.gte && value.lte ? `${value.gte} ~ ${value.lte}` : 'Select Range' }
           </Button>
         </OverlayTrigger>
         {Object.keys(ranges).map(r => (

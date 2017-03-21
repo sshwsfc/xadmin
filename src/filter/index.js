@@ -68,7 +68,7 @@ const FilterInline = React.createClass({
       const { children, invalid, pristine, handleSubmit, submitting } = props
       return (
         <form className="form-horizontal" onSubmit={handleSubmit}>
-          <Row style={{ marginBottom: '-15px' }}>
+          <Row style={{ marginBottom: '-5px' }}>
           {children}
           </Row>
           <Row>
@@ -222,24 +222,6 @@ export default {
               { ...modelState.wheres, filters: where } : _.omit(modelState.wheres, 'filters'))
             dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres })
           }
-        }
-      },
-      'model.list.item': {
-        data: ({ model, modelState }, { item }) => {
-          if(item && modelState.wheres.filters && modelState.wheres.filters.name) {
-            if(modelState.wheres.filters.name.like) {
-              const like = modelState.wheres.filters.name.like
-              if(item.name) {
-                const name = item.name
-                const i = name.indexOf(like)
-                if(i >= 0) {
-                  const newItem = { ...item, name: (<span>{name.substring(0,i)}<span style={{ backgroundColor:'yellow' }}>{like}</span>{name.substring(i + like.length)}</span>) }
-                  return { item: newItem }
-                }
-              }
-            }
-          }
-          return {}
         }
       }
     },

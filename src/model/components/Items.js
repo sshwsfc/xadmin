@@ -148,6 +148,7 @@ const ItemEditFormLayout = (props) => {
 
 const ItemEditForm = ModelWrap('model.item')(({ item, field, schema, model, onClose, saveItem }) => {
   const formField = _.find(model.form || [], obj => obj && obj.key == field ) || { key: field }
+  const required = (model.required || []).indexOf(field) >= 0 ? { required: [ field ] } : {}
   return (
     <SchemaForm formKey="ChangeDataForm" 
       initialValues={item}
@@ -156,8 +157,8 @@ const ItemEditForm = ModelWrap('model.item')(({ item, field, schema, model, onCl
         properties: {
           [field]: schema
         },
-        required: [ field ],
-        form: [ { ...formField, attrs: { ...formField.attrs, autoFocus: true } } ]
+        form: [ formField ],
+        ...required
       }}
       option={{ group : ItemEditFieldGroup }}
       onSubmit={(values) => {

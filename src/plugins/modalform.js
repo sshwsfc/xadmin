@@ -32,12 +32,12 @@ const AddModelBtn = ModelWrap('modalform.modal')(ModelWrap('model.item')(React.c
   },
 
   onSubmitSuccess(item) {
-    this.props.onSuccess(item)
     this.hideModal()
+    this.props.onSuccess(item)
   },
 
   render() {
-    const { model, title, loading, saveItem, canAdd, ...formProps } = this.props
+    const { model, title, loading, saveItem, canAdd, modalProps, btnProps } = this.props
     const { _t } = app.context
     const FormLayout = (props) => {
       const { children, invalid, handleSubmit, submitting, onClose } = props
@@ -55,12 +55,12 @@ const AddModelBtn = ModelWrap('modalform.modal')(ModelWrap('model.item')(React.c
     
     return canAdd ? (
       <span>
-        <Button bsStyle="primary" onClick={this.showModal}>
+        <Button bsStyle="primary" onClick={this.showModal} {...btnProps}>
           {_t('Add {{object}}', { object: model.title })}
         </Button>
         {' '}
         <Modal
-          {...formProps}
+          {...modalProps}
           show={this.state.show}
           onHide={this.hideModal}
         >
