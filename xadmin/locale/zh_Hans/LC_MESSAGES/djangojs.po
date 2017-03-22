@@ -32,6 +32,7 @@ msgstr "保存修改"
 msgid "%(sel)s of %(cnt)s selected"
 msgid_plural "%(sel)s of %(cnt)s selected"
 msgstr[0] "选中了 %(cnt)s 个中的 %(sel)s 个"
+msgstr[1] "选中了 %(cnt)s 个中的 %(sel)s 个"
 
 #: static/xadmin/js/xadmin.plugin.details.js:25
 msgid "Edit"
