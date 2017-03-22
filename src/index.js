@@ -355,7 +355,7 @@ const _wrap_component = (tag, WrappedComponent, wrappers) => {
     componentDidMount() {
       this.getMappers().forEach(mapper => {
         if(mapper.event && mapper.event.mount) {
-          this.runBindMethod(mapper.event.mount)
+          this.runBindMethod(mapper.event.mount, this)
         }
       })
     }
@@ -364,7 +364,7 @@ const _wrap_component = (tag, WrappedComponent, wrappers) => {
       this.tryUnsubscribe()
       this.getMappers().forEach(mapper => {
         if(mapper.event && mapper.event.unmount) {
-          this.runBindMethod(mapper.event.unmount)
+          this.runBindMethod(mapper.event.unmount, this)
         }
       })
       this.clearCache()
