@@ -209,7 +209,7 @@ class ChangePasswordView(ModelAdminView):
         return TemplateResponse(self.request, [
             self.change_user_password_template or
             'xadmin/auth/user/change_password.html'
-        ], self.get_context(), current_app=self.admin_site.name)
+        ], self.get_context())
 
     @method_decorator(sensitive_post_parameters())
     @csrf_protect_m
