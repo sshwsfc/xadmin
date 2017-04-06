@@ -26,13 +26,14 @@ export default React.createClass({
   render() {
     return (
       <Navbar inverse fixedTop fluid>
-        { Block('top.left', this) }
         <Navbar.Header>
           <Navbar.Brand>
             <a href="#">{this.props.site_title}</a>
           </Navbar.Brand>
+          <Navbar.Toggle />
         </Navbar.Header>
         <Navbar.Collapse>
+          { Block('top.left', this) }
           <NavRight />
         </Navbar.Collapse>
       </Navbar>

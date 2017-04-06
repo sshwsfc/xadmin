@@ -8,7 +8,7 @@ import { takeEvery, takeLatest, delay } from 'redux-saga'
 export default {
   name: 'xadmin.loading',
   blocks: {
-    'top.left': () => <LoadingBar style={{ margin: '0 -15px' }} />
+    'main': () => <LoadingBar style={{ margin: '-70px -15px 0', zIndex: 9999 }} />
   },
   reducers: {
     loadingBar: (state=0, action) => {
