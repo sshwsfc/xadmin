@@ -2,7 +2,7 @@ import React from 'react'
 import { Provider, connect } from 'react-redux'
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
 import createSagaMiddleware, { takeEvery, takeLatest } from 'redux-saga'
-import { Router, DefaultRoute, browserHistory } from 'react-router'
+import { Router, DefaultRoute, browserHistory, hashHistory } from 'react-router'
 import { fork } from 'redux-saga/effects'
 import isPlainObject from 'lodash/isPlainObject'
 import waterfall from 'async/waterfall'
@@ -182,9 +182,15 @@ const sage_app = {
 const react_app = {
   context: (app) => (context, cb) => {
     app.go = (uri) => {
-      browserHistory.push(uri)
+      app.context.router.push(uri)
     }
-    cb(null, { ...context, router: browserHistory })
+    
+    const routerType = config('router', 'browser')
+    const router = {
+      browser: browserHistory,
+      hash: hashHistory
+    }[routerType]
+    cb(null, { ...context, router })
   },
   start: (app) => () => {
     // init container
@@ -206,7 +212,7 @@ const react_app = {
     const ReactDOM = require('react-dom')
     const RootComponent = app.load_list('root_component').reduce((PrevComponent, render) => {
       return render(PrevComponent)
-    }, () => <Router history={browserHistory} routes={routers}/>)
+    }, () => <Router history={app.context.router} routes={routers}/>)
 
     ReactDOM.render(<RootComponent />, container)
   }
