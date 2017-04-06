@@ -1,6 +1,6 @@
 {
   "name": "xadmin",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "Xadmin",
   "private": false,
   "main": "./lib/index.js",
@@ -116,16 +116,15 @@
   "keywords": [
     "admin",
     "react",
+    "redux",
+    "rest",
     "json"
   ],
   "npmName": "xadmin",
-  "npmFileMap": [
-    {
-      "basePath": "/dist/",
-      "files": [
-        "*.js"
-      ]
-    }
+  "files": [
+    "lib",
+    "build",
+    "static"
   ],
   "author": "sshwsfc@gmail.com",
   "repository": "https://github.com/sshwsfc/xadmin",
