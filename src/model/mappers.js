@@ -150,8 +150,8 @@ export default {
       return {
         actions: model.item_actions,
         component: model.item_component,
-        canEdit: !!model.permission && !!model.permission.edit && item._canEdit !== false,
-        canDelete: !!model.permission && !!model.permission.delete && item._canDelete !== false
+        canEdit: !!model.permission && !!model.permission.edit && item && item._canEdit !== false,
+        canDelete: !!model.permission && !!model.permission.delete && item && item._canDelete !== false
       }
     },
     method: {
