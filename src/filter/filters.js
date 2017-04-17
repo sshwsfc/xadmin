@@ -81,10 +81,10 @@ export default [
           f.type = 'filter_date'
           break
         case 'time':
-          f.type = 'filter_date'
+          f.type = 'filter_time'
           break
         case 'datetime':
-          f.type = 'filter_date'
+          f.type = 'filter_datetime'
           break
       }
     } else if(schema_type === 'number') {
