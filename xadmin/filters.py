@@ -1,6 +1,5 @@
 from django.db import models
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.encoding import smart_unicode
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.template.loader import get_template
@@ -17,7 +16,7 @@ import datetime
 FILTER_PREFIX = '_p_'
 SEARCH_VAR = '_q_'
 
-from util import (get_model_from_relation,
+from .util import (get_model_from_relation,
     reverse_field_path, get_limit_choices_to_from_path, prepare_lookup_value)
 
 
@@ -192,7 +191,7 @@ class ChoicesFieldListFilter(ListFieldFilter):
         }
         for lookup, title in self.field.flatchoices:
             yield {
-                'selected': smart_unicode(lookup) == self.lookup_exact_val,
+                'selected': lookup == self.lookup_exact_val,
                 'query_string': self.query_string({self.lookup_exact_name: lookup}),
                 'display': title,
             }
@@ -408,7 +407,7 @@ class RelatedFieldListFilter(ListFieldFilter):
         }
         for pk_val, val in self.lookup_choices:
             yield {
-                'selected': self.lookup_exact_val == smart_unicode(pk_val),
+                'selected': self.lookup_exact_val == pk_val,
                 'query_string': self.query_string({
                     self.lookup_exact_name: pk_val,
                 }, [self.lookup_isnull_name]),
@@ -428,62 +427,62 @@ class RelatedFieldListFilter(ListFieldFilter):
 @manager.register
 class MultiSelectFieldListFilter(ListFieldFilter):
     """ Delegates the filter to the default filter and ors the results of each
-     
+
     Lists the distinct values of each field as a checkbox
-    Uses the default spec for each 
-     
+    Uses the default spec for each
+
     """
     template = 'xadmin/filters/checklist.html'
     lookup_formats = {'in': '%s__in'}
     cache_config = {'enabled':False,'key':'quickfilter_%s','timeout':3600,'cache':'default'}
- 
+
     @classmethod
     def test(cls, field, request, params, model, admin_view, field_path):
         return True
- 
+
     def get_cached_choices(self):
         if not self.cache_config['enabled']:
             return None
         c = caches(self.cache_config['cache'])
         return c.get(self.cache_config['key']%self.field_path)
-    
+
     def set_cached_choices(self,choices):
         if not self.cache_config['enabled']:
             return
         c = caches(self.cache_config['cache'])
         return c.set(self.cache_config['key']%self.field_path,choices)
-    
+
     def __init__(self, field, request, params, model, model_admin, field_path,field_order_by=None,field_limit=None,sort_key=None,cache_config=None):
         super(MultiSelectFieldListFilter,self).__init__(field, request, params, model, model_admin, field_path)
-        
+
         # Check for it in the cachce
         if cache_config is not None and type(cache_config)==dict:
             self.cache_config.update(cache_config)
-        
+
         if self.cache_config['enabled']:
             self.field_path = field_path
             choices = self.get_cached_choices()
             if choices:
                 self.lookup_choices = choices
                 return
-            
+
         # Else rebuild it
-        queryset = self.admin_view.queryset().exclude(**{"%s__isnull"%field_path:True}).values_list(field_path, flat=True).distinct() 
+        queryset = self.admin_view.queryset().exclude(**{"%s__isnull"%field_path:True}).values_list(field_path, flat=True).distinct()
         #queryset = self.admin_view.queryset().distinct(field_path).exclude(**{"%s__isnull"%field_path:True})
-        
+
         if field_order_by is not None:
             # Do a subquery to order the distinct set
             queryset = self.admin_view.queryset().filter(id__in=queryset).order_by(field_order_by)
-            
+
         if field_limit is not None and type(field_limit)==int and queryset.count()>field_limit:
             queryset = queryset[:field_limit]
-        
+
         self.lookup_choices = [str(it) for it in queryset.values_list(field_path,flat=True) if str(it).strip()!=""]
         if sort_key is not None:
             self.lookup_choices = sorted(self.lookup_choices,key=sort_key)
-        
+
         if self.cache_config['enabled']:
-            self.set_cached_choices(self.lookup_choices) 
+            self.set_cached_choices(self.lookup_choices)
 
     def choices(self):
         self.lookup_in_val = (type(self.lookup_in_val) in (tuple,list)) and self.lookup_in_val or list(self.lookup_in_val)
@@ -494,7 +493,7 @@ class MultiSelectFieldListFilter(ListFieldFilter):
         }
         for val in self.lookup_choices:
             yield {
-                'selected': smart_unicode(val) in self.lookup_in_val,
+                'selected': val in self.lookup_in_val,
                 'query_string': self.query_string({self.lookup_in_name: ",".join([val]+self.lookup_in_val),}),
                 'remove_query_string': self.query_string({self.lookup_in_name: ",".join([v for v in self.lookup_in_val if v != val]),}),
                 'display': val,
@@ -535,7 +534,6 @@ class AllValuesFieldListFilter(ListFieldFilter):
             if val is None:
                 include_none = True
                 continue
-            val = smart_unicode(val)
             yield {
                 'selected': self.lookup_exact_val == val,
                 'query_string': self.query_string({self.lookup_exact_name: val},

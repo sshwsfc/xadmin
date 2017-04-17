@@ -5,7 +5,6 @@ from django.core.urlresolvers import NoReverseMatch
 from django.db import models
 from django.http import HttpResponseRedirect
 from django.template.response import SimpleTemplateResponse, TemplateResponse
-from django.utils.encoding import force_unicode, smart_unicode
 from django.utils.html import escape, conditional_escape
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
@@ -13,7 +12,7 @@ from django.utils.translation import ugettext as _
 
 from xadmin.util import lookup_field, display_for_field, label_for_field, boolean_icon
 
-from base import ModelAdminView, filter_hook, inclusion_tag, csrf_protect_m
+from .base import ModelAdminView, filter_hook, inclusion_tag, csrf_protect_m
 
 # List settings
 ALL_VAR = 'all'
@@ -66,7 +65,7 @@ class ResultItem(object):
     def label(self):
         text = mark_safe(
             self.text) if self.allow_tags else conditional_escape(self.text)
-        if force_unicode(text) == '':
+        if not text:
             text = mark_safe('&nbsp;')
         for wrap in self.wraps:
             text = mark_safe(wrap % text)
@@ -370,12 +369,12 @@ class ListAdminView(ModelAdminView):
         """
         Prepare the context for templates.
         """
-        self.title = _('%s List') % force_unicode(self.opts.verbose_name)
+        self.title = _('%s List') % self.opts.verbose_name
         model_fields = [(f, f.name in self.list_display, self.get_check_field_url(f))
                         for f in (list(self.opts.fields) + self.get_model_method_fields()) if f.name not in self.list_exclude]
 
         new_context = {
-            'model_name': force_unicode(self.opts.verbose_name_plural),
+            'model_name': self.opts.verbose_name_plural,
             'title': self.title,
             'cl': self,
             'model_fields': model_fields,
@@ -543,7 +542,7 @@ class ListAdminView(ModelAdminView):
                     item.allow_tags = True
                     item.text = boolean_icon(value)
                 else:
-                    item.text = smart_unicode(value)
+                    item.text = value
             else:
                 if isinstance(f.rel, models.ManyToOneRel):
                     field_val = getattr(obj, f.name)

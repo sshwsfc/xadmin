@@ -307,7 +307,7 @@ class AdminSite(object):
             ]
 
         # Add in each model's views.
-        for model, admin_class in self._registry.iteritems():
+        for model, admin_class in self._registry.items():
             view_urls = [url(
                 path, wrap(
                     self.create_model_admin_view(clz, model, admin_class)),

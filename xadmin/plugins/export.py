@@ -1,10 +1,12 @@
-import StringIO
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 import datetime
 import sys
 
 from django.http import HttpResponse
 from django.template import loader
-from django.utils.encoding import force_unicode, smart_unicode
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.xmlutils import SimplerXMLGenerator
@@ -75,7 +77,7 @@ class ExportPlugin(BaseAdminPlugin):
         rows = context['results']
 
         return [dict([
-            (force_unicode(headers[i].text), self._format_value(o)) for i, o in
+            (headers[i].text, self._format_value(o)) for i, o in
             enumerate(filter(lambda c:getattr(c, 'export', False), r.cells))]) for r in rows]
 
     def _get_datas(self, context):
@@ -83,7 +85,7 @@ class ExportPlugin(BaseAdminPlugin):
 
         new_rows = [[self._format_value(o) for o in
             filter(lambda c:getattr(c, 'export', False), r.cells)] for r in rows]
-        new_rows.insert(0, [force_unicode(c.text) for c in context['result_headers'].cells if c.export])
+        new_rows.insert(0, [c.text for c in context['result_headers'].cells if c.export])
         return new_rows
 
     def get_xlsx_export(self, context):
@@ -95,7 +97,7 @@ class ExportPlugin(BaseAdminPlugin):
         model_name = self.opts.verbose_name
         book = xlsxwriter.Workbook(output)
         sheet = book.add_worksheet(
-            u"%s %s" % (_(u'Sheet'), force_unicode(model_name)))
+            u"%s %s" % (_(u'Sheet'), model_name))
         styles = {'datetime': book.add_format({'num_format': 'yyyy-mm-dd hh:mm:ss'}),
                   'date': book.add_format({'num_format': 'yyyy-mm-dd'}),
                   'time': book.add_format({'num_format': 'hh:mm:ss'}),
@@ -132,7 +134,7 @@ class ExportPlugin(BaseAdminPlugin):
         model_name = self.opts.verbose_name
         book = xlwt.Workbook(encoding='utf8')
         sheet = book.add_sheet(
-            u"%s %s" % (_(u'Sheet'), force_unicode(model_name)))
+            u"%s %s" % (_(u'Sheet'), model_name))
         styles = {'datetime': xlwt.easyxf(num_format_str='yyyy-mm-dd hh:mm:ss'),
                   'date': xlwt.easyxf(num_format_str='yyyy-mm-dd'),
                   'time': xlwt.easyxf(num_format_str='hh:mm:ss'),
@@ -193,7 +195,7 @@ class ExportPlugin(BaseAdminPlugin):
                 self._to_xml(xml, value)
                 xml.endElement(key)
         else:
-            xml.characters(smart_unicode(data))
+            xml.characters(data)
 
     def get_xml_export(self, context):
         results = self._get_objects(context)
