@@ -27,7 +27,7 @@ const BatchDeleteBtn = ModelWrap('actons.batch_delete')(ModelWrap('model.list.ac
     return (
       <Modal show={this.state.show} onHide={this.onClose}>
         <Modal.Header closeButton>
-          <Modal.Title>{_t('Confirm to delete selected items.')}</Modal.Title>
+          <Modal.Title>{_t('Confirm to delete selected items')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <ListGroup>

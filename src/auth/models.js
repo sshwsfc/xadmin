@@ -71,19 +71,19 @@ const UserChangePassword = ({ context: { _t } }) => ({
   type: 'object',
   name: 'user_change_password',
   resource_name: 'user/password',
-  title: 'Reset Password',
+  title: _t('Change Password'),
   properties: {
     old_password: {
-      title: 'Old Password',
+      title: _t('Old Password'),
       type: 'string',
       format: 'password'
     },
     new_password: {
-      title: 'New Password',
+      title: _t('New Password'),
       type: 'string'
     },
     new_password2: {
-      title: 'Repeat Password',
+      title: _t('Repeat Password'),
       type: 'string',
       constant: { $data: '1/new_password', constantName: _t('New Password') }
     }
