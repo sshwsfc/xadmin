@@ -186,10 +186,11 @@ const react_app = {
     }
     
     const routerType = config('router', 'browser')
-    const router = {
+    const router = (typeof routerType === 'string') ? {
       browser: browserHistory,
       hash: hashHistory
-    }[routerType]
+    }[routerType] : routerType
+
     cb(null, { ...context, router })
   },
   start: (app) => () => {
