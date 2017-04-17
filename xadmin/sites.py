@@ -1,4 +1,4 @@
-import sys
+# -*- coding: utf-8 -*-
 from functools import update_wrapper
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
@@ -6,9 +6,6 @@ from django.db.models.base import ModelBase
 from django.views.decorators.cache import never_cache
 from django.template.engine import Engine
 import inspect
-
-reload(sys)
-sys.setdefaultencoding("utf-8")
 
 
 class AlreadyRegistered(Exception):
