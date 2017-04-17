@@ -35,5 +35,8 @@ export default {
   },
   filter_date: {
     component: widgets.DateFilter
+  },
+  filter_datetime: {
+    component: widgets.DateFilter
   }
 }
