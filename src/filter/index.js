@@ -1,7 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import { Field, reduxForm, reducer as formReducer } from 'redux-form'
-import { Nav, Well, Modal, NavItem, NavDropdown, MenuItem, OverlayTrigger, Popover, Badge, Button, Col, Row, FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap'
+import { Nav, Panel, Modal, NavItem, NavDropdown, MenuItem, OverlayTrigger, Popover, Badge, Button, Col, Row, FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap'
 import { ModelWrap } from '../model/base'
 import { BaseForm } from '../form'
 import filter_converter from './filters'
@@ -249,7 +249,7 @@ const FilterModal = ModelWrap('model.list.filter')(React.createClass({
 const FilterSubMenu = ModelWrap('model.list.filter')(React.createClass({
   render() {
     const { filters } = this.props
-    return filters && filters.length ? (<Well><FilterInline {...this.props}/></Well>) : null
+    return filters && filters.length ? (<Panel><FilterInline {...this.props}/></Panel>) : null
   }
 }))
 
