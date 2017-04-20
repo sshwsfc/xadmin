@@ -4,6 +4,7 @@ var config = require('./webpack.dev.conf')
 var DashboardPlugin = require('webpack-dashboard/plugin')
 var proxy = require('express-http-proxy')
 var path = require('path')
+var paths = require('./paths')
 var argv = require('yargs').argv
 var app = express()
 var compiler = webpack(config)
@@ -28,7 +29,7 @@ compiler.plugin('compilation', function (compilation) {
 compiler.apply(new DashboardPlugin())
 
 // serve pure static assets
-app.use('/static', express.static(path.resolve(__dirname, '../static')))
+app.use('/static', express.static(paths.appSrcStatic))
 // proxy
 //app.use('/api', proxy('http://localhost:8000'))
 if(argv.proxy) {
