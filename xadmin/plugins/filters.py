@@ -2,7 +2,7 @@ import operator
 from xadmin import widgets
 from xadmin.plugins.utils import get_context_dict
 
-from xadmin.util import get_fields_from_path, lookup_needs_distinct
+from django.contrib.admin.utils import get_fields_from_path, lookup_needs_distinct
 from django.core.exceptions import SuspiciousOperation, ImproperlyConfigured, ValidationError
 from django.db import models
 from django.db.models.fields import FieldDoesNotExist
