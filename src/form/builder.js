@@ -21,6 +21,7 @@ const fieldBuilder = (field, option, ...props) => {
     normalize={field.normalize} parse={field.parse} format={field.format}
     component={field.component} field={field} 
     group={field.group || (option && option.group ? option.group : FieldGroup)} 
+    option={option}
     {...props} />)
 }
 

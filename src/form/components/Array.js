@@ -31,7 +31,7 @@ const defaultItemsRender = ({ fields, meta: { touched, error }, field, fieldsBui
   )
 }
 
-export default ({ input, label, meta: { touched, error }, field }) => {
+export default ({ input, label, meta: { touched, error }, field, option }) => {
   let renderItems = field.itemsRender || defaultItemsRender
   if(typeof renderItems === 'string') {
     renderItems = app.load_dict('array_render')[renderItems]
@@ -45,7 +45,7 @@ export default ({ input, label, meta: { touched, error }, field }) => {
         name: name + '.' + f.name
       } })) : [ { ...items, key: name, name: name, label: itemLable } ]
 
-    return objectBuilder(itemFields, items.render)
+    return objectBuilder(itemFields, items.render, option)
   }
   return <FieldArray name={field.name} label={label} component={renderItems} field={field} fieldsBuilder={fieldsBuilder} />
 }
