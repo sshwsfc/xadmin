@@ -42,12 +42,12 @@ module.exports = {
         test: /\.html$/,
         loader: 'html'
       },
-      {test: /\.less$/, loader: "style-loader!css-loader!less-loader"},
-      {test: /\.scss$/, loader: "style-loader!css-loader!sass-loader"},
-      {test: /\.css?$/, loader: 'style-loader!css-loader'},
+      { test: /\.less$/, loader: 'style-loader!css-loader!less-loader' },
+      { test: /\.scss$/, loader: 'style-loader!css-loader!sass-loader' },
+      { test: /\.css?$/, loader: 'style-loader!css-loader' },
       {
         test: /\.(png|jpg|gif|svg)$/,
-        loader: 'url',
+        loader: 'file',
         query: {
           limit: 10000,
           name: '[name].[ext]?[hash:7]'
