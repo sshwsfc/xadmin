@@ -1,3 +1,5 @@
+import { config as _c } from '../index'
+import CaptchaCodeInput from './components/CaptchaCodeInput'
 
 // Forms
 const UserSignIn = ({ context: { _t } }) => ({
@@ -13,10 +15,22 @@ const UserSignIn = ({ context: { _t } }) => ({
     password: {
       title: _t('Password'),
       type: 'string'
-    }
+    },
+    ...(_c('auth.login.captcha')?{
+      code: {
+        title: _t('Captcha Code'),
+        type: 'string'
+      }
+    }:{})
   },
-  required: [ 'username', 'password' ],
-  form: [ 'username', { key: 'password', attrs: { type: 'password' } } ]
+  required: [ 'username', 'password', ...(_c('auth.login.captcha')?[ 'code' ]:[]) ],
+  form: [ 
+    'username', 
+    { key: 'password', attrs: { type: 'password' } },
+    ...(_c('auth.login.captcha')?[ {
+      key: 'code', captcha_url: '/' + _c('auth.login.captcha'), component: CaptchaCodeInput 
+    } ]:[])
+  ]
 })
 
 const UserSignOut = ({ context: { _t } }) => ({ 
@@ -118,15 +132,24 @@ const UserSignUp = ({ context: { _t } }) => ({
       title: _t('Repeat Password'),
       type: 'string',
       constant: { $data: '1/password1', constantName: _t('Password') }
-    }
+    },
+    ...(_c('auth.registration.captcha')?{
+      code: {
+        title: _t('Captcha Code'),
+        type: 'string'
+      }
+    }:{})
   },
   permission: { add: true },
-  required: [ 'username', 'email', 'password1', 'password2' ],
+  required: [ 'username', 'email', 'password1', 'password2', ...(_c('auth.registration.captcha')?[ 'code' ]:[]) ],
   form: [ 
     'username', 
     'email', 
     { key: 'password1', attrs: { type: 'password' } },
-    { key: 'password2', attrs: { type: 'password' } } 
+    { key: 'password2', attrs: { type: 'password' } },
+    ...(_c('auth.registration.captcha')?[ {
+      key: 'code', captcha_url: '/' + _c('auth.registration.captcha'), component: CaptchaCodeInput 
+    } ]:[] )
   ]
 })
 

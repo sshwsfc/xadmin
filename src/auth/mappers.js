@@ -30,7 +30,7 @@ export default {
           dispatch({ type: '@@xadmin/AUTH_SIGN_IN', payload: _.omit(user, 'password') })
           router.push(query && query.redirect || '/app/')
         }).catch(error => {
-          throw new SubmissionError({ password: _t('Incorrect username or password') })
+          throw new SubmissionError(error.json && error.json.non_field_errors == undefined ? error.json : { password: _t('Incorrect username or password') })
         })
       }
     },
