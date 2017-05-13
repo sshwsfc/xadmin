@@ -1,5 +1,6 @@
 var express = require('express')
 var webpack = require('webpack')
+var url = require('url')
 var config = require('./webpack.dev.conf')
 var DashboardPlugin = require('webpack-dashboard/plugin')
 var proxy = require('express-http-proxy')
@@ -33,7 +34,13 @@ app.use('/static', express.static(paths.appSrcStatic))
 // proxy
 //app.use('/api', proxy('http://localhost:8000'))
 if(argv.proxy) {
-  app.use('/api', proxy(argv.proxy, { reqBodyEncoding: null }))
+  var p = url.parse(argv.proxy)
+  app.use('/api', proxy(p.host, { 
+    forwardPath: function (req) {
+      return p.path + url.parse(req.url).path
+    },
+    reqBodyEncoding: null 
+  }))
 }
 // handle fallback for HTML5 history API
 app.use(require('connect-history-api-fallback')())

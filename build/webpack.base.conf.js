@@ -46,7 +46,7 @@ module.exports = {
       { test: /\.scss$/, loader: 'style-loader!css-loader!sass-loader' },
       { test: /\.css?$/, loader: 'style-loader!css-loader' },
       {
-        test: /\.(png|jpg|gif|svg)$/,
+        test: /\.(png|jpg|gif|svg|ttf|eot|woff2?)$/,
         loader: 'file',
         query: {
           limit: 10000,
