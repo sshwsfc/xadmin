@@ -11,10 +11,11 @@ const stripNullType = (type) => {
   return type
 }
 
-const enumToTitleMap = (enm) => {
+const enumToTitleMap = (enm, title) => {
   let titleMap = []
-  enm.forEach(name => {
-    titleMap.push({ name: name, value: name })
+  enm.forEach((name, index) => {
+    titleMap.push({ name: 
+      title != undefined ? (( _.isArray(title) ? title[index] : title[name] )  || name) : name, value: name })
   })
   return titleMap
 }
@@ -73,7 +74,7 @@ export default [
       } else {
         f.type = 'filter_enum'
         if (!f.titleMap) {
-          f.titleMap = enumToTitleMap(schema['enum'])
+          f.titleMap = enumToTitleMap(schema['enum'], schema['enum_title'] || {})
         }
       }
       switch(schema.format) {
@@ -87,8 +88,15 @@ export default [
           f.type = 'filter_datetime'
           break
       }
-    } else if(schema_type === 'number') {
-      f.type = 'filter_number'
+    } else if(schema_type === 'number' || schema_type === 'integer') {
+      if(!schema['enum']) {
+        f.type = 'filter_number'
+      } else {
+        f.type = 'filter_enum'
+        if (!f.titleMap) {
+          f.titleMap = enumToTitleMap(schema['enum'], schema['enum_title'] || {})
+        }
+      }
     } else if(schema_type === 'boolean') {
       f.type = 'filter_bool'
     }

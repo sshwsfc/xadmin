@@ -1,11 +1,49 @@
 import React, { Component, PropTypes } from 'react'
 import _ from 'lodash'
 import { Page, Icon } from '../../components'
-import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Panel, Well, Button } from 'react-bootstrap'
+import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Panel, Well, ButtonFormGroup, HelpBlock, FormGroup, Col, FormControl, ControlLabel } from 'react-bootstrap'
 
 import { StoreWrap, app } from '../index'
 import { ModelWrap } from '../base'
-import { convert as schemaConvert } from '../form/schema'
+import { Item } from './items'
+import { convert as schemaConvert } from '../../form/schema'
+
+const FieldGroup = ({ label, field, children }) => {
+  const groupProps = {}
+  const attrs = field.attrs || {}
+  const help = field.description || field.help
+  const size = (field.option && field.option.groupSize) || attrs.groupSize || { 
+    label: {
+      sm: 4, md: 3, lg: 2 
+    },
+    control: {
+      sm: 8, md: 9, lg: 10
+    }
+  }
+
+  if (attrs.bsSize) {
+    groupProps['bsSize'] = attrs.bsSize
+  }
+  if (attrs.bsStyle) {
+    groupProps['bsStyle'] = attrs.bsStyle
+  }
+
+  const controlComponent = children ? children : (<FormControl {...attrs} />)
+  
+  return (
+    <FormGroup {...groupProps}>
+      <Col key={0} componentClass={ControlLabel} {...size.label}>
+        {label}
+      </Col>
+      <Col key={1} {...size.control}>
+        {controlComponent}
+        <FormControl.Feedback />
+        {help && <HelpBlock>{help}</HelpBlock>}
+      </Col>
+    </FormGroup>
+    )
+}
+
 
 const ModelInfo = React.createClass({
 
@@ -37,8 +75,12 @@ const ModelInfo = React.createClass({
     const record = this.state.record
 
     return schemaConvert(model).fields.map(field => {
-      const FieldComponent = field.component
-      return <FieldComponent />
+      return (
+        <FieldGroup label={field.label} field={field}>
+          <Item item={record} field={field.key} selected={false} wrap={
+              ({ children, ...props })=><FormControl.Static>{children}</FormControl.Static>
+            }/>
+        </FieldGroup>)
     })
   },
 
@@ -47,11 +89,9 @@ const ModelInfo = React.createClass({
 
     return loading ? 
       (<Panel><div className="text-center"><Icon name="spinner fa-spin fa-4x"/></div></Panel>) : 
-      (
-      <form className="form-horizontal">
+      (<form className="form-horizontal">
         <Panel>{this.rednerFields()}</Panel>
-      </form>
-      )
+      </form>)
   }
 
 })

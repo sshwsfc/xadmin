@@ -112,7 +112,7 @@ const RelateSelect = FormWrap('model.form.fkselect')(React.createClass({
   onValueChange(select) {
     const { input: { value, onChange }, options } = this.props
     this.setState({ search: '' })
-    onChange(select ? select.item : {})
+    onChange(select ? select.item : null)
   },
 
   onSearchChange(search) {
@@ -127,7 +127,7 @@ const RelateSelect = FormWrap('model.form.fkselect')(React.createClass({
     if(options && options.length > 0) {
       //this.refs.select.highlightFirstSelectableOption()
     }
-    if(value && typeof value == 'string') {
+    if(value && typeof value != 'object') {
       getValue(value)
       const displayField = field.displayField || 'name'
       setTimeout(()=>{
@@ -140,9 +140,15 @@ const RelateSelect = FormWrap('model.form.fkselect')(React.createClass({
   },
 
   componentWillReceiveProps(nextProps) {
-    const { field } = this.props
+    const { field, input, getValue } = this.props
     if(field.limit && nextProps.values != this.props.values) {
       this.props.searchRelatedItems()
+    }
+    if(input.value !== nextProps.input.value) {
+      const newValue = nextProps.input.value
+      if(newValue && typeof newValue != 'object') {
+        getValue(newValue)
+      }
     }
   },
 
@@ -174,7 +180,7 @@ const RelateSelect = FormWrap('model.form.fkselect')(React.createClass({
 
   render() {
     const { input, options, label, meta, field, group: FieldGroup } = this.props
-    const loading = (input.value && typeof input.value == 'string')
+    const loading = (input.value && typeof input.value != 'object')
     return (
       <FieldGroup label={label} meta={meta} input={input} field={field}>
         {!loading?this.renderOptions():<FormControl.Static>loading...</FormControl.Static>}
@@ -229,10 +235,10 @@ const filter_converter = [
   } ]
 
 const FilterRelateSelect = FormWrap('model.form.fkselect')(({ input, options, ...props }) => {
-  const value = options ? _.find(options, item => item.id == input.value) : null
+  const value = options && _.find(options, item => item.id == input.value) || input.value
   const newProps = { ...props, options, input: { ...input, value,
     onChange: (value) => {
-      input.onChange(value.id)
+      input.onChange(value && value.id || null)
     } } }
   return <RelateSelect.WrappedComponent {...newProps} />
 })

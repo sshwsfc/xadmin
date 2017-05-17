@@ -10,7 +10,7 @@ export default React.createClass({
     const value = this.props.input.value
     // like
     if(value) {
-      if(typeof value == 'string') {
+      if(typeof value != 'object') {
         return { checks: [ value ] }
       } else {
         return { checks: [ ...value['inq'] ] }

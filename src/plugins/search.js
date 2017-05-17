@@ -3,11 +3,12 @@ import _ from 'lodash'
 import { Navbar, FormGroup, InputGroup, FormControl, Button } from 'react-bootstrap'
 import { ModelWrap } from '../model/base'
 import { Icon } from '../components'
+import { Block, StoreWrap, app } from '../index'
 
 const SearchBar = ModelWrap('model.searchbar')(React.createClass({
 
   propTypes: {
-    searchFields: React.PropTypes.array,
+    searchTitles: React.PropTypes.array,
     searchValue: React.PropTypes.string,
     onSearch: React.PropTypes.object
   },
@@ -22,9 +23,10 @@ const SearchBar = ModelWrap('model.searchbar')(React.createClass({
   },
 
   render() {
-    const { searchFields, searchValue } = this.props
-    if(searchFields && searchFields.length > 0) {
-      const placeholder = 'Search ' + searchFields.join(', ')
+    const { _t } = app.context
+    const { searchValue, searchTitles } = this.props
+    if(searchTitles && searchTitles.length > 0) {
+      const placeholder = _t('Search') + ' ' + searchTitles.join(', ')
       return (
         <Navbar.Form pullLeft>
           <form onSubmit={this.onSearch}>
@@ -56,6 +58,11 @@ export default {
         return {
           searchFields: model.search_fields,
           searchValue: modelState.filter.search
+        }
+      },
+      compute: ({ model, modelState }) => {
+        return {
+          searchTitles: model.search_fields && model.search_fields.map(field => model.properties[field].title || field)
         }
       },
       method: {

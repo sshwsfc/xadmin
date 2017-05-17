@@ -32,20 +32,21 @@ const plugins = [
     template: path.join(paths.appSrc, 'index.html'),
     path: paths.appPublic,
     filename: 'index.html',
+    chunks: ['app', 'vendor']
   }),
-  // new webpack.LoaderOptionsPlugin({
-  //   options: {
-  //     postcss: [
-  //       autoprefixer({
-  //         browsers: [
-  //           'last 3 version',
-  //           'ie >= 10',
-  //         ],
-  //       }),
-  //     ],
-  //     context: sourcePath,
-  //   },
-  // }),
+  new webpack.LoaderOptionsPlugin({
+    options: {
+      postcss: [
+        autoprefixer({
+          browsers: [
+            'last 3 version',
+            'ie >= 10',
+          ],
+        }),
+      ],
+      context: paths.appSrc,
+    },
+  })
 ];
 
 // Common rules
@@ -65,8 +66,6 @@ const rules = [
     test: /\.(png|gif|jpg|svg|ttf|eot|woff2?)$/,
     use: 'file-loader?limit=20480&name=assets/[name]-[hash].[ext]',
   },
-  { test: /\.less$/, use: [ 'style-loader', 'css-loader', 'less-loader' ] },
-  { test: /\.css?$/, use: [ 'style-loader', 'css-loader' ] },
 ];
 
 if (isProduction) {
@@ -89,16 +88,48 @@ if (isProduction) {
         comments: false,
       },
     }),
-    new ExtractTextPlugin('style-[hash].css')
+    new ExtractTextPlugin({
+      filename: 'style-[contenthash].css',
+      allChunks: true
+    })
   );
 
   // Production rules
   rules.push(
     {
+      test: /\.css$/,
+      loader: ExtractTextPlugin.extract({
+        fallback: 'style-loader',
+        use: [
+          'css-loader',
+          'postcss-loader'
+        ]
+      }),
+    }
+  );
+  rules.push(
+    {
       test: /\.scss$/,
       loader: ExtractTextPlugin.extract({
         fallback: 'style-loader',
-        use: 'css-loader!postcss-loader!sass-loader',
+        use: [
+          'css-loader',
+          'postcss-loader',
+          'sass-loader',
+        ]
+      }),
+    }
+  );
+  rules.push(
+    {
+      test: /\.less$/,
+      loader: ExtractTextPlugin.extract({
+        fallback: 'style-loader',
+        use: [
+          'css-loader',
+          'postcss-loader',
+          'less-loader',
+        ]
       }),
     }
   );
@@ -112,18 +143,33 @@ if (isProduction) {
   // Development rules
   rules.push(
     {
-      test: /\.scss$/,
-      exclude: /node_modules/,
+      test: /\.css$/,
       use: [
         'style-loader',
-        // Using source maps breaks urls in the CSS loader
-        // https://github.com/webpack/css-loader/issues/232
-        // This comment solves it, but breaks testing from a local network
-        // https://github.com/webpack/css-loader/issues/232#issuecomment-240449998
-        // 'css-loader?sourceMap',
+        'css-loader',
+        'postcss-loader',
+      ],
+    }
+  );
+  rules.push(
+    {
+      test: /\.scss$/,
+      use: [
+        'style-loader',
         'css-loader',
         'postcss-loader',
         'sass-loader?sourceMap',
+      ],
+    }
+  );
+  rules.push(
+    {
+      test: /\.less$/,
+      use: [
+        'style-loader',
+        'css-loader',
+        'postcss-loader',
+        'less-loader?sourceMap',
       ],
     }
   );
@@ -138,7 +184,7 @@ module.exports = {
   output: {
     path: paths.appPublic,
     publicPath: '/',
-    filename: '[name]-[hash].js'
+    filename: isProduction ? '[name]-[chunkhash].js' : '[name]-[hash].js'
   },
   module: {
     rules,
