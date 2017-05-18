@@ -174,15 +174,6 @@ class ListAdminView(ModelAdminView):
         # Get the number of objects, with admin filters applied.
         self.result_count = self.paginator.count
 
-        # Get the total number of objects, with no admin filters applied.
-        # Perform a slight optimization: Check to see whether any filters were
-        # given. If not, use paginator.hits to calculate the number of objects,
-        # because we've already done paginator.hits and the value is cached.
-        if not self.list_queryset.query.where:
-            self.full_result_count = self.result_count
-        else:
-            self.full_result_count = self.base_queryset.count()
-
         self.can_show_all = self.result_count <= self.list_max_show_all
         self.multi_page = self.result_count > self.list_per_page
 
