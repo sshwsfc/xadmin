@@ -36,7 +36,8 @@ class ForeignKeySearchWidget(forms.Widget):
             attrs.update(kwargs)
             return super(ForeignKeySearchWidget, self).build_attrs(attrs, extra_attrs=extra_attrs)
         else:
-            attrs.update(extra_attrs)
+            if extra_attrs:
+                attrs.update(extra_attrs)
             return super(ForeignKeySearchWidget, self).build_attrs(attrs, **kwargs)
 
     def render(self, name, value, attrs=None):
