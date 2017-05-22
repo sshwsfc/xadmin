@@ -1,4 +1,4 @@
-#coding:utf-8
+# coding:utf-8
 from itertools import chain
 
 import xadmin
@@ -9,7 +9,7 @@ from django.template import loader
 from django.utils.encoding import force_unicode
 from django.utils.html import escape, conditional_escape
 from django.utils.safestring import mark_safe
-from xadmin.util import vendor
+from xadmin.util import vendor, DJANGO_11
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView
 
 
@@ -37,7 +37,10 @@ class SelectMultipleTransfer(forms.SelectMultiple):
             attrs['class'] += 'stacked'
         if value is None:
             value = []
-        final_attrs = self.build_attrs(attrs, name=name)
+        if DJANGO_11:
+            final_attrs = self.build_attrs(attrs, extra_attrs={'name': name})
+        else:
+            final_attrs = self.build_attrs(attrs, name=name)
 
         selected_choices = set(force_unicode(v) for v in value)
         available_output = []
@@ -94,7 +97,7 @@ class M2MSelectPlugin(BaseAdminPlugin):
             (
                 'm2m_transfer' in self.admin_view.style_fields.values() or
                 'm2m_dropdown' in self.admin_view.style_fields.values()
-            )
+        )
 
     def get_field_style(self, attrs, db_field, style, **kwargs):
         if style == 'm2m_transfer' and isinstance(db_field, ManyToManyField):

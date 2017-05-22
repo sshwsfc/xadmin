@@ -33,6 +33,11 @@ try:
 except ImportError:
     from django.utils.timezone import localtime as tz_localtime
 
+if django.get_version() < '1.11':
+    DJANGO_11 = False
+else:
+    DJANGO_11 = True
+
 
 def xstatic(*tags):
     from vendors import vendors
@@ -171,6 +176,7 @@ def flatten_fieldsets(fieldsets):
 
 
 class NestedObjects(Collector):
+
     def __init__(self, *args, **kwargs):
         super(NestedObjects, self).__init__(*args, **kwargs)
         self.edges = {}  # {from_instance: [to_instances]}
@@ -259,12 +265,14 @@ def model_ngettext(obj, n=None):
     singular, plural = d["verbose_name"], d["verbose_name_plural"]
     return ungettext(singular, plural, n or 0)
 
-def is_rel_field(name,model):
-    if hasattr(name,'split') and name.find("__")>0:
+
+def is_rel_field(name, model):
+    if hasattr(name, 'split') and name.find("__") > 0:
         parts = name.split("__")
         if parts[0] in model._meta.get_all_field_names():
             return True
     return False
+
 
 def lookup_field(name, obj, model_admin=None):
     opts = obj._meta
@@ -281,12 +289,12 @@ def lookup_field(name, obj, model_admin=None):
             attr = getattr(model_admin, name)
             value = attr(obj)
         else:
-            if is_rel_field(name,obj):
+            if is_rel_field(name, obj):
                 parts = name.split("__")
-                rel_name,sub_rel_name = parts[0],"__".join(parts[1:])
-                rel_obj =  getattr(obj,rel_name)
+                rel_name, sub_rel_name = parts[0], "__".join(parts[1:])
+                rel_obj = getattr(obj, rel_name)
                 if rel_obj is not None:
-                    return lookup_field(sub_rel_name,rel_obj,model_admin)
+                    return lookup_field(sub_rel_name, rel_obj, model_admin)
             attr = getattr(obj, name)
             if callable(attr):
                 value = attr()
@@ -297,7 +305,6 @@ def lookup_field(name, obj, model_admin=None):
         attr = None
         value = getattr(obj, name)
     return f, attr, value
-
 
 
 def admin_urlname(value, arg):
@@ -353,6 +360,7 @@ def display_for_value(value, boolean=False):
 
 class NotRelationField(Exception):
     pass
+
 
 def get_model_from_relation(field):
     if field.related_model:
@@ -444,12 +452,14 @@ def get_limit_choices_to_from_path(model, path):
     else:
         return models.Q(**limit_choices_to)  # convert dict to Q
 
+
 def sortkeypicker(keynames):
     negate = set()
     for i, k in enumerate(keynames):
         if k[:1] == '-':
             keynames[i] = k[1:]
             negate.add(k[1:])
+
     def getit(adict):
         composite = [adict[k] for k in keynames]
         for i, (k, v) in enumerate(zip(keynames, composite)):
@@ -458,8 +468,10 @@ def sortkeypicker(keynames):
         return composite
     return getit
 
+
 def is_related_field(field):
     return isinstance(field, ForeignObjectRel)
 
+
 def is_related_field2(field):
-    return (hasattr(field, 'rel') and field.rel!=None) or is_related_field(field)
+    return (hasattr(field, 'rel') and field.rel != None) or is_related_field(field)
