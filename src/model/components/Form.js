@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import _ from 'lodash'
 import { Page, Icon } from '../../components'
-import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Panel, Well, Button } from 'react-bootstrap'
+import { Navbar, Nav, NavItem, NavDropdown, OverlayTrigger, Tooltip, MenuItem, Panel, Well, Button } from 'react-bootstrap'
 import { AutoAffix } from 'react-overlays'
 import { ModelWrap } from '../base'
 import { SchemaForm } from '../../form'
@@ -16,8 +16,15 @@ const DefaultLayout = (props) => {
       <Panel>{children}</Panel>
       <AutoAffix offsetBottom={20}>
       <Well bsSize="small" style={{ textAlign: 'right' }}>
-        <Button type="submit" disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary">
-          <Icon name={icon}/> {_t('Save')}</Button>
+      {invalid ? (
+        <OverlayTrigger placement="top" overlay={<Tooltip>{_t('Please be sure to complete all field.')}</Tooltip>}>
+          <Button type="submit" disabled={submitting} onClick={handleSubmit} bsStyle="primary">
+            <Icon name="ban"/> {_t('Save')}</Button>
+        </OverlayTrigger>
+        ) : (
+          <Button type="submit" disabled={submitting} onClick={handleSubmit} bsStyle="primary">
+            <Icon name={icon}/> {_t('Save')}</Button>
+        )}
       </Well>
       </AutoAffix>
     </form>

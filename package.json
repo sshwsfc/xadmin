@@ -43,7 +43,7 @@
   "peerDependencies": {
     "react": "15.x",
     "react-dom": "15.x",
-    "react-bootstrap": "^0.30.7"
+    "react-bootstrap": "^0.31.0"
   },
   "devDependencies": {
     "babel-cli": "6.5.1",
@@ -73,8 +73,6 @@
     "eslint-plugin-promise": "^1.0.8",
     "eslint-plugin-react": "~6.2.0",
     "eventsource-polyfill": "^0.9.6",
-    "express": "^4.14.0",
-    "express-http-proxy": "^0.10.1",
     "extract-text-webpack-plugin": "^2.1.0",
     "file-loader": "^0.9.0",
     "hoist-non-react-statics": "^1.2.0",
@@ -84,15 +82,8 @@
     "jasmine-core": "^2.4.1",
     "json-loader": "^0.5.4",
     "postcss-loader": "^1.1.1",
-    "karma": "0.13.21",
-    "karma-chrome-launcher": "0.2.2",
-    "karma-mocha": "0.2.2",
-    "karma-mocha-reporter": "1.2.0",
-    "karma-sourcemap-loader": "0.3.7",
-    "karma-webpack": "1.7.0",
     "less": "^2.6.1",
     "less-loader": "^2.2.2",
-    "mocha": "2.4.5",
     "sass-loader": "^4.0.2",
     "style": "0.0.3",
     "style-loader": "^0.13.0",
