@@ -8,7 +8,6 @@ from django.utils import formats
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
-from django.utils.encoding import force_unicode, smart_unicode, smart_str
 from django.utils.translation import ungettext
 from django.core.urlresolvers import reverse
 from django.conf import settings
@@ -45,7 +44,7 @@ def xstatic(*tags):
         try:
             for p in tag.split('.'):
                 node = node[p]
-        except Exception, e:
+        except (Exception, e):
             if tag.startswith('xadmin'):
                 file_type = tag.split('.')[-1]
                 if file_type in ('css', 'js'):
@@ -187,7 +186,7 @@ class NestedObjects(Collector):
                 self.add_edge(None, obj)
         try:
             return super(NestedObjects, self).collect(objs, source_attr=source_attr, **kwargs)
-        except models.ProtectedError, e:
+        except (models.ProtectedError, e):
             self.protected.update(e.protected_objects)
 
     def related_objects(self, related, objs):
@@ -236,8 +235,8 @@ def model_format_dict(obj):
     else:
         opts = obj
     return {
-        'verbose_name': force_unicode(opts.verbose_name),
-        'verbose_name_plural': force_unicode(opts.verbose_name_plural)
+        'verbose_name': opts.verbose_name,
+        'verbose_name_plural': opts.verbose_name_plural
     }
 
 
@@ -329,9 +328,9 @@ def display_for_field(value, field):
     elif isinstance(field, models.FloatField):
         return formats.number_format(value)
     elif isinstance(field.rel, models.ManyToManyRel):
-        return ', '.join([smart_unicode(obj) for obj in value.all()])
+        return ', '.join([obj for obj in value.all()])
     else:
-        return smart_unicode(value)
+        return value
 
 
 def display_for_value(value, boolean=False):
@@ -348,7 +347,7 @@ def display_for_value(value, boolean=False):
     elif isinstance(value, (decimal.Decimal, float)):
         return formats.number_format(value)
     else:
-        return smart_unicode(value)
+        return value
 
 
 class NotRelationField(Exception):

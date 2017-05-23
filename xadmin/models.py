@@ -8,7 +8,6 @@ from django.utils.translation import ugettext_lazy as _, ugettext
 from django.core.urlresolvers import NoReverseMatch, reverse
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models.base import ModelBase
-from django.utils.encoding import python_2_unicode_compatible, smart_text, smart_unicode
 
 from django.db.models.signals import post_migrate
 from django.contrib.auth.models import Permission
@@ -18,6 +17,7 @@ import decimal
 from xadmin.util import quote
 
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
+
 
 def add_view_permissions(sender, **kwargs):
     """
@@ -77,7 +77,7 @@ class JSONEncoder(DjangoJSONEncoder):
             try:
                 return super(JSONEncoder, self).default(o)
             except Exception:
-                return smart_unicode(o)
+                return unicode(o)
 
 
 class UserSettings(models.Model):
@@ -162,7 +162,7 @@ class Log(models.Model):
         ordering = ('-action_time',)
 
     def __repr__(self):
-        return smart_text(self.action_time)
+        return self.action_time
 
     def __str__(self):
         if self.action_flag == 'create':

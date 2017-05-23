@@ -8,7 +8,6 @@ from django.forms.models import model_to_dict
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
-from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
@@ -191,7 +190,7 @@ class RecoverListView(BaseReversionView):
             "opts": opts,
             "app_label": opts.app_label,
             "model_name": capfirst(opts.verbose_name),
-            "title": _("Recover deleted %(name)s") % {"name": force_unicode(opts.verbose_name_plural)},
+            "title": _("Recover deleted %(name)s") % {"name": opts.verbose_name_plural},
             "deleted": deleted,
             "changelist_url": self.model_admin_url("changelist"),
         })
@@ -235,9 +234,9 @@ class RevisionListView(BaseReversionView):
             ).select_related("revision__user"))
         ]
         context.update({
-            'title': _('Change history: %s') % force_unicode(self.obj),
+            'title': _('Change history: %s') % self.obj,
             'action_list': action_list,
-            'model_name': capfirst(force_unicode(opts.verbose_name_plural)),
+            'model_name': capfirst(opts.verbose_name_plural),
             'object': self.obj,
             'app_label': opts.app_label,
             "changelist_url": self.model_admin_url("changelist"),
@@ -401,7 +400,7 @@ class RevisionView(BaseRevisionView):
         helper = super(RevisionView, self).get_form_helper()
         diff_fields = {}
         version_data = self.version.field_dict
-        
+
         for f in self.opts.fields:
             fvalue = f.value_from_object(self.org_obj)
             vvalue = version_data.get(f.name, None)
@@ -421,7 +420,7 @@ class RevisionView(BaseRevisionView):
     def get_context(self):
         context = super(RevisionView, self).get_context()
         context["title"] = _(
-            "Revert %s") % force_unicode(self.model._meta.verbose_name)
+            "Revert %s") % self.model._meta.verbose_name
         return context
 
     @filter_hook
@@ -438,7 +437,7 @@ class RevisionView(BaseRevisionView):
     @filter_hook
     def post_response(self):
         self.message_user(_('The %(model)s "%(name)s" was reverted successfully. You may edit it again below.') %
-                          {"model": force_unicode(self.opts.verbose_name), "name": unicode(self.new_obj)}, 'success')
+                          {"model": self.opts.verbose_name, "name": unicode(self.new_obj)}, 'success')
         return HttpResponseRedirect(self.model_admin_url('change', self.new_obj.pk))
 
 
@@ -475,7 +474,7 @@ class RecoverView(BaseRevisionView):
     @filter_hook
     def post_response(self):
         self.message_user(_('The %(model)s "%(name)s" was recovered successfully. You may edit it again below.') %
-                          {"model": force_unicode(self.opts.verbose_name), "name": unicode(self.new_obj)}, 'success')
+                          {"model": self.opts.verbose_name, "name": unicode(self.new_obj)}, 'success')
         return HttpResponseRedirect(self.model_admin_url('change', self.new_obj.pk))
 
 

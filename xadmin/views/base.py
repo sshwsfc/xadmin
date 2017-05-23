@@ -7,7 +7,7 @@ from functools import update_wrapper
 from inspect import getargspec
 
 from django import forms
-from django.utils.encoding import force_unicode, force_text
+from django.utils.encoding import force_text
 from django.apps import apps
 from django.conf import settings
 from django.contrib import messages
@@ -19,7 +19,6 @@ from django.http import HttpResponse
 from django.template import Context, Template
 from django.template.response import TemplateResponse
 from django.utils.decorators import method_decorator, classonlymethod
-from django.utils.encoding import force_unicode, smart_unicode, smart_str
 from django.utils.http import urlencode
 from django.utils.itercompat import is_iterable
 from django.utils.safestring import mark_safe
@@ -38,9 +37,11 @@ csrf_protect_m = method_decorator(csrf_protect)
 class IncorrectPluginArg(Exception):
     pass
 
+
 def get_content_type_for_model(obj):
     from django.contrib.contenttypes.models import ContentType
     return ContentType.objects.get_for_model(obj, for_concrete_model=False)
+
 
 def filter_chain(filters, token, func, *args, **kwargs):
     if token == -1:
@@ -120,7 +121,7 @@ class JSONEncoder(DjangoJSONEncoder):
             try:
                 return super(JSONEncoder, self).default(o)
             except Exception:
-                return smart_unicode(o)
+                return o
 
 
 class BaseAdminObject(object):
@@ -212,7 +213,7 @@ class BaseAdminObject(object):
 
     def log(self, flag, message, obj=None):
         log = Log(
-            user=self.user, 
+            user=self.user,
             ip_addr=self.request.META['REMOTE_ADDR'],
             action_flag=flag,
             message=message
@@ -495,7 +496,7 @@ class ModelAdminView(CommAdminView):
             "opts": self.opts,
             "app_label": self.app_label,
             "model_name": self.model_name,
-            "verbose_name": force_unicode(self.opts.verbose_name),
+            "verbose_name": self.opts.verbose_name,
             'model_icon': self.get_model_icon(self.model),
         }
         context = super(ModelAdminView, self).get_context()
