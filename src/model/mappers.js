@@ -3,6 +3,12 @@ import { SubmissionError } from 'redux-form'
 import _ from 'lodash'
 import { app, config } from '../index'
 
+const getFieldProp = (model, field) => {
+  return field.split('.').reduce((obj, f) => {
+    return obj && obj.properties && obj.properties[f]
+  }, model)
+}
+
 export default {
   'model.item': {
     data: ({ modelState, model, state }, { id, item }) => {
@@ -114,7 +120,7 @@ export default {
   'model.list.header': {
     data: ({ modelState, model }, { field }) => {
       const orders = modelState.filter.order
-        , property = model.properties[field] || {}
+        , property = getFieldProp(model, field) || {}
         , canOrder = (property.canOrder == undefined ? true : property.canOrder) && property.type != 'object' && property.type != 'array'
       return {
         canOrder,
@@ -170,7 +176,7 @@ export default {
   },
   'model.list.item': {
     compute: ({ model }, { items, field, schema }) => {
-      const property = schema || model.properties[field]
+      const property = schema || getFieldProp(model, field)
       const data = schema ? {} : { schema: property }
       if(model.fields_render == undefined) {
         model.fields_render = {}

@@ -75,6 +75,7 @@ const ModelInfo = React.createClass({
     const record = this.state.record
 
     return schemaConvert(model).fields.map(field => {
+      field.option = { ...field.option, ...formProps }
       return (
         <FieldGroup label={field.label} field={field}>
           <Item item={record} field={field.key} selected={false} wrap={

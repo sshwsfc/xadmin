@@ -198,7 +198,7 @@ const Item = ModelWrap('model.list.item')(React.createClass({
     if(item == undefined || item == null) {
       return <WrapComponent><span className="text-muted">{_t('Null')}</span></WrapComponent>
     }
-    let value = item[field]
+    let value = _.get(item, field)
     if(componentClass) {
       const ItemComponent = componentClass
       return <ItemComponent item={item} value={value} field={field} schema={schema} wrap={WrapComponent} />
