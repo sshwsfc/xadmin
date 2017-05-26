@@ -287,6 +287,15 @@ const mappers = {
         })
       },
       searchRelatedItems: ({ dispatch, form, formState }, { field }) => (search) => {
+        if(_.isNil(search) || search == '') {
+          dispatch({ 
+            type: 'GET_RELATED_ITEMS', 
+            meta: { form: form.formKey, field, model: field.schema },
+            items: [], success: true
+          })
+          return
+        }
+
         const searchField = field.searchField || field.displayField || 'name'
         const wheres = search ? { search: { [searchField]: { like: search } } } : {}
 
@@ -462,7 +471,7 @@ const routers = (app) => {
         const key = `/app/model/${relateName}/:id/relations/`
         routes[key] = [ ...(routes[key] || []), {
           path: `${name}/`,
-          component: Model(name),
+          component: Model(name, { key: `${relateName}_${name}` }),
           childRoutes: model_routes
         } ]
       }

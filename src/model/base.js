@@ -29,9 +29,9 @@ const Model = (modelOrName, props={}) => {
     },
 
     componentWillUnmount() {
-      if(!persist) {
+      if(persist === false) {
         const { store } = this.context
-        //store.dispatch({ type: 'DESTROY', model: this.model })
+        setTimeout(() => store.dispatch({ type: 'DESTROY', model: this.model }), 500)
       } 
     },
 

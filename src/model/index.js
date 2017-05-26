@@ -63,7 +63,7 @@ const app = {
       }
       routes = routes.concat({
         path: `model/${name}/`,
-        component: Model(name, name, true),
+        component: Model(name, { key: name, persist: true }),
         childRoutes: model_routes
       })
     }
