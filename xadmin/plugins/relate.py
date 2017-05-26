@@ -3,7 +3,10 @@ from itertools import chain
 
 from django.core.urlresolvers import reverse
 from django.db.models.options import PROXY_PARENTS
-from django.utils.encoding import force_unicode
+try:
+    from django.utils.encoding import force_text as force_unicode
+except ImportError:
+    from django.utils.encoding import force_unicode
 from django.utils.encoding import smart_str
 from django.utils.safestring import mark_safe
 from django.db.models.sql.query import LOOKUP_SEP

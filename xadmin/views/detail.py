@@ -9,7 +9,12 @@ from django.forms.models import modelform_factory
 from django.http import Http404
 from django.template import loader
 from django.template.response import TemplateResponse
-from django.utils.encoding import force_unicode, smart_unicode
+try:
+    from django.utils.encoding import smart_text as smart_unicode
+    from django.utils.encoding import force_text as force_unicode
+except ImportError:
+    from django.utils.encoding import smart_unicode
+    from django.utils.encoding import force_unicode
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
@@ -17,7 +22,7 @@ from django.utils.html import conditional_escape
 from xadmin.layout import FormHelper, Layout, Fieldset, Container, Column, Field, Col, TabHolder
 from xadmin.util import unquote, lookup_field, display_for_field, boolean_icon, label_for_field
 
-from base import ModelAdminView, filter_hook, csrf_protect_m
+from .base import ModelAdminView, filter_hook, csrf_protect_m
 
 # Text to display within change-list table cells if the value is blank.
 EMPTY_CHANGELIST_VALUE = _('Null')
@@ -113,11 +118,15 @@ class ResultField(object):
 
 
 def replace_field_to_value(layout, cb):
+    if sys.version_info[0] == 3:
+        str_type = str
+    else:
+        str_type = basestring
     for i, lo in enumerate(layout.fields):
         if isinstance(lo, Field) or issubclass(lo.__class__, Field):
             layout.fields[i] = ShowField(
                 cb, *lo.fields, attrs=lo.attrs, wrapper_class=lo.wrapper_class)
-        elif isinstance(lo, basestring):
+        elif isinstance(lo, str_type):
             layout.fields[i] = ShowField(cb, lo)
         elif hasattr(lo, 'get_field_names'):
             replace_field_to_value(lo, cb)
@@ -150,7 +159,7 @@ class DetailAdminView(ModelAdminView):
         if layout is None:
             layout = Layout(Container(Col('full',
                                           Fieldset(
-                                              "", *self.form_obj.fields.keys(),
+                                              "", *list(self.form_obj.fields.keys()),
                                               css_class="unsort no_title"), horizontal=True, span=12)
                                       ))
         elif type(layout) in (list, tuple) and len(layout) > 0:
@@ -167,8 +176,8 @@ class DetailAdminView(ModelAdminView):
             if self.detail_show_all:
                 rendered_fields = [i[1] for i in layout.get_field_names()]
                 container = layout[0].fields
-                other_fieldset = Fieldset(_(u'Other Fields'), *[
-                                          f for f in self.form_obj.fields.keys() if f not in rendered_fields])
+                other_fieldset = Fieldset(_('Other Fields'), *[
+                                          f for f in list(self.form_obj.fields.keys()) if f not in rendered_fields])
 
                 if len(other_fieldset.fields):
                     if len(container) and isinstance(container[0], Column):

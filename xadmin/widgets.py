@@ -4,12 +4,16 @@ Form Widget classes specific to the Django admin site.
 from itertools import chain
 from django import forms
 from django.forms.widgets import RadioFieldRenderer, RadioChoiceInput
-from django.utils.encoding import force_unicode
+import sys
+if sys.version_info[0] == 3:
+    from django.utils.encoding import force_text as force_unicode
+else:
+    from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
 from django.utils.html import conditional_escape
 from django.utils.translation import ugettext as _
 
-from util import vendor
+from .util import vendor
 
 
 class AdminDateWidget(forms.DateInput):
@@ -27,7 +31,7 @@ class AdminDateWidget(forms.DateInput):
     def render(self, name, value, attrs=None):
         input_html = super(AdminDateWidget, self).render(name, value, attrs)
         return mark_safe('<div class="input-group date bootstrap-datepicker"><span class="input-group-addon"><i class="fa fa-calendar"></i></span>%s'
-                         '<span class="input-group-btn"><button class="btn btn-default" type="button">%s</button></span></div>' % (input_html, _(u'Today')))
+                         '<span class="input-group-btn"><button class="btn btn-default" type="button">%s</button></span></div>' % (input_html, _('Today')))
 
 
 class AdminTimeWidget(forms.TimeInput):
@@ -45,7 +49,7 @@ class AdminTimeWidget(forms.TimeInput):
     def render(self, name, value, attrs=None):
         input_html = super(AdminTimeWidget, self).render(name, value, attrs)
         return mark_safe('<div class="input-group time bootstrap-clockpicker"><span class="input-group-addon"><i class="fa fa-clock-o">'
-                         '</i></span>%s<span class="input-group-btn"><button class="btn btn-default" type="button">%s</button></span></div>' % (input_html, _(u'Now')))
+                         '</i></span>%s<span class="input-group-btn"><button class="btn btn-default" type="button">%s</button></span></div>' % (input_html, _('Now')))
 
 
 class AdminSelectWidget(forms.Select):
@@ -66,7 +70,7 @@ class AdminSplitDateTime(forms.SplitDateTimeWidget):
         forms.MultiWidget.__init__(self, widgets, attrs)
 
     def format_output(self, rendered_widgets):
-        return mark_safe(u'<div class="datetime clearfix">%s%s</div>' %
+        return mark_safe('<div class="datetime clearfix">%s%s</div>' %
                         (rendered_widgets[0], rendered_widgets[1]))
 
 
@@ -83,9 +87,9 @@ class AdminRadioInput(RadioChoiceInput):
             label_for = ''
         choice_label = conditional_escape(force_unicode(self.choice_label))
         if attrs.get('inline', False):
-            return mark_safe(u'<label%s class="radio-inline">%s %s</label>' % (label_for, self.tag(), choice_label))
+            return mark_safe('<label%s class="radio-inline">%s %s</label>' % (label_for, self.tag(), choice_label))
         else:
-            return mark_safe(u'<div class="radio"><label%s>%s %s</label></div>' % (label_for, self.tag(), choice_label))
+            return mark_safe('<div class="radio"><label%s>%s %s</label></div>' % (label_for, self.tag(), choice_label))
 
 
 class AdminRadioFieldRenderer(RadioFieldRenderer):
@@ -99,7 +103,7 @@ class AdminRadioFieldRenderer(RadioFieldRenderer):
         return AdminRadioInput(self.name, self.value, self.attrs.copy(), choice, idx)
 
     def render(self):
-        return mark_safe(u'\n'.join([force_unicode(w) for w in self]))
+        return mark_safe('\n'.join([force_unicode(w) for w in self]))
 
 
 class AdminRadioSelect(forms.RadioSelect):
@@ -120,7 +124,7 @@ class AdminCheckboxSelect(forms.CheckboxSelectMultiple):
             # so that the checkboxes don't all have the same ID attribute.
             if has_id:
                 final_attrs = dict(final_attrs, id='%s_%s' % (attrs['id'], i))
-                label_for = u' for="%s"' % final_attrs['id']
+                label_for = ' for="%s"' % final_attrs['id']
             else:
                 label_for = ''
 
@@ -131,10 +135,10 @@ class AdminCheckboxSelect(forms.CheckboxSelectMultiple):
             option_label = conditional_escape(force_unicode(option_label))
 
             if final_attrs.get('inline', False):
-                output.append(u'<label%s class="checkbox-inline">%s %s</label>' % (label_for, rendered_cb, option_label))
+                output.append('<label%s class="checkbox-inline">%s %s</label>' % (label_for, rendered_cb, option_label))
             else:
-                output.append(u'<div class="checkbox"><label%s>%s %s</label></div>' % (label_for, rendered_cb, option_label))
-        return mark_safe(u'\n'.join(output))
+                output.append('<div class="checkbox"><label%s>%s %s</label></div>' % (label_for, rendered_cb, option_label))
+        return mark_safe('\n'.join(output))
 
 
 class AdminSelectMultiple(forms.SelectMultiple):
@@ -146,9 +150,9 @@ class AdminSelectMultiple(forms.SelectMultiple):
 
 
 class AdminFileWidget(forms.ClearableFileInput):
-    template_with_initial = (u'<p class="file-upload">%s</p>'
+    template_with_initial = ('<p class="file-upload">%s</p>'
                              % forms.ClearableFileInput.template_with_initial)
-    template_with_clear = (u'<span class="clearable-file-input">%s</span>'
+    template_with_clear = ('<span class="clearable-file-input">%s</span>'
                            % forms.ClearableFileInput.template_with_clear)
 
 

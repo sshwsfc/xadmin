@@ -7,7 +7,11 @@ from django.db import models, transaction
 from django.forms.models import modelform_factory
 from django.http import Http404, HttpResponseRedirect
 from django.template.response import TemplateResponse
-from django.utils.encoding import force_unicode
+import sys
+try:
+    from django.utils.encoding import force_text as force_unicode
+except ImportError:
+    from django.utils.encoding import force_unicode
 from django.utils.html import escape
 from django.template import loader
 from django.utils.translation import ugettext as _
@@ -16,7 +20,7 @@ from xadmin.layout import FormHelper, Layout, Fieldset, TabHolder, Container, Co
 from xadmin.util import unquote
 from xadmin.views.detail import DetailAdminUtil
 
-from base import CommAdminView, filter_hook, csrf_protect_m
+from .base import CommAdminView, filter_hook, csrf_protect_m
 
 class FormAdminView(CommAdminView):
     form = forms.ModelForm
@@ -51,7 +55,7 @@ class FormAdminView(CommAdminView):
     @filter_hook
     def get_form_layout(self):
         layout = copy.deepcopy(self.form_layout)
-        fields = self.form_obj.fields.keys()
+        fields = list(self.form_obj.fields.keys())
 
         if layout is None:
             layout = Layout(Container(Col('full',
@@ -69,7 +73,7 @@ class FormAdminView(CommAdminView):
 
             rendered_fields = [i[1] for i in layout.get_field_names()]
             container = layout[0].fields
-            other_fieldset = Fieldset(_(u'Other Fields'), *[f for f in fields if f not in rendered_fields])
+            other_fieldset = Fieldset(_('Other Fields'), *[f for f in fields if f not in rendered_fields])
 
             if len(other_fieldset.fields):
                 if len(container) and isinstance(container[0], Column):
@@ -110,7 +114,11 @@ class FormAdminView(CommAdminView):
         if self.valid_forms():
             self.save_forms()
             response = self.post_response()
-            if isinstance(response, basestring):
+            if sys.version_info[0] == 3:
+                str_type = str
+            else:
+                str_type = basestring
+            if isinstance(response, str_type):
                 return HttpResponseRedirect(response)
             else:
                 return response

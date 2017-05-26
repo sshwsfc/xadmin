@@ -7,7 +7,6 @@ from django.template import loader
 from django.http import HttpResponseNotFound
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse
-from django.utils.encoding import smart_unicode
 from django.db import models
 from django.utils.http import urlencode
 from django.utils.translation import ugettext_lazy as _, ugettext
@@ -16,7 +15,13 @@ from xadmin.plugins.utils import get_context_dict
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
 from xadmin.views.dashboard import ModelBaseWidget, widget_manager
-from xadmin.util import lookup_field, label_for_field, force_unicode, json
+from xadmin.util import lookup_field, label_for_field, json
+try:
+    from django.utils.encoding import smart_text as smart_unicode
+    from django.utils.encoding import force_text as force_unicode
+except ImportError:
+    from django.utils.encoding import smart_unicode
+    from django.utils.encoding import force_unicode
 
 
 @widget_manager.register

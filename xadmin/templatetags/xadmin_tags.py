@@ -3,6 +3,8 @@ from django.template import Library
 from django.utils.safestring import mark_safe
 
 from xadmin.util import static, vendor as util_vendor
+import collections
+import sys
 
 register = Library()
 
@@ -16,10 +18,14 @@ def view_block(context, block_name, *args, **kwargs):
     method_name = 'block_%s' % block_name
 
     for view in [admin_view] + admin_view.plugins:
-        if hasattr(view, method_name) and callable(getattr(view, method_name)):
+        if hasattr(view, method_name) and isinstance(getattr(view, method_name), collections.Callable):
             block_func = getattr(view, method_name)
             result = block_func(context, nodes, *args, **kwargs)
-            if result and type(result) in (str, unicode):
+            if sys.version_info[0] == 3:
+                str_type = str
+            else:
+                str_type = unicode
+            if result and type(result) in (str, str_type):
                 nodes.append(result)
     if nodes:
         return mark_safe(''.join(nodes))
