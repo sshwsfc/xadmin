@@ -8,7 +8,7 @@ try:
     from django.forms.widgets import ChoiceWidget as RadioChoiceInput
 except:
     from django.forms.widgets import RadioFieldRenderer, RadioChoiceInput
-from django.utils.encoding import force_unicode, force_text
+from django.utils.encoding import force_text
 
 from django.utils.safestring import mark_safe
 from django.utils.html import conditional_escape
@@ -73,7 +73,7 @@ class AdminSplitDateTime(forms.SplitDateTimeWidget):
 
     def render(self, name, value, attrs=None):
         if DJANGO_11:
-            input_html = [ht for ht in super(AdminSplitDateTime, self).render(name, value, attrs).split('\n') if ht <> '']
+            input_html = [ht for ht in super(AdminSplitDateTime, self).render(name, value, attrs).split('\n') if ht != '']
             # return input_html
             return mark_safe('<div class="datetime clearfix"><div class="input-group date bootstrap-datepicker"><span class="input-group-addon"><i class="fa fa-calendar"></i></span>%s'
                              '<span class="input-group-btn"><button class="btn btn-default" type="button">%s</button></span></div>'
