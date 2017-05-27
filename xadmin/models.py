@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _, ugettext
 from django.core.urlresolvers import NoReverseMatch, reverse
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models.base import ModelBase
-from django.utils.encoding import python_2_unicode_compatible, smart_text, smart_unicode
+from django.utils.encoding import python_2_unicode_compatible, smart_text
 
 from django.db.models.signals import post_migrate
 from django.contrib.auth.models import Permission
@@ -40,6 +40,8 @@ def add_view_permissions(sender, **kwargs):
 # check for all our view permissions after a syncdb
 post_migrate.connect(add_view_permissions)
 
+
+@python_2_unicode_compatible
 class Bookmark(models.Model):
     title = models.CharField(_(u'Title'), max_length=128)
     user = models.ForeignKey(AUTH_USER_MODEL, verbose_name=_(u"user"), blank=True, null=True)
@@ -55,7 +57,7 @@ class Bookmark(models.Model):
             base_url = base_url + '?' + self.query
         return base_url
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     class Meta:
@@ -65,10 +67,10 @@ class Bookmark(models.Model):
 
 class JSONEncoder(DjangoJSONEncoder):
     def default(self, o):
-        if isinstance(o, datetime.date):
-            return o.strftime('%Y-%m-%d')
-        elif isinstance(o, datetime.datetime):
+        if isinstance(o, datetime.datetime):
             return o.strftime('%Y-%m-%d %H:%M:%S')
+        elif isinstance(o, datetime.date):
+            return o.strftime('%Y-%m-%d')
         elif isinstance(o, decimal.Decimal):
             return str(o)
         elif isinstance(o, ModelBase):
@@ -77,9 +79,10 @@ class JSONEncoder(DjangoJSONEncoder):
             try:
                 return super(JSONEncoder, self).default(o)
             except Exception:
-                return smart_unicode(o)
+                return smart_text(o)
 
 
+@python_2_unicode_compatible
 class UserSettings(models.Model):
     user = models.ForeignKey(AUTH_USER_MODEL, verbose_name=_(u"user"))
     key = models.CharField(_('Settings Key'), max_length=256)
@@ -91,7 +94,7 @@ class UserSettings(models.Model):
     def set_json(self, obj):
         self.value = json.dumps(obj, cls=JSONEncoder, ensure_ascii=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s %s" % (self.user, self.key)
 
     class Meta:
@@ -99,6 +102,7 @@ class UserSettings(models.Model):
         verbose_name_plural = _('User Settings')
 
 
+@python_2_unicode_compatible
 class UserWidget(models.Model):
     user = models.ForeignKey(AUTH_USER_MODEL, verbose_name=_(u"user"))
     page_id = models.CharField(_(u"Page"), max_length=256)
@@ -126,13 +130,15 @@ class UserWidget(models.Model):
             except Exception:
                 pass
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s %s widget" % (self.user, self.widget_type)
 
     class Meta:
         verbose_name = _(u'User Widget')
         verbose_name_plural = _('User Widgets')
 
+
+@python_2_unicode_compatible
 class Log(models.Model):
     action_time = models.DateTimeField(
         _('action time'),

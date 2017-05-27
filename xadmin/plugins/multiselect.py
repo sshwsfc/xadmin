@@ -6,7 +6,7 @@ from django import forms
 from django.db.models import ManyToManyField
 from django.forms.utils import flatatt
 from django.template import loader
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_text
 from django.utils.html import escape, conditional_escape
 from django.utils.safestring import mark_safe
 from xadmin.util import vendor
@@ -25,9 +25,9 @@ class SelectMultipleTransfer(forms.SelectMultiple):
         super(SelectMultipleTransfer, self).__init__(attrs, choices)
 
     def render_opt(self, selected_choices, option_value, option_label):
-        option_value = force_unicode(option_value)
+        option_value = force_text(option_value)
         return u'<option value="%s">%s</option>' % (
-            escape(option_value), conditional_escape(force_unicode(option_label))), bool(option_value in selected_choices)
+            escape(option_value), conditional_escape(force_text(option_label))), bool(option_value in selected_choices)
 
     def render(self, name, value, attrs=None, choices=()):
         if attrs is None:
@@ -39,14 +39,14 @@ class SelectMultipleTransfer(forms.SelectMultiple):
             value = []
         final_attrs = self.build_attrs(attrs, name=name)
 
-        selected_choices = set(force_unicode(v) for v in value)
+        selected_choices = set(force_text(v) for v in value)
         available_output = []
         chosen_output = []
 
         for option_value, option_label in chain(self.choices, choices):
             if isinstance(option_label, (list, tuple)):
                 available_output.append(u'<optgroup label="%s">' %
-                                        escape(force_unicode(option_value)))
+                                        escape(force_text(option_value)))
                 for option in option_label:
                     output, selected = self.render_opt(
                         selected_choices, *option)
