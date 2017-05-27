@@ -9,6 +9,7 @@ from django.template.response import TemplateResponse
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect
 from django.utils.html import escape
+from django.utils.encoding import smart_text
 from django.utils.translation import ugettext as _
 from django.views.decorators.debug import sensitive_post_parameters
 from django.forms import ModelMultipleChoiceField
@@ -198,7 +199,7 @@ class ChangePasswordView(ModelAdminView):
         helper.include_media = False
         self.form.helper = helper
         context.update({
-            'title': _('Change password: %s') % escape(unicode(self.obj)),
+            'title': _('Change password: %s') % escape(smart_text(self.obj)),
             'form': self.form,
             'has_delete_permission': False,
             'has_change_permission': True,

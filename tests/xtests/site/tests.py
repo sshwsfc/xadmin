@@ -1,10 +1,11 @@
+from __future__ import absolute_import
 from django.http import HttpResponse
 
 from base import BaseTest
 from xadmin.sites import AdminSite
 from xadmin.views import BaseAdminView, BaseAdminPlugin, ModelAdminView, filter_hook
 
-from models import ModelA
+from .models import ModelA
 
 
 class ModelAAdmin(object):

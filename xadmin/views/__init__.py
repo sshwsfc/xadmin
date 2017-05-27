@@ -1,13 +1,14 @@
+from __future__ import absolute_import
 
-from base import BaseAdminPlugin, BaseAdminView, CommAdminView, ModelAdminView, filter_hook, csrf_protect_m, BaseAdminObject
+from .base import BaseAdminPlugin, BaseAdminView, CommAdminView, ModelAdminView, filter_hook, csrf_protect_m, BaseAdminObject
 
-from list import ListAdminView
-from edit import CreateAdminView, UpdateAdminView, ModelFormAdminView
-from delete import DeleteAdminView
-from detail import DetailAdminView
-from form import FormAdminView
-from dashboard import Dashboard, BaseWidget, widget_manager, ModelDashboard
-from website import IndexView, LoginView, LogoutView, UserSettingView
+from .list import ListAdminView
+from .edit import CreateAdminView, UpdateAdminView, ModelFormAdminView
+from .delete import DeleteAdminView
+from .detail import DetailAdminView
+from .form import FormAdminView
+from .dashboard import Dashboard, BaseWidget, widget_manager, ModelDashboard
+from .website import IndexView, LoginView, LogoutView, UserSettingView
 
 __all__ = (
     'BaseAdminObject',

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import Group
 from django.conf import settings
+from django.utils.encoding import python_2_unicode_compatible
 
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
@@ -22,7 +23,7 @@ SERVICE_TYPES = (
     ('mix', u"Mix"),
 )
 
-
+@python_2_unicode_compatible
 class IDC(models.Model):
     name = models.CharField(max_length=64)
     description = models.TextField()
@@ -35,7 +36,7 @@ class IDC(models.Model):
 
     create_time = models.DateField(auto_now=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -43,6 +44,7 @@ class IDC(models.Model):
         verbose_name_plural = verbose_name
 
 
+@python_2_unicode_compatible
 class Host(models.Model):
     idc = models.ForeignKey(IDC)
     name = models.CharField(max_length=64)
@@ -72,7 +74,7 @@ class Host(models.Model):
 
     administrator = models.ForeignKey(AUTH_USER_MODEL, verbose_name="Admin")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -80,6 +82,7 @@ class Host(models.Model):
         verbose_name_plural = verbose_name
 
 
+@python_2_unicode_compatible
 class MaintainLog(models.Model):
     host = models.ForeignKey(Host)
     maintain_type = models.CharField(max_length=32)
@@ -88,7 +91,7 @@ class MaintainLog(models.Model):
     operator = models.CharField(max_length=16)
     note = models.TextField()
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s maintain-log [%s] %s %s' % (self.host.name, self.time.strftime('%Y-%m-%d %H:%M:%S'),
                                                self.maintain_type, self.hard_type)
 
@@ -97,6 +100,7 @@ class MaintainLog(models.Model):
         verbose_name_plural = verbose_name
 
 
+@python_2_unicode_compatible
 class HostGroup(models.Model):
 
     name = models.CharField(max_length=32)
@@ -108,10 +112,11 @@ class HostGroup(models.Model):
         verbose_name = u"Host Group"
         verbose_name_plural = verbose_name
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@python_2_unicode_compatible
 class AccessRecord(models.Model):
     date = models.DateField()
     user_count = models.IntegerField()
@@ -121,5 +126,5 @@ class AccessRecord(models.Model):
         verbose_name = u"Access Record"
         verbose_name_plural = verbose_name
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s Access Record" % self.date.strftime('%Y-%m-%d')
