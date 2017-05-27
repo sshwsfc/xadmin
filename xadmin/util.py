@@ -1,14 +1,15 @@
+from __future__ import absolute_import
 import django
 from django.db import models
 from django.db.models.sql.query import LOOKUP_SEP
 from django.db.models.deletion import Collector
 from django.db.models.fields.related import ForeignObjectRel
 from django.forms.forms import pretty_name
-from django.utils import formats
+from django.utils import formats, six
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
-from django.utils.encoding import force_unicode, smart_unicode, smart_str
+from django.utils.encoding import force_text, smart_text, smart_str
 from django.utils.translation import ungettext
 from django.core.urlresolvers import reverse
 from django.conf import settings
@@ -40,17 +41,18 @@ else:
 
 
 def xstatic(*tags):
-    from vendors import vendors
+    from .vendors import vendors
     node = vendors
 
     fs = []
     lang = get_language()
 
+    cls_str = str if six.PY3 else basestring
     for tag in tags:
         try:
             for p in tag.split('.'):
                 node = node[p]
-        except Exception, e:
+        except Exception as e:
             if tag.startswith('xadmin'):
                 file_type = tag.split('.')[-1]
                 if file_type in ('css', 'js'):
@@ -60,7 +62,7 @@ def xstatic(*tags):
             else:
                 raise e
 
-        if type(node) in (str, unicode):
+        if isinstance(node, cls_str):
             files = node
         else:
             mode = 'dev'
@@ -129,7 +131,8 @@ def quote(s):
     quoting is slightly different so that it doesn't get automatically
     unquoted by the Web browser.
     """
-    if not isinstance(s, basestring):
+    cls_str = str if six.PY3 else basestring
+    if not isinstance(s, cls_str):
         return s
     res = list(s)
     for i in range(len(res)):
@@ -143,7 +146,8 @@ def unquote(s):
     """
     Undo the effects of quote(). Based heavily on urllib.unquote().
     """
-    if not isinstance(s, basestring):
+    cls_str = str if six.PY3 else basestring
+    if not isinstance(s, cls_str):
         return s
     mychr = chr
     myatoi = int
@@ -193,7 +197,7 @@ class NestedObjects(Collector):
                 self.add_edge(None, obj)
         try:
             return super(NestedObjects, self).collect(objs, source_attr=source_attr, **kwargs)
-        except models.ProtectedError, e:
+        except models.ProtectedError as e:
             self.protected.update(e.protected_objects)
 
     def related_objects(self, related, objs):
@@ -242,8 +246,8 @@ def model_format_dict(obj):
     else:
         opts = obj
     return {
-        'verbose_name': force_unicode(opts.verbose_name),
-        'verbose_name_plural': force_unicode(opts.verbose_name_plural)
+        'verbose_name': force_text(opts.verbose_name),
+        'verbose_name_plural': force_text(opts.verbose_name_plural)
     }
 
 
@@ -284,8 +288,11 @@ def lookup_field(name, obj, model_admin=None):
         if callable(name):
             attr = name
             value = attr(obj)
-        elif (model_admin is not None and hasattr(model_admin, name) and
-              not name == '__str__' and not name == '__unicode__'):
+        elif (
+                model_admin is not None
+                and hasattr(model_admin, name)
+                and name not in ('__str__', '__unicode__')
+                ):
             attr = getattr(model_admin, name)
             value = attr(obj)
         else:
@@ -336,9 +343,9 @@ def display_for_field(value, field):
     elif isinstance(field, models.FloatField):
         return formats.number_format(value)
     elif isinstance(field.rel, models.ManyToManyRel):
-        return ', '.join([smart_unicode(obj) for obj in value.all()])
+        return ', '.join([smart_text(obj) for obj in value.all()])
     else:
-        return smart_unicode(value)
+        return smart_text(value)
 
 
 def display_for_value(value, boolean=False):
@@ -355,7 +362,7 @@ def display_for_value(value, boolean=False):
     elif isinstance(value, (decimal.Decimal, float)):
         return formats.number_format(value)
     else:
-        return smart_unicode(value)
+        return smart_text(value)
 
 
 class NotRelationField(Exception):

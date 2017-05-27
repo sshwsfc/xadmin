@@ -3,6 +3,8 @@ Created on Mar 26, 2014
 
 @author: LAB_ADM
 '''
+from future.utils import iteritems
+from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 from xadmin.filters import manager,MultiSelectFieldListFilter
 from xadmin.plugins.filters import *
@@ -80,7 +82,7 @@ class QuickFilterPlugin(BaseAdminPlugin):
  
     def get_list_queryset(self, queryset):
         lookup_params = dict([(smart_str(k)[len(FILTER_PREFIX):], v) for k, v in self.admin_view.params.items() if smart_str(k).startswith(FILTER_PREFIX) and v != ''])
-        for p_key, p_val in lookup_params.iteritems():
+        for p_key, p_val in iteritems(lookup_params):
             if p_val == "False":
                 lookup_params[p_key] = False
         use_distinct = False
@@ -136,7 +138,7 @@ class QuickFilterPlugin(BaseAdminPlugin):
                 if spec and spec.has_output():
                     try:
                         new_qs = spec.do_filte(queryset)
-                    except ValidationError, e:
+                    except ValidationError as e:
                         new_qs = None
                         self.admin_view.message_user(_("<b>Filtering error:</b> %s") % e.messages[0], 'error')
                     if new_qs is not None:
@@ -146,7 +148,10 @@ class QuickFilterPlugin(BaseAdminPlugin):
  
         self.has_filters = bool(self.filter_specs)
         self.admin_view.quickfilter['filter_specs'] = self.filter_specs
-        self.admin_view.quickfilter['used_filter_num'] = len(filter(lambda f: f.is_used, self.filter_specs))
+        obj = filter(lambda f: f.is_used, self.filter_specs)
+        if six.PY3:
+            obj = list(obj)
+        self.admin_view.quickfilter['used_filter_num'] = len(obj)
  
         if use_distinct:
             return queryset.distinct()

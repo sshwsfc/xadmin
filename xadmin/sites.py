@@ -1,14 +1,18 @@
 import sys
 from functools import update_wrapper
+from future.utils import iteritems
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.base import ModelBase
+from django.utils import six
 from django.views.decorators.cache import never_cache
 from django.template.engine import Engine
 import inspect
 
-reload(sys)
-sys.setdefaultencoding("utf-8")
+if six.PY2 and sys.getdefaultencoding() == 'ascii':
+    import imp
+    imp.reload(sys)
+    sys.setdefaultencoding("utf-8")
 
 
 class AlreadyRegistered(Exception):
@@ -305,21 +309,29 @@ class AdminSite(object):
         # inspect[isclass]: Only checks if the object is a class. With it lets you create an custom view that
         # inherits from multiple views and have more of a metaclass.
         urlpatterns += [
-            url(path, wrap(self.create_admin_view(clz_or_func)) if inspect.isclass(clz_or_func) and issubclass(clz_or_func, BaseAdminView) else include(clz_or_func(self)),
-                name=name) for path, clz_or_func, name in self._registry_views
+            url(
+                path,
+                wrap(self.create_admin_view(clz_or_func))
+                if inspect.isclass(clz_or_func) and issubclass(clz_or_func, BaseAdminView)
+                else include(clz_or_func(self)),
+                name=name
+            )
+            for path, clz_or_func, name in self._registry_views
         ]
 
         # Add in each model's views.
-        for model, admin_class in self._registry.iteritems():
-            view_urls = [url(
-                path, wrap(
-                    self.create_model_admin_view(clz, model, admin_class)),
-                name=name % (model._meta.app_label, model._meta.model_name))
-                for path, clz, name in self._registry_modelviews]
+        for model, admin_class in iteritems(self._registry):
+            view_urls = [
+                url(
+                    path,
+                    wrap(self.create_model_admin_view(clz, model, admin_class)),
+                    name=name % (model._meta.app_label, model._meta.model_name)
+                )
+                for path, clz, name in self._registry_modelviews
+            ]
             urlpatterns += [
                 url(r'^%s/%s/' % (model._meta.app_label, model._meta.model_name), include(view_urls))
             ]
-
         return urlpatterns
 
     @property
