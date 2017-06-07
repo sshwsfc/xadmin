@@ -16,6 +16,7 @@ from django.conf import settings
 from django.forms import Media
 from django.utils.translation import get_language
 from django.contrib.admin.utils import label_for_field, help_text_for_field
+from django import VERSION as version
 import datetime
 import decimal
 
@@ -292,7 +293,7 @@ def lookup_field(name, obj, model_admin=None):
                 model_admin is not None
                 and hasattr(model_admin, name)
                 and name not in ('__str__', '__unicode__')
-                ):
+        ):
             attr = getattr(model_admin, name)
             value = attr(obj)
         else:
