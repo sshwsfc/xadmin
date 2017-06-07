@@ -1,6 +1,7 @@
+from __future__ import absolute_import
 from xadmin.sites import AdminSite
 from xadmin.views import BaseAdminView, CommAdminView, ListAdminView
-from models import ModelA, ModelB
+from .models import ModelA, ModelB
 
 site = AdminSite('views_base')
 

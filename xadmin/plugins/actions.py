@@ -5,7 +5,8 @@ from django.db import router
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.template.response import TemplateResponse
-from django.utils.encoding import force_unicode
+from django.utils import six
+from django.utils.encoding import force_text
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _, ungettext
 from django.utils.text import capfirst
@@ -24,7 +25,7 @@ checkbox = forms.CheckboxInput({'class': 'action-select'}, lambda value: False)
 
 
 def action_checkbox(obj):
-    return checkbox.render(ACTION_CHECKBOX_NAME, force_unicode(obj.pk))
+    return checkbox.render(ACTION_CHECKBOX_NAME, force_text(obj.pk))
 action_checkbox.short_description = mark_safe(
     '<input type="checkbox" id="action-toggle" />')
 action_checkbox.allow_tags = True
@@ -102,9 +103,9 @@ class DeleteSelectedAction(BaseActionView):
             return None
 
         if len(queryset) == 1:
-            objects_name = force_unicode(self.opts.verbose_name)
+            objects_name = force_text(self.opts.verbose_name)
         else:
-            objects_name = force_unicode(self.opts.verbose_name_plural)
+            objects_name = force_text(self.opts.verbose_name_plural)
 
         if perms_needed or protected:
             title = _("Cannot delete %(name)s") % {"name": objects_name}
@@ -227,6 +228,8 @@ class ActionPlugin(BaseAdminPlugin):
 
         # get_action might have returned None, so filter any of those out.
         actions = filter(None, actions)
+        if six.PY3:
+            actions = list(actions)
 
         # Convert the actions into a OrderedDict keyed by name.
         actions = OrderedDict([
@@ -242,7 +245,7 @@ class ActionPlugin(BaseAdminPlugin):
         tuple (name, description).
         """
         choices = []
-        for ac, name, description, icon in self.actions.itervalues():
+        for ac, name, description, icon in self.actions.values():
             choice = (name, description % model_format_dict(self.opts), icon)
             choices.append(choice)
         return choices

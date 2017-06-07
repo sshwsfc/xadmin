@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import copy
 
 from crispy_forms.utils import TEMPLATE_PACK
@@ -9,7 +10,8 @@ from django.forms.models import modelform_factory
 from django.http import Http404
 from django.template import loader
 from django.template.response import TemplateResponse
-from django.utils.encoding import force_unicode, smart_unicode
+from django.utils import six
+from django.utils.encoding import force_text, smart_text
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
@@ -17,7 +19,7 @@ from django.utils.html import conditional_escape
 from xadmin.layout import FormHelper, Layout, Fieldset, Container, Column, Field, Col, TabHolder
 from xadmin.util import unquote, lookup_field, display_for_field, boolean_icon, label_for_field
 
-from base import ModelAdminView, filter_hook, csrf_protect_m
+from .base import ModelAdminView, filter_hook, csrf_protect_m
 
 # Text to display within change-list table cells if the value is blank.
 EMPTY_CHANGELIST_VALUE = _('Null')
@@ -90,7 +92,7 @@ class ResultField(object):
                     self.allow_tags = True
                     self.text = boolean_icon(value)
                 else:
-                    self.text = smart_unicode(value)
+                    self.text = smart_text(value)
             else:
                 if isinstance(f.rel, models.ManyToOneRel):
                     self.text = getattr(self.obj, f.name)
@@ -104,7 +106,7 @@ class ResultField(object):
     def val(self):
         text = mark_safe(
             self.text) if self.allow_tags else conditional_escape(self.text)
-        if force_unicode(text) == '' or text == 'None' or text == EMPTY_CHANGELIST_VALUE:
+        if force_text(text) == '' or text == 'None' or text == EMPTY_CHANGELIST_VALUE:
             text = mark_safe(
                 '<span class="text-muted">%s</span>' % EMPTY_CHANGELIST_VALUE)
         for wrap in self.wraps:
@@ -113,11 +115,12 @@ class ResultField(object):
 
 
 def replace_field_to_value(layout, cb):
+    cls_str = str if six.PY3 else basestring
     for i, lo in enumerate(layout.fields):
         if isinstance(lo, Field) or issubclass(lo.__class__, Field):
             layout.fields[i] = ShowField(
                 cb, *lo.fields, attrs=lo.attrs, wrapper_class=lo.wrapper_class)
-        elif isinstance(lo, basestring):
+        elif isinstance(lo, cls_str):
             layout.fields[i] = ShowField(cb, lo)
         elif hasattr(lo, 'get_field_names'):
             replace_field_to_value(lo, cb)
@@ -140,7 +143,7 @@ class DetailAdminView(ModelAdminView):
         if self.obj is None:
             raise Http404(
                 _('%(name)s object with primary key %(key)r does not exist.') %
-                {'name': force_unicode(self.opts.verbose_name), 'key': escape(object_id)})
+                {'name': force_text(self.opts.verbose_name), 'key': escape(object_id)})
         self.org_obj = self.obj
 
     @filter_hook
@@ -211,6 +214,8 @@ class DetailAdminView(ModelAdminView):
         layout = self.get_form_layout()
         replace_field_to_value(layout, self.get_field_result)
         helper.add_layout(layout)
+        cls_str = str if six.PY3 else basestring
+        helper.filter(cls_str, max_level=20).wrap(ShowField, admin_view=self)
         return helper
 
     @csrf_protect_m
@@ -227,7 +232,7 @@ class DetailAdminView(ModelAdminView):
     @filter_hook
     def get_context(self):
         new_context = {
-            'title': _('%s Detail') % force_unicode(self.opts.verbose_name),
+            'title': _('%s Detail') % force_text(self.opts.verbose_name),
             'form': self.form_obj,
 
             'object': self.obj,
@@ -245,7 +250,7 @@ class DetailAdminView(ModelAdminView):
     @filter_hook
     def get_breadcrumb(self):
         bcs = super(DetailAdminView, self).get_breadcrumb()
-        item = {'title': force_unicode(self.obj)}
+        item = {'title': force_text(self.obj)}
         if self.has_view_permission():
             item['url'] = self.model_admin_url('detail', self.obj.pk)
         bcs.append(item)

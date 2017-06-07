@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import print_function
 import os
 import shutil
 import sys
@@ -6,6 +7,7 @@ import tempfile
 
 import django
 from django.apps import AppConfig,apps
+from django.utils.encoding import smart_text
 
 
 TEST_ROOT = os.path.realpath(os.path.dirname(__file__))
@@ -32,9 +34,13 @@ ALWAYS_INSTALLED_APPS = [
 def get_test_modules():
     modules = []
     for f in os.listdir(RUNTESTS_DIR):
-        if (f.startswith('__init__') or
-            f.startswith('.') or
-            f.startswith('sql') or not os.path.isdir(os.path.join(RUNTESTS_DIR, f))):
+        if (
+                f.startswith('__init__')
+                or f.startswith('__pycache__')
+                or f.startswith('.')
+                or f.startswith('sql')
+                or not os.path.isdir(os.path.join(RUNTESTS_DIR, f))
+                ):
             continue
         modules.append(f)
     return modules
@@ -81,7 +87,6 @@ def setup(verbosity, test_labels):
     # Load all the test model apps.
     test_labels_set = set([label.split('.')[0] for label in test_labels])
     test_modules = get_test_modules()
-
     for module_name in test_modules:
         module_label = module_name
         # if the module was named on the command line, or
@@ -103,7 +108,7 @@ def teardown(state):
     # so that it will successfully remove temp trees containing
     # non-ASCII filenames on Windows. (We're assuming the temp dir
     # name itself does not contain non-ASCII characters.)
-    shutil.rmtree(unicode(TEMP_DIR))
+    shutil.rmtree(smart_text(TEMP_DIR))
     # Restore the old settings.
     for key, value in state.items():
         setattr(settings, key, value)

@@ -1,5 +1,6 @@
 from django import template
 from django.template import Library
+from django.utils import six
 from django.utils.safestring import mark_safe
 
 from xadmin.util import static, vendor as util_vendor
@@ -15,11 +16,12 @@ def view_block(context, block_name, *args, **kwargs):
     nodes = []
     method_name = 'block_%s' % block_name
 
+    cls_str = str if six.PY3 else basestring
     for view in [admin_view] + admin_view.plugins:
         if hasattr(view, method_name) and callable(getattr(view, method_name)):
             block_func = getattr(view, method_name)
             result = block_func(context, nodes, *args, **kwargs)
-            if result and type(result) in (str, unicode):
+            if result and isinstance(result, cls_str):
                 nodes.append(result)
     if nodes:
         return mark_safe(''.join(nodes))
