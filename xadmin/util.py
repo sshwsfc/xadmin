@@ -35,7 +35,7 @@ try:
 except ImportError:
     from django.utils.timezone import localtime as tz_localtime
 
-if version[1] < 11:
+if django.VERSION < (1, 11):
     DJANGO_11 = False
 else:
     DJANGO_11 = True
