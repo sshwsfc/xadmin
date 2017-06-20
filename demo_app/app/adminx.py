@@ -11,12 +11,15 @@ from xadmin.plugins.batch import BatchChangeAction
 class MainDashboard(object):
     widgets = [
         [
-            {"type": "html", "title": "Test Widget", "content": "<h3> Welcome to Xadmin! </h3><p>Join Online Group: <br/>QQ Qun : 282936295</p>"},
-            {"type": "chart", "model": "app.accessrecord", "chart": "user_count", "params": {"_p_date__gte": "2013-01-08", "p": 1, "_p_date__lt": "2013-01-29"}},
+            {"type": "html", "title": "Test Widget",
+             "content": "<h3> Welcome to Xadmin! </h3><p>Join Online Group: <br/>QQ Qun : 282936295</p>"},
+            {"type": "chart", "model": "app.accessrecord", "chart": "user_count",
+             "params": {"_p_date__gte": "2013-01-08", "p": 1, "_p_date__lt": "2013-01-29"}},
             {"type": "list", "model": "app.host", "params": {"o": "-guarantee_date"}},
         ],
         [
-            {"type": "qbutton", "title": "Quick Start", "btns": [{"model": Host}, {"model": IDC}, {"title": "Google", "url": "http://www.google.com"}]},
+            {"type": "qbutton", "title": "Quick Start",
+             "btns": [{"model": Host}, {"model": IDC}, {"title": "Google", "url": "http://www.google.com"}]},
             {"type": "addform", "model": MaintainLog},
         ]
     ]
@@ -45,34 +48,39 @@ class MaintainInline(object):
 
 @xadmin.sites.register(IDC)
 class IDCAdmin(object):
-    list_display = ("name", "description", "create_time")
+    list_display = ("name", "description", "create_time", "contact", "telphone", "address", "customer_id")
     list_display_links = ("name",)
     wizard_form_list = [
         ("First's Form", ("name", "description")),
         ("Second Form", ("contact", "telphone", "address")),
         ("Thread Form", ("customer_id",))
     ]
+    search_fields = ["name", "description", "contact", "telphone", "address"]
+    list_filter = [
+        "name"
+    ]
+    list_quick_filter = [{"field": "name", "limit": 10}]
 
     search_fields = ["name"]
     relfield_style = "fk-select"
     reversion_enable = True
 
     actions = [BatchChangeAction, ]
-    batch_fields = ("contact", "groups")
+    batch_fields = ("contact", "description", "address", "customer_id")
 
 
 @xadmin.sites.register(Host)
 class HostAdmin(object):
-
     def open_web(self, instance):
         return """<a href="http://%s" target="_blank">Open</a>""" % instance.ip
+
     open_web.short_description = "Acts"
     open_web.allow_tags = True
     open_web.is_column = True
 
     list_display = (
         "name", "idc", "guarantee_date", "service_type", "status", "open_web",
-        "description",
+        "description", "ip",
     )
     list_display_links = ("name",)
 
@@ -89,6 +97,7 @@ class HostAdmin(object):
     ]
 
     list_quick_filter = ["service_type", {"field": "idc__name", "limit": 10}]
+    # list_quick_filter = ["idc_id"]
     list_bookmarks = [{
         "title": "Need Guarantee",
         "query": {"status__exact": 2},
@@ -98,7 +107,7 @@ class HostAdmin(object):
 
     show_detail_fields = ("idc",)
     list_editable = (
-        "name", "idc", "guarantee_date", "service_type", "description",
+        "name", "idc", "guarantee_date", "service_type", "description", "ip"
     )
     save_as = True
 
@@ -140,12 +149,13 @@ class HostAdmin(object):
     reversion_enable = True
 
     data_charts = {
-        "host_service_type_counts": {'title': u"Host service type count", "x-field": "service_type", "y-field": ("service_type",),
+        "host_service_type_counts": {'title': u"Host service type count", "x-field": "service_type",
+                                     "y-field": ("service_type",),
                                      "option": {
                                          "series": {"bars": {"align": "center", "barWidth": 0.8, 'show': True}},
                                          "xaxis": {"aggregate": "count", "mode": "categories"},
-        },
-        },
+                                     },
+                                     },
     }
 
 
@@ -190,9 +200,9 @@ class MaintainLogAdmin(object):
 
 @xadmin.sites.register(AccessRecord)
 class AccessRecordAdmin(object):
-
     def avg_count(self, instance):
         return int(instance.view_count / instance.user_count)
+
     avg_count.short_description = "Avg Count"
     avg_count.allow_tags = True
     avg_count.is_column = True
@@ -206,19 +216,19 @@ class AccessRecordAdmin(object):
 
     refresh_times = (3, 5, 10)
     data_charts = {
-        "user_count": {'title': u"User Report", "x-field": "date", "y-field": ("user_count", "view_count"), "order": ('date',)},
+        "user_count": {'title': u"User Report", "x-field": "date", "y-field": ("user_count", "view_count"),
+                       "order": ('date',)},
         "avg_count": {'title': u"Avg Report", "x-field": "date", "y-field": ('avg_count',), "order": ('date',)},
-        "per_month": {'title': u"Monthly Users", "x-field": "_chart_month", "y-field": ("user_count", ),
+        "per_month": {'title': u"Monthly Users", "x-field": "_chart_month", "y-field": ("user_count",),
                       "option": {
-            "series": {"bars": {"align": "center", "barWidth": 0.8, 'show': True}},
-            "xaxis": {"aggregate": "sum", "mode": "categories"},
-        },
-        },
+                          "series": {"bars": {"align": "center", "barWidth": 0.8, 'show': True}},
+                          "xaxis": {"aggregate": "sum", "mode": "categories"},
+                      },
+                      },
     }
 
     def _chart_month(self, obj):
         return obj.date.strftime("%B")
-
 
 # xadmin.sites.site.register(HostGroup, HostGroupAdmin)
 # xadmin.sites.site.register(MaintainLog, MaintainLogAdmin)
