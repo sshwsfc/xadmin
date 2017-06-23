@@ -13,7 +13,8 @@ from django.utils import six
 from django.utils.encoding import smart_str
 from django.utils.translation import ugettext as _
 
-from xadmin.filters import manager as filter_manager, FILTER_PREFIX, SEARCH_VAR, DateFieldListFilter, RelatedFieldSearchFilter
+from xadmin.filters import manager as filter_manager, FILTER_PREFIX, SEARCH_VAR, DateFieldListFilter, \
+    RelatedFieldSearchFilter
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
 from xadmin.util import is_related_field
@@ -85,7 +86,8 @@ class FilterPlugin(BaseAdminPlugin):
         # for clean filters
         self.admin_view.has_query_param = bool(lookup_params)
         self.admin_view.clean_query_url = self.admin_view.get_query_string(remove=
-                                                                           [k for k in self.request.GET.keys() if k.startswith(FILTER_PREFIX)])
+                                                                           [k for k in self.request.GET.keys() if
+                                                                            k.startswith(FILTER_PREFIX)])
 
         # Normalize the types of keys
         if not self.free_query_filter:
@@ -121,9 +123,9 @@ class FilterPlugin(BaseAdminPlugin):
                         field, self.request, lookup_params,
                         self.model, self.admin_view, field_path=field_path)
 
-                    if len(field_parts)>1:
+                    if len(field_parts) > 1:
                         # Add related model name to title
-                        spec.title = "%s %s"%(field_parts[-2].name,spec.title)
+                        spec.title = "%s %s" % (field_parts[-2].name, spec.title)
 
                     # Check if we need to use distinct()
                     use_distinct = (use_distinct or
@@ -154,11 +156,23 @@ class FilterPlugin(BaseAdminPlugin):
             raise IncorrectLookupParameters(e)
 
         try:
-            queryset = queryset.filter(**lookup_params)
+            # fix a bug by david: In demo, quick filter by IDC Name() cannot be used.
+            if queryset and lookup_params:
+                new_lookup_parames = dict()
+                for k, v in lookup_params.iteritems():
+                    list_v = v.split(',')
+                    if len(list_v) > 0:
+                        new_lookup_parames.update({k: list_v})
+                    else:
+                        new_lookup_parames.update({k: v})
+                queryset = queryset.filter(**new_lookup_parames)
         except (SuspiciousOperation, ImproperlyConfigured):
             raise
         except Exception as e:
             raise IncorrectLookupParameters(e)
+        else:
+            if not queryset:
+                pass
 
         query = self.request.GET.get(SEARCH_VAR, '')
 
@@ -227,5 +241,6 @@ class FilterPlugin(BaseAdminPlugin):
                     'xadmin/blocks/model_list.nav_form.search_form.html',
                     context=context)
             )
+
 
 site.register_plugin(FilterPlugin, ListAdminView)
