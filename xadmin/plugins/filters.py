@@ -85,9 +85,8 @@ class FilterPlugin(BaseAdminPlugin):
 
         # for clean filters
         self.admin_view.has_query_param = bool(lookup_params)
-        self.admin_view.clean_query_url = self.admin_view.get_query_string(remove=
-                                                                           [k for k in self.request.GET.keys() if
-                                                                            k.startswith(FILTER_PREFIX)])
+        self.admin_view.clean_query_url = self.admin_view.get_query_string(remove=[k for k in self.request.GET.keys() if
+                                                                                   k.startswith(FILTER_PREFIX)])
 
         # Normalize the types of keys
         if not self.free_query_filter:
@@ -157,7 +156,7 @@ class FilterPlugin(BaseAdminPlugin):
 
         try:
             # fix a bug by david: In demo, quick filter by IDC Name() cannot be used.
-            if queryset and lookup_params:
+            if isinstance(queryset, models.query.QuerySet) and lookup_params:
                 new_lookup_parames = dict()
                 for k, v in lookup_params.iteritems():
                     list_v = v.split(',')
@@ -171,7 +170,7 @@ class FilterPlugin(BaseAdminPlugin):
         except Exception as e:
             raise IncorrectLookupParameters(e)
         else:
-            if not queryset:
+            if not isinstance(queryset, models.query.QuerySet):
                 pass
 
         query = self.request.GET.get(SEARCH_VAR, '')
