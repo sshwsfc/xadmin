@@ -17,6 +17,8 @@ def autodiscover():
     from importlib import import_module
     from django.conf import settings
     from django.utils.module_loading import module_has_submodule
+    from django.apps import apps
+
     setattr(settings, 'CRISPY_TEMPLATE_PACK', 'bootstrap3')
     setattr(settings, 'CRISPY_CLASS_CONVERTERS', {
         "textinput": "textinput textInput form-control",
@@ -46,12 +48,12 @@ def autodiscover():
     from xadmin.plugins import register_builtin_plugins
     register_builtin_plugins(site)
 
-    for app in settings.INSTALLED_APPS:
-        mod = import_module(app)
+    for app_config in apps.get_app_configs():
+        mod = import_module(app_config.name)
         # Attempt to import the app's admin module.
         try:
             before_import_registry = site.copy_registry()
-            import_module('%s.adminx' % app)
+            import_module('%s.adminx' % app_config.name)
         except:
             # Reset the model registry to the state before the last import as
             # this import will have to reoccur on the next request and this
