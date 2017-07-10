@@ -28,7 +28,7 @@
     "react-datetime": "^2.8.1",
     "react-redux": "^4.4.5",
     "react-redux-loading-bar": "^2.3.3",
-    "react-router": "2.0.0",
+    "react-router": "^2.4.0",
     "react-selectize": "^2.0.3",
     "redux": "^3.4.0",
     "redux-actions": "^0.12.0",

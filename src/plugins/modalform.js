@@ -19,16 +19,8 @@ const AddModelBtn = ModelWrap('modalform.modal')(ModelWrap('model.item')(React.c
     saveItem: PropTypes.func.isRequired
   },
 
-  getInitialState() {
-    return { show: false }
-  },
-
-  showModal() {
-    this.setState({ show: true })
-  },
-
   hideModal() {
-    this.setState({ show: false })
+    this.props.onClose()
   },
 
   onSubmitSuccess(item) {
@@ -37,7 +29,7 @@ const AddModelBtn = ModelWrap('modalform.modal')(ModelWrap('model.item')(React.c
   },
 
   render() {
-    const { model, title, loading, saveItem, canAdd, modalProps, btnProps } = this.props
+    const { show, model, title, loading, saveItem, canAdd, modalProps, btnProps } = this.props
     const { _t } = app.context
     const FormLayout = (props) => {
       const { children, invalid, handleSubmit, submitting, onClose } = props
@@ -54,14 +46,9 @@ const AddModelBtn = ModelWrap('modalform.modal')(ModelWrap('model.item')(React.c
     }
     
     return canAdd ? (
-      <span>
-        <Button bsStyle="primary" onClick={this.showModal} {...btnProps}>
-          {_t('Add {{object}}', { object: model.title })}
-        </Button>
-        {' '}
         <Modal
           {...modalProps}
-          show={this.state.show}
+          show={show}
           onHide={this.hideModal}
         >
           <Modal.Header closeButton>
@@ -76,7 +63,6 @@ const AddModelBtn = ModelWrap('modalform.modal')(ModelWrap('model.item')(React.c
             onSubmitSuccess={this.onSubmitSuccess}
           />
         </Modal>
-      </span>
     ) : null
   }
 
@@ -91,9 +77,32 @@ export default {
         return <AddModelBtn {...props} />
       }
     },
+    reducers: {
+      showModalAddForm: (state={}, action) => {
+        if(action.type == '@@xadmin-modalform/SHOW') {
+          return { ...state, [action.model.name]: true }
+        } else if(action.type == '@@xadmin-modalform/CLOSE') {
+          return { ...state, [action.model.name]: false }
+        }
+        return state
+      }
+    },
     mappers: {
-      'modalform.modal': {
+      'model.page.list': {
         method: {
+          addItem: ({ dispatch, model }) => () => {
+            dispatch({ model, type: '@@xadmin-modalform/SHOW' })
+          }
+        }
+      },
+      'modalform.modal': {
+        data: ({ state, model }) => ({
+          show: state.showModalAddForm[model.name] || false
+        }),
+        method: {
+          onClose: ({ model, dispatch }) => (item) => {
+            dispatch({ model, type: '@@xadmin-modalform/CLOSE' })
+          },
           onSuccess: ({ model, dispatch }) => (item) => {
             dispatch({ model, type: 'GET_ITEMS' })
           }

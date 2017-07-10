@@ -57,7 +57,7 @@ const SchemaForm = (props) => {
   const WrapForm = reduxForm({ 
     form: formKey,
     validate: (values) => {
-      const valid = ajValidate(_.omitBy(values, v=> _.isNil(v) || v == ''))
+      const valid = ajValidate(_.omitBy(values, v=> v == null || v === undefined || v === ''))
       if(!valid) {
         const { i18n } = app.context
         if(ajvLocalize[i18n.language]) {

@@ -32,38 +32,48 @@ const app = {
   },
   routers: (app) => {
     const models = app.load_dict('models')
+    const { _t } = app.context
     let routes = []
     for (name in models) {
       const model = models[name]
       const model_routes = []
+      const modelName = model.title || model.name
 
       if(!model.permission || model.permission.view) {
         model_routes.push({
           path: 'list',
-          component: ModelPages.ModelListPage
+          breadcrumbName: _t('{{name}} List', { name: modelName }),
+          component: model.components && model.components['page_list'] || ModelPages.ModelListPage
         })
       }
       if(model.permission && model.permission.add) {
         model_routes.push({
           path: ':id/detail',
-          component: ModelPages.ModelDetailPage
+          breadcrumbName: _t('{{name}} Detail', { name: modelName }),
+          component: model.components && model.components['page_detail'] || ModelPages.ModelDetailPage
         })
       }
       if(model.permission && model.permission.add) {
         model_routes.push({
           path: 'add',
-          component: ModelPages.ModelFormPage
+          breadcrumbName: _t('Create {{name}}', { name: modelName }),
+          component: model.components && model.components['page_add'] || ModelPages.ModelFormPage
         })
       }
       if(model.permission && model.permission.edit) {
         model_routes.push({
           path: ':id/edit',
-          component: ModelPages.ModelFormPage
+          breadcrumbName: _t('Edit {{name}}', { name: modelName }),
+          component: model.components && model.components['page_edit'] || ModelPages.ModelFormPage
         })
       }
       routes = routes.concat({
         path: `model/${name}/`,
+        breadcrumbName: _t('{{name}} List', { name: modelName }),
         component: Model(name, { key: name, persist: true }),
+        indexRoute: {
+          onEnter: ({ location }, replace) => replace({ pathname: location.pathname + 'list' })
+        },
         childRoutes: model_routes
       })
     }

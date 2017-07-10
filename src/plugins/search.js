@@ -22,6 +22,10 @@ const SearchBar = ModelWrap('model.searchbar')(React.createClass({
     this.props.onSearch(this.state.value)
   },
 
+  onClean(e) {
+    this.setState({ value: '' }, () => this.onSearch(e))
+  },
+
   render() {
     const { _t } = app.context
     const { searchValue, searchTitles } = this.props
@@ -34,6 +38,7 @@ const SearchBar = ModelWrap('model.searchbar')(React.createClass({
           <InputGroup>
             <FormControl ref="searchInput" value={this.state.value} type="text" placeholder={placeholder} onChange={(e)=>{this.setState({ value: e.target.value })}} />
             <InputGroup.Button>
+              { searchValue ? <Button onClick={this.onClean}><Icon name="times" /></Button> : null }
               <Button type="submit"><Icon name="search" /></Button>
             </InputGroup.Button>
           </InputGroup>
@@ -80,7 +85,7 @@ export default {
           } else {
             wheres = _.omit(wheres, 'searchbar')
           }
-          dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres })
+          dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0, search }, wheres })
         }
       }
     }

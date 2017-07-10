@@ -43,11 +43,12 @@ const Checkboxes = FormWrap('model.form.relates')(React.createClass({
   },
 
   render() {
+    const { _t } = app.context
     const { input, options, label, meta, field, group: FieldGroup } = this.props
     const { items } = field
     return (
       <FieldGroup label={label} meta={meta} input={input} field={field}>
-        {options?this.renderOptions():<div>loading...</div>}
+        {options?this.renderOptions():<div>{_t('loading')}</div>}
       </FieldGroup>
       )
   }
@@ -78,25 +79,27 @@ const RelateMultiSelect = FormWrap('model.form.relates')(React.createClass({
   },
 
   renderOptions() {
+    const { _t } = app.context
     const { input, options, field } = this.props
     const displayField = field.displayField || 'name'
     const checkedValues = input.value ? input.value.map(item => { return { label: item[displayField] || 'null', value: item.id, item }}) : []
     return (<MultiSelect theme="bootstrap3" ref = "select"
-        placeholder={`Select ${field.label}`}
+        placeholder={_t('Select {{label}}', { label: field.label })}
         values={checkedValues}
         options={options.map(option=>{ return { label: option[displayField] || 'null', value: option.id, item: option } })}
         onValuesChange={this.onValuesChange}
-        renderNoResultsFound={()=>{ return (<div className="no-results-found">No results found</div>)}}
+        renderNoResultsFound={()=>{ return (<div className="no-results-found">{_t('No results found')}</div>)}}
         {...field.attrs}
       />)
   },
 
   render() {
+    const { _t } = app.context
     const { input, options, label, meta, field, group: FieldGroup } = this.props
     const { items } = field
     return (
       <FieldGroup label={label} meta={meta} input={input} field={field}>
-        {options?this.renderOptions():<FormControl.Static>loading...</FormControl.Static>}
+        {options?this.renderOptions():<FormControl.Static>{_t('loading')}</FormControl.Static>}
       </FieldGroup>
       )
   }
@@ -123,6 +126,7 @@ const RelateSelect = FormWrap('model.form.fkselect')(React.createClass({
   },
 
   componentDidMount() {
+    const { _t } = app.context
     const { input: { value, onChange }, options, getValue, field } = this.props
     if(options && options.length > 0) {
       //this.refs.select.highlightFirstSelectableOption()
@@ -131,7 +135,7 @@ const RelateSelect = FormWrap('model.form.fkselect')(React.createClass({
       getValue(value)
       const displayField = field.displayField || 'name'
       setTimeout(()=>{
-        onChange({ [displayField]: 'loading...', id: value })
+        onChange({ [displayField]: _t('loading'), id: value })
       }, 10)
     }
     if(!(options && options.length > 0) && field.lazyLoad == false) {
@@ -153,13 +157,14 @@ const RelateSelect = FormWrap('model.form.fkselect')(React.createClass({
   },
 
   renderOptions() {
+    const { _t } = app.context
     const { input: { value }, options, field } = this.props
     const displayField = field.displayField || 'name'
     const selectValue = value ? { label: value[displayField] || '', value: value.id } : null
     const searchProps = field.lazyLoad == false ? {
-      placeholder: `Select ${field.label}`
+      placeholder: _t('Select {{label}}', { label: field.label })
     } : {
-      placeholder: `Search ${field.label}`,
+      placeholder: _t('Search {{label}}', { label: field.label }),
       search: this.state.search,
       onSearchChange: this.onSearchChange
     }
@@ -170,7 +175,7 @@ const RelateSelect = FormWrap('model.form.fkselect')(React.createClass({
         onValueChange={this.onValueChange}
         renderNoResultsFound={(value, search)=>{ 
           return (<div className="no-results-found" style={{ fontSize: 13 }}>
-            {(search.length == 0 && field.lazyLoad != false) ? 'type a few characters to kick off remote search':'No results found'}
+            {(search.length == 0 && field.lazyLoad != false) ? _t('type a few characters to kick off remote search'):_t('No results found')}
             </div>)
         }}
         {...searchProps}
@@ -179,11 +184,12 @@ const RelateSelect = FormWrap('model.form.fkselect')(React.createClass({
   },
 
   render() {
+    const { _t } = app.context
     const { input, options, label, meta, field, group: FieldGroup } = this.props
     const loading = (input.value && typeof input.value != 'object')
     return (
       <FieldGroup label={label} meta={meta} input={input} field={field}>
-        {!loading?this.renderOptions():<FormControl.Static>loading...</FormControl.Static>}
+        {!loading?this.renderOptions():<FormControl.Static>{_t('loading')}</FormControl.Static>}
       </FieldGroup>
       )
   }
@@ -287,7 +293,7 @@ const mappers = {
         })
       },
       searchRelatedItems: ({ dispatch, form, formState }, { field }) => (search) => {
-        if(_.isNil(search) || search == '') {
+        if(search === '') {
           dispatch({ 
             type: 'GET_RELATED_ITEMS', 
             meta: { form: form.formKey, field, model: field.schema },
@@ -400,10 +406,11 @@ const RelateObject = ModelWrap('model.item')(React.createClass({
   },
 
   render() {
+    const { _t } = app.context
     const { data, loading, model } = this.props
     const displayField = model.display_field || 'name'
     return loading || data == undefined ? 
-      (<div className="text-center"><Icon name="spinner fa-spin fa-4x"/> Loading..</div>) : 
+      (<div className="text-center"><Icon name="spinner fa-spin fa-4x"/> {_t('loading')}</div>) : 
       (
         <div>
           <h4><Icon name={model.icon} /> {data[displayField]}</h4>
@@ -434,14 +441,18 @@ const RelateWrap = (SubComponent) => {
 
 const routers = (app) => {
   const models = app.load_dict('models')
+  const { _t } = app.context
   const names = Object.keys(models)
   const routes = {}
 
   for(let name of names) {
     const model = models[name]
+    const modelName = model.title || model.name
+
     // 每个model都加上relations页面
     routes[`/app/model/${name}/`] = {
       path: ':id/relations/',
+      breadcrumbName: _t('{{name}} List', { name: modelName }),
       component: ({ params: { id }, children }) => {
         return <RelateObject id={id}>{children}</RelateObject>
       }
@@ -459,19 +470,25 @@ const routers = (app) => {
         if(!model.permission || model.permission.view) {
           model_routes.push({
             path: 'list',
+            breadcrumbName: _t('{{name}} List', { name: modelName }),
             component: RelateWrap(ModelPages.ModelListPage)
           })
         }
         if(model.permission && model.permission.add) {
           model_routes.push({
             path: 'add',
+            breadcrumbName: _t('Create {{name}}', { name: modelName }),
             component: RelateWrap(ModelPages.ModelFormPage)
           })
         }
         const key = `/app/model/${relateName}/:id/relations/`
         routes[key] = [ ...(routes[key] || []), {
           path: `${name}/`,
+          breadcrumbName: _t('{{name}} List', { name: modelName }),
           component: Model(name, { key: `${relateName}_${name}` }),
+          indexRoute: {
+            onEnter: ({ location }, replace) => replace({ pathname: location.pathname + 'list' })
+          },
           childRoutes: model_routes
         } ]
       }

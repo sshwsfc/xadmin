@@ -135,6 +135,8 @@ const converters = [
       if(typeof schema.items !== 'undefined') {
         f.items = convert(schema.items, { ...options, path: [] })
       }
+      if(schema.itemsRender)
+        f.itemsRender = schema.itemsRender
     }
     return f
   },

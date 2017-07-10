@@ -22,7 +22,7 @@ const ModelList = React.createClass({
   },
 
   renderNav() {
-    const { title, canAdd, addItem } = this.props
+    const { title, canAdd, addItem, model } = this.props
     const { _t } = app.context
     return (
       <div>
@@ -32,7 +32,7 @@ const ModelList = React.createClass({
         <div className="navbar-btn pull-right hide-xs">
           { Block('model.list.navbtn', this) }
           { canAdd ?
-          (<Button bsStyle="primary" onClick={addItem}><Icon name="plus"/> {_t('Add {{object}}', { object: title })}</Button>) : null
+          (<Button bsStyle="primary" onClick={addItem}><Icon name="plus"/> {_t('Add {{object}}', { object: model.title })}</Button>) : null
           }
         </div>
       </div>

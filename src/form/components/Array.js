@@ -37,13 +37,13 @@ export default ({ input, label, meta: { touched, error }, field, option }) => {
     renderItems = app.load_dict('array_render')[renderItems]
   }
   const { items } = field
-  const fieldsBuilder = (name, index, removeBtn) => {
-    const itemLable = (<div>{removeBtn ? removeBtn : ''}{label + ' ' + (index + 1)}</div>)
+  const fieldsBuilder = (name, index, removeBtn, itemLable) => {
+    const label = itemLable || (<div>{removeBtn ? removeBtn : ''}{label + ' ' + (index + 1)}</div>)
     const itemFields = items.fields ? (items.fields
       .map(f => { return { ...f, 
         key: name + '.' + f.key,
         name: name + '.' + f.name
-      } })) : [ { ...items, key: name, name: name, label: itemLable } ]
+      } })) : [ { ...items, key: name, name: name, label } ]
 
     return objectBuilder(itemFields, items.render, option)
   }

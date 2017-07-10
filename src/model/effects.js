@@ -27,7 +27,7 @@ function *handle_delete_item({ model, item, message }) {
     yield api(model).delete(item.id)
     yield put({ type: 'SELECT_ITEMS', selected: false, item, model })
     yield put({ type: '@@xadmin/ADD_NOTICE', payload: {
-      type: 'success', headline: 'Success', message: message || _t('Delete {{object}} success', { object: model.title || model.name })
+      type: 'success', headline: _t('Success'), message: message || _t('Delete {{object}} success', { object: model.title || model.name })
     } })
     yield put({ type: 'GET_ITEMS', model })
   } catch(err) {
@@ -69,7 +69,7 @@ function *handle_save_item({ model, item, promise, message }) {
         _t('Create {{object}} success', { object }) : 
         _t('Save {{object}} success', { object }))
       yield put({ type: '@@xadmin/ADD_NOTICE', payload: {
-        type: 'success', headline: 'Success', message: noticeMessage
+        type: 'success', headline: _t('Success'), message: noticeMessage
       } }) 
     }
   } catch(err) {

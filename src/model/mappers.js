@@ -43,6 +43,11 @@ export default {
         if(data == undefined && id) {
           dispatch({ model, type: 'GET_ITEM', id })
         }
+      },
+      receiveProps: ({ dispatch, model }, { id, data }, nextProps) => {
+        if(id != nextProps.id && nextProps.data == undefined) {
+          dispatch({ model, type: 'GET_ITEM', id: nextProps.id })
+        }
       }
     }
   },

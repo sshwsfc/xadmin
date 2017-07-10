@@ -13,7 +13,7 @@ function *handle_get_userinfo({ type }) {
 }
 
 function *handle_user_signin({ payload: user }) {
-  if(user.name == undefined) {
+  if(user.name == undefined && user.username == undefined) {
     yield put({ type: '@@xadmin/GET_USER_INFO' })
   }
 }

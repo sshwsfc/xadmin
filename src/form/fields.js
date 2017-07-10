@@ -1,5 +1,4 @@
 import widgets from './components'
-Number.isNaN
 
 export default {
   text: {
@@ -33,7 +32,7 @@ export default {
   numselect: {
     component: widgets.Select,
     normalize: (value, previousValue) => {
-      const ret = parseInt(value)
+      const ret = parseFloat(value)
       return Number.isNaN(ret) ? value : ret
     }
   },
@@ -72,7 +71,10 @@ export default {
     }
   },
   bool: {
-    component: widgets.Checkbox
+    component: widgets.Checkbox,
+    normalize: (value, previousValue) => {
+      return Boolean(value)
+    }
   },
   checkbox: {
     component: widgets.Checkbox

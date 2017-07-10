@@ -57,7 +57,7 @@ const InlineGroup = ({ label, meta, input, field, children }) => {
     groupProps['bsStyle'] = attrs.bsStyle
   }
 
-  const controlComponent = children ? children : (<FormControl {...input} {...attrs} placeholder={label} />)
+  const controlComponent = children ? React.cloneElement(children, { placeholder: label } ) : (<FormControl {...input} {...attrs} placeholder={label} />)
   return (
     <FormGroup controlId={input.name} {...groupProps}>
       <Col sm={12}>

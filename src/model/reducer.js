@@ -143,7 +143,7 @@ const modelReducer = (state={}, action={}) => {
   }
   let result = reducers(modelState, action)
   if(action.type == 'INITIALIZE' && action.initial) {
-    result = { ...result, ...action.initial }
+    result = _.merge(result, action.initial)
   }
   return result === modelState ? state : _.set(state, path, result)
 }

@@ -166,14 +166,15 @@ const redux_app = {
 // saga app
 const sagaMiddleware = createSagaMiddleware()
 const sage_app = {
-  start: (app) => () => {
+  context: (app) => (context, cb) => {
     // extend store
-    const { store } = app.context
+    const { store } = context
     store.runSaga = sagaMiddleware.run
 
     // start saga
     const effects = app.load_list('effects')
     effects.forEach(sagaMiddleware.run)
+    cb(null, context)
   },
   middlewares: (app) => { return sagaMiddleware }
 }
@@ -253,23 +254,22 @@ const Block = (tag, element, props) => {
   }
 }
 
-const BlockTag = (props) => {
-  const { tag, children } = props
-  const blocks = app.load_dict_list('blocks')[tag]
-  if(children !== undefined) {
-    if(blocks !== undefined) {
-      return blocks.reduce((prev, SubComponent)=>{
-        return <SubComponent key={SubComponent.displayName} {...props}>{prev}</SubComponent>
-      }, children)
-    } else {
-      return children
-    }
+const BlockTag = ({ tag, children, props, ...extraProps }) => {
+  const blocks = app.load_dict_list('blocks') && app.load_dict_list('blocks')[tag]
+  if(blocks !== undefined) {
+    return blocks.reduce((prev, block) => {
+      const ret = block({ nodes: prev, ...props, ...extraProps })
+      if(ret !== undefined && ret != prev) {
+        if(Array.isArray(ret)) {
+          prev = prev.concat(ret)
+        } else {
+          prev.push(ret)
+        }
+      }
+      return prev
+    }, [ children ])
   } else {
-    if(blocks !== undefined) {
-      return blocks.map((SubComponent)=>{
-        return <SubComponent key={SubComponent.displayName} {...props} />
-      })
-    }
+    return children
   }
 }
 
@@ -564,6 +564,7 @@ export default {
   app,
   config,
   Block,
+  BlockTag,
   Wrap,
   StoreWrap
 }
