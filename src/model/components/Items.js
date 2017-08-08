@@ -269,6 +269,7 @@ const ModelGrid = React.createClass({
     } else {
       if(items.length > 0) {
         return (
+          <div className="table-responsive">
           <Table striped bordered hover>
             <thead>
               <tr>
@@ -285,6 +286,7 @@ const ModelGrid = React.createClass({
               })}
             </tbody>
           </Table>
+          </div>
         )
       } else {
         return (<Well>{_t('No Data')}</Well>)
@@ -346,7 +348,9 @@ const ModelList = React.createClass({
               return <Button><Header key={`model-list-header-${field}`} field={field} /></Button>
             })}
             </ButtonGroup>
-            {items.map(item => <ListRow key={item.id} fields={fields} id={item.id} />)}
+            <div>
+              {items.map(item => <ListRow key={item.id} fields={fields} id={item.id} />)}
+            </div>
           </div>)
       } else {
         return (<Well>{_t('No Data')}</Well>)

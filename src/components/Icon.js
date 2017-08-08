@@ -7,8 +7,9 @@ module.exports = React.createClass({
   },
 
   render() {
+    const fontClass = this.props.fontClass || 'fa fa-fw fa-'
     return (
-      <i className={'fa fa-fw fa-' + this.props.name} {...this.props}></i>
+      <i className={fontClass + this.props.name} {...this.props}></i>
     )
   }
 
