@@ -8,7 +8,7 @@ function *handle_get_userinfo({ type }) {
     const user = yield api({ resource_name: 'auth' }).get('user')
     yield put({ type, payload: user, success: true })
   } catch(err) { 
-    console.error(err)
+    app.error(err)
   }
 }
 
@@ -27,7 +27,7 @@ function *handle_user_signout() {
       type: 'success', headline: 'Success', message: _t('Successfully logged out')
     } })
   } catch(err) { 
-    console.error(err)
+    app.error(err)
   }
 }
 
@@ -42,7 +42,7 @@ function *handle_verify_email({ payload }) {
       type: 'success', headline: 'Success', message: _t('Send verify code to your email, please check')
     } })
   } catch(err) {
-    console.error(err)
+    app.error(err)
   }
 }
 

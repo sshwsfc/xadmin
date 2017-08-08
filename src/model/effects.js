@@ -12,7 +12,7 @@ function *handle_get_list({ model, filter, wheres }) {
     const { items, total } = yield api(model).query(filter || modelState.filter, wheres || modelState.wheres)
     yield put({ type: 'GET_ITEMS', model: model, items: items || [], filter, wheres, count: total })
   } catch(err) {
-    console.error(err)
+    app.error(err)
     yield put({ type: 'GET_ITEMS', model: model, items: [], filter, wheres, count: 0 })
   }
 
@@ -31,7 +31,7 @@ function *handle_delete_item({ model, item, message }) {
     } })
     yield put({ type: 'GET_ITEMS', model })
   } catch(err) {
-    console.error(err)
+    app.error(err)
   }
 
   yield put({ type: 'END_LOADING', model, key: `${model.key}.delete` })
@@ -47,7 +47,7 @@ function *handle_get_item({ model, id }) {
       yield put({ type: 'GET_ITEM', model, item, success: true })
     }
   } catch(err) {
-    console.error(err)
+    app.error(err)
   }
 
   yield put({ type: 'END_LOADING', model, key: `${model.key}.get` })
@@ -73,6 +73,7 @@ function *handle_save_item({ model, item, promise, message }) {
       } }) 
     }
   } catch(err) {
+    app.error(err)
     if(promise) {
       promise.reject(err)
     }

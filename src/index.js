@@ -100,6 +100,14 @@ class App {
         })
       })
   }
+
+  log(level, message, error) {
+    this.load_list('logger').forEach(logger => logger(level, message, error))
+  }
+
+  error(err) {
+    this.log('error', err.toString(), err)
+  }
 }
 
 // redux app
@@ -301,7 +309,7 @@ const shallowEqual = (objA, objB) => {
   return true
 }
 
-const _wrap_component = (tag, WrappedComponent, wrappers) => {
+const _wrap_component = (tag, WrappedComponent, wrappers, defaultMapper) => {
   const connectDisplayName = `Connect(${getDisplayName(WrappedComponent)})`
   // Helps track hot reloading.
   const version = nextVersion++
@@ -398,7 +406,7 @@ const _wrap_component = (tag, WrappedComponent, wrappers) => {
 
     getMappers() {
       if(this.mappers == null) {
-        this.mappers = app.load_dict_list('mappers')[tag] || []
+        this.mappers = (defaultMapper !== undefined ? [ defaultMapper ] : []).concat(app.load_dict_list('mappers')[tag] || [])
       }
       return this.mappers
     }
@@ -519,12 +527,12 @@ const _wrap_component = (tag, WrappedComponent, wrappers) => {
   //return hoistStatics(Connect, WrappedComponent) // will invoke the error "cannot call class as a function" in IE<=10
 }
 
-const _wrap = (magic, wrappers=[]) => {
+const _wrap = (magic, mapper, wrappers=[]) => {
   if(isPlainObject(magic)) {
-    return (arg) => { return _wrap(arg, [ ...wrappers, magic ]) }
+    return (arg1, arg2) => { return _wrap(arg1, arg2, [ ...wrappers, magic ]) }
   } else {
     return (component) => {
-      return _wrap_component(magic, component, wrappers)
+      return _wrap_component(magic, component, wrappers, mapper)
     }
   }
 }

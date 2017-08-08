@@ -25,7 +25,7 @@ function *handle_delete_items({ model, items, message }) {
     }
     yield put({ type: 'GET_ITEMS', model })
   } catch(err) {
-    console.error(err)
+    app.error(err)
   }
 
   yield put({ type: 'END_LOADING', model, key: `${model.key}.delete_items` })
@@ -57,7 +57,7 @@ function *handle_change_items({ model, items, value, promise, message }) {
       } }) 
     }
   } catch(err) {
-    console.error(err)
+    app.error(err)
     if(promise) {
       promise.reject(err)
     }
