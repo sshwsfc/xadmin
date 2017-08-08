@@ -86,7 +86,7 @@ const BatchChangeBtn = ModelWrap('actons.batch_change')(ModelWrap('model.list.ac
     return (
       <Modal show={this.state.show} onHide={this.onClose}>
         <Modal.Header closeButton>
-          <Modal.Title>{_t('Please input the value to batch change items.')}</Modal.Title>
+          <Modal.Title>{_t('Please input the value to batch change items')}</Modal.Title>
         </Modal.Header>
         <SchemaForm formKey={`model_batch.${model.key}`} 
           schema={_.omit({

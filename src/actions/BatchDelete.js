@@ -35,8 +35,8 @@ const BatchDeleteBtn = ModelWrap('actons.batch_delete')(ModelWrap('model.list.ac
           </ListGroup>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={this.onClose}>Close</Button>
-          <Button bsStyle="success" onClick={this.onBatchDelete}>Delete!!!</Button>
+          <Button onClick={this.onClose}>{_t('Close')}</Button>
+          <Button bsStyle="success" onClick={this.onBatchDelete}>{_t('Delete')}</Button>
         </Modal.Footer>
       </Modal>
     )
