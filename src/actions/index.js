@@ -67,7 +67,24 @@ function *handle_change_items({ model, items, value, promise, message }) {
 
 export default {
   blocks: {
-    'model.list.actions': [ (props) => <BatchDelete {...props} />, (props) => <BatchChange {...props} /> ]
+    'model.list.actions': [ 
+      (props) => {
+        const model = props.model
+        if(!!model.permission && !!model.permission.delete) {
+          return <BatchDelete {...props} />
+        } else {
+          return null
+        }
+      }, 
+      (props) => {
+        const model = props.model
+        if(model.batch_change_fields && !!model.permission && !!model.permission.edit) {
+          return <BatchChange {...props} />
+        } else {
+          return null
+        }
+      }
+    ]
   },
   mappers: {
     'actons.batch_delete': {
