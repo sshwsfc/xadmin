@@ -63,7 +63,7 @@ const rules = [
     use: 'json-loader'
   },
   {
-    test: /\.(png|gif|jpg|svg|ttf|eot|woff2?)$/,
+    test: /\.(png|gif|jpg|svg|ttf|eot|woff2|otf?)$/,
     use: 'file-loader?limit=20480&name=assets/[name]-[hash].[ext]',
   },
 ];
