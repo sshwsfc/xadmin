@@ -58,13 +58,13 @@ const ModelForm = React.createClass({
   },
 
   render() {
-    const { title, model, loading, saveItem, componentClass, ...formProps } = this.props
+    const { title, schema, model, loading, saveItem, componentClass, ...formProps } = this.props
     const FormLayout = componentClass || DefaultLayout
     return loading ? 
       (<Panel><div className="text-center"><Icon name="spinner fa-spin fa-4x"/></div></Panel>) : 
       (<SchemaForm 
         formKey={`model.${model.key}`}
-        schema={model}
+        schema={schema || model}
         initialValues={this.state.record}
         onSubmit={saveItem}
         component={FormLayout}
