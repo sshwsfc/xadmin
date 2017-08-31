@@ -86,15 +86,15 @@ const Header = ModelWrap('model.list.header')(React.createClass({
   },
 
   render() {
-    const { title, order, showText } = this.props
+    const { title, order, showText, style } = this.props
       , icon = {
         'ASC' : <Icon name="sort-asc" />,
         'DESC' : <Icon name="sort-desc" />
       }[order] || ''
     const items = [ ...this.renderOrder(), ...(Block('model.list.header.menu', this) || []) ]
     return (items.filter(item=>!_.isNil(item)).length>0) ? (
-      <Dropdown id="nav-dropdown">
-        <a style={{ cursor: 'pointer' }} bsRole="toggle" onClick={e => {e.preventDefault()}}>
+      <Dropdown id="nav-dropdown" style={style}>
+        <a style={{ cursor: 'pointer' }} bsRole="toggle">
           {title} {icon}
         </a>
         <Dropdown.Menu>
@@ -343,11 +343,13 @@ const ModelList = React.createClass({
       if(items.length > 0) {
         return (
           <div>
-            <ButtonGroup bsStyle="xs" style={{ marginBottom: 10 }}>
+            <div style={{ marginBottom: 10 }}>
             {fields.map(field=>{
-              return <Button><Header key={`model-list-header-${field}`} field={field} /></Button>
+              return (<Header key={`model-list-header-${field}`} field={field} showText={false} style={{
+                marginRight: 10, fontSize: '0.8em'
+              }} />)
             })}
-            </ButtonGroup>
+            </div>
             <div>
               {items.map(item => <ListRow key={item.id} fields={fields} id={item.id} />)}
             </div>
