@@ -61,11 +61,15 @@ const UserResetPassword = ({ context: { _t } }) => ({
   properties: {
     new_password1: {
       title: _t('New Password'),
-      type: 'string'
+      type: 'string',
+      maxLength: 12,
+      minLength: 6
     },
     new_password2: {
       title: _t('Repeat Password'),
       type: 'string',
+      maxLength: 12,
+      minLength: 6,
       constant: { $data: '1/new_password1', constantName: _t('New Password') }
     },
     token: {
@@ -90,15 +94,21 @@ const UserChangePassword = ({ context: { _t } }) => ({
     old_password: {
       title: _t('Old Password'),
       type: 'string',
+      maxLength: 12,
+      minLength: 6,
       format: 'password'
     },
     new_password: {
       title: _t('New Password'),
-      type: 'string'
+      type: 'string',
+      maxLength: 12,
+      minLength: 6
     },
     new_password2: {
       title: _t('Repeat Password'),
       type: 'string',
+      maxLength: 12,
+      minLength: 6,
       constant: { $data: '1/new_password', constantName: _t('New Password') }
     }
   },
@@ -126,11 +136,15 @@ const UserSignUp = ({ context: { _t } }) => ({
     },
     password1: {
       title: _t('Password'),
-      type: 'string'
+      type: 'string',
+      maxLength: 12,
+      minLength: 6
     },
     password2: {
       title: _t('Repeat Password'),
       type: 'string',
+      maxLength: 12,
+      minLength: 6,
       constant: { $data: '1/password1', constantName: _t('Password') }
     },
     ...(_c('auth.registration.captcha')?{
