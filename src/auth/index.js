@@ -18,7 +18,8 @@ export default {
     auth: {
       can_reset_password: true,
       can_change_password: true,
-      can_signup: true
+      can_signup: true,
+      can_signin: true
     }
   },
   context: (app) => (context, cb) => {
@@ -52,10 +53,13 @@ export default {
   },
   routers: (app) => {
     const { auth } = app.load_dict('config')
-    const routes = [ {
-      path: 'login',
-      component: SignInForm
-    } ]
+    const routes = []
+    if(auth.can_signin) {
+      routes.push({
+        path: 'login',
+        component: SignInForm
+      })
+    }
     if(auth.can_signup) {
       routes.push({
         path: 'signup',
