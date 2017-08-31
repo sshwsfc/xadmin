@@ -14,11 +14,12 @@ const ActionBar = React.createClass({
     const count = this.props.count
     const { _t } = app.context
     const actions = Block('model.list.actions', this)
+    
     return (actions !== undefined && _.isArray(actions) && actions.filter(act=>!_.isNil(act)).length>0) ? (
       <Well bsSize="small">
         <ButtonToolbar>
           <DropdownButton title={ count > 0 ? _t('{{count}} record selected', { count }) : _t('No data selected')} id="model-list-actions" bsStyle="success" dropup>
-            { actions }
+            { React.Children.toArray(actions) }
           </DropdownButton>
         </ButtonToolbar>
       </Well>
