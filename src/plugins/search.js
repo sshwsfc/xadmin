@@ -18,7 +18,7 @@ const SearchBar = ModelWrap('model.searchbar')(React.createClass({
   },
 
   onSearch(e) {
-    e.preventDefault()
+    if(document.all) { window.event.returnValue = false }else{ e.preventDefault() }
     this.props.onSearch(this.state.value)
   },
 

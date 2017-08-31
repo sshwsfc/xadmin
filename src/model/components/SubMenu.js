@@ -32,7 +32,7 @@ const PageSizeButton = ModelWrap('model.list.btn.pagesize')(React.createClass({
   setPageSize(e) {
     this.props.setPageSize(this.state.size)
     this.setState({ show: false })
-    e.preventDefault()
+    if(document.all) { window.event.returnValue = false }else{ e.preventDefault() }
   },
 
   showCustomize() {
