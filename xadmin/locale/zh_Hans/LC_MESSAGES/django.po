@@ -912,20 +912,14 @@ msgid "Close"
 msgstr "关闭"
 
 #: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:33
-#, fuzzy
-#| msgid "Export all data."
 msgid "Export current page data."
 msgstr "导出当前页数据"
 
 #: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:34
-#, fuzzy
-#| msgid "Export all data."
 msgid "Export selected data."
 msgstr "导出所选择数据"
 
 #: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:36
-#, fuzzy
-#| msgid "Export with table header."
 msgid "Export header only."
 msgstr "仅导出表头"
 
