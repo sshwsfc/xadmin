@@ -2,7 +2,7 @@ import StringIO
 from io import BytesIO
 import datetime
 import sys
-
+import io  # upstream merge fix
 from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponse
 from django.template import loader
