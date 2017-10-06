@@ -71,18 +71,16 @@
         });
 
         if ($$.length) {
-            var template, el = $('#' + options.prefix + '-empty');
+            var el = $('#' + options.prefix + '-empty');
+            var template;
+            // The template html is encoded as text. Using text to get this html decoded makes
+            // sense because it already returns decoded and ready for parsing by jquery.
             if(el.is('textarea')) {
-                template = el.val();
+                template = el.text();
             } else if(el.is('span')) {
-                template = el.html();
-            }else if(el.is('script')) {
-                template = el.html();
+                template = el.text();
             }
-
-            template = el.html(template).text(); // decoded
-            template = $($.parseHTML(template));
-
+            template = $(template);
             template.removeAttr('id');
             if(template.data("replace-id")){
                 template.attr('id', template.data("replace-id"));
