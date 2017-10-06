@@ -1,3 +1,4 @@
+from django.apps import apps
 
 PLUGINS = (
     'actions', 
@@ -27,9 +28,17 @@ PLUGINS = (
     'sitemenu', 
     'language', 
     'quickfilter',
-    'sortablelist',
-	'importexport'
+    'sortablelist'
 )
+
+try:
+    # Fix: LogEntry doesn't declare an explicit app_label...
+    apps.get_app_config("admin")
+    # This plugin depends on django.contrib.admin installed but it does
+    # not always make sense to have two admin interfaces installed.
+    PLUGINS += ('importexport',)
+except LookupError:
+    pass
 
 
 def register_builtin_plugins(site):
