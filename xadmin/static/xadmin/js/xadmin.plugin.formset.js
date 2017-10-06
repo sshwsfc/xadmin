@@ -80,7 +80,9 @@
             } else if(el.is('span')) {
                 template = el.text();
             }
-            template = $($.parseHTML(template));
+            // text to html / insert dom
+            el.html($.parseHTML(template));
+            template = el.children();  // html
             template.removeAttr('id');
             if(template.data("replace-id")){
                 template.attr('id', template.data("replace-id"));
