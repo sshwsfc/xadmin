@@ -1,13 +1,18 @@
-import StringIO
-from io import BytesIO
 import datetime
 import sys
-import io  # upstream merge fix
 from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponse
 from django.template import loader
 from django.utils import six
-from django.utils.encoding import force_text, smart_text
+if six.PY2:
+    from StringIO import StringIO
+    # python 2.x need to work with unicode
+    from django.utils.encoding import \
+        smart_unicode as smart_text, \
+        force_unicode as force_text
+else:
+    from django.utils.encoding import force_text, smart_text
+    from io import StringIO
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.xmlutils import SimplerXMLGenerator
@@ -99,10 +104,8 @@ class ExportPlugin(BaseAdminPlugin):
 
     def get_xlsx_export(self, context):
         datas = self._get_datas(context)
-        output = io.BytesIO()
-        export_header = (
-            self.request.GET.get('export_xlsx_header', 'off') == 'on')
-
+        output = StringIO()
+        export_header = (self.request.GET.get('export_xlsx_header', 'off') == 'on')
         model_name = self.opts.verbose_name
         book = xlsxwriter.Workbook(output)
         sheet = book.add_worksheet(
@@ -136,12 +139,12 @@ class ExportPlugin(BaseAdminPlugin):
 
     def get_xls_export(self, context):
         datas = self._get_datas(context)
-        output = StringIO.StringIO()
+        output = StringIO()
         export_header = (self.request.GET.get('export_xls_header', 'off') == 'on')
 
         model_name = self.opts.verbose_name
         book = xlwt.Workbook(encoding=self.export_unicode_encoding)
-        sheet = book.add_sheet(u"%s %s" % (_(u'Sheet'), force_unicode(model_name)))
+        sheet = book.add_sheet(u"%s %s" % (_(u'Sheet'), force_text(model_name)))
         styles = {'datetime': xlwt.easyxf(num_format_str='yyyy-mm-dd hh:mm:ss'),
                   'date': xlwt.easyxf(num_format_str='yyyy-mm-dd'),
                   'time': xlwt.easyxf(num_format_str='hh:mm:ss'),
@@ -199,7 +202,7 @@ class ExportPlugin(BaseAdminPlugin):
             raise ImproperlyConfigured("Need to install module \"unicodecsv\" "
                                        "in order to export csv as unicode.")
         datas = self._get_datas(context)
-        stream = BytesIO()
+        stream = StringIO()
         writer = unicodecsv.writer(stream, encoding=self.export_unicode_encoding)
         writer.writerows(datas)
         return stream.getvalue()
@@ -221,7 +224,8 @@ class ExportPlugin(BaseAdminPlugin):
 
     def get_xml_export(self, context):
         results = self._get_objects(context)
-        stream = io.StringIO()
+
+        stream = StringIO()
 
         xml = SimplerXMLGenerator(stream, self.export_unicode_encoding)
         xml.startDocument()
