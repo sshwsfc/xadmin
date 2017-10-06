@@ -8,7 +8,7 @@ try:
     from formtools.wizard.forms import ManagementForm
     from formtools.wizard.views import StepsHelper
 except:
-    ##work for django<1.8
+    # work for django<1.8
     from django.contrib.formtools.wizard.storage import get_storage
     from django.contrib.formtools.wizard.forms import ManagementForm
     from django.contrib.formtools.wizard.views import StepsHelper
@@ -21,6 +21,8 @@ from django.forms.models import modelform_factory
 
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView
+
+from xadmin.util import DJANGO_11
 
 
 def normalize_name(name):
@@ -65,7 +67,7 @@ class WizardFormPlugin(BaseAdminPlugin):
     # Plugin replace methods
     def init_request(self, *args, **kwargs):
         if self.request.is_ajax() or ("_ajax" in self.request.GET) or not hasattr(self.request, 'session') or (args and not self.wizard_for_update):
-            #update view
+            # update view
             return False
         return bool(self.wizard_form_list)
 
@@ -323,20 +325,21 @@ class WizardFormPlugin(BaseAdminPlugin):
         return obj.index(step)
 
     def block_before_fieldsets(self, context, nodes):
-        context.update(dict(self.storage.extra_data))
+        context = context.update(dict(self.storage.extra_data))
         context['wizard'] = {
             'steps': self.steps,
             'management_form': ManagementForm(prefix=self.prefix, initial={
                 'current_step': self.steps.current,
             }),
         }
-        nodes.append(loader.render_to_string('xadmin/blocks/model_form.before_fieldsets.wizard.html',context))
+        nodes.append(loader.render_to_string('xadmin/blocks/model_form.before_fieldsets.wizard.html', context))
 
     def block_submit_line(self, context, nodes):
-        context.update(dict(self.storage.extra_data))
+        context = context.update(dict(self.storage.extra_data))
         context['wizard'] = {
             'steps': self.steps
         }
-        nodes.append(loader.render_to_string('xadmin/blocks/model_form.submit_line.wizard.html',context))
+
+        nodes.append(loader.render_to_string('xadmin/blocks/model_form.submit_line.wizard.html', context))
 
 site.register_plugin(WizardFormPlugin, ModelFormAdminView)

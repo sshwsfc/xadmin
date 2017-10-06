@@ -23,7 +23,7 @@ from xadmin.sites import site
 from xadmin.views.base import CommAdminView, ModelAdminView, filter_hook, csrf_protect_m
 from xadmin.views.edit import CreateAdminView
 from xadmin.views.list import ListAdminView
-from xadmin.util import unquote
+from xadmin.util import unquote, DJANGO_11
 import copy
 
 
@@ -36,7 +36,10 @@ class WidgetTypeSelect(forms.Widget):
     def render(self, name, value, attrs=None):
         if value is None:
             value = ''
-        final_attrs = self.build_attrs(attrs, name=name)
+        if DJANGO_11:
+            final_attrs = self.build_attrs(attrs, extra_attrs={'name': name})
+        else:
+            final_attrs = self.build_attrs(attrs, name=name)
         final_attrs['class'] = 'nav nav-pills nav-stacked'
         output = [u'<ul%s>' % flatatt(final_attrs)]
         options = self.render_options(force_text(value), final_attrs['id'])
@@ -44,7 +47,7 @@ class WidgetTypeSelect(forms.Widget):
             output.append(options)
         output.append(u'</ul>')
         output.append('<input type="hidden" id="%s_input" name="%s" value="%s"/>' %
-                     (final_attrs['id'], name, force_text(value)))
+                      (final_attrs['id'], name, force_text(value)))
         return mark_safe(u'\n'.join(output))
 
     def render_option(self, selected_choice, widget, id):
@@ -337,7 +340,7 @@ class ModelBaseWidget(BaseWidget):
     def model_admin_url(self, name, *args, **kwargs):
         return reverse(
             "%s:%s_%s_%s" % (self.admin_site.app_name, self.app_label,
-            self.model_name, name), args=args, kwargs=kwargs)
+                             self.model_name, name), args=args, kwargs=kwargs)
 
 
 class PartialBaseWidget(BaseWidget):

@@ -72,7 +72,7 @@ class ThemePlugin(BaseAdminPlugin):
                 ex_themes = []
                 try:
                     h = httplib2.Http()
-                    resp, content = h.request("http://bootswatch.com/api/3.json", 'GET', '',
+                    resp, content = h.request("https://bootswatch.com/api/3.json", 'GET', '',
                         headers={"Accept": "application/json", "User-Agent": self.request.META['HTTP_USER_AGENT']})
                     if six.PY3:
                         content = content.decode()

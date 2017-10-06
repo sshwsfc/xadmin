@@ -7,7 +7,7 @@ from django.utils.translation import ugettext as _
 from django import forms
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView
-from xadmin.util import vendor
+from xadmin.util import vendor, DJANGO_11
 
 
 class ForeignKeySearchWidget(forms.Widget):
@@ -18,7 +18,7 @@ class ForeignKeySearchWidget(forms.Widget):
         self.db = using
         super(ForeignKeySearchWidget, self).__init__(attrs)
 
-    def build_attrs(self, attrs={}, **kwargs):
+    def build_attrs(self, attrs={}, extra_attrs=None, **kwargs):
         to_opts = self.rel.to._meta
         if "class" not in attrs:
             attrs['class'] = 'select-search'
@@ -32,11 +32,20 @@ class ForeignKeySearchWidget(forms.Widget):
             for i in list(self.rel.limit_choices_to):
                 attrs['data-choices'] += "&_p_%s=%s" % (i, self.rel.limit_choices_to[i])
             attrs['data-choices'] = format_html(attrs['data-choices'])
-
-        return super(ForeignKeySearchWidget, self).build_attrs(attrs, **kwargs)
+        if DJANGO_11:
+            attrs.update(kwargs)
+            return super(ForeignKeySearchWidget, self).build_attrs(attrs, extra_attrs=extra_attrs)
+        else:
+            if extra_attrs:
+                attrs.update(extra_attrs)
+            return super(ForeignKeySearchWidget, self).build_attrs(attrs, **kwargs)
 
     def render(self, name, value, attrs=None):
-        final_attrs = self.build_attrs(attrs, name=name)
+        if DJANGO_11:
+            final_attrs = self.build_attrs(attrs, extra_attrs={'name': name})
+        else:
+            final_attrs = self.build_attrs(attrs, name=name)
+
         output = [format_html('<select{0}>', flatatt(final_attrs))]
         if value:
             output.append(format_html('<option selected="selected" value="{0}">{1}</option>', value, self.label_for_value(value)))
@@ -56,6 +65,7 @@ class ForeignKeySearchWidget(forms.Widget):
     def media(self):
         return vendor('select.js', 'select.css', 'xadmin.widget.select.js')
 
+
 class ForeignKeySelectWidget(ForeignKeySearchWidget):
 
     def build_attrs(self, attrs={}, **kwargs):
@@ -67,6 +77,7 @@ class ForeignKeySelectWidget(ForeignKeySearchWidget):
         attrs['data-placeholder'] = _('Select %s') % self.rel.to._meta.verbose_name
         return attrs
 
+
 class RelateFieldPlugin(BaseAdminPlugin):
 
     def get_field_style(self, attrs, db_field, style, **kwargs):
@@ -75,8 +86,8 @@ class RelateFieldPlugin(BaseAdminPlugin):
             if (db_field.remote_field.to in self.admin_view.admin_site._registry) and \
                     self.has_model_perm(db_field.remote_field.to, 'view'):
                 db = kwargs.get('using')
-                return dict(attrs or {}, \
-                    widget=(style == 'fk-ajax' and ForeignKeySearchWidget or ForeignKeySelectWidget)(db_field.remote_field, self.admin_view, using=db))
+                return dict(attrs or {},
+                            widget=(style == 'fk-ajax' and ForeignKeySearchWidget or ForeignKeySelectWidget)(db_field.remote_field, self.admin_view, using=db))
         return attrs
 
 site.register_plugin(RelateFieldPlugin, ModelFormAdminView)

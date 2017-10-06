@@ -8,7 +8,7 @@ from django.views.decorators.cache import never_cache
 from django.template.engine import Engine
 import inspect
 
-if six.PY2 and sys.getdefaultencoding()=='ascii':
+if six.PY2 and sys.getdefaultencoding() == 'ascii':
     import imp
     imp.reload(sys)
     sys.setdefaultencoding("utf-8")
@@ -23,6 +23,7 @@ class NotRegistered(Exception):
 
 
 class MergeAdminMetaclass(type):
+
     def __new__(cls, name, bases, attrs):
         return type.__new__(cls, str(name), bases, attrs)
 
@@ -37,14 +38,14 @@ class AdminSite(object):
         self._registry_avs = {}  # admin_view_class class -> admin_class class
         self._registry_settings = {}  # settings name -> admin_class class
         self._registry_views = []
-            # url instance contains (path, admin_view class, name)
+        # url instance contains (path, admin_view class, name)
         self._registry_modelviews = []
-            # url instance contains (path, admin_view class, name)
+        # url instance contains (path, admin_view class, name)
         self._registry_plugins = {}  # view_class class -> plugin_class class
 
         self._admin_view_cache = {}
 
-        #self.check_dependencies()
+        # self.check_dependencies()
 
         self.model_admins_order = 0
 
@@ -73,7 +74,7 @@ class AdminSite(object):
             self._registry_modelviews.append((path, admin_view_class, name))
         else:
             raise ImproperlyConfigured(u'The registered view class %s isn\'t subclass of %s' %
-                                      (admin_view_class.__name__, BaseAdminView.__name__))
+                                       (admin_view_class.__name__, BaseAdminView.__name__))
 
     def register_view(self, path, admin_view_class, name):
         self._registry_views.append((path, admin_view_class, name))
@@ -84,7 +85,7 @@ class AdminSite(object):
             self._registry_plugins.setdefault(admin_view_class, []).append(plugin_class)
         else:
             raise ImproperlyConfigured(u'The registered plugin class %s isn\'t subclass of %s' %
-                                      (plugin_class.__name__, BaseAdminPlugin.__name__))
+                                       (plugin_class.__name__, BaseAdminPlugin.__name__))
 
     def unregister_plugin(self, admin_view_class, *plugin_classes):
         """Allows you to remove a plugin from the registry
@@ -190,7 +191,6 @@ class AdminSite(object):
             raise ImproperlyConfigured("Put 'django.contrib.contenttypes' in "
                                        "your INSTALLED_APPS setting in order to use the admin application.")
 
-
         default_template_engine = Engine.get_default()
         if not ('django.contrib.auth.context_processors.auth' in default_template_engine.context_processors or
                 'django.core.context_processors.auth' in default_template_engine.context_processors):
@@ -230,7 +230,7 @@ class AdminSite(object):
 
     def _get_merge_attrs(self, option_class, plugin_class):
         return dict([(name, getattr(option_class, name)) for name in dir(option_class)
-                    if name[0] != '_' and not callable(getattr(option_class, name)) and hasattr(plugin_class, name)])
+                     if name[0] != '_' and not callable(getattr(option_class, name)) and hasattr(plugin_class, name)])
 
     def _get_settings_class(self, admin_view_class):
         name = admin_view_class.__name__.lower()
@@ -320,37 +320,36 @@ class AdminSite(object):
 
         # Admin-site-wide views.
         urlpatterns = [
-                url(r'^jsi18n/$', wrap(self.i18n_javascript, cacheable=True), name='jsi18n')
-                ]
+            url(r'^jsi18n/$', wrap(self.i18n_javascript, cacheable=True), name='jsi18n')
+        ]
 
         # Registed admin views
         # inspect[isclass]: Only checks if the object is a class. With it lets you create an custom view that
         # inherits from multiple views and have more of a metaclass.
         urlpatterns += [
-                url(
-                    path,
-                    wrap(self.create_admin_view(clz_or_func))
-                        if inspect.isclass(clz_or_func) and issubclass(clz_or_func, BaseAdminView)
-                        else include(clz_or_func(self)),
-                    name=name
-                    )
-                for path, clz_or_func, name in self._registry_views
-                ]
+            url(
+                path,
+                wrap(self.create_admin_view(clz_or_func))
+                if inspect.isclass(clz_or_func) and issubclass(clz_or_func, BaseAdminView)
+                else include(clz_or_func(self)),
+                name=name
+            )
+            for path, clz_or_func, name in self._registry_views
+        ]
 
         # Add in each model's views.
         for model, admin_class in six.iteritems(self._registry):
             view_urls = [
-                    url(
-                        path,
-                        wrap(self.create_model_admin_view(clz, model, admin_class)),
-                        name=name % (model._meta.app_label, model._meta.model_name)
-                        )
-                    for path, clz, name in self._registry_modelviews
-                    ]
+                url(
+                    path,
+                    wrap(self.create_model_admin_view(clz, model, admin_class)),
+                    name=name % (model._meta.app_label, model._meta.model_name)
+                )
+                for path, clz, name in self._registry_modelviews
+            ]
             urlpatterns += [
-                    url(r'^%s/%s/' % (model._meta.app_label, model._meta.model_name), include(view_urls))
-                    ]
-
+                url(r'^%s/%s/' % (model._meta.app_label, model._meta.model_name), include(view_urls))
+            ]
         return urlpatterns
 
     @property
@@ -373,3 +372,10 @@ class AdminSite(object):
 # This global object represents the default admin site, for the common case.
 # You can instantiate AdminSite in your own code to create a custom admin site.
 site = AdminSite()
+
+
+def register(models, **kwargs):
+
+    def _model_admin_wrapper(admin_class):
+        site.register(models, admin_class)
+    return _model_admin_wrapper

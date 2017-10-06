@@ -19,6 +19,6 @@
       <a class="question btn btn-default" href="javascript:;" style="display: none;" title="{% trans "Click here to select the objects across all pages" %}">{% blocktrans with cl.result_count as total_count %}Select all {{ total_count }} {{ model_name }}{% endblocktrans %}</a>
       <a class="clear btn btn-default" href="javascript:;" style="display: none;">{% trans "Clear selection" %}</a>
       {% endif %}
-      <script type="text/javascript">var _actions_icnt="{{ cl.result_list|length|default:"0" }}";</script>
   {% endif %}
+  <script type="text/javascript">var _actions_icnt="{{ cl.result_list|length|default:"0" }}";</script>
 </div>

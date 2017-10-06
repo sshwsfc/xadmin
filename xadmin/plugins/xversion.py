@@ -204,7 +204,7 @@ class RecoverListView(BaseReversionView):
 
         return TemplateResponse(
             request, self.recover_list_template or self.get_template_list(
-                "views/recover_list.html"),
+                "views/recover_list.html"), 
             context)
 
 
