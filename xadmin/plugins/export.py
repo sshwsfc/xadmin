@@ -2,7 +2,6 @@ import StringIO
 from io import BytesIO
 import datetime
 import sys
-from future.utils import iteritems
 
 from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponse
@@ -212,7 +211,7 @@ class ExportPlugin(BaseAdminPlugin):
                 self._to_xml(xml, item)
                 xml.endElement("row")
         elif isinstance(data, dict):
-            for key, value in iteritems(data):
+            for key, value in six.iteritems(data):
                 key = key.replace(' ', '_')
                 xml.startElement(key, {})
                 self._to_xml(xml, value)

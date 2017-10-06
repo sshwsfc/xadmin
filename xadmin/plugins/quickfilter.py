@@ -3,7 +3,6 @@ Created on Mar 26, 2014
 
 @author: LAB_ADM
 '''
-from future.utils import iteritems
 from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 from xadmin.filters import manager,MultiSelectFieldListFilter
@@ -82,7 +81,7 @@ class QuickFilterPlugin(BaseAdminPlugin):
  
     def get_list_queryset(self, queryset):
         lookup_params = dict([(smart_str(k)[len(FILTER_PREFIX):], v) for k, v in self.admin_view.params.items() if smart_str(k).startswith(FILTER_PREFIX) and v != ''])
-        for p_key, p_val in iteritems(lookup_params):
+        for p_key, p_val in six.iteritems(lookup_params):
             if p_val == "False":
                 lookup_params[p_key] = False
         use_distinct = False
