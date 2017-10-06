@@ -5,14 +5,12 @@ from django.http import HttpResponse
 from django.template import loader
 from django.utils import six
 if six.PY2:
-    from StringIO import StringIO
     # python 2.x need to work with unicode
     from django.utils.encoding import \
         smart_unicode as smart_text, \
         force_unicode as force_text
 else:
     from django.utils.encoding import force_text, smart_text
-    from io import StringIO
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.xmlutils import SimplerXMLGenerator
@@ -104,7 +102,7 @@ class ExportPlugin(BaseAdminPlugin):
 
     def get_xlsx_export(self, context):
         datas = self._get_datas(context)
-        output = StringIO()
+        output = six.BytesIO()
         export_header = (self.request.GET.get('export_xlsx_header', 'off') == 'on')
         model_name = self.opts.verbose_name
         book = xlsxwriter.Workbook(output)
@@ -139,7 +137,7 @@ class ExportPlugin(BaseAdminPlugin):
 
     def get_xls_export(self, context):
         datas = self._get_datas(context)
-        output = StringIO()
+        output = six.BytesIO()
         export_header = (self.request.GET.get('export_xls_header', 'off') == 'on')
 
         model_name = self.opts.verbose_name
@@ -202,7 +200,7 @@ class ExportPlugin(BaseAdminPlugin):
             raise ImproperlyConfigured("Need to install module \"unicodecsv\" "
                                        "in order to export csv as unicode.")
         datas = self._get_datas(context)
-        stream = StringIO()
+        stream = six.BytesIO()
         writer = unicodecsv.writer(stream, encoding=self.export_unicode_encoding)
         writer.writerows(datas)
         return stream.getvalue()
@@ -225,7 +223,7 @@ class ExportPlugin(BaseAdminPlugin):
     def get_xml_export(self, context):
         results = self._get_objects(context)
 
-        stream = StringIO()
+        stream = six.BytesIO()
 
         xml = SimplerXMLGenerator(stream, self.export_unicode_encoding)
         xml.startDocument()
@@ -236,7 +234,7 @@ class ExportPlugin(BaseAdminPlugin):
         xml.endElement("objects")
         xml.endDocument()
 
-        return stream.getvalue().split('\n')[1]
+        return stream.getvalue().split((b'\n'))[1]
 
     def get_json_export(self, context):
         results = self._get_objects(context)

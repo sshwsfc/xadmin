@@ -104,7 +104,7 @@ class RelatedFieldWidgetWrapper(forms.Widget):
         new_name = self.kwargs.get('_field_inline_' + name)
         return (new_name and new_name[0]) or name
 
-    def render(self, name, value, *args, **kwargs):
+    def render(self, name, value, renderer=None, *args, **kwargs):
         name = self.resolve_field_name_if_inline(name)
         self.widget.choices = self.choices
         output = []
