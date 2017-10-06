@@ -117,7 +117,7 @@
             update: function(row, update){
                 var rowId = row.attr('id');
                 if(rowId){
-                    $('a[href=#'+rowId+']').each(function(){
+                    $('a[href="#'+rowId+'"]').each(function(){
                         update($(this));
                     })
                 }
@@ -125,7 +125,7 @@
             removed: function(row, del, $$){
                 var rowId = row.attr('id');
                 if(rowId){
-                    var tab = $('a[href=#'+rowId+']');
+                    var tab = $('a[href="#'+rowId+'"]');
                     if (del.length) {
                         if(del.val() == 'on'){
                             tab.removeClass('row-deleted');
