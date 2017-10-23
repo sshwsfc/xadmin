@@ -57,6 +57,7 @@ BaseRow.propTypes = {
   deleteItem: React.PropTypes.func.isRequired,
   actions: React.PropTypes.array
 }
+const HeaderLink = ({ onClick, children }) => <a style={{ cursor: 'pointer' }} onClick={onClick}>{children}</a>
 
 const Header = ModelWrap('model.list.header')(React.createClass({
 
@@ -94,11 +95,9 @@ const Header = ModelWrap('model.list.header')(React.createClass({
     const items = [ ...this.renderOrder(), ...(Block('model.list.header.menu', this) || []) ]
     return (items.filter(item=>!_.isNil(item)).length>0) ? (
       <Dropdown id="nav-dropdown" style={style}>
-        <a style={{ cursor: 'pointer' }} bsRole="toggle">
-          {title} {icon}
-        </a>
+        <HeaderLink bsRole="toggle">{title} {icon}</HeaderLink>
         <Dropdown.Menu>
-          {items}
+          {React.Children.toArray(items)}
         </Dropdown.Menu>
       </Dropdown>
       ) : ( showText === false ? null : <span>{title} {icon}</span>)
@@ -233,19 +232,19 @@ class GridRowComponent extends BaseRow {
     const { item, fields, selected } = this.props
     return (
       <tr>
-        <td className={selected?'bg-warning':''}>
+        <td key=".checkbox" className={selected?'bg-warning':''}>
           <input type="checkbox" ref="selector" checked={selected} onChange={this.handleSelect.bind(this)} />
         </td>
-        {fields.map(field=>{
+        {React.Children.toArray(fields.map(field=>{
           return (
-            <Item item={item} field={field} selected={selected} wrap={
+            <Item key={`.${field}`} item={item} field={field} selected={selected} wrap={
               ({ children, ...props })=><td className={selected?'bg-warning':''} {...props}>{children}</td>
             } />
           )
-        })}
-        <td className={selected?'bg-warning':''} style={{ textAlign: 'center' }}>
+        }))}
+        <td key=".action" className={selected?'bg-warning':''} style={{ textAlign: 'center' }}>
           <ButtonGroup>
-          {this.actions()}
+          {React.Children.toArray(this.actions())}
           </ButtonGroup>
         </td>
       </tr>
@@ -274,16 +273,16 @@ const ModelGrid = React.createClass({
             <thead>
               <tr>
                 <th><AllCheck /></th>
-                {fields.map(field=>{
+                {React.Children.toArray(fields.map(field=>{
                   return <th><Header key={`model-list-header-${field}`} field={field}  /></th>
-                })}
+                }))}
                 <th style={{ textAlign: 'center' }}>{_t('Actions')}</th>
               </tr>
             </thead>
             <tbody>
-              {items.map((item)=>{
+              {React.Children.toArray(items.map((item)=>{
                 return <GridRow key={item.id} fields={fields} id={item.id} />
-              })}
+              }))}
             </tbody>
           </Table>
           </div>
@@ -311,13 +310,13 @@ class ListRowComponent extends BaseRow {
         <Media>
           <Media.Body>
             <Media.Heading><Item item={item} field={fields[0]} selected={selected} /></Media.Heading>
-            {fields.slice(1).map(field=>{
+            {React.Children.toArray(fields.slice(1).map(field=>{
               return (
                 <Item item={item} field={field} selected={selected} wrap={
                   ({ children, ...props })=><p key={`item-${item.id}-${field}`} {...props}>{children}</p>
                 } />
               )
-            })}
+            }))}
           </Media.Body>
         </Media>
       </Panel>
@@ -344,14 +343,14 @@ const ModelList = React.createClass({
         return (
           <div>
             <div style={{ marginBottom: 10 }}>
-            {fields.map(field=>{
+            {React.Children.toArray(fields.map(field=>{
               return (<Header key={`model-list-header-${field}`} field={field} showText={false} style={{
                 marginRight: 10, fontSize: '0.8em'
               }} />)
-            })}
+            }))}
             </div>
             <div>
-              {items.map(item => <ListRow key={item.id} fields={fields} id={item.id} />)}
+              {React.Children.toArray(items.map(item => <ListRow key={item.id} fields={fields} id={item.id} />))}
             </div>
           </div>)
       } else {

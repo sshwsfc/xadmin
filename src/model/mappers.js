@@ -126,18 +126,20 @@ export default {
     data: ({ modelState, model }, { field }) => {
       const orders = modelState.filter.order
         , property = getFieldProp(model, field) || {}
-        , canOrder = (property.canOrder == undefined ? true : property.canOrder) && property.type != 'object' && property.type != 'array'
+        , canOrder = (property.canOrder == undefined ? true : property.canOrder) && 
+          ( property.orderField !== undefined || (property.type != 'object' && property.type != 'array') )
       return {
         canOrder,
         title: property.title || _.startCase(field),
-        order: orders !== undefined ? (orders[field] || '') : ''
+        order: orders !== undefined ? (orders[property.orderField || field] || '') : ''
       }
     },
     method: {
       changeOrder: ({ dispatch, model, modelState }, { field }) => (order) => {
         const filter = modelState.filter
         const orders = filter.order || {}
-        orders[field] = order
+        const property = getFieldProp(model, field) || {}
+        orders[property.orderField || field] = order
 
         dispatch({ model, type: 'GET_ITEMS', filter: { ...filter, order: orders } })
       }

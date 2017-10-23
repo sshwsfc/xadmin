@@ -1,4 +1,4 @@
-
+import React from 'react'
 import { UserAuthWrapper } from 'redux-auth-wrapper'
 
 const IsAuthenticated = UserAuthWrapper({
@@ -20,12 +20,15 @@ const IsSuperUser = UserAuthWrapper({
   allowRedirectBack: false
 })
 
-const HasPermission = (permission) => UserAuthWrapper({
-  authSelector: state => state.user,
-  wrapperDisplayName: 'VisibleOnlyHasPermission',
-  predicate: user => user.permissions.indexOf(permission) > -1,
-  FailureComponent: null
-})
+const HasPermission = ({ permission, failureComponent=null, children, ...childProps }) => {
+  const UserAuthTag = UserAuthWrapper({
+    authSelector: state => state.user,
+    wrapperDisplayName: 'VisibleOnlyHasPermission',
+    predicate: user => user.isSuper || (user.permissions && user.permissions.indexOf(permission) > -1),
+    FailureComponent: failureComponent
+  })(()=>React.cloneElement(children, childProps))
+  return <UserAuthTag />
+}
 
 export default {
   IsAuthenticated,

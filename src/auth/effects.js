@@ -21,7 +21,7 @@ function *handle_user_signin({ payload: user }) {
 function *handle_user_signout() {
   const { _t } = app.context
   try{
-    yield api({ resource_name: 'auth/logout' }).save()
+    yield api({ resource_name: 'auth/logout' }).save({})
     yield put({ type: '@@xadmin/AUTH_SIGN_OUT_FINISH' })
     yield put({ type: '@@xadmin/ADD_NOTICE', payload: {
       type: 'success', headline: 'Success', message: _t('Successfully logged out')

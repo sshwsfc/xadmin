@@ -6,8 +6,12 @@ export default (url, options = {}) => {
 
   return fetch(url, options)
     .then(response => {
-      for (let pair of response.headers.entries()) {
-        headers[pair[0]] = pair[1]
+      if(response.headers && response.headers.entries) {
+        for (let pair of response.headers.entries()) {
+          headers[pair[0]] = pair[1]
+        }
+      } else {
+        headers = response.headers
       }
       status = response.status
       statusText = response.statusText
