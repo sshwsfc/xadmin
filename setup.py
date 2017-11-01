@@ -18,10 +18,11 @@ setup(
     include_package_data=True,
     install_requires=[
         'setuptools',
-        'django>=1.9.0,<2',
+        'django>=1.9.0',
         'django-crispy-forms>=1.6.0',
         'django-reversion>=2.0.0',
         'django-formtools>=1.0',
+        'django-import-export>=0.5.1',
         'httplib2==0.9.2',
         'future',
         'six'
