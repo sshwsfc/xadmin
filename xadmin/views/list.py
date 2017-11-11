@@ -70,8 +70,16 @@ class ResultItem(object):
             self.text) if self.allow_tags else conditional_escape(self.text)
         if force_text(text) == '':
             text = mark_safe('&nbsp;')
+
+        def rreplace(s, old, new, occurrence):
+            li = s.rsplit(old, occurrence)
+            return new.join(li)
+        # 修复wrap存在中文转义，报错，修改链接内容不展示的问题
         for wrap in self.wraps:
-            text = mark_safe(wrap % text)
+            if len(wrap.split("%")) > 2:
+                text = mark_safe(rreplace(wrap, '%s', text, 1))
+            else:
+                text = mark_safe(wrap % text)
         return text
 
     @property
