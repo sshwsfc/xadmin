@@ -65,7 +65,7 @@ or Install from github source:
 Install Requires 
 ----------------
 
--  `django`_ >=1.9
+-  `django`_ >=2
 
 -  `django-crispy-forms`_ >=1.6.0 (For xadmin crispy forms)
 
