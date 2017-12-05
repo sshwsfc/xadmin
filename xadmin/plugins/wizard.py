@@ -22,8 +22,6 @@ from django.forms.models import modelform_factory
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView
 
-from xadmin.util import DJANGO_11
-
 
 def normalize_name(name):
     new = re.sub('(((?<=[a-z])[A-Z])|([A-Z](?![A-Z]|$)))', '_\\1', name)

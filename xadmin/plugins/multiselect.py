@@ -9,7 +9,7 @@ from django.template import loader
 from django.utils.encoding import force_text
 from django.utils.html import escape, conditional_escape
 from django.utils.safestring import mark_safe
-from xadmin.util import vendor, DJANGO_11
+from xadmin.util import vendor
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView
 
 
@@ -37,10 +37,7 @@ class SelectMultipleTransfer(forms.SelectMultiple):
             attrs['class'] += 'stacked'
         if value is None:
             value = []
-        if DJANGO_11:
-            final_attrs = self.build_attrs(attrs, extra_attrs={'name': name})
-        else:
-            final_attrs = self.build_attrs(attrs, name=name)
+        final_attrs = self.build_attrs(attrs, extra_attrs={'name': name})
 
         selected_choices = set(force_text(v) for v in value)
         available_output = []

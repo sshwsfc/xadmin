@@ -1,7 +1,7 @@
 # coding=UTF-8
 from itertools import chain
 
-from django.core.urlresolvers import reverse
+from django.urls.base import reverse
 from django.db.models.options import PROXY_PARENTS
 from django.utils import six
 from django.utils.encoding import force_text
@@ -47,7 +47,6 @@ class RelateMenuPlugin(BaseAdminPlugin):
             fields = chain(fields, relations)
         return list(fields)
 
-
     def get_related_list(self):
         if hasattr(self, '_related_acts'):
             return self._related_acts
@@ -85,20 +84,20 @@ class RelateMenuPlugin(BaseAdminPlugin):
             link = ''.join(('<li class="with_menu_btn">',
 
                             '<a href="%s?%s=%s" title="%s"><i class="icon fa fa-th-list"></i> %s</a>' %
-                          (
-                            reverse('%s:%s_%s_changelist' % (
+                            (
+                                reverse('%s:%s_%s_changelist' % (
                                     self.admin_site.app_name, label, model_name)),
-                            RELATE_PREFIX + lookup_name, str(instance.pk), verbose_name, verbose_name) if view_perm else
+                                RELATE_PREFIX + lookup_name, str(instance.pk), verbose_name, verbose_name) if view_perm else
                             '<a><span class="text-muted"><i class="icon fa fa-blank"></i> %s</span></a>' % verbose_name,
 
                             '<a class="add_link dropdown-menu-btn" href="%s?%s=%s"><i class="icon fa fa-plus pull-right"></i></a>' %
-                          (
-                            reverse('%s:%s_%s_add' % (
+                            (
+                                reverse('%s:%s_%s_add' % (
                                     self.admin_site.app_name, label, model_name)),
-                            RELATE_PREFIX + lookup_name, str(
-                instance.pk)) if add_perm else "",
+                                RELATE_PREFIX + lookup_name, str(
+                                    instance.pk)) if add_perm else "",
 
-                '</li>'))
+                            '</li>'))
             links.append(link)
         ul_html = '<ul class="dropdown-menu" role="menu">%s</ul>' % ''.join(
             links)

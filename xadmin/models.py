@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext_lazy as _, ugettext
-from django.core.urlresolvers import NoReverseMatch, reverse
+from django.urls.base import reverse
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models.base import ModelBase
 from django.utils.encoding import python_2_unicode_compatible, smart_text
@@ -18,6 +18,7 @@ import decimal
 from xadmin.util import quote
 
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
+
 
 def add_view_permissions(sender, **kwargs):
     """
@@ -35,7 +36,7 @@ def add_view_permissions(sender, **kwargs):
             Permission.objects.create(content_type=content_type,
                                       codename=codename,
                                       name="Can view %s" % content_type.name)
-            #print "Added view permission for %s" % content_type.name
+            # print "Added view permission for %s" % content_type.name
 
 # check for all our view permissions after a syncdb
 post_migrate.connect(add_view_permissions)
@@ -44,9 +45,9 @@ post_migrate.connect(add_view_permissions)
 @python_2_unicode_compatible
 class Bookmark(models.Model):
     title = models.CharField(_(u'Title'), max_length=128)
-    user = models.ForeignKey(AUTH_USER_MODEL, verbose_name=_(u"user"), blank=True, null=True)
+    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_(u"user"), blank=True, null=True)
     url_name = models.CharField(_(u'Url Name'), max_length=64)
-    content_type = models.ForeignKey(ContentType)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     query = models.CharField(_(u'Query String'), max_length=1000, blank=True)
     is_share = models.BooleanField(_(u'Is Shared'), default=False)
 
@@ -66,6 +67,7 @@ class Bookmark(models.Model):
 
 
 class JSONEncoder(DjangoJSONEncoder):
+
     def default(self, o):
         if isinstance(o, datetime.datetime):
             return o.strftime('%Y-%m-%d %H:%M:%S')
@@ -84,7 +86,7 @@ class JSONEncoder(DjangoJSONEncoder):
 
 @python_2_unicode_compatible
 class UserSettings(models.Model):
-    user = models.ForeignKey(AUTH_USER_MODEL, verbose_name=_(u"user"))
+    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_(u"user"))
     key = models.CharField(_('Settings Key'), max_length=256)
     value = models.TextField(_('Settings Content'))
 
@@ -104,7 +106,7 @@ class UserSettings(models.Model):
 
 @python_2_unicode_compatible
 class UserWidget(models.Model):
-    user = models.ForeignKey(AUTH_USER_MODEL, verbose_name=_(u"user"))
+    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_(u"user"))
     page_id = models.CharField(_(u"Page"), max_length=256)
     widget_type = models.CharField(_(u"Widget Type"), max_length=50)
     value = models.TextField(_(u"Widget Params"))
@@ -186,4 +188,3 @@ class Log(models.Model):
     def get_edited_object(self):
         "Returns the edited object represented by this log entry"
         return self.content_type.get_object_for_this_type(pk=self.object_id)
-
