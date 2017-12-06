@@ -355,7 +355,7 @@ class ModelFormAdminView(ModelAdminView):
 
     @filter_hook
     def get_media(self):
-        return super(ModelFormAdminView, self).get_media() + self.form_obj.media + \
+        return super(ModelFormAdminView, self).get_media() + \
             self.vendor('xadmin.page.form.js', 'xadmin.form.css')
 
 
