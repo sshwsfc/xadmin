@@ -159,7 +159,7 @@ class FilterPlugin(BaseAdminPlugin):
             # fix a bug by david: In demo, quick filter by IDC Name() cannot be used.
             if isinstance(queryset, models.query.QuerySet) and lookup_params:
                 new_lookup_parames = dict()
-                for k, v in lookup_params.iteritems():
+                for k, v in lookup_params.items():
                     list_v = v.split(',')
                     if len(list_v) > 0:
                         new_lookup_parames.update({k: list_v})
