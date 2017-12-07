@@ -15,6 +15,7 @@ from django.utils.html import escape
 from django.utils.text import capfirst, get_text_list
 from django.template import loader
 from django.utils.translation import ugettext as _
+from django.forms.widgets import Media
 from xadmin import widgets
 from xadmin.layout import FormHelper, Layout, Fieldset, TabHolder, Container, Column, Col, Field
 from xadmin.util import unquote
@@ -355,7 +356,11 @@ class ModelFormAdminView(ModelAdminView):
 
     @filter_hook
     def get_media(self):
-        return super(ModelFormAdminView, self).get_media() + \
+        try:
+            m = self.form_obj.media
+        except:
+            m = Media()
+        return super(ModelFormAdminView, self).get_media() + m + \
             self.vendor('xadmin.page.form.js', 'xadmin.form.css')
 
 

@@ -27,8 +27,8 @@ class EditablePlugin(BaseAdminPlugin):
 
     def init_request(self, *args, **kwargs):
         active = bool(self.request.method == 'GET' and self.admin_view.has_change_permission() and self.list_editable)
-        # if active:
-        #     self.model_form = self.get_model_view(ModelFormAdminUtil, self.model).form_obj
+        if active:
+            self.model_form = self.get_model_view(ModelFormAdminUtil, self.model).form_obj
         return active
 
     def result_item(self, item, obj, field_name, row):
@@ -52,7 +52,12 @@ class EditablePlugin(BaseAdminPlugin):
     # Media
     def get_media(self, media):
         if self.editable_need_fields:
-            media = media +\
+
+            try:
+                m = self.model_form.media
+            except:
+                m = Media()
+            media = media + m +\
                 self.vendor(
                     'xadmin.plugin.editable.js', 'xadmin.widget.editable.css')
         return media
