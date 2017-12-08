@@ -94,7 +94,7 @@ class ResultField(object):
                 else:
                     self.text = smart_text(value)
             else:
-                if isinstance(f.rel, models.ManyToOneRel):
+                if isinstance(f.remote_field, models.ManyToOneRel):
                     self.text = getattr(self.obj, f.name)
                 else:
                     self.text = display_for_field(value, f)
