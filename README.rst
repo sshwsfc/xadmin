@@ -62,6 +62,12 @@ or Install from github source:
 
     pip install git+git://github.com/sshwsfc/xadmin.git
 
+Install from github source for Django 2.0:
+
+.. code:: bash
+
+    pip install git+git://github.com/sshwsfc/xadmin.git@django2
+
 Install Requires 
 ----------------
 
