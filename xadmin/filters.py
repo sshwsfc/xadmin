@@ -340,8 +340,8 @@ class RelatedFieldSearchFilter(FieldFilter):
     def __init__(self, field, request, params, model, model_admin, field_path):
         print('-------------------------')
         other_model = get_model_from_relation(field)
-        if hasattr(field, 'rel'):
-            rel_name = field.rel.get_related_field().name
+        if hasattr(field, 'remote_field'):
+            rel_name = field.remote_field.get_related_field().name
         else:
             rel_name = other_model._meta.pk.name
 
@@ -361,9 +361,9 @@ class RelatedFieldSearchFilter(FieldFilter):
             other_model._meta.app_label, other_model._meta.model_name))
         self.label = self.label_for_value(other_model, rel_name, self.lookup_exact_val) if self.lookup_exact_val else ""
         self.choices = '?'
-        if field.rel.limit_choices_to:
-            for i in list(field.rel.limit_choices_to):
-                self.choices += "&_p_%s=%s" % (i, field.rel.limit_choices_to[i])
+        if field.remote_field.limit_choices_to:
+            for i in list(field.remote_field.limit_choices_to):
+                self.choices += "&_p_%s=%s" % (i, field.remote_field.limit_choices_to[i])
             self.choices = format_html(self.choices)
 
     def label_for_value(self, other_model, rel_name, value):
@@ -391,8 +391,8 @@ class RelatedFieldListFilter(ListFieldFilter):
 
     def __init__(self, field, request, params, model, model_admin, field_path):
         other_model = get_model_from_relation(field)
-        if hasattr(field, 'rel'):
-            rel_name = field.rel.get_related_field().name
+        if hasattr(field, 'remote_field'):
+            rel_name = field.remote_field.get_related_field().name
         else:
             rel_name = other_model._meta.pk.name
 
@@ -410,7 +410,7 @@ class RelatedFieldListFilter(ListFieldFilter):
 
     def has_output(self):
         if (is_related_field(self.field)
-                and self.field.field.null or hasattr(self.field, 'rel')
+                and self.field.field.null or hasattr(self.field, 'remote_field')
                 and self.field.null):
             extra = 1
         else:
@@ -436,7 +436,7 @@ class RelatedFieldListFilter(ListFieldFilter):
                 'display': val,
             }
         if (is_related_field(self.field)
-                and self.field.field.null or hasattr(self.field, 'rel')
+                and self.field.field.null or hasattr(self.field, 'remote_field')
                 and self.field.null):
             yield {
                 'selected': bool(self.lookup_isnull_val),
