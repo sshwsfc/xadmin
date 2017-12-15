@@ -71,6 +71,7 @@ class IDCAdmin(object):
 
 @xadmin.sites.register(Host)
 class HostAdmin(object):
+
     def open_web(self, instance):
         return """<a href="http://%s" target="_blank">Open</a>""" % instance.ip
 
@@ -87,7 +88,7 @@ class HostAdmin(object):
     raw_id_fields = ("idc",)
     style_fields = {"system": "radio-inline"}
 
-    search_fields = ["name", "ip", "description"]
+    search_fields = ["name", "ip", "description", "idc__name"]
     list_filter = [
         "idc", "guarantee_date", "status", "brand", "model", "cpu", "core_num",
         "hard_disk", "memory", (
@@ -164,6 +165,7 @@ class HostGroupAdmin(object):
     list_display = ("name", "description")
     list_display_links = ("name",)
 
+    list_filter = ["hosts"]
     search_fields = ["name"]
     style_fields = {"hosts": "checkbox-inline"}
 
@@ -200,6 +202,7 @@ class MaintainLogAdmin(object):
 
 @xadmin.sites.register(AccessRecord)
 class AccessRecordAdmin(object):
+
     def avg_count(self, instance):
         return int(instance.view_count / instance.user_count)
 
@@ -223,8 +226,8 @@ class AccessRecordAdmin(object):
                       "option": {
                           "series": {"bars": {"align": "center", "barWidth": 0.8, 'show': True}},
                           "xaxis": {"aggregate": "sum", "mode": "categories"},
-                      },
-                      },
+        },
+        },
     }
 
     def _chart_month(self, obj):

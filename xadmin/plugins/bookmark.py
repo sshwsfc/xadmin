@@ -1,6 +1,6 @@
 
 from django.contrib.contenttypes.models import ContentType
-from django.core.urlresolvers import reverse
+from django.urls.base import reverse
 from django.db import transaction
 from django.db.models import Q
 from django.forms import ModelChoiceField
@@ -43,16 +43,16 @@ class BookmarkPlugin(BaseAdminPlugin):
         bookmarks = []
 
         current_qs = '&'.join([
-                '%s=%s' % (k, v)
-                for k, v in sorted(filter(
-                        lambda i: bool(i[1] and (
-                                i[0] in (COL_LIST_VAR, ORDER_VAR, SEARCH_VAR)
-                                or i[0].startswith(FILTER_PREFIX)
-                                or i[0].startswith(RELATE_PREFIX)
-                                )),
-                        self.request.GET.items()
-                        ))
-                ])
+            '%s=%s' % (k, v)
+            for k, v in sorted(filter(
+                lambda i: bool(i[1] and (
+                    i[0] in (COL_LIST_VAR, ORDER_VAR, SEARCH_VAR)
+                    or i[0].startswith(FILTER_PREFIX)
+                    or i[0].startswith(RELATE_PREFIX)
+                )),
+                self.request.GET.items()
+            ))
+        ])
 
         model_info = (self.opts.app_label, self.opts.model_name)
         has_selected = False
@@ -64,21 +64,22 @@ class BookmarkPlugin(BaseAdminPlugin):
         for bk in self.list_bookmarks:
             title = bk['title']
             params = dict([
-                    (FILTER_PREFIX + k, v)
-                    for (k, v) in bk['query'].items()
-                    ])
+                (FILTER_PREFIX + k, v)
+                for (k, v) in bk['query'].items()
+            ])
             if 'order' in bk:
                 params[ORDER_VAR] = '.'.join(bk['order'])
             if 'cols' in bk:
                 params[COL_LIST_VAR] = '.'.join(bk['cols'])
             if 'search' in bk:
                 params[SEARCH_VAR] = bk['search']
+
             def check_item(i):
                 return bool(i[1]) or i[1] == False
             bk_qs = '&'.join([
                     '%s=%s' % (k, v)
                     for k, v in sorted(filter(check_item, params.items()))
-                    ])
+            ])
 
             url = list_base_url + '?' + bk_qs
             selected = (current_qs == bk_qs)
@@ -174,7 +175,6 @@ class BookmarkAdmin(object):
             list_display.remove('user')
         return list_display
 
-
     def has_change_permission(self, obj=None):
         if not obj or self.user.is_superuser:
             return True
@@ -222,12 +222,12 @@ class BookmarkWidget(PartialBaseWidget):
         context['result_headers'] = [c for c in list_view.result_headers(
         ).cells if c.field_name in base_fields]
         context['results'] = [
-                [o for i, o in enumerate(filter(
-                            lambda c: c.field_name in base_fields,
-                            r.cells
-                            ))]
-                for r in list_view.results()
-                ]
+            [o for i, o in enumerate(filter(
+                lambda c: c.field_name in base_fields,
+                r.cells
+            ))]
+            for r in list_view.results()
+        ]
         context['result_count'] = list_view.result_count
         context['page_url'] = self.bookmark.url
 

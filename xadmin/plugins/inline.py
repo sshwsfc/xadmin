@@ -210,7 +210,7 @@ class InlineModelAdmin(ModelFormAdminView):
 
                 rendered_fields = [i[1] for i in layout.get_field_names()]
                 layout.extend([f for f in instance[0]
-                              .fields.keys() if f not in rendered_fields])
+                               .fields.keys() if f not in rendered_fields])
 
             helper.add_layout(layout)
             style.update_layout(helper)
@@ -268,8 +268,8 @@ class InlineModelAdmin(ModelFormAdminView):
         opts = self.opts
         if opts.auto_created:
             for field in opts.fields:
-                if field.rel and field.rel.to != self.parent_model:
-                    opts = field.rel.to._meta
+                if field.remote_field and field.remote_field.model != self.parent_model:
+                    opts = field.remote_field.model._meta
                     break
 
         codename = get_permission_codename('change', opts)
@@ -352,7 +352,7 @@ class Inline(Fieldset):
     def __init__(self, rel_model):
         self.model = rel_model
         self.fields = []
-        super(Inline,self).__init__(legend="")
+        super(Inline, self).__init__(legend="")
 
     def render(self, form, form_style, context, template_pack=TEMPLATE_PACK, **kwargs):
         return ""
@@ -470,6 +470,7 @@ class InlineFormsetPlugin(BaseAdminPlugin):
                     form.detail = self.get_view(
                         DetailAdminUtil, fake_admin_class, instance)
         return formset
+
 
 class DetailAdminUtil(DetailAdminView):
 

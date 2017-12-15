@@ -11,7 +11,7 @@ from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
 from django.utils.encoding import force_text, smart_text, smart_str
 from django.utils.translation import ungettext
-from django.core.urlresolvers import reverse
+from django.urls.base import reverse
 from django.conf import settings
 from django.forms import Media
 from django.utils.translation import get_language
@@ -34,11 +34,6 @@ try:
     from django.utils.timezone import template_localtime as tz_localtime
 except ImportError:
     from django.utils.timezone import localtime as tz_localtime
-
-if django.VERSION < (1, 11):
-    DJANGO_11 = False
-else:
-    DJANGO_11 = True
 
 
 def xstatic(*tags):
@@ -84,15 +79,16 @@ def xstatic(*tags):
 
 
 def vendor(*tags):
-    media = Media()
+    css = {'screen': []}
+    js = []
     for tag in tags:
         file_type = tag.split('.')[-1]
         files = xstatic(tag)
         if file_type == 'js':
-            media.add_js(files)
+            js.extend(files)
         elif file_type == 'css':
-            media.add_css({'screen': files})
-    return media
+            css['screen'] += files
+    return Media(css=css, js=js)
 
 
 def lookup_needs_distinct(opts, lookup_path):
@@ -343,7 +339,7 @@ def display_for_field(value, field):
         return formats.number_format(value, field.decimal_places)
     elif isinstance(field, models.FloatField):
         return formats.number_format(value)
-    elif isinstance(field.rel, models.ManyToManyRel):
+    elif isinstance(field.remote_field, models.ManyToManyRel):
         return ', '.join([smart_text(obj) for obj in value.all()])
     else:
         return smart_text(value)
@@ -482,4 +478,4 @@ def is_related_field(field):
 
 
 def is_related_field2(field):
-    return (hasattr(field, 'rel') and field.rel != None) or is_related_field(field)
+    return (hasattr(field, 'remote_field') and field.remote_field != None) or is_related_field(field)

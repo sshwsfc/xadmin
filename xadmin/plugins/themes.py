@@ -1,4 +1,4 @@
-#coding:utf-8
+# coding:utf-8
 from __future__ import print_function
 import httplib2
 from django.template import loader
@@ -58,7 +58,7 @@ class ThemePlugin(BaseAdminPlugin):
         themes = [
             {'name': _(u"Default"), 'description': _(u"Default bootstrap theme"), 'css': self.default_theme},
             {'name': _(u"Bootstrap2"), 'description': _(u"Bootstrap 2.x theme"), 'css': self.bootstrap2_theme},
-            ]
+        ]
         select_css = context.get('site_theme', self.default_theme)
 
         if self.user_themes:
@@ -73,7 +73,7 @@ class ThemePlugin(BaseAdminPlugin):
                 try:
                     h = httplib2.Http()
                     resp, content = h.request("https://bootswatch.com/api/3.json", 'GET', '',
-                        headers={"Accept": "application/json", "User-Agent": self.request.META['HTTP_USER_AGENT']})
+                                              headers={"Accept": "application/json", "User-Agent": self.request.META['HTTP_USER_AGENT']})
                     if six.PY3:
                         content = content.decode()
                     watch_themes = json.loads(content)['themes']

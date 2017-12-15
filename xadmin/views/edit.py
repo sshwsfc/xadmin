@@ -15,6 +15,7 @@ from django.utils.html import escape
 from django.utils.text import capfirst, get_text_list
 from django.template import loader
 from django.utils.translation import ugettext as _
+from django.forms.widgets import Media
 from xadmin import widgets
 from xadmin.layout import FormHelper, Layout, Fieldset, TabHolder, Container, Column, Col, Field
 from xadmin.util import unquote
@@ -87,7 +88,7 @@ class ModelFormAdminView(ModelAdminView):
     def formfield_for_dbfield(self, db_field, **kwargs):
         # If it uses an intermediary model that isn't auto created, don't show
         # a field in admin.
-        if isinstance(db_field, models.ManyToManyField) and not db_field.rel.through._meta.auto_created:
+        if isinstance(db_field, models.ManyToManyField) and not db_field.remote_field.through._meta.auto_created:
             return None
 
         attrs = self.get_field_attrs(db_field, **kwargs)
@@ -199,8 +200,8 @@ class ModelFormAdminView(ModelAdminView):
 
         if layout is None:
             layout = Layout(Container(Col('full',
-                Fieldset("", *fields, css_class="unsort no_title"), horizontal=True, span=12)
-            ))
+                                          Fieldset("", *fields, css_class="unsort no_title"), horizontal=True, span=12)
+                                      ))
         elif type(layout) in (list, tuple) and len(layout) > 0:
             if isinstance(layout[0], Column):
                 fs = layout
@@ -355,7 +356,11 @@ class ModelFormAdminView(ModelAdminView):
 
     @filter_hook
     def get_media(self):
-        return super(ModelFormAdminView, self).get_media() + self.form_obj.media + \
+        try:
+            m = self.form_obj.media
+        except:
+            m = Media()
+        return super(ModelFormAdminView, self).get_media() + m + \
             self.vendor('xadmin.page.form.js', 'xadmin.form.css')
 
 
@@ -527,7 +532,7 @@ class UpdateAdminView(ModelFormAdminView):
             return request.path
         elif "_addanother" in request.POST:
             self.message_user(msg + ' ' + (_("You may add another %s below.")
-                              % force_text(verbose_name)), 'success')
+                                           % force_text(verbose_name)), 'success')
             return self.model_admin_url('add')
         else:
             self.message_user(msg, 'success')
@@ -539,7 +544,7 @@ class UpdateAdminView(ModelFormAdminView):
             elif self.has_view_permission():
                 change_list_url = self.model_admin_url('changelist')
                 if 'LIST_QUERY' in self.request.session \
-                and self.request.session['LIST_QUERY'][0] == self.model_info:
+                        and self.request.session['LIST_QUERY'][0] == self.model_info:
                     change_list_url += '?' + self.request.session['LIST_QUERY'][1]
                 return change_list_url
             else:

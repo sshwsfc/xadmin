@@ -8,19 +8,19 @@ from django.template.loader import get_template
 from django.template.context import Context
 from django.utils import six
 from django.utils.safestring import mark_safe
-from django.utils.html import escape,format_html
+from django.utils.html import escape, format_html
 from django.utils.text import Truncator
 from django.core.cache import cache, caches
 
 from xadmin.views.list import EMPTY_CHANGELIST_VALUE
-from xadmin.util import is_related_field,is_related_field2
+from xadmin.util import is_related_field, is_related_field2
 import datetime
 
 FILTER_PREFIX = '_p_'
 SEARCH_VAR = '_q_'
 
 from .util import (get_model_from_relation,
-    reverse_field_path, get_limit_choices_to_from_path, prepare_lookup_value)
+                   reverse_field_path, get_limit_choices_to_from_path, prepare_lookup_value)
 
 
 class BaseFilter(object):
@@ -125,9 +125,9 @@ class FieldFilter(BaseFilter):
                 self.context_params["%s_val" % name] = ''
 
         arr = map(
-                lambda kv: setattr(self, 'lookup_' + kv[0], kv[1]),
-                self.context_params.items()
-                )
+            lambda kv: setattr(self, 'lookup_' + kv[0], kv[1]),
+            self.context_params.items()
+        )
         if six.PY3:
             list(arr)
 
@@ -169,27 +169,27 @@ class BooleanFieldListFilter(ListFieldFilter):
                 ('', _('All')),
                 ('1', _('Yes')),
                 ('0', _('No')),
-                ):
+        ):
             yield {
-                    'selected': (
-                            self.lookup_exact_val == lookup
-                            and not self.lookup_isnull_val
-                            ),
-                    'query_string': self.query_string(
-                            {self.lookup_exact_name: lookup},
-                            [self.lookup_isnull_name],
-                            ),
-                    'display': title,
-                    }
+                'selected': (
+                    self.lookup_exact_val == lookup
+                    and not self.lookup_isnull_val
+                ),
+                'query_string': self.query_string(
+                    {self.lookup_exact_name: lookup},
+                    [self.lookup_isnull_name],
+                ),
+                'display': title,
+            }
         if isinstance(self.field, models.NullBooleanField):
             yield {
-                    'selected': self.lookup_isnull_val == 'True',
-                    'query_string': self.query_string(
-                                {self.lookup_isnull_name: 'True'},
-                                [self.lookup_exact_name],
-                                ),
-                    'display': _('Unknown'),
-                    }
+                'selected': self.lookup_isnull_val == 'True',
+                'query_string': self.query_string(
+                    {self.lookup_isnull_name: 'True'},
+                    [self.lookup_exact_name],
+                ),
+                'display': _('Unknown'),
+            }
 
 
 @manager.register
@@ -222,10 +222,10 @@ class TextFieldListFilter(FieldFilter):
     @classmethod
     def test(cls, field, request, params, model, admin_view, field_path):
         return (
-                isinstance(field, models.CharField)
-                and field.max_length > 20
-                or isinstance(field, models.TextField)
-               )
+            isinstance(field, models.CharField)
+            and field.max_length > 20
+            or isinstance(field, models.TextField)
+        )
 
 
 @manager.register
@@ -320,7 +320,7 @@ class DateFieldListFilter(ListFieldFilter):
             yield {
                 'selected': self.date_params == param_dict,
                 'query_string': self.query_string(
-                param_dict, [FILTER_PREFIX + self.field_generic]),
+                    param_dict, [FILTER_PREFIX + self.field_generic]),
                 'display': title,
             }
 
@@ -338,13 +338,14 @@ class RelatedFieldSearchFilter(FieldFilter):
         return related_modeladmin and getattr(related_modeladmin, 'relfield_style', None) in ('fk-ajax', 'fk-select')
 
     def __init__(self, field, request, params, model, model_admin, field_path):
+        print('-------------------------')
         other_model = get_model_from_relation(field)
-        if hasattr(field, 'rel'):
-            rel_name = field.rel.get_related_field().name
+        if hasattr(field, 'remote_field'):
+            rel_name = field.remote_field.get_related_field().name
         else:
             rel_name = other_model._meta.pk.name
 
-        self.lookup_formats = {'in': '%%s__%s__in' % rel_name,'exact': '%%s__%s__exact' % rel_name}
+        self.lookup_formats = {'in': '%%s__%s__in' % rel_name, 'exact': '%%s__%s__exact' % rel_name}
         super(RelatedFieldSearchFilter, self).__init__(
             field, request, params, model, model_admin, field_path)
 
@@ -360,9 +361,9 @@ class RelatedFieldSearchFilter(FieldFilter):
             other_model._meta.app_label, other_model._meta.model_name))
         self.label = self.label_for_value(other_model, rel_name, self.lookup_exact_val) if self.lookup_exact_val else ""
         self.choices = '?'
-        if field.rel.limit_choices_to:
-            for i in list(field.rel.limit_choices_to):
-                self.choices += "&_p_%s=%s" % (i, field.rel.limit_choices_to[i])
+        if field.remote_field.limit_choices_to:
+            for i in list(field.remote_field.limit_choices_to):
+                self.choices += "&_p_%s=%s" % (i, field.remote_field.limit_choices_to[i])
             self.choices = format_html(self.choices)
 
     def label_for_value(self, other_model, rel_name, value):
@@ -390,12 +391,12 @@ class RelatedFieldListFilter(ListFieldFilter):
 
     def __init__(self, field, request, params, model, model_admin, field_path):
         other_model = get_model_from_relation(field)
-        if hasattr(field, 'rel'):
-            rel_name = field.rel.get_related_field().name
+        if hasattr(field, 'remote_field'):
+            rel_name = field.remote_field.get_related_field().name
         else:
             rel_name = other_model._meta.pk.name
 
-        self.lookup_formats = {'in': '%%s__%s__in' % rel_name,'exact': '%%s__%s__exact' %
+        self.lookup_formats = {'in': '%%s__%s__in' % rel_name, 'exact': '%%s__%s__exact' %
                                rel_name, 'isnull': '%s__isnull'}
         self.lookup_choices = field.get_choices(include_blank=False)
         super(RelatedFieldListFilter, self).__init__(
@@ -409,7 +410,7 @@ class RelatedFieldListFilter(ListFieldFilter):
 
     def has_output(self):
         if (is_related_field(self.field)
-                and self.field.field.null or hasattr(self.field, 'rel')
+                and self.field.field.null or hasattr(self.field, 'remote_field')
                 and self.field.null):
             extra = 1
         else:
@@ -435,7 +436,7 @@ class RelatedFieldListFilter(ListFieldFilter):
                 'display': val,
             }
         if (is_related_field(self.field)
-                and self.field.field.null or hasattr(self.field, 'rel')
+                and self.field.field.null or hasattr(self.field, 'remote_field')
                 and self.field.null):
             yield {
                 'selected': bool(self.lookup_isnull_val),
@@ -445,80 +446,82 @@ class RelatedFieldListFilter(ListFieldFilter):
                 'display': EMPTY_CHANGELIST_VALUE,
             }
 
+
 @manager.register
 class MultiSelectFieldListFilter(ListFieldFilter):
     """ Delegates the filter to the default filter and ors the results of each
-     
+
     Lists the distinct values of each field as a checkbox
     Uses the default spec for each 
-     
+
     """
     template = 'xadmin/filters/checklist.html'
     lookup_formats = {'in': '%s__in'}
-    cache_config = {'enabled':False,'key':'quickfilter_%s','timeout':3600,'cache':'default'}
- 
+    cache_config = {'enabled': False, 'key': 'quickfilter_%s', 'timeout': 3600, 'cache': 'default'}
+
     @classmethod
     def test(cls, field, request, params, model, admin_view, field_path):
         return True
- 
+
     def get_cached_choices(self):
         if not self.cache_config['enabled']:
             return None
         c = caches(self.cache_config['cache'])
-        return c.get(self.cache_config['key']%self.field_path)
-    
-    def set_cached_choices(self,choices):
+        return c.get(self.cache_config['key'] % self.field_path)
+
+    def set_cached_choices(self, choices):
         if not self.cache_config['enabled']:
             return
         c = caches(self.cache_config['cache'])
-        return c.set(self.cache_config['key']%self.field_path,choices)
-    
-    def __init__(self, field, request, params, model, model_admin, field_path,field_order_by=None,field_limit=None,sort_key=None,cache_config=None):
-        super(MultiSelectFieldListFilter,self).__init__(field, request, params, model, model_admin, field_path)
-        
+        return c.set(self.cache_config['key'] % self.field_path, choices)
+
+    def __init__(self, field, request, params, model, model_admin, field_path, field_order_by=None, field_limit=None, sort_key=None, cache_config=None):
+        super(MultiSelectFieldListFilter, self).__init__(field, request, params, model, model_admin, field_path)
+
         # Check for it in the cachce
-        if cache_config is not None and type(cache_config)==dict:
+        if cache_config is not None and type(cache_config) == dict:
             self.cache_config.update(cache_config)
-        
+
         if self.cache_config['enabled']:
             self.field_path = field_path
             choices = self.get_cached_choices()
             if choices:
                 self.lookup_choices = choices
                 return
-            
+
         # Else rebuild it
-        queryset = self.admin_view.queryset().exclude(**{"%s__isnull"%field_path:True}).values_list(field_path, flat=True).distinct() 
+        queryset = self.admin_view.queryset().exclude(**{"%s__isnull" % field_path: True}).values_list(field_path, flat=True).distinct()
         #queryset = self.admin_view.queryset().distinct(field_path).exclude(**{"%s__isnull"%field_path:True})
-        
+
         if field_order_by is not None:
             # Do a subquery to order the distinct set
             queryset = self.admin_view.queryset().filter(id__in=queryset).order_by(field_order_by)
-            
-        if field_limit is not None and type(field_limit)==int and queryset.count()>field_limit:
+
+        if field_limit is not None and type(field_limit) == int and queryset.count() > field_limit:
             queryset = queryset[:field_limit]
-        
-        self.lookup_choices = [str(it) for it in queryset.values_list(field_path,flat=True) if str(it).strip()!=""]
+
+        self.lookup_choices = [str(it) for it in queryset.values_list(field_path, flat=True) if str(it).strip() != ""]
         if sort_key is not None:
-            self.lookup_choices = sorted(self.lookup_choices,key=sort_key)
-        
+            self.lookup_choices = sorted(self.lookup_choices, key=sort_key)
+
         if self.cache_config['enabled']:
-            self.set_cached_choices(self.lookup_choices) 
+            self.set_cached_choices(self.lookup_choices)
 
     def choices(self):
-        self.lookup_in_val = (type(self.lookup_in_val) in (tuple,list)) and self.lookup_in_val or list(self.lookup_in_val)
+        self.lookup_in_val = (type(self.lookup_in_val) in (tuple, list)) and self.lookup_in_val or list(self.lookup_in_val)
         yield {
             'selected': len(self.lookup_in_val) == 0,
-            'query_string': self.query_string({},[self.lookup_in_name]),
+            'query_string': self.query_string({}, [self.lookup_in_name]),
             'display': _('All'),
         }
         for val in self.lookup_choices:
             yield {
                 'selected': smart_text(val) in self.lookup_in_val,
-                'query_string': self.query_string({self.lookup_in_name: ",".join([val]+self.lookup_in_val),}),
-                'remove_query_string': self.query_string({self.lookup_in_name: ",".join([v for v in self.lookup_in_val if v != val]),}),
+                'query_string': self.query_string({self.lookup_in_name: ",".join([val] + self.lookup_in_val), }),
+                'remove_query_string': self.query_string({self.lookup_in_name: ",".join([v for v in self.lookup_in_val if v != val]), }),
                 'display': val,
             }
+
 
 @manager.register
 class AllValuesFieldListFilter(ListFieldFilter):
