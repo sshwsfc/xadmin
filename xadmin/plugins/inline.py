@@ -227,10 +227,12 @@ class InlineModelAdmin(ModelFormAdminView):
                 form.readonly_fields = []
                 inst = form.save(commit=False)
                 if inst:
+                    field_names = [f.name for f in inst._meta.get_fields()]
                     for readonly_field in readonly_fields:
                         value = None
                         label = None
-                        if readonly_field in inst._meta.get_all_field_names():
+                        
+                        if readonly_field in field_names:
                             label = inst._meta.get_field(readonly_field).verbose_name
                             value = smart_text(getattr(inst, readonly_field))
                         elif inspect.ismethod(getattr(inst, readonly_field, None)):
@@ -239,7 +241,7 @@ class InlineModelAdmin(ModelFormAdminView):
                         elif inspect.ismethod(getattr(self, readonly_field, None)):
                             value = getattr(self, readonly_field)(inst)
                             label = getattr(getattr(self, readonly_field), 'short_description', readonly_field)
-                        if value:
+                        if label is not None: # Allow values of False/0 to show up
                             form.readonly_fields.append({'label': label, 'contents': value})
         return instance
 
