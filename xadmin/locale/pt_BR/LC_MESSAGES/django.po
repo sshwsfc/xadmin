@@ -1154,7 +1154,7 @@ msgid ""
 "Are you sure you want to delete the %(verbose_name)s \"%(escaped_object)s\"? "
 "All of the following related items will be deleted:"
 msgstr ""
-"Tem certeza de que deseja excluir %(verbose_name)s \"%(escaped_object)s\"? "
+"Tem certeza de que deseja excluir %(verbose_name)s \"%(escaped_object)s\" ? "
 "Todos os seguintes conteúdos vinculados serão excluídos:"
 
 #: .\templates\xadmin\views\model_delete_confirm.html:34
@@ -1197,8 +1197,8 @@ msgid ""
 "Are you sure you want to delete the selected %(objects_name)s? All of the "
 "following objects and their related items will be deleted:"
 msgstr ""
-"Tem certeza de que deseja excluir o %(objects_name)s selecionado? Todos os "
-"seguintes objetos e seus itens relacionados serão excluídos:"
+"Tem certeza de que deseja excluir o %(objects_name)s selecionado ? "
+"Todos os seguintes conteúdos vinculados serão excluídos:"
 
 #: .\templates\xadmin\views\model_history.html:26
 msgid "Diff"
