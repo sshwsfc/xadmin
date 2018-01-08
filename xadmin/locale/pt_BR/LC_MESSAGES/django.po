@@ -211,7 +211,7 @@ msgstr "Deletado \"%(object)s\""
 #: .\plugins\actions.py:57
 #, python-format
 msgid "Delete selected %(verbose_name_plural)s"
-msgstr "Excluir selecionado %(verbose_name_plural)s"
+msgstr "Excluir %(verbose_name_plural)s selecionados"
 
 #: .\plugins\actions.py:72
 #, python-format
@@ -344,7 +344,7 @@ msgstr "Alterar este campo"
 #: .\plugins\batch.py:65
 #, python-format
 msgid "Batch Change selected %(verbose_name_plural)s"
-msgstr "Alterar lote selecionado %(verbose_name_plural)s"
+msgstr "Alterar %(verbose_name_plural)s selecionados em lote"
 
 #: .\plugins\batch.py:89
 #, python-format
@@ -1069,7 +1069,7 @@ msgstr "Alterar múltiplos objetos"
 msgid "Change one %(objects_name)s"
 msgid_plural "Batch change %(counter)s %(objects_name)s"
 msgstr[0] "Alterar um %(objects_name)s"
-msgstr[1] "Alterar lote %(counter)s %(objects_name)s"
+msgstr[1] "Alterar campos para %(counter)s %(objects_name)s selecionados"
 
 #: .\templates\xadmin\views\batch_change_form.html:38
 msgid "Change Multiple"
@@ -1155,7 +1155,7 @@ msgid ""
 "All of the following related items will be deleted:"
 msgstr ""
 "Tem certeza de que deseja excluir %(verbose_name)s \"%(escaped_object)s\"? "
-"Todos os seguintes itens relacionados serão excluídos:"
+"Todos os seguintes conteúdos vinculados serão excluídos:"
 
 #: .\templates\xadmin\views\model_delete_confirm.html:34
 #: .\templates\xadmin\views\model_delete_selected_confirm.html:49
