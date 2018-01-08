@@ -1,0 +1,33 @@
+{
+  "name": "xadmin-dashboard",
+  "version": "1.0.64",
+  "main": "./lib/index.js",
+  "license": "MIT",
+  "dependencies": {
+    "animate.css": "^3.5.2",
+    "antd": "^2.11.1",
+    "echarts": "^3.4.0",
+    "element-resize-event": "^2.0.7",
+    "immutable": "^3.8.1",
+    "immutable-data": "^2.0.5",
+    "lodash": "^4.16.4",
+    "moment": "^2.17.1",
+    "monaco-editor": "^0.8.3",
+    "react-contextmenu": "^2.6.3",
+    "react-grid-layout": "^0.14.4",
+    "react-json-inspector": "^7.0.1",
+    "react-monaco-editor": "^0.8.1",
+    "react-reflex": "^2.0.6",
+    "react-rnd": "^7.1.5",
+    "react-svg": "^2.1.19",
+    "react-transition-group": "^2.2.1",
+    "xadmin-core": "^1.0.0"
+  },
+  "files": [
+    "lib",
+    "package.json"
+  ],
+  "scripts": {
+    "build": "babel src -d lib -w"
+  }
+}

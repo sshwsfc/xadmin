@@ -1,0 +1,120 @@
+import React from 'react'
+import _ from 'lodash'
+import { FormGroup, ControlLabel, FormControl, Col, HelpBlock, ButtonGroup, Modal, OverlayTrigger, Popover, Panel, Button, Label, Well, MenuItem, ListGroup, ListGroupItem } from 'react-bootstrap'
+import { app } from '../index'
+import { SchemaForm, FormWrap } from '../form/base'
+import { ModelWrap, Model } from '../model/base'
+import { BaseRow, List } from '../model/components/Items'
+import { Icon } from '../components'
+
+const FieldGroup = ({ label, meta, input, field, children }) => {
+  const groupProps = {}
+  const attrs = field.attrs || {}
+  const error = meta.touched && meta.error
+  const help = field.description || field.help
+  const size = (field.option && field.option.groupSize) || attrs.groupSize || { 
+    label: {
+      sm: 4, md: 3, lg: 2 
+    },
+    control: {
+      sm: 8, md: 9, lg: 10
+    }
+  }
+
+  if(meta.dirty) {
+    groupProps['validationState'] = 'success'
+  }
+  if (error) {
+    groupProps['validationState'] = 'error'
+  }
+  if (attrs.bsSize) {
+    groupProps['bsSize'] = attrs.bsSize
+  }
+  if (attrs.bsStyle) {
+    groupProps['bsStyle'] = attrs.bsStyle
+  }
+
+  const controlComponent = children ? children : (<FormControl {...input} {...attrs} />)
+  return (
+    <FormGroup controlId={input.name} {...groupProps}>
+      <Col key={0} componentClass={ControlLabel} {...size.label}>
+        {label}
+      </Col>
+      <Col key={1} {...size.control}>
+        {controlComponent}
+        <FormControl.Feedback />
+        {help && <HelpBlock>{help}</HelpBlock>}
+        {error && <HelpBlock>{error}</HelpBlock>}
+      </Col>
+    </FormGroup>
+    )
+}
+
+const BatchChangeBtn = ModelWrap('actons.batch_change')(ModelWrap('model.list.actions')(React.createClass({
+
+  getInitialState() {
+    return { show: false }
+  },
+
+  onClose() {
+    this.setState({ show: false })
+  },
+
+  onBatchChange(value) {
+    this.props.onBatchChange(value)
+    this.onClose()
+  },
+
+  renderModel() {
+    const { selected, model, fields, location } = this.props
+    const { _t } = app.context
+
+    const FormLayout = (props) => {
+      const { children, invalid, handleSubmit, submitting, onClose } = props
+      const icon = submitting ? 'spinner fa-spin' : 'floppy-o'
+      return (
+        <form className="form-horizontal" onSubmit={handleSubmit}>
+          <Modal.Body>{children}</Modal.Body>
+          <Modal.Footer>
+            <Button onClick={onClose}>{_t('Close')}</Button>
+            <Button type="submit" disabled={invalid || submitting}  bsStyle="primary" onClick={handleSubmit}>{_t('Change')}</Button>
+          </Modal.Footer>
+        </form>
+      )
+    }
+
+    return (
+      <Modal show={this.state.show} onHide={this.onClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>{_t('Please input the value to batch change items')}</Modal.Title>
+        </Modal.Header>
+        <SchemaForm formKey={`model_batch.${model.key}`} 
+          schema={_.omit({
+            ...model,
+            properties: _.pick(model.properties, fields),
+            form: model.form !== undefined ? model.form.filter(obj => {
+              return obj == '*' || fields.indexOf(obj) >= 0 || fields.indexOf(obj.key) >= 0 }) : [ '*' ]
+          }, 'required')}
+          option={{ group: FieldGroup }}
+          onSubmit={this.onBatchChange}
+          onClose={this.onClose}
+          component={FormLayout}/>
+      </Modal>
+    )
+  },
+
+  render() {
+    const { selected, onSelect, canEdit, fields } = this.props
+    const { _t } = app.context
+
+    return (canEdit && fields.length > 0) ? (
+      <MenuItem eventKey={'actions_batch_change'} onSelect={(e)=>{onSelect(e); this.setState({ show: true })}} disabled={selected.length == 0}>
+      {_t('Batch Change Items')}
+      {(this.state.show && selected.length > 0) ? this.renderModel() : null}
+      </MenuItem>
+    ) : null
+  }
+
+})))
+
+export default BatchChangeBtn

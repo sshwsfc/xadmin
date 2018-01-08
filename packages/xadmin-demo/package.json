@@ -1,0 +1,21 @@
+{
+  "name": "xadmin-demo",
+  "version": "1.0.0",
+  "description": "Xadmin Demo",
+  "main": "index.js",
+  "author": "sshwsfc@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "async": "^2.6.0",
+    "babel-runtime": "^6.11.6",
+    "lodash": "^4.17.4",
+    "react-redux": "^5.0.6",
+    "react-router": "^2.4.0",
+    "redux": "^3.7.2",
+    "redux-saga": "^0.16.0",
+    "react": "15",
+    "react-dom": "15",
+    "xadmin": "^0.1.13",
+    "xadmin-core": "^1.0.0"
+  }
+}

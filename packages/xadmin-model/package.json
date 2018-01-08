@@ -1,0 +1,15 @@
+{
+  "name": "xadmin-model",
+  "version": "1.0.0",
+  "description": "Xadmin Model",
+  "main": "index.js",
+  "author": "sshwsfc@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "xadmin-core": "^1.0.0"
+  },
+  "peerDependencies": {
+    "react": "^16.2.0"
+  }
+}

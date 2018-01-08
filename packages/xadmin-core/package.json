@@ -1,0 +1,20 @@
+{
+  "name": "xadmin-core",
+  "version": "1.0.0",
+  "description": "Xadmin Core",
+  "main": "src/index.js",
+  "author": "sshwsfc@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "async": "^2.6.0",
+    "lodash": "^4.17.4",
+    "react-redux": "^5.0.6",
+    "react-router": "^4.2.0",
+    "redux": "^3.7.2",
+    "redux-saga": "^0.16.0"
+  },
+  "peerDependencies": {
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
+  }
+}
