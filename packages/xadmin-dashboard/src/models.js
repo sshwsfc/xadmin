@@ -1,7 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import { Button, ButtonGroup, Panel, Media, Badge, Tabs, Tab, Grid, Row, Col } from 'react-bootstrap'
-import { app } from 'xadmin'
+import { app } from 'xadmin-core'
 
 const dashboard = ({ context: { _t } }) => ({
   name: 'dashboard',

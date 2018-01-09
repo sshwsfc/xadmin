@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { app } from 'xadmin'
+import { app } from 'xadmin-core'
 import Root from './components/Root'
 
 const genCellKey = (type) => {

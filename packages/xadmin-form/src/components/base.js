@@ -96,7 +96,7 @@ const SimpleGroup = ({ label, meta, input, field, children }) => {
     )
 }
 
-export default {
+export {
   FieldGroup,
   InlineGroup,
   SimpleGroup

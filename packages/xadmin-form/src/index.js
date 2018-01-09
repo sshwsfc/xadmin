@@ -15,8 +15,24 @@ import {
 } from './base'
 
 const ajv = new Ajv({ allErrors: true })
+const app = {
+  start: (app) => () => {
+    app.load_list('ajv_key').forEach(args => {
+      ajv.addKeyword(args[0], args[1])
+    })
+    app.load_list('ajv_format').forEach(args => {
+      ajv.addFormat(args[0], args[1])
+    })
+  },
+  reducers: (app) => {
+    const plugins = app.load_dict('form_reducer')
+    return { form: formReducer.plugin(plugins) }
+  },
+  form_fields: default_fields,
+  schema_converter: converters
+}
 
-export default {
+export {
   BaseForm,
   Form,
   SchemaForm,
@@ -24,22 +40,6 @@ export default {
   fieldBuilder,
   objectBuilder,
   schemaConvert,
-  SubmissionError,
-  
-  app: {
-    start: (app) => () => {
-      app.load_list('ajv_key').forEach(args => {
-        ajv.addKeyword(args[0], args[1])
-      })
-      app.load_list('ajv_format').forEach(args => {
-        ajv.addFormat(args[0], args[1])
-      })
-    },
-    reducers: (app) => {
-      const plugins = app.load_dict('form_reducer')
-      return { form: formReducer.plugin(plugins) }
-    },
-    form_fields: default_fields,
-    schema_converter: converters
-  }
+  SubmissionError
 }
+export default app

@@ -192,10 +192,9 @@ module.exports = {
     alias: {
       'src': paths.appSrc
     },
-    modules: [
-      paths.appNodeModules,
-      paths.appSrc
-    ]
+    modules: [ 'node_modules' ].concat([ 'demo', 'core', 'i18n', 'form', 'dashboard' ].map(function (name) {
+      return path.resolve(paths.packagesPath, 'xadmin-' + name , 'node_modules')
+    }))
   },
   plugins,
   devServer: {

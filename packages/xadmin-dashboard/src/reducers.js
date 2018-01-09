@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { REHYDRATE } from 'redux-persist/constants'
+//import { REHYDRATE } from 'redux-persist/constants'
 import _ from 'lodash'
 import { Map } from 'immutable'
 
@@ -16,8 +16,8 @@ const paramsReducer = (state={}, action) => {
   switch(type) {
     case '@@x-dashboard/UPDATE_DASHBOARD':
       return params
-    case REHYDRATE:
-      return action.payload.dashboard.params
+    // case REHYDRATE:
+    //   return action.payload.dashboard.params
     default:
       return state
   }

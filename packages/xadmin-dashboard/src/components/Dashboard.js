@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { app, StoreWrap } from 'xadmin'
+import { app, StoreWrap } from 'xadmin-core'
 import Cell from './Cell'
 import DashboardWrap from '../wrap'
 import Root from './Root'

@@ -1,5 +1,5 @@
 import React from 'react'
-import { app } from 'xadmin'
+import { app } from 'xadmin-core'
 import Box from '../containers/Box'
 
 export default {

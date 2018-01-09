@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { app } from '../index'
+import { app } from 'xadmin-core'
 
 const stripNullType = (type) => {
   if(Array.isArray(type) && type.length == 2) {
@@ -191,7 +191,7 @@ const converters = [
   }
 ]
 
-export default {
+export {
   convert,
   converters
 }

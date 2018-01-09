@@ -25,5 +25,6 @@ module.exports = {
   appNodeModules: resolveApp('node_modules'),
   ownNodeModules: resolveApp('node_modules'),
   nodePaths: nodePaths,
-  xadminPath: path.resolve(__dirname, '../src')
+  xadminPath: path.resolve(__dirname, '../src'),
+  packagesPath: path.resolve(appDirectory, '..')
 }

@@ -1,7 +1,7 @@
 {
   "name": "xadmin-dashboard",
   "version": "1.0.64",
-  "main": "./lib/index.js",
+  "main": "./src/index.js",
   "license": "MIT",
   "dependencies": {
     "animate.css": "^3.5.2",
@@ -14,6 +14,7 @@
     "moment": "^2.17.1",
     "monaco-editor": "^0.8.3",
     "react-contextmenu": "^2.6.3",
+    "react-fontawesome": "^1.6.1",
     "react-grid-layout": "^0.14.4",
     "react-json-inspector": "^7.0.1",
     "react-monaco-editor": "^0.8.1",
@@ -21,7 +22,8 @@
     "react-rnd": "^7.1.5",
     "react-svg": "^2.1.19",
     "react-transition-group": "^2.2.1",
-    "xadmin-core": "^1.0.0"
+    "xadmin-core": "^1.0.0",
+    "xadmin-form": "^1.0.0"
   },
   "files": [
     "lib",

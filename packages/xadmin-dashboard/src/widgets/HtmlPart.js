@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import _ from 'lodash'
-import { Page, Icon } from 'xadmin/lib/components'
-import Textarea from 'xadmin/lib/form/components/Textarea'
-import { app, StoreWrap } from 'xadmin'
+import Icon from 'react-fontawesome'
+import Textarea from 'xadmin-form/src/components/Textarea'
+import { app, StoreWrap } from 'xadmin-core'
 
 const HtmlPart = React.createClass({
 

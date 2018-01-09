@@ -1,4 +1,4 @@
-import { app } from 'xadmin'
+import { app } from 'xadmin-core'
 
 const oneDay = 24 * 3600 * 1000
 

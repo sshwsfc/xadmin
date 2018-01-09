@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { StoreWrap } from 'xadmin'
+import { StoreWrap } from 'xadmin-core'
 
 export default StoreWrap({
 

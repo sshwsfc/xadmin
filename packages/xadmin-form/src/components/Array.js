@@ -3,8 +3,8 @@ import { FieldArray } from 'redux-form'
 import { FieldGroup } from './base'
 import { Panel, Button, PanelGroup } from 'react-bootstrap'
 import { objectBuilder, prefixFieldKey } from '../builder'
-import Icon from '../../components/Icon'
-import { app } from '../../index'
+import Icon from 'react-fontawesome'
+import app from 'xadmin-core'
 
 const defaultItemsRender = ({ fields, meta: { touched, error }, field, fieldsBuilder }) => {
   const { items, label } = field

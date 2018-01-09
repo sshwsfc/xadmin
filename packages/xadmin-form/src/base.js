@@ -90,7 +90,7 @@ const FormWrap = StoreWrap({
   }
 })
 
-export default {
+export {
   BaseForm,
   Form,
   SchemaForm,

@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import _ from 'lodash'
-import { Page, Icon } from 'xadmin/lib/components'
-import { app, StoreWrap } from 'xadmin'
+import Icon from 'react-fontawesome'
+import { app, StoreWrap } from 'xadmin-core'
 import elementResizeEvent from 'element-resize-event'
 
 const WebGL = React.createClass({

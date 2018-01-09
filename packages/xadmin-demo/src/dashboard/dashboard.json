@@ -1,0 +1,34 @@
+{
+  "params": {},
+  "cells": {
+    "xadmin-dashboard_container_grid_esd3zh932": {
+      "type": "xadmin-dashboard/container/grid",
+      "parent": "root",
+      "layout": [
+        {
+          "i": "html_s4l98l4qh",
+          "x": 7,
+          "y": 0,
+          "w": 6,
+          "h": 3,
+          "moved": false,
+          "static": false
+        }
+      ],
+      "childrenCells": [
+        "html_s4l98l4qh"
+      ]
+    },
+    "root": {
+      "childrenCells": [
+        "xadmin-dashboard_container_grid_esd3zh932"
+      ]
+    },
+    "html_s4l98l4qh": {
+      "type": "html",
+      "parent": "xadmin-dashboard_container_grid_esd3zh932",
+      "html": "123"
+    }
+  },
+  "endpoints": {}
+}

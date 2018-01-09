@@ -33,7 +33,7 @@ const prefixFieldKey = (field, prefix) => {
   return f
 }
 
-export default {
+export {
   defaultUIRender,
   objectBuilder,
   fieldBuilder,
