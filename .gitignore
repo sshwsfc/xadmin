@@ -34,6 +34,7 @@ jspm_packages
 
 .DS_Store
 .vscode
-/dist/
-/lib/
-/es/
+public
+dist
+lib
+es
