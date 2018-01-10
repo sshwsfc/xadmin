@@ -1,10 +1,10 @@
 import React from 'react'
-import { Link } from 'react-router'
 import _ from 'lodash'
-import { Icon } from '../../components'
+import Icon from 'react-fontawesome'
+import { Block, app } from 'xadmin-core'
+import { SchemaForm } from 'xadmin-form'
+
 import { FormGroup, ControlLabel, FormControl, Col, HelpBlock, Table, OverlayTrigger, Popover, Button, ButtonGroup, Input, Dropdown, MenuItem, Well, Panel, Media } from 'react-bootstrap'
-import { Block, app } from '../../index'
-import { SchemaForm } from '../../form/base'
 import { ModelWrap } from '../base'
 
 class BaseRow extends React.Component {
@@ -253,7 +253,7 @@ class GridRowComponent extends BaseRow {
 }
 const GridRow = ModelWrap('model.list.row')(GridRowComponent)
 
-const ModelGrid = React.createClass({
+const Grid = ModelWrap('model.items')(React.createClass({
 
   propTypes: {
     fields: React.PropTypes.array.isRequired,
@@ -292,7 +292,7 @@ const ModelGrid = React.createClass({
       }
     }
   }
-})
+}))
 
 class ListRowComponent extends BaseRow {
 
@@ -325,7 +325,7 @@ class ListRowComponent extends BaseRow {
 }
 const ListRow = ModelWrap('model.list.row')(ListRowComponent)
 
-const ModelList = React.createClass({
+const List = ModelWrap('model.items')(React.createClass({
 
   propTypes: {
     fields: React.PropTypes.array.isRequired,
@@ -358,10 +358,8 @@ const ModelList = React.createClass({
       }
     }
   }
-})
+}))
 
-export default {
-  Grid: ModelWrap('model.items')(ModelGrid),
-  List: ModelWrap('model.items')(ModelList),
-  Header, GridRow, ListRow, Item, BaseRow
+export {
+  Grid, List, Header, GridRow, ListRow, Item, BaseRow
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
 
-module.exports = React.createClass({
+export default React.createClass({
 
   propTypes: {
     title: React.PropTypes.node,

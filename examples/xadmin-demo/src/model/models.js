@@ -1,5 +1,5 @@
 // this file is e.g. for models
-import { Radios, Textarea } from '../form/components'
+import { Radios, Textarea } from 'xadmin-form/lib/components'
 
 export default {
   car: {

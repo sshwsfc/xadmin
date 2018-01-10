@@ -5,12 +5,14 @@ import { FieldArray } from 'redux-form'
 import { fork, put, call, cancelled } from 'redux-saga/effects'
 import { takeEvery, takeLatest, delay } from 'redux-saga'
 import { Checkbox, FormControl } from 'react-bootstrap'
-import { Icon } from '../components'
+
+import app, { api, Block, StoreWrap } from 'xadmin-core'
+import { FormWrap } from 'xadmin-form'
+import Icon from 'react-fontawesome'
+
 import ModelPages from './components/Pages'
-import { FormWrap } from '../form'
 import { Model, ModelWrap } from './base'
-import api from '../api'
-import { Block, StoreWrap, app } from '../index'
+
 import { SimpleSelect, MultiSelect } from 'react-selectize'
 import 'react-selectize/themes/index.css'
 

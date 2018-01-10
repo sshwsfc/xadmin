@@ -2,10 +2,11 @@ import React from 'react'
 import { Link } from 'react-router'
 import { Button, Nav, Row, Col } from 'react-bootstrap'
 
-import { Page, Icon } from '../../components'
-import { Block, app } from '../../index'
+import Icon from 'react-fontawesome'
+import { Block, app } from 'xadmin-core'
 import { ModelWrap } from '../base'
 
+import Page from './Page'
 import Pagination from './Pagination'
 import { Grid } from './Items'
 import Form from './Form'

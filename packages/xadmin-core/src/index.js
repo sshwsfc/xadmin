@@ -564,9 +564,22 @@ const config = (key, default_value) => {
   return app.load_dict('config')[key] || default_value
 }
 
+const API_CACHE = {}
+
+const api = (opt) => {
+  const resource = opt.resource_name || opt.name
+  if(API_CACHE[resource] == undefined) {
+    API_CACHE[resource] = config('api', () => {
+      throw 'App API not implement!!!'
+    })(opt)
+  }
+  return API_CACHE[resource]
+}
+
 export default app
 export {
   app,
+  api,
   config,
   Block,
   BlockTag,

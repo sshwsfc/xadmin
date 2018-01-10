@@ -1,8 +1,12 @@
 {
   "lerna": "2.5.1",
   "packages": [
-    "packages/*",
-    "examples/*"
+    "packages/*"
   ],
-  "version": "1.0.0"
+  "version": "independent",
+  "commands": {
+    "publish": {
+      "skipGit": true
+    }
+  }
 }

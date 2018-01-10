@@ -1,11 +1,11 @@
 import React, { Component, PropTypes } from 'react'
 import _ from 'lodash'
-import { Page, Icon } from '../../components'
+import Icon from 'react-fontawesome'
+import app from 'xadmin-core'
+import { SchemaForm } from 'xadmin-form'
+
 import { Navbar, Nav, NavItem, NavDropdown, OverlayTrigger, Tooltip, MenuItem, Panel, Well, Button } from 'react-bootstrap'
-import { AutoAffix } from 'react-overlays'
 import { ModelWrap } from '../base'
-import { SchemaForm } from '../../form'
-import { app } from '../../index'
 
 const DefaultLayout = (props) => {
   const { children, invalid, handleSubmit, submitting } = props
@@ -14,7 +14,6 @@ const DefaultLayout = (props) => {
   return (
     <form className="form-horizontal" onSubmit={handleSubmit}>
       <Panel>{children}</Panel>
-      <AutoAffix offsetBottom={20}>
       <Well bsSize="small" style={{ textAlign: 'right' }}>
       {invalid ? (
         <OverlayTrigger placement="top" overlay={<Tooltip>{_t('Please be sure to complete all field.')}</Tooltip>}>
@@ -26,7 +25,6 @@ const DefaultLayout = (props) => {
             <Icon name={icon}/> {_t('Save')}</Button>
         )}
       </Well>
-      </AutoAffix>
     </form>
   )
 }

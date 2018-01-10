@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import _ from 'lodash'
 import Icon from 'react-fontawesome'
-import Textarea from 'xadmin-form/src/components/Textarea'
+import Textarea from 'xadmin-form/lib/components/Textarea'
 import { app, StoreWrap } from 'xadmin-core'
 
 const HtmlPart = React.createClass({

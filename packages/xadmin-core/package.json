@@ -1,8 +1,8 @@
 {
   "name": "xadmin-core",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Xadmin Core",
-  "main": "lib/index.js",
+  "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
   "license": "MIT",
   "dependencies": {
@@ -16,5 +16,12 @@
   "peerDependencies": {
     "react": "15",
     "react-dom": "15"
-  }
+  },
+  "scripts": {
+    "compile": "babel src --out-dir lib",
+    "watch": "babel src --out-dir lib -w"
+  },
+  "files": [
+    "lib"
+  ]
 }

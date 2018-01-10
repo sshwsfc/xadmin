@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { Page, Icon } from '../../components'
+import Icon from 'react-fontawesome'
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Panel, Well, Button } from 'react-bootstrap'
 import { ModelWrap } from '../base'
 

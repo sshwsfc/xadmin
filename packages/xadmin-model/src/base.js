@@ -3,8 +3,7 @@ import React from 'react'
 import _ from 'lodash'
 import { PropTypes, createElement } from 'react'
 
-import { Block, StoreWrap, app } from '../index'
-import { Icon } from '../components'
+import { Block, StoreWrap, app } from 'xadmin-core'
 
 const Model = (modelOrName, props={}) => {
   const { key, persist, initialValues, modelProps } = props
@@ -74,7 +73,7 @@ const ModelWrap = StoreWrap({
   }
 })
 
-export default {
+export {
   ModelWrap,
   Model
 }

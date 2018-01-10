@@ -1,9 +1,9 @@
 import React from 'react'
 import moment from 'moment'
 import _ from 'lodash'
+import app from 'xadmin-core'
+import Icon from 'react-fontawesome'
 import { Item } from './components/Items'
-import { Icon } from '../components'
-import { app } from '../index'
 
 export default [
   (SubPrev, schema) => {

@@ -46,6 +46,36 @@ class Hello extends React.Component {
                 type: 'string',
                 format: 'date',
                 title: '数据日期'
+              },
+              layers: {
+                title: '层',
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    mode: {
+                      title: '布局形式',
+                      type: 'string',
+                      enum: [ '栅格布局', '绝对布局' ]
+                    },
+                    cols: {
+                      title: '列数',
+                      type: 'number'
+                    },
+                    yheight: {
+                      title: '行高度',
+                      type: 'number'
+                    },
+                    margin: {
+                      title: '间距',
+                      type: 'number'
+                    },
+                    verticalFree: {
+                      title: '自由摆放',
+                      type: 'boolean'
+                    }
+                  }
+                }
               }
             }
           }}

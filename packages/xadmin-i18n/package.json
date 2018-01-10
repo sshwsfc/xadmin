@@ -2,7 +2,7 @@
   "name": "xadmin-i18n",
   "version": "1.0.0",
   "description": "Xadmin i18n",
-  "main": "src/index.js",
+  "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
   "license": "MIT",
   "dependencies": {
@@ -11,7 +11,16 @@
     "i18next-localstorage-cache": "^0.3.0",
     "i18next-xhr-backend": "^1.2.1",
     "lodash": "^4.16.4",
-    "moment": "^2.15.1",
-    "xadmin-core": "^1.0.0"
-  }
+    "moment": "^2.15.1"
+  },
+  "peerDependencies": {
+    "xadmin-core": "1"
+  },
+  "scripts": {
+    "compile": "babel src --out-dir lib",
+    "watch": "babel src --out-dir lib -w"
+  },
+  "files": [
+    "lib"
+  ]
 }

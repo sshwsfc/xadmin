@@ -1,7 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import { Well, DropdownButton, ButtonToolbar, MenuItem } from 'react-bootstrap'
-import { Block, app } from '../../index'
+import { Block, app } from 'xadmin-core'
 import { ModelWrap } from '../base'
 
 

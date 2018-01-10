@@ -1,4 +1,3 @@
-
 import localforage from 'localforage'
 import mappers from './mappers'
 import SignInForm from './components/SignIn'

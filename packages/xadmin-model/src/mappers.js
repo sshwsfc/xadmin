@@ -1,7 +1,7 @@
 import React from 'react'
-import { SubmissionError } from 'redux-form'
 import _ from 'lodash'
-import { app, config } from '../index'
+import { app, config } from 'xadmin-core'
+import { SubmissionError } from 'xadmin-form'
 
 const getFieldProp = (model, field) => {
   return field.split('.').reduce((obj, f) => {
@@ -13,7 +13,7 @@ export default {
   'model.item': {
     data: ({ modelState, model, state }, { id, item }) => {
       return {
-        loading: state.loading[`${model.key}.get`],
+        loading: state.loading && state.loading[`${model.key}.get`],
         item: item || (id ? modelState.items[id] : undefined)
       }
     },
@@ -57,7 +57,7 @@ export default {
       return {
         ids,
         fields: modelState.filter.fields,
-        loading: state.loading[`${model.key}.items`]
+        loading: state.loading && state.loading[`${model.key}.items`]
       }
     },
     compute: ({ modelState, model }, props, prev) => {

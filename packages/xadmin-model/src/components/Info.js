@@ -1,12 +1,12 @@
 import React, { Component, PropTypes } from 'react'
 import _ from 'lodash'
-import { Page, Icon } from '../../components'
+import Icon from 'react-fontawesome'
+import { StoreWrap, app } from 'xadmin-core'
+import { convert as schemaConvert } from 'xadmin-form/lib/schema'
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Panel, Well, ButtonFormGroup, HelpBlock, FormGroup, Col, FormControl, ControlLabel } from 'react-bootstrap'
 
-import { StoreWrap, app } from '../index'
 import { ModelWrap } from '../base'
 import { Item } from './items'
-import { convert as schemaConvert } from '../../form/schema'
 
 const FieldGroup = ({ label, field, children }) => {
   const groupProps = {}

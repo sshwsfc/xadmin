@@ -1,7 +1,5 @@
-import { fork, put, call, cancelled } from 'redux-saga/effects'
-import { takeEvery, takeLatest, delay } from 'redux-saga'
-import { app } from '../index'
-import api from '../api'
+import { all, fork, put, call, cancelled, takeEvery } from 'redux-saga/effects'
+import app, { api } from 'xadmin-core'
 
 function *handle_get_list({ model, filter, wheres }) {
   yield put({ type: 'START_LOADING', model, key: `${model.key}.items` })
@@ -82,10 +80,10 @@ function *handle_save_item({ model, item, promise, message }) {
 }
 
 export default function *() {
-  yield [
+  yield all([
     takeEvery(action => action.model && action.type == 'GET_ITEMS' && action.items == undefined, handle_get_list),
     takeEvery(action => action.model && action.type == 'GET_ITEM' && action.success !== true, handle_get_item),
     takeEvery(action => action.model && action.type == 'SAVE_ITEM' && action.success !== true, handle_save_item),
     takeEvery(action => action.model && action.type == 'DELETE_ITEM', handle_delete_item)
-  ]
+  ])
 }

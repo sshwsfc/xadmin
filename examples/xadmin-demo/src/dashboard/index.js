@@ -27,7 +27,9 @@ app
 .use(live)
 
 if (process.env.NODE_ENV !== 'production') {
+  const form = require('xadmin-form').default
   const editor = require('./editor').default
+  app.use(form)
   app.use(editor)
 }
 

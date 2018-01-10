@@ -1,8 +1,6 @@
 import React, { createClass, PropTypes } from 'react'
-import { Icon } from '../../components'
-import { Link } from 'react-router'
 import { Pagination } from 'react-bootstrap'
-import { Block, app } from '../../index'
+import app from 'xadmin-core'
 import { ModelWrap } from '../base'
 
 const ModelPagination = createClass({

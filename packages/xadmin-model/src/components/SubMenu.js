@@ -1,9 +1,8 @@
 import React from 'react'
 import _ from 'lodash'
-import { Link } from 'react-router'
-import { Icon } from '../../components'
+import Icon from 'react-fontawesome'
+import { Block, app } from 'xadmin-core'
 import { ButtonToolbar, Modal, FormGroup, ControlLabel, FormControl, DropdownButton, OverlayTrigger, Popover, Clearfix, ButtonGroup, Button, Dropdown, MenuItem, Panel, ListGroup, ListGroupItem } from 'react-bootstrap'
-import { Block, app } from '../../index'
 import { ModelWrap } from '../base'
 
 const CountButton = ModelWrap('model.list.btn.count')(React.createClass({

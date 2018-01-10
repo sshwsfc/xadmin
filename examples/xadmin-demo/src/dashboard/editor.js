@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, Popover } from 'antd'
 import { app, StoreWrap, Block } from 'xadmin-core'
 import { DashboardWrap } from 'xadmin-dashboard'
-import { Editor } from 'xadmin-dashboard/src/editor'
+import { Editor } from 'xadmin-dashboard/lib/editor'
 
 const LoadBtn = DashboardWrap('load.button')(({ loadData }) => <Button onClick={loadData} icon="sync">加载布局</Button>)
 const DumpBtn = DashboardWrap('dump.button')(({ href }) => <a download="dashboard.json" href={href} target="_blank">点击下载布局文件</a>)

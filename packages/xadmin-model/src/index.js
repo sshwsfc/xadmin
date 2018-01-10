@@ -1,10 +1,10 @@
 import React from 'react'
 import { combineReducers } from 'redux'
-import Icon from '../components/Icon'
-import ModelPages from './components/Pages'
+import Icon from 'react-fontawesome'
 import { Nav, NavItem } from 'react-bootstrap'
 
-import { Model } from './base'
+import ModelPages from './components/Pages'
+import { Model, ModelWrap } from './base'
 import modelReducer from './reducer'
 import effects from './effects'
 import mappers from './mappers'
@@ -78,7 +78,7 @@ const app = {
       })
     }
     return {
-      '/app/': routes
+      '@': routes
     }
   },
   reducers: {
@@ -89,6 +89,5 @@ const app = {
   field_render
 }
 
-export default {
-  app
-}
+export { Model, ModelWrap }
+export default app
