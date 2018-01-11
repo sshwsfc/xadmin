@@ -1,15 +1,28 @@
+import React from 'react'
 import localforage from 'localforage'
 import mappers from './mappers'
+import { App as BaseApp } from 'xadmin-layout'
 import SignInForm from './components/SignIn'
 import SignUpForm from './components/SignUp'
 import ForgetPasswordForm from './components/ForgetPassword'
 import ResetPasswordForm from './components/ResetPasswordForm'
 import ChangePasswordForm from './components/ChangePasswordForm'
+import UserMenu from './components/UserMenu'
 import reducers from './reducer'
 import models from './models'
 import effects from './effects'
+import {
+  IsAuthenticated,
+  ShowAuthenticated,
+  IsSuperUser,
+  HasPermission,
+  perm
+} from './wrap'
 
 import './auth.css'
+
+@IsAuthenticated
+class App extends BaseApp { }
 
 export default {
   name: 'xadmin.auth',
@@ -20,6 +33,12 @@ export default {
       can_signup: true,
       can_signin: true
     }
+  },
+  blocks: {
+    'top.right': () => <UserMenu />
+  },
+  components: {
+    App
   },
   context: (app) => (context, cb) => {
     const { store } = context
@@ -87,4 +106,12 @@ export default {
   effects,
   mappers,
   reducers
+}
+
+export {
+  IsAuthenticated,
+  ShowAuthenticated,
+  IsSuperUser,
+  HasPermission,
+  perm
 }

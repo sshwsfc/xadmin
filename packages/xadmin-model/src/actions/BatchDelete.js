@@ -1,9 +1,10 @@
 import React from 'react'
 import { Modal, ButtonGroup, OverlayTrigger, Popover, Panel, Button, Label, Well, MenuItem, ListGroup, ListGroupItem } from 'react-bootstrap'
-import { app } from '../index'
-import { ModelWrap, Model } from '../model/base'
-import { BaseRow, List } from '../model/components/Items'
-import { Icon } from '../components'
+import { app } from 'xadmin-core'
+import { ModelWrap, Model } from '../index'
+import { BaseRow, List } from '../components/Items'
+
+import Icon from 'react-fontawesome'
 
 const BatchDeleteBtn = ModelWrap('actons.batch_delete')(ModelWrap('model.list.actions')(React.createClass({
 

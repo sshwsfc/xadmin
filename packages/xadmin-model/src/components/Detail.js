@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import Icon from 'react-fontawesome'
+import { Page } from 'xadmin-layout'
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Panel, Well, Button } from 'react-bootstrap'
 import { ModelWrap } from '../base'
 
@@ -39,8 +40,8 @@ const ModelDetail = React.createClass({
     return (
       <Page title={title}>
       {loading ? 
-        (<Panel><div className="text-center"><Icon name="spinner fa-spin fa-4x"/> Loading..</div></Panel>) : 
-        (<Panel>{}</Panel>)
+        (<Panel><Panel.Body><div className="text-center"><Icon name="spinner fa-spin fa-4x"/> Loading..</div></Panel.Body></Panel>) : 
+        (<Panel><Panel.Body>{}</Panel.Body></Panel>)
       }
       </Page>
     )

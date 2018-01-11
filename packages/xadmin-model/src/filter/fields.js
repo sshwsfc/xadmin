@@ -1,8 +1,8 @@
-import widgets from './components'
+import { TextFilter, EnumFilter, NumberFilter, DateFilter } from './components'
 
 export default {
   filter_text: {
-    component: widgets.TextFilter,
+    component: TextFilter,
     format: (value, name) => {
       if(value) {
         if(typeof value == 'string') {
@@ -28,15 +28,15 @@ export default {
     }
   },
   filter_enum: {
-    component: widgets.EnumFilter
+    component: EnumFilter
   },
   filter_number: {
-    component: widgets.NumberFilter
+    component: NumberFilter
   },
   filter_date: {
-    component: widgets.DateFilter
+    component: DateFilter
   },
   filter_datetime: {
-    component: widgets.DateFilter
+    component: DateFilter
   }
 }

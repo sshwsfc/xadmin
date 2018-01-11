@@ -258,13 +258,11 @@ const User = (app) => {
   }
 }
 
-export default (app) => {
-  return {
-    auth_user: User(app),
-    auth_permission: Permission(app),
-    auth_role: Role(app)
-  }
-}
+export default (app) => ({
+  auth_user: User(app),
+  auth_permission: Permission(app),
+  auth_role: Role(app)
+})
 
 export {
   UserSignIn,

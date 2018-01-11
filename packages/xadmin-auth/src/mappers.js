@@ -1,7 +1,7 @@
 import _ from 'lodash'
-import { SubmissionError } from 'redux-form'
+import { SubmissionError } from 'xadmin-form'
 import { UserSignIn, UserChangePassword } from './models'
-import { app } from 'xadmin-core'
+import app from 'xadmin-core'
 
 export default {
   'auth.user': {

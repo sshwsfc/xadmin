@@ -264,7 +264,7 @@ const Grid = ModelWrap('model.items')(React.createClass({
     const { fields, items, loading } = this.props
     const { _t } = app.context
     if(loading) {
-      return <Panel><div className="text-center"><Icon name="spinner fa-spin fa-4x"/></div></Panel>
+      return <Panel><Panel.Body><div className="text-center"><Icon name="spinner fa-spin fa-4x"/></div></Panel.Body></Panel>
     } else {
       if(items.length > 0) {
         return (
@@ -305,20 +305,23 @@ class ListRowComponent extends BaseRow {
     const { item, fields, selected } = this.props
     const actions = this.actions()
     return (
-      <Panel footer={<ButtonGroup>{actions}</ButtonGroup>} bsStyle={selected?'danger':'default'}>
-        <input type="checkbox" ref="selector" checked={selected} onChange={this.handleChange.bind(this)} />
-        <Media>
-          <Media.Body>
-            <Media.Heading><Item item={item} field={fields[0]} selected={selected} /></Media.Heading>
-            {React.Children.toArray(fields.slice(1).map(field=>{
-              return (
-                <Item item={item} field={field} selected={selected} wrap={
-                  ({ children, ...props })=><p key={`item-${item.id}-${field}`} {...props}>{children}</p>
-                } />
-              )
-            }))}
-          </Media.Body>
-        </Media>
+      <Panel bsStyle={selected?'danger':'default'}>
+        <Panel.Body>
+          <input type="checkbox" ref="selector" checked={selected} onChange={this.handleChange.bind(this)} />
+          <Media>
+            <Media.Body>
+              <Media.Heading><Item item={item} field={fields[0]} selected={selected} /></Media.Heading>
+              {React.Children.toArray(fields.slice(1).map(field=>{
+                return (
+                  <Item item={item} field={field} selected={selected} wrap={
+                    ({ children, ...props })=><p key={`item-${item.id}-${field}`} {...props}>{children}</p>
+                  } />
+                )
+              }))}
+            </Media.Body>
+          </Media>
+        </Panel.Body>
+        <Panel.Footer><ButtonGroup>{actions}</ButtonGroup></Panel.Footer>
       </Panel>
       )
   }
@@ -337,7 +340,7 @@ const List = ModelWrap('model.items')(React.createClass({
     const { _t } = app.context
 
     if(loading) {
-      return <Panel><div className="text-center"><Icon name="spinner fa-spin fa-4x"/></div></Panel>
+      return <Panel><Panel.Body><div className="text-center"><Icon name="spinner fa-spin fa-4x"/></div></Panel.Body></Panel>
     } else {
       if(items.length > 0) {
         return (

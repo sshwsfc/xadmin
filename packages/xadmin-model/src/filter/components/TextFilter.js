@@ -1,7 +1,7 @@
 import React from 'react'
 import { InputGroup, FormControl, Button } from 'react-bootstrap'
 import { FieldGroup } from './base'
-import { Icon } from '../../components'
+import Icon from 'react-fontawesome'
 
 export default React.createClass({
 

@@ -1,13 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router'
 import { Panel, Well, Button } from 'react-bootstrap'
-
-import { Page, Icon } from '../../components'
-import { Block, StoreWrap } from '../../index'
-import { Model, ModelWrap } from '../../model/base'
-import Form from '../../model/components/Form'
+import Icon from 'react-fontawesome'
+import { StoreWrap, app } from 'xadmin-core'
+import { Model, ModelWrap } from 'xadmin-model'
+import Form from 'xadmin-model/lib/components/Form'
+import { Page } from 'xadmin-layout'
 import { UserChangePassword } from '../models'
-import { app } from '../../index'
 
 export default StoreWrap('auth.change_password')(({ onChange }) => {
   const ChangePasswordModel = Model(UserChangePassword(app))
@@ -21,7 +20,7 @@ export default StoreWrap('auth.change_password')(({ onChange }) => {
             const icon = submitting ? 'spinner fa-spin' : 'floppy-o'
             return (
               <form className="form-horizontal" onSubmit={handleSubmit}>
-                <Panel>{children}</Panel>
+                <Panel><Panel.Body>{children}</Panel.Body></Panel>
                 <Well bsSize="small">
                   <Button type="submit" disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary">
                     <Icon name={icon}/> {_t('Change Password')}</Button>

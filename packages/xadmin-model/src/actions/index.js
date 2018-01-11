@@ -1,10 +1,7 @@
 import React from 'react'
 import { SubmissionError } from 'redux-form'
-import { fork, put, call, cancelled } from 'redux-saga/effects'
-import { takeEvery, takeLatest, delay } from 'redux-saga'
-
-import api from '../api'
-import { app } from '../index'
+import { all, fork, put, call, cancelled, takeEvery } from 'redux-saga/effects'
+import app, { api } from 'xadmin-core'
 
 import BatchDelete from './BatchDelete'
 import BatchChange from './BatchChange'
@@ -121,9 +118,9 @@ export default {
     }
   },
   effects: function *() {
-    yield [
+    yield all([
       takeEvery(action => action.model && action.type == 'DELETE_ITEMS' && action.success !== true, handle_delete_items),
       takeEvery(action => action.model && action.type == 'SAVE_ITEMS' && action.success !== true, handle_change_items)
-    ]
+    ])
   }
 }

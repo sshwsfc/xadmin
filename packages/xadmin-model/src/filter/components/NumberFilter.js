@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { Field } from 'redux-form'
 import { FieldGroup } from './base'
 import { FormControl, InputGroup, Button } from 'react-bootstrap'
-import { Icon } from '../../components'
+import Icon from 'react-fontawesome'
 
 export default React.createClass({
 

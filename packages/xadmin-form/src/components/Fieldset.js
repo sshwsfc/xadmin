@@ -5,8 +5,13 @@ import { objectBuilder } from '../builder'
 
 export default ({ input, label, meta: { touched, error }, field, group, option }) => {
   return (
-    <Panel collapsible defaultExpanded header={<h3>{label}</h3>}>
-      {objectBuilder(field.fields, field.render, { ...option, group })}
+    <Panel>
+      <Panel.Heading>
+        <Panel.Title toggle componentClass="h3">{label}</Panel.Title>
+      </Panel.Heading>
+			<Panel.Body collapsible defaultExpanded>
+        {objectBuilder(field.fields, field.render, { ...option, group })}
+      </Panel.Body>
     </Panel>
   )
 }

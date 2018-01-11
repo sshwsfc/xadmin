@@ -1,20 +1,20 @@
 {
   "name": "xadmin-auth",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Xadmin Auth",
-  "main": "index.js",
+  "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
   "license": "MIT",
   "dependencies": {
-    "lodash": "^4.17.4",
     "localforage": "^1.4.3",
-    "redux-saga": "^0.16.0",
+    "lodash": "^4.17.4",
     "redux-auth-wrapper": "^0.9.0"
   },
   "peerDependencies": {
-    "react": "^16.2.0",
+    "react": "15",
     "react-bootstrap": "^0.31.0",
     "redux-form": "^6.1.1",
+    "redux-saga": "^0.16.0",
     "xadmin-core": "1",
     "xadmin-form": "1",
     "xadmin-i18n": "1",

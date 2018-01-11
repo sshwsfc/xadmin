@@ -1,5 +1,4 @@
-import { fork, put, call, cancelled } from 'redux-saga/effects'
-import { takeEvery, takeLatest, delay } from 'redux-saga'
+import { all, fork, put, call, cancelled, takeEvery } from 'redux-saga/effects'
 import { app, api } from 'xadmin-core'
 
 function *handle_get_userinfo({ type }) {
@@ -46,10 +45,10 @@ function *handle_verify_email({ payload }) {
 }
 
 export default function *() {
-  yield [
+  yield all([
     takeEvery(action => action.type == '@@xadmin/GET_USER_INFO' && action.success != true, handle_get_userinfo),
     takeEvery(action => action.type == '@@xadmin/AUTH_VERIFY_EMAIL', handle_verify_email),
     takeEvery(action => action.type == '@@xadmin/AUTH_SIGN_IN', handle_user_signin),
     takeEvery(action => action.type == '@@xadmin/AUTH_SIGN_OUT', handle_user_signout)
-  ]
+  ])
 }

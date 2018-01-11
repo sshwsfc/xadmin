@@ -4,9 +4,9 @@ import { Button, Nav, Row, Col } from 'react-bootstrap'
 
 import Icon from 'react-fontawesome'
 import { Block, app } from 'xadmin-core'
+import { Page } from 'xadmin-layout'
 import { ModelWrap } from '../base'
 
-import Page from './Page'
 import Pagination from './Pagination'
 import { Grid } from './Items'
 import Form from './Form'
@@ -51,7 +51,9 @@ const ModelList = React.createClass({
     const GridComponents = [
       <Pagination bsSize="small" />,
       <SubMenu />,
-      <ItemsComponent query={query} />
+      <ItemsComponent query={query} />,
+      <ActionBar />,
+      <Pagination bsSize="" />
     ]
 
     return (
@@ -64,8 +66,6 @@ const ModelList = React.createClass({
             { sidePanel ? <Col sm={3}>{ sidePanel }</Col> : null  }
           </Row>
         ) : GridComponents }
-        <ActionBar />
-        <Pagination bsSize="" />
       </Page>
       )
   }

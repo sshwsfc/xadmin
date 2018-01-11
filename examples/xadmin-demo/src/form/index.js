@@ -2,6 +2,7 @@ import React from 'react'
 import { app, StoreWrap } from 'xadmin-core'
 
 import i18n from 'xadmin-i18n'
+import layout, { Page } from 'xadmin-layout'
 import form, { SchemaForm } from 'xadmin-form'
 
 @StoreWrap('hello')
@@ -27,7 +28,7 @@ class Hello extends React.Component {
     }
 
     return (
-      <div>
+      <Page title="Form demo">
         {count} 
         <SchemaForm formKey="DemoForm"
           schema={{
@@ -81,13 +82,14 @@ class Hello extends React.Component {
           }}
           onSubmit={this.onSubmit.bind(this)}
           component={FormLayout}/>
-      </div>
+      </Page>
     )
   }
 }
 
 export default app
 .use(i18n)
+.use(layout)
 .use(form)
 .use({
   config: {
@@ -122,11 +124,8 @@ export default app
       return state
     }
   },
-  routers: {
-    '@': {
-      path: '/',
-      component: Hello 
-    }
+  components: {
+    Dashboard: Hello
   }
 
 })

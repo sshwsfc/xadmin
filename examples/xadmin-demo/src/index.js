@@ -1,4 +1,4 @@
-import demo from './model'
+import demo from './plugins'
 
 demo
 .use({

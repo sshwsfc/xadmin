@@ -1,11 +1,13 @@
 import React from 'react'
 import _ from 'lodash'
 import { FormGroup, ControlLabel, FormControl, Col, HelpBlock, ButtonGroup, Modal, OverlayTrigger, Popover, Panel, Button, Label, Well, MenuItem, ListGroup, ListGroupItem } from 'react-bootstrap'
-import { app } from '../index'
-import { SchemaForm, FormWrap } from '../form/base'
-import { ModelWrap, Model } from '../model/base'
-import { BaseRow, List } from '../model/components/Items'
-import { Icon } from '../components'
+import { SchemaForm, FormWrap } from 'xadmin-form'
+
+import { app } from 'xadmin-core'
+import { ModelWrap, Model } from '../index'
+import { BaseRow, List } from '../components/Items'
+
+import Icon from 'react-fontawesome'
 
 const FieldGroup = ({ label, meta, input, field, children }) => {
   const groupProps = {}

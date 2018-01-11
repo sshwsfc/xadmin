@@ -32,6 +32,7 @@ const app = {
   schema_converter: converters
 }
 
+export default app
 export {
   BaseForm,
   Form,
@@ -42,4 +43,3 @@ export {
   schemaConvert,
   SubmissionError
 }
-export default app

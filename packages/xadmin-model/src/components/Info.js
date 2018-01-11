@@ -89,9 +89,9 @@ const ModelInfo = React.createClass({
     const { title, model, loading, componentClass, ...formProps } = this.props
 
     return loading ? 
-      (<Panel><div className="text-center"><Icon name="spinner fa-spin fa-4x"/></div></Panel>) : 
+      (<Panel><Panel.Body><div className="text-center"><Icon name="spinner fa-spin fa-4x"/></div></Panel.Body></Panel>) : 
       (<form className="form-horizontal">
-        <Panel>{this.rednerFields()}</Panel>
+        <Panel><Panel.Body>{this.rednerFields()}</Panel.Body></Panel>
       </form>)
   }
 

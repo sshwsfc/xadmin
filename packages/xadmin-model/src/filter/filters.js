@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { schemaConvert } from '../form'
+import { schemaConvert } from 'xadmin-form'
 
 const stripNullType = (type) => {
   if(Array.isArray(type) && type.length == 2) {

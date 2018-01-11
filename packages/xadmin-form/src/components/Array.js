@@ -18,8 +18,11 @@ const defaultItemsRender = ({ fields, meta: { touched, error }, field, fieldsBui
           const itemLable = (<h6>{label + ' ' + (index + 1)}{removeBtn}</h6>)
           const fieldsComponent = fieldsBuilder(name, index, removeBtn)
           return fieldsComponent.length > 1 ? (
-            <Panel header={itemLable} eventKey={index} key={`items${index}`}>
-            {fieldsComponent}
+            <Panel eventKey={index} key={`items${index}`}>
+              <Panel.Heading>
+                <Panel.Title toggle>{itemLable}</Panel.Title>
+              </Panel.Heading>
+              <Panel.Body collapsible>{fieldsComponent}</Panel.Body>
             </Panel>
           ) : (
             <div>{fieldsComponent}</div>

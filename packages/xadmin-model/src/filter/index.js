@@ -1,14 +1,15 @@
 import React from 'react'
 import _ from 'lodash'
 import { Field, reduxForm, reducer as formReducer } from 'redux-form'
+import Icon from 'react-fontawesome'
+import app from 'xadmin-core'
 import { Nav, ButtonGroup, Panel, Modal, Navbar, NavItem, NavDropdown, MenuItem, OverlayTrigger, Popover, Badge, Button, Col, Row, FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap'
-import { ModelWrap } from '../model/base'
-import { BaseForm } from '../form'
+import { BaseForm } from 'xadmin-form'
+import { InlineGroup, SimpleGroup } from 'xadmin-form/lib/components/base'
+
+import { ModelWrap } from '../index'
 import filter_converter from './filters'
 import filter_fields from './fields'
-import { app } from '../index'
-import { Icon } from '../components'
-import { InlineGroup, SimpleGroup } from '../form/components/base'
 
 const convert = (schema, options) => {
   const opts = options || {}
@@ -126,14 +127,17 @@ const FilterMenu = ModelWrap('model.list.filter')(React.createClass({
       const FormLayout = (props) => {
         const { children, invalid, pristine, handleSubmit, submitting } = props
         return (
-          <Panel header={_t('Filter Form')}>
-            <form onSubmit={handleSubmit}>
-              {children}
-              <ButtonGroup justified>
-                <Button style={{ width: '30%' }} disabled={submitting} onClick={resetFilter} bsStyle="default">{_t('Clear')}</Button>
-                <Button style={{ width: '70%' }} disabled={invalid || pristine || submitting} onClick={handleSubmit} bsStyle="primary">{_t('Search')}</Button>
-              </ButtonGroup>
-            </form>
+          <Panel>
+            <Panel.Heading>{_t('Filter Form')}</Panel.Heading>
+            <Panel.Body>
+              <form onSubmit={handleSubmit}>
+                {children}
+                <ButtonGroup justified>
+                  <Button style={{ width: '30%' }} disabled={submitting} onClick={resetFilter} bsStyle="default">{_t('Clear')}</Button>
+                  <Button style={{ width: '70%' }} disabled={invalid || pristine || submitting} onClick={handleSubmit} bsStyle="primary">{_t('Search')}</Button>
+                </ButtonGroup>
+              </form>
+            </Panel.Body>
           </Panel>
         )
       }
@@ -252,7 +256,7 @@ const FilterModal = ModelWrap('model.list.filter')(React.createClass({
 const FilterSubMenu = ModelWrap('model.list.filter')(React.createClass({
   render() {
     const { filters } = this.props
-    return filters && filters.length ? (<Panel><FilterInline {...this.props}/></Panel>) : null
+    return filters && filters.length ? (<Panel><Panel.Body><FilterInline {...this.props}/></Panel.Body></Panel>) : null
   }
 }))
 
@@ -299,64 +303,65 @@ const block_func = (Filter, name) => ({ model }) => (
 )
 
 export default {
+  name: 'xadmin.filter',
+  blocks: {
+    'model.list.nav': () => [ <FilterModal name="nav" />, <FilterNavForm name="navform" /> ],
+    'model.list.modal': block_func(FilterModal, 'modal'),
+    'model.list.popover': block_func(FilterPopover, 'popover'),
+    'model.list.submenu': block_func(FilterSubMenu, 'submenu'),
+    'model.list.sidemenu': block_func(FilterMenu, 'sidemenu')
+  },
+  mappers: {
+    'model.list.filter': {
+      data: ({ model, modelState }, { name }) => {
+        return {
+          data: modelState.wheres.filters
+        }
+      },
+      compute: ({ model, modelState }, { data, name }) => {
+        const filters = (model.filters ? (model.filters[name] || []) : []).map(filter => {
+          const key = typeof filter == 'string' ? filter : filter.key
+          return {
+            key,
+            schema: model.properties[key],
+            field: typeof filter == 'string' ? { } : filter
+          }
+        })
+        return {
+          filters, data: _.clone(data),
+          formKey: `filter.${model.name}`
+        }
+      },
+      method: {
+        resetFilter: ({ dispatch, model, modelState }) => (e) => {
+          dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres: _.omit(modelState.wheres, 'filters') })
+        },
+        changeFilter: ({ dispatch, model, modelState }, { name }) => (values) => {
+          const where = Object.keys(values).reduce((prev, key) => {
+            if(values[key]) {
+              prev[key] = values[key]
+            } else {
+              prev = _.omit(prev, key)
+            }
+            return prev
+          }, { ...modelState.wheres.filters })
+          const wheres = (Object.keys(where).length > 0 ? 
+            { ...modelState.wheres, filters: where } : _.omit(modelState.wheres, 'filters'))
+          dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres })
+        }
+      }
+    }
+  },
+  form_fields: filter_fields,
+  filter_converter
+}
+const FilterNav = FilterModal
+export {
   FilterForm,
   FilterSubMenu,
   FilterPopover,
   FilterNavForm,
   FilterMenu,
   FilterModal,
-  FilterNav: FilterModal,
-  app: {
-    name: 'xadmin.filter',
-    blocks: {
-      'model.list.nav': () => [ <FilterModal name="nav" />, <FilterNavForm name="navform" /> ],
-      'model.list.modal': block_func(FilterModal, 'modal'),
-      'model.list.popover': block_func(FilterPopover, 'popover'),
-      'model.list.submenu': block_func(FilterSubMenu, 'submenu'),
-      'model.list.sidemenu': block_func(FilterMenu, 'sidemenu')
-    },
-    mappers: {
-      'model.list.filter': {
-        data: ({ model, modelState }, { name }) => {
-          return {
-            data: modelState.wheres.filters
-          }
-        },
-        compute: ({ model, modelState }, { data, name }) => {
-          const filters = (model.filters ? (model.filters[name] || []) : []).map(filter => {
-            const key = typeof filter == 'string' ? filter : filter.key
-            return {
-              key,
-              schema: model.properties[key],
-              field: typeof filter == 'string' ? { } : filter
-            }
-          })
-          return {
-            filters, data: _.clone(data),
-            formKey: `filter.${model.name}`
-          }
-        },
-        method: {
-          resetFilter: ({ dispatch, model, modelState }) => (e) => {
-            dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres: _.omit(modelState.wheres, 'filters') })
-          },
-          changeFilter: ({ dispatch, model, modelState }, { name }) => (values) => {
-            const where = Object.keys(values).reduce((prev, key) => {
-              if(values[key]) {
-                prev[key] = values[key]
-              } else {
-                prev = _.omit(prev, key)
-              }
-              return prev
-            }, { ...modelState.wheres.filters })
-            const wheres = (Object.keys(where).length > 0 ? 
-              { ...modelState.wheres, filters: where } : _.omit(modelState.wheres, 'filters'))
-            dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres })
-          }
-        }
-      }
-    },
-    form_fields: filter_fields,
-    filter_converter
-  }
+  FilterNav
 }

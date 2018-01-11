@@ -7,16 +7,21 @@
   "license": "MIT",
   "dependencies": {
     "antd": "^2.13.11",
+    "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.4",
+    "nervjs": "^1.2.2",
     "react": "15",
     "react-bootstrap": "^0.32.0",
+    "react-date-range": "^0.9.4",
     "react-dom": "15",
     "redux-saga": "^0.16.0",
+    "xadmin-auth": "^1.0.1",
     "xadmin-core": "^1.0.1",
     "xadmin-dashboard": "^1.1.2",
     "xadmin-form": "^1.0.0",
     "xadmin-i18n": "^1.0.0",
-    "xadmin-model": "^1.0.0"
+    "xadmin-model": "^1.0.2",
+    "xadmin-plugins": "^1.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

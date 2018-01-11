@@ -78,7 +78,7 @@ const app = {
       })
     }
     return {
-      '@': routes
+      '/app/': routes
     }
   },
   reducers: {

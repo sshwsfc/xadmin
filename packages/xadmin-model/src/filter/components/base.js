@@ -35,6 +35,6 @@ const FieldGroup = ({ id, label, help, meta, control, children }) => {
   }
 }
 
-export default {
+export {
   FieldGroup
 }

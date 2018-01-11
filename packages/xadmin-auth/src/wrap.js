@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import _ from 'lodash'
 import { UserAuthWrapper } from 'redux-auth-wrapper'
-import { app } from 'xadmin-core'
+import app from 'xadmin-core'
 
 const IsAuthenticated = UserAuthWrapper({
   authSelector: state => state.user,
@@ -63,7 +63,7 @@ const perm = (permission, component, failureComponent=null) => {
   })(store.getState().user) ? component: failureComponent
 }
 
-export default {
+export {
   IsAuthenticated,
   ShowAuthenticated,
   IsSuperUser,

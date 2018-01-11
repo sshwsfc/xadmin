@@ -1,7 +1,7 @@
 
 /* panel single **/
 .panel-single {
-  margin: 50px;
+  margin: 50px auto;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;

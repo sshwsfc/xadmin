@@ -13,7 +13,7 @@ const DefaultLayout = (props) => {
   const { _t } = app.context
   return (
     <form className="form-horizontal" onSubmit={handleSubmit}>
-      <Panel>{children}</Panel>
+      <Panel><Panel.Body>{children}</Panel.Body></Panel>
       <Well bsSize="small" style={{ textAlign: 'right' }}>
       {invalid ? (
         <OverlayTrigger placement="top" overlay={<Tooltip>{_t('Please be sure to complete all field.')}</Tooltip>}>

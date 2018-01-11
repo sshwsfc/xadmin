@@ -1,8 +1,8 @@
 import React from 'react'
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
-import { StoreWrap } from '../../index'
-import Icon from '../../components/Icon'
-import { app, Block } from '../../index'
+
+import Icon from 'react-fontawesome'
+import { StoreWrap, app, Block } from 'xadmin-core'
 
 const UserMenu = StoreWrap('auth.user')(({ user, onLogout, onChangePassword }) => {
   const { _t } = app.context
