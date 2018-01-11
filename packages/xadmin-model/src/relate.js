@@ -2,8 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
 import { FieldArray } from 'redux-form'
-import { fork, put, call, cancelled } from 'redux-saga/effects'
-import { takeEvery, takeLatest, delay } from 'redux-saga'
+import { all, fork, put, call, cancelled, takeEvery } from 'redux-saga/effects'
 import { Checkbox, FormControl } from 'react-bootstrap'
 
 import app, { api, Block, StoreWrap } from 'xadmin-core'
@@ -373,10 +372,10 @@ function *handle_get_relate(action) {
 }
 
 function *effects() {
-  yield [
+  yield all([
     takeEvery(action => action.type == 'GET_RELATED_ITEMS' && action.items == undefined, handle_get_relates),
     takeEvery(action => action.type == 'GET_RELATED_ITEM' && action.item == undefined, handle_get_relate)
-  ]
+  ])
 }
 
 class RelateObjectCls extends React.Component {

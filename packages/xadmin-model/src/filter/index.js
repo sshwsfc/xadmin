@@ -184,10 +184,6 @@ class FilterModal extends React.Component {
 
   state = { show: false }
 
-  showModal() {
-    this.setState({ show: true })
-  }
-
   onClose() {
     this.setState({ show: false })
   }
@@ -195,6 +191,8 @@ class FilterModal extends React.Component {
   renderFilterForm() {
     const { _t } = app.context
     const { filters, formKey, data, changeFilter, resetFilter } = this.props
+    const onClose = this.onClose.bind(this)
+    
     const FormLayout = (props) => {
       const { children, invalid, pristine, handleSubmit, submitting } = props
       return (
@@ -205,11 +203,11 @@ class FilterModal extends React.Component {
           <Modal.Footer>
             <Button disabled={submitting} onClick={()=>{
               resetFilter()
-              this.onClose()
+              onClose()
             }} bsStyle="default">{_t('Clear')}</Button>
             <Button disabled={invalid || pristine || submitting} onClick={()=>{
               handleSubmit()
-              this.onClose()
+              onClose()
             }} bsStyle="primary">{_t('Search')}</Button>
           </Modal.Footer>
         </form>
@@ -228,7 +226,7 @@ class FilterModal extends React.Component {
   renderModal() {
     const { _t } = app.context
     return (
-      <Modal show={this.state.show} onHide={this.onClose}>
+      <Modal show={this.state.show} onHide={this.onClose.bind(this)}>
         <Modal.Header closeButton>
           <Modal.Title>{_t('Filter Form')}</Modal.Title>
         </Modal.Header>
@@ -242,7 +240,7 @@ class FilterModal extends React.Component {
     const { filters, data } = this.props
     if(filters && filters.length) {
       return (
-          <NavItem onClick={this.showModal.bind(this)}>
+          <NavItem onClick={()=>this.setState({ show: true })}>
             <Icon name="filter" /> {_t('Filter')} {(data && Object.keys(data).length) ? (<Badge>{Object.keys(data).length}</Badge>) : null}
             {this.state.show ? this.renderModal() : null}
           </NavItem>

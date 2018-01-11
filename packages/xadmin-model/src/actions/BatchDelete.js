@@ -12,7 +12,7 @@ class BatchDeleteBtn extends React.Component {
 
   state = { show: false }
 
-  onClose() {
+  onClose = () => {
     this.setState({ show: false })
   }
 

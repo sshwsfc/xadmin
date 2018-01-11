@@ -112,7 +112,7 @@ class ColsDropdown extends React.Component {
 
 }
 
-ColsDropdown.WrappedComponent.PropTypes = {
+ColsDropdown.WrappedComponent.propTypes = {
   selected: PropTypes.array.isRequired,
   fields: PropTypes.object.isRequired,
   changeFieldDisplay: PropTypes.func.isRequired
