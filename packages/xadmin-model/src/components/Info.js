@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import _ from 'lodash'
 import Icon from 'react-fontawesome'
 import { StoreWrap, app } from 'xadmin-core'
@@ -44,16 +45,14 @@ const FieldGroup = ({ label, field, children }) => {
     )
 }
 
+class ModelInfo extends React.Component {
 
-const ModelInfo = React.createClass({
-
-  propTypes: {
-    id: PropTypes.string,
-    data: PropTypes.object,
-    loading: PropTypes.bool,
-    model: PropTypes.object.isRequired,
-    getItem: PropTypes.func.isRequired
-  },
+  constructor(props, context) {
+    super(props, context)
+    this.state = {
+      record: _.omitBy({ ...this.props.data }, _.isNil)
+    }
+  }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.data !== nextProps.data) {
@@ -62,15 +61,9 @@ const ModelInfo = React.createClass({
     if (this.props.id !== nextProps.id) {
       this.props.getItem(nextProps.id)
     }
-  },
+  }
 
-  getInitialState() {
-    return {
-      record: _.omitBy({ ...this.props.data }, _.isNil)
-    }
-  },
-
-  rednerFields() {
+  renderFields() {
     const { title, model, ...formProps } = this.props
     const record = this.state.record
 
@@ -83,7 +76,7 @@ const ModelInfo = React.createClass({
             }/>
         </FieldGroup>)
     })
-  },
+  }
 
   render() {
     const { title, model, loading, componentClass, ...formProps } = this.props
@@ -91,10 +84,17 @@ const ModelInfo = React.createClass({
     return loading ? 
       (<Panel><Panel.Body><div className="text-center"><Icon name="spinner fa-spin fa-4x"/></div></Panel.Body></Panel>) : 
       (<form className="form-horizontal">
-        <Panel><Panel.Body>{this.rednerFields()}</Panel.Body></Panel>
+        <Panel><Panel.Body>{this.renderFields()}</Panel.Body></Panel>
       </form>)
   }
 
-})
+}
+ModelInfo.propTypes = {
+  id: PropTypes.string,
+  data: PropTypes.object,
+  loading: PropTypes.bool,
+  model: PropTypes.object.isRequired,
+  getItem: PropTypes.func.isRequired
+}
 
 export default ModelWrap('model.item')(ModelInfo)

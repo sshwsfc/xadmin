@@ -1,10 +1,9 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Transition } from 'react-transition-group' 
 
 class Animation extends React.Component {
-  constructor(props) {
-    super(props)
-  }
+  
   renderStyle(id, enterAnimation, enterDuration, exitAnimation, exitDuration) {
     return (
       `
@@ -19,6 +18,7 @@ class Animation extends React.Component {
         `
     )
   }
+
   render() {
     const { 
       id,
@@ -59,6 +59,7 @@ class Animation extends React.Component {
     )
   }
 }
+
 Animation.propTypes = {
   id: PropTypes.string.isRequired,
   enterAnimation: PropTypes.string.isRequired,
@@ -67,4 +68,5 @@ Animation.propTypes = {
   exitDuration: PropTypes.number.isRequired,
   show: PropTypes.bool.isRequired
 }
+
 export default Animation

@@ -52,20 +52,20 @@ const FieldGroup = ({ label, meta, input, field, children }) => {
     )
 }
 
-const BatchChangeBtn = ModelWrap('actons.batch_change')(ModelWrap('model.list.actions')(React.createClass({
+@ModelWrap('actons.batch_change')
+@ModelWrap('model.list.actions')
+class BatchChangeBtn extends React.Component {
 
-  getInitialState() {
-    return { show: false }
-  },
+  state = { show: false }
 
   onClose() {
     this.setState({ show: false })
-  },
+  }
 
   onBatchChange(value) {
     this.props.onBatchChange(value)
     this.onClose()
-  },
+  }
 
   renderModel() {
     const { selected, model, fields, location } = this.props
@@ -98,12 +98,12 @@ const BatchChangeBtn = ModelWrap('actons.batch_change')(ModelWrap('model.list.ac
               return obj == '*' || fields.indexOf(obj) >= 0 || fields.indexOf(obj.key) >= 0 }) : [ '*' ]
           }, 'required')}
           option={{ group: FieldGroup }}
-          onSubmit={this.onBatchChange}
+          onSubmit={this.onBatchChange.bind(this)}
           onClose={this.onClose}
           component={FormLayout}/>
       </Modal>
     )
-  },
+  }
 
   render() {
     const { selected, onSelect, canEdit, fields } = this.props
@@ -117,6 +117,6 @@ const BatchChangeBtn = ModelWrap('actons.batch_change')(ModelWrap('model.list.ac
     ) : null
   }
 
-})))
+}
 
 export default BatchChangeBtn

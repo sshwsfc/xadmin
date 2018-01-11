@@ -5,7 +5,8 @@ import { app, StoreWrap, Block } from 'xadmin-core'
 import DashForm from './DashForm'
 import DashboardWrap from '../../wrap'
 
-export default DashboardWrap('dashboard.view')(React.createClass({
+@DashboardWrap('dashboard.view')
+class Menu extends React.Component {
 
   addCell(type) {
     const Widget = app.load_dict('dashboard_widgets')[type]
@@ -24,7 +25,7 @@ export default DashboardWrap('dashboard.view')(React.createClass({
     if(this.props.onAddCell) {
       this.props.onAddCell(params.key)
     }
-  },
+  }
 
   changeLayer(editLayer) {
     const { params, saveParams } = this.props
@@ -32,7 +33,7 @@ export default DashboardWrap('dashboard.view')(React.createClass({
       ...params,
       editLayer
     })
-  },
+  }
 
   render() {
     const { params: { layers, editLayer }, ...props } = this.props
@@ -62,4 +63,6 @@ export default DashboardWrap('dashboard.view')(React.createClass({
     )
   }
 
-}))
+}
+
+export default Menu

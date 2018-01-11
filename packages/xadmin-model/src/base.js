@@ -1,21 +1,12 @@
 import React from 'react'
-
 import _ from 'lodash'
-import { PropTypes, createElement } from 'react'
-
+import PropTypes from 'prop-types'
 import { Block, StoreWrap, app } from 'xadmin-core'
 
 const Model = (modelOrName, props={}) => {
   const { key, persist, initialValues, modelProps } = props
-  const ModelComponent = React.createClass({
 
-    contextTypes: {
-      store: React.PropTypes.object.isRequired
-    },
-
-    childContextTypes: {
-      model: PropTypes.object.isRequired
-    },
+  class ModelComponent extends React.Component {
 
     componentWillMount() {
       const { store } = this.context
@@ -25,22 +16,22 @@ const Model = (modelOrName, props={}) => {
         ...modelProps
       }
       store.dispatch({ type: 'INITIALIZE', model: this.model, initial: initialValues })
-    },
+    }
 
     componentWillUnmount() {
       if(persist === false) {
         const { store } = this.context
         setTimeout(() => store.dispatch({ type: 'DESTROY', model: this.model }), 500)
       } 
-    },
+    }
 
     getChildContext() {
       return { model: this.model }
-    },
+    }
 
     render() {
       return this.props.children
-    },
+    }
 
     getModel(name) {
       const model = app.load_dict('models')[name]
@@ -51,14 +42,23 @@ const Model = (modelOrName, props={}) => {
         ...modelProps
       } : null
     }
-  })
+    
+  }
+
+  ModelComponent.contextTypes = {
+    store: PropTypes.object.isRequired
+  }
+
+  ModelComponent.childContextTypes = {
+    model: PropTypes.object.isRequired
+  }
 
   return ModelComponent
 }
 
 const ModelWrap = StoreWrap({
   contextTypes: {
-    model: React.PropTypes.object.isRequired
+    model: PropTypes.object.isRequired
   },
   getState: (context) => {
     const { store, model } = context

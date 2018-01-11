@@ -1,5 +1,6 @@
 import echarts from 'echarts'
 import React from 'react'
+import PropTypes from 'prop-types'
 import _ from 'lodash'
 
 import elementResizeEvent from 'element-resize-event'
@@ -185,11 +186,11 @@ class EChartBase extends React.Component {
 }
 
 EChartBase.PropTypes = {
-  notMerge: React.PropTypes.bool,
-  lazyUpdate: React.PropTypes.bool,
-  theme: React.PropTypes.string,
-  showLoading: React.PropTypes.bool,
-  events: React.PropTypes.object
+  notMerge: PropTypes.bool,
+  lazyUpdate: PropTypes.bool,
+  theme: PropTypes.string,
+  showLoading: PropTypes.bool,
+  events: PropTypes.object
 }
 
 EChartBase.ParamSchema = {

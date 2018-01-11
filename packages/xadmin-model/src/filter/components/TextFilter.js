@@ -3,27 +3,27 @@ import { InputGroup, FormControl, Button } from 'react-bootstrap'
 import { FieldGroup } from './base'
 import Icon from 'react-fontawesome'
 
-export default React.createClass({
+export default class TextFilter extends React.Component {
 
-  onBlur(e) {
+  onBlur = (e) => {
     const { value, onBlur } = this.props.input
     onBlur({ ...value, text: e.target.value })
-  },
+  }
 
-  onChange(e) {
+  onChange = (e) => {
     const { value, onChange } = this.props.input
     onChange({ ...value, text: e.target.value })
-  },
+  }
 
-  onLikeChange(like) {
+  onLikeChange = (like) => {
     const { value, onChange } = this.props.input
     onChange({ ...value, like })
-  },
+  }
 
-  clear() {
+  clear = () => {
     const { onChange } = this.props.input
     onChange(null)
-  },
+  }
 
   render() {
     const { input: { name, value, onBlur, onChange, ...inputProps }, label, meta, field, group: FieldGroup } = this.props
@@ -44,4 +44,4 @@ export default React.createClass({
     )
   }
 
-})
+}

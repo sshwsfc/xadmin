@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import _ from 'lodash'
 import Icon from 'react-fontawesome'
 import app from 'xadmin-core'
@@ -29,16 +30,14 @@ const DefaultLayout = (props) => {
   )
 }
 
-const ModelForm = React.createClass({
+class ModelForm extends React.Component {
 
-  propTypes: {
-    id: PropTypes.string,
-    data: PropTypes.object,
-    loading: PropTypes.bool,
-    model: PropTypes.object.isRequired,
-    getItem: PropTypes.func.isRequired,
-    saveItem: PropTypes.func.isRequired
-  },
+  constructor(props, context) {
+    super(props, context)
+    this.state = {
+      record: _.omitBy({ ...this.props.data }, _.isNil)
+    }
+  }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.data !== nextProps.data) {
@@ -47,13 +46,7 @@ const ModelForm = React.createClass({
     if (this.props.id !== nextProps.id) {
       this.props.getItem(nextProps.id)
     }
-  },
-
-  getInitialState() {
-    return {
-      record: _.omitBy({ ...this.props.data }, _.isNil)
-    }
-  },
+  }
 
   render() {
     const { title, schema, model, loading, saveItem, componentClass, ...formProps } = this.props
@@ -71,6 +64,14 @@ const ModelForm = React.createClass({
       )
   }
 
-})
+}
+ModelForm.propTypes = {
+  id: PropTypes.string,
+  data: PropTypes.object,
+  loading: PropTypes.bool,
+  model: PropTypes.object.isRequired,
+  getItem: PropTypes.func.isRequired,
+  saveItem: PropTypes.func.isRequired
+}
 
 export default ModelWrap('model.item')(ModelForm)

@@ -40,6 +40,11 @@ export default app
           type: 'string',
           format: 'email'
         },
+        regDate: {
+          title: 'Reg Date',
+          type: 'string',
+          format: 'date'
+        },
         level: {
           type: 'number',
           enum: [ 1, 2 ],
@@ -59,15 +64,15 @@ export default app
         }
       },
       permission: { view: true, add: true, edit: true, delete: true },
-      form: [ 'id', 'name', 'email', 'level', 'departments' ],
+      form: [ 'id', 'name', 'email', 'regDate', 'level', 'departments' ],
       filters: {
-        nav: [ 'name', 'id', 'email' ],
+        nav: [ 'name', 'id', 'email', 'regDate' ],
         sidemenu: [ 'id' ]
       },
       search_fields: [ 'name', 'email' ],
       required: [ 'name', 'id', 'email', 'level' ],
       readonly: [ 'id', 'eid' ],
-      list_display: [ 'name', 'id', 'email', 'level' ]
+      list_display: [ 'name', 'id', 'email', 'regDate', 'level' ]
     }
   }
 })

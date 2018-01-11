@@ -41,9 +41,9 @@ const FormLayout = (props) => {
   )
 }
 
-const CellProps = React.createClass({
+class CellProps extends React.Component {
 
-  formLayout(props) {
+  formLayout = (props) => {
     const { params={}, cellKey } = this.props
     const { children, invalid, handleSubmit, submitSucceeded, submitting, isCreate } = props
     const icon = submitting ? 'spinner fa-spin' : 'floppy-o'
@@ -52,15 +52,15 @@ const CellProps = React.createClass({
         {children}
         <Button type="submit" disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary" block>
           <Icon name={icon}/> 保存</Button>
-        <CodeModal params={params} onChange={this.saveParams} />
+        <CodeModal params={params} onChange={this.saveParams.bind(this)} />
       </form>
     )
-  },
+  }
 
   saveParams(values) {
     this.props.saveParams(values)
     this.props.onClose && this.props.onClose()
-  },
+  }
 
   render() {
     const { params, cellKey } = this.props
@@ -89,9 +89,9 @@ const CellProps = React.createClass({
           component={this.formLayout}/>) : <div>没有可配置项</div>
   }
 
-})
+}
 
-const LayoutProps = DashboardWrap('cell.layout.props', {
+@DashboardWrap('cell.layout.props', {
   data: ({ dashboard }, { cellKey }) => {
     return {
       parent: dashboard.cells[dashboard.cells[cellKey] ? dashboard.cells[cellKey].parent : null]
@@ -103,9 +103,10 @@ const LayoutProps = DashboardWrap('cell.layout.props', {
       dispatch({ dashboard, type: '@@x-dashboard/MERGE_CELL', key, params })
     }
   }
-})(React.createClass({
+})
+class LayoutProps extends React.Component {
   
-  formLayout(props) {
+  formLayout = (props) => {
     const { cellKey, parent } = this.props
     const { children, invalid, handleSubmit, submitSucceeded, submitting, isCreate } = props
     const icon = submitting ? 'spinner fa-spin' : 'floppy-o'
@@ -116,7 +117,7 @@ const LayoutProps = DashboardWrap('cell.layout.props', {
           <Icon name={icon}/> 保存</Button>
       </form>
     )
-  },
+  }
 
   saveParams(values) {
     const { params, cellKey, parent } = this.props
@@ -130,7 +131,7 @@ const LayoutProps = DashboardWrap('cell.layout.props', {
     }
 
     this.props.onClose && this.props.onClose()
-  },
+  }
 
   render() {
     const { params, cellKey, parent } = this.props
@@ -149,7 +150,7 @@ const LayoutProps = DashboardWrap('cell.layout.props', {
               schema={schema}
               initialValues={_.clone(layout)}
               group={FieldGroup}
-              onSubmit={this.saveParams}
+              onSubmit={this.saveParams.bind(this)}
               component={this.formLayout}/>)
       }
     }
@@ -157,7 +158,7 @@ const LayoutProps = DashboardWrap('cell.layout.props', {
     return <div>没有可配置项</div>
   }
 
-}))
+}
 
 class AnimateProps extends React.Component {
 
@@ -211,10 +212,9 @@ const AnimateSchema = {
   form: [ '*' ]
 }
 
+class CellEvents extends React.Component {
 
-const CellEvents = React.createClass({
-
-  formLayout(props) {
+  formLayout = (props) => {
     const { params={}, cellKey } = this.props
     const { children, invalid, handleSubmit, submitSucceeded, submitting, isCreate } = props
     const icon = submitting ? 'spinner fa-spin' : 'floppy-o'
@@ -223,15 +223,15 @@ const CellEvents = React.createClass({
         {children}
         <Button type="submit" disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary" block>
           <Icon name={icon}/> 保存</Button>
-        <CodeModal params={params} onChange={this.saveParams} />
+        <CodeModal params={params} onChange={this.save.bind(this)} />
       </form>
     )
-  },
+  }
 
   save(values) {
     this.props.saveEvents(values)
     this.props.onClose && this.props.onClose()
-  },
+  }
 
   render() {
     const { params, cellKey } = this.props
@@ -253,7 +253,7 @@ const CellEvents = React.createClass({
           component={this.formLayout}/>) : <div>没有可配置的事件</div>
   }
 
-})
+}
 
 class CellStyle extends React.Component {
   
@@ -296,7 +296,7 @@ class CellStyle extends React.Component {
 
 }
 
-const CellDatasource = React.createClass({
+class CellDatasource extends React.Component {
 
   render() {
     return (
@@ -306,7 +306,7 @@ const CellDatasource = React.createClass({
     )
   }
 
-})
+}
 
 @DashboardWrap('dashboard.form')
 export default class PropForm extends React.Component {

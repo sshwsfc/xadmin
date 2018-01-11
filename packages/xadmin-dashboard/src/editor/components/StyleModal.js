@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react'
+import React from 'react'
 import _ from 'lodash'
 import Icon from 'react-fontawesome'
 import { Modal, Navbar, Nav, NavItem, NavDropdown, MenuItem, Panel, Well, Button, Grid, Row, Col } from 'react-bootstrap'
@@ -6,7 +6,7 @@ import { StoreWrap } from 'xadmin-core'
 import CodeEditor from './CodeEditor'
 import DashboardWrap from '../../wrap'
 
-class StyleModal extends Component {
+class StyleModal extends React.Component {
 
   state = { show: false, code: this.props.style }
 

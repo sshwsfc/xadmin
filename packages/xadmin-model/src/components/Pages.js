@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router'
 import { Button, Nav, Row, Col } from 'react-bootstrap'
 
@@ -13,14 +14,7 @@ import Form from './Form'
 import SubMenu from './SubMenu'
 import ActionBar from './ActionBar'
 
-const ModelList = React.createClass({
-
-  propTypes: {
-    icon: React.PropTypes.string.isRequired,
-    title: React.PropTypes.string.isRequired,
-    canAdd: React.PropTypes.bool.isRequired,
-    addItem: React.PropTypes.func.isRequired
-  },
+class ModelList extends React.Component {
 
   renderNav() {
     const { title, canAdd, addItem, model } = this.props
@@ -38,7 +32,7 @@ const ModelList = React.createClass({
         </div>
       </div>
       )
-  },
+  }
 
   render() {
     const { icon, title, componentClass, location } = this.props
@@ -70,15 +64,15 @@ const ModelList = React.createClass({
       )
   }
 
-})
+}
+ModelList.propTypes = {
+  icon: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  canAdd: PropTypes.bool.isRequired,
+  addItem: PropTypes.func.isRequired
+}
 
-
-const ModelForm = React.createClass({
-
-  propTypes: {
-    title: React.PropTypes.string.isRequired,
-    onSuccess: React.PropTypes.func.isRequired
-  },
+class ModelForm extends React.Component {
 
   render() {
     const { params, location: { query }, title, onSuccess, componentClass } = this.props
@@ -92,7 +86,12 @@ const ModelForm = React.createClass({
     )
   }
 
-})
+}
+
+ModelForm.propTypes = {
+  title: PropTypes.string.isRequired,
+  onSuccess: PropTypes.func.isRequired
+}
 
 export default {
   ModelListPage: ModelWrap('model.page.list')(ModelList),

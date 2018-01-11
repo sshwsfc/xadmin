@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import PropTypes from 'prop-types'
 import { Provider, connect } from 'react-redux'
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
 import createSagaMiddleware, { takeEvery, takeLatest } from 'redux-saga'
@@ -535,7 +536,7 @@ const _wrap = (magic, mapper, wrappers=[]) => {
 
 const Wrap = _wrap({
   contextTypes: {
-    router: React.PropTypes.object.isRequired
+    router: PropTypes.object.isRequired
   },
   getState: (context) => {
     const { router } = context
@@ -545,7 +546,7 @@ const Wrap = _wrap({
 
 const StoreWrap = Wrap({
   contextTypes: {
-    store: React.PropTypes.object.isRequired
+    store: PropTypes.object.isRequired
   },
   getState: (context) => {
     const { store } = context

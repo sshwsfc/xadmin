@@ -17,16 +17,17 @@ const FuncEditorField = ({ input, label, meta, field, group: FieldGroup }) => {
   )
 }
 
-export default DashboardWrap('dashboard.endpoint')(React.createClass({
+@DashboardWrap('dashboard.endpoint')
+class ConnectModal extends React.Component {
 
-  onClose() {
+  onClose = () => {
     this.props.onClose()
-  },
+  }
 
-  onSubmit(values) {
+  onSubmit = (values) => {
     this.props.saveEndpoint(values)
     this.onClose()
-  },
+  }
 
   render() {
     const schema = {
@@ -130,4 +131,6 @@ export default DashboardWrap('dashboard.endpoint')(React.createClass({
     )
   }
 
-}))
+}
+
+export default ConnectModal

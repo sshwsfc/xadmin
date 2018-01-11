@@ -1,16 +1,13 @@
 import React from 'react'
-import { PropTypes, createElement } from 'react'
+import PropTypes from 'prop-types'
 import { ButtonToolbar, Button, Modal, Nav, NavItem } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
 import { ModelWrap } from 'xadmin-model'
 import { SchemaForm } from 'xadmin-form'
 import { Block, StoreWrap, app } from 'xadmin-core'
 
-const ModelTabs = ModelWrap('modaltab.tabs')(React.createClass({
-
-  propTypes: {
-    onSelect: PropTypes.func.isRequired
-  },
+@ModelWrap('modaltab.tabs')
+class ModelTabs extends React.Component {
 
   render() {
     const { model, onSelect } = this.props
@@ -28,7 +25,7 @@ const ModelTabs = ModelWrap('modaltab.tabs')(React.createClass({
     ) : null
   }
 
-}))
+}
 
 export default {
   name: 'xadmin.model.modaltabs',

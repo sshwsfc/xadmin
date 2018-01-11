@@ -1,34 +1,35 @@
-import React, { Component, PropTypes } from 'react'
+import React from 'react'
 import _ from 'lodash'
 import Icon from 'react-fontawesome'
 import { Modal, Navbar, Nav, NavItem, NavDropdown, MenuItem, Panel, Well, Button, Grid, Row, Col } from 'react-bootstrap'
 import { StoreWrap } from 'xadmin-core'
 import CodeEditor from './CodeEditor'
 
-const CodeModal = React.createClass({
+class CodeModal extends React.Component {
 
-  getInitialState() {
-    return { show: false, code: JSON.stringify(this.props.params, null, 2) }
-  },
+  constructor(props, context) {
+    super(props, context)
+    this.state = { show: false, code: JSON.stringify(props.params, null, 2) }
+  }
 
-  onClose() {
+  onClose = () => {
     this.setState({ show: false })
-  },
+  }
 
-  onChange(newValue) {
+  onChange = (newValue) => {
     this.setState({ code: newValue })
-  },
+  }
 
-  onSave() {
+  onSave = () => {
     this.props.onChange(JSON.parse(this.state.code))
     this.onClose()
-  },
+  }
 
   componentWillReceiveProps(nextProps) {
     if(this.props.params != nextProps.params) {
       this.setState({ code: JSON.stringify(nextProps.params, null, 2) })
     }
-  },
+  }
 
   render() {
     return (
@@ -53,6 +54,6 @@ const CodeModal = React.createClass({
       )
   }
 
-})
+}
 
 export default CodeModal

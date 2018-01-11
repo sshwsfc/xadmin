@@ -1,10 +1,10 @@
-import React, { Component, PropTypes } from 'react'
+import React from 'react'
 import _ from 'lodash'
 import Icon from 'react-fontawesome'
 import Textarea from 'xadmin-form/lib/components/Textarea'
 import { app, StoreWrap } from 'xadmin-core'
 
-const HtmlPart = React.createClass({
+class HtmlPart extends React.Component {
 
   render() {
     const { html, params=[] } = this.props
@@ -15,7 +15,7 @@ const HtmlPart = React.createClass({
     return <div dangerouslySetInnerHTML={{ __html: _.template(html)(vs) }} />
   }
 
-})
+}
 
 HtmlPart.Title = 'HTML组件'
 

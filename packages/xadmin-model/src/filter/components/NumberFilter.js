@@ -5,16 +5,17 @@ import { FieldGroup } from './base'
 import { FormControl, InputGroup, Button } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
 
-export default React.createClass({
+export default class NumberFilter extends React.Component {
 
-  getInitialState() {
-    const value = this.props.input.value
+  constructor(props, context) {
+    super(props, context)
+    const value = props.input.value
     if(typeof value == 'string') {
-      return { eq: value }
+      this.state = { eq: value }
     } else {
-      return { ...value }
+      this.state = { ...value }
     }
-  },
+  }
 
   getValue() {
     const { eq, ...ops } = this.state
@@ -26,32 +27,32 @@ export default React.createClass({
       })
       return Object.keys(ret).length > 0 ? ret : null
     }
-  },
+  }
 
-  onBlur(e, key) {
+  onBlur = (e, key) => {
     const { onBlur } = this.props.input
     this.setState({ [key]: e.target.value }, ()=>{
       onBlur(this.getValue())
     })
-  },
+  }
 
-  onChange(e, key) {
+  onChange = (e, key) => {
     const { onChange } = this.props.input
     this.setState({ [key]: e.target.value }, ()=>{
       onChange(this.getValue())
     })
-  },
+  }
 
-  clear() {
+  clear = () => {
     const { onChange } = this.props.input
     this.setState({ }, ()=>{
       onChange(this.getValue())
     })
-  },
+  }
 
   shouldComponentUpdate(nextProps) {
     return this.props != nextProps
-  },
+  }
 
   render() {
     const { input: { name, value, onBlur, onChange, ...inputProps }, label, meta, field, group: FieldGroup } = this.props
@@ -71,4 +72,4 @@ export default React.createClass({
     )
   }
 
-})
+}

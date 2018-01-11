@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import _ from 'lodash'
 import Icon from 'react-fontawesome'
 import { Block, app } from 'xadmin-core'
@@ -47,27 +48,20 @@ class BaseRow extends React.Component {
 }
 
 BaseRow.propTypes = {
-  item: React.PropTypes.object.isRequired,
-  fields: React.PropTypes.array.isRequired,
-  selected: React.PropTypes.bool.isRequired,
-  changeSelect: React.PropTypes.func.isRequired,
-  canEdit: React.PropTypes.bool.isRequired,
-  canDelete: React.PropTypes.bool.isRequired,
-  editItem: React.PropTypes.func.isRequired,
-  deleteItem: React.PropTypes.func.isRequired,
-  actions: React.PropTypes.array
+  item: PropTypes.object.isRequired,
+  fields: PropTypes.array.isRequired,
+  selected: PropTypes.bool.isRequired,
+  changeSelect: PropTypes.func.isRequired,
+  canEdit: PropTypes.bool.isRequired,
+  canDelete: PropTypes.bool.isRequired,
+  editItem: PropTypes.func.isRequired,
+  deleteItem: PropTypes.func.isRequired,
+  actions: PropTypes.array
 }
 const HeaderLink = ({ onClick, children }) => <a style={{ cursor: 'pointer' }} onClick={onClick}>{children}</a>
 
-const Header = ModelWrap('model.list.header')(React.createClass({
-
-  propTypes: {
-    field: React.PropTypes.string.isRequired,
-    title: React.PropTypes.string.isRequired,
-    order: React.PropTypes.string.isRequired,
-    canOrder: React.PropTypes.bool.isRequired,
-    changeOrder: React.PropTypes.func.isRequired
-  },
+@ModelWrap('model.list.header')
+class Header extends React.Component {
 
   renderOrder() {
     const { field, order, canOrder } = this.props
@@ -84,7 +78,7 @@ const Header = ModelWrap('model.list.header')(React.createClass({
       }
     }
     return orderItems
-  },
+  }
 
   render() {
     const { title, order, showText, style } = this.props
@@ -102,7 +96,7 @@ const Header = ModelWrap('model.list.header')(React.createClass({
       </Dropdown>
       ) : ( showText === false ? null : <span>{title} {icon}</span>)
   }
-}))
+}
 
 const ItemEditFieldGroup = ({ label, meta, input, field, children }) => {
   const groupProps = {}
@@ -169,15 +163,10 @@ const ItemEditForm = ModelWrap('model.item')(({ item, field, schema, model, onCl
     )
 })
 
-const Item = ModelWrap('model.list.item')(React.createClass({
+@ModelWrap('model.list.item')
+class Item extends React.Component {
 
-  propTypes: {
-    item: React.PropTypes.object,
-    field: React.PropTypes.string.isRequired,
-    schema: React.PropTypes.object.isRequired
-  },
-
-  getInitialState() { return { over: false } },
+  state = { over: false }
 
   render() {
     const { item, field, schema, componentClass, wrap, nest, model: { editable_fields } } = this.props
@@ -205,21 +194,27 @@ const Item = ModelWrap('model.list.item')(React.createClass({
       return <WrapComponent>{value == undefined || value == null?<span className="text-muted">{_t('Null')}</span>:value}</WrapComponent>
     }
   }
-}))
+}
+Item.WrappedComponent.propTypes = {
+  item: PropTypes.object,
+  field: PropTypes.string.isRequired,
+  schema: PropTypes.object.isRequired
+}
 
-const AllCheck = ModelWrap('model.checkall')(React.createClass({
+@ModelWrap('model.checkall')
+class AllCheck extends React.Component {
 
   handleSelect(e) {
     const selected = this.refs.selector.checked
     this.props.changeAllSelect(selected)
-  },
+  }
 
   render() {
     const { selecteall } = this.props
-    return <input type="checkbox" ref="selector" checked={selecteall} onChange={this.handleSelect} />
+    return <input type="checkbox" ref="selector" checked={selecteall} onChange={this.handleSelect.bind(this)} />
   }
 
-}))
+}
 
 class GridRowComponent extends BaseRow {
 
@@ -251,14 +246,11 @@ class GridRowComponent extends BaseRow {
     )
   }
 }
+
 const GridRow = ModelWrap('model.list.row')(GridRowComponent)
 
-const Grid = ModelWrap('model.items')(React.createClass({
-
-  propTypes: {
-    fields: React.PropTypes.array.isRequired,
-    items: React.PropTypes.array.isRequired
-  },
+@ModelWrap('model.items')
+class Grid extends React.Component {
 
   render() {
     const { fields, items, loading } = this.props
@@ -292,7 +284,11 @@ const Grid = ModelWrap('model.items')(React.createClass({
       }
     }
   }
-}))
+}
+Grid.WrappedComponent.propTypes = {
+  fields: PropTypes.array.isRequired,
+  items: PropTypes.array.isRequired
+}
 
 class ListRowComponent extends BaseRow {
 
@@ -328,12 +324,8 @@ class ListRowComponent extends BaseRow {
 }
 const ListRow = ModelWrap('model.list.row')(ListRowComponent)
 
-const List = ModelWrap('model.items')(React.createClass({
-
-  propTypes: {
-    fields: React.PropTypes.array.isRequired,
-    items: React.PropTypes.array.isRequired
-  },
+@ModelWrap('model.items')
+class List extends React.Component {
 
   render() {
     const { fields, items, loading } = this.props
@@ -361,7 +353,12 @@ const List = ModelWrap('model.items')(React.createClass({
       }
     }
   }
-}))
+}
+
+List.WrappedComponent.propTypes = {
+  fields: PropTypes.array.isRequired,
+  items: PropTypes.array.isRequired
+}
 
 export {
   Grid, List, Header, GridRow, ListRow, Item, BaseRow

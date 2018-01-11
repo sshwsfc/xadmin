@@ -22,41 +22,42 @@ const defaultRanges = {
   }) }
 }
 
-export default React.createClass({
+export default class DateFilter extends React.Component {
 
-  getInitialState() {
-    const value = this.props.input.value
-    const mode = this.props.field.mode || 'base'
-    return { mode, value }
-  },
+  constructor(props, context) {
+    super(props, context)
+    const value = props.input.value
+    const mode = props.field.mode || 'base'
+    this.state = { mode, value }
+  }
 
   getValue() {
     const { value } = this.state
     return value.rule ? value : null
-  },
+  }
 
   shouldComponentUpdate(nextProps) {
     return this.props != nextProps
-  },
+  }
 
-  clear(rule, range) {
+  clear = (rule, range) => {
     const { onChange } = this.props.input
     const { value } = this.state
     this.setState({ value: {} }, ()=>{
       onChange(this.getValue())
     })
-  },
+  }
 
-  onSelectRange(rule, range) {
+  onSelectRange = (rule, range) => {
     const { onChange } = this.props.input
     const format = this.props.field.datetimeFormat || 'YYYY-MM-DD HH:mm:ss'
     const { value } = this.state
     this.setState({ value: { rule, ...range.value(format) } }, ()=>{
       onChange(this.getValue())
     })
-  },
+  }
 
-  handleSelectRange(dates) {
+  handleSelectRange = (dates) => {
     const { onChange } = this.props.input
     const format = this.props.field.datetimeFormat || 'YYYY-MM-DD HH:mm:ss'
     const { value } = this.state
@@ -67,7 +68,7 @@ export default React.createClass({
     }, ()=>{
       onChange(this.getValue())
     })
-  },
+  }
 
   renderMini() {
     const { field } = this.props
@@ -89,7 +90,7 @@ export default React.createClass({
         ))}
       </ButtonGroup>
     )
-  },
+  }
 
   renderBase() {
     const { field } = this.props
@@ -111,7 +112,7 @@ export default React.createClass({
         ))}
       </ButtonGroup>
     )
-  },
+  }
 
   renderCalender() {
     return (
@@ -123,7 +124,7 @@ export default React.createClass({
           }}
         />
       )
-  },
+  }
 
   render() {
     const { input, label, meta, field, group: FieldGroup } = this.props
@@ -136,4 +137,4 @@ export default React.createClass({
     )
   }
 
-})
+}

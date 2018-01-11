@@ -1,38 +1,35 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import _ from 'lodash'
 import Icon from 'react-fontawesome'
 import { Block, app } from 'xadmin-core'
 import { ButtonToolbar, Modal, FormGroup, ControlLabel, FormControl, DropdownButton, OverlayTrigger, Popover, Clearfix, ButtonGroup, Button, Dropdown, MenuItem, Panel, ListGroup, ListGroupItem } from 'react-bootstrap'
 import { ModelWrap } from '../base'
 
-const CountButton = ModelWrap('model.list.btn.count')(React.createClass({
-  propTypes: {
-    count: React.PropTypes.number.isRequired
-  },
+@ModelWrap('model.list.btn.count')
+class CountButton extends React.Component {
 
   render() {
     const { _t } = app.context
     const { count } = this.props
     return <Button bsSize="small">{_t('{{count}} records', { count })}</Button>
   }
-}))
 
-const PageSizeButton = ModelWrap('model.list.btn.pagesize')(React.createClass({
+}
 
-  getInitialState() {
-    return { show: false, size: this.props.size }
-  },
+@ModelWrap('model.list.btn.pagesize')
+class PageSizeButton extends React.Component {
 
-  propTypes: {
-    size: React.PropTypes.number.isRequired,
-    sizes: React.PropTypes.array.isRequired
-  },
+  constructor(props, context) {
+    super(props, context)
+    this.state = { show: false, size: props.size }
+  }
 
   setPageSize(e) {
     this.props.setPageSize(this.state.size)
     this.setState({ show: false })
     if(document.all) { window.event.returnValue = false }else{ e.preventDefault() }
-  },
+  }
 
   showCustomize() {
     const { _t } = app.context
@@ -42,7 +39,7 @@ const PageSizeButton = ModelWrap('model.list.btn.pagesize')(React.createClass({
         <Modal.Header closeButton>
           <Modal.Title>{_t('Customize page size')}</Modal.Title>
         </Modal.Header>
-        <form onSubmit={this.setPageSize}>
+        <form onSubmit={this.setPageSize.bind(this)}>
         <Modal.Body>
           <FormGroup
             controlId="formPageSize"
@@ -58,12 +55,12 @@ const PageSizeButton = ModelWrap('model.list.btn.pagesize')(React.createClass({
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={()=>this.setState({ show: false })}>{_t('Close')}</Button>
-          <Button type="submit" bsStyle="primary" disabled={this.state.size==size} onClick={this.setPageSize}>{_t('Set page size')}</Button>
+          <Button type="submit" bsStyle="primary" disabled={this.state.size==size} onClick={this.setPageSize.bind(this)}>{_t('Set page size')}</Button>
         </Modal.Footer>
         </form>
       </Modal>
       )
-  },
+  }
 
   render() {
     const { _t } = app.context
@@ -77,19 +74,12 @@ const PageSizeButton = ModelWrap('model.list.btn.pagesize')(React.createClass({
       </DropdownButton>
       )
   }
-}))
+}
 
-const ColsDropdown = ModelWrap('model.list.btn.cols')(React.createClass({
+@ModelWrap('model.list.btn.cols')
+class ColsDropdown extends React.Component {
 
-  propTypes: {
-    selected: React.PropTypes.array.isRequired,
-    fields: React.PropTypes.object.isRequired,
-    changeFieldDisplay: React.PropTypes.func.isRequired
-  },
-
-  getInitialState() {
-    return { open: false }
-  },
+  state = { open: false }
 
   render() {
     const { _t } = app.context
@@ -119,9 +109,16 @@ const ColsDropdown = ModelWrap('model.list.btn.cols')(React.createClass({
       </OverlayTrigger>
       )
   }
-}))
 
-const SubMenu = React.createClass({
+}
+
+ColsDropdown.WrappedComponent.PropTypes = {
+  selected: PropTypes.array.isRequired,
+  fields: PropTypes.object.isRequired,
+  changeFieldDisplay: PropTypes.func.isRequired
+}
+
+class SubMenu extends React.Component {
 
   render() {
     return (
@@ -136,6 +133,7 @@ const SubMenu = React.createClass({
       </ButtonToolbar>
     )
   }
-})
+
+}
 
 export default SubMenu

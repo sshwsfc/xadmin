@@ -1,5 +1,5 @@
 import React from 'react'
-import { PropTypes, createElement } from 'react'
+import PropTypes from 'prop-types'
 import _ from 'lodash'
 import { FieldArray } from 'redux-form'
 import { fork, put, call, cancelled } from 'redux-saga/effects'
@@ -16,14 +16,15 @@ import { Model, ModelWrap } from './base'
 import { SimpleSelect, MultiSelect } from 'react-selectize'
 import 'react-selectize/themes/index.css'
 
-const Checkboxes = FormWrap('model.form.relates')(React.createClass({
+@FormWrap('model.form.relates')
+class Checkboxes extends React.Component {
 
   componentDidMount() {
     const { input, options, field } = this.props
     if(!options) {
       this.props.getRelatedItems()
     }
-  },
+  }
 
   onChange(checked, option) {
     const { input: { value, onChange } } = this.props
@@ -32,7 +33,7 @@ const Checkboxes = FormWrap('model.form.relates')(React.createClass({
     } else {
       onChange(value.filter(item => item.id != option.id))
     }
-  },
+  }
 
   renderOptions() {
     const { input, options, field } = this.props
@@ -42,7 +43,7 @@ const Checkboxes = FormWrap('model.form.relates')(React.createClass({
       const checked = checkedIds.indexOf(option.id) >= 0
       return <Checkbox onChange={()=>{this.onChange(!checked, option)}} checked={checked} {...field.attrs} >{option[displayField]}</Checkbox>
     })
-  },
+  }
 
   render() {
     const { _t } = app.context
@@ -55,16 +56,17 @@ const Checkboxes = FormWrap('model.form.relates')(React.createClass({
       )
   }
 
-}))
+}
 
-const RelateMultiSelect = FormWrap('model.form.relates')(React.createClass({
+@FormWrap('model.form.relates')
+class RelateMultiSelect extends React.Component {
 
   componentDidMount() {
     const { input, options, field } = this.props
     if(options == null) {
       this.props.getRelatedItems()
     }
-  },
+  }
 
   onChange(checked, option) {
     const { input: { value, onChange } } = this.props
@@ -73,12 +75,12 @@ const RelateMultiSelect = FormWrap('model.form.relates')(React.createClass({
     } else {
       onChange(value.filter(item => item.id != option.id))
     }
-  },
+  }
 
   onValuesChange(selectOptions) {
     const { input: { value, onChange }, options } = this.props
     onChange(selectOptions.map(option=>{ return option.item }))
-  },
+  }
 
   renderOptions() {
     const { _t } = app.context
@@ -89,11 +91,11 @@ const RelateMultiSelect = FormWrap('model.form.relates')(React.createClass({
         placeholder={_t('Select {{label}}', { label: field.label })}
         values={checkedValues}
         options={options.map(option=>{ return { label: option[displayField] || 'null', value: option.id, item: option } })}
-        onValuesChange={this.onValuesChange}
+        onValuesChange={this.onValuesChange.bind(this)}
         renderNoResultsFound={()=>{ return (<div className="no-results-found">{_t('No results found')}</div>)}}
         {...field.attrs}
       />)
-  },
+  }
 
   render() {
     const { _t } = app.context
@@ -106,27 +108,25 @@ const RelateMultiSelect = FormWrap('model.form.relates')(React.createClass({
       )
   }
 
-}))
+}
 
-const RelateSelect = FormWrap('model.form.fkselect')(React.createClass({
+@FormWrap('model.form.fkselect')
+class RelateSelect extends React.Component {
 
-  getInitialState() {
-    return { search: '' }
-  },
+  state = { search: '' }
 
   onValueChange(select) {
     const { input: { value, onChange }, options } = this.props
     this.setState({ search: '' })
-    console.log(select)
     onChange(select ? select.item : null)
-  },
+  }
 
   onSearchChange(search) {
     this.setState({ search })
     if(search && search != '') {
       this.props.searchRelatedItems(search)
     }
-  },
+  }
 
   componentDidMount() {
     const { _t } = app.context
@@ -144,7 +144,7 @@ const RelateSelect = FormWrap('model.form.fkselect')(React.createClass({
     if(!(options && options.length > 0) && field.lazyLoad == false) {
       this.props.searchRelatedItems()
     }
-  },
+  }
 
   componentWillReceiveProps(nextProps) {
     const { field, input, getValue } = this.props
@@ -157,7 +157,7 @@ const RelateSelect = FormWrap('model.form.fkselect')(React.createClass({
         getValue(newValue)
       }
     }
-  },
+  }
 
   renderOptions() {
     const { _t } = app.context
@@ -169,13 +169,13 @@ const RelateSelect = FormWrap('model.form.fkselect')(React.createClass({
     } : {
       placeholder: _t('Search {{label}}', { label: field.label }),
       search: this.state.search,
-      onSearchChange: this.onSearchChange
+      onSearchChange: this.onSearchChange.bind(this)
     }
     return (<SimpleSelect theme="bootstrap3" ref="select"
         placeholder={`Search ${field.label}`}
         value={selectValue}
         options={(options||[]).map(option=>{ return { label: option[displayField] || 'null', value: option.id, item: option } })}
-        onValueChange={this.onValueChange}
+        onValueChange={this.onValueChange.bind(this)}
         renderNoResultsFound={(value, search)=>{ 
           return (<div className="no-results-found" style={{ fontSize: 13 }}>
             {(search.length == 0 && field.lazyLoad != false) ? _t('type a few characters to kick off remote search'):_t('No results found')}
@@ -184,7 +184,7 @@ const RelateSelect = FormWrap('model.form.fkselect')(React.createClass({
         {...searchProps}
         {...field.attrs}
       />)
-  },
+  }
 
   render() {
     const { _t } = app.context
@@ -197,7 +197,7 @@ const RelateSelect = FormWrap('model.form.fkselect')(React.createClass({
       )
   }
 
-}))
+}
 
 const schema_converter = [
   (f, schema, options) => {
@@ -379,34 +379,17 @@ function *effects() {
   ]
 }
 
-const RelateObject = ModelWrap('model.item')(React.createClass({
-
-  propTypes: {
-    id: PropTypes.string,
-    data: PropTypes.object,
-    loading: PropTypes.bool.isRequired,
-    model: PropTypes.object.isRequired,
-    getItem: PropTypes.func.isRequired
-  },
-
-  contextTypes: {
-    model: PropTypes.object.isRequired
-  },
-
-  childContextTypes: {
-    relateObj: PropTypes.object.isRequired,
-    relateModel: PropTypes.object.isRequired
-  },
+class RelateObjectCls extends React.Component {
 
   getChildContext() {
     return { relateObj: this.props.data, relateModel: this.context.model }
-  },
+  }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.id !== nextProps.id) {
       this.props.getItem(nextProps.id)
     }
-  },
+  }
 
   render() {
     const { _t } = app.context
@@ -423,15 +406,30 @@ const RelateObject = ModelWrap('model.item')(React.createClass({
       )
   }
 
-}))
+}
+
+RelateObjectCls.propTypes = {
+  id: PropTypes.string,
+  data: PropTypes.object,
+  loading: PropTypes.bool.isRequired,
+  model: PropTypes.object.isRequired,
+  getItem: PropTypes.func.isRequired
+}
+
+RelateObjectCls.contextTypes = {
+  model: PropTypes.object.isRequired
+}
+
+RelateObjectCls.childContextTypes = {
+  relateObj: PropTypes.object.isRequired,
+  relateModel: PropTypes.object.isRequired
+}
+
+const RelateObject = ModelWrap('model.item')(RelateObjectCls)
 
 const RelateWrap = (SubComponent) => {
-  return React.createClass({
 
-    contextTypes: {
-      relateObj: PropTypes.object.isRequired,
-      relateModel: PropTypes.object.isRequired
-    },
+  class RelateWrap extends React.Component {
 
     render() {
       const { location, ...props } = this.props
@@ -439,7 +437,14 @@ const RelateWrap = (SubComponent) => {
 
       return <SubComponent {...props} location={{ ...location, query: {  ...location.query, [relateModel.name]: relateObj.id } }} />
     }
-  })
+  }
+  
+  RelateWrap.contextTypes = {
+    relateObj: PropTypes.object.isRequired,
+    relateModel: PropTypes.object.isRequired
+  }
+
+  return RelateWrap
 }
 
 const routers = (app) => {

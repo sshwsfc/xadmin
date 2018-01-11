@@ -1,10 +1,11 @@
-import React, { Component, PropTypes } from 'react'
+import React from 'react'
 import { app, StoreWrap } from 'xadmin-core'
 import Cell from './Cell'
 import DashboardWrap from '../wrap'
 import Root from './Root'
 
-const Dashboard = DashboardWrap('dashboard.view')(React.createClass({
+@DashboardWrap('dashboard.view')
+class Dashboard extends React.Component {
 
   renderContent() {
     const { params, scale, cells, editMode=true } = this.props
@@ -21,7 +22,7 @@ const Dashboard = DashboardWrap('dashboard.view')(React.createClass({
     const Main = Root.getWidget()
 
     return <Main className="dashboard" editMode={editMode} style={style} cellKey={Root.key} childrenCells={childrenCells} />
-  },
+  }
 
   render() {
     const { height=1080, width='auto' } = this.props.params
@@ -32,6 +33,6 @@ const Dashboard = DashboardWrap('dashboard.view')(React.createClass({
     )
   }
 
-}))
+}
 
 export default Dashboard

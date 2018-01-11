@@ -5,16 +5,17 @@ import { SchemaForm, fieldBuilder } from 'xadmin-form'
 import { app, StoreWrap } from 'xadmin-core'
 import DashboardWrap from '../../wrap'
 
-export default DashboardWrap('dashboard.view')(React.createClass({
+@DashboardWrap('dashboard.view')
+class DashForm extends React.Component {
 
-  onClose() {
+  onClose = () => {
     this.props.onClose()
-  },
+  }
 
-  onSubmit(values) {
+  onSubmit = (values) => {
     this.props.saveParams(values)
     this.onClose()
-  },
+  }
 
   render() {
     const { cellKey, removeCell } = this.props
@@ -102,4 +103,6 @@ export default DashboardWrap('dashboard.view')(React.createClass({
     )
   }
 
-}))
+}
+
+export default DashForm

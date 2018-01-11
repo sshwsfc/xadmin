@@ -30,7 +30,7 @@ const FilterForm = (props) => {
   return <WrapForm fields={fields} {...props}/>
 }
 
-const FilterDiv = React.createClass({
+class FilterDiv extends React.Component {
 
   render() {
     const { _t } = app.context
@@ -60,9 +60,9 @@ const FilterDiv = React.createClass({
             />)
   }
 
-})
+}
 
-const FilterInline = React.createClass({
+class FilterInline extends React.Component {
 
   render() {
     const { _t } = app.context
@@ -115,9 +115,10 @@ const FilterInline = React.createClass({
             />)
   }
 
-})
+}
 
-const FilterMenu = ModelWrap('model.list.filter')(React.createClass({
+@ModelWrap('model.list.filter')
+class FilterMenu extends React.Component {
 
   render() {
     const { _t } = app.context
@@ -155,9 +156,10 @@ const FilterMenu = ModelWrap('model.list.filter')(React.createClass({
     }
   }
 
-}))
+}
 
-const FilterPopover = ModelWrap('model.list.filter')(React.createClass({
+@ModelWrap('model.list.filter')
+class FilterPopover extends React.Component {
 
   render() {
     const { _t } = app.context
@@ -175,21 +177,20 @@ const FilterPopover = ModelWrap('model.list.filter')(React.createClass({
     }
   }
 
-}))
+}
 
-const FilterModal = ModelWrap('model.list.filter')(React.createClass({
+@ModelWrap('model.list.filter')
+class FilterModal extends React.Component {
 
-  getInitialState() {
-    return { show: false }
-  },
+  state = { show: false }
 
   showModal() {
     this.setState({ show: true })
-  },
+  }
 
   onClose() {
     this.setState({ show: false })
-  },
+  }
 
   renderFilterForm() {
     const { _t } = app.context
@@ -222,7 +223,7 @@ const FilterModal = ModelWrap('model.list.filter')(React.createClass({
               onSubmit={changeFilter}
               fieldProps={{ mode: 'base' }}
             />)
-  },
+  }
 
   renderModal() {
     const { _t } = app.context
@@ -234,14 +235,14 @@ const FilterModal = ModelWrap('model.list.filter')(React.createClass({
         {this.renderFilterForm()}
       </Modal>
     )
-  },
+  }
 
   render() {
     const { _t } = app.context
     const { filters, data } = this.props
     if(filters && filters.length) {
       return (
-          <NavItem onClick={this.showModal}>
+          <NavItem onClick={this.showModal.bind(this)}>
             <Icon name="filter" /> {_t('Filter')} {(data && Object.keys(data).length) ? (<Badge>{Object.keys(data).length}</Badge>) : null}
             {this.state.show ? this.renderModal() : null}
           </NavItem>
@@ -251,16 +252,18 @@ const FilterModal = ModelWrap('model.list.filter')(React.createClass({
     }
   }
 
-}))
+}
 
-const FilterSubMenu = ModelWrap('model.list.filter')(React.createClass({
+@ModelWrap('model.list.filter')
+class FilterSubMenu extends React.Component {
   render() {
     const { filters } = this.props
     return filters && filters.length ? (<Panel><Panel.Body><FilterInline {...this.props}/></Panel.Body></Panel>) : null
   }
-}))
+}
 
-const FilterNavForm = ModelWrap('model.list.filter')(React.createClass({
+@ModelWrap('model.list.filter')
+class FilterNavForm extends React.Component {
 
   renderFilterForm() {
     const { _t } = app.context
@@ -285,7 +288,7 @@ const FilterNavForm = ModelWrap('model.list.filter')(React.createClass({
               group={InlineGroup}
               fieldProps={{ mode: 'base' }}
             />)
-  },
+  }
 
   render() {
     const { filters } = this.props
@@ -296,7 +299,7 @@ const FilterNavForm = ModelWrap('model.list.filter')(React.createClass({
     }
   }
 
-}))
+}
 
 const block_func = (Filter, name) => ({ model }) => (
   (model && model.filters && model.filters[name]) ? <Filter name={name} /> : null

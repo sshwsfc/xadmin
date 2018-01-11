@@ -5,8 +5,8 @@ import { objectBuilder } from 'xadmin-form'
 
 export default class Fieldset extends React.Component {
 
-  constructor(props) {
-    super(props)
+  constructor(props, context) {
+    super(props, context)
     const field = props.field
     this.state = {
       activeKey: field.schema.collapsed || field.collapsed ? [] : [ '1' ]

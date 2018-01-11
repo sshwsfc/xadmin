@@ -1,14 +1,11 @@
-import React, { Component, PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import _ from 'lodash'
 import Icon from 'react-fontawesome'
 import { app, StoreWrap } from 'xadmin-core'
 import elementResizeEvent from 'element-resize-event'
 
-const WebGL = React.createClass({
-
-  propTypes: {
-    modal: React.PropTypes.object
-  },
+class WebGL extends React.Component {
 
   // first add
   componentDidMount() {
@@ -21,17 +18,17 @@ const WebGL = React.createClass({
     elementResizeEvent(this.refs.webglDom, () => {
       this.renderGLDom(glObj => glObj.resize())
     })
-  },
+  }
 
   // update
   componentDidUpdate() {
     this.renderGLDom(glObj => glObj.resize())
-  },
+  }
 
   // remove
   componentWillUnmount() {
     
-  },
+  }
 
   //bind the events
   bindEvents(instance, events) {
@@ -50,7 +47,7 @@ const WebGL = React.createClass({
       _loop(eventName)
     }
 
-  },
+  }
 
   // render the dom
   renderGLDom(cb) {
@@ -58,7 +55,7 @@ const WebGL = React.createClass({
       glObj.setOption(this.props)
       cb(glObj)
     })
-  },
+  }
 
   getGLInstance(cb) {
     if(this.gl == undefined) {
@@ -67,7 +64,7 @@ const WebGL = React.createClass({
     } else {
       cb(this.gl)
     }
-  },
+  }
 
   render() {
     const style = {
@@ -76,6 +73,6 @@ const WebGL = React.createClass({
     return <div style={style} ref="webglDom" />
   }
 
-})
+}
 
 export default WebGL

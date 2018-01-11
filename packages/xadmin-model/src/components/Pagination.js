@@ -1,16 +1,10 @@
-import React, { createClass, PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Pagination } from 'react-bootstrap'
 import app from 'xadmin-core'
 import { ModelWrap } from '../base'
 
-const ModelPagination = createClass({
-
-  propTypes: {
-    bsSize: PropTypes.string,
-    items: PropTypes.number,
-    activePage: PropTypes.number,
-    changePage: PropTypes.func
-  },
+class ModelPagination extends React.Component {
 
   render() {
     const { _t } = app.context
@@ -41,6 +35,13 @@ const ModelPagination = createClass({
     }
   }
 
-})
+}
+
+ModelPagination.propTypes = {
+  bsSize: PropTypes.string,
+  items: PropTypes.number,
+  activePage: PropTypes.number,
+  changePage: PropTypes.func
+}
 
 export default ModelWrap('model.list.pagination')(ModelPagination)

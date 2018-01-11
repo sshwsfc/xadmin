@@ -3,7 +3,7 @@ import ColorPicker from 'rc-color-picker'
 import 'rc-color-picker/assets/index.css'
 import { FormControl, InputGroup } from 'react-bootstrap'
 
-const ColorPickerField = React.createClass({
+class ColorPickerField extends React.Component {
 
   render() {
     const { input, label, meta, field, group: FieldGroup } = this.props
@@ -23,6 +23,6 @@ const ColorPickerField = React.createClass({
     )
   }
 
-})
+}
 
 export default ColorPickerField

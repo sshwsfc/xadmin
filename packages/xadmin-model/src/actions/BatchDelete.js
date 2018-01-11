@@ -6,20 +6,20 @@ import { BaseRow, List } from '../components/Items'
 
 import Icon from 'react-fontawesome'
 
-const BatchDeleteBtn = ModelWrap('actons.batch_delete')(ModelWrap('model.list.actions')(React.createClass({
+@ModelWrap('actons.batch_delete')
+@ModelWrap('model.list.actions')
+class BatchDeleteBtn extends React.Component {
 
-  getInitialState() {
-    return { show: false }
-  },
+  state = { show: false }
 
   onClose() {
     this.setState({ show: false })
-  },
+  }
 
   onBatchDelete() {
     this.props.onBatchDelete()
     this.onClose()
-  },
+  }
 
   renderModel() {
     const { selected, model } = this.props
@@ -37,11 +37,11 @@ const BatchDeleteBtn = ModelWrap('actons.batch_delete')(ModelWrap('model.list.ac
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={this.onClose}>{_t('Close')}</Button>
-          <Button bsStyle="success" onClick={this.onBatchDelete}>{_t('Delete')}</Button>
+          <Button bsStyle="success" onClick={this.onBatchDelete.bind(this)}>{_t('Delete')}</Button>
         </Modal.Footer>
       </Modal>
     )
-  },
+  }
 
   render() {
     const { selected, onSelect, canDelete } = this.props
@@ -55,6 +55,6 @@ const BatchDeleteBtn = ModelWrap('actons.batch_delete')(ModelWrap('model.list.ac
     ) : null
   }
 
-})))
+}
 
 export default BatchDeleteBtn

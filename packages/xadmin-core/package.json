@@ -8,10 +8,14 @@
   "dependencies": {
     "async": "^2.6.0",
     "lodash": "^4.17.4",
+    "prop-types": "^15.6.0",
     "react-redux": "^5.0.6",
     "react-router": "^2.4.0",
     "redux": "^3.7.2",
-    "redux-saga": "^0.16.0"
+    "redux-saga": "^0.16.0",
+    "xadmin-form": "^1.0.1",
+    "xadmin-model": "^1.0.4",
+    "xadmin-plugins": "^1.0.2"
   },
   "peerDependencies": {
     "react": "15",

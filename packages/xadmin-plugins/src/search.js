@@ -1,30 +1,27 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import _ from 'lodash'
 import { Navbar, FormGroup, InputGroup, FormControl, Button } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
 import { Block, StoreWrap, app } from 'xadmin-core'
 import { ModelWrap } from 'xadmin-model'
 
-const SearchBar = ModelWrap('model.searchbar')(React.createClass({
+@ModelWrap('model.searchbar')
+class SearchBar extends React.Component {
 
-  propTypes: {
-    searchTitles: React.PropTypes.array,
-    searchValue: React.PropTypes.string,
-    onSearch: React.PropTypes.object
-  },
-
-  getInitialState() {
-    return { value: this.props.searchValue }
-  },
+  constructor(props, context) {
+    super(props, context)
+    this.state = { value: props.searchValue }
+  }
 
   onSearch(e) {
     if(document.all) { window.event.returnValue = false }else{ e.preventDefault() }
     this.props.onSearch(this.state.value)
-  },
+  }
 
   onClean(e) {
     this.setState({ value: '' }, () => this.onSearch(e))
-  },
+  }
 
   render() {
     const { _t } = app.context
@@ -33,12 +30,12 @@ const SearchBar = ModelWrap('model.searchbar')(React.createClass({
       const placeholder = _t('Search') + ' ' + searchTitles.join(', ')
       return (
         <Navbar.Form pullLeft>
-          <form onSubmit={this.onSearch}>
+          <form onSubmit={this.onSearch.bind(this)}>
 
           <InputGroup>
             <FormControl ref="searchInput" value={this.state.value} type="text" placeholder={placeholder} onChange={(e)=>{this.setState({ value: e.target.value })}} />
             <InputGroup.Button>
-              { searchValue ? <Button onClick={this.onClean}><Icon name="times" /></Button> : null }
+              { searchValue ? <Button onClick={this.onClean.bind(this)}><Icon name="times" /></Button> : null }
               <Button type="submit"><Icon name="search" /></Button>
             </InputGroup.Button>
           </InputGroup>
@@ -50,7 +47,7 @@ const SearchBar = ModelWrap('model.searchbar')(React.createClass({
     return null
   }
 
-}))
+}
 
 export default {
   name: 'xadmin.model.search',

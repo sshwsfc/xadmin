@@ -1,7 +1,7 @@
-import React, { Component, PropTypes } from 'react'
+import React from 'react'
 import MonacoEditor from 'react-monaco-editor'
 
-const CodeEditor = React.createClass({
+class CodeEditor extends React.Component {
 
   render() {
     const { code, onChange, editorOptions, ...props } = this.props
@@ -32,6 +32,6 @@ const CodeEditor = React.createClass({
       )
   }
 
-})
+}
 
 export default CodeEditor

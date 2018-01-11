@@ -18,15 +18,13 @@ const _transformSheet = function (stylesheet, namespace) {
     )
 }
 
-const ControlBar = React.createClass({
+class ControlBar extends React.Component {
 
-  getInitialState() {
-    return { show: false }
-  },
+  state = { show: false }
 
-  onClose() {
+  onClose = () => {
     this.setState({ show: false })
-  },
+  }
 
   render() {
     const { onRemove, cellKey, onCopy } = this.props
@@ -36,7 +34,7 @@ const ControlBar = React.createClass({
       </div>
     )
   }
-})
+}
 
 const MissWidgetType = ({ type }) => (<span>组件类型 [{type}] 未定义</span>)
 
@@ -90,8 +88,8 @@ const shallowEqual = (objA, objB) => {
 @DashboardWrap('dashboard.cell')
 export default class Cell extends React.Component {
 
-  constructor(props) {
-    super(props)
+  constructor(props, context) {
+    super(props, context)
     const { cellKey, editMode, data, cells, params } = props
     const widgetParams = convertData(data, params, editMode)
 

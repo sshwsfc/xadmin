@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react'
+import React from 'react'
 import _ from 'lodash'
 import ReactGridLayout, { WidthProvider } from 'react-grid-layout'
 import Cell from '../components/Cell'

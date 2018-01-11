@@ -7,6 +7,7 @@
   "license": "MIT",
   "dependencies": {
     "lodash": "^4.17.4",
+    "prop-types": "^15.6.0",
     "react-date-range": "^0.9.4",
     "react-fontawesome": "^1.6.1",
     "redux": "^3.7.2",

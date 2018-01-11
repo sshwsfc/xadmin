@@ -1,14 +1,11 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import _ from 'lodash'
 import { Well, DropdownButton, ButtonToolbar, MenuItem } from 'react-bootstrap'
 import { Block, app } from 'xadmin-core'
 import { ModelWrap } from '../base'
 
-
-const ActionBar = React.createClass({
-  propTypes: {
-    count: React.PropTypes.number.isRequired
-  },
+class ActionBar extends React.Component {
 
   render() {
     const count = this.props.count
@@ -25,6 +22,10 @@ const ActionBar = React.createClass({
       </Well>
     ) : null
   }
-})
+}
+
+ActionBar.propTypes = {
+  count: PropTypes.number.isRequired
+}
 
 export default ModelWrap('model.list.actions')(ActionBar)

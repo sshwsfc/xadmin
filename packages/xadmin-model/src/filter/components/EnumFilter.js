@@ -4,21 +4,22 @@ import { Field } from 'redux-form'
 import { FieldGroup } from './base'
 import { FormControl, Checkbox } from 'react-bootstrap'
 
-export default React.createClass({
+export default class EnumFilter extends React.Component {
 
-  getInitialState() {
-    const value = this.props.input.value
+  constructor(props, context) {
+    super(props, context)
+    const value = props.input.value
     // like
     if(value) {
       if(typeof value != 'object') {
-        return { checks: [ value ] }
+        this.state = { checks: [ value ] }
       } else {
-        return { checks: [ ...value['inq'] ] }
+        this.state = { checks: [ ...value['inq'] ] }
       }
     } else {
-      return { checks: [] }
+      this.state = { checks: [] }
     }
-  },
+  }
 
   getValue(e) {
     const { checks } = this.state
@@ -29,9 +30,9 @@ export default React.createClass({
     } else {
       return null
     }
-  },
+  }
 
-  onChange(e, value) {
+  onChange = (e, value) => {
     const { onChange } = this.props.input
     const { checks } = this.state
     let newChecks = checks
@@ -49,18 +50,18 @@ export default React.createClass({
         onChange(this.getValue())
       })
     }
-  },
+  }
 
-  clear() {
+  clear = () => {
     const { onChange } = this.props.input
     this.setState({ checks: [] }, ()=>{
       onChange(this.getValue())
     })
-  },
+  }
 
   shouldComponentUpdate(nextProps) {
     return this.props != nextProps
-  },
+  }
 
   render() {
     const { input: { name, value, onBlur, onChange, ...inputProps }, label, meta, field, group: FieldGroup } = this.props
@@ -85,4 +86,4 @@ export default React.createClass({
     )
   }
 
-})
+}

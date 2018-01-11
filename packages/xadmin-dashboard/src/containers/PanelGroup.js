@@ -1,12 +1,12 @@
-import React, { Component, PropTypes } from 'react'
+import React from 'react'
 import _ from 'lodash'
 import Cell from '../components/Cell'
 import { Panel, PanelGroup } from 'react-bootstrap'
 
 class PanelGroupContainer extends React.Component {
 
-  constructor(props) {
-    super()
+  constructor(props, context) {
+    super(props, context)
     const defaultPanel = props.defaultPanel === undefined ? 1 : props.defaultPanel
     this.state = {
       activeKey: `panel-${defaultPanel-1}`

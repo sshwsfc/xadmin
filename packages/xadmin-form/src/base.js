@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Field, reducer as formReducer, reduxForm } from 'redux-form'
 import { StoreWrap, app } from 'xadmin-core'
 import { fieldBuilder, objectBuilder } from './builder'
@@ -82,7 +83,7 @@ const SchemaForm = (props) => {
 
 const FormWrap = StoreWrap({
   contextTypes: {
-    _reduxForm: React.PropTypes.object.isRequired
+    _reduxForm: PropTypes.object.isRequired
   },
   getState: (context) => {
     const { store, _reduxForm } = context

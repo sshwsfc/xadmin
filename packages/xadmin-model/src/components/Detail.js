@@ -1,24 +1,22 @@
-import React, { Component, PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import Icon from 'react-fontawesome'
 import { Page } from 'xadmin-layout'
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Panel, Well, Button } from 'react-bootstrap'
 import { ModelWrap } from '../base'
 
-const ModelDetail = React.createClass({
+class ModelDetail extends React.Component {
 
-  propTypes: {
-    id: PropTypes.string,
-    title: React.PropTypes.string.isRequired,
-    params: PropTypes.object.isRequired,
-    data: PropTypes.object,
-    loading: PropTypes.bool.isRequired,
-    schema: PropTypes.object.isRequired,
-    getItem: PropTypes.func.isRequired
-  },
+  constructor(props, context) {
+    super(props, context)
+    this.state = {
+      record: { ...props.data }
+    }
+  }
 
   componentDidMount() {
     this.props.getItem(this.props.id)
-  },
+  }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.data !== nextProps.data) {
@@ -27,13 +25,7 @@ const ModelDetail = React.createClass({
     if (this.props.id !== nextProps.id) {
       this.props.getItem(nextProps.id)
     }
-  },
-
-  getInitialState() {
-    return {
-      record: { ...this.props.data }
-    }
-  },
+  }
 
   render() {
     const { schema, title, formKey, loading } = this.props
@@ -47,6 +39,15 @@ const ModelDetail = React.createClass({
     )
   }
 
-})
+}
+ModelDetail.propTypes = {
+  id: PropTypes.string,
+  title: PropTypes.string.isRequired,
+  params: PropTypes.object.isRequired,
+  data: PropTypes.object,
+  loading: PropTypes.bool.isRequired,
+  schema: PropTypes.object.isRequired,
+  getItem: PropTypes.func.isRequired
+}
 
 export default ModelWrap('model.detail')(ModelDetail)

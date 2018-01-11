@@ -1,12 +1,11 @@
 import React from 'react'
-import { PropTypes, createElement } from 'react'
+import PropTypes from 'prop-types'
 import _ from 'lodash'
 import { ButtonToolbar, Button, Modal, Panel } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
 import { Block, StoreWrap, app } from 'xadmin-core'
 import { ModelWrap, Model } from 'xadmin-model'
 import { SchemaForm } from 'xadmin-form'
-
 
 const DetailView = ModelWrap('model.item')(({ id, data, loading, model }) => {
   return loading ? 
@@ -19,23 +18,17 @@ const DetailView = ModelWrap('model.item')(({ id, data, loading, model }) => {
     )
 })
 
-const DetailModal = React.createClass({
+class DetailModal extends React.Component {
 
-  propTypes: {
-    id: PropTypes.string
-  },
-
-  getInitialState() {
-    return { show: false }
-  },
+  state = { show: false }
 
   showModal() {
     this.setState({ show: true })
-  },
+  }
 
   hideModal() {
     this.setState({ show: false })
-  },
+  }
 
   render() {
     const { id, children, wrap:WrapComponent } = this.props
@@ -65,7 +58,10 @@ const DetailModal = React.createClass({
     )
   }
 
-})
+}
+DetailModal.propTypes = {
+  id: PropTypes.string
+}
 
 export default {
   name: 'xadmin.model.reldetail',

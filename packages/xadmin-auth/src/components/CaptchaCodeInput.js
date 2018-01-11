@@ -2,16 +2,17 @@ import React from 'react'
 import { FormControl, InputGroup, Col, Row, Tooltip, OverlayTrigger } from 'react-bootstrap'
 import { app, api } from 'xadmin-core'
 
-export default React.createClass({
+export default class CaptchaCodeInput extends React.Component {
+
+  constructor(props, context) {
+    super(props, context)
+    this.state = { url: this.getCodeUrl() }
+  }
 
   getCodeUrl() {
     const { field } = this.props
     return api({}).host + (field.captcha_url || '/get_captcha_code') + '?random=' + Math.random().toString()
-  },
-
-  getInitialState() {
-    return { url: this.getCodeUrl() }
-  },
+  }
 
   render() {
     const { input, label, meta, field, group: FieldGroup } = this.props
@@ -32,4 +33,4 @@ export default React.createClass({
       </FieldGroup>
     )
   }
-})
+}

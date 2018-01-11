@@ -12,8 +12,8 @@ import DashboardWrap from '../../wrap'
 })
 class TextModal extends React.Component {
 
-  constructor(props){
-    super(props)
+  constructor(props, context) {
+    super(props, context)
     this.state = {
       showModal : false,
       jsonPath : '',

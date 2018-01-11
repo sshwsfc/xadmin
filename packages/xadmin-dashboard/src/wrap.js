@@ -1,11 +1,12 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import { StoreWrap } from 'xadmin-core'
 
 export default StoreWrap({
 
   contextTypes: {
-    dashboardPath: React.PropTypes.object
+    dashboardPath: PropTypes.object
   },
 
   getState: (context) => {

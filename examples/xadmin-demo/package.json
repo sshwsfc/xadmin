@@ -10,6 +10,7 @@
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.4",
     "nervjs": "^1.2.2",
+    "prop-types": "^15.6.0",
     "react": "15",
     "react-bootstrap": "^0.32.0",
     "react-date-range": "^0.9.4",

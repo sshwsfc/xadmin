@@ -25,8 +25,8 @@ export default class Header extends React.Component {
     showDashboardModal: false
   }
 
-  constructor() {
-    super()
+  constructor(props, context) {
+    super(props, context)
     const widgets = app.load_dict('dashboard_widgets')
 
     this.addMenu = _.uniq([ 

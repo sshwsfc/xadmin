@@ -1,31 +1,21 @@
 import React from 'react'
-import { PropTypes, createElement } from 'react'
+import PropTypes from 'prop-types'
 import { ButtonToolbar, Button, Modal } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
 import { ModelWrap } from 'xadmin-model'
 import { SchemaForm } from 'xadmin-form'
 import { Block, StoreWrap, app } from 'xadmin-core'
 
-const AddModelBtn = ModelWrap('modalform.modal')(ModelWrap('model.item')(React.createClass({
-
-  propTypes: {
-    id: PropTypes.string,
-    data: PropTypes.object,
-    loading: PropTypes.bool.isRequired,
-    model: PropTypes.object.isRequired,
-    key: PropTypes.string.isRequired,
-    getItem: PropTypes.func.isRequired,
-    saveItem: PropTypes.func.isRequired
-  },
+class AddModelBtnCls extends React.Component {
 
   hideModal() {
     this.props.onClose()
-  },
+  }
 
   onSubmitSuccess(item) {
     this.hideModal()
     this.props.onSuccess(item)
-  },
+  }
 
   render() {
     const { show, model, title, loading, saveItem, canAdd, modalProps, btnProps } = this.props
@@ -48,7 +38,7 @@ const AddModelBtn = ModelWrap('modalform.modal')(ModelWrap('model.item')(React.c
         <Modal
           {...modalProps}
           show={show}
-          onHide={this.hideModal}
+          onHide={this.hideModal.bind(this)}
         >
           <Modal.Header closeButton>
             <Modal.Title>{title}</Modal.Title>
@@ -57,15 +47,26 @@ const AddModelBtn = ModelWrap('modalform.modal')(ModelWrap('model.item')(React.c
             formKey={`model.${model.key}`}
             schema={model}
             onSubmit={saveItem}
-            onClose={this.hideModal}
+            onClose={this.hideModal.bind(this)}
             component={FormLayout}
-            onSubmitSuccess={this.onSubmitSuccess}
+            onSubmitSuccess={this.onSubmitSuccess.bind(this)}
           />
         </Modal>
     ) : null
   }
 
-})))
+}
+AddModelBtnCls.propTypes = {
+  id: PropTypes.string,
+  data: PropTypes.object,
+  loading: PropTypes.bool.isRequired,
+  model: PropTypes.object.isRequired,
+  key: PropTypes.string.isRequired,
+  getItem: PropTypes.func.isRequired,
+  saveItem: PropTypes.func.isRequired
+}
+
+const AddModelBtn = ModelWrap('modalform.modal')(ModelWrap('model.item')(AddModelBtnCls))
 
 export default {
   name: 'xadmin.model.modalform',
