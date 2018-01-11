@@ -1,0 +1,22 @@
+{% load i18n %}
+<div class="datetime clearfix">
+  <div class="input-group date bootstrap-datepicker">
+    <span class="input-group-addon">
+      <i class="fa fa-calendar"></i>
+    </span>
+    {% include widget.subwidgets.0.template_name %}
+    <span class="input-group-btn">
+      <button class="btn btn-default" type="button">{% trans 'Today' %}</button>
+    </span>
+  </div>
+
+  <div class="input-group time bootstrap-clockpicker">
+    <span class="input-group-addon">
+      <i class="fa fa-clock-o"></i>
+    </span>
+    {% include widget.subwidgets.1.template_name %}
+    <span class="input-group-btn">
+      <button class="btn btn-default" type="button">{% trans 'Now' %}</button>
+    </span>
+  </div>
+</div>
