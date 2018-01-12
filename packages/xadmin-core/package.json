@@ -1,6 +1,6 @@
 {
   "name": "xadmin-core",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Xadmin Core",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
@@ -13,9 +13,9 @@
     "react-router": "^3.2.0",
     "redux": "^3.7.2",
     "redux-saga": "^0.16.0",
-    "xadmin-form": "^1.0.1",
-    "xadmin-model": "^1.0.4",
-    "xadmin-plugins": "^1.0.2"
+    "xadmin-form": "^1.0.2",
+    "xadmin-model": "^1.0.5",
+    "xadmin-plugins": "^1.0.3"
   },
   "peerDependencies": {
     "react": "16",

@@ -1,6 +1,6 @@
 {
   "name": "xadmin-auth",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Xadmin Auth",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
