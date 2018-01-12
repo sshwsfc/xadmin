@@ -1,0 +1,21 @@
+{
+  "name": "xadmin-api-jsonplaceholder",
+  "version": "1.0.0",
+  "description": "Xadmin API for jsonplaceholder",
+  "main": "./lib/index.js",
+  "author": "sshwsfc@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "isomorphic-fetch": "^2.2.1"
+  },
+  "peerDependencies": {
+    "xadmin-core": "1"
+  },
+  "scripts": {
+    "compile": "babel src --out-dir lib",
+    "watch": "babel src --out-dir lib -w"
+  },
+  "files": [
+    "lib"
+  ]
+}
