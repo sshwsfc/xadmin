@@ -10,7 +10,7 @@
     "react-bootstrap": "0.32"
   },
   "peerDependencies": {
-    "xadmin-core": "1"
+    "xadmin": "1"
   },
   "scripts": {
     "compile": "babel src --out-dir lib",

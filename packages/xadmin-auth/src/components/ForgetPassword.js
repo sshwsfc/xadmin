@@ -3,7 +3,7 @@ import { Link } from 'react-router'
 import { Panel, Well, Button } from 'react-bootstrap'
 
 import Icon from 'react-fontawesome'
-import { StoreWrap, app } from 'xadmin-core'
+import { StoreWrap, app } from 'xadmin'
 import { Model, ModelWrap } from 'xadmin-model'
 import Form from 'xadmin-model/lib/components/Form'
 

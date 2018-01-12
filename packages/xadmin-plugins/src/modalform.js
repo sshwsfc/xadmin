@@ -4,7 +4,7 @@ import { ButtonToolbar, Button, Modal } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
 import { ModelWrap } from 'xadmin-model'
 import { SchemaForm } from 'xadmin-form'
-import { Block, StoreWrap, app } from 'xadmin-core'
+import { Block, StoreWrap, app } from 'xadmin'
 
 class AddModelBtnCls extends React.Component {
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import app from 'xadmin-core'
+import app from 'xadmin'
 import dashboard, { Dashboard } from 'xadmin-dashboard'
 import project from './project'
 

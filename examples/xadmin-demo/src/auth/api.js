@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import app from 'xadmin-core'
+import app from 'xadmin'
 import _fetch from 'isomorphic-fetch'
 
 const fetch = (url, options = {}) => {

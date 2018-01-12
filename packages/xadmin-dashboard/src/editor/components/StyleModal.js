@@ -2,7 +2,7 @@ import React from 'react'
 import _ from 'lodash'
 import Icon from 'react-fontawesome'
 import { Modal, Navbar, Nav, NavItem, NavDropdown, MenuItem, Panel, Well, Button, Grid, Row, Col } from 'react-bootstrap'
-import { StoreWrap } from 'xadmin-core'
+import { StoreWrap } from 'xadmin'
 import CodeEditor from './CodeEditor'
 import DashboardWrap from '../../wrap'
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Field, reduxForm, reducer as formReducer } from 'redux-form'
-import { app, StoreWrap } from 'xadmin-core'
+import { app, StoreWrap } from 'xadmin'
 import { FieldGroup } from './components/base'
 
 const defaultUIRender = (fields, option) => {

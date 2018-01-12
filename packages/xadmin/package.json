@@ -1,5 +1,5 @@
 {
-  "name": "xadmin-core",
+  "name": "xadmin",
   "version": "1.0.5",
   "description": "Xadmin Core",
   "main": "./lib/index.js",

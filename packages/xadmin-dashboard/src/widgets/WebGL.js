@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
 import Icon from 'react-fontawesome'
-import { app, StoreWrap } from 'xadmin-core'
+import { app, StoreWrap } from 'xadmin'
 import elementResizeEvent from 'element-resize-event'
 
 class WebGL extends React.Component {

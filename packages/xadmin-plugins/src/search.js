@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import _ from 'lodash'
 import { Navbar, FormGroup, InputGroup, FormControl, Button } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
-import { Block, StoreWrap, app } from 'xadmin-core'
+import { Block, StoreWrap, app } from 'xadmin'
 import { ModelWrap } from 'xadmin-model'
 
 @ModelWrap('model.searchbar')

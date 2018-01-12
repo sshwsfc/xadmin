@@ -1,7 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import PropTypes from 'prop-types'
-import { Block, StoreWrap, app } from 'xadmin-core'
+import { Block, StoreWrap, app } from 'xadmin'
 
 const Model = (modelOrName, props={}) => {
   const { key, persist, initialValues, modelProps } = props

@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
 import Icon from 'react-fontawesome'
-import app from 'xadmin-core'
+import app from 'xadmin'
 import { SchemaForm } from 'xadmin-form'
 
 import { Navbar, Nav, NavItem, NavDropdown, OverlayTrigger, Tooltip, MenuItem, Panel, Well, Button } from 'react-bootstrap'

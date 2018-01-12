@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { FormGroup, ControlLabel, FormControl, Col, HelpBlock, ButtonGroup, Modal, OverlayTrigger, Popover, Panel, Button, Label, Well, MenuItem, ListGroup, ListGroupItem } from 'react-bootstrap'
 import { SchemaForm, FormWrap } from 'xadmin-form'
 
-import { app } from 'xadmin-core'
+import { app } from 'xadmin'
 import { ModelWrap, Model } from '../index'
 import { BaseRow, List } from '../components/Items'
 

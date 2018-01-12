@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
 import { Well, DropdownButton, ButtonToolbar, MenuItem } from 'react-bootstrap'
-import { Block, app } from 'xadmin-core'
+import { Block, app } from 'xadmin'
 import { ModelWrap } from '../base'
 
 class ActionBar extends React.Component {

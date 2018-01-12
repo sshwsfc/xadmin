@@ -4,7 +4,7 @@ import { Panel, Button, PanelGroup } from 'react-bootstrap'
 import { Collapse } from 'antd'
 import { objectBuilder } from 'xadmin-form'
 import Icon from 'react-fontawesome'
-import { app } from 'xadmin-core'
+import { app } from 'xadmin'
 
 const defaultItemsRender = ({ fields, meta: { touched, error }, field, fieldsBuilder }) => {
   const { items, label } = field

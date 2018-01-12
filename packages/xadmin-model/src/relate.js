@@ -5,7 +5,7 @@ import { FieldArray } from 'redux-form'
 import { all, fork, put, call, cancelled, takeEvery } from 'redux-saga/effects'
 import { Checkbox, FormControl } from 'react-bootstrap'
 
-import app, { api, Block, StoreWrap } from 'xadmin-core'
+import app, { api, Block, StoreWrap } from 'xadmin'
 import { FormWrap } from 'xadmin-form'
 import Icon from 'react-fontawesome'
 

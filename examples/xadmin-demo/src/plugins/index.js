@@ -1,5 +1,5 @@
 import React from 'react'
-import { app, StoreWrap } from 'xadmin-core'
+import { app, StoreWrap } from 'xadmin'
 
 import loading from 'xadmin-plugins/lib/loading'
 import search from 'xadmin-plugins/lib/search'

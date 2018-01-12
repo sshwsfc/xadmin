@@ -1,5 +1,5 @@
 import { all, fork, put, call, cancelled, takeEvery } from 'redux-saga/effects'
-import app, { api } from 'xadmin-core'
+import app, { api } from 'xadmin'
 
 function *handle_get_list({ model, filter, wheres }) {
   yield put({ type: 'START_LOADING', model, key: `${model.key}.items` })

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Main, App, Page } from './bootstrap'
-import app from 'xadmin-core'
+import app from 'xadmin'
 
 class Dashboard extends React.Component {
   render() {

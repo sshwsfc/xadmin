@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { StoreWrap } from 'xadmin-core'
+import { StoreWrap } from 'xadmin'
 
 export default StoreWrap({
 

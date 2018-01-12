@@ -1,6 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
-import { app, config } from 'xadmin-core'
+import { app, config } from 'xadmin'
 import { SubmissionError } from 'xadmin-form'
 
 const getFieldProp = (model, field) => {

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import _ from 'lodash'
 import { ButtonToolbar, Button, Modal, Panel } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
-import { Block, StoreWrap, app } from 'xadmin-core'
+import { Block, StoreWrap, app } from 'xadmin'
 import { ModelWrap, Model } from 'xadmin-model'
 import { SchemaForm } from 'xadmin-form'
 

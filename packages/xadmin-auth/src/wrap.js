@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import _ from 'lodash'
 import { UserAuthWrapper } from 'redux-auth-wrapper'
-import app from 'xadmin-core'
+import app from 'xadmin'
 
 const IsAuthenticated = UserAuthWrapper({
   authSelector: state => state.user,

@@ -2,7 +2,7 @@ import React from 'react'
 import _ from 'lodash'
 import Icon from 'react-fontawesome'
 import Textarea from 'xadmin-form/lib/components/Textarea'
-import { app, StoreWrap } from 'xadmin-core'
+import { app, StoreWrap } from 'xadmin'
 
 class HtmlPart extends React.Component {
 

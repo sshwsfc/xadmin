@@ -14,7 +14,7 @@
   },
   "peerDependencies": {
     "react-bootstrap": "0.32",
-    "xadmin-core": "1",
+    "xadmin": "1",
     "xadmin-form": "1",
     "xadmin-i18n": "1",
     "xadmin-model": "1"

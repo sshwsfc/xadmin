@@ -18,7 +18,7 @@
     "react-router": "^3.2.0",
     "redux-saga": "^0.16.0",
     "xadmin-auth": "^1.0.1",
-    "xadmin-core": "^1.0.1",
+    "xadmin": "^1.0.1",
     "xadmin-dashboard": "^1.1.2",
     "xadmin-form": "^1.0.0",
     "xadmin-i18n": "^1.0.0",

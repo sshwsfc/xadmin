@@ -2,7 +2,7 @@ import React from 'react'
 import { NavItem, Button, FormGroup, ControlLabel, FormControl, HelpBlock, Modal } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
 import { SchemaForm, fieldBuilder } from 'xadmin-form'
-import { app, StoreWrap } from 'xadmin-core'
+import { app, StoreWrap } from 'xadmin'
 import DashboardWrap from '../../wrap'
 
 @DashboardWrap('dashboard.view')

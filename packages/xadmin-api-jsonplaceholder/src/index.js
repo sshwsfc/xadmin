@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-fetch'
-import { RESTBaseAPI } from 'xadmin-core'
+import { RESTBaseAPI } from 'xadmin'
 
 export default class API extends RESTBaseAPI {
 

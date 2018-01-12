@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Field, reducer as formReducer, reduxForm } from 'redux-form'
-import { StoreWrap, app } from 'xadmin-core'
+import { StoreWrap, app } from 'xadmin'
 import { fieldBuilder, objectBuilder } from './builder'
 
 import Ajv from 'ajv'

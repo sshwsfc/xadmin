@@ -1,7 +1,7 @@
 import React from 'react'
 import { SubmissionError } from 'redux-form'
 import { all, fork, put, call, cancelled, takeEvery } from 'redux-saga/effects'
-import app, { api } from 'xadmin-core'
+import app, { api } from 'xadmin'
 
 import BatchDelete from './BatchDelete'
 import BatchChange from './BatchChange'

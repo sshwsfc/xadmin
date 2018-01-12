@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Popover } from 'antd'
-import { app, StoreWrap, Block } from 'xadmin-core'
+import { app, StoreWrap, Block } from 'xadmin'
 import { DashboardWrap } from 'xadmin-dashboard'
 import { Editor } from 'xadmin-dashboard/lib/editor'
 

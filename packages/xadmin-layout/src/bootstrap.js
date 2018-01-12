@@ -1,6 +1,6 @@
 import React from 'react'
 import { Row, Col, Breadcrumb, BreadcrumbItem, Panel, Nav, Navbar } from 'react-bootstrap'
-import { Block, config as _c } from 'xadmin-core'
+import { Block, config as _c } from 'xadmin'
 
 class Bread extends React.Component {
   render() {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { app, StoreWrap } from 'xadmin-core'
+import { app, StoreWrap } from 'xadmin'
 import Cell from './Cell'
 import DashboardWrap from '../wrap'
 import Root from './Root'

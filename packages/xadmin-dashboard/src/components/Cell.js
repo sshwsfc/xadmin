@@ -1,6 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
-import { app, StoreWrap } from 'xadmin-core'
+import { app, StoreWrap } from 'xadmin'
 import Icon from 'react-fontawesome'
 import DashboardWrap from '../wrap'
 import Animate from './Animate'

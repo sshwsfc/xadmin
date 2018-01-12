@@ -1,6 +1,6 @@
 import React from 'react'
 import { FormControl, InputGroup, Col, Row, Tooltip, OverlayTrigger } from 'react-bootstrap'
-import { app, api } from 'xadmin-core'
+import { app, api } from 'xadmin'
 
 export default class CaptchaCodeInput extends React.Component {
 

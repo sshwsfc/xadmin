@@ -1,5 +1,5 @@
 npm link xadmin-auth
-npm link xadmin-core
+npm link xadmin
 npm link xadmin-layout
 npm link xadmin-dashboard
 npm link xadmin-form

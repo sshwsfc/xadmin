@@ -1,7 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import Icon from 'react-fontawesome'
-import { app, StoreWrap } from 'xadmin-core'
+import { app, StoreWrap } from 'xadmin'
 import elementResizeEvent from 'element-resize-event'
 import WebGL from './WebGL'
 import earth from '../gls/earth'

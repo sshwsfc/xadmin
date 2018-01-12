@@ -1,6 +1,6 @@
 import React from 'react'
 import { Modal, ButtonGroup, OverlayTrigger, Popover, Panel, Button, Label, Well, MenuItem, ListGroup, ListGroupItem } from 'react-bootstrap'
-import { app } from 'xadmin-core'
+import { app } from 'xadmin'
 import { ModelWrap, Model } from '../index'
 import { BaseRow, List } from '../components/Items'
 

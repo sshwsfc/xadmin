@@ -1,5 +1,5 @@
 import React from 'react'
-import { app, StoreWrap } from 'xadmin-core'
+import { app, StoreWrap } from 'xadmin'
 
 import i18n from 'xadmin-i18n'
 import form from 'xadmin-form'

@@ -1,4 +1,4 @@
-import app from 'xadmin-core'
+import app from 'xadmin'
 
 import i18n from 'xadmin-i18n'
 import form from 'xadmin-form'

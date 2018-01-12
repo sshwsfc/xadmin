@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { app } from 'xadmin-core'
+import { app } from 'xadmin'
 
 const stripNullType = (type) => {
   if(Array.isArray(type) && type.length == 2) {

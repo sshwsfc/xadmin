@@ -2,7 +2,7 @@ import React from 'react'
 import DashboardWrap from '../../wrap'
 import { Icon, Tabs, Button, Tree, Card } from 'antd'
 import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu'
-import { app } from 'xadmin-core'
+import { app } from 'xadmin'
 import Root from '../../components/Root'
 
 const TabPane = Tabs.TabPane

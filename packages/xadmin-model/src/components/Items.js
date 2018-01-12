@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
 import Icon from 'react-fontawesome'
-import { Block, app } from 'xadmin-core'
+import { Block, app } from 'xadmin'
 import { SchemaForm } from 'xadmin-form'
 
 import { FormGroup, ControlLabel, FormControl, Col, HelpBlock, Table, OverlayTrigger, Popover, Button, ButtonGroup, Input, Dropdown, MenuItem, Well, Panel, Media } from 'react-bootstrap'

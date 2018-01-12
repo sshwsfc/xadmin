@@ -14,7 +14,7 @@
     "react-bootstrap": "^0.31.0",
     "redux-form": "^6.1.1",
     "redux-saga": "^0.16.0",
-    "xadmin-core": "1",
+    "xadmin": "1",
     "xadmin-form": "1",
     "xadmin-i18n": "1",
     "xadmin-model": "1"

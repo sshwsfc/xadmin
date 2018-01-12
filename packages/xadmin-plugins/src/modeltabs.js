@@ -4,7 +4,7 @@ import { ButtonToolbar, Button, Modal, Nav, NavItem } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
 import { ModelWrap } from 'xadmin-model'
 import { SchemaForm } from 'xadmin-form'
-import { Block, StoreWrap, app } from 'xadmin-core'
+import { Block, StoreWrap, app } from 'xadmin'
 
 @ModelWrap('modaltab.tabs')
 class ModelTabs extends React.Component {

@@ -4,7 +4,7 @@ import { Link } from 'react-router'
 import { Button, Nav, Row, Col } from 'react-bootstrap'
 
 import Icon from 'react-fontawesome'
-import { Block, app } from 'xadmin-core'
+import { Block, app } from 'xadmin'
 import { Page } from 'xadmin-layout'
 import { ModelWrap } from '../base'
 

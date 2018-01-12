@@ -1,7 +1,7 @@
 import React from 'react'
 import { Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
-import { app, StoreWrap, Block } from 'xadmin-core'
+import { app, StoreWrap, Block } from 'xadmin'
 import DashForm from './DashForm'
 import DashboardWrap from '../../wrap'
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { StoreWrap } from 'xadmin-core'
+import { StoreWrap } from 'xadmin'
 import { AlertList } from 'react-bs-notifier'
 
 const Notices = StoreWrap('xadmin.notice')(({ notices, onDismiss }) => {

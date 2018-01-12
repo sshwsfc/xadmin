@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
 import Icon from 'react-fontawesome'
-import { StoreWrap, app } from 'xadmin-core'
+import { StoreWrap, app } from 'xadmin'
 import { convert as schemaConvert } from 'xadmin-form/lib/schema'
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Panel, Well, ButtonFormGroup, HelpBlock, FormGroup, Col, FormControl, ControlLabel } from 'react-bootstrap'
 

@@ -1,4 +1,4 @@
-import { config as _c } from 'xadmin-core'
+import { config as _c } from 'xadmin'
 import CaptchaCodeInput from './components/CaptchaCodeInput'
 
 // Forms

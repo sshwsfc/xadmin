@@ -1,7 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import { Menu, Icon, Col, Row, Button, Popover, Progress , Modal, Tabs, Slider } from 'antd'
-import { app, StoreWrap, Block } from 'xadmin-core'
+import { app, StoreWrap, Block } from 'xadmin'
 import DashboardWrap from '../../wrap'
 
 import XMenu from './Menu'
