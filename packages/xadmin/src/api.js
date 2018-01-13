@@ -19,7 +19,9 @@ export default class RESTBaseAPI {
   }
 
   query(filter = {}, wheres = {}) {
-    return this.fetch().then(ds => ds.slice(filter.offset || 0, filter.limit || 15))
+    return this.fetch().then(ds => ({
+      total: ds.length, items: ds.slice(filter.skip || 0, (filter.skip || 0) + parseInt(filter.limit || 15))
+    }))
   }
 
   get(id = '') {

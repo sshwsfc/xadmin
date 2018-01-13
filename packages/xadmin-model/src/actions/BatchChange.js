@@ -109,12 +109,13 @@ class BatchChangeBtn extends React.Component {
     const { selected, onSelect, canEdit, fields } = this.props
     const { _t } = app.context
 
-    return (canEdit && fields.length > 0) ? (
+    return (canEdit && fields.length > 0) ? [ (
       <MenuItem eventKey={'actions_batch_change'} onSelect={(e)=>{onSelect(e); this.setState({ show: true })}} disabled={selected.length == 0}>
       {_t('Batch Change Items')}
-      {(this.state.show && selected.length > 0) ? this.renderModel() : null}
       </MenuItem>
-    ) : null
+      ),
+      (this.state.show && selected.length > 0) ? this.renderModel() : null
+    ] : null
   }
 
 }

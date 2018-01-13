@@ -1,105 +1,48 @@
-// this file is e.g. for models
 import { Radios, Textarea } from 'xadmin-form/lib/components'
 
 export default {
-  car: {
-    name: 'car',
-    title: 'Car',
+  User: {
+    name: 'user',
+    resource_name: 'users',
     type: 'object',
+    icon: 'user', // fa-icon
+    title: 'User',
     properties: {
-      name: {
-        type: 'string',
-        minLength: 3
-      },
-      color: {
-        type: 'string',
-        minLength: 3
-      },
-      count: {
+      id: {
         type: 'number',
-        maximum: 30
+        title: 'User ID'
       },
-      active: {
-        type: 'boolean'
+      name: {
+        type: 'string'
       },
-      saleDate: {
-        title: '售卖日期',
+      username: {
+        type: 'string'
+      },
+      email: {
         type: 'string',
-        format: 'date'
+        format: 'email'
       },
-      brand: {
-        title: 'Car Brand',
-        type: 'string',
-        enum: [
-          'benz',
-          'BMW',
-          'audi'
-        ]
+      website: {
+        type: 'string'
       },
-      comment: {
-        title: 'Comment',
-        type: 'string',
-        maxLength: 20,
-        validationMessage: 'Don\'t be greedy!',
-        description: 'Please write your comment here.'
-      },
-      othercar: {
-        name: 'othercar',
-        title: 'Other Car',
+      address: {
         type: 'object',
         properties: {
-          name: {
-            type: 'string',
-            minLength: 3
-          },
-          color: {
-            type: 'string',
-            minLength: 3
-          }
-        }
-      },
-      cars: {
-        title: 'Chlid Cars',
-        type: 'array',
-        items: {
-          type: 'object',
-          properties: {
-            name: {
-              type: 'string',
-              minLength: 3
-            },
-            color: {
-              type: 'string',
-              minLength: 3
-            },
-            saleDate: {
-              title: '售卖日期',
-              type: 'string',
-              format: 'date'
-            }
-          }
-        }
-      },
-      items: {
-        title: 'Chlid Items',
-        type: 'array',
-        items: {
-          type: 'string',
-          minLength: 3
+          street: { type: 'string' },
+          suite: { type: 'string' }
         }
       }
     },
     permission: { view: true, add: true, edit: true, delete: true },
-    required: [ 'name' ],
-    form: [ 
-      { key: 'name', attrs: { bsSize: 'lg' } }, 
-      'color', 
-      'saleDate',
-      { key: 'brand', component: Radios, attrs: { inline: true } }, 
-      { key: 'comment', component: Textarea, attrs: { rows: 5 } },
-      '*'
-    ],
-    filters: [ 'name', 'brand', 'color', 'createdAt' ],
-    list_display: [ 'name', 'brand', 'color', 'createdAt' ]
+    form: [ 'id', 'name', 'email', 'address', 
+      { key: 'website', component: Textarea, attrs: { rows: 5 } } ],
+    filters: {
+      nav: [ 'name', 'email' ],
+      sidemenu: [ 'name' ]
+    },
+    search_fields: [ 'name', 'email' ],
+    required: [ 'name', 'email', 'website' ],
+    readonly: [ 'id' ],
+    list_display: [ 'id', 'name', 'email', 'website', 'address.street' ]
   }
 }

@@ -142,7 +142,6 @@ class FilterMenu extends React.Component {
           </Panel>
         )
       }
-
       return (<FilterForm
               formKey={formKey}
               filters={filters}
@@ -239,12 +238,12 @@ class FilterModal extends React.Component {
     const { _t } = app.context
     const { filters, data } = this.props
     if(filters && filters.length) {
-      return (
-          <NavItem onClick={()=>this.setState({ show: true })}>
-            <Icon name="filter" /> {_t('Filter')} {(data && Object.keys(data).length) ? (<Badge>{Object.keys(data).length}</Badge>) : null}
-            {this.state.show ? this.renderModal() : null}
-          </NavItem>
-        )
+      return [
+        (<NavItem onClick={()=>this.setState({ show: true })}>
+          <Icon name="filter" /> {_t('Filter')} {(data && Object.keys(data).length) ? (<Badge>{Object.keys(data).length}</Badge>) : null}
+        </NavItem>),
+        this.state.show ? this.renderModal() : null
+      ]
     } else {
       return null
     }

@@ -28,7 +28,7 @@ class PageSizeButton extends React.Component {
   setPageSize(e) {
     this.props.setPageSize(this.state.size)
     this.setState({ show: false })
-    if(document.all) { window.event.returnValue = false }else{ e.preventDefault() }
+    if(document.all) { window.event.returnValue = false }else{ e.persist() }
   }
 
   showCustomize() {
@@ -65,14 +65,15 @@ class PageSizeButton extends React.Component {
   render() {
     const { _t } = app.context
     const { size, sizes, setPageSize } = this.props
-    return (
+    return [ (
       <DropdownButton bsSize="small" title={_t('{{size}} per page', { size })} id="dropdown-size-btn">
         {sizes.map(size => <MenuItem onSelect={()=>setPageSize(size)} eventKey={`size-${size}`}>{_t('Set {{size}} per page', { size })}</MenuItem>)}
         <MenuItem divider />
-        {this.state.show ? this.showCustomize() : null}
         <MenuItem eventKey="cus-size" onSelect={()=>this.setState({ show: true })}>{_t('Customize page size')}</MenuItem>
       </DropdownButton>
-      )
+      ), 
+      this.state.show ? this.showCustomize() : null
+    ]
   }
 }
 

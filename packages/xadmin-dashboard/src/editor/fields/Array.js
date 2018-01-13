@@ -15,7 +15,7 @@ const defaultItemsRender = ({ fields, meta: { touched, error }, field, fieldsBui
       <div style={{ marginTop: 5 }}> 
       <Collapse bordered={false}>
         {fields.map((name, index) => {
-          const removeBtn = (<Button bsSize="xsmall" onClick={() => fields.remove(index)} style={{ float: 'right' }}><Icon name="minus"/></Button>)
+          const removeBtn = (<Button bsSize="xsmall" onClick={(e) => { fields.remove(index); e.persist() }} style={{ float: 'right' }}><Icon name="minus"/></Button>)
           const itemLable = (<span>{label + ' ' + (index + 1)}{removeBtn}</span>)
           const fieldsComponent = fieldsBuilder(name, index, removeBtn, itemLable)
           return fieldsComponent.length > 1 ? (

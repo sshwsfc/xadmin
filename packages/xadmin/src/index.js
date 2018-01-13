@@ -18,9 +18,12 @@ const API_CACHE = {}
 const api = (opt) => {
   const resource = opt.resource_name || opt.name
   if(API_CACHE[resource] == undefined) {
-    API_CACHE[resource] = config('api', () => {
+    const API = config('api')
+    if (API) {
+      API_CACHE[resource] = new API(opt)
+    } else {
       throw 'App API not implement!!!'
-    })(opt)
+    }
   }
   return API_CACHE[resource]
 }

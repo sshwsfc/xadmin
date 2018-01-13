@@ -1,11 +1,21 @@
-import widgets from './components'
+import {
+  Text,
+  Select,
+  Checkbox,
+  Radios,
+  RadioBtn,
+  Textarea,
+  DateTime,
+  Fieldset,
+  ArrayWidget
+} from './components'
 
 export default {
   text: {
-    component: widgets.Text
+    component: Text
   },
   number: {
-    component: widgets.Text,
+    component: Text,
     normalize: (value, previousValue) => {
       const ret = parseFloat(value)
       return Number.isNaN(ret) ? value : ret
@@ -16,7 +26,7 @@ export default {
     }
   },
   integer: {
-    component: widgets.Text,
+    component: Text,
     normalize: (value, previousValue) => {
       const ret = parseInt(value)
       return Number.isNaN(ret) ? value : ret
@@ -27,17 +37,17 @@ export default {
     }
   },
   select: {
-    component: widgets.Select
+    component: Select
   },
   numselect: {
-    component: widgets.Select,
+    component: Select,
     normalize: (value, previousValue) => {
       const ret = parseFloat(value)
       return Number.isNaN(ret) ? value : ret
     }
   },
   date: {
-    component: widgets.DateTime,
+    component: DateTime,
     normalize: (value, previousValue) => {
       return (value && value.format) ? value.format('YYYY-MM-DD') : value || previousValue
     },
@@ -48,7 +58,7 @@ export default {
     }
   },
   time: {
-    component: widgets.DateTime,
+    component: DateTime,
     normalize: (value, previousValue) => {
       return (value && value.format) ? value.format('HH:mm:ss') : value || previousValue
     },
@@ -60,7 +70,7 @@ export default {
     }
   },
   datetime: {
-    component: widgets.DateTime,
+    component: DateTime,
     normalize: (value, previousValue) => {
       return (value && value.format) ? value.format('YYYY-MM-DD HH:mm:ss') : value || previousValue
     },
@@ -71,18 +81,18 @@ export default {
     }
   },
   bool: {
-    component: widgets.Checkbox,
+    component: Checkbox,
     normalize: (value, previousValue) => {
       return Boolean(value)
     }
   },
   checkbox: {
-    component: widgets.Checkbox
+    component: Checkbox
   },
   fieldset: {
-    component: widgets.Fieldset
+    component: Fieldset
   },
   array: {
-    component: widgets.ArrayWidget
+    component: ArrayWidget
   }
 }

@@ -52,12 +52,12 @@ class CellProps extends React.Component {
         {children}
         <Button type="submit" disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary" block>
           <Icon name={icon}/> 保存</Button>
-        <CodeModal params={params} onChange={this.saveParams.bind(this)} />
+        <CodeModal params={params} onChange={this.saveParams} />
       </form>
     )
   }
 
-  saveParams(values) {
+  saveParams = (values) => {
     this.props.saveParams(values)
     this.props.onClose && this.props.onClose()
   }
@@ -119,7 +119,7 @@ class LayoutProps extends React.Component {
     )
   }
 
-  saveParams(values) {
+  saveParams = (values) => {
     const { params, cellKey, parent } = this.props
 
     if(parent && parent.type) {
@@ -150,7 +150,7 @@ class LayoutProps extends React.Component {
               schema={schema}
               initialValues={_.clone(layout)}
               group={FieldGroup}
-              onSubmit={this.saveParams.bind(this)}
+              onSubmit={this.saveParams}
               component={this.formLayout}/>)
       }
     }
@@ -223,12 +223,12 @@ class CellEvents extends React.Component {
         {children}
         <Button type="submit" disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary" block>
           <Icon name={icon}/> 保存</Button>
-        <CodeModal params={params} onChange={this.save.bind(this)} />
+        <CodeModal params={params} onChange={this.save} />
       </form>
     )
   }
 
-  save(values) {
+  save = (values) => {
     this.props.saveEvents(values)
     this.props.onClose && this.props.onClose()
   }

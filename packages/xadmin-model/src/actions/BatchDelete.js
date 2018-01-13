@@ -47,12 +47,13 @@ class BatchDeleteBtn extends React.Component {
     const { selected, onSelect, canDelete } = this.props
     const { _t } = app.context
 
-    return canDelete ? (
+    return canDelete ? [ (
       <MenuItem eventKey={'actions_batch_delete'} onSelect={(e)=>{onSelect(e); this.setState({ show: true })}} disabled={selected.length == 0}>
       {_t('Batch Delete Items')}
-      {(this.state.show && selected.length > 0) ? this.renderModel() : null}
       </MenuItem>
-    ) : null
+      ),
+      (this.state.show && selected.length > 0) ? this.renderModel() : null
+    ] : null
   }
 
 }

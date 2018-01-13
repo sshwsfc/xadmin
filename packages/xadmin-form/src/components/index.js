@@ -9,7 +9,7 @@ import DateTime from './DateTime'
 import Fieldset from './Fieldset'
 import ArrayWidget from './Array'
 
-export default {
+export {
   Text,
   Select,
   Checkbox,

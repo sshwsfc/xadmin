@@ -1,15 +1,15 @@
 {
-    "presets": ["env", "react"],
-    "plugins": [
-      "transform-object-rest-spread",
-      "transform-class-properties",
-      "transform-decorators-legacy",
-      [
-        "transform-runtime",
-        {
-          "polyfill": false,
-          "regenerator": true
-        }
-      ]
+  "presets": ["env", "react"],
+  "plugins": [
+    "transform-object-rest-spread",
+    "transform-class-properties",
+    "transform-decorators-legacy",
+    [
+      "transform-runtime",
+      {
+        "polyfill": false,
+        "regenerator": true
+      }
     ]
-  }
+  ]
+}

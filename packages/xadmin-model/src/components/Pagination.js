@@ -8,24 +8,26 @@ class ModelPagination extends React.Component {
 
   render() {
     const { _t } = app.context
-    const { emptyComponent } = this.props
+    const { emptyComponent, items, activePage, changePage } = this.props
+    const c = (num) => () => changePage(num)
 
-    if(this.props.items > 1) {
+    const pages = []
+    for (let i = 1; i <= items; i++) {
+      pages.push(<Pagination.Item active={activePage == i} onClick={c(i)}>{i}</Pagination.Item>)
+    }
+
+    if(items > 1) {
       return (
         <Pagination
-            style={{ marginTop: 0 }}
-            bsSize={this.props.bsSize || ''}
-            prev
-            next
-            first
-            last
-            ellipsis
-            boundaryLinks
-            items={this.props.items}
-            activePage={this.props.activePage}
-            onSelect={this.props.changePage}
-            maxButtons={5} />
-        )
+          style={{ marginTop: 0 }}
+          bsSize={this.props.bsSize || ''}>
+          <Pagination.First disabled={activePage == 1} onClick={c(1)} />
+          <Pagination.Prev disabled={activePage == 1} onClick={c(activePage - 1)} />
+          {pages}
+          <Pagination.Next disabled={activePage == items} onClick={c(activePage + 1)}/>
+          <Pagination.Last disabled={activePage == items} onClick={c(items)}/>
+        </Pagination>
+      )
     } else {
       return emptyComponent !== undefined ? emptyComponent : (
         <ul style={{ marginTop: 0 }} className="pagination pagination-sm">

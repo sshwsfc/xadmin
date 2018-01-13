@@ -21,9 +21,6 @@ import {
 
 import './auth.css'
 
-@IsAuthenticated
-class App extends BaseApp { }
-
 export default {
   name: 'xadmin.auth',
   config: {
@@ -38,7 +35,7 @@ export default {
     'top.right': () => <UserMenu />
   },
   components: {
-    App
+    App: IsAuthenticated(BaseApp)
   },
   context: (app) => (context, cb) => {
     const { store } = context

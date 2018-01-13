@@ -22,10 +22,6 @@ const live = {
   }
 }
 
-app
-.use(dashboard)
-.use(live)
-
 if (process.env.NODE_ENV !== 'production') {
   const form = require('xadmin-form').default
   const editor = require('./editor').default
@@ -33,6 +29,9 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(editor)
 }
 
-app.use(project)
+app
+.use(dashboard)
+.use(live)
+.use(project)
 
 export default app

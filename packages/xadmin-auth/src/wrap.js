@@ -1,32 +1,30 @@
 import React, { Component } from 'react'
 import _ from 'lodash'
-import { UserAuthWrapper } from 'redux-auth-wrapper'
+import { connectedRouterRedirect } from 'redux-auth-wrapper/history3/redirect'
+import connectedAuthWrapper from 'redux-auth-wrapper/connectedAuthWrapper'
 import app from 'xadmin'
 
-const IsAuthenticated = UserAuthWrapper({
-  authSelector: state => state.user,
+const IsAuthenticated = connectedRouterRedirect({
+  authenticatedSelector: state => state.user !== null,
+  redirectPath: '/login',
   wrapperDisplayName: 'UserIsAuthenticated'
 })
 
-const ShowAuthenticated = UserAuthWrapper({
-  authSelector: state => state.user,
-  wrapperDisplayName: 'UserShowAuthenticated',
-  FailureComponent: null
+const ShowAuthenticated = connectedAuthWrapper({
+  authenticatedSelector: state => state.user !== null,
+  wrapperDisplayName: 'UserShowAuthenticated'
 })
 
-const IsSuperUser = UserAuthWrapper({
-  authSelector: state => state.user,
-  failureRedirectPath: '/app',
-  wrapperDisplayName: 'UserIsSuper',
-  predicate: user => user.isSuper,
-  allowRedirectBack: false
+const IsSuperUser = connectedRouterRedirect({
+  authenticatedSelector: state => state.user !== null && state.user.isSuper,
+  redirectPath: '/app',
+  wrapperDisplayName: 'UserIsSuper'
 })
 
 const HasPermission = ({ permission, failureComponent=null, children, ...childProps }) => {
-  const UserAuthTag = UserAuthWrapper({
-    authSelector: state => state.user,
-    wrapperDisplayName: 'VisibleOnlyHasPermission',
-    predicate: user => {
+  const UserAuthTag = connectedAuthWrapper({
+    authenticatedSelector: state => {
+      const user = state.user
       if(user && user.isSuper) { return true }
       if(user && user.permissions) {
         if(_.isArray(permission)) {
@@ -40,6 +38,7 @@ const HasPermission = ({ permission, failureComponent=null, children, ...childPr
         return false
       }
     },
+    wrapperDisplayName: 'VisibleOnlyHasPermission',
     FailureComponent: failureComponent
   })(()=> Object.keys(childProps).length > 0 ? React.cloneElement(children, childProps) : children)
   return <UserAuthTag />

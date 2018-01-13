@@ -101,7 +101,7 @@ export default class Header extends React.Component {
         <Button onClick={this.props.increase} icon="plus" />
       </div>
     )
-    return (
+    return [ (
       <div className="header-bg">
         <Row>
           <Col span={3} className="b-bottom logo">
@@ -117,15 +117,12 @@ export default class Header extends React.Component {
               </SubMenu>
               <Menu.Item key="dashboard-form">
                 <a onClick={()=>this.setState({ showDashboardModal: true })}><Icon type="setting" />页面属性</a>
-                <DashForm show={this.state.showDashboardModal} onClose={()=>this.setState({ showDashboardModal: false })} />
               </Menu.Item>
               <Menu.Item key="datasource">
                 <a onClick={()=>this.setState({ showDataModal: true })}><Icon type="retweet" />数据源</a>
-                <DataModal show={this.state.showDataModal} onClose={()=>this.setState({ showDataModal: false })} />
               </Menu.Item>
               <Menu.Item key="connect">
                 <a onClick={()=>this.setState({ showConnectModal: true })}><Icon type="retweet" />接口管理</a>
-                <ConnectModal show={this.state.showConnectModal} onClose={()=>this.setState({ showConnectModal: false })} />
               </Menu.Item>
             </Menu>
           </Col>
@@ -140,6 +137,10 @@ export default class Header extends React.Component {
           </Col>
         </Row>
       </div>
-    )
+    ), 
+      <DashForm show={this.state.showDashboardModal} onClose={()=>this.setState({ showDashboardModal: false })} />,
+      <DataModal show={this.state.showDataModal} onClose={()=>this.setState({ showDataModal: false })} />,
+      <ConnectModal show={this.state.showConnectModal} onClose={()=>this.setState({ showConnectModal: false })} />
+    ]
   }
 }

@@ -14,7 +14,7 @@ const defaultItemsRender = ({ fields, meta: { touched, error }, field, fieldsBui
       <Button bsSize="xsmall" onClick={() => fields.push()}><Icon name="plus"/></Button></h5>
       <PanelGroup accordion>
         {fields.map((name, index) => {
-          const removeBtn = (<Button bsSize="xsmall" onClick={() => fields.remove(index)} style={{ float: 'right' }}><Icon name="minus"/></Button>)
+          const removeBtn = (<Button bsSize="xsmall" onClick={(e) => { fields.remove(index); e.persist() }} style={{ float: 'right' }}><Icon name="minus"/></Button>)
           const itemLable = (<h6>{label + ' ' + (index + 1)}{removeBtn}</h6>)
           const fieldsComponent = fieldsBuilder(name, index, removeBtn)
           return fieldsComponent.length > 1 ? (

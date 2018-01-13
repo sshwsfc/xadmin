@@ -39,3 +39,4 @@ const BlockTag = ({ tag, children, props, ...extraProps }) => {
   }
 }
 
+export { Block, BlockTag }

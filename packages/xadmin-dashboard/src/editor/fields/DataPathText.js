@@ -46,14 +46,14 @@ class TextModal extends React.Component {
     })
   }
 
-  render(){
+  render() {
     const { data={}, input, label, meta, field, group: FieldGroup } = this.props
 
     return(
-      <div style={{position:'relative'}}>
+      <div style={{ position:'relative' }}>
         <FieldGroup label={label} meta={meta} input={input} field={field} >
           <FormControl {...input} {...field.attrs}  />
-          <Icon type="api" onClick={ this.openModal } style={{position:'absolute',right:'15px',top:'32px',fontSize:'20px'}}/>
+          <Icon type="api" onClick={ this.openModal } style={{ position:'absolute',right:'15px',top:'32px',fontSize:'20px' }}/>
         </FieldGroup>
         <Modal show={ this.state.showModal } onHide={ this.closeModal }>
           <Modal.Header closeButton>

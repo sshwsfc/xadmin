@@ -91,7 +91,7 @@ const react_app = {
       app.context.router.push(uri)
     }
     
-    const routerType = app.config('router', 'browser')
+    const routerType = app.load_dict('config')['router'] || 'browser'
     const router = (typeof routerType === 'string') ? {
       browser: browserHistory,
       hash: hashHistory
@@ -101,7 +101,7 @@ const react_app = {
   },
   start: (app) => () => {
     // init container
-    let { container } = app.context
+    let { container='#app' } = app.context
     if (typeof container === 'string') {
       container = document.querySelector(container)
     }

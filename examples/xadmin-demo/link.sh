@@ -6,3 +6,4 @@ npm link xadmin-form
 npm link xadmin-i18n
 npm link xadmin-model
 npm link xadmin-plugins
+npm link xadmin-api-jsonplaceholder

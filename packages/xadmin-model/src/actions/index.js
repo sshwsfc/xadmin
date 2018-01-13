@@ -15,7 +15,7 @@ function *handle_delete_items({ model, items, message }) {
     if(API.batchDelte) {
       yield API.batchDelte(items.map(item=>item.id))
     } else {
-      yield items.map(item => call([ API, API.delete ], item.id))
+      yield all(items.map(item => call([ API, API.delete ], item.id)))
     }
     for(let item of items) {
       yield put({ type: 'SELECT_ITEMS', selected: false, item, model })
@@ -38,7 +38,7 @@ function *handle_change_items({ model, items, value, promise, message }) {
     if(API.batchSave) {
       ret = yield API.batchSave(items, value)
     } else {
-      ret = yield items.map(item => call([ API, API.save ], { id: item.id, ...value }, true))
+      ret = yield all(items.map(item => call([ API, API.save ], { id: item.id, ...value }, true)))
     }
     yield put({ type: 'GET_ITEMS', model })
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Field, reducer as formReducer, reduxForm } from 'redux-form'
-import { StoreWrap, app } from 'xadmin'
+import { StoreWrap, app, config } from 'xadmin'
 import { fieldBuilder, objectBuilder } from './builder'
 
 import Ajv from 'ajv'
@@ -41,8 +41,11 @@ const validateByFields = (errors, values, fields) => {
 
 const Form = (props) => {
   const { formKey, validate, fields } = props
+  const formConfig = config('redux-form-config')
   const WrapForm = reduxForm({ 
     form: formKey,
+    destroyOnUnmount: false,
+    ...formConfig,
     validate: (values) => {
       let errors = validate ? validate(values) : {}
       return validateByFields(errors, values, fields)
@@ -55,15 +58,19 @@ const SchemaForm = (props) => {
   const { formKey, schema } = props
   const ajValidate = ajv.compile(schema)
   const fields = schemaConvert(schema).fields
-  
+  const formConfig = config('redux-form-config')
   const WrapForm = reduxForm({ 
     form: formKey,
+    destroyOnUnmount: false,
+    ...formConfig,
     validate: (values) => {
       const valid = ajValidate(_.omitBy(values, v=> v == null || v === undefined || v === ''))
       if(!valid) {
         const { i18n } = app.context
-        if(ajvLocalize[i18n.language]) {
+        if(i18n && ajvLocalize[i18n.language]) {
           ajvLocalize[i18n.language](ajValidate.errors)
+        } else {
+          ajvLocalize['en'](ajValidate.errors)
         }
       }
       let errors = valid ? {} : ajValidate.errors.reduce((prev, err) => {
