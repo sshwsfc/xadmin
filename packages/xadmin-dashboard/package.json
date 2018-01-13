@@ -1,6 +1,6 @@
 {
   "name": "xadmin-dashboard",
-  "version": "1.1.4",
+  "version": "1.1.6",
   "main": "./lib/index.js",
   "license": "MIT",
   "dependencies": {
@@ -16,9 +16,9 @@
     "prop-types": "^15.6.0",
     "react-contextmenu": "^2.6.3",
     "react-fontawesome": "^1.6.1",
-    "react-grid-layout": "^0.14.4",
-    "react-json-inspector": "^7.0.1",
-    "react-monaco-editor": "^0.8.1",
+    "react-grid-layout": "^0.16.2",
+    "react-json-inspector": "^7.1.1",
+    "react-monaco-editor": "^0.13.0",
     "react-reflex": "^2.0.6",
     "react-rnd": "^7.1.5",
     "react-svg": "^2.1.19",
