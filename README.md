@@ -16,7 +16,7 @@ xadmin3.0版本已经完全重写，完全变成了一个纯前端框架。全�
 npm i --save xadmin-start
 ```
 
-xadmin其实由很多个包组成，用户可以根据自己的需要选择安装，xadmin-main 包是一个集成了所有常用功能包，您也可以自己定制安装，xadmin的包目前如下：
+xadmin其实由很多个包组成，用户可以根据自己的需要选择安装，xadmin-start 包是一个集成了所有常用功能包，您也可以自己定制安装，xadmin的包目前如下：
 
 | Package | Version | Docs | Description |
 |---------|---------|------|-------------|
