@@ -2,9 +2,7 @@
 
 xadmin3.0版本已经完全重写，完全变成了一个纯前端框架。全新的xadmin使用React和Redux套餐，保持了xadmin原有的高扩展性和高定制性，让您可以轻松定制出一整套管理后台。后端数据全部采用API方式获取，您可以定制自己的API Client对接您的后台系统。
 
-```
-使用xadmin老版本的同学，可使用 django-rest-framework 这个django自动生成RESTful API神奇对接xadmin。xadmin官方也会在近期推出专门针对django的接口。其他语言框架的接口也会陆续推出
-```
+> 使用xadmin老版本的同学，可使用 django-rest-framework 这个django自动生成RESTful API神奇对接xadmin。xadmin官方也会在近期推出专门针对django的接口。其他语言框架的接口也会陆续推出
 
 ## 文档
 
