@@ -3,10 +3,5 @@
   "packages": [
     "packages/*"
   ],
-  "version": "independent",
-  "commands": {
-    "publish": {
-      "skipGit": true
-    }
-  }
+  "version": "independent"
 }
