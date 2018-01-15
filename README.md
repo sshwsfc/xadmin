@@ -12,7 +12,7 @@ xadmin3.0版本已经完全重写，完全变成了一个纯前端框架。全�
 
 ## 安装
 
-首先您需要安装 node 和 npm， 在你的项目目录下执行
+首先您需要安装 node 和 npm， 在你的项目目录下执行
 
 ```
 npm i --save xadmin-start
@@ -34,9 +34,9 @@ xadmin其实由很多个包组成，用户可以根据自己的需要选择安�
 
 ## 开始实例
 
-使用xadmin非常简单，本直接运行在在线JS运行器中即可看到效果。
+使用xadmin非常简单，本直接运行在在线JS运行器中即可看到效果。
 
-``` js
+``` js
 import app from 'xadmin-start'
 import api from 'xadmin-api-jsonplaceholder'
 
