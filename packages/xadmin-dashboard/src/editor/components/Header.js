@@ -107,7 +107,7 @@ export default class Header extends React.Component {
           <Col span={3} className="b-bottom logo">
             E.T LIVE生产平台
           </Col>
-          <Col span={14}>
+          <Col span={10}>
             <Menu
               theme="dark"
               selectedKeys={[ this.state.current ]}
@@ -126,7 +126,7 @@ export default class Header extends React.Component {
               </Menu.Item>
             </Menu>
           </Col>
-          <Col span={7} className="b-bottom">
+          <Col span={11} className="b-bottom" style={{ textAlign: 'right', paddingRight: 10 }}>
             <Popover placement="bottom"  content={content1} trigger="hover">
               <Button icon="laptop" />
             </Popover>
