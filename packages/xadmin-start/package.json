@@ -1,6 +1,6 @@
 {
   "name": "xadmin-start",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Xadmin Start Template -- Default",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
@@ -12,14 +12,16 @@
     "react-bootstrap": "^0.32.0",
     "react-date-range": "^0.9.4",
     "react-dom": "16",
+    "react-redux": "^5.0.6",
     "react-router": "^3.2.0",
+    "redux": "^3.7.2",
     "redux-saga": "^0.16.0",
     "xadmin": "^1.0.8",
     "xadmin-auth": "^1.0.10",
     "xadmin-form": "^1.0.4",
     "xadmin-i18n": "^1.0.4",
     "xadmin-layout": "^1.0.4",
-    "xadmin-model": "^1.0.7",
+    "xadmin-model": "^1.0.8",
     "xadmin-plugins": "^1.0.5"
   },
   "scripts": {
