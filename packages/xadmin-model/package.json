@@ -1,6 +1,6 @@
 {
   "name": "xadmin-model",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Xadmin Model",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
@@ -10,6 +10,7 @@
     "prop-types": "^15.6.0",
     "react-date-range": "^0.9.4",
     "react-fontawesome": "^1.6.1",
+    "react-select": "^1.2.1",
     "redux": "^3.7.2",
     "redux-form": "^7.2.0",
     "redux-saga": "^0.16.0"

@@ -1,13 +1,14 @@
 {
   "name": "xadmin-layout",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Xadmin Base Layout",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
   "license": "MIT",
   "dependencies": {
     "lodash": "^4.17.4",
-    "react-bootstrap": "0.32"
+    "react-bootstrap": "0.32",
+    "react-fontawesome": "^1.6.1"
   },
   "peerDependencies": {
     "xadmin": "1"

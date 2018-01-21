@@ -1,6 +1,6 @@
 {
   "name": "xadmin-form",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Xadmin Form",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
@@ -12,7 +12,8 @@
     "prop-types": "^15.6.0",
     "react-datetime": "^2.11.1",
     "react-fontawesome": "^1.6.1",
-    "redux-form": "^7.2.0"
+    "react-select": "^1.2.1",
+    "redux-form": "^7.2.1"
   },
   "peerDependencies": {
     "react-bootstrap": "0.32",
