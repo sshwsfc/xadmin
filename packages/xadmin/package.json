@@ -1,6 +1,6 @@
 {
   "name": "xadmin",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Xadmin Core",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
