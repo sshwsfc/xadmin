@@ -39,7 +39,7 @@ const FieldGroup = ({ label, error, input, field, children }) => {
         {error && <HelpBlock>{error}</HelpBlock>}
       </Col>
     </FormGroup>
-    )
+  )
 }
 
 export default FieldGroup

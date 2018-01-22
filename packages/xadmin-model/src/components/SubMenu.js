@@ -40,26 +40,26 @@ class PageSizeButton extends React.Component {
           <Modal.Title>{_t('Customize page size')}</Modal.Title>
         </Modal.Header>
         <form onSubmit={this.setPageSize.bind(this)}>
-        <Modal.Body>
-          <FormGroup
-            controlId="formPageSize"
-          >
-            <ControlLabel>{_t('Page Size')}</ControlLabel>
-            <FormControl
-              type="number"
-              value={this.state.size}
-              placeholder={_t('Enter page size')}
-              onChange={(e)=>this.setState({ size: e.target.value })}
-            />
-          </FormGroup>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={()=>this.setState({ show: false })}>{_t('Close')}</Button>
-          <Button type="submit" bsStyle="primary" disabled={this.state.size==size} onClick={this.setPageSize.bind(this)}>{_t('Set page size')}</Button>
-        </Modal.Footer>
+          <Modal.Body>
+            <FormGroup
+              controlId="formPageSize"
+            >
+              <ControlLabel>{_t('Page Size')}</ControlLabel>
+              <FormControl
+                type="number"
+                value={this.state.size}
+                placeholder={_t('Enter page size')}
+                onChange={(e)=>this.setState({ size: e.target.value })}
+              />
+            </FormGroup>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={()=>this.setState({ show: false })}>{_t('Close')}</Button>
+            <Button type="submit" bsStyle="primary" disabled={this.state.size==size} onClick={this.setPageSize.bind(this)}>{_t('Set page size')}</Button>
+          </Modal.Footer>
         </form>
       </Modal>
-      )
+    )
   }
 
   render() {
@@ -71,8 +71,8 @@ class PageSizeButton extends React.Component {
         <MenuItem divider />
         <MenuItem eventKey="cus-size" onSelect={()=>this.setState({ show: true })}>{_t('Customize page size')}</MenuItem>
       </DropdownButton>
-      ), 
-      this.state.show ? this.showCustomize() : null
+    ), 
+    this.state.show ? this.showCustomize() : null
     ]
   }
 }
@@ -108,7 +108,7 @@ class ColsDropdown extends React.Component {
       }>
         <Button bsSize="small">{_t('Columns')}</Button>
       </OverlayTrigger>
-      )
+    )
   }
 
 }

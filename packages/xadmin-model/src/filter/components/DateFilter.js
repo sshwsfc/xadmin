@@ -116,14 +116,14 @@ export default class DateFilter extends React.Component {
 
   renderCalender() {
     return (
-        <DateRange
-          onChange={this.handleSelectRange}
-          theme={{
-            Calendar : { width: 200 },
-            PredefinedRanges : { marginLeft: 10, marginTop: 10 }
-          }}
-        />
-      )
+      <DateRange
+        onChange={this.handleSelectRange}
+        theme={{
+          Calendar : { width: 200 },
+          PredefinedRanges : { marginLeft: 10, marginTop: 10 }
+        }}
+      />
+    )
   }
 
   render() {

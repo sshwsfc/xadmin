@@ -9,7 +9,7 @@ export default ({ input, label, meta: { touched, error }, field, group, option }
       <Panel.Heading>
         <Panel.Title toggle componentClass="h3">{label}</Panel.Title>
       </Panel.Heading>
-			<Panel.Body collapsible defaultExpanded>
+      <Panel.Body collapsible defaultExpanded>
         {objectBuilder(field.fields, field.render, { ...option, group })}
       </Panel.Body>
     </Panel>

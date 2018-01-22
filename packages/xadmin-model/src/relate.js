@@ -12,8 +12,8 @@ import Icon from 'react-fontawesome'
 import ModelPages from './components/Pages'
 import { Model, ModelWrap } from './base'
 
-import { SimpleSelect, MultiSelect } from 'react-selectize'
-import 'react-selectize/themes/index.css'
+import Select from 'react-select'
+import 'react-select/dist/react-select.css'
 
 @FormWrap('model.form.relates')
 class Checkboxes extends React.Component {
@@ -52,7 +52,7 @@ class Checkboxes extends React.Component {
       <FieldGroup label={label} meta={meta} input={input} field={field}>
         {options?this.renderOptions():<div>{_t('loading')}</div>}
       </FieldGroup>
-      )
+    )
   }
 
 }
@@ -86,14 +86,14 @@ class RelateMultiSelect extends React.Component {
     const { input, options, field } = this.props
     const displayField = field.displayField || 'name'
     const checkedValues = input.value ? input.value.map(item => { return { label: item[displayField] || 'null', value: item.id, item }}) : []
-    return (<MultiSelect theme="bootstrap3" ref = "select"
-        placeholder={_t('Select {{label}}', { label: field.label })}
-        values={checkedValues}
-        options={options.map(option=>{ return { label: option[displayField] || 'null', value: option.id, item: option } })}
-        onValuesChange={this.onValuesChange.bind(this)}
-        renderNoResultsFound={()=>{ return (<div className="no-results-found">{_t('No results found')}</div>)}}
-        {...field.attrs}
-      />)
+    return (<Select multi={true} theme="bootstrap3" ref = "select"
+      placeholder={_t('Select {{label}}', { label: field.label })}
+      values={checkedValues}
+      options={options.map(option=>{ return { label: option[displayField] || 'null', value: option.id, item: option } })}
+      onChange={this.onValuesChange.bind(this)}
+      renderNoResultsFound={()=>{ return (<div className="no-results-found">{_t('No results found')}</div>)}}
+      {...field.attrs}
+    />)
   }
 
   render() {
@@ -104,7 +104,7 @@ class RelateMultiSelect extends React.Component {
       <FieldGroup label={label} meta={meta} input={input} field={field}>
         {options?this.renderOptions():<FormControl.Static>{_t('loading')}</FormControl.Static>}
       </FieldGroup>
-      )
+    )
   }
 
 }
@@ -164,45 +164,56 @@ class RelateSelect extends React.Component {
     const displayField = field.displayField || 'name'
     const selectValue = value ? { label: value[displayField] || '', value: value.id } : null
     const searchProps = field.lazyLoad == false ? {
-      placeholder: _t('Select {{label}}', { label: field.label })
+      placeholder: _t('Select {{label}}', { label: field.label }),
+      noResultsText: _t('No results found')
     } : {
       placeholder: _t('Search {{label}}', { label: field.label }),
-      search: this.state.search,
-      onSearchChange: this.onSearchChange.bind(this)
+      noResultsText: this.state.search ? _t('No results found') : _t('Type to search'),
+      onInputChange: this.onSearchChange.bind(this)
     }
-    return (<SimpleSelect theme="bootstrap3" ref="select"
-        placeholder={`Search ${field.label}`}
-        value={selectValue}
-        options={(options||[]).map(option=>{ return { label: option[displayField] || 'null', value: option.id, item: option } })}
-        onValueChange={this.onValueChange.bind(this)}
-        renderNoResultsFound={(value, search)=>{ 
-          return (<div className="no-results-found" style={{ fontSize: 13 }}>
-            {(search.length == 0 && field.lazyLoad != false) ? _t('type a few characters to kick off remote search'):_t('No results found')}
-            </div>)
-        }}
-        {...searchProps}
-        {...field.attrs}
-      />)
+    const textLabels = {
+      clearValueText: _t('Clear value'),
+      clearAllText: _t('Clear all'),
+      searchPromptText: _t('Type to search')
+    }
+    const SelectComponent = field.lazyLoad == false ? Select : Select.Async
+    return (<Select theme="bootstrap3" ref="select"
+      value={selectValue}
+      options={(options||[]).map(option=>{ return { label: option[displayField] || 'null', value: option.id, item: option } })}
+      onChange={this.onValueChange.bind(this)}
+      renderNoResultsFound={(value, search)=>{ 
+        return (<div className="no-results-found" style={{ fontSize: 13 }}>
+          {(search.length == 0 && field.lazyLoad != false) ? _t('type a few characters to kick off remote search'):_t('No results found')}
+        </div>)
+      }}
+      {...textLabels}
+      {...searchProps}
+      {...field.attrs}
+    />)
+  }
+
+  renderLoading() {
+    const { _t } = app.context
+    return <Select theme="bootstrap3" ref="select" isLoading={true} options={[]} placeholder={_t('loading')} />
   }
 
   render() {
-    const { _t } = app.context
     const { input, options, label, meta, field, group: FieldGroup } = this.props
     const loading = (input.value && typeof input.value != 'object')
     return (
       <FieldGroup label={label} meta={meta} input={input} field={field}>
-        {!loading?this.renderOptions():<FormControl.Static>{_t('loading')}</FormControl.Static>}
+        {!loading?this.renderOptions():this.renderLoading()}
       </FieldGroup>
-      )
+    )
   }
 
 }
 
 const schema_converter = [
   (f, schema, options) => {
-    if(schema.type == 'array' && schema.items.type == 'object' && (schema.items.resource_name || schema.items.name)) {
+    if(schema.type == 'array' && schema.items.type == 'object' && schema.items.name) {
       const models = app.load_dict('models')
-      const name = schema.items.resource_name || schema.items.name
+      const name = schema.items.name
       if(models[name]) {
         const model = models[name]
         f.type = 'relates'
@@ -213,9 +224,9 @@ const schema_converter = [
     return f
   },
   (f, schema, options) => {
-    if(schema.type == 'object' && (schema.resource_name || schema.name)) {
+    if(schema.type == 'object' && schema.name) {
       const models = app.load_dict('models')
-      const name = schema.resource_name || schema.name
+      const name = schema.name
       if(models[name]) {
         const model = models[name]
         f.type = 'fkselect'
@@ -229,9 +240,9 @@ const schema_converter = [
 
 const filter_converter = [
   (f, schema, options) => {
-    if(schema.type == 'object' && (schema.resource_name || schema.name)) {
+    if(schema.type == 'object' && schema.name) {
       const models = app.load_dict('models')
-      const name = schema.resource_name || schema.name
+      const name = schema.name
       if(models[name]) {
         const model = models[name]
         f.type = 'filter_relate'

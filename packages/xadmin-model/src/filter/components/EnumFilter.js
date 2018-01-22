@@ -77,11 +77,11 @@ export default class EnumFilter extends React.Component {
             }
           }}
           inline={inline} {...inputProps}> All</Checkbox>
-      {field.titleMap.map(option => { return (
-        <Checkbox key={option.name} 
-          checked={checks.indexOf(option.value) >= 0} 
-          onChange={(e)=>this.onChange(e, option.value)}
-          inline={inline} {...inputProps} value={option.value}> {option.name}</Checkbox>) })}
+        {field.titleMap.map(option => { return (
+          <Checkbox key={option.name} 
+            checked={checks.indexOf(option.value) >= 0} 
+            onChange={(e)=>this.onChange(e, option.value)}
+            inline={inline} {...inputProps} value={option.value}> {option.name}</Checkbox>) })}
       </FieldGroup>
     )
   }

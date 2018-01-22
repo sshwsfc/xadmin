@@ -27,7 +27,7 @@ const SignInForm = StoreWrap('auth.sign_in')(({ onSignIn }) => {
                     <h1 style={{ fontSize: 24 }}>{_t('Please Login')}</h1>
                   </Panel.Heading>
                   <Panel.Body>
-                  {children}
+                    {children}
                     {error && <strong>{error}</strong>}
                     <Button type="submit" disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary" bsSize="large" block>
                       <Icon name={icon}/> {_t('Login')}</Button>

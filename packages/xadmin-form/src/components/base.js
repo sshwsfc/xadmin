@@ -38,7 +38,7 @@ const FieldGroup = ({ label, meta, input, field, children }) => {
         {error && <HelpBlock>{error}</HelpBlock>}
       </Col>
     </FormGroup>
-    )
+  )
 }
 
 const InlineGroup = ({ label, meta, input, field, children }) => {
@@ -66,7 +66,7 @@ const InlineGroup = ({ label, meta, input, field, children }) => {
         {error && <HelpBlock>{error}</HelpBlock>}
       </Col>
     </FormGroup>
-    )
+  )
 }
 
 const SimpleGroup = ({ label, meta, input, field, children }) => {
@@ -93,7 +93,7 @@ const SimpleGroup = ({ label, meta, input, field, children }) => {
       {help && <HelpBlock>{help}</HelpBlock>}
       {error && <HelpBlock>{error}</HelpBlock>}
     </FormGroup>
-    )
+  )
 }
 
 export {

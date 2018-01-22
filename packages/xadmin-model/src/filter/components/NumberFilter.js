@@ -1,5 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
+import app from 'xadmin'
 import { Field } from 'redux-form'
 import { FieldGroup } from './base'
 import { FormControl, InputGroup, Button } from 'react-bootstrap'
@@ -57,15 +58,16 @@ export default class NumberFilter extends React.Component {
   render() {
     const { input: { name, value, onBlur, onChange, ...inputProps }, label, meta, field, group: FieldGroup } = this.props
     const { gte, lte } = this.state
+    const { _t } = app.context
     return (
       <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
         <InputGroup>
           <FormControl type="number" { ...inputProps} {...field.attrs} value={gte}
-            placeholder={field.minimum ? `Minimum(${field.minimum})` : 'No limit'}
+            placeholder={field.minimum ? `Minimum(${field.minimum})` : _t('No limit')} style={{ paddingRight: 5 }}
             onBlur={(e)=>this.onBlur(e, 'gte')} onChange={(e)=>this.onChange(e, 'gte')} />
-          <InputGroup.Addon>to</InputGroup.Addon>
+          <InputGroup.Addon>~</InputGroup.Addon>
           <FormControl type="number" { ...inputProps} {...field.attrs} value={lte}
-            placeholder={field.maximum ? `Maximum(${field.maximum})` : 'No limit'}
+            placeholder={field.maximum ? `Maximum(${field.maximum})` : _t('No limit')} style={{ paddingRight: 5 }}
             onBlur={(e)=>this.onBlur(e, 'lte')} onChange={(e)=>this.onChange(e, 'lte')} />
         </InputGroup>
       </FieldGroup>

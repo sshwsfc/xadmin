@@ -42,7 +42,7 @@ const FieldGroup = ({ label, field, children }) => {
         {help && <HelpBlock>{help}</HelpBlock>}
       </Col>
     </FormGroup>
-    )
+  )
 }
 
 class ModelInfo extends React.Component {
@@ -72,8 +72,8 @@ class ModelInfo extends React.Component {
       return (
         <FieldGroup label={field.label} field={field}>
           <Item item={record} field={field.key} selected={false} wrap={
-              ({ children, ...props })=><FormControl.Static>{children}</FormControl.Static>
-            }/>
+            ({ children, ...props })=><FormControl.Static>{children}</FormControl.Static>
+          }/>
         </FieldGroup>)
     })
   }

@@ -31,10 +31,10 @@ class ModelDetail extends React.Component {
     const { schema, title, formKey, loading } = this.props
     return (
       <Page title={title}>
-      {loading ? 
-        (<Panel><Panel.Body><div className="text-center"><Icon name="spinner fa-spin fa-4x"/> Loading..</div></Panel.Body></Panel>) : 
-        (<Panel><Panel.Body>{}</Panel.Body></Panel>)
-      }
+        {loading ? 
+          (<Panel><Panel.Body><div className="text-center"><Icon name="spinner fa-spin fa-4x"/> Loading..</div></Panel.Body></Panel>) : 
+          (<Panel><Panel.Body>{}</Panel.Body></Panel>)
+        }
       </Page>
     )
   }

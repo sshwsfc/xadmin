@@ -51,13 +51,13 @@ class FilterDiv extends React.Component {
       )
     }
     return (<FilterForm
-              formKey={formKey}
-              filters={filters}
-              component={FormLayout}
-              initialValues={data}
-              onSubmit={changeFilter}
-              fieldProps={{ mode: 'base' }}
-            />)
+      formKey={formKey}
+      filters={filters}
+      component={FormLayout}
+      initialValues={data}
+      onSubmit={changeFilter}
+      fieldProps={{ mode: 'base' }}
+    />)
   }
 
 }
@@ -66,20 +66,20 @@ class FilterInline extends React.Component {
 
   render() {
     const { _t } = app.context
-    const { filters, formKey, data, changeFilter, resetFilter } = this.props
+    const { filters, formKey, data, changeFilter, resetFilter, groupSize } = this.props
 
     const FormLayout = (props) => {
       const { children, invalid, pristine, handleSubmit, submitting } = props
       return (
         <form className="form-horizontal" onSubmit={handleSubmit}>
           <Row style={{ marginBottom: '-5px' }}>
-          {children}
+            {children}
           </Row>
           <Row>
             <Col style={{ textAlign: 'center' }} sm={12}>
-            <Button disabled={invalid || pristine || submitting} bsSize="sm" onClick={handleSubmit} bsStyle="primary">{_t('Search')}</Button>
-            {' '}
-            <Button disabled={submitting} onClick={resetFilter} bsSize="sm" bsStyle="default">{_t('Clear')}</Button>
+              <Button disabled={invalid || pristine || submitting} bsSize="sm" onClick={handleSubmit} bsStyle="primary">{_t('Search')}</Button>
+              {' '}
+              <Button disabled={submitting} onClick={resetFilter} bsSize="sm" bsStyle="default">{_t('Clear')}</Button>
             </Col>
           </Row>
         </form>
@@ -87,9 +87,8 @@ class FilterInline extends React.Component {
     }
     const groupComponent = ({ id, label, help, error, groupProps, children }) => {
       return (
-        <Col key={0} sm={6} md={4}>
+        <Col key={0} sm={6} md={4} {...groupSize}>
           <FormGroup controlId={id} {...groupProps}>
-          <Row>
             <Col key={0} componentClass={ControlLabel} sm={2} md={5}>
               {label}
             </Col>
@@ -99,20 +98,19 @@ class FilterInline extends React.Component {
               {help && <HelpBlock>{help}</HelpBlock>}
               {error && <HelpBlock>{error}</HelpBlock>}
             </Col>
-          </Row>
           </FormGroup>
         </Col>
       )
     }
     return (<FilterForm
-              formKey={formKey}
-              filters={filters}
-              component={FormLayout}
-              initialValues={data}
-              onSubmit={changeFilter}
-              group={groupComponent}
-              fieldProps={{ attrs: { bsSize: 'sm' }, mode: 'mini' }}
-            />)
+      formKey={formKey}
+      filters={filters}
+      component={FormLayout}
+      initialValues={data}
+      onSubmit={changeFilter}
+      group={groupComponent}
+      fieldProps={{ attrs: { bsSize: 'sm' }, mode: 'mini' }}
+    />)
   }
 
 }
@@ -143,13 +141,13 @@ class FilterMenu extends React.Component {
         )
       }
       return (<FilterForm
-              formKey={formKey}
-              filters={filters}
-              component={FormLayout}
-              initialValues={data}
-              onSubmit={changeFilter}
-              group={SimpleGroup}
-            />)
+        formKey={formKey}
+        filters={filters}
+        component={FormLayout}
+        initialValues={data}
+        onSubmit={changeFilter}
+        group={SimpleGroup}
+      />)
     } else {
       return null
     }
@@ -213,13 +211,13 @@ class FilterModal extends React.Component {
       )
     }
     return (<FilterForm
-              formKey={formKey}
-              filters={filters}
-              component={FormLayout}
-              initialValues={data}
-              onSubmit={changeFilter}
-              fieldProps={{ mode: 'base' }}
-            />)
+      formKey={formKey}
+      filters={filters}
+      component={FormLayout}
+      initialValues={data}
+      onSubmit={changeFilter}
+      fieldProps={{ mode: 'base' }}
+    />)
   }
 
   renderModal() {
@@ -242,7 +240,7 @@ class FilterModal extends React.Component {
         (<NavItem onClick={()=>this.setState({ show: true })}>
           <Icon name="filter" /> {_t('Filter')} {(data && Object.keys(data).length) ? (<Badge>{Object.keys(data).length}</Badge>) : null}
         </NavItem>),
-        this.state.show ? this.renderModal() : null
+        this.renderModal()
       ]
     } else {
       return null
@@ -277,14 +275,14 @@ class FilterNavForm extends React.Component {
       )
     }
     return (<FilterForm
-              formKey={formKey}
-              filters={filters}
-              component={FormLayout}
-              initialValues={data}
-              onSubmit={changeFilter}
-              group={InlineGroup}
-              fieldProps={{ mode: 'base' }}
-            />)
+      formKey={formKey}
+      filters={filters}
+      component={FormLayout}
+      initialValues={data}
+      onSubmit={changeFilter}
+      group={InlineGroup}
+      fieldProps={{ mode: 'base' }}
+    />)
   }
 
   render() {

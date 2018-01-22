@@ -27,11 +27,11 @@ class ModelList extends React.Component {
         <div className="navbar-btn pull-right hide-xs">
           { Block('model.list.navbtn', this) }
           { canAdd ?
-          (<Button bsStyle="primary" onClick={addItem}><Icon name="plus"/> {_t('Add {{object}}', { object: model.title })}</Button>) : null
+            (<Button bsStyle="primary" onClick={addItem}><Icon name="plus"/> {_t('Add {{object}}', { object: model.title })}</Button>) : null
           }
         </div>
       </div>
-      )
+    )
   }
 
   render() {
@@ -55,13 +55,13 @@ class ModelList extends React.Component {
         { Block('model.list.submenu', this) }
         { (sideMenu || sidePanel) ? (
           <Row>
-            { sideMenu ? <Col sm={3}>{ sideMenu }</Col> : null }
-            <Col sm={9}>{ GridComponents }</Col>
-            { sidePanel ? <Col sm={3}>{ sidePanel }</Col> : null  }
+            { sideMenu ? <Col sm={(sideMenu && sidePanel) ? 2 : 3}>{ sideMenu }</Col> : null }
+            <Col sm={(sideMenu && sidePanel) ? 8 : 9}>{ GridComponents }</Col>
+            { sidePanel ? <Col sm={(sideMenu && sidePanel) ? 2 : 3}>{ sidePanel }</Col> : null  }
           </Row>
         ) : GridComponents }
       </Page>
-      )
+    )
   }
 
 }

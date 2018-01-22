@@ -30,16 +30,16 @@ export default class TextFilter extends React.Component {
     const { text, like } = value
     return (
       <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
-      <InputGroup { ...field.attrs }>
-        <InputGroup.Button>
-          <Button active={like} onClick={()=>this.onLikeChange(!like)}><Icon name="magic" /></Button>
-        </InputGroup.Button>
-        <FormControl type="text" { ...inputProps} {...field.attrs} value={text}
-          onBlur={this.onBlur} onChange={this.onChange} />
-        <InputGroup.Button>
-          <Button onClick={this.clear} style={{ borderLeft: 'none' }}><Icon name="close" /></Button>
-        </InputGroup.Button>
-      </InputGroup>
+        <InputGroup { ...field.attrs }>
+          <InputGroup.Button>
+            <Button active={like} onClick={()=>this.onLikeChange(!like)}><Icon name="magic" /></Button>
+          </InputGroup.Button>
+          <FormControl type="text" { ...inputProps} {...field.attrs} value={text}
+            onBlur={this.onBlur} onChange={this.onChange} />
+          <InputGroup.Button>
+            <Button onClick={this.clear} style={{ borderLeft: 'none' }}><Icon name="close" /></Button>
+          </InputGroup.Button>
+        </InputGroup>
       </FieldGroup>
     )
   }

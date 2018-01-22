@@ -21,10 +21,10 @@ class BaseRow extends React.Component {
       actions.push((
         <OverlayTrigger trigger="click" rootClose placement="top" overlay={
           <Popover title={_t('Comfirm')} id="delete-item-popover">
-          <p><strong>{_t('Comfirm Delete')}？</strong></p>
-          <p className="text-center">
-            <Button bsStyle="danger" onClick={this.props.deleteItem}>{_t('Delete')}</Button>
-          </p>
+            <p><strong>{_t('Comfirm Delete')}？</strong></p>
+            <p className="text-center">
+              <Button bsStyle="danger" onClick={this.props.deleteItem}>{_t('Delete')}</Button>
+            </p>
           </Popover>
         }>
           <Button bsSize="xsmall">{_t('Delete')}</Button>
@@ -94,7 +94,7 @@ class Header extends React.Component {
           {React.Children.toArray(items)}
         </Dropdown.Menu>
       </Dropdown>
-      ) : ( showText === false ? null : <span>{title} {icon}</span>)
+    ) : ( showText === false ? null : <span>{title} {icon}</span>)
   }
 }
 
@@ -124,7 +124,7 @@ const ItemEditFieldGroup = ({ label, meta, input, field, children }) => {
         {error && <HelpBlock style={{ marginBottom: 0 }}>{error}</HelpBlock>}
       </Col>
     </FormGroup>
-    )
+  )
 }
 
 const ItemEditFormLayout = (props) => {
@@ -160,7 +160,7 @@ const ItemEditForm = ModelWrap('model.item')(({ item, field, schema, model, onCl
       }}
       onClose={onClose}
       component={ItemEditFormLayout}/>
-    )
+  )
 })
 
 @ModelWrap('model.list.item')
@@ -239,7 +239,7 @@ class GridRowComponent extends BaseRow {
         }))}
         <td key=".action" className={selected?'bg-warning':''} style={{ textAlign: 'center' }}>
           <ButtonGroup>
-          {React.Children.toArray(this.actions())}
+            {React.Children.toArray(this.actions())}
           </ButtonGroup>
         </td>
       </tr>
@@ -261,22 +261,22 @@ class Grid extends React.Component {
       if(items.length > 0) {
         return (
           <div className="table-responsive">
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th><AllCheck /></th>
-                {React.Children.toArray(fields.map(field=>{
-                  return <th><Header key={`model-list-header-${field}`} field={field}  /></th>
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th><AllCheck /></th>
+                  {React.Children.toArray(fields.map(field=>{
+                    return <th><Header key={`model-list-header-${field}`} field={field}  /></th>
+                  }))}
+                  <th style={{ textAlign: 'center' }}>{_t('Actions')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {React.Children.toArray(items.map((item)=>{
+                  return <GridRow key={item.id} fields={fields} id={item.id} />
                 }))}
-                <th style={{ textAlign: 'center' }}>{_t('Actions')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {React.Children.toArray(items.map((item)=>{
-                return <GridRow key={item.id} fields={fields} id={item.id} />
-              }))}
-            </tbody>
-          </Table>
+              </tbody>
+            </Table>
           </div>
         )
       } else {
@@ -319,7 +319,7 @@ class ListRowComponent extends BaseRow {
         </Panel.Body>
         <Panel.Footer><ButtonGroup>{actions}</ButtonGroup></Panel.Footer>
       </Panel>
-      )
+    )
   }
 }
 const ListRow = ModelWrap('model.list.row')(ListRowComponent)
@@ -338,11 +338,11 @@ class List extends React.Component {
         return (
           <div>
             <div style={{ marginBottom: 10 }}>
-            {React.Children.toArray(fields.map(field=>{
-              return (<Header key={`model-list-header-${field}`} field={field} showText={false} style={{
-                marginRight: 10, fontSize: '0.8em'
-              }} />)
-            }))}
+              {React.Children.toArray(fields.map(field=>{
+                return (<Header key={`model-list-header-${field}`} field={field} showText={false} style={{
+                  marginRight: 10, fontSize: '0.8em'
+                }} />)
+              }))}
             </div>
             <div>
               {React.Children.toArray(items.map(item => <ListRow key={item.id} fields={fields} id={item.id} />))}

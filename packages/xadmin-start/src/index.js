@@ -6,6 +6,7 @@ import layout from 'xadmin-layout'
 import model from 'xadmin-model'
 import auth from 'xadmin-auth'
 
+import relate from 'xadmin-model/lib/relate'
 import filter from 'xadmin-model/lib/filter'
 import actions from 'xadmin-model/lib/actions'
 
@@ -23,6 +24,7 @@ export default app
   .use(form)
   .use(model)
   .use(auth)
+  .use(relate)
   .use(filter)
   .use(search)
   .use(loading)

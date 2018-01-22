@@ -123,6 +123,11 @@ export default {
             })
           }
         })
+      },
+      showError: ({ dispatch, dashboard }) => ({ error, info }) => {
+        dispatch({ type: '@@xadmin/ADD_NOTICE', payload: {
+          type: 'danger', headline: '错误', message: error.toString()
+        } })
       }
     }
   },

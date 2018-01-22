@@ -49,7 +49,7 @@ const FieldGroup = ({ label, meta, input, field, children }) => {
         {error && <HelpBlock>{error}</HelpBlock>}
       </Col>
     </FormGroup>
-    )
+  )
 }
 
 @ModelWrap('actons.batch_change')
@@ -111,10 +111,10 @@ class BatchChangeBtn extends React.Component {
 
     return (canEdit && fields.length > 0) ? [ (
       <MenuItem eventKey={'actions_batch_change'} onSelect={(e)=>{onSelect(e); this.setState({ show: true })}} disabled={selected.length == 0}>
-      {_t('Batch Change Items')}
+        {_t('Batch Change Items')}
       </MenuItem>
-      ),
-      (this.state.show && selected.length > 0) ? this.renderModel() : null
+    ),
+    (this.state.show && selected.length > 0) ? this.renderModel() : null
     ] : null
   }
 

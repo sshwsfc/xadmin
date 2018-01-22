@@ -88,6 +88,22 @@ const _wrap_component = (tag, WrappedComponent, wrappers, defaultMapper) => {
       }
     }
 
+    componentDidUpdate() {
+      this.getMappers().forEach(mapper => {
+        if(mapper.event && mapper.event.update) {
+          this.runBindMethod(mapper.event.update, this)
+        }
+      })
+    }
+
+    componentWillMount() {
+      this.getMappers().forEach(mapper => {
+        if(mapper.event && mapper.event.willMount) {
+          this.runBindMethod(mapper.event.willMount, this)
+        }
+      })
+    }
+
     componentDidMount() {
       this.getMappers().forEach(mapper => {
         if(mapper.event && mapper.event.mount) {

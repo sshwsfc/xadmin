@@ -15,12 +15,12 @@ class ModelTabs extends React.Component {
     const tabs = model.tabs
     return tabs ? (
       <Nav bsStyle="tabs" activeKey="__current__" style={{ marginBottom: 10 }}>
-      { tabs.map(tab=>{
-        return (
-          <NavItem eventKey={tab.url || '__current__'} onClick={()=>{
-            if(tab.url) onSelect(tab.url)
-          }}>{tab.title}</NavItem>)
-      }) }
+        { tabs.map(tab=>{
+          return (
+            <NavItem eventKey={tab.url || '__current__'} onClick={()=>{
+              if(tab.url) onSelect(tab.url)
+            }}>{tab.title}</NavItem>)
+        }) }
       </Nav>
     ) : null
   }

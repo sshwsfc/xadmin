@@ -11,7 +11,7 @@ const defaultItemsRender = ({ fields, meta: { touched, error }, field, fieldsBui
   return (
     <div>
       <h5>{label}{' '}
-      <Button bsSize="xsmall" onClick={() => fields.push()}><Icon name="plus"/></Button></h5>
+        <Button bsSize="xsmall" onClick={() => fields.push()}><Icon name="plus"/></Button></h5>
       <PanelGroup accordion>
         {fields.map((name, index) => {
           const removeBtn = (<Button bsSize="xsmall" onClick={(e) => { fields.remove(index); e.persist() }} style={{ float: 'right' }}><Icon name="minus"/></Button>)

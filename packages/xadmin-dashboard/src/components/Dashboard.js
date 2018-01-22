@@ -24,6 +24,10 @@ class Dashboard extends React.Component {
     return <Main className="dashboard" editMode={editMode} style={style} cellKey={Root.key} childrenCells={childrenCells} />
   }
 
+  componentDidCatch(error, info) {
+    this.props.showError({ error, info })
+  }
+
   render() {
     const { height=1080, width='auto' } = this.props.params
     return (

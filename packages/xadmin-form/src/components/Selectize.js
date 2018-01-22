@@ -1,8 +1,8 @@
 import React from 'react'
 import { FormControl } from 'react-bootstrap'
 
-import { SimpleSelect, MultiSelect } from 'react-selectize'
-import 'react-selectize/themes/index.css'
+import Select from 'react-select'
+import 'react-select/dist/react-select.css'
 import './Selectize.css'
 
 export default ({ input, label, meta, field, group: FieldGroup }) => {
@@ -30,11 +30,12 @@ export default ({ input, label, meta, field, group: FieldGroup }) => {
 
   return (
     <FieldGroup label={label} meta={meta} input={input} field={field}>
-      <SimpleSelect id={input.name} theme="bootstrap3"
+      <Select id={input.name} theme="bootstrap3"
         placeholder={field.description}
         value={value}
+        clearable={false}
         options={options.map(option=>{ return { label: option.name || 'null', value: option.value } })}
-        onValueChange={onValueChange}
+        onChange={onValueChange}
         onBlur={onSelectBlur}
         onFocus={onSelectFocus}
         {...field.attrs}

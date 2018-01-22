@@ -44,5 +44,43 @@ export default {
     required: [ 'name', 'email', 'website' ],
     readonly: [ 'id' ],
     list_display: [ 'id', 'name', 'email', 'website', 'address.street' ]
+  },
+  Post: {
+    name: 'post',
+    resource_name: 'posts',
+    type: 'object',
+    icon: 'file-o', // fa-icon
+    title: 'Post',
+    properties: {
+      id: {
+        type: 'number',
+        title: 'User ID'
+      },
+      title: {
+        type: 'string'
+      },
+      body: {
+        type: 'string'
+      },
+      user: {
+        type: 'object',
+        name: 'User',
+        resource_name: 'users',
+        properties: {
+          id: { type: 'number' },
+          name: { type: 'string' }
+        }
+      }
+    },
+    permission: { view: true, add: true, edit: true, delete: true },
+    form: [ 'id', 'title', 'user', 'body' ],
+    filters: {
+      nav: [ 'title', 'user' ],
+      sidemenu: [ 'user' ]
+    },
+    search_fields: [ 'title' ],
+    required: [ 'title', 'user', 'body' ],
+    readonly: [ 'id' ],
+    list_display: [ 'id', 'title', 'user' ]
   }
 }

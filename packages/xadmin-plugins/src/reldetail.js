@@ -11,10 +11,10 @@ const DetailView = ModelWrap('model.item')(({ id, data, loading, model }) => {
   return loading ? 
     (<Panel><div className="text-center"><Icon name="spinner fa-spin fa-4x"/></div></Panel>) : 
     (data ? <SchemaForm 
-        formKey={`model.${model.key}`}
-        schema={model}
-        initialValues={_.omitBy(data, _.isNil)}
-      /> : null
+      formKey={`model.${model.key}`}
+      schema={model}
+      initialValues={_.omitBy(data, _.isNil)}
+    /> : null
     )
 })
 

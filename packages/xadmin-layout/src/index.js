@@ -1,5 +1,6 @@
 import React from 'react'
 import { Main, App, Page } from './bootstrap'
+import Icon from 'react-fontawesome'
 import app from 'xadmin'
 
 class Dashboard extends React.Component {
@@ -10,6 +11,7 @@ class Dashboard extends React.Component {
 }
 
 export default {
+  name: 'xadmin.layout',
   components: {
     Main, App, Dashboard
   },
@@ -39,7 +41,7 @@ export default {
 }
 
 export {
-  Page,
+  Page, Icon,
   Main,
   App
 }

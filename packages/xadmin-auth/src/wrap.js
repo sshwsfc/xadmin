@@ -21,26 +21,32 @@ const IsSuperUser = connectedRouterRedirect({
   wrapperDisplayName: 'UserIsSuper'
 })
 
-const HasPermission = ({ permission, failureComponent=null, children, ...childProps }) => {
-  const UserAuthTag = connectedAuthWrapper({
-    authenticatedSelector: state => {
-      const user = state.user
-      if(user && user.isSuper) { return true }
-      if(user && user.permissions) {
-        if(_.isArray(permission)) {
-          return !_.some(permission, p => user.permissions.indexOf(p) == -1)
-        } else if(_.isFunction(permission)) {
-          return permission(user)
-        } else {
-          return user.permissions.indexOf(permission) > -1
-        }
+const PermissionWrap = (permission, FailureComponent) => connectedAuthWrapper({
+  authenticatedSelector: state => {
+    const user = state.user
+    if(user && user.isSuper) { return true }
+    if(user && user.permissions) {
+      if(_.isArray(permission)) {
+        return !_.some(permission, p => user.permissions.indexOf(p) == -1)
+      } else if(_.isFunction(permission)) {
+        return permission(user)
       } else {
-        return false
+        return user.permissions.indexOf(permission) > -1
       }
-    },
-    wrapperDisplayName: 'VisibleOnlyHasPermission',
-    FailureComponent: failureComponent
-  })(()=> Object.keys(childProps).length > 0 ? React.cloneElement(children, childProps) : children)
+    } else {
+      return false
+    }
+  },
+  wrapperDisplayName: 'VisibleOnlyHasPermission',
+  FailureComponent
+})
+
+const HasPermission = ({ permission, FailureComponent='NoPermission', children, ...props }) => {
+  const UserAuthTag = PermissionWrap(permission, FailureComponent)(
+    () => {
+      return Object.keys(props).length > 0 ? React.cloneElement(children, props) : children
+    }
+  )
   return <UserAuthTag />
 }
 

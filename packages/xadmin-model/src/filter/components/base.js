@@ -31,7 +31,7 @@ const FieldGroup = ({ id, label, help, meta, control, children }) => {
           {error && <HelpBlock>{error}</HelpBlock>}
         </Col>
       </FormGroup>
-      )
+    )
   }
 }
 

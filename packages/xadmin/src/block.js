@@ -4,7 +4,7 @@ const Block = (tag, element, props) => {
 
   const blocks = app.load_dict_list('blocks')
   if(blocks[tag] !== undefined) {
-    return blocks[tag].reduce((prev, block) => {
+    const nodes = blocks[tag].reduce((prev, block) => {
       const ret = block({ nodes: prev, ...element.props, ...props })
       if(ret !== undefined && ret != prev) {
         if(Array.isArray(ret)) {
@@ -15,7 +15,11 @@ const Block = (tag, element, props) => {
       }
       return prev
     }, [])
+    if(nodes.length && nodes.filter(node => node !== null).length > 0) {
+      return nodes
+    }
   }
+  return null
 }
 
 const BlockTag = ({ tag, children, props, ...extraProps }) => {

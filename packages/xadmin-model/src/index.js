@@ -24,7 +24,7 @@ const app = {
               <NavItem key={`main-menu-item-model-${name}`} onSelect={()=>app.go(`/app/model/${name}/list`)}>
                 <Icon name={model.icon || name}/> {model.title}
               </NavItem>
-              )
+            )
           }
         }).filter(item => item !== undefined)
       }
@@ -34,7 +34,7 @@ const app = {
     const models = app.load_dict('models')
     const { _t } = app.context
     let routes = []
-    for (name in models) {
+    for (let name in models) {
       const model = models[name]
       const model_routes = []
       const modelName = model.title || model.name

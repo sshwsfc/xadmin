@@ -29,8 +29,8 @@ export default StoreWrap('auth.reset_password')(({ onSuccess, location: { query 
                   </Panel.Heading>
                   <Panel.Body>
                     {children}
-                      <Button type="submit" disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary" bsSize="large" block>
-                        <Icon name={icon}/> {_t('Reset Password')}</Button>
+                    <Button type="submit" disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary" bsSize="large" block>
+                      <Icon name={icon}/> {_t('Reset Password')}</Button>
                   </Panel.Body>
                 </Panel>
               </form>

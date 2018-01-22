@@ -35,23 +35,23 @@ class AddModelBtnCls extends React.Component {
     }
     
     return canAdd ? (
-        <Modal
-          {...modalProps}
-          show={show}
-          onHide={this.hideModal.bind(this)}
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>{title}</Modal.Title>
-          </Modal.Header>
-          <SchemaForm 
-            formKey={`model.${model.key}`}
-            schema={model}
-            onSubmit={saveItem}
-            onClose={this.hideModal.bind(this)}
-            component={FormLayout}
-            onSubmitSuccess={this.onSubmitSuccess.bind(this)}
-          />
-        </Modal>
+      <Modal
+        {...modalProps}
+        show={show}
+        onHide={this.hideModal.bind(this)}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>{title}</Modal.Title>
+        </Modal.Header>
+        <SchemaForm 
+          formKey={`model.${model.key}`}
+          schema={model}
+          onSubmit={saveItem}
+          onClose={this.hideModal.bind(this)}
+          component={FormLayout}
+          onSubmitSuccess={this.onSubmitSuccess.bind(this)}
+        />
+      </Modal>
     ) : null
   }
 

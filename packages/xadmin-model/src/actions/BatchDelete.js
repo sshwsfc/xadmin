@@ -32,7 +32,7 @@ class BatchDeleteBtn extends React.Component {
         </Modal.Header>
         <Modal.Body>
           <ListGroup>
-          {selected.map(item=>(<ListGroupItem><Icon name={model.icon}/> {model.display ? model.display(item) : item.name}</ListGroupItem>))}
+            {selected.map(item=>(<ListGroupItem><Icon name={model.icon}/> {model.display ? model.display(item) : item.name}</ListGroupItem>))}
           </ListGroup>
         </Modal.Body>
         <Modal.Footer>
@@ -49,10 +49,10 @@ class BatchDeleteBtn extends React.Component {
 
     return canDelete ? [ (
       <MenuItem eventKey={'actions_batch_delete'} onSelect={(e)=>{onSelect(e); this.setState({ show: true })}} disabled={selected.length == 0}>
-      {_t('Batch Delete Items')}
+        {_t('Batch Delete Items')}
       </MenuItem>
-      ),
-      (this.state.show && selected.length > 0) ? this.renderModel() : null
+    ),
+    (this.state.show && selected.length > 0) ? this.renderModel() : null
     ] : null
   }
 

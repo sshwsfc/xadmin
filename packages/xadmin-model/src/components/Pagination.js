@@ -6,9 +6,94 @@ import { ModelWrap } from '../base'
 
 class ModelPagination extends React.Component {
 
+  renderPageButtons({ activePage, items, maxButtons, onSelect }) {
+    const pageButtons = []
+
+    let startPage
+    let endPage
+    let hasHiddenPagesAfter
+
+    if (maxButtons) {
+      let hiddenPagesBefore = activePage - parseInt(maxButtons / 2, 10)
+      startPage = Math.max(hiddenPagesBefore, 1)
+      hasHiddenPagesAfter = items >= startPage + maxButtons
+
+      if (!hasHiddenPagesAfter) {
+        endPage = items
+        startPage = items - maxButtons + 1
+        if (startPage < 1) {
+          startPage = 1
+        }
+      } else {
+        endPage = startPage + maxButtons - 1
+      }
+    } else {
+      startPage = 1
+      endPage = items
+    }
+
+    for (let pagenumber = startPage; pagenumber <= endPage; pagenumber++) {
+      pageButtons.push(
+        <Pagination.Item
+          onClick={()=>onSelect(pagenumber)}
+          key={pagenumber}
+          eventKey={pagenumber}
+          active={pagenumber === activePage}
+        >
+          {pagenumber}
+        </Pagination.Item>
+      )
+    }
+
+    if (startPage !== 1) {
+      pageButtons.unshift(
+        <Pagination.Ellipsis
+          key="ellipsisFirst"
+          disabled
+        />
+      )
+
+      pageButtons.unshift(
+        <Pagination.Item
+          onClick={()=>onSelect(1)}
+          key={1}
+          eventKey={1}
+          active={false}
+        >
+          1
+        </Pagination.Item>
+      )
+    }
+
+    if (maxButtons && hasHiddenPagesAfter) {
+      pageButtons.push(
+        <Pagination.Ellipsis
+          key="ellipsis"
+          disabled
+        />
+      )
+
+      if (endPage !== items) {
+        pageButtons.push(
+          <Pagination.Item
+            onClick={()=>onSelect(items)}
+            key={items}
+            eventKey={items}
+            active={false}
+          >
+            {items}
+          </Pagination.Item>
+        )
+      }
+    }
+
+    return pageButtons
+  }
+
+
   render() {
     const { _t } = app.context
-    const { emptyComponent, items, activePage, changePage } = this.props
+    const { emptyComponent, items, activePage, maxButtons=6, changePage } = this.props
     const c = (num) => () => changePage(num)
 
     const pages = []
@@ -16,16 +101,16 @@ class ModelPagination extends React.Component {
       pages.push(<Pagination.Item active={activePage == i} onClick={c(i)}>{i}</Pagination.Item>)
     }
 
+    const onSelect = (page) => changePage(page)
+
     if(items > 1) {
       return (
         <Pagination
           style={{ marginTop: 0 }}
           bsSize={this.props.bsSize || ''}>
-          <Pagination.First disabled={activePage == 1} onClick={c(1)} />
           <Pagination.Prev disabled={activePage == 1} onClick={c(activePage - 1)} />
-          {pages}
+          {this.renderPageButtons({ activePage, items, maxButtons, onSelect })}
           <Pagination.Next disabled={activePage == items} onClick={c(activePage + 1)}/>
-          <Pagination.Last disabled={activePage == items} onClick={c(items)}/>
         </Pagination>
       )
     } else {
@@ -33,7 +118,7 @@ class ModelPagination extends React.Component {
         <ul style={{ marginTop: 0 }} className="pagination pagination-sm">
           <li className="disabled"><a>{_t('No paging')}</a></li>
         </ul>
-        )
+      )
     }
   }
 

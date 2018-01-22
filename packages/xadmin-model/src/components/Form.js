@@ -16,11 +16,11 @@ const DefaultLayout = (props) => {
     <form className="form-horizontal" onSubmit={handleSubmit}>
       <Panel><Panel.Body>{children}</Panel.Body></Panel>
       <Well bsSize="small" style={{ textAlign: 'right' }}>
-      {invalid ? (
-        <OverlayTrigger placement="top" overlay={<Tooltip>{_t('Please be sure to complete all field.')}</Tooltip>}>
-          <Button type="submit" disabled={submitting} onClick={handleSubmit} bsStyle="primary">
-            <Icon name="ban"/> {_t('Save')}</Button>
-        </OverlayTrigger>
+        {invalid ? (
+          <OverlayTrigger placement="top" overlay={<Tooltip>{_t('Please be sure to complete all field.')}</Tooltip>}>
+            <Button type="submit" disabled={submitting} onClick={handleSubmit} bsStyle="primary">
+              <Icon name="ban"/> {_t('Save')}</Button>
+          </OverlayTrigger>
         ) : (
           <Button type="submit" disabled={submitting} onClick={handleSubmit} bsStyle="primary">
             <Icon name={icon}/> {_t('Save')}</Button>
