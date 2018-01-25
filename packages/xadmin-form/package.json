@@ -1,6 +1,6 @@
 {
   "name": "xadmin-form",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "Xadmin Form",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
