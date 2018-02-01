@@ -46,6 +46,8 @@ class ExportMenuPlugin(BaseAdminPlugin):
     export_names = {'xlsx': 'Excel 2007', 'xls': 'Excel', 'csv': 'CSV',
                     'xml': 'XML', 'json': 'JSON'}
 
+    export_menu_block_template = 'xadmin/blocks/model_list.top_toolbar.exports.html'
+
     def init_request(self, *args, **kwargs):
         self.list_export = [
             f for f in self.list_export
@@ -58,7 +60,7 @@ class ExportMenuPlugin(BaseAdminPlugin):
                 'form_params': self.admin_view.get_form_params({'_do_': 'export'}, ('export_type',)),
                 'export_types': [{'type': et, 'name': self.export_names[et]} for et in self.list_export],
             })
-            nodes.append(loader.render_to_string('xadmin/blocks/model_list.top_toolbar.exports.html',
+            nodes.append(loader.render_to_string(self.export_menu_block_template,
                                                  context=get_context_dict(context)))
 
 

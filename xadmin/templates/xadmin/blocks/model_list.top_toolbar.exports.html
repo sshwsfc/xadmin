@@ -19,6 +19,7 @@
             <h4 class="modal-title">{% trans "Export" %} {{et.name}}</h4>
           </div>
           <div class="modal-body">
+            {% block modal_body  %}
             {{ form_params|safe }}
             <input type="hidden" name="export_type" value="{{et.type}}">
               <label class="checkbox">
@@ -41,10 +42,13 @@
               <label class="checkbox">
                 <input type="checkbox" name="all" value="on"> {% trans "Export all data." %}
               </label>
+            {% endblock %}
           </div>
           <div class="modal-footer">
+          {% block model_footer %}
             <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
             <button class="btn btn-success" type="submit"><i class="fa fa-share"></i> {% trans "Export" %}</button>
+          {% endblock %}
           </div>
           </form>
         </div><!-- /.modal-content -->
