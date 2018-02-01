@@ -43,7 +43,7 @@ const convertData = (data, value, editMode) => {
     try {
       value = _.template(value)(data)
     } catch (error) {
-      if(!editMode) {
+      if(editMode) {
         console.error(error)
       }
     }

@@ -80,6 +80,12 @@ class PageSizeButton extends React.Component {
 @ModelWrap('model.list.btn.cols')
 class ColsDropdown extends React.Component {
 
+  static propTypes = {
+    selected: PropTypes.array.isRequired,
+    fields: PropTypes.object.isRequired,
+    changeFieldDisplay: PropTypes.func.isRequired
+  }
+
   state = { open: false }
 
   render() {
@@ -113,12 +119,7 @@ class ColsDropdown extends React.Component {
 
 }
 
-ColsDropdown.WrappedComponent.propTypes = {
-  selected: PropTypes.array.isRequired,
-  fields: PropTypes.object.isRequired,
-  changeFieldDisplay: PropTypes.func.isRequired
-}
-
+@ModelWrap('model.list.submenu')
 class SubMenu extends React.Component {
 
   render() {

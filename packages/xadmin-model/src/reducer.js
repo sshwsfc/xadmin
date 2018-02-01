@@ -4,7 +4,7 @@ import { combineReducers } from 'redux'
 
 const cacheDuration = 10 * 60 * 1000 // ten minutes
 
-const addRecords = (newRecords = [], oldRecords) => {
+const addRecords = (newRecords = [], oldRecords, partial) => {
   // prepare new records and timestamp them
   const newRecordsById = newRecords.reduce((prev, record) => {
     prev[record.id] = record
@@ -31,7 +31,10 @@ const addRecords = (newRecords = [], oldRecords) => {
   // combine old records and new records
   const records = {
     ...oldValidRecords,
-    ...newRecordsById
+    ...(partial ? Object.keys(newRecordsById).reduce((prev, id) => {
+      prev[id] = oldValidRecords[id] ? { ...oldValidRecords[id], ...newRecordsById[id] } : newRecordsById[id]
+      return prev
+    }, {}) : newRecordsById)
   }
   Object.defineProperty(records, 'fetchedAt', { value: {
     ...oldValidRecordsFetchedAt,
@@ -51,7 +54,7 @@ const reducers = combineReducers({
       case 'GET_ITEM':
         return action.success === true ? addRecords([ action.item ], state) : state
       case 'SAVE_ITEM':
-        return action.success === true ? addRecords([ action.item ], state) : state
+        return action.success === true ? addRecords([ action.item ], state, action.partial) : state
       default:
         return state
     }

@@ -1,6 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
-import { Field, reduxForm, reducer as formReducer } from 'redux-form'
+import { Field, reduxForm, reducer as formReducer, reset } from 'redux-form'
 import Icon from 'react-fontawesome'
 import app from 'xadmin'
 import { Nav, ButtonGroup, Panel, Modal, Navbar, NavItem, NavDropdown, MenuItem, OverlayTrigger, Popover, Badge, Button, Col, Row, FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap'
@@ -25,9 +25,18 @@ const FilterForm = (props) => {
     return _.merge(field, filter.field, fieldProps)
   })
   const WrapForm = reduxForm({ 
-    form: formKey
+    form: formKey,
+    enableReinitialize: true
   })(BaseForm)
   return <WrapForm fields={fields} {...props}/>
+}
+
+class FilterComponent extends React.Component {
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.state != nextState
+  }
+
 }
 
 class FilterDiv extends React.Component {
@@ -116,7 +125,7 @@ class FilterInline extends React.Component {
 }
 
 @ModelWrap('model.list.filter')
-class FilterMenu extends React.Component {
+class FilterMenu extends FilterComponent {
 
   render() {
     const { _t } = app.context
@@ -156,7 +165,7 @@ class FilterMenu extends React.Component {
 }
 
 @ModelWrap('model.list.filter')
-class FilterPopover extends React.Component {
+class FilterPopover extends FilterComponent {
 
   render() {
     const { _t } = app.context
@@ -177,12 +186,16 @@ class FilterPopover extends React.Component {
 }
 
 @ModelWrap('model.list.filter')
-class FilterModal extends React.Component {
+class FilterModal extends FilterComponent {
 
   state = { show: false }
 
   onClose() {
     this.setState({ show: false })
+  }
+
+  shouldComponentUpdate() {
+    return true
   }
 
   renderFilterForm() {
@@ -250,15 +263,17 @@ class FilterModal extends React.Component {
 }
 
 @ModelWrap('model.list.filter')
-class FilterSubMenu extends React.Component {
+class FilterSubMenu extends FilterComponent {
+
   render() {
     const { filters } = this.props
     return filters && filters.length ? (<Panel><Panel.Body><FilterInline {...this.props}/></Panel.Body></Panel>) : null
   }
+
 }
 
 @ModelWrap('model.list.filter')
-class FilterNavForm extends React.Component {
+class FilterNavForm extends FilterComponent {
 
   renderFilterForm() {
     const { _t } = app.context
@@ -333,10 +348,11 @@ export default {
       method: {
         resetFilter: ({ dispatch, model, modelState }) => (e) => {
           dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres: _.omit(modelState.wheres, 'filters') })
+          dispatch(reset(`filter.${model.name}`, {}))
         },
         changeFilter: ({ dispatch, model, modelState }, { name }) => (values) => {
           const where = Object.keys(values).reduce((prev, key) => {
-            if(values[key]) {
+            if(!_.isNil(values[key])) {
               prev[key] = values[key]
             } else {
               prev = _.omit(prev, key)

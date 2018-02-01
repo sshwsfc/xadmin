@@ -11,8 +11,12 @@ export default [
       const dtf = app.load_dict('config').date_format || {}
       const format = schema.dateFormat || { time: dtf.time || 'LT', date: dtf.date || 'LL', datetime: dtf.datetime || 'LLL' }[schema.format]
       return ({ value, wrap: WrapComponent }) => {
-        const time = moment(value)
-        return <WrapComponent>{time.format(format)}</WrapComponent>
+        if(!_.isNil(value)) {
+          const time = moment(value)
+          return <WrapComponent>{time.format(format)}</WrapComponent>
+        } else {
+          return <WrapComponent><span className="text-muted">-</span></WrapComponent>
+        }
       }
     } else if(schema.type == 'string' && schema.enum && schema.enum_title) {
       return ({ value, wrap: WrapComponent }) => {

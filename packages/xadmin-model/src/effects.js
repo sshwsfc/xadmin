@@ -51,13 +51,16 @@ function *handle_get_item({ model, id }) {
   yield put({ type: 'END_LOADING', model, key: `${model.key}.get` })
 }
 
-function *handle_save_item({ model, item, promise, message }) {
+function *handle_save_item({ model, item, partial, promise, message }) {
   yield put({ type: 'START_LOADING', model, key: `${model.key}.save` })
   const { _t } = app.context
 
   try {
-    const data = yield api(model).save(item)
-    yield put({ type: 'SAVE_ITEM', model, item: data || item, success: true })
+    if(model.partialSave || item['__partial__']) {
+      partial = true
+    }
+    const data = yield api(model).save(item, partial)
+    yield put({ type: 'SAVE_ITEM', model, item: data || item, partial, success: true })
     if(promise) {
       promise.resolve(data)
     }

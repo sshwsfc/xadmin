@@ -1,4 +1,4 @@
-import { TextFilter, EnumFilter, NumberFilter, DateFilter } from './components'
+import { TextFilter, EnumFilter, NumberFilter, DateFilter, BooleanFilter } from './components'
 
 export default {
   filter_text: {
@@ -32,6 +32,9 @@ export default {
   },
   filter_number: {
     component: NumberFilter
+  },
+  filter_bool: {
+    component: BooleanFilter
   },
   filter_date: {
     component: DateFilter

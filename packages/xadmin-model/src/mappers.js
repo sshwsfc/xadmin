@@ -30,9 +30,9 @@ export default {
           dispatch({ model, type: 'GET_ITEM', id })
         }
       },
-      saveItem: ({ dispatch, model }, { successMessage }) => (item) => {
+      saveItem: ({ dispatch, model }, { successMessage }) => (item, partial) => {
         return new Promise((resolve, reject) => {
-          dispatch({ model, type: 'SAVE_ITEM', item, promise: { resolve, reject }, message: successMessage })
+          dispatch({ model, type: 'SAVE_ITEM', item, partial, promise: { resolve, reject }, message: successMessage })
         }).catch(err => {
           throw new SubmissionError(err.json)
         })

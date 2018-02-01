@@ -7,12 +7,8 @@ import { app, StoreWrap } from 'xadmin'
 class HtmlPart extends React.Component {
 
   render() {
-    const { html, params=[] } = this.props
-    const vs = params.reduce(( prev, { key, value }) => {
-      prev[key] = value
-      return prev
-    }, {})
-    return <div dangerouslySetInnerHTML={{ __html: _.template(html)(vs) }} />
+    const { html } = this.props
+    return <div dangerouslySetInnerHTML={{ __html: html }} />
   }
 
 }
@@ -25,23 +21,6 @@ HtmlPart.ParamSchema = {
     html: {
       type: 'string',
       format: 'code'
-    },
-    params: {
-      type: 'array',
-      title: '变量',
-      items: {
-        type: 'object',
-        properties: {
-          key: {
-            type: 'string',
-            title: '变量名'
-          },
-          value: {
-            type: 'string',
-            title: '变量值'
-          }
-        }
-      }
     }
   },
   form: [ '*', { key: 'html', component: Textarea }, 'params' ]

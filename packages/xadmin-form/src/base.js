@@ -40,12 +40,14 @@ const validateByFields = (errors, values, fields) => {
 }
 
 const Form = (props) => {
-  const { formKey, validate, fields } = props
+  const { formKey, validate, fields, wrapProps } = props
   const formConfig = config('redux-form-config')
   const WrapForm = reduxForm({ 
     form: formKey,
-    destroyOnUnmount: false,
+    //destroyOnUnmount: false,
+    enableReinitialize: true,
     ...formConfig,
+    ...wrapProps,
     validate: (values) => {
       let errors = validate ? validate(values) : {}
       return validateByFields(errors, values, fields)
@@ -55,14 +57,16 @@ const Form = (props) => {
 }
 
 const SchemaForm = (props) => {
-  const { formKey, schema } = props
+  const { formKey, schema, wrapProps } = props
   const ajValidate = ajv.compile(schema)
   const fields = schemaConvert(schema).fields
   const formConfig = config('redux-form-config')
   const WrapForm = reduxForm({ 
     form: formKey,
-    destroyOnUnmount: false,
+    //destroyOnUnmount: false,
+    enableReinitialize: true,
     ...formConfig,
+    ...wrapProps,
     validate: (values) => {
       const valid = ajValidate(_.omitBy(values, v=> v == null || v === undefined || v === ''))
       if(!valid) {

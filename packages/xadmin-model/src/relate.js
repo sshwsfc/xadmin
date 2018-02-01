@@ -270,7 +270,13 @@ const form_fields = {
     component: RelateSelect
   },
   filter_relate: {
-    component: FilterRelateSelect
+    component: FilterRelateSelect,
+    parse: (value, name) => {
+      if(value && value.id) {
+        return value.id
+      }
+      return value
+    }
   }
 }
 
@@ -349,8 +355,20 @@ const reducers = {
       return { ..._.set(state, `${form}.relates.${field.name}`, items) }
     }
     if(action.type == 'GET_RELATED_ITEM' && action.success) {
-      const { meta: { form, field, model }, item } = action
-      return { ..._.set(state, `${form}.values.${field.name}`, item) }
+      const { meta: { form, field, model } } = action
+      let item = action.item
+      if(field.parse) {
+        item = field.parse(item, field.name)
+      }
+      let newState = _.set(state, `${form}.values.${field.name}`, item)
+
+      // if relates is empty push into
+      const relates = _.get(newState, `${form}.relates.${field.name}`)
+      if(!relates || relates.length == 0) {
+        newState = _.set(newState, `${form}.relates.${field.name}`, [ action.item ])
+      }
+      
+      return { ...newState }
     }
     return state
   }

@@ -170,18 +170,18 @@ const _wrap_component = (tag, WrappedComponent, wrappers, defaultMapper) => {
     }
 
     computeWrapProps() {
-      const { stateContext, props } = this
+      const { stateContext, props, dataProps } = this
       return wrappers.reduce((prev, wrapper) => {
         if(wrapper.computeProps === undefined) {
           return prev
         }
-        return { ...prev, ...wrapper.computeProps(tag, stateContext, { ...props, ...this.dataProps }, prev) }
+        return { ...prev, ...wrapper.computeProps(tag, stateContext, { ...props, ...dataProps }, prev) }
       }, this.wrapProps || {})
     }
 
     runBindMethod(method, args) {
-      const { stateContext, props } = this
-      return method(stateContext, props, args)
+      const { stateContext, props, dataProps, computeProps } = this
+      return method(stateContext, { ...props, ...dataProps, ...computeProps }, args)
     }
 
     computeMethodProps() {
@@ -194,9 +194,7 @@ const _wrap_component = (tag, WrappedComponent, wrappers, defaultMapper) => {
         let bindMethods = {}
         for(let key in methods) {
           const method = methods[key]
-          bindMethods[key] = (e) => {
-            return bindMethod(method)(e)
-          }
+          bindMethods[key] = bindMethod(method)
         }
         return { ...prev, ...bindMethods }
       }, {})
