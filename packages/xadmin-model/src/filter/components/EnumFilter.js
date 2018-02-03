@@ -63,6 +63,22 @@ export default class EnumFilter extends React.Component {
     return this.props != nextProps
   }
 
+  componentWillReceiveProps(nextProps) {
+    if(this.props != nextProps) {
+      const value = nextProps.input.value
+      // like
+      if(value) {
+        if(typeof value != 'object') {
+          this.setState({ checks: [ value ] })
+        } else {
+          this.setState({ checks: [ ...value['inq'] ] })
+        }
+      } else {
+        this.setState({ checks: [] })
+      }
+    }
+  }
+
   render() {
     const { input: { name, value, onBlur, onChange, ...inputProps }, label, meta, field, group: FieldGroup } = this.props
     const { checks } = this.state

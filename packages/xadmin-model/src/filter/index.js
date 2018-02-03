@@ -1,6 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
-import { Field, reduxForm, reducer as formReducer, reset } from 'redux-form'
+import { Field, reduxForm, reducer as formReducer, reset, clearFields } from 'redux-form'
 import Icon from 'react-fontawesome'
 import app from 'xadmin'
 import { Nav, ButtonGroup, Panel, Modal, Navbar, NavItem, NavDropdown, MenuItem, OverlayTrigger, Popover, Badge, Button, Col, Row, FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap'
@@ -348,7 +348,7 @@ export default {
       method: {
         resetFilter: ({ dispatch, model, modelState }) => (e) => {
           dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres: _.omit(modelState.wheres, 'filters') })
-          dispatch(reset(`filter.${model.name}`, {}))
+          dispatch(clearFields(`filter.${model.name}`, false, false, ...Object.keys(model.properties)))
         },
         changeFilter: ({ dispatch, model, modelState }, { name }) => (values) => {
           const where = Object.keys(values).reduce((prev, key) => {

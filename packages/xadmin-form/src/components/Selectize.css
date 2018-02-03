@@ -2,3 +2,6 @@
   min-width: 100px;
   max-width: 300px;
 }
+.Select .Select-menu-outer {
+  z-index: 999;
+}

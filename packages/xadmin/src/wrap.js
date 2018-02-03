@@ -194,7 +194,7 @@ const _wrap_component = (tag, WrappedComponent, wrappers, defaultMapper) => {
         let bindMethods = {}
         for(let key in methods) {
           const method = methods[key]
-          bindMethods[key] = bindMethod(method)
+          bindMethods[key] = (...args) => bindMethod(method)(...args)
         }
         return { ...prev, ...bindMethods }
       }, {})
