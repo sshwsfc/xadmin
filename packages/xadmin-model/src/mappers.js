@@ -130,7 +130,7 @@ export default {
           ( property.orderField !== undefined || (property.type != 'object' && property.type != 'array') )
       return {
         canOrder,
-        title: property.title || _.startCase(field),
+        title: property.header || property.title || _.startCase(field),
         order: orders !== undefined ? (orders[property.orderField || field] || '') : ''
       }
     },
@@ -185,17 +185,18 @@ export default {
     compute: ({ model }, { items, field, schema }) => {
       const property = schema || getFieldProp(model, field)
       const data = schema ? {} : { schema: property }
+      const key = schema ? `${schema.name}.${field}` : field
       if(model.fields_render == undefined) {
         model.fields_render = {}
       }
-      if(model.fields_render[field] == undefined) {
-        model.fields_render[field] = property != undefined ? 
+      if(model.fields_render[key] == undefined) {
+        model.fields_render[key] = property != undefined ? 
           app.load_list('field_render').reduce((prev, render) => {
             return render(prev, property, field)
           }, null) : null
       }
-      if(model.fields_render[field]) {
-        data['componentClass'] = model.fields_render[field]
+      if(model.fields_render[key]) {
+        data['componentClass'] = model.fields_render[key]
       }
       return data
     }

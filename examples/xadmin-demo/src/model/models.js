@@ -1,6 +1,37 @@
 import { Radios, Textarea } from 'xadmin-form/lib/components'
 
 export default {
+  Brand: {
+    name: 'brand',
+    resource_name: 'brands',
+    type: 'object',
+    icon: 'file-o', // fa-icon
+    title: 'Brand',
+    properties: {
+      id: {
+        type: 'string',
+        title: 'Brand ID'
+      },
+      '权限': {
+        type: 'string'
+      },
+      property: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            unit: { type: 'string' },
+            value: { type: 'string' }
+          }
+        }
+      }
+    },
+    permission: { view: true, add: true, edit: true, delete: true },
+    form: [ 'id', 'property', '权限' ],
+    required: [ 'id', 'property' ],
+    list_display: [ 'id', 'property' ]
+  },
   User: {
     name: 'user',
     resource_name: 'users',
@@ -31,11 +62,21 @@ export default {
           street: { type: 'string' },
           suite: { type: 'string' }
         }
+      },
+      property: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            value: { type: 'string' }
+          }
+        }
       }
     },
     permission: { view: true, add: true, edit: true, delete: true },
     form: [ 'id', 'name', 'email', 'address', 
-      { key: 'website', component: Textarea, attrs: { rows: 5 } } ],
+      { key: 'website', component: Textarea, attrs: { rows: 5 } }, 'property' ],
     filters: {
       nav: [ 'name', 'email' ],
       sidemenu: [ 'name' ]

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import _ from 'lodash'
 import Icon from 'react-fontawesome'
 import { Block, app } from 'xadmin'
-import { ButtonToolbar, Modal, FormGroup, ControlLabel, FormControl, DropdownButton, OverlayTrigger, Popover, Clearfix, ButtonGroup, Button, Dropdown, MenuItem, Panel, ListGroup, ListGroupItem } from 'react-bootstrap'
+import { Row, Col, ButtonToolbar, Modal, FormGroup, ControlLabel, FormControl, DropdownButton, OverlayTrigger, Popover, Clearfix, ButtonGroup, Button, Dropdown, MenuItem, Panel, ListGroup, ListGroupItem } from 'react-bootstrap'
 import { ModelWrap } from '../base'
 
 @ModelWrap('model.list.btn.count')
@@ -92,24 +92,35 @@ class ColsDropdown extends React.Component {
     const { _t } = app.context
     const { selected, fields } = this.props
     let items = []
-    for (let name in fields) {
+    const showFields = Object.keys(fields).filter(name => fields[name].showInGrid !== false)
+    const menuShow = showFields.length <= 10
+
+    for (let name of showFields) {
       let field = fields[name]
         , fieldName = name
         , title = field.title || name
         , fieldSelected = _.indexOf(selected, name) !== -1
         , icon = fieldSelected ? <Icon name="check-square-o" /> : <Icon name="square-o" />
-      items.push(<ListGroupItem key={name} onClick={(e) => {
-        this.props.changeFieldDisplay([ fieldName, !fieldSelected ])
-      }}>{icon} {title}</ListGroupItem>)
+        , onClick = (e) => {
+          this.props.changeFieldDisplay([ fieldName, !fieldSelected ])
+        }
+      if(menuShow) {
+        items.push(<ListGroupItem key={name} onClick={onClick}>{icon} {title}</ListGroupItem>)
+      } else {
+        items.push((
+          <Col sm={3} key={name} style={{ margin: '5px 0' }}>
+            <Button bsStyle={fieldSelected?'success':'default'} block onClick={onClick}>{icon} {title}</Button>
+          </Col>))
+      }
     }
 
     const DropdownBtn = Dropdown.ControlledComponent
     return (
       <OverlayTrigger trigger="click" rootClose placement="bottom" overlay={
-        <Popover id="model-cols-select-popover">
-          <ListGroup fill style={{ marginBottom: 0 }}>
-            {items}
-          </ListGroup>
+        <Popover style={{ maxWidth: 800, maxHeight: 600, overflowY: 'scroll' }} id="model-cols-select-popover">
+          { menuShow ? 
+            <ListGroup fill style={{ marginBottom: 0 }}>{items}</ListGroup> :
+            <Row>{items}</Row> }
         </Popover>
       }>
         <Button bsSize="small">{_t('Columns')}</Button>

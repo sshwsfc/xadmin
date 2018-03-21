@@ -108,9 +108,9 @@ class ModelPagination extends React.Component {
         <Pagination
           style={{ marginTop: 0 }}
           bsSize={this.props.bsSize || ''}>
-          <Pagination.Prev disabled={activePage == 1} onClick={c(activePage - 1)} />
+          <Pagination.Prev disabled={activePage == 1} onClick={activePage == 1 ? ()=>{} : c(activePage - 1)} />
           {this.renderPageButtons({ activePage, items, maxButtons, onSelect })}
-          <Pagination.Next disabled={activePage == items} onClick={c(activePage + 1)}/>
+          <Pagination.Next disabled={activePage == items} onClick={activePage == items ? ()=> {} : c(activePage + 1)}/>
         </Pagination>
       )
     } else {

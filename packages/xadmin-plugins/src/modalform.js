@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { ButtonToolbar, Button, Modal } from 'react-bootstrap'
+import { ButtonToolbar, Button, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
 import { ModelWrap } from 'xadmin-model'
 import { SchemaForm } from 'xadmin-form'
@@ -28,7 +28,16 @@ class AddModelBtnCls extends React.Component {
           <Modal.Body>{children}</Modal.Body>
           <Modal.Footer>
             <Button onClick={onClose}>{_t('Close')}</Button>
-            <Button type="submit" bsStyle="primary" disabled={invalid || submitting} onClick={handleSubmit}><Icon name={icon}/> {_t('Save')}</Button>
+
+            {invalid ? (
+              <OverlayTrigger placement="top" overlay={<Tooltip>{_t('Please be sure to complete all field.')}</Tooltip>}>
+                <Button type="submit" disabled={submitting} onClick={handleSubmit} bsStyle="primary">
+                  <Icon name="ban"/> {_t('Save')}</Button>
+              </OverlayTrigger>
+            ) : (
+              <Button type="submit" disabled={submitting} onClick={handleSubmit} bsStyle="primary">
+                <Icon name={icon}/> {_t('Save')}</Button>
+            )}
           </Modal.Footer>
         </form>
       )

@@ -23,7 +23,7 @@ HtmlPart.ParamSchema = {
       format: 'code'
     }
   },
-  form: [ '*', { key: 'html', component: Textarea }, 'params' ]
+  form: [ '*', { key: 'html', component: Textarea } ]
 }
 
 export default HtmlPart

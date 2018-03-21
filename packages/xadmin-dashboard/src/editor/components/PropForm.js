@@ -26,7 +26,7 @@ const FieldGroup = ({ label, meta, input, field, children }) => {
       {help && <HelpBlock>{help}</HelpBlock>}
       {error && <HelpBlock>{error}</HelpBlock>}
     </FormGroup>
-    )
+  )
 }
 
 const FormLayout = (props) => {
@@ -75,18 +75,19 @@ class CellProps extends React.Component {
     }
 
     return schema ? (<SchemaForm formKey={`form-params-${cellKey}`}
-          schema={{
-            ...schema,
-            properties: {
-              name: { title: '组件名称', type: 'string' },
-              ...schema.properties,
-              __display__: { title: '显示逻辑', type: 'string' }
-            }
-          }}
-          initialValues={params}
-          group={FieldGroup}
-          onSubmit={this.saveParams}
-          component={this.formLayout}/>) : <div>没有可配置项</div>
+      schema={{
+        ...schema,
+        properties: {
+          name: { title: '组件名称', type: 'string' },
+          ...schema.properties,
+          __display__: { title: '显示逻辑', type: 'string' }
+        }
+      }}
+      wrapProps={{ destroyOnUnmount: false }}
+      initialValues={params}
+      group={FieldGroup}
+      onSubmit={this.saveParams}
+      component={this.formLayout}/>) : <div>没有可配置项</div>
   }
 
 }
@@ -147,11 +148,12 @@ class LayoutProps extends React.Component {
       if(schema && Container.getChildLayout && Container.saveChildLayout) {
         const layout = Container.getChildLayout(parent, cellKey)
         return (<SchemaForm formKey={`form-layout-${cellKey}`}
-              schema={schema}
-              initialValues={_.clone(layout)}
-              group={FieldGroup}
-              onSubmit={this.saveParams}
-              component={this.formLayout}/>)
+          schema={schema}
+          wrapProps={{ destroyOnUnmount: false }}
+          initialValues={_.clone(layout)}
+          group={FieldGroup}
+          onSubmit={this.saveParams}
+          component={this.formLayout}/>)
       }
     }
 
@@ -169,11 +171,12 @@ class AnimateProps extends React.Component {
   render() {
     const { params, cellKey } = this.props
     return (<SchemaForm formKey={`form-animate-${cellKey}`}
-          schema={AnimateSchema}
-          initialValues={_.clone(params.animate)}
-          group={FieldGroup}
-          onSubmit={this.saveParams}
-          component={FormLayout}/>)
+      schema={AnimateSchema}
+      wrapProps={{ destroyOnUnmount: false }}
+      initialValues={_.clone(params.animate)}
+      group={FieldGroup}
+      onSubmit={this.saveParams}
+      component={FormLayout}/>)
   }
 
 }
@@ -246,11 +249,12 @@ class CellEvents extends React.Component {
     }
 
     return schema ? (<SchemaForm formKey={`form-events-${cellKey}`}
-          schema={schema}
-          initialValues={params.events}
-          group={FieldGroup}
-          onSubmit={this.save}
-          component={this.formLayout}/>) : <div>没有可配置的事件</div>
+      schema={schema}
+      wrapProps={{ destroyOnUnmount: false }}
+      initialValues={params.events}
+      group={FieldGroup}
+      onSubmit={this.save}
+      component={this.formLayout}/>) : <div>没有可配置的事件</div>
   }
 
 }
@@ -301,7 +305,7 @@ class CellDatasource extends React.Component {
   render() {
     return (
       <select>
-      {Object.keys(datasources).map(key => <option>{datasources[key].name}</option>)}
+        {Object.keys(datasources).map(key => <option>{datasources[key].name}</option>)}
       </select>
     )
   }

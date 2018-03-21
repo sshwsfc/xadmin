@@ -10,7 +10,7 @@ import relate from 'xadmin-model/lib/relate'
 import filter from 'xadmin-model/lib/filter'
 import actions from 'xadmin-model/lib/actions'
 
-import api from 'xadmin-api-jsonplaceholder'
+import api from './api'
 import models from './models'
 
 export default app

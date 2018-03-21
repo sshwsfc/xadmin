@@ -153,9 +153,10 @@ const ItemEditForm = ModelWrap('model.item')(({ item, field, schema, model, onCl
         form: [ formField ],
         ...required
       }}
+      wrapProps={{ destroyOnUnmount: false }}
       option={{ group : ItemEditFieldGroup }}
       onSubmit={(values) => {
-        saveItem(values)
+        saveItem({ ...values, __partial__: true })
         onClose()
       }}
       onClose={onClose}

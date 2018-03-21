@@ -32,16 +32,24 @@ export default class RESTBaseAPI {
     return this.fetch(id, { method: 'DELETE' })
   }
 
+  put(id, data) {
+    return this.fetch(id, { method: 'PUT', body: JSON.stringify(data) }).then((item) => {
+      return { ...data, ...item }
+    })
+  }
+
+  post(data) {
+    return this.fetch(null, { method: 'POST', body: JSON.stringify(data) }).then((item) => {
+      return { ...data, ...item }
+    })
+  }
+
   save(data) {
     if (data.id) {
       let id = data.id
-      return this.fetch(id, { method: 'PUT', body: JSON.stringify(data) }).then((item) => {
-        return { ...data, ...item }
-      })
+      return this.put(id, data)
     } else {
-      return this.fetch(null, { method: 'POST', body: JSON.stringify(data) }).then((item) => {
-        return { ...data, ...item }
-      })
+      return this.post(data)
     }
   }
 }

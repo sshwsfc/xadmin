@@ -12,11 +12,11 @@ import splashscreen from 'xadmin-plugins/lib/splashscreen'
 import main from '../model'
 
 export default main
-.use(search)
-.use(loading)
-.use(notice)
-.use(modalform)
-.use(modeltabs)
-.use(reldetail)
-.use(splashscreen)
+  .use(search)
+  .use(loading)
+  .use(notice)
+  .use(modalform)
+  .use(modeltabs)
+  .use(reldetail)
+  .use(splashscreen)
 

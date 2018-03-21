@@ -16,6 +16,7 @@ const DefaultLayout = (props) => {
     <form className="form-horizontal" onSubmit={handleSubmit}>
       <Panel><Panel.Body>{children}</Panel.Body></Panel>
       <Well bsSize="small" style={{ textAlign: 'right' }}>
+        <Button onClick={()=>history.back()} bsStyle="default">{_t('Cancel')}</Button>
         {invalid ? (
           <OverlayTrigger placement="top" overlay={<Tooltip>{_t('Please be sure to complete all field.')}</Tooltip>}>
             <Button type="submit" disabled={submitting} onClick={handleSubmit} bsStyle="primary">

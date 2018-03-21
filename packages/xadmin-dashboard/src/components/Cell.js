@@ -110,7 +110,7 @@ export default class Cell extends React.Component {
   componentWillReceiveProps(nextProps) {
     const newState = {}
     if(nextProps.cells !== this.props.cells || nextProps.params !== this.props.params) {
-      newState['childrenCells'] = (nextProps.params.childrenCells || []).map(key => nextProps.cells[key])
+      newState['childrenCells'] = (nextProps.params && nextProps.params.childrenCells || []).map(key => nextProps.cells[key])
     }
     if(nextProps.params && this.props.params && nextProps.params.events !== this.props.params.events) {
       newState['events'] = this.getEvents(nextProps.params.events)
@@ -169,7 +169,7 @@ export default class Cell extends React.Component {
       dispatchData, removeCell, selectCell, copyCell, onSettings, ...extraProps } = this.props
 
     // is should display
-    if(!this.state.display) { return null }
+    if(!this.state.display || params == null) { return null }
 
     const animed = params.animate && params.animate.active
     const Widget = app.load_dict('dashboard_widgets')[params.type] || MissWidgetType
