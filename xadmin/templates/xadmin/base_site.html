@@ -12,7 +12,7 @@
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav pull-right">
         {% view_block 'top_navmenu' %}
-        {% if user.is_active and user.is_staff %}
+        {% if user.is_active and user.is_admin %}
           <li class="dropdown">
             <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
             <strong>{% trans 'Welcome,' %} {% firstof user.first_name user.username %}</strong> <span class="caret"></span></a>

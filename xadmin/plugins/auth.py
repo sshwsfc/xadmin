@@ -59,10 +59,10 @@ class GroupAdmin(object):
 
 class UserAdmin(object):
     change_user_password_template = None
-    list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff')
-    list_filter = ('is_staff', 'is_superuser', 'is_active')
-    search_fields = ('username', 'first_name', 'last_name', 'email')
-    ordering = ('username',)
+    list_display = ('username', 'email', 'date_joined', 'is_admin')
+    list_filter = ('is_admin', 'is_active')
+    search_fields = ('username', 'introduce_by', 'date_joined', 'email')
+    ordering = ('email',)
     style_fields = {'user_permissions': 'm2m_transfer'}
     model_icon = 'fa fa-user'
     relfield_style = 'fk-ajax'
@@ -118,9 +118,9 @@ class PermissionAdmin(object):
     model_icon = 'fa fa-lock'
     list_display = ('show_name', )
 
-site.register(Group, GroupAdmin)
+#site.register(Group, GroupAdmin)
 site.register(User, UserAdmin)
-site.register(Permission, PermissionAdmin)
+#site.register(Permission, PermissionAdmin)
 
 
 class UserFieldPlugin(BaseAdminPlugin):
