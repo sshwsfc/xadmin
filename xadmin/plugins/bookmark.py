@@ -163,6 +163,7 @@ class BookmarkAdmin(object):
     list_display_links = ('title',)
     user_fields = ['user']
     hidden_menu = True
+    remove_permissions = ['add', 'delete']
 
     def queryset(self):
         if self.user.is_superuser:
