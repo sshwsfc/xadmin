@@ -80,6 +80,11 @@ class UserAdmin(object):
             self.form = UserChangeForm
         return super(UserAdmin, self).get_model_form(**kwargs)
 
+    def queryset(self):
+        qs = super(UserAdmin, self).queryset().filter(is_superuser=False)
+        return qs
+
+
     def get_form_layout(self):
         if self.org_obj:
             self.form_layout = (
