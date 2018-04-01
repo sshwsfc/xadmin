@@ -61,6 +61,7 @@ class UserAdmin(object):
     change_user_password_template = None
     list_display = ('username', 'email', 'date_joined', 'is_admin')
     list_filter = ('is_admin', 'is_active')
+    list_display_links = ('email')
     search_fields = ('username', 'introduce_by', 'date_joined', 'email')
     ordering = ('email',)
     style_fields = {'user_permissions': 'm2m_transfer'}
