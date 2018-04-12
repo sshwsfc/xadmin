@@ -7,7 +7,7 @@ import { convert as schemaConvert } from 'xadmin-form/lib/schema'
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Panel, Well, ButtonFormGroup, HelpBlock, FormGroup, Col, FormControl, ControlLabel } from 'react-bootstrap'
 
 import { ModelWrap } from '../base'
-import { Item } from './items'
+import { Item } from './Items'
 
 const FieldGroup = ({ label, field, children }) => {
   const groupProps = {}

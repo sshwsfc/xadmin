@@ -88,44 +88,44 @@ class Hello extends React.Component {
 }
 
 export default app
-.use(i18n)
-.use(layout)
-.use(form)
-.use({
-  config: {
-    locale: {
-      lng: 'zh_Hans'
-    }
-  },
-  locales: {
-    zh_Hans: {
-      translation: {
-        'Add Count': '添加数字'
+  .use(i18n)
+  .use(layout)
+  .use(form)
+  .use({
+    config: {
+      locale: {
+        lng: 'zh_Hans'
       }
-    }
-  },
-  mappers: {
-    hello: {
-      data: ({ state }, props ) => {
-        return { count: state.count }
-      },
-      method: {
-        add: ({ dispatch }) => (values) => {
-          dispatch({ type: 'ADD', ...values })
+    },
+    locales: {
+      zh_Hans: {
+        translation: {
+          'Add Count': '添加数字'
         }
       }
-    }
-  },
-  reducers: {
-    count: (state=0, action) => {
-      if(action.type == 'ADD') {
-        return state + action.count
+    },
+    mappers: {
+      hello: {
+        data: ({ state }, props ) => {
+          return { count: state.count }
+        },
+        method: {
+          add: ({ dispatch }) => (values) => {
+            dispatch({ type: 'ADD', ...values })
+          }
+        }
       }
-      return state
+    },
+    reducers: {
+      count: (state=0, action) => {
+        if(action.type == 'ADD') {
+          return state + action.count
+        }
+        return state
+      }
+    },
+    components: {
+      Dashboard: Hello
     }
-  },
-  components: {
-    Dashboard: Hello
-  }
 
-})
+  })

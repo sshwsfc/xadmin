@@ -173,7 +173,7 @@ export default {
         dispatch({ model, type: 'SELECT_ITEMS', item, selected })
       },
       editItem: ({ router, model, modelState }, { id }) => () => {
-        router.push(`/app/model/${model.name}/${id}/edit`)
+        router.push(`/app/model/${model.name}/${encodeURIComponent(id)}/edit`)
       },
       deleteItem: ({ dispatch, model, modelState }, { id }) => () => {
         const item = modelState.items[id]

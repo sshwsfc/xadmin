@@ -18,7 +18,7 @@ const DefaultLayout = (props) => {
       <Well bsSize="small" style={{ textAlign: 'right' }}>
         <Button onClick={()=>history.back()} bsStyle="default">{_t('Cancel')}</Button>{' '}
         {invalid ? (
-          <OverlayTrigger placement="top" overlay={<Tooltip>{_t('Please be sure to complete all field.')}</Tooltip>}>
+          <OverlayTrigger placement="top" overlay={<Tooltip>{_t('Please be sure to complete all field')}</Tooltip>}>
             <Button type="submit" disabled={submitting} onClick={handleSubmit} bsStyle="primary">
               <Icon name="ban"/> {_t('Save')}</Button>
           </OverlayTrigger>
