@@ -338,7 +338,6 @@ class RelatedFieldSearchFilter(FieldFilter):
         return related_modeladmin and getattr(related_modeladmin, 'relfield_style', None) in ('fk-ajax', 'fk-select')
 
     def __init__(self, field, request, params, model, model_admin, field_path):
-        print('-------------------------')
         other_model = get_model_from_relation(field)
         if hasattr(field, 'remote_field'):
             rel_name = field.remote_field.get_related_field().name
