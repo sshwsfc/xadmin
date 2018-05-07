@@ -3,7 +3,7 @@
 <li class="dropdown g-setlang">
   <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
   <i class="fa fa-globe"></i> <span class="hide-sm">
-    {% get_language_info for LANGUAGE_CODE as l %}{{ l.name_local }}
+    {% get_current_language as l %}{{ l.name_local }}
     <i class="caret"></i></span></a>
   <form id="setlang-form" action="{% url 'xadmin:set_language' %}" method="post" style="display:none;">
     {% csrf_token %}
