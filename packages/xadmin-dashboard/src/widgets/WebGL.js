@@ -7,6 +7,9 @@ import elementResizeEvent from 'element-resize-event'
 
 class WebGL extends React.Component {
 
+  init = false
+  initing = false
+
   // first add
   componentDidMount() {
     let onEvents = this.props.onEvents || {}
@@ -51,6 +54,7 @@ class WebGL extends React.Component {
 
   // render the dom
   renderGLDom(cb) {
+    if(this.initing) return
     this.getGLInstance(glObj => {
       glObj.setOption(this.props)
       cb(glObj)
@@ -58,11 +62,15 @@ class WebGL extends React.Component {
   }
 
   getGLInstance(cb) {
-    if(this.gl == undefined) {
-      this.gl = this.props.modal
-      this.gl.init(this.refs.webglDom, () => cb(this.gl))
+    if(this.init) {
+      cb(this.props.modal)
     } else {
-      cb(this.gl)
+      this.initing = true
+      this.props.modal.init(this.refs.webglDom, () => {
+        cb(this.props.modal)
+        this.init = true
+        this.initing = false
+      })
     }
   }
 

@@ -100,6 +100,7 @@ export default class Cell extends React.Component {
 
     // 初始化不会跟随data改变而改变的东西
     this.state = {
+      hasError: false,
       childrenCells: (params.childrenCells || []).map(key => cells[key]),
       events: this.getEvents(params.events),
       widgetParams,
@@ -164,7 +165,15 @@ export default class Cell extends React.Component {
     return false
   }
 
+  componentDidCatch(error, info) {
+    this.setState({ hasError: true })
+  }
+
   render() {
+    if(this.state.hasError) {
+      return null
+    }
+
     const { selected, params={}, data, cellKey, editMode, wrapStyle, widgetWrap,
       dispatchData, removeCell, selectCell, copyCell, onSettings, ...extraProps } = this.props
 

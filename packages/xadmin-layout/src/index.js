@@ -1,5 +1,5 @@
 import React from 'react'
-import { Main, App, Page } from './bootstrap'
+import { Main, App, Page, Loading } from './bootstrap'
 import Icon from 'react-fontawesome'
 import app from 'xadmin'
 
@@ -41,7 +41,7 @@ export default {
 }
 
 export {
-  Page, Icon,
+  Page, Icon, Loading,
   Main,
   App
 }

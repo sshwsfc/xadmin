@@ -59,12 +59,10 @@ const InlineGroup = ({ label, meta, input, field, children }) => {
 
   const controlComponent = children ? children : (<FormControl {...input} {...attrs} placeholder={label} />)
   return (
-    <FormGroup controlId={input.name} {...groupProps}>
-      <Col sm={12}>
-        {controlComponent}
-        {help && <HelpBlock>{help}</HelpBlock>}
-        {error && <HelpBlock>{error}</HelpBlock>}
-      </Col>
+    <FormGroup controlId={input.name} style={{ marginRight: 10 }} {...groupProps}>
+      {controlComponent}
+      {help && <HelpBlock>{help}</HelpBlock>}
+      {error && <HelpBlock>{error}</HelpBlock>}
     </FormGroup>
   )
 }

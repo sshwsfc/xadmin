@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 //import { REHYDRATE } from 'redux-persist/constants'
 import _ from 'lodash'
-import { Map } from 'immutable'
+import produce from 'immer'
 
 const findRelateCells = (cells, parentKey) => {
   return Object.keys(cells).reduce((prev, key) => {
@@ -102,46 +102,44 @@ const layoutsReducer = (state={}, action) => {
 }
 
 const dataReducer = (state={}, action) => {
-  switch(action.type) {
-    // case '@@x-dashboard/ADD_CELL':
-    //   if(action.payload.key) {
-    //     return state.setIn( action.payload.key, action.payload.data )
-    //   } else {
-    //     return state
-    //   }
-    case '@@x-dashboard/UPDATE_DATA':
-      if(action.data !== undefined) {
-        const path = action.cell || action.key
-        return { ..._.set(state, path, action.data) }
-      } else if(action.payload !== undefined) {
-        const keys = Object.keys(action.payload)
-        if(keys.length == 1) {
-          const path = keys[0]
-          let value = action.payload[path]
-          if(_.isPlainObject(value)) {
-            value = _.mergeWith(_.get(state, path), value, (objValue, srcValue) => {
+  if(action.type == '@@x-dashboard/UPDATE_ALL_DATA')
+    return action.payload
+  
+  return produce(state, draft => {
+    switch(action.type) {
+      // case '@@x-dashboard/ADD_CELL':
+      //   if(action.payload.key) {
+      //     return state.setIn( action.payload.key, action.payload.data )
+      //   } else {
+      //     return state
+      //   }
+      case '@@x-dashboard/UPDATE_DATA':
+        if(action.data !== undefined) {
+          const path = action.cell || action.key
+          _.set(draft, path, action.data)
+        } else if(action.payload !== undefined) {
+          const keys = Object.keys(action.payload)
+          if(keys.length == 1) {
+            const path = keys[0]
+            let value = action.payload[path]
+            if(_.isPlainObject(value)) {
+              value = _.mergeWith(_.get(draft, path), value, (objValue, srcValue) => {
+                if (_.isArray(objValue)) {
+                  return srcValue
+                }
+              })
+            }
+            _.set(draft, path, value)
+          } else {
+            _.mergeWith(draft, action.payload, (objValue, srcValue) => {
               if (_.isArray(objValue)) {
                 return srcValue
               }
             })
           }
-          return { ..._.set(state, path, value) }
-        } else {
-          return _.mergeWith(_.cloneDeep(state), action.payload, (objValue, srcValue) => {
-            if (_.isArray(objValue)) {
-              return srcValue
-            }
-          })
         }
-        //return state.mergeDeepWith(action.payload)
-      } else {
-        return state
-      }
-    case '@@x-dashboard/UPDATE_ALL_DATA':
-      return action.payload
-    default:
-      return state
-  }
+    }
+  })
 }
 
 const endpointReducer = (state={}, action) => {

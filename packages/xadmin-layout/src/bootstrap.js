@@ -1,6 +1,7 @@
 import React from 'react'
 import { Row, Col, Breadcrumb, BreadcrumbItem, Panel, Nav, Navbar } from 'react-bootstrap'
 import { Block, config as _c } from 'xadmin'
+import Icon from 'react-fontawesome'
 
 class Bread extends React.Component {
   render() {
@@ -103,6 +104,12 @@ class App extends React.Component {
     )}
 }
 
+class Loading extends React.Component {
+  render() {
+    return <Panel><Panel.Body className="text-center"><Icon name="spinner fa-spin fa-4x"/></Panel.Body></Panel>
+  }
+}
+
 export {
-  App, Main, Page
+  App, Main, Page, Loading
 }
