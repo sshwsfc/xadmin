@@ -223,8 +223,11 @@ class ActionPlugin(BaseAdminPlugin):
             class_actions = getattr(klass, 'actions', [])
             if not class_actions:
                 continue
-            actions.extend(
-                [self.get_action(action) for action in class_actions])
+            # Allows additional processing for actions.
+            # May need to select action per user profile.
+            if callable(class_actions):
+                class_actions = class_actions(self.admin_view.request)
+            actions.extend([self.get_action(action) for action in class_actions])
 
         # get_action might have returned None, so filter any of those out.
         actions = filter(None, actions)
