@@ -2,6 +2,7 @@ from django import template
 from django.template import Library
 from django.utils import six
 from django.utils.safestring import mark_safe
+from django.utils.html import escape
 
 from xadmin.util import static, vendor as util_vendor
 
@@ -34,6 +35,7 @@ def view_block(context, block_name, *args, **kwargs):
 def admin_urlname(value, arg):
     return 'xadmin:%s_%s_%s' % (value.app_label, value.model_name, arg)
 
+
 static = register.simple_tag(static)
 
 
@@ -51,7 +53,7 @@ class BlockcaptureNode(template.Node):
 
     def render(self, context):
         output = self.nodelist.render(context)
-        context[self.varname] = str(output)
+        context[self.varname] = escape(output)
         return ''
 
 
