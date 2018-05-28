@@ -25,6 +25,12 @@ class SearchBar extends React.Component {
     this.props.onSearch('')
   }
 
+  onKeyPress(e) {
+    if (e.keyCode == 13) {
+      this.onSearch(e)
+    }
+  }
+
   render() {
     const { _t } = app.context
     const { searchValue, searchTitles } = this.props
@@ -34,7 +40,9 @@ class SearchBar extends React.Component {
         <Navbar.Form pullLeft>
 
           <InputGroup>
-            <FormControl ref="searchInput" value={this.state.value} type="text" placeholder={placeholder} onChange={(e)=>{this.setState({ value: e.target.value })}} />
+            <FormControl ref="searchInput" value={this.state.value} 
+              onKeyPress={this.onKeyPress.bind(this)}
+              type="text" placeholder={placeholder} onChange={(e)=>{this.setState({ value: e.target.value })}} />
             <InputGroup.Button>
               { searchValue ? <Button onClick={this.onClean.bind(this)}><Icon name="times" /></Button> : null }
               <Button onClick={this.onSearch.bind(this)} type="submit"><Icon name="search" /></Button>
