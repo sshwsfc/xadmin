@@ -21,7 +21,7 @@
     "redux-auth-wrapper": "^2.0.2",
     "redux-form": "^7.2.0",
     "redux-saga": "^0.16.0",
-    "xadmin": "^1.0.1",
+    "xadmin": "^1.0.10",
     "xadmin-api-jsonplaceholder": "^1.0.0",
     "xadmin-auth": "^1.0.1",
     "xadmin-dashboard": "^1.1.2",
