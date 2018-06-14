@@ -158,7 +158,7 @@ class AdminSite(object):
         Returns True if the given HttpRequest has permission to view
         *at least one* page in the admin site.
         """
-        return request.user.is_active and request.user.is_admin
+        return request.user.is_active
 
     def check_dependencies(self):
         """

@@ -124,9 +124,9 @@ class PermissionAdmin(object):
     model_icon = 'fa fa-lock'
     list_display = ('show_name', )
 
-#site.register(Group, GroupAdmin)
+site.register(Group, GroupAdmin)
 site.register(User, UserAdmin)
-#site.register(Permission, PermissionAdmin)
+site.register(Permission, PermissionAdmin)
 
 
 class UserFieldPlugin(BaseAdminPlugin):

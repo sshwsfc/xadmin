@@ -232,6 +232,7 @@ ul.nav-sitemenu li a {
 }
 .panel-group.nav-sitemenu .panel .list-group {
   border-radius: 0px;
+  margin-left: 20px;
 }
 .panel-group.nav-sitemenu .panel .list-group .list-group-item:first-child {
   border-top-width: 1px;
