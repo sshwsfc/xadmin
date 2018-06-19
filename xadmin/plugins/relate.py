@@ -101,15 +101,15 @@ class RelateMenuPlugin(BaseAdminPlugin):
             links.append(link)
         ul_html = '<ul class="dropdown-menu" role="menu">%s</ul>' % ''.join(
             links)
-        return '<div class="dropdown related_menu pull-right"><a title="%s" class="relate_menu dropdown-toggle" data-toggle="dropdown"><i class="icon fa fa-list"></i></a>%s</div>' % (_('Related Objects'), ul_html)
-    related_link.short_description = '&nbsp;'
+        return '<div class="dropdown related_menu"><a title="%s" class="relate_menu dropdown-toggle" data-toggle="dropdown"><i class="icon fa fa-list"></i></a>%s</div>' % (_('Related Objects'), ul_html)
+    related_link.short_description = '关联'
     related_link.allow_tags = True
     related_link.allow_export = False
     related_link.is_column = False
 
     def get_list_display(self, list_display):
         if self.use_related_menu and len(self.get_related_list()):
-            list_display.append('related_link')
+            list_display.insert(-1, 'related_link')
             self.admin_view.related_link = self.related_link
         return list_display
 
