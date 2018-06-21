@@ -57,8 +57,12 @@ class RelateMenuPlugin(BaseAdminPlugin):
                 continue
             if rel.related_model not in self.admin_site._registry.keys():
                 continue
-            has_view_perm = self.has_model_perm(rel.related_model, 'view')
-            has_add_perm = self.has_model_perm(rel.related_model, 'add')
+            if self.user.is_admin:
+                has_view_perm = True
+                has_add_perm = True
+            else:
+                has_view_perm = self.has_model_perm(rel.related_model, 'view')
+                has_add_perm = self.has_model_perm(rel.related_model, 'add')
             if not (has_view_perm or has_add_perm):
                 continue
 

@@ -317,7 +317,7 @@ def admin_urlname(value, arg):
 
 def boolean_icon(field_val):
     return mark_safe(u'<i class="%s" alt="%s"></i>' % (
-        {True: 'fa fa-check-circle text-success', False: 'fa fa-times-circle text-error', None: 'fa fa-question-circle muted'}[field_val], field_val))
+        {True: 'fa fa-check-circle text-success', False: 'fa fa-times-circle text-danger', None: 'glyphicon glyphicon-minus muted'}[field_val], field_val))
 
 
 def display_for_field(value, field):
