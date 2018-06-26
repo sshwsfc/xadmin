@@ -4,6 +4,7 @@ import _ from 'lodash'
 import Icon from 'react-fontawesome'
 import { Block, app } from 'xadmin'
 import { SchemaForm } from 'xadmin-form'
+import { Page, Loading } from 'xadmin-layout'
 
 import { FormGroup, ControlLabel, FormControl, Col, HelpBlock, Table, OverlayTrigger, Popover, Button, ButtonGroup, Input, Dropdown, MenuItem, Well, Panel, Media } from 'react-bootstrap'
 import { ModelWrap } from '../base'
@@ -257,7 +258,7 @@ class Grid extends React.Component {
     const { fields, items, loading } = this.props
     const { _t } = app.context
     if(loading) {
-      return <Panel><Panel.Body><div className="text-center"><Icon name="spinner fa-spin fa-4x"/></div></Panel.Body></Panel>
+      return <Loading />
     } else {
       if(items.length > 0) {
         return (
@@ -333,7 +334,7 @@ class List extends React.Component {
     const { _t } = app.context
 
     if(loading) {
-      return <Panel><Panel.Body><div className="text-center"><Icon name="spinner fa-spin fa-4x"/></div></Panel.Body></Panel>
+      return <Loading />
     } else {
       if(items.length > 0) {
         return (

@@ -40,7 +40,7 @@ export default {
     },
     event: {
       mount: ({ dispatch, model }, { id, data }) => {
-        if(data == undefined && id) {
+        if(model.forceGetItem || (data == undefined && id !== undefined)) {
           dispatch({ model, type: 'GET_ITEM', id })
         }
       },

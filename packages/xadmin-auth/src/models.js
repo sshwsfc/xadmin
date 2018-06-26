@@ -184,6 +184,7 @@ const Permission = ({ context: { _t } }) => ({
       type: 'string'
     }
   },
+  search_fields: [ 'name' ],
   ui: { show_menu: false }
 })
 
@@ -206,6 +207,7 @@ const Role = (app) => {
         items: Permission(app)
       }
     },
+    search_fields: [ 'name' ],
     ui: { show_menu: false }
   }
 }
@@ -250,6 +252,10 @@ const User = (app) => {
         type: 'array',
         items: Role(app)
       }
+    },
+    search_fields: [ 'username', 'email' ],
+    filters: {
+      nav: [ 'emailVerified', 'is_superuser', 'date_joined' ]
     },
     list_display: [ 'username', 'email', 'is_superuser', 'date_joined' ],
     form: [ 'username', 'email', 'is_superuser' ],

@@ -113,11 +113,14 @@ const react_app = {
         return childs.length > 0 ? { ...r, childRoutes: [ ...(r.childRoutes||[]), ...childs ] } : r
       })
     }
-    const routers = find_childs('@')[0]
+    const routers = find_childs('@')
+    let AppComponent = (routers && routers.length) ?
+      () => <Router history={app.context.router} routes={routers[0]}/> :
+      (app.load_dict('components').Main || (() => <span>Please config routers or Main component.</span>))
 
     const RootComponent = app.load_list('root_component').reduce((PrevComponent, render) => {
       return render(PrevComponent)
-    }, () => <Router history={app.context.router} routes={routers}/>)
+    }, AppComponent)
 
     ReactDOM.render(<RootComponent />, container)
   }

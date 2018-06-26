@@ -98,11 +98,11 @@ class RelateMultiSelect extends React.Component {
 
   render() {
     const { _t } = app.context
-    const { input, options, label, meta, field, group: FieldGroup } = this.props
+    const { input, options, loading, label, meta, field, group: FieldGroup } = this.props
     const { items } = field
     return (
       <FieldGroup label={label} meta={meta} input={input} field={field}>
-        {options?this.renderOptions():<FormControl.Static>{_t('loading')}</FormControl.Static>}
+        {(!loading && options)?this.renderOptions():<FormControl.Static>{_t('loading')}</FormControl.Static>}
       </FieldGroup>
     )
   }
@@ -158,9 +158,12 @@ class RelateSelect extends React.Component {
     }
   }
 
-  renderOptions() {
+  render() {
     const { _t } = app.context
-    const { input: { value }, options, field } = this.props
+
+    const { input: { value }, options, loading, label, meta, field, group: FieldGroup } = this.props
+    const isLoading = loading || (value && typeof value != 'object')
+
     const displayField = field.displayField || 'name'
     const selectValue = value ? { label: value[displayField] || '', value: value.id } : null
     const searchProps = field.lazyLoad == false ? {
@@ -168,7 +171,7 @@ class RelateSelect extends React.Component {
       noResultsText: _t('No results found')
     } : {
       placeholder: _t('Search {{label}}', { label: field.label }),
-      noResultsText: this.state.search ? _t('No results found') : _t('Type to search'),
+      noResultsText: loading ? _t('loading') : (this.state.search ? _t('No results found') : _t('Type to search')),
       onInputChange: this.onSearchChange.bind(this)
     }
     const textLabels = {
@@ -177,32 +180,22 @@ class RelateSelect extends React.Component {
       searchPromptText: _t('Type to search')
     }
     const SelectComponent = field.lazyLoad == false ? Select : Select.Async
-    return (<Select theme="bootstrap3" ref="select"
-      value={selectValue}
-      options={(options||[]).map(option=>{ return { label: option[displayField] || 'null', value: option.id, item: option } })}
-      onChange={this.onValueChange.bind(this)}
-      renderNoResultsFound={(value, search)=>{ 
-        return (<div className="no-results-found" style={{ fontSize: 13 }}>
-          {(search.length == 0 && field.lazyLoad != false) ? _t('type a few characters to kick off remote search'):_t('No results found')}
-        </div>)
-      }}
-      {...textLabels}
-      {...searchProps}
-      {...field.attrs}
-    />)
-  }
 
-  renderLoading() {
-    const { _t } = app.context
-    return <Select theme="bootstrap3" ref="select" isLoading={true} options={[]} placeholder={_t('loading')} />
-  }
-
-  render() {
-    const { input, options, label, meta, field, group: FieldGroup } = this.props
-    const loading = (input.value && typeof input.value != 'object')
     return (
-      <FieldGroup label={label} meta={meta} input={input} field={field}>
-        {!loading?this.renderOptions():this.renderLoading()}
+      <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
+        <Select theme="bootstrap3" ref="select"
+          value={selectValue} isLoading={isLoading}
+          options={(options||[]).map(option=>{ return { label: option[displayField] || 'null', value: option.id, item: option } })}
+          onChange={this.onValueChange.bind(this)}
+          renderNoResultsFound={(value, search)=>{ 
+            return (<div className="no-results-found" style={{ fontSize: 13 }}>
+              {(search.length == 0 && field.lazyLoad != false) ? _t('type a few characters to kick off remote search'):_t('No results found')}
+            </div>)
+          }}
+          {...textLabels}
+          {...searchProps}
+          {...field.attrs}
+        />
       </FieldGroup>
     )
   }
@@ -287,20 +280,25 @@ const mappers = {
       if(formState) {
         data['options'] = formState.relates ? _.get(formState.relates, field.name) : null
       }
+      const key = `form.${form.formKey}.${field.name}.relates`
+      if(state.loading[key]) {
+        data['loading'] = true
+      }
       return data
     },
     method: {
       getRelatedItems: ({ dispatch, form }, { field }) => () => {
-        const key = `form.${form.formKey}.${field.name}.relates`
-        dispatch({ type: 'GET_RELATED_ITEMS', key, meta: { form: form.formKey, field, model: field.items.schema } })
+        dispatch({ type: 'GET_RELATED_ITEMS', meta: { form: form.formKey, field, model: field.items.schema } })
       }
     }
   },
   'model.form.fkselect': {
     data: ({ state, form, formState, dispatch }, { input: { value }, field }) => {
+      const key = `form.${form.formKey}.${field.name}.relates`
       return {
         options: (formState && formState.relates) ? _.get(formState.relates, field.name) : [],
-        values: formState && formState.values
+        values: formState && formState.values,
+        loading: state.loading[key]
       }
     },
     method: {
@@ -375,28 +373,28 @@ const reducers = {
 }
 
 function *handle_get_relates(action) {
-  const { key, meta: { form, field, model } } = action
+  const { meta: { form, field, model } } = action
   try {
-    yield put({ type: 'START_LOADING', key })
+    yield put({ type: 'START_LOADING', key: `form.${form}.${field.name}.relates` })
     const { items } = yield api(model).query(action.filter, action.wheres)
     yield put({ ...action, items, success: true })
   } catch(err) {
     yield put({ ...action, items: [], success: true })
   } finally {
-    yield put({ type: 'END_LOADING', key })
+    yield put({ type: 'END_LOADING', key: `form.${form}.${field.name}.relates`  })
   }
 }
 
 function *handle_get_relate(action) {
-  const { key, meta: { form, field, model }, id } = action
+  const { meta: { form, field, model }, id } = action
   try {
-    yield put({ type: 'START_LOADING', key })
+    yield put({ type: 'START_LOADING', key: `form.${form}.${field.name}.relates`  })
     const item = yield api(model).get(id)
     yield put({ ...action, item, success: true })
   } catch(err) {
     yield put({ ...action, item: null, success: true })
   } finally {
-    yield put({ type: 'END_LOADING', key })
+    yield put({ type: 'END_LOADING', key: `form.${form}.${field.name}.relates`  })
   }
 }
 

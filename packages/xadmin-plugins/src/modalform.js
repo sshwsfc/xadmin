@@ -6,7 +6,9 @@ import { ModelWrap } from 'xadmin-model'
 import { SchemaForm } from 'xadmin-form'
 import { Block, StoreWrap, app } from 'xadmin'
 
-class AddModelBtnCls extends React.Component {
+@ModelWrap('model.item')
+@ModelWrap('modalform.modal')
+class AddModelBtn extends React.Component {
 
   hideModal() {
     this.props.onClose()
@@ -20,15 +22,24 @@ class AddModelBtnCls extends React.Component {
   render() {
     const { show, model, title, loading, saveItem, canAdd, modalProps, btnProps } = this.props
     const { _t } = app.context
+
     const FormLayout = (props) => {
       const { children, invalid, handleSubmit, submitting, onClose } = props
       const icon = submitting ? 'spinner fa-spin' : 'floppy-o'
       return (
-        <form className="form-horizontal">
-          <Modal.Body>{children}</Modal.Body>
+        <Modal
+          {...modalProps}
+          show={show}
+          onHide={this.hideModal.bind(this)}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>{title}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <form className="form-horizontal">{children}</form>
+          </Modal.Body>
           <Modal.Footer>
             <Button onClick={onClose}>{_t('Close')}</Button>
-
             {invalid ? (
               <OverlayTrigger placement="top" overlay={<Tooltip>{_t('Please be sure to complete all field.')}</Tooltip>}>
                 <Button type="submit" disabled={submitting} onClick={handleSubmit} bsStyle="primary">
@@ -39,43 +50,23 @@ class AddModelBtnCls extends React.Component {
                 <Icon name={icon}/> {_t('Save')}</Button>
             )}
           </Modal.Footer>
-        </form>
+        </Modal>
       )
     }
     
     return canAdd ? (
-      <Modal
-        {...modalProps}
-        show={show}
-        onHide={this.hideModal.bind(this)}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>{title}</Modal.Title>
-        </Modal.Header>
-        <SchemaForm 
-          formKey={`model.${model.key}`}
-          schema={model}
-          onSubmit={saveItem}
-          onClose={this.hideModal.bind(this)}
-          component={FormLayout}
-          onSubmitSuccess={this.onSubmitSuccess.bind(this)}
-        />
-      </Modal>
+      <SchemaForm 
+        formKey={`model.modalform.${model.key}`}
+        schema={model}
+        onSubmit={saveItem}
+        onClose={this.hideModal.bind(this)}
+        component={FormLayout}
+        onSubmitSuccess={this.onSubmitSuccess.bind(this)}
+      />
     ) : null
   }
 
 }
-AddModelBtnCls.propTypes = {
-  id: PropTypes.string,
-  data: PropTypes.object,
-  loading: PropTypes.bool.isRequired,
-  model: PropTypes.object.isRequired,
-  key: PropTypes.string.isRequired,
-  getItem: PropTypes.func.isRequired,
-  saveItem: PropTypes.func.isRequired
-}
-
-const AddModelBtn = ModelWrap('modalform.modal')(ModelWrap('model.item')(AddModelBtnCls))
 
 export default {
   name: 'xadmin.model.modalform',

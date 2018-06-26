@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import _ from 'lodash'
 import Icon from 'react-fontawesome'
 import app from 'xadmin'
+import { Page, Loading } from 'xadmin-layout'
 import { SchemaForm } from 'xadmin-form'
 
 import { Navbar, Nav, NavItem, NavDropdown, OverlayTrigger, Tooltip, MenuItem, Panel, Well, Button } from 'react-bootstrap'
@@ -52,8 +53,7 @@ class ModelForm extends React.Component {
   render() {
     const { title, schema, model, loading, saveItem, componentClass, ...formProps } = this.props
     const FormLayout = componentClass || DefaultLayout
-    return loading ? 
-      (<Panel><div className="text-center"><Icon name="spinner fa-spin fa-4x"/></div></Panel>) : 
+    return loading ? <Loading /> : 
       (<SchemaForm 
         formKey={`model.${model.key}`}
         schema={schema || model}

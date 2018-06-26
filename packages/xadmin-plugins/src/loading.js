@@ -6,7 +6,7 @@ import { takeEvery, put, all } from 'redux-saga/effects'
 export default {
   name: 'xadmin.loading',
   blocks: {
-    'main': () => <LoadingBar style={{ margin: '-70px -15px 0', zIndex: 9999 }} />
+    'main': () => <LoadingBar className="loading_bar" style={{ zIndex: 9999, height: 3, position: 'absolute', backgroundColor: 'red' }} />
   },
   reducers: {
     loadingBar: (state=0, action) => {

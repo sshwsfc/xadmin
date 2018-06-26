@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Icon from 'react-fontawesome'
-import { Page } from 'xadmin-layout'
+import { Page, Loading } from 'xadmin-layout'
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Panel, Well, Button } from 'react-bootstrap'
 import { ModelWrap } from '../base'
 
@@ -32,7 +32,7 @@ class ModelDetail extends React.Component {
     return (
       <Page title={title}>
         {loading ? 
-          (<Panel><Panel.Body><div className="text-center"><Icon name="spinner fa-spin fa-4x"/> Loading..</div></Panel.Body></Panel>) : 
+          <Loading /> : 
           (<Panel><Panel.Body>{}</Panel.Body></Panel>)
         }
       </Page>

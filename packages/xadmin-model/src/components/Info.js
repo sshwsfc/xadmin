@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import _ from 'lodash'
 import Icon from 'react-fontawesome'
 import { StoreWrap, app } from 'xadmin'
+import { Page, Loading } from 'xadmin-layout'
 import { convert as schemaConvert } from 'xadmin-form/lib/schema'
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Panel, Well, ButtonFormGroup, HelpBlock, FormGroup, Col, FormControl, ControlLabel } from 'react-bootstrap'
 
@@ -81,8 +82,7 @@ class ModelInfo extends React.Component {
   render() {
     const { title, model, loading, componentClass, ...formProps } = this.props
 
-    return loading ? 
-      (<Panel><Panel.Body><div className="text-center"><Icon name="spinner fa-spin fa-4x"/></div></Panel.Body></Panel>) : 
+    return loading ? <Loading/> : 
       (<form className="form-horizontal">
         <Panel><Panel.Body>{this.renderFields()}</Panel.Body></Panel>
       </form>)
