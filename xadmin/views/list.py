@@ -169,7 +169,6 @@ class ListAdminView(ModelAdminView):
 
     def make_result_list(self):
         # Get search parameters from the query string.
-        self.base_queryset = self.queryset()
         self.list_queryset = self.get_list_queryset()
         self.ordering_field_columns = self.get_ordering_field_columns()
         self.paginator = self.get_paginator()
