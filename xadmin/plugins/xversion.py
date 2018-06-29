@@ -252,7 +252,6 @@ class RevisionListView(BaseReversionView):
         return context
 
     def get(self, request, object_id, *args, **kwargs):
-        object_id = unquote(object_id)
         self.obj = self.get_object(object_id)
 
         if not self.has_change_permission(self.obj):
@@ -282,7 +281,6 @@ class RevisionListView(BaseReversionView):
         return obj, detail
 
     def post(self, request, object_id, *args, **kwargs):
-        object_id = unquote(object_id)
         self.obj = self.get_object(object_id)
 
         if not self.has_change_permission(self.obj):

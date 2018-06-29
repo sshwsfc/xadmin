@@ -641,7 +641,7 @@ class ModelDashboard(Dashboard, ModelAdminView):
         return self.title % force_text(self.obj)
 
     def init_request(self, object_id, *args, **kwargs):
-        self.obj = self.get_object(unquote(object_id))
+        self.obj = self.get_object(object_id)
 
         if not self.has_view_permission(self.obj):
             raise PermissionDenied
