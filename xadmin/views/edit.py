@@ -456,7 +456,7 @@ class CreateAdminView(ModelFormAdminView):
 class UpdateAdminView(ModelFormAdminView):
 
     def init_request(self, object_id, *args, **kwargs):
-        self.org_obj = self.get_object(unquote(object_id))
+        self.org_obj = self.get_object(object_id)
 
         if not self.has_change_permission(self.org_obj):
             raise PermissionDenied
