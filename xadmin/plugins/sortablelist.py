@@ -11,6 +11,7 @@ from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
 from django.db import transaction
 
+from xadmin.plugins.utils import get_context_dict
 from xadmin.views import (
     BaseAdminPlugin, ModelAdminView, ListAdminView
 )
@@ -47,7 +48,8 @@ class SortableListPlugin(BaseAdminPlugin):
 
     def block_top_toolbar(self, context, nodes):
         save_node = render_to_string(
-            'xadmin/blocks/model_list.top_toolbar.saveorder.html', context_instance=context
+            'xadmin/blocks/model_list.top_toolbar.saveorder.html',
+            context=get_context_dict(context)
         )
         nodes.append(save_node)
 
