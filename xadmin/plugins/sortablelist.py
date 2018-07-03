@@ -22,6 +22,8 @@ from xadmin.views.base import csrf_protect_m
 class SortableListPlugin(BaseAdminPlugin):
 
     list_order_field = None
+    # Used in custom columns
+    list_order_display_field = None
 
     def init_request(self, *args, **kwargs):
         return bool(self.list_order_field)
@@ -38,7 +40,8 @@ class SortableListPlugin(BaseAdminPlugin):
         return row
 
     def result_item(self, item, obj, field_name, row):
-        if self.is_list_sortable and field_name == self.list_order_field:
+        if self.is_list_sortable and field_name in (self.list_order_field,
+                                                    self.list_order_display_field):
             item.btns.append('<a><i class="fa fa-arrows"></i></a>')
         return item
 
