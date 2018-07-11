@@ -169,10 +169,7 @@ class AdminSelectMultiple(forms.SelectMultiple):
 
 
 class AdminFileWidget(forms.ClearableFileInput):
-    template_with_initial = (u'<p class="file-upload">%s</p>'
-                             % forms.ClearableFileInput.initial_text)
-    template_with_clear = (u'<span class="clearable-file-input">%s</span>'
-                           % forms.ClearableFileInput.clear_checkbox_label)
+    """For compatibility"""
 
 
 class AdminTextareaWidget(forms.Textarea):
