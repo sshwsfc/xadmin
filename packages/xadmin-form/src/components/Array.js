@@ -41,10 +41,10 @@ export default ({ input, label, meta, field, option, group: FieldGroup }) => {
   }
   const { items } = field
   const fieldsBuilder = (name, index, removeBtn, itemLable) => {
-    const label = itemLable || (<div>{removeBtn ? removeBtn : ''}{label + ' ' + (index + 1)}</div>)
+    const itemLabel = itemLable || (<div>{removeBtn ? removeBtn : ''}</div>)
     const itemFields = items.fields ? 
       (items.fields.map(f => prefixFieldKey(f, name + '.'))) : 
-      [ { ...items, key: name, name: name, label } ]
+      [ { ...items, key: name, name: name, label: itemLabel } ]
 
     return objectBuilder(itemFields, items.render, option)
   }

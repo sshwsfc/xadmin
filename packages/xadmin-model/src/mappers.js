@@ -21,7 +21,7 @@ export default {
       const { _t } = app.context
       return {
         title: id ? _t('Edit {{title}}', { title: model.title }) : _t('Create {{title}}', { title: model.title }),
-        data: item || (_.isEmpty(query) ? undefined : query)
+        data: item || { ...model.defaultValue, ...query }
       }
     },
     method: {

@@ -322,7 +322,7 @@ const mappers = {
         const searchField = field.searchField || field.displayField || 'name'
         const wheres = search ? { search: { [searchField]: { like: search } } } : {}
 
-        if(field.limit) {
+        if(formState && field.limit) {
           const limit = field.limit(formState.values)
           if(limit == null) {
             dispatch({

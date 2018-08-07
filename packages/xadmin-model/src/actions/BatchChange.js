@@ -70,38 +70,39 @@ class BatchChangeBtn extends React.Component {
   renderModel() {
     const { selected, model, fields, location } = this.props
     const { _t } = app.context
+    const show = this.state.show
 
     const FormLayout = (props) => {
       const { children, invalid, handleSubmit, submitting, onClose } = props
       const icon = submitting ? 'spinner fa-spin' : 'floppy-o'
       return (
-        <form className="form-horizontal" onSubmit={handleSubmit}>
-          <Modal.Body>{children}</Modal.Body>
+        <Modal show={show} onHide={this.onClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>{_t('Please input the value to batch change items')}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <form className="form-horizontal" onSubmit={handleSubmit}>{children}</form>
+          </Modal.Body>
           <Modal.Footer>
             <Button onClick={onClose}>{_t('Close')}</Button>
-            <Button type="submit" disabled={invalid || submitting}  bsStyle="primary" onClick={handleSubmit}>{_t('Change')}</Button>
+            <Button type="submit" disabled={invalid || submitting}  bsStyle="primary" onClick={handleSubmit}><Icon name={icon}/> {_t('Change')}</Button>
           </Modal.Footer>
-        </form>
+        </Modal>
       )
     }
 
     return (
-      <Modal show={this.state.show} onHide={this.onClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>{_t('Please input the value to batch change items')}</Modal.Title>
-        </Modal.Header>
-        <SchemaForm formKey={`model_batch.${model.key}`} 
-          schema={_.omit({
-            ...model,
-            properties: _.pick(model.properties, fields),
-            form: model.form !== undefined ? model.form.filter(obj => {
-              return obj == '*' || fields.indexOf(obj) >= 0 || fields.indexOf(obj.key) >= 0 }) : [ '*' ]
-          }, 'required')}
-          option={{ group: FieldGroup }}
-          onSubmit={this.onBatchChange.bind(this)}
-          onClose={this.onClose}
-          component={FormLayout}/>
-      </Modal>
+      <SchemaForm formKey={`model_batch.${model.key}`} 
+        schema={_.omit({
+          ...model,
+          properties: _.pick(model.properties, fields),
+          form: model.form !== undefined ? model.form.filter(obj => {
+            return obj == '*' || fields.indexOf(obj) >= 0 || fields.indexOf(obj.key) >= 0 }) : [ '*' ]
+        }, 'required')}
+        option={{ group: FieldGroup }}
+        onSubmit={this.onBatchChange.bind(this)}
+        onClose={this.onClose}
+        component={FormLayout}/>
     )
   }
 
