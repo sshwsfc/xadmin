@@ -2,8 +2,8 @@ from __future__ import absolute_import
 from django.utils.translation import ugettext as _
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.views.decorators.cache import never_cache
-from django.contrib.auth.views import login
-from django.contrib.auth.views import logout
+from django.contrib.auth.views import LoginView as login
+from django.contrib.auth.views import LogoutView as logout
 from django.http import HttpResponse
 
 from .base import BaseAdminView, filter_hook
@@ -63,7 +63,8 @@ class LoginView(BaseAdminView):
             'template_name': self.login_template or 'xadmin/views/login.html',
         }
         self.update_params(defaults)
-        return login(request, **defaults)
+        # return login(request, **defaults)
+        return login.as_view(**defaults)(request)
 
     @never_cache
     def post(self, request, *args, **kwargs):
@@ -91,7 +92,8 @@ class LogoutView(BaseAdminView):
             defaults['template_name'] = self.logout_template
 
         self.update_params(defaults)
-        return logout(request, **defaults)
+        # return logout(request, **defaults)
+        return logout.as_view(**defaults)(request)
 
     @never_cache
     def post(self, request, *args, **kwargs):
