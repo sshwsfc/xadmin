@@ -66,7 +66,7 @@ Install from github source for Django 2.0:
 
 .. code:: bash
 
-    pip install git+git://github.com/sshwsfc/xadmin.git@django2
+    pip install https://codeload.github.com/sshwsfc/xadmin/zip/django2
 
 Install Requires 
 ----------------
