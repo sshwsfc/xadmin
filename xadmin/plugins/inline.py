@@ -164,7 +164,7 @@ class InlineModelAdmin(ModelFormAdminView):
             "form": self.form,
             "formset": self.formset,
             "fk_name": self.fk_name,
-            'fields': forms.ALL_FIELDS,
+            'fields': forms.ALL_FIELDS if len(self.fields) == 0 else self.fields,
             "exclude": exclude,
             "formfield_callback": self.formfield_for_dbfield,
             "extra": self.extra,
