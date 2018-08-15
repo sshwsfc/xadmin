@@ -598,6 +598,6 @@ class ModelAdminView(CommAdminView):
         codename = get_permission_codename('change', self.opts)
         return ('change' not in self.remove_permissions) and self.user.has_perm('%s.%s' % (self.app_label, codename))
 
-    def has_delete_permission(self, obj=None):
+    def has_delete_permission(self, request=None, obj=None):
         codename = get_permission_codename('delete', self.opts)
         return ('delete' not in self.remove_permissions) and self.user.has_perm('%s.%s' % (self.app_label, codename))

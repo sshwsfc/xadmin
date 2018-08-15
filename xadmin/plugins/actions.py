@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from django import forms
+from django import forms, VERSION as django_version
 from django.core.exceptions import PermissionDenied
 from django.db import router
 from django.http import HttpResponse, HttpResponseRedirect
@@ -19,6 +19,7 @@ from xadmin.util import model_format_dict, model_ngettext
 from xadmin.views import BaseAdminPlugin, ListAdminView
 from xadmin.views.base import filter_hook, ModelAdminView
 
+from xadmin import views
 
 ACTION_CHECKBOX_NAME = '_selected_action'
 checkbox = forms.CheckboxInput({'class': 'action-select'}, lambda value: False)
@@ -26,11 +27,14 @@ checkbox = forms.CheckboxInput({'class': 'action-select'}, lambda value: False)
 
 def action_checkbox(obj):
     return checkbox.render(ACTION_CHECKBOX_NAME, force_text(obj.pk))
+
+
 action_checkbox.short_description = mark_safe(
     '<input type="checkbox" id="action-toggle" />')
 action_checkbox.allow_tags = True
 action_checkbox.allow_export = False
 action_checkbox.is_column = False
+
 
 class BaseActionView(ModelAdminView):
     action_name = None
@@ -70,7 +74,7 @@ class DeleteSelectedAction(BaseActionView):
         n = queryset.count()
         if n:
             if self.delete_models_batch:
-                self.log('delete', _('Batch delete %(count)d %(items)s.') % { "count": n, "items": model_ngettext(self.opts, n) })
+                self.log('delete', _('Batch delete %(count)d %(items)s.') % {"count": n, "items": model_ngettext(self.opts, n)})
                 queryset.delete()
             else:
                 for obj in queryset:
@@ -88,10 +92,18 @@ class DeleteSelectedAction(BaseActionView):
 
         using = router.db_for_write(self.model)
 
+        if django_version > (2, 0):
+            setattr(self.admin_site._registry[self.model], 'has_delete_permission', self.has_delete_permission)
+
         # Populate deletable_objects, a data structure of all related objects that
         # will also be deleted.
-        deletable_objects, model_count, perms_needed, protected = get_deleted_objects(
-            queryset, self.opts, self.user, self.admin_site, using)
+
+        if django_version > (2, 0):
+            deletable_objects, model_count, perms_needed, protected = get_deleted_objects(
+                queryset, self.opts, self.admin_site)
+        else:
+            deletable_objects, model_count, perms_needed, protected = get_deleted_objects(
+                queryset, self.opts, self.user, self.admin_site, using)
 
         # The user has already confirmed the deletion.
         # Do the deletion and return a None to display the change list view again.
