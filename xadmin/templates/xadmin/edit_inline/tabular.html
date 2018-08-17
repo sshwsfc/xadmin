@@ -10,7 +10,8 @@
    {% for field in fields %}
      {% if not field.widget.is_hidden %}
        <th{% if field.required %} class="required"{% endif %}>{{ field.label|capfirst }}
-       {% if field.help_text %}&nbsp;<a title="{{ field.help_text|striptags }}" /><i class="fa fa-question-circle"></i></a>{% endif %}
+           {% if field.help_text %}&nbsp;
+               <a title="{{ field.help_text|striptags }}"><i class="fa fa-question-circle"></i></a>{% endif %}
        </th>
      {% endif %}
    {% endfor %}
