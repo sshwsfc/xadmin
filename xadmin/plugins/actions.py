@@ -1,5 +1,7 @@
 from collections import OrderedDict
+
 from django import forms, VERSION as django_version
+from django.contrib.admin.utils import get_deleted_objects
 from django.core.exceptions import PermissionDenied
 from django.db import router
 from django.http import HttpResponse, HttpResponseRedirect
@@ -8,18 +10,14 @@ from django.template.response import TemplateResponse
 from django.utils import six
 from django.utils.encoding import force_text
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext as _, ungettext
 from django.utils.text import capfirst
-
-from django.contrib.admin.utils import get_deleted_objects
+from django.utils.translation import ugettext as _, ungettext
 
 from xadmin.plugins.utils import get_context_dict
 from xadmin.sites import site
 from xadmin.util import model_format_dict, model_ngettext
 from xadmin.views import BaseAdminPlugin, ListAdminView
 from xadmin.views.base import filter_hook, ModelAdminView
-
-from xadmin import views
 
 ACTION_CHECKBOX_NAME = '_selected_action'
 checkbox = forms.CheckboxInput({'class': 'action-select'}, lambda value: False)
@@ -98,7 +96,7 @@ class DeleteSelectedAction(BaseActionView):
         # Populate deletable_objects, a data structure of all related objects that
         # will also be deleted.
 
-        if django_version > (2, 0):
+        if django_version > (2, 1):
             deletable_objects, model_count, perms_needed, protected = get_deleted_objects(
                 queryset, self.opts, self.admin_site)
         else:
