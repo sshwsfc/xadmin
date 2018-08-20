@@ -1,6 +1,6 @@
 {
   "name": "xadmin-api-jsonplaceholder",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Xadmin API for jsonplaceholder",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",

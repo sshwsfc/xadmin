@@ -1,6 +1,6 @@
 {
   "name": "xadmin-plugins",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Xadmin Plugins",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
