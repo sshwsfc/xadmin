@@ -255,8 +255,7 @@ class ExportPlugin(BaseAdminPlugin):
 
     def send_mail(self, user, data, context):
         """Send the data file by email"""
-        filename, content, file_mimetype = self._get_file_spec(data, context)
-        export_email_config = {
+        email_config = {
             'subject': _('Exported file delivery'),
             'message': _('The file is attached.'),
             'from_email': settings.DEFAULT_FROM_EMAIL,
@@ -264,22 +263,30 @@ class ExportPlugin(BaseAdminPlugin):
             'fail_silently': True,
             'html_message': False
         }
-        export_email_config.update(self.export_email_config)
+        email_config.update(self.export_email_config)
 
-        html_message = export_email_config.pop('html_message', False)
-        fail_silently = export_email_config.pop('fail_silently', True)
+        def send_mail_async(config, data, context):
+            filename, content, file_mimetype = self._get_file_spec(data, context)
 
-        # compat
-        export_email_config['body'] = export_email_config.pop('message', '')
-        export_email_config['to'] = export_email_config.pop('recipient_list', None)
+            html_message = config.pop('html_message', False)
+            fail_silently = config.pop('fail_silently', True)
 
-        mail = EmailMultiAlternatives(**export_email_config)
-        if html_message:
-            mail.attach_alternative(html_message, 'text/html')
+            # compat
+            config['body'] = config.pop('message', '')
+            config['to'] = config.pop('recipient_list', None)
 
-        mail.attach(filename, content, file_mimetype)
-        mail.send(fail_silently=fail_silently)
-        return True
+            mail = EmailMultiAlternatives(**config)
+            if html_message:
+                mail.attach_alternative(html_message, 'text/html')
+
+            mail.attach(filename, content, file_mimetype)
+            mail.send(fail_silently=fail_silently)
+
+        thargs = (email_config.copy(),
+                  copy.deepcopy(data),
+                  context.copy())
+        th = threading.Thread(target=send_mail_async, args=thargs)
+        th.start()
 
     def _get_file_spec(self, data, context):
         file_type = data.get('export_type', 'csv')
@@ -290,22 +297,19 @@ class ExportPlugin(BaseAdminPlugin):
         return filename, content, file_mimetype
 
     def get_response(self, response, context, *args, **kwargs):
+        request = self.request
         if self._options_is_on('export_to_email'):
-            user = self.request.user
+            user = request.user
             email = user.email if hasattr(user, 'email') else None
             if email is not None:
-                th = threading.Thread(target=self.send_mail,
-                                      args=(self.request.user,
-                                            copy.deepcopy(self.request.GET),
-                                            context.copy()))
-                th.start()
-                messages.success(self.request, _("The file is sent to your email: "
-                                                 "<strong>{0:s}</strong>".format(email)))
+                self.send_mail(user, request.GET, context)
+                messages.success(request, _("The file is sent to your email: "
+                                            "<strong>{0:s}</strong>".format(email)))
             else:
-                messages.warning(self.request, _("Your account does not have an email address."))
-            return HttpResponseRedirect(self.request.path)
+                messages.warning(request, _("Your account does not have an email address."))
+            return HttpResponseRedirect(request.path)
 
-        filename, content, file_mimetype = self._get_file_spec(self.request.GET, context)
+        filename, content, file_mimetype = self._get_file_spec(request.GET, context)
 
         response = HttpResponse(content_type="{0:s}; charset={1:s}".format(file_mimetype, self.export_unicode_encoding))
         filename_format = u'attachment; filename="{0:s}"'.format(filename)
