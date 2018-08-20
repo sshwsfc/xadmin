@@ -93,6 +93,10 @@ class ExportPlugin(BaseAdminPlugin):
             value = escape(str(o.text))
         return value
 
+    def _options_is_on(self, name):
+        """Checks if the option value is on. Return bool"""
+        return getattr(self.request, self.request.method).get(name, 'off') == 'on'
+
     def _get_objects(self, context):
         headers = [c for c in context['result_headers'].cells if c.export]
         rows = context['results']
@@ -112,7 +116,7 @@ class ExportPlugin(BaseAdminPlugin):
     def get_xlsx_export(self, context):
         datas = self._get_datas(context)
         output = six.BytesIO()
-        export_header = (self.request.GET.get('export_xlsx_header', 'off') == 'on')
+        export_header = self._options_is_on('export_xlsx_header')
         model_name = self.opts.verbose_name
         book = xlsxwriter.Workbook(output)
         sheet = book.add_worksheet(
@@ -147,8 +151,7 @@ class ExportPlugin(BaseAdminPlugin):
     def get_xls_export(self, context):
         datas = self._get_datas(context)
         output = six.BytesIO()
-        export_header = (self.request.GET.get('export_xls_header', 'off') == 'on')
-
+        export_header = self._options_is_on('export_xls_header')
         model_name = self.opts.verbose_name
         book = xlwt.Workbook(encoding=self.export_unicode_encoding)
         sheet = book.add_sheet(u"%s %s" % (_(u'Sheet'), force_text(model_name)))
@@ -195,7 +198,7 @@ class ExportPlugin(BaseAdminPlugin):
         datas = self._get_datas(context)
         stream = []
 
-        if self.request.GET.get('export_csv_header', 'off') != 'on':
+        if self._options_is_on('export_csv_header'):
             datas = datas[1:]
 
         for row in datas:
@@ -248,7 +251,7 @@ class ExportPlugin(BaseAdminPlugin):
     def get_json_export(self, context):
         results = self._get_objects(context)
         return json.dumps({'objects': results}, ensure_ascii=False,
-                          indent=(self.request.GET.get('export_json_format', 'off') == 'on') and 4 or None)
+                          indent=(self._options_is_on('export_json_format') and 4 or None))
 
     def send_mail(self, user, data, context):
         """Send the data file by email"""
@@ -287,7 +290,7 @@ class ExportPlugin(BaseAdminPlugin):
         return filename, content, file_mimetype
 
     def get_response(self, response, context, *args, **kwargs):
-        if self.request.GET.get('export_to_email', 'off') == 'on':
+        if self._options_is_on('export_to_email'):
             user = self.request.user
             email = user.email if hasattr(user, 'email') else None
             if email is not None:
@@ -313,7 +316,7 @@ class ExportPlugin(BaseAdminPlugin):
 
     # View Methods
     def get_result_list(self, __):
-        if self.request.GET.get('all', 'off') == 'on':
+        if self._options_is_on('all'):
             self.admin_view.list_per_page = sys.maxsize
         return __()
 
