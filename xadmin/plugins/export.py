@@ -1,10 +1,13 @@
 import datetime
 import sys
+import copy
+import threading
 
 from django.conf import settings
+from django.contrib import messages
 from django.core.exceptions import ImproperlyConfigured
 from django.core.mail import EmailMultiAlternatives
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.utils import six
 if six.PY2:
@@ -247,11 +250,9 @@ class ExportPlugin(BaseAdminPlugin):
         return json.dumps({'objects': results}, ensure_ascii=False,
                           indent=(self.request.GET.get('export_json_format', 'off') == 'on') and 4 or None)
 
-    def send_mail(self, request, filename, content, file_mimetype):
+    def send_mail(self, user, data, context):
         """Send the data file by email"""
-        user = request.user
-        if not hasattr(user, 'email'):
-            return
+        filename, content, file_mimetype = self._get_file_spec(data, context)
         export_email_config = {
             'subject': _('Exported file delivery'),
             'message': _('The file is attached.'),
@@ -277,19 +278,31 @@ class ExportPlugin(BaseAdminPlugin):
         mail.send(fail_silently=fail_silently)
         return True
 
-    def get_response(self, response, context, *args, **kwargs):
-        file_type = self.request.GET.get('export_type', 'csv')
-        to_email = self.request.GET.get('send_mail', 'off') == 'on'
-
+    def _get_file_spec(self, data, context):
+        file_type = data.get('export_type', 'csv')
         content = getattr(self, 'get_%s_export' % file_type)(context)
-
         filename = u"{0:s}.{1:s}".format(self.opts.verbose_name.replace(' ', '_'),
                                          file_type)
-
         file_mimetype = self.export_mimes[file_type]
+        return filename, content, file_mimetype
 
-        if to_email and self.send_mail(self.admin_view.request, filename, content, file_mimetype):
-            return HttpResponse('ok')
+    def get_response(self, response, context, *args, **kwargs):
+        if self.request.GET.get('export_to_email', 'off') == 'on':
+            user = self.request.user
+            email = user.email if hasattr(user, 'email') else None
+            if email is not None:
+                th = threading.Thread(target=self.send_mail,
+                                      args=(self.request.user,
+                                            copy.deepcopy(self.request.GET),
+                                            context.copy()))
+                th.start()
+                messages.success(self.request, _("The file is sent to your email: "
+                                                 "<strong>{0:s}</strong>".format(email)))
+            else:
+                messages.warning(self.request, _("Your account does not have an email address."))
+            return HttpResponseRedirect(self.request.path)
+
+        filename, content, file_mimetype = self._get_file_spec(self.request.GET, context)
 
         response = HttpResponse(content_type="{0:s}; charset={1:s}".format(file_mimetype, self.export_unicode_encoding))
         filename_format = u'attachment; filename="{0:s}"'.format(filename)
