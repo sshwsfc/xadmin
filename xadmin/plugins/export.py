@@ -253,11 +253,12 @@ class ExportPlugin(BaseAdminPlugin):
         return json.dumps({'objects': results}, ensure_ascii=False,
                           indent=(self._options_is_on('export_json_format') and 4 or None))
 
-    def send_mail(self, user, data, context):
+    def send_mail(self, user, request, context):
         """Send the data file by email"""
+        host = request.get_host()
         email_config = {
             'subject': _('Exported file delivery'),
-            'message': _('The file is attached.'),
+            'message': _('Sent from address {0!s}. The file is attached.').format(host),
             'from_email': settings.DEFAULT_FROM_EMAIL,
             'recipient_list': [user.email],
             'fail_silently': True,
@@ -283,7 +284,7 @@ class ExportPlugin(BaseAdminPlugin):
             mail.send(fail_silently=fail_silently)
 
         thargs = (email_config.copy(),
-                  copy.deepcopy(data),
+                  copy.deepcopy(request.GET),
                   context.copy())
         th = threading.Thread(target=send_mail_async, args=thargs)
         th.start()
@@ -302,7 +303,7 @@ class ExportPlugin(BaseAdminPlugin):
             user = request.user
             email = user.email if hasattr(user, 'email') else None
             if email is not None:
-                self.send_mail(user, request.GET, context)
+                self.send_mail(user, request, context)
                 messages.success(request, _("The file is sent to your email: "
                                             "<strong>{0:s}</strong>".format(email)))
             else:
