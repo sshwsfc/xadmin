@@ -1,6 +1,9 @@
 import datetime
 import sys
+
+from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
+from django.core.mail import EmailMultiAlternatives
 from django.http import HttpResponse
 from django.template import loader
 from django.utils import six
@@ -72,6 +75,7 @@ class ExportPlugin(BaseAdminPlugin):
 
     export_unicode_csv = False
     export_unicode_encoding = "utf-8"
+    export_email_config = {}
 
     def init_request(self, *args, **kwargs):
         return self.request.GET.get('_do_') == 'export'
@@ -243,16 +247,55 @@ class ExportPlugin(BaseAdminPlugin):
         return json.dumps({'objects': results}, ensure_ascii=False,
                           indent=(self.request.GET.get('export_json_format', 'off') == 'on') and 4 or None)
 
+    def send_mail(self, request, filename, content, file_mimetype):
+        """Send the data file by email"""
+        user = request.user
+        if not hasattr(user, 'email'):
+            return
+        export_email_config = {
+            'subject': _('Exported file delivery'),
+            'message': _('The file is attached.'),
+            'from_email': settings.DEFAULT_FROM_EMAIL,
+            'recipient_list': [user.email],
+            'fail_silently': True,
+            'html_message': False
+        }
+        export_email_config.update(self.export_email_config)
+
+        html_message = export_email_config.pop('html_message', False)
+        fail_silently = export_email_config.pop('fail_silently', True)
+
+        # compat
+        export_email_config['body'] = export_email_config.pop('message', '')
+        export_email_config['to'] = export_email_config.pop('recipient_list', None)
+
+        mail = EmailMultiAlternatives(**export_email_config)
+        if html_message:
+            mail.attach_alternative(html_message, 'text/html')
+
+        mail.attach(filename, content, file_mimetype)
+        mail.send(fail_silently=fail_silently)
+        return True
+
     def get_response(self, response, context, *args, **kwargs):
         file_type = self.request.GET.get('export_type', 'csv')
-        response = HttpResponse(content_type="{0:s}; charset={1:s}".format(self.export_mimes[file_type],
-                                                                           self.export_unicode_encoding))
-        file_name = self.opts.verbose_name.replace(' ', '_')
+        to_email = self.request.GET.get('send_mail', 'off') == 'on'
 
-        filename_format = u'attachment; filename={0:s}.{1:s}'.format(file_name, file_type)
+        content = getattr(self, 'get_%s_export' % file_type)(context)
+
+        filename = u"{0:s}.{1:s}".format(self.opts.verbose_name.replace(' ', '_'),
+                                         file_type)
+
+        file_mimetype = self.export_mimes[file_type]
+
+        if to_email and self.send_mail(self.admin_view.request, filename, content, file_mimetype):
+            return HttpResponse('ok')
+
+        response = HttpResponse(content_type="{0:s}; charset={1:s}".format(file_mimetype, self.export_unicode_encoding))
+        filename_format = u'attachment; filename="{0:s}"'.format(filename)
         response['Content-Disposition'] = filename_format.encode(self.export_unicode_encoding)
 
-        response.write(getattr(self, 'get_%s_export' % file_type)(context))
+        response.write(content)
         return response
 
     # View Methods
