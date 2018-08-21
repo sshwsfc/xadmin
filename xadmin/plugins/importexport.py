@@ -371,15 +371,18 @@ class ExportMixin(object):
         # scope = self.request.POST.get('_select_across', False) == '1'
         scope = request.GET.get('scope')
         select_across = request.GET.get('_select_across', False) == '1'
-        selected = request.GET.get('_selected_actions', '')
+        selected = request.GET.get('_selected_actions', '').strip()
         if scope == 'all':
             queryset = self.admin_view.queryset()
         elif scope == 'header_only':
             queryset = []
         elif scope == 'selected':
             if not select_across:
-                selected_pk = selected.split(',')
-                queryset = self.admin_view.queryset().filter(pk__in=selected_pk)
+                if selected:
+                    selected_pk = selected.split(',')
+                    queryset = self.admin_view.queryset().filter(pk__in=selected_pk)
+                else:
+                    queryset = self.admin_view.queryset().none()
             else:
                 queryset = self.admin_view.queryset()
         else:
@@ -431,10 +434,13 @@ class ExportPlugin(ExportMixin, BaseAdminPlugin):
         if not has_view_perm:
             raise PermissionDenied
 
+        selected = self.request.GET.get('_selected_actions', '').strip()
         export_format = self.request.GET.get('file_format')
 
         if not export_format:
             messages.warning(self.request, _('You must select an export format.'))
+        elif not selected:
+            messages.warning(self.request, _('You need to select items for export.'))
         else:
             formats = self.get_export_formats()
             file_format = formats[int(export_format)]()
