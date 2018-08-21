@@ -30,10 +30,19 @@
                                 </div>
                             {% endfor %}
                         </fieldset>
-                        <label><input name="scope" type="radio" value="current" checked="checked"/> {% trans "Export current page data." %} </label>
-                        <label><input name="scope" type="radio" value="selected"/> {% trans "Export selected data." %} </label>
-                        <label><input name="scope" type="radio" value="all"/> {% trans "Export all data." %} </label>
-                        <label><input name="scope" type="radio" value="header_only"/> {% trans "Export header only." %} </label>
+                        <label class="radio">
+                            <input name="scope" type="radio" value="all"
+                                   checked="checked"/> {% trans "Export all data." %}
+                        </label>
+                        <label class="radio">
+                            <input name="scope" type="radio" value="current"/> {% trans "Export current page data." %}
+                        </label>
+                        <label class="radio">
+                            <input name="scope" type="radio" value="selected"/> {% trans "Export selected data." %}
+                        </label>
+                        <label class="radio">
+                            <input name="scope" type="radio" value="header_only"/> {% trans "Export header only." %}
+                        </label>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>

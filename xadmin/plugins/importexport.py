@@ -411,10 +411,21 @@ class ExportMenuPlugin(ExportMixin, BaseAdminPlugin):
     def init_request(self, *args, **kwargs):
         return bool(self.import_export_args.get('export_resource_class'))
 
+    @staticmethod
+    def _form_bootstrap_styles(form):
+        """set bootstrap styles"""
+        attrs = {'class': 'form-control'}
+        for field_name in ['file_format']:
+            if field_name in form.fields:
+                field = form.fields[field_name]
+                if field.widget.attrs is None:
+                    field.widget.attrs = {}
+                field.widget.attrs.update(attrs)
+
     def block_top_toolbar(self, context, nodes):
         formats = self.get_export_formats()
         form = ExportForm(formats)
-
+        self._form_bootstrap_styles(form)
         context = get_context_dict(context or {})  # no error!
         context.update({
             'form': form,
