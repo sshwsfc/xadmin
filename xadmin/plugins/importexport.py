@@ -451,8 +451,10 @@ class ExportPlugin(ExportMixin, BaseAdminPlugin):
 
         if not export_format:
             messages.warning(self.request, _('You must select an export format.'))
+            return HttpResponseRedirect(self.request.path)
         elif scope == 'selected' and not self.request.GET.get('_selected_actions', '').strip():
             messages.warning(self.request, _('You need to select items for export.'))
+            return HttpResponseRedirect(self.request.path)
         else:
             formats = self.get_export_formats()
             file_format = formats[int(export_format)]()
