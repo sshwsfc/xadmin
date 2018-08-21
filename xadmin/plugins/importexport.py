@@ -421,6 +421,9 @@ class ExportMenuPlugin(ExportMixin, BaseAdminPlugin):
                 if field.widget.attrs is None:
                     field.widget.attrs = {}
                 field.widget.attrs.update(attrs)
+                # Makes the field required.
+                if getattr(field, 'required'):
+                    field.widget.attrs['required'] = ''
 
     def block_top_toolbar(self, context, nodes):
         formats = self.get_export_formats()
