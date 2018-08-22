@@ -302,7 +302,7 @@ class ExportPlugin(BaseAdminPlugin):
         if self._options_is_on('export_to_email'):
             user = request.user
             email = user.email if hasattr(user, 'email') else None
-            if email is not None:
+            if isinstance(email, six.string_types) and email.strip():
                 self.send_mail(user, request, context)
                 messages.success(request, (_("The file is sent to your email: ") +
                                            "<strong>{0:s}</strong>".format(email)))

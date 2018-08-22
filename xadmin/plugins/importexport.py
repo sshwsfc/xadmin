@@ -44,6 +44,8 @@ from datetime import datetime
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template import loader
+from django.utils import six
+
 from xadmin.plugins.utils import get_context_dict
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView, ModelAdminView
@@ -497,7 +499,7 @@ class ExportPlugin(ExportMixin, BaseAdminPlugin):
     def send_mail_response(self, request, **kwargs):
         user = request.user
         email = user.email if hasattr(user, 'email') else None
-        if email is not None:
+        if isinstance(email, six.string_types) and email.strip():
             self.send_mail(user, request, **kwargs)
             messages.success(request, (_("The file is sent to your email: ")
                                        + "<strong>{0:s}</strong>".format(email)))
