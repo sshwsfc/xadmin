@@ -1,14 +1,16 @@
-from django.db import models
+import copy
+import re
+
 from django import forms
+from django.db import models
+from django.forms.models import modelform_factory
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
-from django.forms.models import modelform_factory
-import copy
+
+from xadmin.layout import Layout
 from xadmin.sites import site
 from xadmin.util import get_model_from_relation, vendor
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView
-from xadmin.layout import Layout
-import re
 
 
 class QuickFormPlugin(BaseAdminPlugin):
@@ -137,8 +139,8 @@ class QuickAddBtnPlugin(BaseAdminPlugin):
             if rel_model in self.admin_site._registry and self.has_model_perm(rel_model, 'add'):
                 add_url = self.get_model_url(rel_model, 'add')
                 formfield.widget = RelatedFieldWidgetWrapper(
-                    formfield.widget, db_field.remote_field, add_url, self.get_model_url(self.model, 'add')),
-                    ** self.request.GET)
+                    formfield.widget, db_field.remote_field, add_url, self.get_model_url(self.model, 'add'),
+                    **self.request.GET)
         return formfield
 
 site.register_plugin(QuickFormPlugin, ModelFormAdminView)
