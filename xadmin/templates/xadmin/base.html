@@ -1,6 +1,7 @@
 {% load xadmin_tags %}{% load i18n %}<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
 <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
   {% block extrameta %}
   <meta name="description" content="">
@@ -10,6 +11,11 @@
   <title>{% block title %}{% endblock %}</title>
   {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "xadmin/css/rtl.css" %}{% endblock %}" />{% endif %}
   {% vendor 'bootstrap.css' %}
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="{% static 'xadmin/vendor/ie/html5shiv.min.js' %}"></script>
+    <script src="{% static 'xadmin/vendor/ie/respond.min.js' %}"></script>
+  <![endif]-->
   {% if site_theme %}
   <link rel="stylesheet" type="text/css" id="site-theme" href="{{site_theme}}" />
   {% else %}

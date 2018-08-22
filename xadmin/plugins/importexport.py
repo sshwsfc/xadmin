@@ -38,8 +38,14 @@ class FooAdmin(object):
 ++++++++++++++++
 More info about django-import-export please refer https://github.com/django-import-export/django-import-export
 """
+import threading
 from datetime import datetime
+
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
 from django.template import loader
+from django.utils import six
+
 from xadmin.plugins.utils import get_context_dict
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView, ModelAdminView
@@ -228,8 +234,9 @@ class ImportView(ImportBaseView):
             except UnicodeDecodeError as e:
                 return HttpResponse(_(u"<h1>Imported file has a wrong encoding: %s</h1>" % e))
             except Exception as e:
-                return HttpResponse(_(u"<h1>%s encountered while trying to read file: %s</h1>" % (type(e).__name__,
-                                                                                                  import_file.name)))
+                return HttpResponse(_(u"<h1>{0!s} encountered while trying to read file: {1:s}</h1>"
+                                      .format(type(e).__name__, import_file.name)))
+
             result = resource.import_data(dataset, dry_run=True,
                                           raise_errors=False,
                                           file_name=import_file.name,
@@ -375,13 +382,22 @@ class ExportMixin(object):
         select_across = request.GET.get('_select_across', False) == '1'
         selected = request.GET.get('_selected_actions', '')
         if scope == 'all':
-            queryset = self.admin_view.queryset()
+            # Consider all filtered data
+            queryset_all = request.GET.get('queryset_all', '')
+            if queryset_all == "filtered":
+                queryset = self.admin_view.get_list_queryset()
+            else:
+                queryset = self.admin_view.queryset()
         elif scope == 'header_only':
             queryset = []
         elif scope == 'selected':
             if not select_across:
-                selected_pk = selected.split(',')
-                queryset = self.admin_view.queryset().filter(pk__in=selected_pk)
+                selected = selected.strip()
+                if selected:
+                    selected_pk = selected.split(',')
+                    queryset = self.admin_view.queryset().filter(pk__in=selected_pk)
+                else:
+                    queryset = self.admin_view.queryset().none()
             else:
                 queryset = self.admin_view.queryset()
         else:
@@ -409,10 +425,24 @@ class ExportMenuPlugin(ExportMixin, BaseAdminPlugin):
     def init_request(self, *args, **kwargs):
         return bool(self.import_export_args.get('export_resource_class'))
 
+    @staticmethod
+    def _form_bootstrap_styles(form):
+        """set bootstrap styles"""
+        attrs = {'class': 'form-control'}
+        for field_name in ['file_format']:
+            if field_name in form.fields:
+                field = form.fields[field_name]
+                if field.widget.attrs is None:
+                    field.widget.attrs = {}
+                field.widget.attrs.update(attrs)
+                # Makes the field required.
+                if getattr(field, 'required'):
+                    field.widget.attrs['required'] = ''
+
     def block_top_toolbar(self, context, nodes):
         formats = self.get_export_formats()
         form = ExportForm(formats)
-
+        self._form_bootstrap_styles(form)
         context = get_context_dict(context or {})  # no error!
         context.update({
             'form': form,
@@ -424,9 +454,60 @@ class ExportMenuPlugin(ExportMixin, BaseAdminPlugin):
 
 
 class ExportPlugin(ExportMixin, BaseAdminPlugin):
+    export_email_config = {}
 
     def init_request(self, *args, **kwargs):
         return self.request.GET.get('_action_') == 'export'
+
+    def send_mail(self, user, request, **kwargs):
+        """Sends the file with data by email to the user"""
+        host = request.get_host()
+        email_config = {
+            'subject': _('Exported file delivery'),
+            'message': _('Sent from address {0!s}. The file is attached.').format(host),
+            'from_email': settings.DEFAULT_FROM_EMAIL,
+            'recipient_list': [user.email],
+            'fail_silently': True,
+            'html_message': False
+        }
+        email_config.update(self.export_email_config)
+
+        def send_mail_async(config):
+            file_format = kwargs['file_format']
+            content = self.get_export_data(file_format,
+                                           kwargs['queryset'],
+                                           request=request)
+            content_type = file_format.get_content_type()
+            filename = self.get_export_filename(file_format)
+
+            html_message = config.pop('html_message', False)
+            fail_silently = config.pop('fail_silently', True)
+
+            # compat
+            config['body'] = config.pop('message', '')
+            config['to'] = config.pop('recipient_list', None)
+
+            mail = EmailMultiAlternatives(**config)
+            if html_message:
+                mail.attach_alternative(html_message, 'text/html')
+
+            mail.attach(filename, content, content_type)
+            mail.send(fail_silently=fail_silently)
+
+        thargs = (email_config.copy(),)
+        th = threading.Thread(target=send_mail_async, args=thargs)
+        th.start()
+
+    def send_mail_response(self, request, **kwargs):
+        user = request.user
+        email = user.email if hasattr(user, 'email') else None
+        if isinstance(email, six.string_types) and email.strip():
+            self.send_mail(user, request, **kwargs)
+            messages.success(request, (_("The file is sent to your email: ")
+                                       + "<strong>{0:s}</strong>".format(email)))
+        else:
+            messages.warning(request, _("Your account does not have an email address."))
+        return HttpResponseRedirect(request.path)
 
     def get_response(self, response, context, *args, **kwargs):
         has_view_perm = self.has_model_perm(self.model, 'view')
@@ -434,15 +515,30 @@ class ExportPlugin(ExportMixin, BaseAdminPlugin):
             raise PermissionDenied
 
         export_format = self.request.GET.get('file_format')
+        scope = self.request.GET.get('scope')
 
         if not export_format:
             messages.warning(self.request, _('You must select an export format.'))
+            return HttpResponseRedirect(self.request.path)
+        elif scope == 'selected' and not self.request.GET.get('_selected_actions', '').strip():
+            messages.warning(self.request, _('You need to select items for export.'))
+            return HttpResponseRedirect(self.request.path)
         else:
             formats = self.get_export_formats()
             file_format = formats[int(export_format)]()
             queryset = self.get_export_queryset(self.request, context)
+
+            # The export takes place in the background, so you do not have to wait.
+            if self.request.GET.get('result-action', '') == 'sendmail':
+                return self.send_mail_response(
+                    self.request,
+                    file_format=file_format,
+                    queryset=queryset)
+
+            # Follow normal flow if it is not to send by email
             export_data = self.get_export_data(file_format, queryset, request=self.request)
             content_type = file_format.get_content_type()
+
             # Django 1.7 uses the content_type kwarg instead of mimetype
             try:
                 response = HttpResponse(export_data, content_type=content_type)

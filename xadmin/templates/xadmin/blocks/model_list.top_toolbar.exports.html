@@ -13,15 +13,17 @@
     <div id="export-modal-{{et.type}}" class="modal fade">
       <div class="modal-dialog">
         <div class="modal-content">
-          <form method="get" action="">
+            <form method="get" action="" id="form-export">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title">{% trans "Export" %} {{et.name}}</h4>
           </div>
           <div class="modal-body">
+            {% block modal_body  %}
             {{ form_params|safe }}
             <input type="hidden" name="export_type" value="{{et.type}}">
-              <label class="checkbox">
+                <div class="checkbox">
+                    <label>
                 {% if et.type == "xlsx" %}
                 <input type="checkbox" name="export_xlsx_header" checked="checked" value="on"> {% trans "Export with table header." %}
                 {% endif %}
@@ -38,13 +40,23 @@
                 <input type="checkbox" name="export_json_format" checked="checked" value="on"> {% trans "Export with format." %}
                 {% endif %}
               </label>
-              <label class="checkbox">
-                <input type="checkbox" name="all" value="on"> {% trans "Export all data." %}
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" name="all" value="on"> {% trans "Export all data." %}</label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="export_to_email" value="on">
+                        {% trans "Send result file via email." %}
               </label>
+                </div>
+            {% endblock %}
           </div>
           <div class="modal-footer">
+          {% block model_footer %}
             <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
             <button class="btn btn-success" type="submit"><i class="fa fa-share"></i> {% trans "Export" %}</button>
+          {% endblock %}
           </div>
           </form>
         </div><!-- /.modal-content -->

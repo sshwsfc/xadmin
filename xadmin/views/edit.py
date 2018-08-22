@@ -184,12 +184,6 @@ class ModelFormAdminView(ModelAdminView):
 
         return modelform_factory(self.model, **defaults)
 
-        try:
-            return modelform_factory(self.model, **defaults)
-        except FieldError as e:
-            raise FieldError('%s. Check fields/fieldsets/exclude attributes of class %s.'
-                             % (e, self.__class__.__name__))
-
     @filter_hook
     def get_form_layout(self):
         layout = copy.deepcopy(self.form_layout)
@@ -227,6 +221,7 @@ class ModelFormAdminView(ModelAdminView):
     def get_form_helper(self):
         helper = FormHelper()
         helper.form_tag = False
+        helper.label_class = 'col-md-1'
         helper.include_media = False
         helper.add_layout(self.get_form_layout())
 

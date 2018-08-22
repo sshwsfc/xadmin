@@ -15,6 +15,7 @@ from xadmin.layout import FormHelper, Layout, flatatt, Container, Column, Field,
 from xadmin.plugins.utils import get_context_dict
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView, DetailAdminView, filter_hook
+from collections import OrderedDict
 
 
 class ShowField(Field):
@@ -164,7 +165,7 @@ class InlineModelAdmin(ModelFormAdminView):
             "form": self.form,
             "formset": self.formset,
             "fk_name": self.fk_name,
-            'fields': forms.ALL_FIELDS if len(self.fields) == 0 else self.fields,
+            'fields': self.fields if self.fields else forms.ALL_FIELDS,
             "exclude": exclude,
             "formfield_callback": self.formfield_for_dbfield,
             "extra": self.extra,
@@ -193,6 +194,7 @@ class InlineModelAdmin(ModelFormAdminView):
         helper = FormHelper()
         helper.form_tag = False
         helper.include_media = False
+        helper.label_class = 'col-md-1'
         # override form method to prevent render csrf_token in inline forms, see template 'bootstrap/whole_uni_form.html'
         helper.form_method = 'get'
 
@@ -432,8 +434,8 @@ class InlineFormsetPlugin(BaseAdminPlugin):
 
     def get_form_layout(self, layout):
         allow_blank = isinstance(self.admin_view, DetailAdminView)
-        # fixed #176 bug, change dict to list
-        fs = [(f.model, InlineFormset(f, allow_blank)) for f in self.formsets]
+        # fixed #176, #363 bugs, change dict to list
+        fs = OrderedDict([(f.model, InlineFormset(f, allow_blank)) for f in self.formsets])
         replace_inline_objects(layout, fs)
 
         if fs:
@@ -443,8 +445,8 @@ class InlineFormsetPlugin(BaseAdminPlugin):
             if not container:
                 container = layout
 
-            # fixed #176 bug, change dict to list
-            for key, value in fs:
+            # fixed #176, #363 bugs, change dict to list
+            for key, value in fs.items():
                 container.append(value)
 
         return layout

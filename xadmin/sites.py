@@ -1,6 +1,5 @@
 import sys
 from functools import update_wrapper
-from future.utils import iteritems
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.base import ModelBase
@@ -83,11 +82,30 @@ class AdminSite(object):
     def register_plugin(self, plugin_class, admin_view_class):
         from xadmin.views.base import BaseAdminPlugin
         if issubclass(plugin_class, BaseAdminPlugin):
-            self._registry_plugins.setdefault(
-                admin_view_class, []).append(plugin_class)
+            self._registry_plugins.setdefault(admin_view_class, []).append(plugin_class)
         else:
             raise ImproperlyConfigured(u'The registered plugin class %s isn\'t subclass of %s' %
                                        (plugin_class.__name__, BaseAdminPlugin.__name__))
+
+    def unregister_plugin(self, admin_view_class, *plugin_classes):
+        """Allows you to remove a plugin from the registry
+        :param admin_view_class: Class that subclass BaseAdminView.
+        :param plugin_classes: Plugins (subclass / BaseAdminPlugin) that must be unregistered.
+        """
+        from xadmin.views.base import BaseAdminPlugin
+        from xadmin.views.base import BaseAdminView
+        if not issubclass(admin_view_class, BaseAdminView):
+            raise ImproperlyConfigured(u'The registered view class %s isn\'t subclass of %s' %
+                                       (admin_view_class.__name__, BaseAdminView.__name__))
+        for plugin_class in plugin_classes:
+            if issubclass(plugin_class, BaseAdminPlugin):
+                try:
+                    self._registry_plugins[admin_view_class].remove(plugin_class)
+                except ValueError:
+                    raise NotRegistered('Plugin \"%s\" was not registered' % plugin_class.__name__)
+            else:
+                raise ImproperlyConfigured(u'The registered plugin class %s isn\'t subclass of %s' %
+                                           (plugin_class.__name__, BaseAdminPlugin.__name__))
 
     def register_settings(self, name, admin_class):
         self._registry_settings[name.lower()] = admin_class
@@ -321,7 +339,7 @@ class AdminSite(object):
         ]
 
         # Add in each model's views.
-        for model, admin_class in iteritems(self._registry):
+        for model, admin_class in six.iteritems(self._registry):
             view_urls = [
                 re_path(
                     _path,

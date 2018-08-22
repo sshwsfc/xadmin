@@ -1,12 +1,22 @@
-import io
 import datetime
 import sys
-from future.utils import iteritems
+import copy
+import threading
 
-from django.http import HttpResponse
+from django.conf import settings
+from django.contrib import messages
+from django.core.exceptions import ImproperlyConfigured
+from django.core.mail import EmailMultiAlternatives
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.utils import six
-from django.utils.encoding import force_text, smart_text
+if six.PY2:
+    # python 2.x need to work with unicode
+    from django.utils.encoding import \
+        smart_unicode as smart_text, \
+        force_unicode as force_text
+else:
+    from django.utils.encoding import force_text, smart_text
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.xmlutils import SimplerXMLGenerator
@@ -17,6 +27,11 @@ from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
 from xadmin.util import json
 from xadmin.views.list import ALL_VAR
+
+try:
+    import unicodecsv
+except ImportError:
+    unicodecsv = None
 
 try:
     import xlwt
@@ -37,6 +52,8 @@ class ExportMenuPlugin(BaseAdminPlugin):
     export_names = {'xlsx': 'Excel 2007', 'xls': 'Excel', 'csv': 'CSV',
                     'xml': 'XML', 'json': 'JSON'}
 
+    export_menu_block_template = 'xadmin/blocks/model_list.top_toolbar.exports.html'
+
     def init_request(self, *args, **kwargs):
         self.list_export = [
             f for f in self.list_export
@@ -49,7 +66,7 @@ class ExportMenuPlugin(BaseAdminPlugin):
                 'form_params': self.admin_view.get_form_params({'_do_': 'export'}, ('export_type',)),
                 'export_types': [{'type': et, 'name': self.export_names[et]} for et in self.list_export],
             })
-            nodes.append(loader.render_to_string('xadmin/blocks/model_list.top_toolbar.exports.html',
+            nodes.append(loader.render_to_string(self.export_menu_block_template,
                                                  context=get_context_dict(context)))
 
 
@@ -58,6 +75,10 @@ class ExportPlugin(BaseAdminPlugin):
     export_mimes = {'xlsx': 'application/vnd.ms-excel',
                     'xls': 'application/vnd.ms-excel', 'csv': 'text/csv',
                     'xml': 'application/xhtml+xml', 'json': 'application/json'}
+
+    export_unicode_csv = False
+    export_unicode_encoding = "utf-8"
+    export_email_config = {}
 
     def init_request(self, *args, **kwargs):
         return self.request.GET.get('_do_') == 'export'
@@ -71,6 +92,10 @@ class ExportPlugin(BaseAdminPlugin):
         else:
             value = escape(str(o.text))
         return value
+
+    def _options_is_on(self, name):
+        """Checks if the option value is on. Return bool"""
+        return getattr(self.request, self.request.method).get(name, 'off') == 'on'
 
     def _get_objects(self, context):
         headers = [c for c in context['result_headers'].cells if c.export]
@@ -90,10 +115,8 @@ class ExportPlugin(BaseAdminPlugin):
 
     def get_xlsx_export(self, context):
         datas = self._get_datas(context)
-        output = io.BytesIO()
-        export_header = (
-            self.request.GET.get('export_xlsx_header', 'off') == 'on')
-
+        output = six.BytesIO()
+        export_header = self._options_is_on('export_xlsx_header')
         model_name = self.opts.verbose_name
         book = xlsxwriter.Workbook(output)
         sheet = book.add_worksheet(
@@ -127,14 +150,11 @@ class ExportPlugin(BaseAdminPlugin):
 
     def get_xls_export(self, context):
         datas = self._get_datas(context)
-        output = io.BytesIO()
-        export_header = (
-            self.request.GET.get('export_xls_header', 'off') == 'on')
-
+        output = six.BytesIO()
+        export_header = self._options_is_on('export_xls_header')
         model_name = self.opts.verbose_name
-        book = xlwt.Workbook(encoding='utf8')
-        sheet = book.add_sheet(
-            u"%s %s" % (_(u'Sheet'), force_text(model_name)))
+        book = xlwt.Workbook(encoding=self.export_unicode_encoding)
+        sheet = book.add_sheet(u"%s %s" % (_(u'Sheet'), force_text(model_name)))
         styles = {'datetime': xlwt.easyxf(num_format_str='yyyy-mm-dd hh:mm:ss'),
                   'date': xlwt.easyxf(num_format_str='yyyy-mm-dd'),
                   'time': xlwt.easyxf(num_format_str='hh:mm:ss'),
@@ -172,16 +192,30 @@ class ExportPlugin(BaseAdminPlugin):
         return t
 
     def get_csv_export(self, context):
+        if self.export_unicode_csv:
+            return self.get_unicode_csv_export(context)
+
         datas = self._get_datas(context)
         stream = []
 
-        if self.request.GET.get('export_csv_header', 'off') != 'on':
+        if self._options_is_on('export_csv_header'):
             datas = datas[1:]
 
         for row in datas:
             stream.append(','.join(map(self._format_csv_text, row)))
 
         return '\r\n'.join(stream)
+
+    def get_unicode_csv_export(self, context):
+        """Exports the data in the configured encoding. Default utf8"""
+        if unicodecsv is None:
+            raise ImproperlyConfigured("Need to install module \"unicodecsv\" "
+                                       "in order to export csv as unicode.")
+        datas = self._get_datas(context)
+        stream = six.BytesIO()
+        writer = unicodecsv.writer(stream, encoding=self.export_unicode_encoding)
+        writer.writerows(datas)
+        return stream.getvalue()
 
     def _to_xml(self, xml, data):
         if isinstance(data, (list, tuple)):
@@ -190,7 +224,7 @@ class ExportPlugin(BaseAdminPlugin):
                 self._to_xml(xml, item)
                 xml.endElement("row")
         elif isinstance(data, dict):
-            for key, value in iteritems(data):
+            for key, value in six.iteritems(data):
                 key = key.replace(' ', '_')
                 xml.startElement(key, {})
                 self._to_xml(xml, value)
@@ -200,9 +234,10 @@ class ExportPlugin(BaseAdminPlugin):
 
     def get_xml_export(self, context):
         results = self._get_objects(context)
-        stream = io.StringIO()
 
-        xml = SimplerXMLGenerator(stream, "utf-8")
+        stream = six.BytesIO()
+
+        xml = SimplerXMLGenerator(stream, self.export_unicode_encoding)
         xml.startDocument()
         xml.startElement("objects", {})
 
@@ -211,28 +246,82 @@ class ExportPlugin(BaseAdminPlugin):
         xml.endElement("objects")
         xml.endDocument()
 
-        return stream.getvalue().split('\n')[1]
+        return stream.getvalue().split((b'\n'))[1]
 
     def get_json_export(self, context):
         results = self._get_objects(context)
         return json.dumps({'objects': results}, ensure_ascii=False,
-                          indent=(self.request.GET.get('export_json_format', 'off') == 'on') and 4 or None)
+                          indent=(self._options_is_on('export_json_format') and 4 or None))
+
+    def send_mail(self, user, request, context):
+        """Send the data file by email"""
+        host = request.get_host()
+        email_config = {
+            'subject': _('Exported file delivery'),
+            'message': _('Sent from address {0!s}. The file is attached.').format(host),
+            'from_email': settings.DEFAULT_FROM_EMAIL,
+            'recipient_list': [user.email],
+            'fail_silently': True,
+            'html_message': False
+        }
+        email_config.update(self.export_email_config)
+
+        def send_mail_async(config, data, context):
+            filename, content, file_mimetype = self._get_file_spec(data, context)
+
+            html_message = config.pop('html_message', False)
+            fail_silently = config.pop('fail_silently', True)
+
+            # compat
+            config['body'] = config.pop('message', '')
+            config['to'] = config.pop('recipient_list', None)
+
+            mail = EmailMultiAlternatives(**config)
+            if html_message:
+                mail.attach_alternative(html_message, 'text/html')
+
+            mail.attach(filename, content, file_mimetype)
+            mail.send(fail_silently=fail_silently)
+
+        thargs = (email_config.copy(),
+                  copy.deepcopy(request.GET),
+                  context.copy())
+        th = threading.Thread(target=send_mail_async, args=thargs)
+        th.start()
+
+    def _get_file_spec(self, data, context):
+        file_type = data.get('export_type', 'csv')
+        content = getattr(self, 'get_%s_export' % file_type)(context)
+        filename = u"{0:s}.{1:s}".format(self.opts.verbose_name.replace(' ', '_'),
+                                         file_type)
+        file_mimetype = self.export_mimes[file_type]
+        return filename, content, file_mimetype
 
     def get_response(self, response, context, *args, **kwargs):
-        file_type = self.request.GET.get('export_type', 'csv')
-        response = HttpResponse(
-            content_type="%s; charset=UTF-8" % self.export_mimes[file_type])
+        request = self.request
+        if self._options_is_on('export_to_email'):
+            user = request.user
+            email = user.email if hasattr(user, 'email') else None
+            if isinstance(email, six.string_types) and email.strip():
+                self.send_mail(user, request, context)
+                messages.success(request, (_("The file is sent to your email: ") +
+                                           "<strong>{0:s}</strong>".format(email)))
+            else:
+                messages.warning(request, _("Your account does not have an email address."))
+            return HttpResponseRedirect(request.path)
 
-        file_name = self.opts.verbose_name.replace(' ', '_')
-        response['Content-Disposition'] = ('attachment; filename=%s.%s' % (
-            file_name, file_type)).encode('utf-8')
+        filename, content, file_mimetype = self._get_file_spec(request.GET, context)
 
-        response.write(getattr(self, 'get_%s_export' % file_type)(context))
+        response = HttpResponse(content_type="{0:s}; charset={1:s}".format(file_mimetype, self.export_unicode_encoding))
+        filename_format = u'attachment; filename="{0:s}"'.format(filename)
+        response['Content-Disposition'] = filename_format.encode(self.export_unicode_encoding)
+
+        response.write(content)
         return response
 
     # View Methods
     def get_result_list(self, __):
-        if self.request.GET.get('all', 'off') == 'on':
+        if self._options_is_on('all'):
             self.admin_view.list_per_page = sys.maxsize
         return __()
 

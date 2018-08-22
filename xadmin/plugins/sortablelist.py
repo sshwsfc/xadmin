@@ -11,6 +11,7 @@ from django.template.loader import render_to_string
 from django.urls.base import reverse
 from django.db import transaction
 
+from xadmin.plugins.utils import get_context_dict
 from xadmin.views import (
     BaseAdminPlugin, ModelAdminView, ListAdminView
 )
@@ -21,6 +22,8 @@ from xadmin.views.base import csrf_protect_m
 class SortableListPlugin(BaseAdminPlugin):
 
     list_order_field = None
+    # Used in custom columns
+    list_order_display_field = None
 
     def init_request(self, *args, **kwargs):
         return bool(self.list_order_field)
@@ -37,7 +40,8 @@ class SortableListPlugin(BaseAdminPlugin):
         return row
 
     def result_item(self, item, obj, field_name, row):
-        if self.is_list_sortable and field_name == self.list_order_field:
+        if self.is_list_sortable and field_name in (self.list_order_field,
+                                                    self.list_order_display_field):
             item.btns.append('<a><i class="fa fa-arrows"></i></a>')
         return item
 
@@ -47,7 +51,8 @@ class SortableListPlugin(BaseAdminPlugin):
 
     def block_top_toolbar(self, context, nodes):
         save_node = render_to_string(
-            'xadmin/blocks/model_list.top_toolbar.saveorder.html', context_instance=context
+            'xadmin/blocks/model_list.top_toolbar.saveorder.html',
+            context=get_context_dict(context)
         )
         nodes.append(save_node)
 

@@ -6,14 +6,22 @@
             prefix: $$.data('prefix')
         }, $.fn.formset.styles[$$.data('style')], opts),
 
-            updateElementIndex = function(elem, prefix, ndx) {
-                var idRegex = new RegExp(prefix + '-(\\d+|__prefix__)-'),
-                    replacement = prefix + '-' + ndx + '-';
-                if (elem.attr("for")) elem.attr("for", elem.attr("for").replace(idRegex, replacement));
-                if (elem.attr('id')) elem.attr('id', elem.attr('id').replace(idRegex, replacement));
-                if (elem.attr('name')) elem.attr('name', elem.attr('name').replace(idRegex, replacement));
-                if (elem.attr('href')) elem.attr('href', elem.attr('href').replace(idRegex, replacement));
-                elem.find('.formset-num').html(ndx + 1);
+            updateElementIndex = function (elem, prefix, ndx) {
+              var idRegex = new RegExp(prefix + '-(\\d+|__prefix__)-', "g"),
+                replacement = prefix + '-' + ndx + '-';
+              var attrs = [
+                  "for", "id", "name", "href",
+                  // quick-form ...
+                  "data-for-id",
+                  "data-refresh-url"
+              ];
+              var index, name;
+              for (index = 0; index < attrs.length; index++) {
+                  name = attrs[index];
+                  if (elem.attr(name))
+                      elem.attr(name, elem.attr(name).replace(idRegex, replacement));
+              }
+              elem.find('.formset-num').html(ndx + 1);
             },
 
             hasChildElements = function(row) {
@@ -63,18 +71,18 @@
         });
 
         if ($$.length) {
-            var template, el = $('#' + options.prefix + '-empty');
+            var el = $('#' + options.prefix + '-empty');
+            var template;
+            // The template html is encoded as text. Using text to get this html decoded makes
+            // sense because it already returns decoded and ready for parsing by jquery.
             if(el.is('textarea')) {
                 template = el.val();
             } else if(el.is('span')) {
-                template = el.html();
-            }else if(el.is('script')) {
-                template = el.html();
+                template = el.text();
             }
-
-            template = el.html(template).text(); // decoded
-            template = $($.parseHTML(template));
-
+            // text to html / insert dom
+            el.html($.parseHTML(template));
+            template = el.children();  // html
             template.removeAttr('id');
             if(template.data("replace-id")){
                 template.attr('id', template.data("replace-id"));
@@ -109,7 +117,7 @@
             update: function(row, update){
                 var rowId = row.attr('id');
                 if(rowId){
-                    $('a[href=#'+rowId+']').each(function(){
+                    $('a[href="#'+rowId+'"]').each(function(){
                         update($(this));
                     })
                 }
@@ -117,7 +125,7 @@
             removed: function(row, del, $$){
                 var rowId = row.attr('id');
                 if(rowId){
-                    var tab = $('a[href=#'+rowId+']');
+                    var tab = $('a[href="#'+rowId+'"]');
                     if (del.length) {
                         if(del.val() == 'on'){
                             tab.removeClass('row-deleted');
