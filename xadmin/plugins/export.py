@@ -304,8 +304,8 @@ class ExportPlugin(BaseAdminPlugin):
             email = user.email if hasattr(user, 'email') else None
             if email is not None:
                 self.send_mail(user, request, context)
-                messages.success(request, _("The file is sent to your email: "
-                                            "<strong>{0:s}</strong>".format(email)))
+                messages.success(request, (_("The file is sent to your email: ") +
+                                           "<strong>{0:s}</strong>".format(email)))
             else:
                 messages.warning(request, _("Your account does not have an email address."))
             return HttpResponseRedirect(request.path)

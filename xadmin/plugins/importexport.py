@@ -231,8 +231,9 @@ class ImportView(ImportBaseView):
             except UnicodeDecodeError as e:
                 return HttpResponse(_(u"<h1>Imported file has a wrong encoding: %s</h1>" % e))
             except Exception as e:
-                return HttpResponse(_(u"<h1>%s encountered while trying to read file: %s</h1>" % (type(e).__name__,
-                                                                                                  import_file.name)))
+                return HttpResponse(_(u"<h1>{0!s} encountered while trying to read file: {1:s}</h1>"
+                                      .format(type(e).__name__, import_file.name)))
+
             result = resource.import_data(dataset, dry_run=True,
                                           raise_errors=False,
                                           file_name=import_file.name,
@@ -498,8 +499,8 @@ class ExportPlugin(ExportMixin, BaseAdminPlugin):
         email = user.email if hasattr(user, 'email') else None
         if email is not None:
             self.send_mail(user, request, **kwargs)
-            messages.success(request, _("The file is sent to your email: "
-                                        "<strong>{0:s}</strong>".format(email)))
+            messages.success(request, (_("The file is sent to your email: ")
+                                       + "<strong>{0:s}</strong>".format(email)))
         else:
             messages.warning(request, _("Your account does not have an email address."))
         return HttpResponseRedirect(request.path)
