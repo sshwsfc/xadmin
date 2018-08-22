@@ -34,10 +34,12 @@
                                         {% trans "Export all data" %}
                                     </label>
                                 </div>
-                                <label class="checkbox text-info col-sm-offset-2">
-                                    <input name="queryset_all" type="checkbox" value="filtered" checked="checked"/>
-                                    {% trans "with filter" %}
-                                </label>
+                                <div class="checkbox col-sm-offset-1">
+                                    <label class="text-info">
+                                        <input name="queryset_all" type="checkbox" value="filtered" checked="checked"/>
+                                        {% trans "with filter" %}
+                                    </label>
+                                </div>
                             </div>
                         </div>
 
@@ -75,11 +77,13 @@
                         </div>
 
                         <div class="form-group">
-                            <div class="controls text-info">
-                                <label class="checkbox">
-                                    <input name="result-action" type="checkbox" value="sendmail"/>
-                                    {% trans "Send result file via email." %}
-                                </label>
+                            <div class="controls">
+                                <div class="checkbox">
+                                    <label class="text-info">
+                                        <input name="result-action" type="checkbox" value="sendmail"/>
+                                        {% trans "Send result file via email." %}
+                                    </label>
+                                </div>
                             </div>
                         </div>
 
