@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xadmin-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-22 14:49-0300\n"
+"POT-Creation-Date: 2018-08-22 15:09-0300\n"
 "PO-Revision-Date: 2013-11-20 10:21+0000\n"
 "Last-Translator: gladson <gladson@immensa.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/"
@@ -434,19 +434,19 @@ msgstr "%(name)s objeto com chave primária %(key)r não existe."
 msgid "Sheet"
 msgstr "Planilha"
 
-#: .\plugins\export.py:260 .\plugins\importexport.py:462
+#: .\plugins\export.py:260 .\plugins\importexport.py:464
 msgid "Exported file delivery"
 msgstr "Entrega de arquivo exportado"
 
-#: .\plugins\export.py:261 .\plugins\importexport.py:463
+#: .\plugins\export.py:261 .\plugins\importexport.py:465
 msgid "Sent from address {0!s}. The file is attached."
 msgstr "Enviado do endereço {0!s}. O arquivo encontra-se em anexo."
 
-#: .\plugins\export.py:307 .\plugins\importexport.py:502
+#: .\plugins\export.py:307 .\plugins\importexport.py:504
 msgid "The file is sent to your email: "
 msgstr "O arquivo será enviado para seu endereço de email: "
 
-#: .\plugins\export.py:310 .\plugins\importexport.py:505
+#: .\plugins\export.py:310 .\plugins\importexport.py:507
 msgid "Your account does not have an email address."
 msgstr "Sua conta não tem um endereço de email cadastrado."
 
@@ -475,41 +475,41 @@ msgstr "Baixar"
 msgid "Change:"
 msgstr "Alterar:"
 
-#: .\plugins\importexport.py:179 .\plugins\importexport.py:251
+#: .\plugins\importexport.py:181 .\plugins\importexport.py:253
 #: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.import.html:4
 #: .\templates\xadmin\import_export\import.html:6
 #: .\templates\xadmin\import_export\import.html:13
 msgid "Import"
 msgstr "Importar"
 
-#: .\plugins\importexport.py:232
+#: .\plugins\importexport.py:234
 #, python-format
 msgid "<h1>Imported file has a wrong encoding: %s</h1>"
 msgstr "<h1>O arquivo importado tem uma codificação desconhecida: %s</h1>"
 
-#: .\plugins\importexport.py:234
+#: .\plugins\importexport.py:236
 msgid "<h1>{0!s} encountered while trying to read file: {1:s}</h1>"
 msgstr "<h1>{0!s} encontrado ao tentar ler o arquivo: {1:s}</h1>"
 
-#: .\plugins\importexport.py:307
+#: .\plugins\importexport.py:309
 msgid "Import finished"
 msgstr "Importação terminada"
 
-#: .\plugins\importexport.py:307
+#: .\plugins\importexport.py:309
 #: .\templates\xadmin\blocks\comm.top.topnav.html:23
 msgid "Add"
 msgstr "Adicionar"
 
-#: .\plugins\importexport.py:308
+#: .\plugins\importexport.py:310
 #: .\templates\xadmin\import_export\import.html:109
 msgid "Update"
 msgstr "Atualizar"
 
-#: .\plugins\importexport.py:517
+#: .\plugins\importexport.py:519
 msgid "You must select an export format."
 msgstr "Precisa selecionar um formato de exportação."
 
-#: .\plugins\importexport.py:520
+#: .\plugins\importexport.py:522
 msgid "You need to select items for export."
 msgstr "Precisa selecionar itens para exportação."
 
@@ -946,8 +946,9 @@ msgid "Export all data."
 msgstr "Exportar todos os dados."
 
 #: .\templates\xadmin\blocks\model_list.top_toolbar.exports.html:46
+#: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:81
 msgid "Send result file via email."
-msgstr ""
+msgstr "Enviar arquivo de resultado por email."
 
 #: .\templates\xadmin\blocks\model_list.top_toolbar.exports.html:52
 #: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:88
@@ -974,10 +975,6 @@ msgstr "Exportar dados selecionados."
 #: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:71
 msgid "Export header only."
 msgstr "Exportar somente cabeçalhos da tabela."
-
-#: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:81
-msgid "Send result by email."
-msgstr "Enviar resultado por email."
 
 #: .\templates\xadmin\blocks\model_list.top_toolbar.layouts.html:4
 msgid "Layout"
