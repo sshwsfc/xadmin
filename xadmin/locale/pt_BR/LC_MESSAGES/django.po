@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xadmin-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-22 14:37-0300\n"
+"POT-Creation-Date: 2018-08-22 14:49-0300\n"
 "PO-Revision-Date: 2013-11-20 10:21+0000\n"
 "Last-Translator: gladson <gladson@immensa.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/"
@@ -964,22 +964,16 @@ msgid "with filter"
 msgstr "com filtro"
 
 #: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:49
-#, fuzzy
-#| msgid "Export all data."
 msgid "Export current page data."
-msgstr "Exportar todos os dados."
+msgstr "Exportar dados da página atual."
 
 #: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:60
-#, fuzzy
-#| msgid "Export all data."
 msgid "Export selected data."
-msgstr "Exportar todos os dados."
+msgstr "Exportar dados selecionados."
 
 #: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:71
-#, fuzzy
-#| msgid "Export with table header."
 msgid "Export header only."
-msgstr "Exportar com cabeçalho da tabela"
+msgstr "Exportar somente cabeçalhos da tabela."
 
 #: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:81
 msgid "Send result by email."
@@ -1065,7 +1059,6 @@ msgid "To"
 msgstr "Para"
 
 #: .\templates\xadmin\filters\fk_search.html:14
-#, fuzzy
 msgid "Select"
 msgstr "Selecione"
 
