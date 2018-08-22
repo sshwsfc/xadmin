@@ -373,7 +373,12 @@ class ExportMixin(object):
         select_across = request.GET.get('_select_across', False) == '1'
         selected = request.GET.get('_selected_actions', '')
         if scope == 'all':
-            queryset = self.admin_view.queryset()
+            # Consider all filtered data
+            queryset_all = request.GET.get('queryset_all', '')
+            if queryset_all == "filtered":
+                queryset = self.admin_view.get_list_queryset()
+            else:
+                queryset = self.admin_view.queryset()
         elif scope == 'header_only':
             queryset = []
         elif scope == 'selected':
