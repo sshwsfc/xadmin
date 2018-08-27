@@ -1,6 +1,6 @@
 {
   "name": "xadmin-layout",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Xadmin Base Layout",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
@@ -20,5 +20,5 @@
   "files": [
     "lib"
   ],
-  "gitHead": "5591786a0be9011f9607a9d88afb498026dde4d2"
+  "gitHead": "7a976e3f4034bef2e8042de81f37eeda9abcf50c"
 }

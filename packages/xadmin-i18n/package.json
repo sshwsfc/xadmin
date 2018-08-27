@@ -1,6 +1,6 @@
 {
   "name": "xadmin-i18n",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Xadmin i18n",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
@@ -23,5 +23,5 @@
   "files": [
     "lib"
   ],
-  "gitHead": "5591786a0be9011f9607a9d88afb498026dde4d2"
+  "gitHead": "7a976e3f4034bef2e8042de81f37eeda9abcf50c"
 }
