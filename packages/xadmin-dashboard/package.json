@@ -1,6 +1,6 @@
 {
   "name": "xadmin-dashboard",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "main": "./lib/index.js",
   "license": "MIT",
   "dependencies": {
@@ -33,5 +33,6 @@
   },
   "files": [
     "lib"
-  ]
+  ],
+  "gitHead": "6e490b97b3c9433f12bdbd8ec306c510dbd88ea9"
 }
