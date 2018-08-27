@@ -171,8 +171,9 @@ class Item extends React.Component {
   state = { over: false }
 
   render() {
-    const { item, field, schema, componentClass, wrap, nest, model: { editable_fields } } = this.props
+    const { item, field, schema, componentClass, wrap, nest, model, inList=true } = this.props
     const { _t } = app.context
+    const editable_fields = model.editable_fields
     const RawWrapComponent = wrap || (({ children }) => <span>{children}</span>)
     const WrapComponent = (nest == true || editable_fields == undefined || editable_fields.indexOf(field) < 0) ? RawWrapComponent : ({ children, ...props }) => {
       return (
@@ -191,7 +192,7 @@ class Item extends React.Component {
     let value = _.get(item, field)
     if(componentClass) {
       const ItemComponent = componentClass
-      return <ItemComponent item={item} value={value} field={field} schema={schema} wrap={WrapComponent} />
+      return <ItemComponent item={item} value={value} field={field} schema={schema} inList={inList} model={model} wrap={WrapComponent} />
     } else {
       return <WrapComponent>{value == undefined || value == null?<span className="text-muted">{_t('Null')}</span>:value}</WrapComponent>
     }

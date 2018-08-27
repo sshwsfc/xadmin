@@ -15,7 +15,11 @@ const Model = (modelOrName, props={}) => {
         key: key || modelOrName.name,
         ...modelProps
       }
-      store.dispatch({ type: 'INITIALIZE', model: this.model, initial: initialValues })
+      let initial = initialValues
+      if(!initial && this.model.initialValues) {
+        initial = _.isFunction(this.model.initialValues) ? this.model.initialValues() : this.model.initialValues
+      }
+      store.dispatch({ type: 'INITIALIZE', model: this.model, initial })
     }
 
     componentWillUnmount() {

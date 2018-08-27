@@ -11,6 +11,7 @@ import { ModelWrap } from '../base'
 import Pagination from './Pagination'
 import { Grid } from './Items'
 import Form from './Form'
+import Info from './Info'
 import SubMenu from './SubMenu'
 import ActionBar from './ActionBar'
 
@@ -93,9 +94,31 @@ ModelForm.propTypes = {
   onSuccess: PropTypes.func.isRequired
 }
 
+class ModelDetail extends React.Component {
+
+  render() {
+    const { params, title, onClose, onEdit, componentClass } = this.props
+    const DetailComponent = componentClass || Info
+    const { _t } = app.context
+
+    return (
+      <Page title={title}>
+        { Block('model.detail.before', this) }
+        <DetailComponent id={params && params.id} />
+        { Block('model.detail.after', this) }
+        <Well bsSize="small" style={{ textAlign: 'right' }}>
+          <Button onClick={onClose} bsStyle="default">{_t('Back')}</Button>
+          {canEdit?<Button onClick={onEdit} bsStyle="primary" style={{marginLeft:5}}>{_t('Edit')}</Button>:null}
+        </Well>
+      </Page>
+    )
+  }
+
+}
+
 export default {
   ModelListPage: ModelWrap('model.page.list')(ModelList),
   ModelFormPage: ModelWrap('model.page.form')(ModelForm),
-  ModelDetailPage: ModelWrap('model.page.detail')(ModelForm)
+  ModelDetailPage: ModelWrap('model.page.detail')(ModelDetail)
 }
 

@@ -19,9 +19,19 @@ export default {
     },
     compute: ({ model }, { id, query, item }) => {
       const { _t } = app.context
+      let data = item
+      if(!data) {
+        if(model.defaultValue) {
+          data = _.isFunction(model.defaultValue) ? model.defaultValue() : model.defaultValue
+        }
+        if(!_.isEmpty(query)) {
+          data = { ...data, ...query}
+        }
+      }
+
       return {
         title: id ? _t('Edit {{title}}', { title: model.title }) : _t('Create {{title}}', { title: model.title }),
-        data: item || { ...model.defaultValue, ...query }
+        data
       }
     },
     method: {
@@ -267,8 +277,24 @@ export default {
       }
     },
     method: {
-      onSuccess: ({ dispatch, router }) => () => {
-        router.goBack()
+      onSuccess: ({ model, router }) => () => {
+        router.push({ pathname: `/app/model/${model.name}/list` })
+      }
+    }
+  },
+  'model.page.detail': {
+    data: ({ modelState, model }, { params }) => {
+      return {
+        title: model.title,
+        canEdit: !!model.permission && !!model.permission.edit
+      }
+    },
+    method: {
+      onClose: ({ model, router }) => () => {
+        router.push({ pathname: `/app/model/${model.name}/list` })
+      },
+      onEdit: ({ model, router }, { params }) => () => {
+        router.push({ pathname: `/app/model/${model.name}/${params.id}/edit` })
       }
     }
   }

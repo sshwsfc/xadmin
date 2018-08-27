@@ -72,7 +72,7 @@ class ModelInfo extends React.Component {
       field.option = { ...field.option, ...formProps }
       return (
         <FieldGroup label={field.label} field={field}>
-          <Item item={record} field={field.key} selected={false} wrap={
+          <Item item={record} field={field.key} inList={false} selected={false} wrap={
             ({ children, ...props })=><FormControl.Static>{children}</FormControl.Static>
           }/>
         </FieldGroup>)

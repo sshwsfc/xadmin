@@ -46,6 +46,13 @@ export default [
       return ({ value, field, wrap: WrapComponent }) => {
         const fieldName = `${field}__items`
         const itemWrap = ({ children })=><span>{children}{', '}</span>
+        if(!_.isArray(value)) {
+          if(_.isString(value)) {
+            value = value.split(',')
+          } else {
+            value = [ value ]
+          }
+        }
         const renderValue = value ? value.map(item => {
           return <Item nest={true} item={{ [fieldName]: item }} field={fieldName} schema={schema.items} wrap={itemWrap} />
         }) : null
