@@ -1,6 +1,6 @@
 {
   "name": "xadmin-model",
-  "version": "1.0.40",
+  "version": "1.0.41",
   "description": "Xadmin Model",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
@@ -28,5 +28,5 @@
   "files": [
     "lib"
   ],
-  "gitHead": "6e490b97b3c9433f12bdbd8ec306c510dbd88ea9"
+  "gitHead": "5591786a0be9011f9607a9d88afb498026dde4d2"
 }
