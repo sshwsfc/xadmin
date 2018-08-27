@@ -2,7 +2,7 @@
     // add select render
     $.fn.exform.renders.push(function(f){
       if($.fn.selectize){
-        f.find('select:not(.select-search):not([multiple=multiple])').selectize();
+        f.find('select:not(.select-search):not(.selectize-off):not([multiple=multiple])').selectize();
         f.find('.select-search').each(function(){
             var $el = $(this);
             var preload = $el.hasClass('select-preload');
