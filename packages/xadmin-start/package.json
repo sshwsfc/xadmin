@@ -1,6 +1,6 @@
 {
   "name": "xadmin-start",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "Xadmin Start Template -- Default",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
@@ -21,7 +21,7 @@
     "xadmin-form": "^1.0.28",
     "xadmin-i18n": "^1.0.12",
     "xadmin-layout": "^1.0.14",
-    "xadmin-model": "^1.0.42",
+    "xadmin-model": "^1.0.45",
     "xadmin-plugins": "^1.0.17"
   },
   "scripts": {
