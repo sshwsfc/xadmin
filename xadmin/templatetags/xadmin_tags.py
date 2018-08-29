@@ -1,12 +1,18 @@
 from django import template
 from django.template import Library
 from django.utils import six
-from django.utils.safestring import mark_safe
 from django.utils.html import escape
+from django.utils.safestring import mark_safe
 
 from xadmin.util import static, vendor as util_vendor
 
 register = Library()
+
+
+@register.simple_tag(takes_context=True)
+def username_field(context):
+    """Get the userame based on the variable [USERNAME_FIELD]"""
+    return getattr(context['original'], context['original'].USERNAME_FIELD)
 
 
 @register.simple_tag(takes_context=True)
