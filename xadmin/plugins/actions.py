@@ -55,6 +55,13 @@ class BaseActionView(ModelAdminView):
     def do_action(self, queryset):
         pass
 
+    def __init__(self, request, *args, **kwargs):
+        super().__init__(request, *args, **kwargs)
+        if django_version > (2, 0):
+            for model in self.admin_site._registry:
+                if not hasattr(self.admin_site._registry[model], 'has_delete_permission'):
+                    setattr(self.admin_site._registry[model], 'has_delete_permission', self.has_delete_permission)
+
 
 class DeleteSelectedAction(BaseActionView):
 
@@ -90,11 +97,6 @@ class DeleteSelectedAction(BaseActionView):
         if not self.has_delete_permission():
             raise PermissionDenied
 
-        using = router.db_for_write(self.model)
-
-        if django_version > (2, 0):
-            setattr(self.admin_site._registry[self.model], 'has_delete_permission', self.has_delete_permission)
-
         # Populate deletable_objects, a data structure of all related objects that
         # will also be deleted.
 
@@ -102,6 +104,7 @@ class DeleteSelectedAction(BaseActionView):
             deletable_objects, model_count, perms_needed, protected = get_deleted_objects(
                 queryset, self.opts, self.admin_site)
         else:
+            using = router.db_for_write(self.model)
             deletable_objects, model_count, perms_needed, protected = get_deleted_objects(
                 queryset, self.opts, self.user, self.admin_site, using)
 
