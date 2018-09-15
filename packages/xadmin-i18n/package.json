@@ -1,6 +1,6 @@
 {
   "name": "xadmin-i18n",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Xadmin i18n",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
