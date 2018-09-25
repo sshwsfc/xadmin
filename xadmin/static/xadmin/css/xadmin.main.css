@@ -243,6 +243,9 @@ ul.nav-sitemenu li a {
 
 @media (min-width: 768px) {
   .panel-group.nav-sitemenu {
+    top: 65px;
+    bottom: 0;
+    overflow-y: auto;
     position: fixed;
     margin-left: -15px;
   }
