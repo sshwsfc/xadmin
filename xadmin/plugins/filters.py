@@ -60,9 +60,9 @@ class FilterPlugin(BaseAdminPlugin):
                 # Lookups on non-existants fields are ok, since they're ignored
                 # later.
                 return True
-            if hasattr(field, 'rel'):
-                model = field.rel.to
-                rel_name = field.rel.get_related_field().name
+            if hasattr(field, 'remote_field'):
+                model = field.remote_field.to
+                rel_name = field.remote_field.get_related_field().name
             elif is_related_field(field):
                 model = field.model
                 rel_name = model._meta.pk.name
