@@ -39,7 +39,7 @@ class DeleteAdminView(ModelAdminView):
 
         # Populate deleted_objects, a data structure of all related objects that
         # will also be deleted.
-        if django_version > (2, 0):
+        if django_version > (2, 1):
             (self.deleted_objects, model_count, self.perms_needed, self.protected) = get_deleted_objects(
                 [self.obj], self.opts, self.admin_site)
         else:
