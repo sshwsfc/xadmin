@@ -100,7 +100,7 @@ class DeleteSelectedAction(BaseActionView):
         # Populate deletable_objects, a data structure of all related objects that
         # will also be deleted.
 
-        if django_version > (2, 0):
+        if django_version > (2, 1):
             deletable_objects, model_count, perms_needed, protected = get_deleted_objects(
                 queryset, self.opts, self.admin_site)
         else:
