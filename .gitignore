@@ -3,6 +3,8 @@
 # C extensions
 *.so
 
+htmlcov
+
 # Packages
 *.egg
 *.egg-info
