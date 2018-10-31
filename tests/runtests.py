@@ -51,7 +51,6 @@ def setup(verbosity, test_labels):
     state = {
         'INSTALLED_APPS': settings.INSTALLED_APPS,
         'ROOT_URLCONF': getattr(settings, "ROOT_URLCONF", ""),
-        'TEMPLATE_DIRS': settings.TEMPLATE_DIRS,
         'USE_I18N': settings.USE_I18N,
         'LOGIN_URL': settings.LOGIN_URL,
         'LANGUAGE_CODE': settings.LANGUAGE_CODE,
@@ -65,7 +64,10 @@ def setup(verbosity, test_labels):
     settings.ROOT_URLCONF = 'urls'
     settings.STATIC_URL = '/static/'
     settings.STATIC_ROOT = os.path.join(TEMP_DIR, 'static')
-    settings.TEMPLATE_DIRS = (os.path.join(RUNTESTS_DIR, TEST_TEMPLATE_DIR),)
+    for engine in settings.TEMPLATES:
+        engine['DIRS'].extend([
+            os.path.join(RUNTESTS_DIR, TEST_TEMPLATE_DIR)
+        ])
     settings.USE_I18N = True
     settings.LANGUAGE_CODE = 'en'
     settings.MIDDLEWARE_CLASSES = (
