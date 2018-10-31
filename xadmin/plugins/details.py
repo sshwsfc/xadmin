@@ -16,7 +16,7 @@ class DetailsPlugin(BaseAdminPlugin):
     def result_item(self, item, obj, field_name, row):
         if (self.show_all_rel_details or (field_name in self.show_detail_fields)):
             rel_obj = None
-            if hasattr(item.field, 'rel') and isinstance(item.field.rel, models.ManyToOneRel):
+            if hasattr(item.field, 'remote_field') and isinstance(item.field.remote_field, models.ManyToOneRel):
                 rel_obj = getattr(obj, field_name)
             elif field_name in self.show_detail_fields:
                 rel_obj = obj
