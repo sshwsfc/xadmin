@@ -108,6 +108,7 @@ class DeleteSelectedAction(BaseActionView):
             deletable_objects, model_count, perms_needed, protected = get_deleted_objects(
                 queryset, self.opts, self.user, self.admin_site, using)
 
+
         # The user has already confirmed the deletion.
         # Do the deletion and return a None to display the change list view again.
         if self.request.POST.get('post'):
