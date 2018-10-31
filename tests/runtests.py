@@ -25,6 +25,8 @@ ALWAYS_INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # required to use import-export plugin
+    'django.contrib.admin',
 
     'xadmin',
     'crispy_forms',
