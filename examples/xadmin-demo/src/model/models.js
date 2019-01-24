@@ -81,6 +81,7 @@ export default {
       nav: [ 'name', 'email' ],
       sidemenu: [ 'name' ]
     },
+    editable_fields: ['name'],
     search_fields: [ 'name', 'email' ],
     required: [ 'name', 'email', 'website' ],
     readonly: [ 'id' ],

@@ -1,5 +1,6 @@
 import React from 'react'
-import { InputGroup, FormControl, Button } from 'react-bootstrap'
+import app from 'xadmin'
+import { InputGroup, FormControl, Button, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { FieldGroup } from './base'
 import Icon from 'react-fontawesome'
 
@@ -7,17 +8,32 @@ export default class TextFilter extends React.Component {
 
   onBlur = (e) => {
     const { value, onBlur } = this.props.input
-    onBlur({ ...value, text: e.target.value })
+    if(e.target.value && value.like) {
+      onBlur({ like: e.target.value })
+    } else {
+      onBlur(e.target.value)
+    }
   }
 
   onChange = (e) => {
     const { value, onChange } = this.props.input
-    onChange({ ...value, text: e.target.value })
+    if(e.target.value && value.like) {
+      onChange({ like: e.target.value })
+    } else {
+      onChange(e.target.value)
+    }
   }
 
   onLikeChange = (like) => {
     const { value, onChange } = this.props.input
-    onChange({ ...value, like })
+    if(!value) {
+      return
+    }
+    if(value.like && !like) {
+      onChange(value.like)
+    } else if(_.isString(value) && like) {
+      onChange({ like: value })
+    }
   }
 
   clear = () => {
@@ -27,12 +43,23 @@ export default class TextFilter extends React.Component {
 
   render() {
     const { input: { name, value, onBlur, onChange, ...inputProps }, label, meta, field, group: FieldGroup } = this.props
-    const { text, like } = value
+    let text = value
+    let like = false
+    if(value.like) {
+      text = value.like
+      like = true
+    }
+    const { _t } = app.context
+
     return (
       <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
         <InputGroup { ...field.attrs }>
           <InputGroup.Button>
-            <Button active={like} onClick={()=>this.onLikeChange(!like)}><Icon name="magic" /></Button>
+            <OverlayTrigger placement="top" overlay={<Tooltip>{like ? _t('Fuzzy query') : _t('Exact query')}</Tooltip>}>
+              <Button disabled={!text} onClick={()=>this.onLikeChange(!like)}>
+                {like ? <Icon name="magic" /> : <Icon name="search" /> }
+              </Button>
+            </OverlayTrigger>
           </InputGroup.Button>
           <FormControl type="text" { ...inputProps} {...field.attrs} value={text}
             onBlur={this.onBlur} onChange={this.onChange} />

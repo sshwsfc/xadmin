@@ -22,7 +22,7 @@ export default ({ input, label, meta, field, group: FieldGroup }) => {
   if(input.value !== undefined && input.value !== null) {
     for(let option of options) {
       if(option.value == input.value) {
-        value = { label: option.name || 'null', value: option.value }
+        value = { label: option.name != undefined ? option.name : 'null', value: option.value }
         break
       }
     }
@@ -34,7 +34,7 @@ export default ({ input, label, meta, field, group: FieldGroup }) => {
         placeholder={field.description}
         value={value}
         clearable={false}
-        options={options.map(option=>{ return { label: option.name || 'null', value: option.value } })}
+        options={options.map(option=>{ return { label: option.name != undefined ? option.name : 'null', value: option.value } })}
         onChange={onValueChange}
         onBlur={onSelectBlur}
         onFocus={onSelectFocus}

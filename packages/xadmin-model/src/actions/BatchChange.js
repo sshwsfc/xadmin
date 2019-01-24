@@ -62,7 +62,7 @@ class BatchChangeBtn extends React.Component {
     this.setState({ show: false })
   }
 
-  onBatchChange(value) {
+  onBatchChange = (value) => {
     this.props.onBatchChange(value)
     this.onClose()
   }
@@ -100,7 +100,7 @@ class BatchChangeBtn extends React.Component {
             return obj == '*' || fields.indexOf(obj) >= 0 || fields.indexOf(obj.key) >= 0 }) : [ '*' ]
         }, 'required')}
         option={{ group: FieldGroup }}
-        onSubmit={this.onBatchChange.bind(this)}
+        onSubmit={(values) => this.onBatchChange(values)}
         onClose={this.onClose}
         component={FormLayout}/>
     )

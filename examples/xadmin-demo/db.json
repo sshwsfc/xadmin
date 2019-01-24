@@ -1,0 +1,54 @@
+{
+  "brands": [],
+  "users": [
+    {
+      "name": "田淼1",
+      "email": "sshwsfc@gmail.com",
+      "website": "北京",
+      "id": 1,
+      "property": [
+        {
+          "name": "性别",
+          "value": "男"
+        }
+      ],
+      "__partial__": true
+    },
+    {
+      "name": "宋芳",
+      "email": "51384626@qq.com",
+      "website": "哈哈哈哈啊",
+      "id": 2
+    }
+  ],
+  "posts": [
+    {
+      "title": "班费返还",
+      "user": {
+        "name": "田淼",
+        "email": "sshwsfc@gmail.com",
+        "website": "北京",
+        "id": 1,
+        "property": [
+          {
+            "name": "性别",
+            "value": "男"
+          }
+        ]
+      },
+      "body": "这是一个神奇的帖子",
+      "id": 1
+    },
+    {
+      "user": {
+        "name": "宋芳",
+        "email": "51384626@qq.com",
+        "website": "哈哈哈哈啊",
+        "id": 2
+      },
+      "title": "总工程师",
+      "body": "这个是一个神奇的帖子",
+      "id": 2
+    }
+  ]
+}

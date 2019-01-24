@@ -58,7 +58,7 @@ class ModelForm extends React.Component {
         formKey={`model.${model.key}`}
         schema={schema || model}
         initialValues={this.state.record}
-        onSubmit={saveItem}
+        onSubmit={(values) => saveItem(values)}
         component={FormLayout}
         {...formProps}
         {...model.form_props} />

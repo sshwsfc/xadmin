@@ -43,7 +43,7 @@ class MainMenu extends React.Component {
 class Page extends React.Component {
   render() {
     return (
-      <div>
+      <div className={this.props.className} style={this.props.style}>
         <Navbar fluid>
           <Navbar.Header>
             <Navbar.Brand>

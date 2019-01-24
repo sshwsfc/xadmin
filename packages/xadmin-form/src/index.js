@@ -1,5 +1,5 @@
 import React from 'react'
-import { Field, reduxForm, reducer as formReducer, SubmissionError } from 'redux-form'
+import { reducer as formReducer, SubmissionError } from 'redux-form'
 import Ajv from 'ajv'
 import default_fields from './fields'
 import { converters } from './schema'

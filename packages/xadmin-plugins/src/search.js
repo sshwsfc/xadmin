@@ -18,6 +18,7 @@ class SearchBar extends React.Component {
     if(this.state.value) {
       this.props.onSearch(this.state.value)
     }
+    event.preventDefault()
   }
 
   onClean(e) {
@@ -38,17 +39,17 @@ class SearchBar extends React.Component {
       const placeholder = _t('Search') + ' ' + searchTitles.join(', ')
       return (
         <Navbar.Form pullLeft>
-
+          <form onSubmit={this.onSearch.bind(this)}>
           <InputGroup>
             <FormControl ref="searchInput" value={this.state.value} 
               onKeyPress={this.onKeyPress.bind(this)}
               type="text" placeholder={placeholder} onChange={(e)=>{this.setState({ value: e.target.value })}} />
             <InputGroup.Button>
               { searchValue ? <Button onClick={this.onClean.bind(this)}><Icon name="times" /></Button> : null }
-              <Button onClick={this.onSearch.bind(this)} type="submit"><Icon name="search" /></Button>
+              <Button type="submit"><Icon name="search" /></Button>
             </InputGroup.Button>
           </InputGroup>
-
+          </form>
         </Navbar.Form>
       )
     }

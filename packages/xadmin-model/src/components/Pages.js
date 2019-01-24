@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router'
-import { Button, Nav, Row, Col } from 'react-bootstrap'
+import { Button, Nav, Row, Col, Well } from 'react-bootstrap'
 
 import Icon from 'react-fontawesome'
 import { Block, app } from 'xadmin'
@@ -36,7 +35,7 @@ class ModelList extends React.Component {
   }
 
   render() {
-    const { icon, title, componentClass, location } = this.props
+    const { icon, title, componentClass, location, model } = this.props
     const ItemsComponent = componentClass || Grid
     const query = location && location.query
 
@@ -52,7 +51,7 @@ class ModelList extends React.Component {
     ]
 
     return (
-      <Page title={(<span><Icon name={icon}/> {title}</span>)} nav={this.renderNav()}>
+      <Page className={`xadmin-model-list-${model.key}`} title={(<span><Icon name={icon}/> {title}</span>)} nav={this.renderNav()}>
         { Block('model.list.submenu', this) }
         { (sideMenu || sidePanel) ? (
           <Row>
@@ -76,10 +75,10 @@ ModelList.propTypes = {
 class ModelForm extends React.Component {
 
   render() {
-    const { params, location: { query }, title, onSuccess, componentClass } = this.props
+    const { params, location: { query }, title, model, onSuccess, componentClass } = this.props
     const FormComponent = componentClass || Form
     return (
-      <Page title={title}>
+      <Page title={title} className={`xadmin-model-form-${model.key}`}>
         { Block('model.form.before', this) }
         <FormComponent id={params && params.id} query={query} onSubmitSuccess={onSuccess} />
         { Block('model.form.after', this) }
@@ -97,12 +96,12 @@ ModelForm.propTypes = {
 class ModelDetail extends React.Component {
 
   render() {
-    const { params, title, onClose, onEdit, componentClass } = this.props
+    const { params, title, model, onClose, onEdit, canEdit, componentClass } = this.props
     const DetailComponent = componentClass || Info
     const { _t } = app.context
 
     return (
-      <Page title={title}>
+      <Page title={title} className={`xadmin-model-detail-${model.key}`}>
         { Block('model.detail.before', this) }
         <DetailComponent id={params && params.id} />
         { Block('model.detail.after', this) }

@@ -1,6 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
-import { Field, reduxForm, reducer as formReducer, reset, clearFields } from 'redux-form'
+import { Field, reduxForm, reducer as formReducer, reset, change, clearFields, initialize, getFormValues, getFormMeta } from 'redux-form'
 import Icon from 'react-fontawesome'
 import app from 'xadmin'
 import { Nav, ButtonGroup, Panel, Modal, Navbar, NavItem, NavDropdown, MenuItem, OverlayTrigger, Popover, Badge, Button, Col, Row, FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap'
@@ -51,7 +51,7 @@ class FilterDiv extends React.Component {
           {children}
           <Row>
             <Col sm={9} xsOffset={3} >
-              <Button disabled={invalid || pristine || submitting} onClick={handleSubmit} bsStyle="primary">{_t('Search')}</Button>
+              <Button disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary">{_t('Search')}</Button>
               {' '}
               <Button disabled={submitting} onClick={resetFilter} bsStyle="default">{_t('Clear')}</Button>
             </Col>
@@ -86,7 +86,7 @@ class FilterInline extends React.Component {
           </Row>
           <Row>
             <Col style={{ textAlign: 'center' }} sm={12}>
-              <Button disabled={invalid || pristine || submitting} bsSize="sm" onClick={handleSubmit} bsStyle="primary">{_t('Search')}</Button>
+              <Button disabled={invalid || submitting} bsSize="sm" onClick={handleSubmit} bsStyle="primary">{_t('Search')}</Button>
               {' '}
               <Button disabled={submitting} onClick={resetFilter} bsSize="sm" bsStyle="default">{_t('Clear')}</Button>
             </Col>
@@ -96,12 +96,12 @@ class FilterInline extends React.Component {
     }
     const groupComponent = ({ id, label, help, error, groupProps, children }) => {
       return (
-        <Col key={0} sm={6} md={4} {...groupSize}>
+        <Col key={0} sm={6} md={4} lg={4} {...groupSize}>
           <FormGroup controlId={id} {...groupProps}>
-            <Col key={0} componentClass={ControlLabel} sm={2} md={5}>
+            <Col key={0} componentClass={ControlLabel} sm={2} md={5} lg={4}>
               {label}
             </Col>
-            <Col key={1} sm={10} md={7}>
+            <Col key={1} sm={10} md={7} lg={8}>
               {children}
               <FormControl.Feedback />
               {help && <HelpBlock>{help}</HelpBlock>}
@@ -111,6 +111,7 @@ class FilterInline extends React.Component {
         </Col>
       )
     }
+    console.log(data)
     return (<FilterForm
       formKey={formKey}
       filters={filters}
@@ -142,7 +143,7 @@ class FilterMenu extends FilterComponent {
                 {children}
                 <ButtonGroup justified>
                   <Button style={{ width: '30%' }} disabled={submitting} onClick={resetFilter} bsStyle="default">{_t('Clear')}</Button>
-                  <Button style={{ width: '70%' }} disabled={invalid || pristine || submitting} onClick={handleSubmit} bsStyle="primary">{_t('Search')}</Button>
+                  <Button style={{ width: '70%' }} disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary">{_t('Search')}</Button>
                 </ButtonGroup>
               </form>
             </Panel.Body>
@@ -215,7 +216,7 @@ class FilterModal extends FilterComponent {
               resetFilter()
               onClose()
             }} bsStyle="default">{_t('Clear')}</Button>
-            <Button disabled={invalid || pristine || submitting} onClick={()=>{
+            <Button disabled={invalid || submitting} onClick={()=>{
               handleSubmit()
               onClose()
             }} bsStyle="primary">{_t('Search')}</Button>
@@ -283,7 +284,7 @@ class FilterNavForm extends FilterComponent {
       return (
         <Navbar.Form pullRight onSubmit={handleSubmit}>
           {children}{' '}
-          <Button disabled={invalid || pristine || submitting} onClick={handleSubmit} bsStyle="primary">{_t('Search')}</Button>
+          <Button disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary">{_t('Search')}</Button>
           {' '}
           <Button disabled={submitting} onClick={resetFilter} bsStyle="default">{_t('Clear')}</Button>
         </Navbar.Form>
@@ -346,11 +347,31 @@ export default {
         }
       },
       method: {
-        resetFilter: ({ dispatch, model, modelState }) => (e) => {
-          dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres: _.omit(modelState.wheres, 'filters') })
-          dispatch(clearFields(`filter.${model.name}`, false, false, ...Object.keys(model.properties)))
+        resetFilter: ({ dispatch, model, state, modelState }) => (e) => {
+          const formKey = `filter.${model.name}`
+          const initial = _.isFunction(model.initialValues) ? model.initialValues() : model.initialValues
+          const where = initial && initial.wheres && initial.wheres.filters || {}
+          const values = { ...getFormValues(formKey)(state), ...where }
+          const cf = []
+          Object.keys(values).forEach(field => {
+            if(where[field] !== undefined) {
+              dispatch(change(formKey, field, where[field]))
+            } else {
+              cf.push(field)
+            }
+          })
+          if(cf.length > 0) {
+            dispatch(clearFields(formKey, false, false, ...cf))
+          }
+
+          const wheres = (Object.keys(where).length > 0 ? 
+            { ...modelState.wheres, filters: where } : _.omit(modelState.wheres, 'filters'))
+
+          dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres })
         },
-        changeFilter: ({ dispatch, model, modelState }, { name }) => (values) => {
+        changeFilter: ({ dispatch, model, state, modelState }, { name }) => () => {
+          const values = getFormValues(`filter.${model.name}`)(state)
+          console.log(values)
           const where = Object.keys(values).reduce((prev, key) => {
             if(!_.isNil(values[key])) {
               prev[key] = values[key]
@@ -363,7 +384,15 @@ export default {
             { ...modelState.wheres, filters: where } : _.omit(modelState.wheres, 'filters'))
           dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres })
         }
-      }
+      },
+      // event: {
+      //   mount: ({ dispatch, model }) => {
+      //     if(model.filterDefault) {
+      //       const values = _.isFunction(model.filterDefault) ? model.filterDefault() : model.filterDefault
+      //       dispatch(initialize(`filter.${model.name}`, values))
+      //     }
+      //   }
+      // }
     }
   },
   form_fields: filter_fields,
