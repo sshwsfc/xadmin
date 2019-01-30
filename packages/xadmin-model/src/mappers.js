@@ -44,7 +44,7 @@ export default {
         return new Promise((resolve, reject) => {
           dispatch({ model, type: 'SAVE_ITEM', item, partial, promise: { resolve, reject }, message: successMessage })
         }).catch(err => {
-          throw new SubmissionError(err.json)
+          throw new SubmissionError(err.formError || err.json)
         })
       }
     },

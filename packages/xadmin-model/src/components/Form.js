@@ -45,9 +45,6 @@ class ModelForm extends React.Component {
     if (this.props.data !== nextProps.data) {
       this.setState({ record: _.omitBy({ ...nextProps.data }, _.isNil) })
     }
-    if (this.props.id !== nextProps.id) {
-      this.props.getItem(nextProps.id)
-    }
   }
 
   render() {
