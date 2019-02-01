@@ -54,7 +54,7 @@ class AddModelBtn extends React.Component {
       )
     }
     
-    return canAdd ? (
+    return canAdd && show ? (
       <SchemaForm 
         formKey={`model.modalform.${model.key}`}
         schema={model}
