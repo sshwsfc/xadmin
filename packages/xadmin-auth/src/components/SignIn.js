@@ -29,7 +29,7 @@ const SignInForm = StoreWrap('auth.sign_in')(({ onSignIn }) => {
                   <Panel.Body>
                     {children}
                     {error && <strong>{error}</strong>}
-                    <Button type="submit" disabled={invalid || submitting} onClick={handleSubmit} bsStyle="primary" bsSize="large" block>
+                    <Button type="submit" disabled={submitting} onClick={handleSubmit} bsStyle="primary" bsSize="large" block>
                       <Icon name={icon}/> {_t('Login')}</Button>
                     { auth.can_signup && (<div style={{ marginTop: 20 }}>{_t('Not registed')}? <Link to="/signup">{_t('please signup')}</Link></div>) }
                     { auth.can_reset_password && (<div style={{ marginTop: 10 }}>{_t('Forgot password')}? <Link to="/forget_password">{_t('reset password')}</Link></div>) }

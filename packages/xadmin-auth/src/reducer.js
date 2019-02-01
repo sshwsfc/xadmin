@@ -1,5 +1,3 @@
-
-
 export default {
   user: (state=null, action) => {
     switch(action.type) {

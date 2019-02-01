@@ -40,11 +40,11 @@ export default {
           dispatch({ model, type: 'GET_ITEM', id })
         }
       },
-      saveItem: ({ dispatch, model }, { successMessage }) => (item, partial) => {
+      saveItem: ({ dispatch, model }, { successMessage }) => (item, partial, ...args) => {
         return new Promise((resolve, reject) => {
           dispatch({ model, type: 'SAVE_ITEM', item, partial, promise: { resolve, reject }, message: successMessage })
         }).catch(err => {
-          throw new SubmissionError(err.json)
+          throw new SubmissionError(err.formError || err.json)
         })
       }
     },
@@ -136,8 +136,8 @@ export default {
     data: ({ modelState, model }, { field }) => {
       const orders = modelState.filter.order
         , property = getFieldProp(model, field) || {}
-        , canOrder = (property.canOrder == undefined ? true : property.canOrder) && 
-          ( property.orderField !== undefined || (property.type != 'object' && property.type != 'array') )
+        , canOrder = (property.canOrder !== undefined ? property.canOrder : 
+          ( property.orderField !== undefined || (property.type != 'object' && property.type != 'array')))
       return {
         canOrder,
         title: property.header || property.title || _.startCase(field),
@@ -270,7 +270,7 @@ export default {
     }
   },
   'model.page.form': {
-    data: ({ modelState, model }, { params }) => {
+    data: ({ model }, { params }) => {
       const { _t } = app.context
       return {
         title: params && params.id ?  _t('Edit {{title}}', { title: model.title }) : _t('Create {{title}}', { title: model.title })
@@ -283,7 +283,7 @@ export default {
     }
   },
   'model.page.detail': {
-    data: ({ modelState, model }, { params }) => {
+    data: ({ model }, { params }) => {
       return {
         title: model.title,
         canEdit: !!model.permission && !!model.permission.edit

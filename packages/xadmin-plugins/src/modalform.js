@@ -5,7 +5,7 @@ import Icon from 'react-fontawesome'
 import { ModelWrap } from 'xadmin-model'
 import { SchemaForm } from 'xadmin-form'
 import { Block, StoreWrap, app } from 'xadmin'
-
+import './modalform.css'
 @ModelWrap('model.item')
 @ModelWrap('modalform.modal')
 class AddModelBtn extends React.Component {
@@ -30,6 +30,7 @@ class AddModelBtn extends React.Component {
         <Modal
           {...modalProps}
           show={show}
+          className="xadmin-modal-form"
           onHide={this.hideModal.bind(this)}
         >
           <Modal.Header closeButton>

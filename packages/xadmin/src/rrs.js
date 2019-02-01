@@ -1,11 +1,9 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import PropTypes from 'prop-types'
-import { Provider, connect } from 'react-redux'
-import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
-import createSagaMiddleware, { takeEvery, takeLatest } from 'redux-saga'
-import { Router, DefaultRoute, browserHistory, hashHistory } from 'react-router'
-import { fork } from 'redux-saga/effects'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { browserHistory, hashHistory, Router } from 'react-router';
+import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
+import createSagaMiddleware from 'redux-saga';
 
 // redux app
 const redux_app = {

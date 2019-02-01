@@ -46,7 +46,7 @@ const app = {
           component: model.components && model.components['page_list'] || ModelPages.ModelListPage
         })
       }
-      if(model.permission && model.permission.add) {
+      if(model.permission && model.permission.view) {
         model_routes.push({
           path: ':id/detail',
           breadcrumbName: _t('{{name}} Detail', { name: modelName }),

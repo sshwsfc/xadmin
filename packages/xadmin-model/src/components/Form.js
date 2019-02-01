@@ -45,9 +45,6 @@ class ModelForm extends React.Component {
     if (this.props.data !== nextProps.data) {
       this.setState({ record: _.omitBy({ ...nextProps.data }, _.isNil) })
     }
-    if (this.props.id !== nextProps.id) {
-      this.props.getItem(nextProps.id)
-    }
   }
 
   render() {
@@ -58,7 +55,7 @@ class ModelForm extends React.Component {
         formKey={`model.${model.key}`}
         schema={schema || model}
         initialValues={this.state.record}
-        onSubmit={saveItem}
+        onSubmit={(values) => saveItem(values)}
         component={FormLayout}
         {...formProps}
         {...model.form_props} />
