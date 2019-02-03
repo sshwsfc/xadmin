@@ -25,7 +25,7 @@ export default {
           data = _.isFunction(model.defaultValue) ? model.defaultValue() : model.defaultValue
         }
         if(!_.isEmpty(query)) {
-          data = { ...data, ...query}
+          data = { ...data, ...query }
         }
       }
 

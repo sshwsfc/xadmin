@@ -82,13 +82,18 @@ export default class App {
   start(init_context={}) {
     const self = this
 
-    waterfall([ (cb) => { cb(null, init_context) }, ...this.load_list('context') ],
-      (err, context) => {
-        self.context = context
-        self.load_list('start').forEach((starter) => {
-          starter(self)
-        })
+    waterfall([ (cb) => { cb(null, init_context) }, 
+      ...this.load_list('context')
+        .map(func => (context, cb) => func(context, (err, newContext) => {
+          self.context = newContext
+          cb(err, newContext)
+        })) ],
+    (err, context) => {
+      self.context = context
+      self.load_list('start').forEach((starter) => {
+        starter(self)
       })
+    })
   }
 
   log(level, message, error) {
