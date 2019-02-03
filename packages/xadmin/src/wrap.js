@@ -50,7 +50,7 @@ const _wrap_component = (tag, WrappedComponent, wrappers, defaultMapper) => {
       const context = this.context
       return wrappers.reduce((prev, wrapper) => {
         if(wrapper.getState !== undefined) {
-          return { ...prev, ...wrapper.getState(context) }
+          return { ...prev, ...wrapper.getState.bind(this)(context) }
         } else {
           return prev
         }
@@ -283,6 +283,20 @@ const Wrap = _wrap({
   }
 })
 
+const HOCWrap = Wrap({
+  getState: (context) => {
+    const { store } = context
+    return { state: store.getState(), dispatch: store.dispatch }
+  },
+  subscribe: (context, callback) => {
+    const { store } = context
+    return { store: store.subscribe(callback) }
+  },
+  unsubscribe: (unsubscribe) => {
+    unsubscribe['store']()
+  }
+})
+
 const StoreWrap = Wrap({
   contextTypes: {
     store: PropTypes.object.isRequired
@@ -301,5 +315,5 @@ const StoreWrap = Wrap({
 })
 
 export {
-  Wrap, StoreWrap
+  Wrap, HOCWrap, StoreWrap
 }

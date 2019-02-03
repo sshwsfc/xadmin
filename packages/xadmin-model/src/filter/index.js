@@ -8,6 +8,7 @@ import { BaseForm } from 'xadmin-form'
 import { InlineGroup, SimpleGroup } from 'xadmin-form/lib/components/base'
 
 import { ModelWrap } from '../index'
+import { getFieldProp } from '../utils'
 import filter_converter from './filters'
 import filter_fields from './fields'
 
@@ -335,12 +336,12 @@ export default {
       compute: ({ model, modelState }, { data, name }) => {
         const filters = (model.filters ? (model.filters[name] || []) : []).map(filter => {
           const key = typeof filter == 'string' ? filter : filter.key
-          return {
-            key,
-            schema: model.properties[key],
+          const schema = getFieldProp(model, key)
+          return schema ? {
+            key, schema,
             field: typeof filter == 'string' ? { } : filter
-          }
-        })
+          } : null
+        }).filter(Boolean)
         return {
           filters, data: _.clone(data),
           formKey: `filter.${model.name}`

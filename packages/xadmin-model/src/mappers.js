@@ -2,12 +2,7 @@ import React from 'react'
 import _ from 'lodash'
 import { app, config } from 'xadmin'
 import { SubmissionError } from 'xadmin-form'
-
-const getFieldProp = (model, field) => {
-  return field.split('.').reduce((obj, f) => {
-    return obj && obj.properties && obj.properties[f]
-  }, model)
-}
+import { getFieldProp } from './utils'
 
 export default {
   'model.item': {
