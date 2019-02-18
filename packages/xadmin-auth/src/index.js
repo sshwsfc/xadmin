@@ -28,7 +28,8 @@ export default {
       can_reset_password: true,
       can_change_password: true,
       can_signup: true,
-      can_signin: true
+      can_signin: true,
+      userinfo_timeout: 5 * 24 * 60
     }
   },
   blocks: {
@@ -39,7 +40,7 @@ export default {
   },
   context: (app) => (context, cb) => {
     const { store } = context
-
+    
     let user = null
     store.subscribe(() => {
       const state = store.getState()

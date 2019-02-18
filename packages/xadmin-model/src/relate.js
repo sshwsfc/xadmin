@@ -219,9 +219,9 @@ const schema_converter = [
   (f, schema, options) => {
     if(schema.type == 'object' && schema.name) {
       const models = app.load_dict('models')
-      const name = schema.name
-      if(models[name]) {
-        const model = models[name]
+      const relateName = schema.relateTo || schema.name
+      if(models[relateName]) {
+        const model = models[relateName]
         f.type = 'fkselect'
         f.schema = model
         f.displayField = model.display_field || 'name'
@@ -235,9 +235,9 @@ const filter_converter = [
   (f, schema, options) => {
     if(schema.type == 'object' && schema.name) {
       const models = app.load_dict('models')
-      const name = schema.name
-      if(models[name]) {
-        const model = models[name]
+      const relateName = schema.relateTo || schema.name
+      if(models[relateName]) {
+        const model = models[relateName]
         f.type = 'filter_relate'
         f.schema = model
         f.displayField = model.display_field || 'name'
