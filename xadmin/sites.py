@@ -367,7 +367,14 @@ class AdminSite(object):
             from django.views.i18n import javascript_catalog
         else:
             from django.views.i18n import null_javascript_catalog as javascript_catalog
-        return javascript_catalog(request, packages=['django.conf', 'xadmin'])
+        # Gives plugins the ability to add your translation scripts.
+        packages = getattr(settings, 'XADMIN_I18N_JAVASCRIPT_PACKAGES', [])
+        try:
+            packages.extend(['django.conf', 'xadmin'])
+        except AttributeError:
+            raise ImproperlyConfigured('Expected list type as attribute '
+                                       'in "XADMIN_I18N_JAVASCRIPT_PACKAGES"')
+        return javascript_catalog(request, packages=packages)
 
 # This global object represents the default admin site, for the common case.
 # You can instantiate AdminSite in your own code to create a custom admin site.
