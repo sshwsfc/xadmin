@@ -6,11 +6,11 @@
   "author": "sshwsfc@gmail.com",
   "license": "MIT",
   "dependencies": {
-    "i18next": "^4.1.4",
-    "i18next-browser-languagedetector": "^1.0.1",
-    "i18next-localstorage-cache": "^0.3.0",
-    "i18next-xhr-backend": "^1.2.1",
-    "lodash": "^4.16.4"
+    "i18next": "^15.0.6",
+    "i18next-browser-languagedetector": "^3.0.1",
+    "i18next-localstorage-cache": "^1.1.1",
+    "i18next-xhr-backend": "^2.0.1",
+    "lodash": "^4.17.11"
   },
   "peerDependencies": {
     "moment": "2",

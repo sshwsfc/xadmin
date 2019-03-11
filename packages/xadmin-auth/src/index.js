@@ -1,5 +1,6 @@
 import React from 'react'
 import localforage from 'localforage'
+import Cookies from 'js-cookie'
 import mappers from './mappers'
 import { App as BaseApp } from 'xadmin-layout'
 import SignInForm from './components/SignIn'
@@ -29,7 +30,7 @@ export default {
       can_change_password: true,
       can_signup: true,
       can_signin: true,
-      userinfo_timeout: 5 * 24 * 60
+      persist_type: 'localforage'
     }
   },
   blocks: {
@@ -40,32 +41,63 @@ export default {
   },
   context: (app) => (context, cb) => {
     const { store } = context
-    
+    const { auth } = app.load_dict('config')
+
     let user = null
     store.subscribe(() => {
       const state = store.getState()
       if(state.user !== user) {
-        if(state.user) {
-          localforage.setItem('user', JSON.stringify(state.user))
-        } else {
-          localforage.removeItem('user')
+        if(auth.persist_type == 'localforage') {
+          if(state.user) {
+            localforage.setItem('user', JSON.stringify(state.user))
+          } else {
+            localforage.removeItem('user')
+          }
+        } else if(auth.persist_type == 'session-storage') {
+          if(state.user) {
+            sessionStorage.setItem('user', JSON.stringify(state.user))
+          } else {
+            sessionStorage.removeItem('user')
+          }
+        } else if(auth.persist_type == 'cookie') {
+          if(state.user) {
+            Cookies.set('user', state.user, auth.userinfo_timeout ? { expires: auth.userinfo_timeout } : {})
+          } else {
+            Cookies.remove('user')
+          }
         }
         user = state.user
       }
     })
 
-    localforage.getItem('user', function (err, value) {
-      if(err == null && value) {
-        try {
-          const user = JSON.parse(value)
-          store.dispatch({ type: '@@xadmin/AUTH_SIGN_IN', payload: user })
-        } catch(err) {
-          localforage.removeItem('user')
+    if(auth.persist_type == 'localforage') {
+      localforage.getItem('user', function (err, value) {
+        if(err == null && value) {
+          try {
+            const user = JSON.parse(value)
+            store.dispatch({ type: '@@xadmin/AUTH_SIGN_IN', payload: user })
+          } catch(err) {
+            localforage.removeItem('user')
+          }
         }
+        cb(null, context)
+      })
+    } else if(auth.persist_type == 'session-storage') {
+      const value = sessionStorage.getItem('user')
+      if(value) {
+        const user = JSON.parse(value)
+        store.dispatch({ type: '@@xadmin/AUTH_SIGN_IN', payload: user })
       }
       cb(null, context)
-    })
-
+    }  else if(auth.persist_type == 'cookie') {
+      const user = Cookies.getJSON('user')
+      if(user) {
+        store.dispatch({ type: '@@xadmin/AUTH_SIGN_IN', payload: user })
+      }
+      cb(null, context)
+    } else {
+      cb(null, context)
+    }
   },
   routers: (app) => {
     const { auth } = app.load_dict('config')

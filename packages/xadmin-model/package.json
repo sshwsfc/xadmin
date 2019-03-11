@@ -12,7 +12,7 @@
     "react-fontawesome": "^1.6.1",
     "react-select": "^1.2.1",
     "redux": "^3.7.2",
-    "redux-form": "^7.2.0",
+    "redux-form": "^8.1.0",
     "redux-saga": "^0.16.0"
   },
   "peerDependencies": {

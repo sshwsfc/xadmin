@@ -372,7 +372,6 @@ export default {
         },
         changeFilter: ({ dispatch, model, state, modelState }, { name }) => () => {
           const values = getFormValues(`filter.${model.name}`)(state)
-          console.log(values)
           const where = Object.keys(values).reduce((prev, key) => {
             if(!_.isNil(values[key])) {
               prev[key] = values[key]
@@ -385,7 +384,7 @@ export default {
             { ...modelState.wheres, filters: where } : _.omit(modelState.wheres, 'filters'))
           dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres })
         }
-      },
+      }
       // event: {
       //   mount: ({ dispatch, model }) => {
       //     if(model.filterDefault) {

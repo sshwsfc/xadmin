@@ -8,6 +8,8 @@ const Model = (modelOrName, props={}) => {
 
   class ModelComponent extends React.Component {
 
+    model = null
+
     componentWillMount() {
       const { store } = this.context
       this.model = _.isString(modelOrName) ? this.getModel(modelOrName) : {
@@ -26,6 +28,7 @@ const Model = (modelOrName, props={}) => {
       if(persist === false) {
         const { store } = this.context
         setTimeout(() => store.dispatch({ type: 'DESTROY', model: this.model }), 500)
+        
       } 
     }
 

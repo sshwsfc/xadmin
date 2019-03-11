@@ -1,19 +1,17 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { browserHistory, hashHistory, Router } from 'react-router';
-import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
-import createSagaMiddleware from 'redux-saga';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
+import { browserHistory, hashHistory, Router } from 'react-router'
+import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
+import createSagaMiddleware from 'redux-saga'
 
 // redux app
 const redux_app = {
   context: (app) => (context, cb) => {
 
-    const devtools = window.devToolsExtension || (() => noop => noop)
     const enhancers = [
       applyMiddleware(...app.load_list('middlewares')),
-      ...app.load_list('store_enhancers'),
-      devtools()
+      ...app.load_list('store_enhancers')
     ]
 
     const enhance_reducer = (key, reducer) => {
@@ -45,12 +43,13 @@ const redux_app = {
       }
       return combineReducers(reducers)
     }
+    const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
     // create store
     const store = createStore(
       create_reducers(),
       context['initial_state'] || {},
-      compose(...enhancers)
+      composeEnhancers(...enhancers)
     )
 
     cb(null, { ...context, store })
@@ -112,26 +111,22 @@ const react_app = {
       })
     }
     const routers = find_childs('@')
-    let AppComponent = (routers && routers.length) ?
-      () => <Router history={app.context.router} routes={routers[0]}/> :
-      (app.load_dict('components').Main || (() => <span>Please config routers or Main component.</span>))
 
-    const RootComponent = app.load_list('root_component').reduce((PrevComponent, render) => {
-      return render(PrevComponent)
-    }, AppComponent)
+    const root = app.load_list('root_component').reduce((children, render) => {
+      return render(children)
+    }, (routers && routers.length) ?
+      <Router history={app.context.router} routes={routers[0]}/> :
+      <span>Please config routers or Main component.</span>)
 
-    ReactDOM.render(<RootComponent />, container)
+    ReactDOM.render(root, container)
   }
 }
 
 // react-redux app
 const react_redux_app = {
-  root_component: (app) => (PrevComponent) => {
-    const { store } = app.context
-    return () => (
-      <Provider store={store}><PrevComponent /></Provider>
-    )
-  }
+  root_component: (app) => (children) => (
+    <Provider store={app.context.store}>{children}</Provider>
+  )
 }
 
 export default app => {

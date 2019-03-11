@@ -2,7 +2,7 @@ import App from './app'
 import rrs from './rrs'
 import RESTBaseAPI from './api'
 import { Block, BlockTag } from './block'
-import { Wrap, StoreWrap } from './wrap'
+import { Wrap, StoreWrap, wrap } from './wrap'
 
 if(window.__app__ == undefined) {
   window.__app__ = rrs(new App())
@@ -36,5 +36,6 @@ export {
   RESTBaseAPI,
   Block,
   Wrap,
-  StoreWrap
+  StoreWrap,
+  wrap
 }

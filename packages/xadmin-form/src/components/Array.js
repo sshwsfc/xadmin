@@ -1,7 +1,7 @@
 import React from 'react'
 import { FieldArray } from 'redux-form'
 import { FieldGroup } from './base'
-import { Panel, Button, PanelGroup } from 'react-bootstrap'
+import { Card, Button, CardGroup } from 'react-bootstrap'
 import { objectBuilder, prefixFieldKey } from '../builder'
 import Icon from 'react-fontawesome'
 import app from 'xadmin'
@@ -12,23 +12,21 @@ const defaultItemsRender = ({ fields, meta: { touched, error }, field, fieldsBui
     <div>
       <h5>{label}{' '}
         <Button bsSize="xsmall" onClick={() => fields.push()}><Icon name="plus"/></Button></h5>
-      <PanelGroup accordion>
+      <CardGroup accordion>
         {fields.map((name, index) => {
           const removeBtn = (<Button bsSize="xsmall" onClick={(e) => { fields.remove(index); e.persist() }} style={{ float: 'right' }}><Icon name="minus"/></Button>)
           const itemLable = (<h6>{label + ' ' + (index + 1)}{removeBtn}</h6>)
           const fieldsComponent = fieldsBuilder(name, index, removeBtn)
           return fieldsComponent.length > 1 ? (
-            <Panel eventKey={index} key={`items${index}`}>
-              <Panel.Heading>
-                <Panel.Title toggle>{itemLable}</Panel.Title>
-              </Panel.Heading>
-              <Panel.Body collapsible>{fieldsComponent}</Panel.Body>
-            </Panel>
+            <Card eventKey={index} key={`items${index}`}>
+              <Card.Header>{itemLable}</Card.Header>
+              <Card.Body collapsible>{fieldsComponent}</Card.Body>
+            </Card>
           ) : (
             <div>{fieldsComponent}</div>
           )
         })}
-      </PanelGroup>
+      </CardGroup>
       {(touched && error) ? error : null}
     </div>
   )

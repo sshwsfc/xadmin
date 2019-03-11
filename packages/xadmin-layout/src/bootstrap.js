@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row, Col, Breadcrumb, BreadcrumbItem, Panel, Nav, Navbar } from 'react-bootstrap'
+import { Row, Col, Breadcrumb, Card, Nav, Navbar, Container } from 'react-bootstrap'
 import { Block, config as _c } from 'xadmin'
 import Icon from 'react-fontawesome'
 
@@ -7,12 +7,12 @@ class Bread extends React.Component {
   render() {
     return (
       <Breadcrumb>
-        <BreadcrumbItem href="#">
+        <Breadcrumb.Item href="#">
         Home
-        </BreadcrumbItem>
-        <BreadcrumbItem active>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item active>
         Data
-        </BreadcrumbItem>
+        </Breadcrumb.Item>
       </Breadcrumb>
     )}
 }
@@ -32,48 +32,42 @@ class Footer extends React.Component {
 class MainMenu extends React.Component {
   render() {
     return (
-      <Panel>
+      <Card body>
         <Nav bsStyle="pills" stacked>
           { Block('main.menu', this) }
         </Nav>
-      </Panel>
+      </Card>
     )}
 }
 
 class Page extends React.Component {
   render() {
     return (
-      <div className={this.props.className} style={this.props.style}>
-        <Navbar fluid>
-          <Navbar.Header>
-            <Navbar.Brand>
-              <a>{ this.props.title }</a>
-            </Navbar.Brand>
-          </Navbar.Header>
+      <Container className={this.props.className} style={this.props.style} fluid>
+        <Navbar bg="light">
+          <Navbar.Brand>{ this.props.title }</Navbar.Brand>
           {this.props.nav}
         </Navbar>
         {this.props.children}
-      </div>
+      </Container>
     )}
 }
 
 class TopNav extends React.Component {
   render() {
     return (
-      <Navbar inverse fixedTop fluid>
-        <Navbar.Header>
-          <Navbar.Brand>
-            <a href="#">{this.props.site_title}</a>
-          </Navbar.Brand>
-          <Navbar.Toggle />
-        </Navbar.Header>
-        <Navbar.Collapse>
-          { Block('top.left', this) }
-          <Nav pullRight>
-            { Block('top.right', this) }
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
+      <Container>
+        <Navbar bg="dark" variant="dark" fixed="top" expand="lg">
+          <Navbar.Brand href="#">{this.props.site_title}</Navbar.Brand>
+          <Navbar.Toggle aria-controls="main-navbar-nav" />
+          <Navbar.Collapse id="main-navbar-nav">
+            { Block('top.left', this) }
+            <Nav>
+              { Block('top.right', this) }
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
+      </Container>
     )
   }
 }
@@ -106,7 +100,7 @@ class App extends React.Component {
 
 class Loading extends React.Component {
   render() {
-    return <Panel><Panel.Body className="text-center"><Icon name="spinner fa-spin fa-4x"/></Panel.Body></Panel>
+    return <Card body className="text-center"><Icon name="spinner fa-spin fa-4x"/></Card>
   }
 }
 
