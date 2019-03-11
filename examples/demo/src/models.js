@@ -1,4 +1,4 @@
-import { Radios, Textarea } from 'xadmin-form/lib/components'
+import { Textarea } from 'xadmin-form/lib/components'
 
 export default {
   Brand: {

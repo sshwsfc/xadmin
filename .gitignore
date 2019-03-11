@@ -37,7 +37,6 @@ package-lock.json
 .cache
 .DS_Store
 .vscode
-public
 dist
 lib
 es

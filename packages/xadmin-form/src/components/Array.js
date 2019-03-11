@@ -1,6 +1,5 @@
 import React from 'react'
 import { FieldArray } from 'redux-form'
-import { FieldGroup } from './base'
 import { Card, Button, CardGroup } from 'react-bootstrap'
 import { objectBuilder, prefixFieldKey } from '../builder'
 import Icon from 'react-fontawesome'
