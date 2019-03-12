@@ -3,84 +3,56 @@ import _ from 'lodash'
 import PropTypes from 'prop-types'
 import { Block, StoreWrap, app } from 'xadmin'
 
-const Model = (modelOrName, props={}) => {
-  const { key, persist, initialValues, modelProps } = props
+const ModelContext = React.createContext(null)
 
-  class ModelComponent extends React.Component {
+class Model extends React.Component {
 
-    model = null
+  constructor(props) {
+    super(props)
+    const { name, schema, modelKey, initialValues, props: modelProps } = props
 
-    componentWillMount() {
-      const { store } = this.context
-      this.model = _.isString(modelOrName) ? this.getModel(modelOrName) : {
-        ...modelOrName,
-        key: key || modelOrName.name,
-        ...modelProps
-      }
-      let initial = initialValues
-      if(!initial && this.model.initialValues) {
-        initial = _.isFunction(this.model.initialValues) ? this.model.initialValues() : this.model.initialValues
-      }
-      store.dispatch({ type: 'INITIALIZE', model: this.model, initial })
+    const model = name ? this.getModel(name, modelKey, modelProps) : {
+      ...schema,
+      key: modelKey || schema.name,
+      ...modelProps
     }
-
-    componentWillUnmount() {
-      if(persist === false) {
-        const { store } = this.context
-        setTimeout(() => store.dispatch({ type: 'DESTROY', model: this.model }), 500)
-        
-      } 
+    let initial = initialValues
+    if(!initial && model.initialValues) {
+      initial = _.isFunction(model.initialValues) ? model.initialValues() : model.initialValues
     }
-
-    getChildContext() {
-      return { model: this.model }
-    }
-
-    render() {
-      return this.props.children
-    }
-
-    getModel(name) {
-      const model = app.load_dict('models')[name]
-      model.name = model.name || name
-      return model ? {
-        ...model,
-        key: key || model.name,
-        ...modelProps
-      } : null
-    }
-    
+    app.context.store.dispatch({ type: 'INITIALIZE', model, initial })
+    this.state = { model }
   }
 
-  ModelComponent.contextTypes = {
-    store: PropTypes.object.isRequired
+  getModel(name, key, props) {
+    const model = app.get('models')[name]
+    if(!model) {
+      throw Error(`Model '${name}' not found!`)
+    }
+    model.name = model.name || name
+    return {
+      ...model,
+      key: key || model.name,
+      ...props
+    }
   }
 
-  ModelComponent.childContextTypes = {
-    model: PropTypes.object.isRequired
+  render() {
+    return <ModelContext.Provider value={this.state.model}>{this.props.children}</ModelContext.Provider>
   }
-
-  return ModelComponent
 }
 
-const ModelWrap = StoreWrap({
-  contextTypes: {
-    model: PropTypes.object.isRequired
-  },
-  getState: (context) => {
-    const { store, model } = context
-    return { modelState: store.getState().model[model.key], model }
-  },
-  computeProps: (tag, { model }) => {
-    const ret = { model }
-    if(model.components && model.components[tag]) {
-      ret['componentClass'] = model.components[tag]
-    }
-    return ret
-  }
+const ModelWrap = StoreWrap(Connect => (props) => {
+  const { state } = props.wrapContext
+  return (
+    <ModelContext.Consumer>
+      { model => <Connect {...props} model={model} wrapContext={{ ...props.wrapContext, model, modelState: state.model[model.key] }} /> }
+    </ModelContext.Consumer>
+  )
 })
 
 export {
+  ModelContext,
   ModelWrap,
   Model
 }

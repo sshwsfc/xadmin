@@ -7,7 +7,7 @@ import { Nav } from 'react-bootstrap'
 import i18n from 'xadmin-i18n'
 import form from 'xadmin-form'
 import layout from 'xadmin-layout'
-//import model from 'xadmin-model'
+import model from 'xadmin-model'
 import models from './models'
 import API from './api'
 
@@ -17,7 +17,7 @@ app
 .use(i18n)
 .use(layout)
 .use(form)
-//.use(model)
+.use(model)
 .use({
   config: {
     api: API,
@@ -33,7 +33,7 @@ app
     'top.right': () => <Nav.Link key="block">Block</Nav.Link>
   },
   components: {
-    App
+    Dashboard: App
   },
   reducers: {
     test: (state=0, action) => {

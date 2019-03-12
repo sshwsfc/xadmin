@@ -33,7 +33,7 @@ class MainMenu extends React.Component {
   render() {
     return (
       <Card body>
-        <Nav bsStyle="pills" stacked>
+        <Nav variant="pills" className="flex-column">
           <Block name="main.menu" {...this.props} />
         </Nav>
       </Card>
@@ -43,7 +43,7 @@ class MainMenu extends React.Component {
 class Page extends React.Component {
   render() {
     return (
-      <Container className={this.props.className} style={this.props.style} fluid>
+      <Container className={'px-0 ' + this.props.className} style={this.props.style} fluid>
         <Navbar bg="light">
           <Navbar.Brand>{ this.props.title }</Navbar.Brand>
           {this.props.nav}

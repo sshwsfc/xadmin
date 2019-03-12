@@ -6,7 +6,7 @@ import { Block, app } from 'xadmin'
 import { SchemaForm } from 'xadmin-form'
 import { Page, Loading } from 'xadmin-layout'
 
-import { FormGroup, ControlLabel, FormControl, Col, HelpBlock, Table, OverlayTrigger, Popover, Button, ButtonGroup, Input, Dropdown, MenuItem, Well, Panel, Media } from 'react-bootstrap'
+import { FormGroup, Jumbotron, FormControl, Col, HelpBlock, Table, OverlayTrigger, Popover, Button, ButtonGroup, Input, Dropdown, MenuItem, Panel, Media } from 'react-bootstrap'
 import { ModelWrap } from '../base'
 
 class BaseRow extends React.Component {
@@ -283,7 +283,7 @@ class Grid extends React.Component {
           </div>
         )
       } else {
-        return (<Well>{_t('No Data')}</Well>)
+        return (<Jumbotron><h5 className="text-center text-muted"><Icon name="file-o" /> {_t('No Data')}</h5></Jumbotron>)
       }
     }
   }

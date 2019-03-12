@@ -1,10 +1,10 @@
 import React from 'react'
 import { combineReducers } from 'redux'
 import Icon from 'react-fontawesome'
-import { Nav, NavItem } from 'react-bootstrap'
+import { Nav } from 'react-bootstrap'
 
 import ModelPages from './components/Pages'
-import { Model, ModelWrap } from './base'
+import { Model, ModelWrap, ModelContext } from './base'
 import modelReducer from './reducer'
 import effects from './effects'
 import mappers from './mappers'
@@ -12,8 +12,11 @@ import field_render from './fields'
 
 const app = {
   name: 'xadmin.model',
+  items: {
+    models: { type: 'map' }
+  },
   blocks: (app) => {
-    const models = app.load_dict('models')
+    const models = app.get('models')
     return {
       'main.menu': () => {
         return Object.keys(models).map((name) => {
@@ -21,9 +24,9 @@ const app = {
           if((!model.permission || model.permission.view) && 
             (!model.ui || model.ui.show_menu)) {
             return (
-              <NavItem key={`main-menu-item-model-${name}`} onSelect={()=>app.go(`/app/model/${name}/list`)}>
-                <Icon name={model.icon || name}/> {model.title}
-              </NavItem>
+              <Nav.Item key={`main-menu-item-model-${name}`} >
+                <Nav.Link eventKey={`model-${name}`} onSelect={()=>app.go(`/app/model/${name}/list`)}><Icon name={model.icon || name}/> {model.title}</Nav.Link>
+              </Nav.Item>
             )
           }
         }).filter(item => item !== undefined)
@@ -31,7 +34,7 @@ const app = {
     }
   },
   routers: (app) => {
-    const models = app.load_dict('models')
+    const models = app.get('models')
     const { _t } = app.context
     let routes = []
     for (let name in models) {
@@ -70,7 +73,7 @@ const app = {
       routes = routes.concat({
         path: `model/${name}/`,
         breadcrumbName: _t('{{name}} List', { name: modelName }),
-        component: Model(name, { key: name, persist: true }),
+        component: ({ children }) => <Model name={name}>{children}</Model>,
         indexRoute: {
           onEnter: ({ location }, replace) => replace({ pathname: location.pathname + 'list' })
         },
@@ -89,5 +92,5 @@ const app = {
   field_render
 }
 
-export { Model, ModelWrap }
+export { Model, ModelWrap, ModelContext }
 export default app

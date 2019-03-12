@@ -48,11 +48,10 @@ const wrap_component = (WrappedComponent, tag, defaultMapper) => {
       _.isFunction(mapper.data) ? { ...prev, ...mapper.data(wrapContext, props, prev) } : prev
       , {})
 
-  const computeComputeProps = ({ wrapContext, ...props }) => {
+  const computeComputeProps = ({ wrapContext, ...props }) => 
     getMappers().reduce((prev, mapper) => 
       _.isFunction(mapper.compute) ? { ...prev, ...mapper.compute(wrapContext, props, prev) } : prev
       , {})
-  }
 
   class Connect extends React.Component {
 
