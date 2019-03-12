@@ -12,11 +12,14 @@ class Dashboard extends React.Component {
 
 export default {
   name: 'xadmin.layout',
+  items: {
+    components: { type: 'map' }
+  },
   components: {
     Main, App, Dashboard
   },
   routers: app => {
-    const { Main, App, Dashboard } = app.load_dict('components')
+    const { Main, App, Dashboard } = app.get('components')
     return {
       '@' : {
         path: '/',

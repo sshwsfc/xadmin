@@ -45,7 +45,7 @@ export default class App {
   getItem(key) {
     const item = this.items[key]
     if(item == undefined) {
-      throw Error(`Not define configuration item '${key}'`)
+      throw Error(`Not defined configuration item '${key}'`)
     }
     return item
   }

@@ -87,9 +87,4 @@ class App extends React.Component {
   }
 }
 
-export default StoreWrap('test', {
-  data: ({ state }) => ({ title: state.test }),
-  method: {
-    add: ({ dispatch }) => () => dispatch({ type: 'TEST_ADD' })
-  }
-})(App);
+export default StoreWrap('test', { data: ({ state }) => ({ title: state.test }) })(App);

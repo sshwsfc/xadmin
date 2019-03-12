@@ -57,6 +57,15 @@ export default {
       website: {
         type: 'string'
       },
+      brithday: {
+        type: 'string',
+        format: 'date'
+      },
+      loginTime: {
+        type: 'string',
+        format: 'date-time',
+        convert: 'node-link'
+      },
       address: {
         type: 'object',
         properties: {
@@ -76,7 +85,7 @@ export default {
       }
     },
     permission: { view: true, add: true, edit: true, delete: true },
-    form: [ 'id', 'name', 'email', 'address', 
+    form: [ 'id', 'name', 'email', 'address', '*',
       { key: 'website', component: Textarea, attrs: { rows: 5 } } ],
     filters: {
       nav: [ 'name', 'email' ],

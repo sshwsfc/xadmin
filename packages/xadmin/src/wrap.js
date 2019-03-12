@@ -34,24 +34,24 @@ const shallowEqual = (objA, objB, ingoreKey) => {
 
 const wrap_component = (WrappedComponent, tag, defaultMapper) => {
   const app = window.__app__
-  const mappers = (defaultMapper !== undefined ? [ defaultMapper ] : []).concat(app.mapArray('mappers')[tag] || [])
+  let mappers = null
 
-  const computeDataProps = ({ wrapContext, ...props }) => {
-    return mappers.reduce((prev, mapper) => {
-      if(mapper.data == undefined) {
-        return prev
-      }
-      return { ...prev, ...mapper.data(wrapContext, props, prev) }
-    }, {})
+  const getMappers = () => {
+    if(mappers == null) {
+      mappers = (defaultMapper !== undefined ? [ defaultMapper ] : []).concat(tag && app.get('mappers')[tag] || [])
+    }
+    return mappers
   }
 
+  const computeDataProps = ({ wrapContext, ...props }) => 
+    getMappers().reduce((prev, mapper) => 
+      _.isFunction(mapper.data) ? { ...prev, ...mapper.data(wrapContext, props, prev) } : prev
+      , {})
+
   const computeComputeProps = ({ wrapContext, ...props }) => {
-    return mappers.reduce((prev, mapper) => {
-      if(mapper.compute == undefined) {
-        return prev
-      }
-      return { ...prev, ...mapper.compute(wrapContext, props, prev) }
-    }, {})
+    getMappers().reduce((prev, mapper) => 
+      _.isFunction(mapper.compute) ? { ...prev, ...mapper.compute(wrapContext, props, prev) } : prev
+      , {})
   }
 
   class Connect extends React.Component {
@@ -74,7 +74,7 @@ const wrap_component = (WrappedComponent, tag, defaultMapper) => {
     }
 
     componentDidUpdate() {
-      mappers.forEach(mapper => {
+      getMappers().forEach(mapper => {
         if(mapper.event && mapper.event.update) {
           this.runBindMethod(mapper.event.update, this)
         }
@@ -82,7 +82,7 @@ const wrap_component = (WrappedComponent, tag, defaultMapper) => {
     }
 
     componentDidMount() {
-      mappers.forEach(mapper => {
+      getMappers().forEach(mapper => {
         if(mapper.event && mapper.event.mount) {
           this.runBindMethod(mapper.event.mount, this)
         }
@@ -90,7 +90,7 @@ const wrap_component = (WrappedComponent, tag, defaultMapper) => {
     }
 
     componentWillUnmount() {
-      mappers.forEach(mapper => {
+      getMappers().forEach(mapper => {
         if(mapper.event && mapper.event.unmount) {
           this.runBindMethod(mapper.event.unmount, this)
         }
@@ -104,7 +104,7 @@ const wrap_component = (WrappedComponent, tag, defaultMapper) => {
 
     computeMethodProps() {
       const bindMethod = this.runBindMethod.bind(this)
-      return mappers.reduce((prev, mapper) => {
+      return getMappers().reduce((prev, mapper) => {
         if(mapper.method === undefined) {
           return prev
         }

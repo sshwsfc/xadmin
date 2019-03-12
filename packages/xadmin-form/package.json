@@ -17,6 +17,7 @@
   },
   "peerDependencies": {
     "react-redux": "6",
+    "moment": "2",
     "xadmin": "1"
   },
   "scripts": {

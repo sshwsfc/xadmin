@@ -10,7 +10,8 @@ const base = {
     context: { type: 'array' },
     start: { type: 'array' },
     logger: { type: 'array' },
-    blocks: { type: 'mapArray' }
+    blocks: { type: 'mapArray' },
+    mappers: { type: 'mapArray' }
   }
 }
 

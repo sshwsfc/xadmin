@@ -47,7 +47,7 @@ const convert = (schema, options) => {
   if(opts.lookup === undefined) {
     opts.lookup = {}
   }
-  return app.load_list(opts.convert_key || 'schema_converter').reduce((prve, converter) => {
+  return app.get('schema_converter').reduce((prve, converter) => {
     return converter(prve, schema, opts)
   }, opts.global && opts.global.formDefaults ? _.cloneDeep(opts.global.formDefaults) : {})
 }

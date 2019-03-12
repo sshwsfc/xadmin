@@ -10,7 +10,7 @@ import _ from 'lodash'
 import ajvLocalize from './locales'
 import { convert as schemaConvert } from './schema'
 
-const ajv = new Ajv({ allErrors: true, v5: true, verbose: true })
+const ajv = new Ajv({ allErrors: true, verbose: true })
 
 const BaseForm = (props) => {
   const { fields, render, option, component, handleSubmit, ...formProps } = props

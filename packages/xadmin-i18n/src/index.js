@@ -15,9 +15,12 @@ const locales = {
 
 export default {
   name: 'xadmin.i18n',
+  items: {
+    locales: { type: 'mapArray' }
+  },
   context: (app) => (context, cb) => {
-    const resources = app.load_dict_list('locales')
-    const { locale } = app.load_dict('config')
+    const resources = app.get('locales')
+    const { locale } = app.get('config')
     for(let ln in resources) {
       resources[ln] = _.merge({}, ...resources[ln])
     }

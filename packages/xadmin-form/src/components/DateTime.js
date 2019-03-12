@@ -10,10 +10,20 @@ export default ({ input, label, meta, field, group: FieldGroup }) => {
   const { onChange, onBlur, onFocus, value, ...inputProps } = input
   return (
     <FieldGroup label={label} meta={meta} input={input} field={field}>
-      <InputGroup style={{ maxWidth: 280 }}>
-        <DateTimeField inputProps={inputProps} closeOnSelect={true} onChange={onChange} {...field.attrs} value={moment(value)} />
-        <InputGroup.Addon><Icon name="calendar"/></InputGroup.Addon>
-      </InputGroup>
+      <DateTimeField 
+        closeOnSelect={true}
+        onChange={onChange} 
+        {...field.attrs} 
+        value={moment(value)} 
+        renderInput={(props, openCalendar, closeCalendar) => (
+          <InputGroup style={{ maxWidth: 220 }}>
+            <FormControl {...props} {...inputProps} autoComplete="off" onFocus={openCalendar} />
+            <InputGroup.Append>
+              <InputGroup.Text onClick={openCalendar}><Icon name="calendar"/></InputGroup.Text>
+            </InputGroup.Append>
+          </InputGroup>
+        )}
+      />
     </FieldGroup>
   )
 }

@@ -9,7 +9,9 @@ import form from 'xadmin-form'
 import layout from 'xadmin-layout'
 //import model from 'xadmin-model'
 import models from './models'
-import API from './api';
+import API from './api'
+
+import 'moment/locale/zh-cn' 
 
 app
 .use(i18n)
@@ -28,7 +30,7 @@ app
     }
   },
   blocks: {
-    'top.right': () => <Nav.Link key="123">Block</Nav.Link>
+    'top.right': () => <Nav.Link key="block">Block</Nav.Link>
   },
   components: {
     App
@@ -37,6 +39,13 @@ app
     test: (state=0, action) => {
       if(action.type === 'TEST_ADD') return ++state
       return state
+    }
+  },
+  mappers: {
+    test: {
+      method: {
+        add: ({ dispatch }) => () => dispatch({ type: 'TEST_ADD' })
+      }
     }
   },
   models

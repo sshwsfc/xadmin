@@ -8,7 +8,7 @@ const defaultUIRender = (fields, option) => {
 }
 
 const objectBuilder = (fields, render, option) => {
-  const fields_defined = app.load_dict('form_fields')
+  const fields_defined = app.get('form_fields')
   const fields_wraped = fields
     .filter(field => field.type === undefined || fields_defined[field.type] !== undefined)
     .map(field => { return { ...fields_defined[field.type || 'text'], ...field, option } })

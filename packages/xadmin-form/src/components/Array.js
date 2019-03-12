@@ -9,23 +9,22 @@ const defaultItemsRender = ({ fields, meta: { touched, error }, field, fieldsBui
   const { items, label } = field
   return (
     <div>
-      <h5>{label}{' '}
-        <Button bsSize="xsmall" onClick={() => fields.push()}><Icon name="plus"/></Button></h5>
-      <CardGroup accordion>
-        {fields.map((name, index) => {
-          const removeBtn = (<Button bsSize="xsmall" onClick={(e) => { fields.remove(index); e.persist() }} style={{ float: 'right' }}><Icon name="minus"/></Button>)
-          const itemLable = (<h6>{label + ' ' + (index + 1)}{removeBtn}</h6>)
-          const fieldsComponent = fieldsBuilder(name, index, removeBtn)
-          return fieldsComponent.length > 1 ? (
-            <Card eventKey={index} key={`items${index}`}>
-              <Card.Header>{itemLable}</Card.Header>
-              <Card.Body collapsible>{fieldsComponent}</Card.Body>
-            </Card>
-          ) : (
-            <div>{fieldsComponent}</div>
-          )
-        })}
-      </CardGroup>
+      <h5>
+        <Button onClick={() => fields.push()}><Icon name="plus"/> {label}</Button>
+      </h5>
+      {fields.map((name, index) => {
+        const removeBtn = (<Button variant="danger" size="sm" onClick={(e) => { fields.remove(index); e.persist() }} style={{ float: 'right', lineHeight: '1' }}><Icon name="trash"/></Button>)
+        const itemLable = (<span>{label + ' ' + (index + 1)}{removeBtn}</span>)
+        const fieldsComponent = fieldsBuilder(name, index, removeBtn)
+        return fieldsComponent.length > 1 ? (
+          <Card key={`items-${name}`} className="mt-2">
+            <Card.Header>{itemLable}</Card.Header>
+            <Card.Body>{fieldsComponent}</Card.Body>
+          </Card>
+        ) : (
+          <div>{fieldsComponent}</div>
+        )
+      })}
       {(touched && error) ? error : null}
     </div>
   )
@@ -34,7 +33,7 @@ const defaultItemsRender = ({ fields, meta: { touched, error }, field, fieldsBui
 export default ({ input, label, meta, field, option, group: FieldGroup }) => {
   let renderItems = field.itemsRender || defaultItemsRender
   if(typeof renderItems === 'string') {
-    renderItems = app.load_dict('array_render')[renderItems]
+    renderItems = app.get('array_render')[renderItems]
   }
   const { items } = field
   const fieldsBuilder = (name, index, removeBtn, itemLable) => {
