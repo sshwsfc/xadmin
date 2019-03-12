@@ -1,17 +1,24 @@
+import React from 'react'
 import './index.css';
 import App from './App';
 import app from 'xadmin';
+import { Nav } from 'react-bootstrap'
 
 import i18n from 'xadmin-i18n'
 import form from 'xadmin-form'
 import layout from 'xadmin-layout'
+//import model from 'xadmin-model'
+import models from './models'
+import API from './api';
 
 app
 .use(i18n)
 .use(layout)
 .use(form)
+//.use(model)
 .use({
   config: {
+    api: API,
     locale: {
       lng: 'zh_Hans', moment: 'zh-cn'
     },
@@ -19,6 +26,9 @@ app
     date_format: {
       time: 'HH:mm:ss', date: 'YYYY-MM-DD', datetime: 'YYYY-MM-DD HH:mm:ss'
     }
+  },
+  blocks: {
+    'top.right': () => <Nav.Link key="123">Block</Nav.Link>
   },
   components: {
     App
@@ -28,5 +38,6 @@ app
       if(action.type === 'TEST_ADD') return ++state
       return state
     }
-  }
+  },
+  models
 }).start({ container: '#root' })

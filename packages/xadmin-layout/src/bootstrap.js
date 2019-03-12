@@ -34,7 +34,7 @@ class MainMenu extends React.Component {
     return (
       <Card body>
         <Nav bsStyle="pills" stacked>
-          { Block('main.menu', this) }
+          <Block name="main.menu" {...this.props} />
         </Nav>
       </Card>
     )}
@@ -61,9 +61,12 @@ class TopNav extends React.Component {
           <Navbar.Brand href="#">{this.props.site_title}</Navbar.Brand>
           <Navbar.Toggle aria-controls="main-navbar-nav" />
           <Navbar.Collapse id="main-navbar-nav">
-            { Block('top.left', this) }
+            <Nav className="mr-auto">
+              <Block name="top.left" {...this.props} />
+            </Nav>
+            <Block name="top.center" {...this.props} />
             <Nav>
-              { Block('top.right', this) }
+              <Block name="top.right" {...this.props} />
             </Nav>
           </Navbar.Collapse>
         </Navbar>

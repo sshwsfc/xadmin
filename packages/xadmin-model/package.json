@@ -10,16 +10,16 @@
     "prop-types": "^15.6.0",
     "react-date-range": "^0.9.4",
     "react-fontawesome": "^1.6.1",
-    "react-select": "^1.2.1",
+    "react-select": "^1.2.1"
+  },
+  "peerDependencies": {
+    "react-bootstrap": "1",
+    "xadmin": "1",
+    "xadmin-form": "1",
+    "xadmin-i18n": "1",
     "redux": "^3.7.2",
     "redux-form": "^8.1.0",
     "redux-saga": "^0.16.0"
-  },
-  "peerDependencies": {
-    "react-bootstrap": "0.32",
-    "xadmin": "1",
-    "xadmin-form": "1",
-    "xadmin-i18n": "1"
   },
   "scripts": {
     "compile": "babel src --out-dir lib",

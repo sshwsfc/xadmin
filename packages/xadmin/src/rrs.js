@@ -7,15 +7,23 @@ import createSagaMiddleware from 'redux-saga'
 
 // redux app
 const redux_app = {
+  items: {
+    reducers: { type: 'mapArray' },
+    'redux/subscribe': { type: 'array' },
+    'redux/on_create': { type: 'array' },
+    'redux/middlewares': { type: 'array' },
+    'redux/store_enhancers': { type: 'array' },
+    'redux/reducer_enhance': { type: 'mapArray' }
+  },
   context: (app) => (context, cb) => {
 
     const enhancers = [
-      applyMiddleware(...app.load_list('middlewares')),
-      ...app.load_list('store_enhancers')
+      applyMiddleware(...app.get('redux/middlewares')),
+      ...app.$('redux/store_enhancers')
     ]
 
     const enhance_reducer = (key, reducer) => {
-      const reducer_enhance = app.load_dict_list('reducer_enhance')
+      const reducer_enhance = app.get('redux/reducer_enhance')
       if(reducer_enhance[key] !== undefined) {
         const reducers = [ reducer, ...reducer_enhance[key] ]
         return (state, action) => {
@@ -36,7 +44,7 @@ const redux_app = {
     }
     
     const create_reducers = () => {
-      const reducers_map = app.load_dict_list('reducers')
+      const reducers_map = app.get('reducers')
       let reducers = {}
       for(const key in reducers_map) {
         reducers[key] = combine_reducer(key, reducers_map[key])
@@ -57,38 +65,45 @@ const redux_app = {
   start: (app) => () => {
     // store change
     const { store } = app.context
-    const listeners = app.load_list('subscribe')
+    const listeners = app.get('redux/subscribe')
     for (const listener of listeners) {
       store.subscribe(listener)
     }
-    app.load_list('on_create_store').forEach((callback) => callback(store))
+    app.get('redux/on_create').forEach((callback) => callback(store))
   }
 }
 
 // saga app
 const sagaMiddleware = createSagaMiddleware()
 const sage_app = {
+  items: {
+    effects: { type: 'array' }
+  },
   context: (app) => (context, cb) => {
     // extend store
     const { store } = context
     store.runSaga = sagaMiddleware.run
 
     // start saga
-    const effects = app.load_list('effects')
+    const effects = app.get('effects')
     effects.forEach(sagaMiddleware.run)
     cb(null, context)
   },
-  middlewares: (app) => { return sagaMiddleware }
+  'redux/middlewares': (app) => { return sagaMiddleware }
 }
 
 // react & react-router app
 const react_app = {
+  items: {
+    routers: { type: 'mapArray' },
+    root_component: { type: 'array' }
+  },
   context: (app) => (context, cb) => {
     app.go = (uri) => {
       app.context.router.push(uri)
     }
     
-    const routerType = app.load_dict('config')['router'] || 'browser'
+    const routerType = app.config('router') || 'browser'
     const router = (typeof routerType === 'string') ? {
       browser: browserHistory,
       hash: hashHistory
@@ -103,7 +118,7 @@ const react_app = {
       container = document.querySelector(container)
     }
 
-    const rs = app.load_dict_list('routers')
+    const rs = app.get('routers')
     const find_childs = (path) => {
       return (rs[path] || []).map((r) => {
         const childs = find_childs((path == '@' ? '' : path) + r.path)
@@ -112,7 +127,7 @@ const react_app = {
     }
     const routers = find_childs('@')
 
-    const root = app.load_list('root_component').reduce((children, render) => {
+    const root = app.get('root_component').reduce((children, render) => {
       return render(children)
     }, (routers && routers.length) ?
       <Router history={app.context.router} routes={routers[0]}/> :

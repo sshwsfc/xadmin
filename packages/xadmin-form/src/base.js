@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Field, reducer as formReducer, reduxForm } from 'redux-form'
+import { ReduxFormContext } from 'redux-form/es/ReduxFormContext'
 import { StoreWrap, app, config } from 'xadmin'
 import { fieldBuilder, objectBuilder } from './builder'
 
@@ -44,8 +45,8 @@ const Form = (props) => {
   const formConfig = config('redux-form-config')
   const WrapForm = reduxForm({ 
     form: formKey,
-    //destroyOnUnmount: false,
-    enableReinitialize: true,
+    // destroyOnUnmount: false,
+    // enableReinitialize: true,
     ...formConfig,
     ...wrapProps,
     validate: (values) => {
@@ -63,8 +64,8 @@ const SchemaForm = (props) => {
   const formConfig = config('redux-form-config')
   const WrapForm = reduxForm({ 
     form: formKey,
-    //destroyOnUnmount: false,
-    enableReinitialize: true,
+    // destroyOnUnmount: false,
+    // enableReinitialize: true,
     ...formConfig,
     ...wrapProps,
     validate: (values) => {
@@ -92,14 +93,13 @@ const SchemaForm = (props) => {
   return <WrapForm fields={fields} {...props}/>
 }
 
-const FormWrap = StoreWrap({
-  contextTypes: {
-    _reduxForm: PropTypes.object.isRequired
-  },
-  getState: (context) => {
-    const { store, _reduxForm } = context
-    return { form: _reduxForm, formState: _reduxForm.getFormState(store.getState()) }
-  }
+const FormWrap = StoreWrap(Connect => (props) => {
+  const { state } = props.wrapContext
+  return (
+    <ReduxFormContext.Consumer>
+      { _reduxForm => <Connect {...props} wrapContext={{ ...props.wrapContext, form: _reduxForm, formState: _reduxForm.getFormState(state) }} /> }
+    </ReduxFormContext.Consumer>
+  )
 })
 
 export {

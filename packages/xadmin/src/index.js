@@ -4,13 +4,23 @@ import RESTBaseAPI from './api'
 import { Block, BlockTag } from './block'
 import { Wrap, StoreWrap, wrap } from './wrap'
 
+const base = {
+  items: {
+    config: { type: 'map' },
+    context: { type: 'array' },
+    start: { type: 'array' },
+    logger: { type: 'array' },
+    blocks: { type: 'mapArray' }
+  }
+}
+
 if(window.__app__ == undefined) {
-  window.__app__ = rrs(new App())
+  window.__app__ = rrs((new App()).use(base))
 }
 const app = window.__app__
 
 const config = (key, default_value) => {
-  return app.load_dict('config')[key] || default_value
+  return app.get('config')[key] || default_value
 }
 
 const API_CACHE = {}

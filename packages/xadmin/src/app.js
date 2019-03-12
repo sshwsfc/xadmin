@@ -4,18 +4,70 @@ export default class App {
 
   constructor() {
     this.apps = []
+    this.items = {}
     this.context = {}
     this._cache = {}
   }
 
+  checkAddItems(items) {
+    items && Object.keys(items).forEach(key => {
+      if(this.items[key] != undefined) {
+        throw Error(`Repeatedly defined configuration item '${key}'`)
+      } else {
+        this.items[key] = items[key]
+      }
+    })
+  }
+
   use(app) {
-    this.apps.push(app.app || app)
+    const _app = app.app || app
+    if(_app) {
+      this.checkAddItems(_app.items)
+      this.apps.push(_app)
+    }
     return this
   }
 
   unuse(name) {
-    this.apps = this.apps.filter(app => app.name != name)
+    this.apps = this.apps.reduce((prev, app) => {
+      if(app.name != name) {
+        prev.push(app)
+      } else if (app.items) {
+        Object.keys(app.items).forEach(key => delete this.items[key])
+      }
+      return prev
+    }, [])
     return this
+  }
+
+  items() { this.items }
+
+  getItem(key) {
+    const item = this.items[key]
+    if(item == undefined) {
+      throw Error(`Not define configuration item '${key}'`)
+    }
+    return item
+  }
+
+  $(key) {
+    return this.get(key)
+  }
+
+  get(key) {
+    const item = this.getItem(key)
+    if(item.reducer && item.init) {
+      return this.reduce(key, item.reducer, item.init)
+    }
+    switch (item.type) {
+      case 'array':
+        return this.array(key)
+      case 'mapArray':
+        return this.mapArray(key)
+      case 'map':
+      default:
+        return this.map(key)
+    }
   }
 
   getValue(value) {
@@ -49,23 +101,20 @@ export default class App {
   }
 
   map(key) {
-    const self = this
     return this.reduce(key, (prev, value) => {
-      return { ...prev, ...self.getValue(value) }
+      return { ...prev, ...this.getValue(value) }
     }, {})
   }
 
   array(key) {
-    const self = this
     return this.reduce(key, (prev, value) => {
-      return prev.concat(self.getValue(value))
+      return prev.concat(this.getValue(value))
     }, [])
   }
 
   mapArray(key) {
-    const self = this
     return this.reduce(key, (prev, value) => {
-      const values = self.getValue(value)
+      const values = this.getValue(value)
       for(const key in values) {
         prev[key] = (prev[key] || [])
         const com_value = values[key]
@@ -91,25 +140,29 @@ export default class App {
     return this.mapArray(key)
   }
 
+  config(key) {
+    this.get('config')[key]
+  }
+
   start(init_context={}) {
     const self = this
 
     waterfall([ (cb) => { cb(null, init_context) }, 
-      ...this.array('context')
+      ...this.get('context')
         .map(func => (context, cb) => func(context, (err, newContext) => {
           self.context = newContext
           cb(err, newContext)
         })) ],
     (err, context) => {
       self.context = context
-      self.array('start').forEach((starter) => {
+      self.get('start').forEach((starter) => {
         starter(self)
       })
     })
   }
 
   log(level, message, error) {
-    this.array('logger').forEach(logger => logger(level, message, error))
+    this.get('logger').forEach(logger => logger(level, message, error))
   }
 
   error(err) {
