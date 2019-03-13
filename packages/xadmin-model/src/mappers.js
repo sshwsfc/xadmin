@@ -177,8 +177,8 @@ export default {
         const item = modelState.items[id]
         dispatch({ model, type: 'SELECT_ITEMS', item, selected })
       },
-      editItem: ({ router, model, modelState }, { id }) => () => {
-        router.push(`/app/model/${model.name}/${encodeURIComponent(id)}/edit`)
+      editItem: ({ model, modelState }, { id }) => () => {
+        app.context.router.push(`/app/model/${model.name}/${encodeURIComponent(id)}/edit`)
       },
       deleteItem: ({ dispatch, model, modelState }, { id }) => () => {
         const item = modelState.items[id]
@@ -259,8 +259,8 @@ export default {
       }
     },
     method: {
-      addItem: ({ router, model }, { location }) => () => {
-        router.push({ pathname: `/app/model/${model.name}/add`, query: (location && location.query) || {} })
+      addItem: ({ model }, { location }) => () => {
+        app.context.router.push({ pathname: `/app/model/${model.name}/add`, query: (location && location.query) || {} })
       }
     }
   },
@@ -272,8 +272,8 @@ export default {
       }
     },
     method: {
-      onSuccess: ({ model, router }) => () => {
-        router.push({ pathname: `/app/model/${model.name}/list` })
+      onSuccess: ({ model }) => () => {
+        app.context.router.push({ pathname: `/app/model/${model.name}/list` })
       }
     }
   },
@@ -285,11 +285,11 @@ export default {
       }
     },
     method: {
-      onClose: ({ model, router }) => () => {
-        router.push({ pathname: `/app/model/${model.name}/list` })
+      onClose: ({ model }) => () => {
+        app.context.router.push({ pathname: `/app/model/${model.name}/list` })
       },
-      onEdit: ({ model, router }, { params }) => () => {
-        router.push({ pathname: `/app/model/${model.name}/${params.id}/edit` })
+      onEdit: ({ model }, { params }) => () => {
+        app.context.router.push({ pathname: `/app/model/${model.name}/${params.id}/edit` })
       }
     }
   }

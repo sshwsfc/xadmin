@@ -3,10 +3,10 @@ import PropTypes from 'prop-types'
 import _ from 'lodash'
 import Icon from 'react-fontawesome'
 import app from 'xadmin'
-import { Page, Loading } from 'xadmin-layout'
+import { Loading } from 'xadmin-layout'
 import { SchemaForm } from 'xadmin-form'
 
-import { Navbar, Nav, NavItem, NavDropdown, OverlayTrigger, Tooltip, MenuItem, Panel, Well, Button } from 'react-bootstrap'
+import { OverlayTrigger, Tooltip, Card, Form, Row, Col, Button } from 'react-bootstrap'
 import { ModelWrap } from '../base'
 
 const DefaultLayout = (props) => {
@@ -14,21 +14,25 @@ const DefaultLayout = (props) => {
   const icon = submitting ? 'spinner fa-spin' : 'floppy-o'
   const { _t } = app.context
   return (
-    <form className="form-horizontal" onSubmit={handleSubmit}>
-      <Panel><Panel.Body>{children}</Panel.Body></Panel>
-      <Well bsSize="small" style={{ textAlign: 'right' }}>
-        <Button onClick={()=>history.back()} bsStyle="default">{_t('Cancel')}</Button>{' '}
-        {invalid ? (
-          <OverlayTrigger placement="top" overlay={<Tooltip>{_t('Please be sure to complete all field')}</Tooltip>}>
-            <Button type="submit" disabled={submitting} onClick={handleSubmit} bsStyle="primary">
-              <Icon name="ban"/> {_t('Save')}</Button>
-          </OverlayTrigger>
-        ) : (
-          <Button type="submit" disabled={submitting} onClick={handleSubmit} bsStyle="primary">
-            <Icon name={icon}/> {_t('Save')}</Button>
-        )}
-      </Well>
-    </form>
+    <Form onSubmit={handleSubmit}>
+      <Card className="mt-3 mb-3" body>
+        {children}
+        <Form.Group as={Row} className="mt-5">
+          <Col sm={{ span: 10, offset: 2 }}>
+            {invalid ? (
+              <OverlayTrigger placement="top" overlay={<Tooltip>{_t('Please be sure to complete all field')}</Tooltip>}>
+                <Button type="submit" disabled={submitting} onClick={handleSubmit} variant="primary">
+                  <Icon name="ban"/> {_t('Save')}</Button>
+              </OverlayTrigger>
+            ) : (
+              <Button type="submit" disabled={submitting} onClick={handleSubmit} variant="primary">
+                <Icon name={icon}/> {_t('Save')}</Button>
+            )} {' '}
+            <Button onClick={()=>history.back()} variant="default">{_t('Cancel')}</Button>
+          </Col>
+        </Form.Group>
+      </Card>
+    </Form>
   )
 }
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Row, Col, Breadcrumb, Card, Nav, Navbar, Container } from 'react-bootstrap'
-import { Block, config as _c } from 'xadmin'
+import { Block, config as _c, app } from 'xadmin'
 import Icon from 'react-fontawesome'
 
 class Bread extends React.Component {
@@ -44,11 +44,13 @@ class Page extends React.Component {
   render() {
     return (
       <Container className={'px-0 ' + this.props.className} style={this.props.style} fluid>
-        <Navbar bg="light">
+        <Navbar key="page-nav" bg="light" className="mb-3">
           <Navbar.Brand>{ this.props.title }</Navbar.Brand>
           {this.props.nav}
         </Navbar>
-        {this.props.children}
+        <React.Fragment key="page-content">
+          {this.props.children}
+        </React.Fragment>
       </Container>
     )}
 }
@@ -58,7 +60,7 @@ class TopNav extends React.Component {
     return (
       <Container>
         <Navbar bg="dark" variant="dark" fixed="top" expand="lg">
-          <Navbar.Brand href="#">{this.props.site_title}</Navbar.Brand>
+          <Navbar.Brand href="#" onClick={() => app.go('/app/')}>{this.props.site_title}</Navbar.Brand>
           <Navbar.Toggle aria-controls="main-navbar-nav" />
           <Navbar.Collapse id="main-navbar-nav">
             <Nav className="mr-auto">

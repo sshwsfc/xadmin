@@ -85,7 +85,7 @@ export default {
       }
     },
     permission: { view: true, add: true, edit: true, delete: true },
-    form: [ 'id', 'name', 'email', 'address', '*',
+    form: [ 'name', 'email', 'address', '*',
       { key: 'website', component: Textarea, attrs: { rows: 5 } } ],
     filters: {
       nav: [ 'name', 'email' ],
@@ -125,7 +125,7 @@ export default {
       }
     },
     permission: { view: true, add: true, edit: true, delete: true },
-    form: [ 'id', 'title', 'user', 'body' ],
+    form: [ 'title', 'body' ],
     filters: {
       nav: [ 'title', 'user' ],
       sidemenu: [ 'user' ]

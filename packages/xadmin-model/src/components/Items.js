@@ -6,7 +6,7 @@ import { Block, app } from 'xadmin'
 import { SchemaForm } from 'xadmin-form'
 import { Page, Loading } from 'xadmin-layout'
 
-import { FormGroup, Jumbotron, FormControl, Col, HelpBlock, Table, OverlayTrigger, Popover, Button, ButtonGroup, Input, Dropdown, MenuItem, Panel, Media } from 'react-bootstrap'
+import { Form, Jumbotron, Row, Col, HelpBlock, Table, OverlayTrigger, Popover, Button, ButtonGroup, Input, Dropdown, MenuItem, Panel, Media } from 'react-bootstrap'
 import { ModelWrap } from '../base'
 
 class BaseRow extends React.Component {
@@ -16,7 +16,7 @@ class BaseRow extends React.Component {
     const { _t } = app.context
     let actions = (this.props.actions || []).map(Action => <Action {...this.props} />)
     if(canEdit) {
-      actions.push(<Button bsSize="xsmall" onClick={this.props.editItem}>{_t('Edit')}</Button>)
+      actions.push(<Button size="sm" style={{ height: '1.5rem', lineHeight: 1 }} onClick={this.props.editItem}>{_t('Edit')}</Button>)
     }
     if(canDelete) {
       actions.push((
@@ -24,11 +24,11 @@ class BaseRow extends React.Component {
           <Popover title={_t('Comfirm')} id="delete-item-popover">
             <p><strong>{_t('Comfirm Delete')}？</strong></p>
             <p className="text-center">
-              <Button bsStyle="danger" onClick={this.props.deleteItem}>{_t('Delete')}</Button>
+              <Button variant="danger" onClick={this.props.deleteItem}>{_t('Delete')}</Button>
             </p>
           </Popover>
         }>
-          <Button bsSize="xsmall">{_t('Delete')}</Button>
+          <Button size="sm" style={{ height: '1.5rem', lineHeight: 1 }} variant="danger">{_t('Delete')}</Button>
         </OverlayTrigger>
       ))
     }
@@ -59,7 +59,13 @@ BaseRow.propTypes = {
   deleteItem: PropTypes.func.isRequired,
   actions: PropTypes.array
 }
-const HeaderLink = ({ onClick, children }) => <a style={{ cursor: 'pointer' }} onClick={onClick}>{children}</a>
+
+class HeaderLink extends React.Component {
+  render() {
+    const { onClick, children } = this.props
+    return <a style={{ cursor: 'pointer' }} onClick={onClick}>{children}</a>
+  }
+}
 
 @ModelWrap('model.list.header')
 class Header extends React.Component {
@@ -71,11 +77,11 @@ class Header extends React.Component {
 
     if(canOrder) {
       orderItems = [
-        <MenuItem onSelect={e=>{ this.props.changeOrder('ASC') }} active={order==='ASC'}><Icon name="sort-amount-asc" /> {_t('Sort ASC')}</MenuItem>,
-        <MenuItem onSelect={e=>{ this.props.changeOrder('DESC') }} active={order==='DESC'}><Icon name="sort-amount-desc" /> {_t('Sort DESC')}</MenuItem>
+        <Dropdown.Item onSelect={e=>{ this.props.changeOrder('ASC') }} active={order==='ASC'}><Icon name="sort-amount-asc" /> {_t('Sort ASC')}</Dropdown.Item>,
+        <Dropdown.Item onSelect={e=>{ this.props.changeOrder('DESC') }} active={order==='DESC'}><Icon name="sort-amount-desc" /> {_t('Sort DESC')}</Dropdown.Item>
       ]
       if(order != '') {
-        orderItems.push(<MenuItem onSelect={e=>{ this.props.changeOrder('') }}><Icon name="close" /> {_t('Clear order')}</MenuItem>)
+        orderItems.push(<Dropdown.Item onSelect={e=>{ this.props.changeOrder('') }}><Icon name="close" /> {_t('Clear order')}</Dropdown.Item>)
       }
     }
     return orderItems
@@ -87,10 +93,12 @@ class Header extends React.Component {
         'ASC' : <Icon name="sort-asc" />,
         'DESC' : <Icon name="sort-desc" />
       }[order] || ''
-    const items = [ ...this.renderOrder(), ...(Block('model.list.header.menu', this) || []) ]
+    const items = [ ...this.renderOrder(), ...(Block({ name: 'model.list.header.menu', ...this.props }) || []) ]
     return (items.filter(item=>!_.isNil(item)).length>0) ? (
-      <Dropdown id="nav-dropdown" style={style}>
-        <HeaderLink bsRole="toggle">{title} {icon}</HeaderLink>
+      <Dropdown key="nav-dropdown" style={style}>
+        <Dropdown.Toggle as={HeaderLink}>
+          {title} {icon}
+        </Dropdown.Toggle>
         <Dropdown.Menu>
           {React.Children.toArray(items)}
         </Dropdown.Menu>
@@ -105,26 +113,20 @@ const ItemEditFieldGroup = ({ label, meta, input, field, children }) => {
   const error = meta.error
   const help = field.description || field.help
 
-  if (error) {
-    groupProps['validationState'] = 'error'
+  if (attrs.size) {
+    groupProps['size'] = attrs.size
   }
-  if (attrs.bsSize) {
-    groupProps['bsSize'] = attrs.bsSize
-  }
-  if (attrs.bsStyle) {
-    groupProps['bsStyle'] = attrs.bsStyle
+  if (attrs.variant) {
+    groupProps['variant'] = attrs.variant
   }
 
-  const controlComponent = children ? children : (<FormControl {...input} {...attrs} />)
+  const controlComponent = children ? children : (<Form.Control {...input} {...attrs} />)
   return (
-    <FormGroup controlId={input.name} {...groupProps}>
-      <Col sm={12} style={{ marginBottom: -5 }}>
-        {controlComponent}
-        <FormControl.Feedback />
-        {help && <HelpBlock style={{ marginBottom: 0 }}>{help}</HelpBlock>}
-        {error && <HelpBlock style={{ marginBottom: 0 }}>{error}</HelpBlock>}
-      </Col>
-    </FormGroup>
+    <Form.Group as={Row} controlId={input.name} {...groupProps}>
+      {controlComponent}
+      {error && <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>}
+      {help && <Form.Text className="text-muted">{help}</Form.Text>}
+    </Form.Group>
   )
 }
 
@@ -135,7 +137,7 @@ const ItemEditFormLayout = (props) => {
   return (
     <form className="form-horizontal inline-form" onSubmit={handleSubmit}>
       {children}
-      <Button block type="submit" disabled={pristine || invalid || submitting} bsStyle="primary" bsSize="xs" onClick={handleSubmit}>{_t('Change')}</Button>
+      <Button block type="submit" disabled={pristine || invalid || submitting} variant="primary" bsSize="xs" onClick={handleSubmit}>{_t('Change')}</Button>
     </form>
   )
 }
@@ -304,7 +306,7 @@ class ListRowComponent extends BaseRow {
     const { item, fields, selected } = this.props
     const actions = this.actions()
     return (
-      <Panel bsStyle={selected?'danger':'default'}>
+      <Panel variant={selected?'danger':'default'}>
         <Panel.Body>
           <input type="checkbox" ref="selector" checked={selected} onChange={this.handleChange.bind(this)} />
           <Media>
@@ -352,7 +354,7 @@ class List extends React.Component {
             </div>
           </div>)
       } else {
-        return (<Well>{_t('No Data')}</Well>)
+        return (<Jumbotron><h5 className="text-center text-muted"><Icon name="file-o" /> {_t('No Data')}</h5></Jumbotron>)
       }
     }
   }

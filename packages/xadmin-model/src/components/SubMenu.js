@@ -1,9 +1,9 @@
-import React from 'react'
-import PropTypes from 'prop-types'
 import _ from 'lodash'
+import PropTypes from 'prop-types'
+import React from 'react'
+import { Button, ButtonToolbar, Col, Dropdown, DropdownButton, Form, ListGroup, Modal, OverlayTrigger, Popover, Row } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
-import { Block, app } from 'xadmin'
-import { Row, Col, ButtonToolbar, Modal, FormGroup, ControlLabel, FormControl, DropdownButton, OverlayTrigger, Popover, Clearfix, ButtonGroup, Button, Dropdown, MenuItem, Panel, ListGroup, ListGroupItem } from 'react-bootstrap'
+import { app, Block } from 'xadmin'
 import { ModelWrap } from '../base'
 
 @ModelWrap('model.list.btn.count')
@@ -12,7 +12,7 @@ class CountButton extends React.Component {
   render() {
     const { _t } = app.context
     const { count } = this.props
-    return <Button bsSize="small">{_t('{{count}} records', { count })}</Button>
+    return <Button size="sm" variant="outline-secondary">{_t('{{count}} records', { count })}</Button>
   }
 
 }
@@ -35,27 +35,25 @@ class PageSizeButton extends React.Component {
     const { _t } = app.context
     const { size, sizes, setPageSize } = this.props
     return (
-      <Modal bsSize="small" show={this.state.show} onHide={()=>this.setState({ show: false })}>
+      <Modal key="size-modal" size="sm" show={this.state.show} onHide={()=>this.setState({ show: false })}>
         <Modal.Header closeButton>
           <Modal.Title>{_t('Customize page size')}</Modal.Title>
         </Modal.Header>
         <form onSubmit={this.setPageSize.bind(this)}>
           <Modal.Body>
-            <FormGroup
-              controlId="formPageSize"
-            >
-              <ControlLabel>{_t('Page Size')}</ControlLabel>
-              <FormControl
+            <Form.Group controlId="formPageSize">
+              <Form.Label>{_t('Page Size')}</Form.Label>
+              <Form.Control
                 type="number"
                 value={this.state.size}
                 placeholder={_t('Enter page size')}
                 onChange={(e)=>this.setState({ size: e.target.value })}
               />
-            </FormGroup>
+            </Form.Group>
           </Modal.Body>
           <Modal.Footer>
-            <Button onClick={()=>this.setState({ show: false })}>{_t('Close')}</Button>
-            <Button type="submit" bsStyle="primary" disabled={this.state.size==size} onClick={this.setPageSize.bind(this)}>{_t('Set page size')}</Button>
+            <Button key="close" variant="outline-secondary" onClick={()=>this.setState({ show: false })}>{_t('Close')}</Button>
+            <Button key="submit" type="submit" variant="primary" disabled={this.state.size==size} onClick={this.setPageSize.bind(this)}>{_t('Set page size')}</Button>
           </Modal.Footer>
         </form>
       </Modal>
@@ -66,10 +64,10 @@ class PageSizeButton extends React.Component {
     const { _t } = app.context
     const { size, sizes, setPageSize } = this.props
     return [ (
-      <DropdownButton bsSize="small" title={_t('{{size}} per page', { size })} id="dropdown-size-btn">
-        {sizes.map(size => <MenuItem onSelect={()=>setPageSize(size)} eventKey={`size-${size}`}>{_t('Set {{size}} per page', { size })}</MenuItem>)}
-        <MenuItem divider />
-        <MenuItem eventKey="cus-size" onSelect={()=>this.setState({ show: true })}>{_t('Customize page size')}</MenuItem>
+      <DropdownButton key="page-size-dropdown" size="sm" variant="outline-secondary" className="ml-2" title={_t('{{size}} per page', { size })} id="dropdown-size-btn">
+        {sizes.map(size => <Dropdown.Item key={`size-${size}`} onSelect={()=>setPageSize(size)} eventKey={`size-${size}`}>{_t('Set {{size}} per page', { size })}</Dropdown.Item>)}
+        <Dropdown.Divider key="size-divider" />
+        <Dropdown.Item key="size-custom" eventKey="cus-size" onSelect={()=>this.setState({ show: true })}>{_t('Customize page size')}</Dropdown.Item>
       </DropdownButton>
     ), 
     this.state.show ? this.showCustomize() : null
@@ -105,7 +103,7 @@ class ColsDropdown extends React.Component {
           this.props.changeFieldDisplay([ fieldName, !fieldSelected ])
         }
       if(menuShow) {
-        items.push(<ListGroupItem key={name} onClick={onClick}>{icon} {title}</ListGroupItem>)
+        items.push(<ListGroup.Item key={name} onClick={onClick}>{icon} {title}</ListGroup.Item>)
       } else {
         items.push((
           <Col sm={3} key={name} style={{ margin: '5px 0' }}>
@@ -114,16 +112,15 @@ class ColsDropdown extends React.Component {
       }
     }
 
-    const DropdownBtn = Dropdown.ControlledComponent
     return (
       <OverlayTrigger trigger="click" rootClose placement="bottom" overlay={
-        <Popover style={{ maxWidth: 800, maxHeight: 600, overflowY: 'scroll' }} id="model-cols-select-popover">
+        <Popover className="px-0 py-0" style={{ maxWidth: 800, maxHeight: 600, overflowY: 'auto' }} id="model-cols-select-popover">
           { menuShow ? 
-            <ListGroup fill style={{ marginBottom: 0 }}>{items}</ListGroup> :
+            <ListGroup className="mx-0 my-0" variant="flush">{items}</ListGroup> :
             <Row>{items}</Row> }
         </Popover>
       }>
-        <Button bsSize="small">{_t('Columns')}</Button>
+        <Button size="sm" className="ml-2" variant="outline-secondary">{_t('Columns')}</Button>
       </OverlayTrigger>
     )
   }
@@ -135,13 +132,10 @@ class SubMenu extends React.Component {
 
   render() {
     return (
-      <ButtonToolbar className="pull-right">
+      <ButtonToolbar>
         <CountButton />
         <PageSizeButton />
-        { Block('model.list.submenu.btngroup', this) }
-        <ButtonGroup bsSize="small">
-          { Block('model.list.submenu.btn', this) }
-        </ButtonGroup>
+        <Block name="model.list.submenu.btngroup" {...this.props} />
         <ColsDropdown />
       </ButtonToolbar>
     )

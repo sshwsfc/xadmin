@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Nav, Row, Col, Well } from 'react-bootstrap'
+import { Button, Nav, Row, Col } from 'react-bootstrap'
 
 import Icon from 'react-fontawesome'
 import { Block, app } from 'xadmin'
@@ -19,19 +19,17 @@ class ModelList extends React.Component {
   renderNav() {
     const { title, canAdd, addItem, model } = this.props
     const { _t } = app.context
-    return (
-      <div>
-        <Nav>
-          { Block('model.list.nav', this) }
-        </Nav>
-        <div className="navbar-btn pull-right hide-xs">
-          { Block('model.list.navbtn', this) }
-          { canAdd ?
-            (<Button bsStyle="primary" onClick={addItem}><Icon name="plus"/> {_t('Add {{object}}', { object: model.title })}</Button>) : null
-          }
-        </div>
-      </div>
-    )
+    return [
+      <Nav key="nav-left" className="mr-auto">
+        <Block name="model.list.nav" {...this.props} />
+      </Nav>,
+      <Nav key="nav-right">
+        <Block name="model.list.navbtn" {...this.props} />
+        { canAdd ?
+          (<Button variant="primary" onClick={addItem}><Icon name="plus"/> {_t('Add {{object}}', { object: model.title })}</Button>) : null
+        }
+      </Nav>
+    ]
   }
 
   render() {
@@ -39,20 +37,22 @@ class ModelList extends React.Component {
     const ItemsComponent = componentClass || Grid
     const query = location && location.query
 
-    const sideMenu = Block('model.list.sidemenu', this)
+    const sideMenu = Block({ name: 'model.list.sidemenu', ...this.props })
     const sidePanel = Block('model.list.sidepanel', this)
 
     const GridComponents = [
-      <Pagination bsSize="small" />,
-      <SubMenu />,
-      <ItemsComponent query={query} />,
-      <ActionBar />,
-      <Pagination bsSize="" />
+      <div key="model-list-subnav" style={{ display: 'flex', justifyContent: 'space-between' }} className="mb-3">
+        <Pagination size="sm" className="my-0"/>
+        <SubMenu />
+      </div>,
+      <ItemsComponent key="model-list-grid" query={query} />,
+      <ActionBar key="model-list-action" />,
+      <Pagination key="model-list-pagination" />
     ]
 
     return (
       <Page className={`xadmin-model-list-${model.key}`} title={(<span><Icon name={icon}/> {title}</span>)} nav={this.renderNav()}>
-        { Block('model.list.submenu', this) }
+        <Block name="model.list.submenu" {...this.props} />
         { (sideMenu || sidePanel) ? (
           <Row>
             { sideMenu ? <Col sm={(sideMenu && sidePanel) ? 2 : 3}>{ sideMenu }</Col> : null }
@@ -79,9 +79,9 @@ class ModelForm extends React.Component {
     const FormComponent = componentClass || Form
     return (
       <Page title={title} className={`xadmin-model-form-${model.key}`}>
-        { Block('model.form.before', this) }
+        <Block name="model.form.before" {...this.props} />
         <FormComponent id={params && params.id} query={query} onSubmitSuccess={onSuccess} />
-        { Block('model.form.after', this) }
+        <Block name="model.form.after" {...this.props} />
       </Page>
     )
   }
@@ -105,10 +105,10 @@ class ModelDetail extends React.Component {
         { Block('model.detail.before', this) }
         <DetailComponent id={params && params.id} />
         { Block('model.detail.after', this) }
-        <Well bsSize="small" style={{ textAlign: 'right' }}>
+        <div bsSize="small" style={{ textAlign: 'right' }}>
           <Button onClick={onClose} bsStyle="default">{_t('Back')}</Button>
-          {canEdit?<Button onClick={onEdit} bsStyle="primary" style={{marginLeft:5}}>{_t('Edit')}</Button>:null}
-        </Well>
+          {canEdit?<Button onClick={onEdit} bsStyle="primary" style={{ marginLeft:5 }}>{_t('Edit')}</Button>:null}
+        </div>
       </Page>
     )
   }

@@ -37,7 +37,6 @@ class ModelPagination extends React.Component {
         <Pagination.Item
           onClick={()=>onSelect(pagenumber)}
           key={pagenumber}
-          eventKey={pagenumber}
           active={pagenumber === activePage}
         >
           {pagenumber}
@@ -57,7 +56,6 @@ class ModelPagination extends React.Component {
         <Pagination.Item
           onClick={()=>onSelect(1)}
           key={1}
-          eventKey={1}
           active={false}
         >
           1
@@ -78,7 +76,6 @@ class ModelPagination extends React.Component {
           <Pagination.Item
             onClick={()=>onSelect(items)}
             key={items}
-            eventKey={items}
             active={false}
           >
             {items}
@@ -106,8 +103,7 @@ class ModelPagination extends React.Component {
     if(items > 1) {
       return (
         <Pagination
-          style={{ marginTop: 0 }}
-          bsSize={this.props.bsSize || ''}>
+          size={this.props.size || ''} className={this.props.className}>
           <Pagination.Prev disabled={activePage == 1} onClick={activePage == 1 ? ()=>{} : c(activePage - 1)} />
           {this.renderPageButtons({ activePage, items, maxButtons, onSelect })}
           <Pagination.Next disabled={activePage == items} onClick={activePage == items ? ()=> {} : c(activePage + 1)}/>
@@ -115,9 +111,10 @@ class ModelPagination extends React.Component {
       )
     } else {
       return emptyComponent !== undefined ? emptyComponent : (
-        <ul style={{ marginTop: 0 }} className="pagination pagination-sm">
-          <li className="disabled"><a>{_t('No paging')}</a></li>
-        </ul>
+        <Pagination
+          size={this.props.size || ''} className={this.props.className}>
+          <Pagination.Item disabled>{_t('No paging')}</Pagination.Item>
+        </Pagination>
       )
     }
   }

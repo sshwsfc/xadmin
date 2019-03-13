@@ -1,7 +1,7 @@
 import App from './app'
 import rrs from './rrs'
 import RESTBaseAPI from './api'
-import { Block, BlockTag } from './block'
+import { Block } from './block'
 import { Wrap, StoreWrap, wrap } from './wrap'
 
 const base = {
