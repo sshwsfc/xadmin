@@ -23,7 +23,8 @@ const block = (tag, element, props) => {
 }
 
 const Block = (props) => {
-  return block(props.name, { props })
+  const bs = block(props.name, { props })
+  return props.children ? props.children(bs) : bs
 }
 
 export { Block, block }

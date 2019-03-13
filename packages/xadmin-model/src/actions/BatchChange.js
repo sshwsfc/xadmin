@@ -1,11 +1,10 @@
 import React from 'react'
 import _ from 'lodash'
-import { FormGroup, ControlLabel, FormControl, Col, HelpBlock, ButtonGroup, Modal, OverlayTrigger, Popover, Panel, Button, Label, Well, MenuItem, ListGroup, ListGroupItem } from 'react-bootstrap'
-import { SchemaForm, FormWrap } from 'xadmin-form'
+import { Form, Col, Row, Dropdown, Modal, Button } from 'react-bootstrap'
+import { SchemaForm } from 'xadmin-form'
 
 import { app } from 'xadmin'
 import { ModelWrap, Model } from '../index'
-import { BaseRow, List } from '../components/Items'
 
 import Icon from 'react-fontawesome'
 
@@ -23,32 +22,25 @@ const FieldGroup = ({ label, meta, input, field, children }) => {
     }
   }
 
-  if(meta.dirty) {
-    groupProps['validationState'] = 'success'
+  if (attrs.size) {
+    groupProps['size'] = attrs.size
   }
-  if (error) {
-    groupProps['validationState'] = 'error'
-  }
-  if (attrs.bsSize) {
-    groupProps['bsSize'] = attrs.bsSize
-  }
-  if (attrs.bsStyle) {
-    groupProps['bsStyle'] = attrs.bsStyle
+  if (attrs.variant) {
+    groupProps['variant'] = attrs.variant
   }
 
-  const controlComponent = children ? children : (<FormControl {...input} {...attrs} />)
+  const controlComponent = children ? children : (<Form.Control {...input} {...attrs} />)
   return (
-    <FormGroup controlId={input.name} {...groupProps}>
-      <Col key={0} componentClass={ControlLabel} {...size.label}>
-        {label}
-      </Col>
-      <Col key={1} {...size.control}>
+    <Form.Group as={Row} controlId={input.name} {...groupProps}>
+      <Form.Label column {...size.label}>
+        {label}{field && field.required ? <span className="text-danger">*</span> : ''}
+      </Form.Label>
+      <Col {...size.control}>
         {controlComponent}
-        <FormControl.Feedback />
-        {help && <HelpBlock>{help}</HelpBlock>}
-        {error && <HelpBlock>{error}</HelpBlock>}
+        {error && <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>}
+        {help && <Form.Text className="text-muted">{help}</Form.Text>}
       </Col>
-    </FormGroup>
+    </Form.Group>
   )
 }
 
@@ -68,28 +60,9 @@ class BatchChangeBtn extends React.Component {
   }
 
   renderModel() {
-    const { selected, model, fields, location } = this.props
+    const { model, fields } = this.props
     const { _t } = app.context
     const show = this.state.show
-
-    const FormLayout = (props) => {
-      const { children, invalid, handleSubmit, submitting, onClose } = props
-      const icon = submitting ? 'spinner fa-spin' : 'floppy-o'
-      return (
-        <Modal show={show} onHide={this.onClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>{_t('Please input the value to batch change items')}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <form className="form-horizontal" onSubmit={handleSubmit}>{children}</form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={onClose}>{_t('Close')}</Button>
-            <Button type="submit" disabled={invalid || submitting}  bsStyle="primary" onClick={handleSubmit}><Icon name={icon}/> {_t('Change')}</Button>
-          </Modal.Footer>
-        </Modal>
-      )
-    }
 
     return (
       <SchemaForm formKey={`model_batch.${model.key}`} 
@@ -101,21 +74,37 @@ class BatchChangeBtn extends React.Component {
         }, 'required')}
         option={{ group: FieldGroup }}
         onSubmit={(values) => this.onBatchChange(values)}
-        onClose={this.onClose}
-        component={FormLayout}/>
+        onClose={this.onClose}>
+        { ({ children, invalid, handleSubmit, submitting, onClose }) => (
+          <Modal key="actions_batch_change_modal" show={show} onHide={onClose}>
+            <Modal.Header closeButton>
+              <Modal.Title>{_t('Please input the value to batch change items')}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form onSubmit={handleSubmit}>{children}</Form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button key={0} variant="light" onClick={onClose}>{_t('Close')}</Button>
+              <Button key={1} type="submit" disabled={invalid || submitting}  variant="primary" onClick={handleSubmit}>
+                <Icon name={submitting ? 'spinner fa-spin' : 'floppy-o'}/> {_t('Change')}
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        ) }
+      </SchemaForm>
     )
   }
 
   render() {
-    const { selected, onSelect, canEdit, fields } = this.props
+    const { selected, canEdit, fields } = this.props
     const { _t } = app.context
 
     return (canEdit && fields.length > 0) ? [ (
-      <MenuItem eventKey={'actions_batch_change'} onSelect={(e)=>{onSelect(e); this.setState({ show: true })}} disabled={selected.length == 0}>
+      <Dropdown.Item key="actions_batch_change" onSelect={(e)=>{ this.setState({ show: true })}} disabled={selected.length == 0}>
         {_t('Batch Change Items')}
-      </MenuItem>
+      </Dropdown.Item>
     ),
-    (this.state.show && selected.length > 0) ? this.renderModel() : null
+    selected.length > 0 ? this.renderModel() : null
     ] : null
   }
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { SubmissionError } from 'redux-form'
+import { SubmissionError } from 'xadmin-form'
 import { all, fork, put, call, cancelled, takeEvery } from 'redux-saga/effects'
 import app, { api } from 'xadmin'
 

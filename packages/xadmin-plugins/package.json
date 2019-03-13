@@ -13,7 +13,7 @@
     "redux-saga": "^0.16.0"
   },
   "peerDependencies": {
-    "react-bootstrap": "0.32",
+    "react-bootstrap": "1",
     "xadmin": "1",
     "xadmin-form": "1",
     "xadmin-i18n": "1",

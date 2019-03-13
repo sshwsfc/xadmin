@@ -21,14 +21,14 @@ const DefaultLayout = (props) => {
           <Col sm={{ span: 10, offset: 2 }}>
             {invalid ? (
               <OverlayTrigger placement="top" overlay={<Tooltip>{_t('Please be sure to complete all field')}</Tooltip>}>
-                <Button type="submit" disabled={submitting} onClick={handleSubmit} variant="primary">
+                <Button key={0} type="submit" disabled={submitting} onClick={handleSubmit} variant="primary">
                   <Icon name="ban"/> {_t('Save')}</Button>
               </OverlayTrigger>
             ) : (
-              <Button type="submit" disabled={submitting} onClick={handleSubmit} variant="primary">
+              <Button key={0} type="submit" disabled={submitting} onClick={handleSubmit} variant="primary">
                 <Icon name={icon}/> {_t('Save')}</Button>
             )} {' '}
-            <Button onClick={()=>history.back()} variant="default">{_t('Cancel')}</Button>
+            <Button key={1} onClick={()=>history.back()} variant="default">{_t('Cancel')}</Button>
           </Col>
         </Form.Group>
       </Card>

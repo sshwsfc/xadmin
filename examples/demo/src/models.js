@@ -92,6 +92,7 @@ export default {
       sidemenu: [ 'name' ]
     },
     editable_fields: ['name'],
+    batch_change_fields: ['website', 'brithday'],
     search_fields: [ 'name', 'email' ],
     required: [ 'name', 'email', 'website' ],
     readonly: [ 'id' ],

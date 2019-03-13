@@ -13,11 +13,13 @@ import { convert as schemaConvert } from './schema'
 const ajv = new Ajv({ allErrors: true, verbose: true })
 
 const BaseForm = (props) => {
-  const { fields, render, option, component, handleSubmit, ...formProps } = props
+  const { fields, render, option, component, children, handleSubmit, ...formProps } = props
   const build_fields = objectBuilder(fields, render, { ...option, ...formProps })
   if(component) {
     const FormComponent = component
     return <FormComponent {...props} >{build_fields}</FormComponent>
+  } else if(children) {
+    return children({ ...props, children: build_fields })
   } else {
     return (
       <form className="form-horizontal" onSubmit={handleSubmit}>{build_fields}</form>
