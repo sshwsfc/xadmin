@@ -1,3 +1,4 @@
+import React from 'react'
 import { Textarea } from 'xadmin-form/lib/components'
 
 export default {

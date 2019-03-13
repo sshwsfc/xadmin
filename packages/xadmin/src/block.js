@@ -1,3 +1,4 @@
+import React from 'react'
 
 const block = (tag, element, props) => {
   const app = window.__app__

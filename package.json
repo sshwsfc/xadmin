@@ -14,6 +14,7 @@
     "@babel/preset-env": "^7.3.4",
     "@babel/preset-react": "^7.0.0",
     "@babel/runtime": "^7.3.4",
+    "babel-eslint": "^10.0.1",
     "eslint": "^5.15.1",
     "eslint-config-rackt": "^1.1.1",
     "eslint-friendly-formatter": "^4.0.1",

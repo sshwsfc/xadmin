@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { Button, ButtonToolbar, Col, Dropdown, DropdownButton, Form, ListGroup, Modal, OverlayTrigger, Popover, Row } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
-import { app, Block } from 'xadmin'
-import { ModelWrap } from '../base'
+import { app } from 'xadmin'
+import { ModelWrap, ModelBlock } from '../base'
 
 @ModelWrap('model.list.btn.count')
 class CountButton extends React.Component {
@@ -135,7 +135,7 @@ class SubMenu extends React.Component {
       <ButtonToolbar>
         <CountButton />
         <PageSizeButton />
-        <Block name="model.list.submenu.btngroup" {...this.props} />
+        <ModelBlock name="model.list.submenu.btngroup" {...this.props} />
         <ColsDropdown />
       </ButtonToolbar>
     )

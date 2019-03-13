@@ -2,12 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
 import Icon from 'react-fontawesome'
-import { Block, app } from 'xadmin'
+import { app } from 'xadmin'
 import { SchemaForm } from 'xadmin-form'
 import { Page, Loading } from 'xadmin-layout'
 
-import { Form, Jumbotron, Row, Col, HelpBlock, Table, OverlayTrigger, Popover, Button, ButtonGroup, Input, Dropdown, MenuItem, Panel, Media } from 'react-bootstrap'
-import { ModelWrap } from '../base'
+import { Form, Jumbotron, Row, Col, Table, OverlayTrigger, Popover, Button, ButtonGroup, Dropdown, Panel, Media } from 'react-bootstrap'
+import { ModelWrap, ModelBlock } from '../base'
 
 class BaseRow extends React.Component {
 
@@ -93,17 +93,26 @@ class Header extends React.Component {
         'ASC' : <Icon name="sort-asc" />,
         'DESC' : <Icon name="sort-desc" />
       }[order] || ''
-    const items = [ ...this.renderOrder(), ...(Block({ name: 'model.list.header.menu', ...this.props }) || []) ]
-    return (items.filter(item=>!_.isNil(item)).length>0) ? (
-      <Dropdown key="nav-dropdown" style={style}>
-        <Dropdown.Toggle as={HeaderLink}>
-          {title} {icon}
-        </Dropdown.Toggle>
-        <Dropdown.Menu>
-          {React.Children.toArray(items)}
-        </Dropdown.Menu>
-      </Dropdown>
-    ) : ( showText === false ? null : <span>{title} {icon}</span>)
+
+    return (
+      <ModelBlock name="model.list.header.menu" {...this.props}>
+        { bs => {
+          const items = [ ...this.renderOrder(), ...(bs||[]) ]
+
+          return items.length ? (
+            <Dropdown key="nav-dropdown" style={style}>
+              <Dropdown.Toggle as={HeaderLink}>
+                {title} {icon}
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                {React.Children.toArray(items)}
+              </Dropdown.Menu>
+            </Dropdown>
+          ) : ( showText === false ? null : <span>{title} {icon}</span>)
+
+        } }
+      </ModelBlock>
+    )
   }
 }
 
@@ -122,10 +131,12 @@ const ItemEditFieldGroup = ({ label, meta, input, field, children }) => {
 
   const controlComponent = children ? children : (<Form.Control {...input} {...attrs} />)
   return (
-    <Form.Group as={Row} controlId={input.name} {...groupProps}>
-      {controlComponent}
-      {error && <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>}
-      {help && <Form.Text className="text-muted">{help}</Form.Text>}
+    <Form.Group as={Row} className="mb-2" controlId={input.name} {...groupProps}>
+      <Col sm={12}>
+        {controlComponent}
+        {error && <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>}
+        {help && <Form.Text className="text-muted">{help}</Form.Text>}
+      </Col>
     </Form.Group>
   )
 }
@@ -135,10 +146,10 @@ const ItemEditFormLayout = (props) => {
   const icon = submitting ? 'spinner fa-spin' : 'floppy-o'
   const { _t } = app.context
   return (
-    <form className="form-horizontal inline-form" onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit}>
       {children}
-      <Button block type="submit" disabled={pristine || invalid || submitting} variant="primary" bsSize="xs" onClick={handleSubmit}>{_t('Change')}</Button>
-    </form>
+      <Button block type="submit" disabled={pristine || invalid || submitting} variant="primary" size="sm" onClick={handleSubmit}>{_t('Change')}</Button>
+    </Form>
   )
 }
 
@@ -176,7 +187,7 @@ class Item extends React.Component {
     const { item, field, schema, componentClass, wrap, nest, model, inList=true } = this.props
     const { _t } = app.context
     const editable_fields = model.editable_fields
-    const RawWrapComponent = wrap || (({ children }) => <span>{children}</span>)
+    const RawWrapComponent = wrap || (({ children }) => <span style={{ cursor: 'pointer' }}>{children}</span>)
     const WrapComponent = (nest == true || editable_fields == undefined || editable_fields.indexOf(field) < 0) ? RawWrapComponent : ({ children, ...props }) => {
       return (
         <OverlayTrigger trigger="click" rootClose placement="top" overlay={
@@ -184,7 +195,7 @@ class Item extends React.Component {
             <ItemEditForm item={item} field={field} schema={schema} onClose={()=>{}} />
           </Popover>
         }>
-          <RawWrapComponent {...props}>{children}</RawWrapComponent>
+          <RawWrapComponent {...props} style={{ cursor: 'pointer' }}>{children}</RawWrapComponent>
         </OverlayTrigger>
       )
     }

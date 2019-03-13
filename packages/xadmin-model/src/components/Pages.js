@@ -3,9 +3,9 @@ import PropTypes from 'prop-types'
 import { Button, Nav, Row, Col } from 'react-bootstrap'
 
 import Icon from 'react-fontawesome'
-import { Block, app } from 'xadmin'
+import { app } from 'xadmin'
 import { Page } from 'xadmin-layout'
-import { ModelWrap } from '../base'
+import { ModelWrap, ModelBlock } from '../base'
 
 import Pagination from './Pagination'
 import { Grid } from './Items'
@@ -21,10 +21,10 @@ class ModelList extends React.Component {
     const { _t } = app.context
     return [
       <Nav key="nav-left" className="mr-auto">
-        <Block name="model.list.nav" {...this.props} />
+        <ModelBlock name="model.list.nav" {...this.props} />
       </Nav>,
       <Nav key="nav-right">
-        <Block name="model.list.navbtn" {...this.props} />
+        <ModelBlock name="model.list.navbtn" {...this.props} />
         { canAdd ?
           (<Button variant="primary" onClick={addItem}><Icon name="plus"/> {_t('Add {{object}}', { object: model.title })}</Button>) : null
         }
@@ -36,9 +36,6 @@ class ModelList extends React.Component {
     const { icon, title, componentClass, location, model } = this.props
     const ItemsComponent = componentClass || Grid
     const query = location && location.query
-
-    const sideMenu = Block({ name: 'model.list.sidemenu', ...this.props })
-    const sidePanel = Block('model.list.sidepanel', this)
 
     const GridComponents = [
       <div key="model-list-subnav" style={{ display: 'flex', justifyContent: 'space-between' }} className="mb-3">
@@ -52,14 +49,20 @@ class ModelList extends React.Component {
 
     return (
       <Page className={`xadmin-model-list-${model.key}`} title={(<span><Icon name={icon}/> {title}</span>)} nav={this.renderNav()}>
-        <Block name="model.list.submenu" {...this.props} />
-        { (sideMenu || sidePanel) ? (
-          <Row>
-            { sideMenu ? <Col sm={(sideMenu && sidePanel) ? 2 : 3}>{ sideMenu }</Col> : null }
-            <Col sm={(sideMenu && sidePanel) ? 8 : 9}>{ GridComponents }</Col>
-            { sidePanel ? <Col sm={(sideMenu && sidePanel) ? 2 : 3}>{ sidePanel }</Col> : null  }
-          </Row>
-        ) : GridComponents }
+        <ModelBlock name="model.list.submenu" {...this.props} />
+        <ModelBlock name="model.list.sidemenu" {...this.props}>
+          { sideMenu => (
+            <ModelBlock name="model.list.sidepanel" {...this.props}>
+              { sidePanel => (sideMenu || sidePanel) ? (
+                <Row>
+                  { sideMenu ? <Col sm={(sideMenu && sidePanel) ? 1 : 2}>{ sideMenu }</Col> : null }
+                  <Col sm={(sideMenu && sidePanel) ? 9 : 10}>{ GridComponents }</Col>
+                  { sidePanel ? <Col sm={(sideMenu && sidePanel) ? 1 : 2}>{ sidePanel }</Col> : null  }
+                </Row>
+              ) : GridComponents }
+            </ModelBlock>
+          ) }
+        </ModelBlock>
       </Page>
     )
   }
@@ -79,9 +82,9 @@ class ModelForm extends React.Component {
     const FormComponent = componentClass || Form
     return (
       <Page title={title} className={`xadmin-model-form-${model.key}`}>
-        <Block name="model.form.before" {...this.props} />
+        <ModelBlock name="model.form.before" {...this.props} />
         <FormComponent id={params && params.id} query={query} onSubmitSuccess={onSuccess} />
-        <Block name="model.form.after" {...this.props} />
+        <ModelBlock name="model.form.after" {...this.props} />
       </Page>
     )
   }
@@ -102,9 +105,9 @@ class ModelDetail extends React.Component {
 
     return (
       <Page title={title} className={`xadmin-model-detail-${model.key}`}>
-        { Block('model.detail.before', this) }
+        <ModelBlock name="model.detail.before" {...this.props} />
         <DetailComponent id={params && params.id} />
-        { Block('model.detail.after', this) }
+        <ModelBlock name="model.detail.after" {...this.props} />
         <div bsSize="small" style={{ textAlign: 'right' }}>
           <Button onClick={onClose} bsStyle="default">{_t('Back')}</Button>
           {canEdit?<Button onClick={onEdit} bsStyle="primary" style={{ marginLeft:5 }}>{_t('Edit')}</Button>:null}
