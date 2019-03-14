@@ -25,6 +25,7 @@ class Footer extends React.Component {
         <footer className="text-center">
           <p>&copy; <slot>{_c('site.copyright')}</slot></p>
         </footer>
+        <Block name="footer" {...this.props} />
       </div>
     )}
 }
@@ -58,21 +59,19 @@ class Page extends React.Component {
 class TopNav extends React.Component {
   render() {
     return (
-      <Container>
-        <Navbar bg="dark" variant="dark" fixed="top" expand="lg">
-          <Navbar.Brand href="#" onClick={() => app.go('/app/')}>{this.props.site_title}</Navbar.Brand>
-          <Navbar.Toggle aria-controls="main-navbar-nav" />
-          <Navbar.Collapse id="main-navbar-nav">
-            <Nav className="mr-auto">
-              <Block name="top.left" {...this.props} />
-            </Nav>
-            <Block name="top.center" {...this.props} />
-            <Nav>
-              <Block name="top.right" {...this.props} />
-            </Nav>
-          </Navbar.Collapse>
-        </Navbar>
-      </Container>
+      <Navbar bg="dark" variant="dark" sticky="top" expand="lg">
+        <Navbar.Brand href="#" onClick={() => app.go('/app/')}>{this.props.site_title}</Navbar.Brand>
+        <Navbar.Toggle aria-controls="main-navbar-nav" />
+        <Navbar.Collapse id="main-navbar-nav">
+          <Nav className="mr-auto">
+            <Block name="top.left" {...this.props} />
+          </Nav>
+          <Block name="top.center" {...this.props} />
+          <Nav>
+            <Block name="top.right" {...this.props} />
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
     )
   }
 }
@@ -80,12 +79,14 @@ class TopNav extends React.Component {
 class Main extends React.Component {
   render() {
     return (
-      <div className="container-fluid" style={{ paddingTop: this.props.paddingTop || 70 }}>
-        { Block('main', this)}
+      <>
         <TopNav site_title={_c('site.title', 'Admin')}/>
-        {this.props.children}
+        <Container fluid className="mt-3">
+          { Block('main', this)}
+          {this.props.children}
+        </Container>
         <Footer/>
-      </div>
+      </>
     )}
 }
 

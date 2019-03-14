@@ -28,7 +28,7 @@ const DefaultLayout = (props) => {
               <Button key={0} type="submit" disabled={submitting} onClick={handleSubmit} variant="primary">
                 <Icon name={icon}/> {_t('Save')}</Button>
             )} {' '}
-            <Button key={1} onClick={()=>history.back()} variant="default">{_t('Cancel')}</Button>
+            <Button key={1} onClick={()=>history.back()} variant="light">{_t('Cancel')}</Button>
           </Col>
         </Form.Group>
       </Card>

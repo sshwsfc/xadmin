@@ -6,12 +6,13 @@ import { Nav } from 'react-bootstrap'
 
 import i18n from 'xadmin-i18n'
 import form from 'xadmin-form'
-import layout from 'xadmin-layout'
+import layout, { Icon } from 'xadmin-layout'
 import model from 'xadmin-model'
 // import relate from 'xadmin-model/lib/relate'
 // import filter from 'xadmin-model/lib/filter'
 import actions from 'xadmin-model/lib/actions'
 import models from './models'
+import themes from './themes'
 import API from './api'
 
 import 'moment/locale/zh-cn' 
@@ -20,6 +21,17 @@ app
 .use(i18n)
 .use(layout)
 .use(form)
+.use(themes)
+.use({
+  blocks: {
+    'main.menu': () => (
+      <Nav.Item key={`main-menu-dashboard`} >
+        <Nav.Link eventKey="dashboard" onSelect={()=>app.go('/app/dashboard')}><Icon name="home"/> Home</Nav.Link>
+      </Nav.Item>
+    ),
+    'top.right': () => <Nav.Link key="block">Admin</Nav.Link>
+  },
+})
 .use(model)
 .use(actions)
 .use({
@@ -32,9 +44,6 @@ app
     date_format: {
       time: 'HH:mm:ss', date: 'YYYY-MM-DD', datetime: 'YYYY-MM-DD HH:mm:ss'
     }
-  },
-  blocks: {
-    'top.right': () => <Nav.Link key="block">Block</Nav.Link>
   },
   components: {
     Dashboard: App

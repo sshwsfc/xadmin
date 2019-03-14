@@ -46,7 +46,7 @@ export default ({ input, label, meta, field, option, group: FieldGroup }) => {
   }
   return (
     <FieldGroup label={label} meta={meta} input={input} field={field}>
-      <FieldArray name={field.name} label={label} component={renderItems} field={field} fieldsBuilder={fieldsBuilder} />
+      <FieldArray name={field.name} label={label} input={input} component={renderItems} field={field} fieldsBuilder={fieldsBuilder} />
     </FieldGroup>
   )
 }

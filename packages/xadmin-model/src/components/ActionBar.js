@@ -14,7 +14,7 @@ class ActionBar extends React.Component {
     return (
       <ModelBlock name="model.list.actions" {...this.props}>
         { actions => actions && (
-          <DropdownButton className="mb-2" title={ count > 0 ? _t('{{count}} record selected', { count }) : _t('No data selected')} id="model-list-actions" variant="success" drop="up">
+          <DropdownButton className="mb-3" title={ count > 0 ? _t('{{count}} record selected', { count }) : _t('No data selected')} id="model-list-actions" variant="success" drop="up">
             { React.Children.toArray(actions) }
           </DropdownButton>
         ) }

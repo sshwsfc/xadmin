@@ -62,11 +62,12 @@ class App extends React.Component {
   render() {
     const { _t } = app.context
     return (
-      <Page title={`测试` + _t('Create {{name}}', { name: this.props.title })} 
-        nav={<ButtonGroup>
-          <Button variant="outline-success" onClick={this.props.add}>Add</Button>
+      <Page title="Dashboard" nav={
+        <ButtonGroup>
+          <Button variant="outline-success" onClick={this.props.add}>{_t('Create {{name}}', { name: this.props.title })}</Button>
           <Button variant="outline-success" onClick={this.handleShow}>Open</Button> 
-          </ButtonGroup>}>
+        </ButtonGroup>
+      }>
         <SchemaForm
           formKey="test"
           schema={models.User}
