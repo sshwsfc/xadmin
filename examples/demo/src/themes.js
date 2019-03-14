@@ -32,12 +32,12 @@ class ThemeSelect extends React.Component {
     const { theme } = this.state
     return [
       (
-        <NavDropdown title="Themes">
-          <NavDropdown.Item eventKey="default" onSelect={()=>this.setState({ theme: null })}>Default</NavDropdown.Item>
-          {THEMES.map(name => <NavDropdown.Item eventKey={name} onSelect={()=>this.setState({ theme: name })}>{name}</NavDropdown.Item>)}
+        <NavDropdown key={0} title="Themes">
+          <NavDropdown.Item key="default" eventKey="default" onSelect={()=>this.setState({ theme: null })}>Default</NavDropdown.Item>
+          {THEMES.map(name => <NavDropdown.Item key={name} eventKey={name} onSelect={()=>this.setState({ theme: name })}>{name}</NavDropdown.Item>)}
         </NavDropdown>
       ),
-      theme && <link href={`https://bootswatch.com/4/${theme}/bootstrap.min.css`} rel="stylesheet" />
+      theme && <link key={1} href={`https://bootswatch.com/4/${theme}/bootstrap.min.css`} rel="stylesheet" />
     ]
   }
 }
@@ -45,6 +45,6 @@ class ThemeSelect extends React.Component {
 export default {
   name: 'app.themes',
   blocks: {
-    'top.right': (props) => <ThemeSelect {...props} />
+    'top.right': (props) => <ThemeSelect key="themes" {...props} />
   }
 }

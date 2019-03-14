@@ -10,7 +10,7 @@
     "prop-types": "^15.6.0",
     "react-date-range": "^0.9.4",
     "react-fontawesome": "^1.6.1",
-    "react-select": "^1.2.1"
+    "react-select": "^2.4.2"
   },
   "peerDependencies": {
     "react-bootstrap": "1",

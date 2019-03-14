@@ -88,7 +88,7 @@ export default {
       user: {
         type: 'object',
         name: 'User',
-        resource_name: 'users',
+        relateTo: 'User',
         properties: {
           id: { type: 'number' },
           name: { type: 'string' }
@@ -96,7 +96,7 @@ export default {
       }
     },
     permission: { view: true, add: true, edit: true, delete: true },
-    form: [ 'title', 'body' ],
+    form: [ 'title', 'body', 'user' ],
     filters: {
       nav: [ 'title', 'user' ],
       sidemenu: [ 'user' ]

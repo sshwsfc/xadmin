@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
+import { FieldArray } from 'redux-form'
+import { all, fork, put, call, cancelled, takeEvery } from 'redux-saga/effects'
 import { Checkbox, FormControl } from 'react-bootstrap'
 
 import app, { api, Block, StoreWrap } from 'xadmin'
@@ -11,7 +13,7 @@ import ModelPages from './components/Pages'
 import { Model, ModelWrap } from './base'
 
 import Select from 'react-select'
-import AsyncSelect from 'react-select/lib/Async'
+import 'react-select/dist/react-select.css'
 
 @FormWrap('model.form.relates')
 class Checkboxes extends React.Component {
@@ -107,35 +109,92 @@ class RelateMultiSelect extends React.Component {
 
 }
 
-//@FormWrap('model.form.fkselect')
+@FormWrap('model.form.fkselect')
 class RelateSelect extends React.Component {
 
-  loadOptions = inputValue => {
-    const { input: { value }, label, meta, field, group: FieldGroup } = this.props
-    const displayField = field.displayField || 'name'
-    return api(field.schema)
-      .query({ limit: 1000, fields: [ 'id', displayField ] }, { search: { [displayField]: { like: inputValue } } })
-      .then(({ items }) => 
-        items.map(item => 
-          ({ value: item, label: item[displayField] })
-        )
-      )
+  state = { search: '' }
+
+  onValueChange(select) {
+    const { input: { value, onChange }, options } = this.props
+    this.setState({ search: '' })
+    onChange(select ? select.item : null)
   }
 
-  onChange = (value) => {
-    this.props.input.onChange(value.value)
+  onSearchChange(search) {
+    this.setState({ search })
+    if(search && search != '') {
+      this.props.searchRelatedItems(search)
+    }
+  }
+
+  componentDidMount() {
+    const { _t } = app.context
+    const { input: { value, onChange }, options, getValue, field } = this.props
+    if(options && options.length > 0) {
+      //this.refs.select.highlightFirstSelectableOption()
+    }
+    if(value && typeof value != 'object') {
+      getValue(value)
+      const displayField = field.displayField || 'name'
+      setTimeout(()=>{
+        onChange({ [displayField]: _t('loading'), id: value })
+      }, 10)
+    }
+    if(!(options && options.length > 0) && field.lazyLoad == false) {
+      this.props.searchRelatedItems()
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { field, input, getValue } = this.props
+    if(field.limit && nextProps.values != this.props.values) {
+      this.props.searchRelatedItems()
+    }
+    if(input.value !== nextProps.input.value) {
+      const newValue = nextProps.input.value
+      if(newValue && typeof newValue != 'object') {
+        getValue(newValue)
+      }
+    }
   }
 
   render() {
     const { _t } = app.context
-    const { input: { value }, label, meta, field, group: FieldGroup } = this.props
+
+    const { input: { value }, options, loading, label, meta, field, group: FieldGroup } = this.props
+    const isLoading = loading || (value && typeof value != 'object')
+
     const displayField = field.displayField || 'name'
+    const selectValue = value ? { label: value[displayField] || '', value: value.id } : null
+    const searchProps = field.lazyLoad == false ? {
+      placeholder: _t('Select {{label}}', { label: field.label }),
+      noResultsText: _t('No results found')
+    } : {
+      placeholder: _t('Search {{label}}', { label: field.label }),
+      noResultsText: loading ? _t('loading') : (this.state.search ? _t('No results found') : _t('Type to search')),
+      onInputChange: this.onSearchChange.bind(this)
+    }
+    const textLabels = {
+      clearValueText: _t('Clear value'),
+      clearAllText: _t('Clear all'),
+      searchPromptText: _t('Type to search')
+    }
+    const SelectComponent = field.lazyLoad == false ? Select : Select.Async
+
     return (
       <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
-        <AsyncSelect cacheOptions defaultOptions 
-          selectOption={value ? { value, label: value[displayField] } : null} 
-          onChange={this.onChange} 
-          loadOptions={this.loadOptions} 
+        <Select theme="bootstrap3" ref="select"
+          value={selectValue} isLoading={isLoading}
+          options={(options||[]).map(option=>{ return { label: option[displayField] || 'null', value: option.id, item: option } })}
+          onChange={this.onValueChange.bind(this)}
+          renderNoResultsFound={(value, search)=>{ 
+            return (<div className="no-results-found" style={{ fontSize: 13 }}>
+              {(search.length == 0 && field.lazyLoad != false) ? _t('type a few characters to kick off remote search'):_t('No results found')}
+            </div>)
+          }}
+          {...textLabels}
+          {...searchProps}
+          {...field.attrs}
         />
       </FieldGroup>
     )
@@ -146,7 +205,7 @@ class RelateSelect extends React.Component {
 const schema_converter = [
   (f, schema, options) => {
     if(schema.type == 'array' && schema.items.type == 'object' && schema.items.name) {
-      const models = app.get('models')
+      const models = app.load_dict('models')
       const name = schema.items.name
       if(models[name]) {
         const model = models[name]
@@ -158,9 +217,9 @@ const schema_converter = [
     return f
   },
   (f, schema, options) => {
-    if(schema.type == 'object' && schema.relateTo) {
-      const models = app.get('models')
-      const relateName = schema.relateTo
+    if(schema.type == 'object' && schema.name) {
+      const models = app.load_dict('models')
+      const relateName = schema.relateTo || schema.name
       if(models[relateName]) {
         const model = models[relateName]
         f.type = 'fkselect'
@@ -313,6 +372,39 @@ const reducers = {
   }
 }
 
+function *handle_get_relates(action) {
+  const { meta: { form, field, model } } = action
+  try {
+    yield put({ type: 'START_LOADING', key: `form.${form}.${field.name}.relates` })
+    const { items } = yield api(model).query(action.filter, action.wheres)
+    yield put({ ...action, items, success: true })
+  } catch(err) {
+    yield put({ ...action, items: [], success: true })
+  } finally {
+    yield put({ type: 'END_LOADING', key: `form.${form}.${field.name}.relates`  })
+  }
+}
+
+function *handle_get_relate(action) {
+  const { meta: { form, field, model }, id } = action
+  try {
+    yield put({ type: 'START_LOADING', key: `form.${form}.${field.name}.relates`  })
+    const item = yield api(model).get(id)
+    yield put({ ...action, item, success: true })
+  } catch(err) {
+    yield put({ ...action, item: null, success: true })
+  } finally {
+    yield put({ type: 'END_LOADING', key: `form.${form}.${field.name}.relates`  })
+  }
+}
+
+function *effects() {
+  yield all([
+    takeEvery(action => action.type == 'GET_RELATED_ITEMS' && action.items == undefined, handle_get_relates),
+    takeEvery(action => action.type == 'GET_RELATED_ITEM' && action.item == undefined, handle_get_relate)
+  ])
+}
+
 class RelateObjectCls extends React.Component {
 
   getChildContext() {
@@ -441,10 +533,11 @@ const routers = (app) => {
 
 export default {
   name: 'xadmin.model.relate',
+  effects: (app) => effects,
   mappers,
   reducers,
   form_fields,
   schema_converter,
-  filter_converter
-  //routers
+  filter_converter,
+  routers
 }

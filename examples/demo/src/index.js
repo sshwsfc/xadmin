@@ -8,7 +8,7 @@ import i18n from 'xadmin-i18n'
 import form from 'xadmin-form'
 import layout, { Icon } from 'xadmin-layout'
 import model from 'xadmin-model'
-// import relate from 'xadmin-model/lib/relate'
+import relate from 'xadmin-model/lib/relate'
 // import filter from 'xadmin-model/lib/filter'
 import actions from 'xadmin-model/lib/actions'
 import models from './models'
@@ -34,6 +34,7 @@ app
 })
 .use(model)
 .use(actions)
+.use(relate)
 .use({
   config: {
     api: API,
