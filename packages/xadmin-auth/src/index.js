@@ -20,8 +20,6 @@ import {
   perm
 } from './wrap'
 
-import './auth.css'
-
 export default {
   name: 'xadmin.auth',
   config: {
@@ -34,7 +32,7 @@ export default {
     }
   },
   blocks: {
-    'top.right': () => <UserMenu />
+    'top.right': () => <UserMenu key="auth.user" />
   },
   components: {
     App: IsAuthenticated(BaseApp)

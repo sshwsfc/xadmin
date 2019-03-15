@@ -14,28 +14,29 @@ export default {
       onLogout: ({ dispatch }) => () => {
         dispatch({ type: '@@xadmin/AUTH_SIGN_OUT' })
       },
-      onChangePassword: ({ router }) => () => {
-        router.push('/app/change_password')
+      onChangePassword: () => () => {
+        app.go('/app/change_password')
       }
     }
   },
   'auth.sign_in': {
     method: {
-      onSignIn: ({ dispatch, router }, { location: { query } }) => (item) => {
+      onSignIn: ({ dispatch }, { location: { query } }) => (item) => {
         const { _t } = app.context
         return new Promise((resolve, reject) => {
           dispatch({ model: UserSignIn(app), type: 'SAVE_ITEM', item, promise: { resolve, reject }, 
             message: false })
         }).then(user => {
           dispatch({ type: '@@xadmin/AUTH_SIGN_IN', payload: _.omit(user, 'password') })
-          router.push(query && query.redirect || '/app/')
+          app.go(query && query.redirect || '/app/')
         }).catch(error => {
+          dispatch({ type: '@@xadmin/AUTH_SIGN_IN_ERROR', error })
           throw new SubmissionError(error.json && error.json.non_field_errors == undefined ? error.json : { password: _t('Incorrect username or password') })
         })
       }
     },
     event: {
-      mount: ({ dispatch, router }, { location: { query } }) => {
+      mount: ({ dispatch }, { location: { query } }) => {
         const { _t } = app.context
         if(query.verifyEmail == 'success') {
           dispatch({ type: '@@xadmin/ADD_NOTICE', payload: {
@@ -47,7 +48,7 @@ export default {
   },
   'auth.sign_up': {
     method: {
-      onSuccess: ({ dispatch, router }) => (resp) => {
+      onSuccess: ({ dispatch }) => (resp) => {
         if(resp.key) {
           dispatch({ type: '@@xadmin/AUTH_VERIFY_EMAIL', payload: resp })
         } else if(resp.detail) {
@@ -55,26 +56,26 @@ export default {
             type: 'success', headline: 'Success', message: resp.detail
           } })
         }
-        router.push('/login')
+        app.go('/login')
       }
     }
   },
   'auth.forget_password': {
     method: {
-      onSuccess: ({ dispatch, router }) => (user) => {
-        router.push('/login')
+      onSuccess: () => (user) => {
+        app.go('/login')
       }
     }
   },
   'auth.change_password': {
     method: {
-      onChange: ({ dispatch, router }) => (item) => {
+      onChange: ({ dispatch }) => (item) => {
         const { _t } = app.context
         return new Promise((resolve, reject) => {
           dispatch({ model: UserChangePassword(app), type: 'SAVE_ITEM', item, promise: { resolve, reject }, 
             message: _t('Change password success') })
         }).then(user => {
-          router.push('/app/')
+          app.go('/app/')
         }).catch(error => {
           throw new SubmissionError({ old_password: _t('Incorrect old password') })
         })
@@ -83,8 +84,8 @@ export default {
   },
   'auth.reset_password': {
     method: {
-      onSuccess: ({ dispatch, router }) => (user) => {
-        router.push('/login')
+      onSuccess: () => (user) => {
+        app.go('/login')
       }
     }
   }

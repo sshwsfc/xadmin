@@ -7,13 +7,14 @@
   "license": "MIT",
   "dependencies": {
     "js-cookie": "^2.2.0",
-    "localforage": "^1.4.3",
+    "localforage": "^1.7.3",
     "lodash": "^4.17.11",
-    "redux-auth-wrapper": "^2.0.2"
+    "react-fontawesome": "^1.6.1",
+    "redux-auth-wrapper": "^2.1.0"
   },
   "peerDependencies": {
-    "react-bootstrap": "^0.32.0",
-    "redux-saga": "^0.16.0",
+    "react-bootstrap": "1",
+    "redux-saga": "1",
     "xadmin": "1",
     "xadmin-form": "1",
     "xadmin-i18n": "1",

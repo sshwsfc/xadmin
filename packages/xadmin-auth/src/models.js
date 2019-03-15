@@ -95,8 +95,7 @@ const UserChangePassword = ({ context: { _t } }) => ({
       title: _t('Old Password'),
       type: 'string',
       maxLength: 12,
-      minLength: 6,
-      format: 'password'
+      minLength: 6
     },
     new_password: {
       title: _t('New Password'),
@@ -109,7 +108,7 @@ const UserChangePassword = ({ context: { _t } }) => ({
       type: 'string',
       maxLength: 12,
       minLength: 6,
-      constant: { $data: '1/new_password', constantName: _t('New Password') }
+      const: { $data: '1/new_password', constantName: _t('New Password') }
     }
   },
   required: [ 'old_password', 'new_password', 'new_password2' ],

@@ -24,7 +24,7 @@ export default (errors) => {
         out = '数据应为 anyOf 所指定的其中一个'
         break
       }
-      case 'constant': {
+      case 'const': {
         out = schema.constantName ? ('与 ' + schema.constantName + ' 不相等') : '应当等于常量'
         break
       }

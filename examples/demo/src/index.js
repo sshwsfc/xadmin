@@ -5,6 +5,7 @@ import app from 'xadmin';
 import { Nav } from 'react-bootstrap'
 
 import i18n from 'xadmin-i18n'
+import auth from 'xadmin-auth'
 import form from 'xadmin-form'
 import layout, { Icon } from 'xadmin-layout'
 import model from 'xadmin-model'
@@ -35,13 +36,14 @@ app
 .use(model)
 .use(actions)
 .use(relate)
+.use(auth)
 .use({
   config: {
     api: API,
     locale: {
       lng: 'zh_Hans', moment: 'zh-cn'
     },
-    auth: { can_signin: true, can_signup: false, can_reset_password: false, persist_type: 'session-storage' },
+    auth: { can_signin: true, can_signup: true, can_reset_password: true, persist_type: 'session-storage' },
     date_format: {
       time: 'HH:mm:ss', date: 'YYYY-MM-DD', datetime: 'YYYY-MM-DD HH:mm:ss'
     }
