@@ -1,0 +1,5 @@
+
+.model-list-action, .model-list-action > button {
+  height: 1.5rem!important;
+  line-height: 1;
+}

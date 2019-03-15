@@ -1,10 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
-import { Checkbox, FormControl } from 'react-bootstrap'
+import { Checkbox, Form, DropdownButton, Dropdown } from 'react-bootstrap'
 
 import app, { api, Block, StoreWrap } from 'xadmin'
 import { FormWrap } from 'xadmin-form'
+import { Loading } from 'xadmin-layout'
 import Icon from 'react-fontawesome'
 
 import ModelPages from './components/Pages'
@@ -13,14 +14,31 @@ import { Model, ModelWrap } from './base'
 import Select from 'react-select'
 import AsyncSelect from 'react-select/lib/Async'
 
-@FormWrap('model.form.relates')
-class Checkboxes extends React.Component {
+class RelateBase extends React.Component {
+
+  loadOptions = inputValue => {
+    const { input: { value }, label, meta, field, group: FieldGroup } = this.props
+    const displayField = field.displayField || 'name'
+    return api(field.schema)
+      .query({ limit: 1000, fields: [ 'id', displayField ] }, 
+        inputValue ? { search: { [displayField]: { like: inputValue } } } : {})
+      .then(({ items }) => 
+        items.map(item => 
+          ({ value: item.id, label: item[displayField], item })
+        )
+      )
+  }
+}
+
+class Checkboxes extends RelateBase {
+
+  state = { loading: false, options: [] }
 
   componentDidMount() {
-    const { input, options, field } = this.props
-    if(!options) {
-      this.props.getRelatedItems()
-    }
+    this.setState({ loading: true })
+    this.loadOptions().then(options => {
+      this.setState({ loading: false, options })
+    })
   }
 
   onChange(checked, option) {
@@ -33,74 +51,25 @@ class Checkboxes extends React.Component {
   }
 
   renderOptions() {
-    const { input, options, field } = this.props
-    const displayField = field.displayField || 'name'
+    const { input, field } = this.props
+    const { options } = this.state
     const checkedIds = input.value ? input.value.map(item => item.id) : []
-    return options.map(option=>{
-      const checked = checkedIds.indexOf(option.id) >= 0
-      return <Checkbox onChange={()=>{this.onChange(!checked, option)}} checked={checked} {...field.attrs} >{option[displayField]}</Checkbox>
+
+    return options.map(({ value, label, item })=>{
+      const checked = checkedIds.indexOf(value) >= 0
+      return <Checkbox onChange={()=>{this.onChange(!checked, item)}} checked={checked} {...field.attrs} >{label}</Checkbox>
     })
   }
 
   render() {
     const { _t } = app.context
-    const { input, options, label, meta, field, group: FieldGroup } = this.props
-    const { items } = field
+    const { input, label, meta, field, group: FieldGroup } = this.props
+    const { loading, options } = this.state
     return (
       <FieldGroup label={label} meta={meta} input={input} field={field}>
-        {options?this.renderOptions():<div>{_t('loading')}</div>}
-      </FieldGroup>
-    )
-  }
-
-}
-
-@FormWrap('model.form.relates')
-class RelateMultiSelect extends React.Component {
-
-  componentDidMount() {
-    const { input, options, field } = this.props
-    if(options == null) {
-      this.props.getRelatedItems()
-    }
-  }
-
-  onChange(checked, option) {
-    const { input: { value, onChange } } = this.props
-    if(checked) {
-      onChange([ ...value, option ])
-    } else {
-      onChange(value.filter(item => item.id != option.id))
-    }
-  }
-
-  onValuesChange(selectOptions) {
-    const { input: { value, onChange }, options } = this.props
-    onChange(selectOptions.map(option=>{ return option.item }))
-  }
-
-  renderOptions() {
-    const { _t } = app.context
-    const { input, options, field } = this.props
-    const displayField = field.displayField || 'name'
-    const checkedValues = input.value ? input.value.map(item => { return { label: item[displayField] || 'null', value: item.id, item }}) : []
-    return (<Select multi={true} theme="bootstrap3" ref = "select"
-      placeholder={_t('Select {{label}}', { label: field.label })}
-      values={checkedValues}
-      options={options.map(option=>{ return { label: option[displayField] || 'null', value: option.id, item: option } })}
-      onChange={this.onValuesChange.bind(this)}
-      renderNoResultsFound={()=>{ return (<div className="no-results-found">{_t('No results found')}</div>)}}
-      {...field.attrs}
-    />)
-  }
-
-  render() {
-    const { _t } = app.context
-    const { input, options, loading, label, meta, field, group: FieldGroup } = this.props
-    const { items } = field
-    return (
-      <FieldGroup label={label} meta={meta} input={input} field={field}>
-        {(!loading && options)?this.renderOptions():<FormControl.Static>{_t('loading')}</FormControl.Static>}
+        {loading ? <Form.Control plaintext readOnly defaultValue={_t('loading')} /> : 
+          (options ? this.renderOptions() : <Form.Control plaintext readOnly defaultValue={_t('Empty')} />)
+        }
       </FieldGroup>
     )
   }
@@ -108,32 +77,42 @@ class RelateMultiSelect extends React.Component {
 }
 
 //@FormWrap('model.form.fkselect')
-class RelateSelect extends React.Component {
+class RelateSelect extends RelateBase {
 
-  loadOptions = inputValue => {
-    const { input: { value }, label, meta, field, group: FieldGroup } = this.props
-    const displayField = field.displayField || 'name'
-    return api(field.schema)
-      .query({ limit: 1000, fields: [ 'id', displayField ] }, { search: { [displayField]: { like: inputValue } } })
-      .then(({ items }) => 
-        items.map(item => 
-          ({ value: item, label: item[displayField] })
-        )
-      )
-  }
-
-  onChange = (value) => {
-    this.props.input.onChange(value.value)
+  onChange = (option) => {
+    this.props.input.onChange(option.item)
   }
 
   render() {
     const { _t } = app.context
-    const { input: { value }, label, meta, field, group: FieldGroup } = this.props
+    const { input: { value: item }, label, meta, field, group: FieldGroup } = this.props
     const displayField = field.displayField || 'name'
     return (
       <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
         <AsyncSelect cacheOptions defaultOptions 
-          selectOption={value ? { value, label: value[displayField] } : null} 
+          selectOption={item ? { item, label: item[displayField], value: item.id } : null} 
+          onChange={this.onChange}
+          loadOptions={this.loadOptions} 
+        />
+      </FieldGroup>
+    )
+  }
+}
+
+class RelateMultiSelect extends RelateBase {
+
+  onChange = (options) => {
+    this.props.input.onChange(options.map(opt => opt.item))
+  }
+
+  render() {
+    const { _t } = app.context
+    const { input: { value: items }, label, meta, field, group: FieldGroup } = this.props
+    const displayField = field.displayField || 'name'
+    return (
+      <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
+        <AsyncSelect cacheOptions defaultOptions isMulti closeMenuOnSelect={false}
+          selectOption={items ? items.map(item => ({ value: item.id, item, label: item[displayField] })) : null} 
           onChange={this.onChange} 
           loadOptions={this.loadOptions} 
         />
@@ -143,14 +122,36 @@ class RelateSelect extends React.Component {
 
 }
 
+class FilterRelateSelect extends RelateBase {
+
+  onChange = (option) => {
+    this.props.input.onChange(option.value)
+  }
+
+  render() {
+    const { _t } = app.context
+    const { input: { value: selectId }, label, meta, field, group: FieldGroup } = this.props
+
+    return (
+      <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
+        <AsyncSelect cacheOptions defaultOptions 
+          isOptionSelected={option => selectId && option.value == selectId}
+          onChange={this.onChange} 
+          loadOptions={this.loadOptions} 
+        />
+      </FieldGroup>
+    )
+  }
+}
+
 const schema_converter = [
   (f, schema, options) => {
-    if(schema.type == 'array' && schema.items.type == 'object' && schema.items.name) {
+    if(schema.type == 'array' && schema.items.type == 'object' && schema.items.relateTo) {
       const models = app.get('models')
-      const name = schema.items.name
+      const name = schema.items.relateTo
       if(models[name]) {
         const model = models[name]
-        f.type = 'relates'
+        f.type = 'multi_select'
         f.schema = model
         f.displayField = model.display_field || 'name'
       }
@@ -174,9 +175,9 @@ const schema_converter = [
 
 const filter_converter = [
   (f, schema, options) => {
-    if(schema.type == 'object' && schema.name) {
-      const models = app.load_dict('models')
-      const relateName = schema.relateTo || schema.name
+    if(schema.type == 'object' && schema.relateTo) {
+      const models = app.get('models')
+      const relateName = schema.relateTo
       if(models[relateName]) {
         const model = models[relateName]
         f.type = 'filter_relate'
@@ -185,23 +186,15 @@ const filter_converter = [
       }
     }
     return f
-  } ]
-
-const FilterRelateSelect = FormWrap('model.form.fkselect')(({ input, options, ...props }) => {
-  const value = options && _.find(options, item => item.id == input.value) || input.value
-  const newProps = { ...props, options, input: { ...input, value,
-    onChange: (value) => {
-      input.onChange(value ? value.id : null)
-    } } }
-  return <RelateSelect.WrappedComponent {...newProps} />
-})
+  } 
+]
 
 const form_fields = {
-  relates: {
-    component: RelateMultiSelect
-  },
   fkselect: {
     component: RelateSelect
+  },
+  multi_select: {
+    component: RelateMultiSelect
   },
   filter_relate: {
     component: FilterRelateSelect,
@@ -214,175 +207,32 @@ const form_fields = {
   }
 }
 
-const mappers = {
-  'model.form.relates': {
-    data: ({ state, form, formState }, { input: { value }, field }) => {
-      const data = {}
-      if(formState) {
-        data['options'] = formState.relates ? _.get(formState.relates, field.name) : null
-      }
-      const key = `form.${form.formKey}.${field.name}.relates`
-      if(state.loading[key]) {
-        data['loading'] = true
-      }
-      return data
-    },
-    method: {
-      getRelatedItems: ({ dispatch, form }, { field }) => () => {
-        dispatch({ type: 'GET_RELATED_ITEMS', meta: { form: form.formKey, field, model: field.items.schema } })
-      }
-    }
-  },
-  'model.form.fkselect': {
-    data: ({ state, form, formState, dispatch }, { input: { value }, field }) => {
-      const key = `form.${form.formKey}.${field.name}.relates`
-      return {
-        options: (formState && formState.relates) ? _.get(formState.relates, field.name) : [],
-        values: formState && formState.values,
-        loading: state.loading[key]
-      }
-    },
-    method: {
-      getValue: ({ state, form, formState, dispatch }, { field }) => (value) => {
-        dispatch({ 
-          type: 'GET_RELATED_ITEM', 
-          meta: { form: form.formKey, field, model: field.schema }, 
-          id: value 
-        })
-      },
-      searchRelatedItems: ({ dispatch, form, formState }, { field }) => (search) => {
-        if(search === '') {
-          dispatch({ 
-            type: 'GET_RELATED_ITEMS', 
-            meta: { form: form.formKey, field, model: field.schema },
-            items: [], success: true
-          })
-          return
-        }
+const RelateContext = React.createContext()
 
-        const searchField = field.searchField || field.displayField || 'name'
-        const wheres = search ? { search: { [searchField]: { like: search } } } : {}
-
-        if(formState && field.limit) {
-          const limit = field.limit(formState.values)
-          if(limit == null) {
-            dispatch({
-              type: 'GET_RELATED_ITEMS',
-              meta: { form: form.formKey, field, model: field.schema },
-              success: true, items: []
-            })
-            return 
-          } else {
-            wheres['limit'] = limit
-          }
-        }
-
-        dispatch({ 
-          type: 'GET_RELATED_ITEMS', 
-          meta: { form: form.formKey, field, model: field.schema },
-          wheres: { ...wheres }
-        })
-      }
-    }
-  }
-}
-
-const reducers = {
-  form: (state={}, action) => {
-    if(action.type == 'GET_RELATED_ITEMS' && action.success) {
-      const { meta: { form, field, model }, items } = action
-      return { ..._.set(state, `${form}.relates.${field.name}`, items) }
-    }
-    if(action.type == 'GET_RELATED_ITEM' && action.success) {
-      const { meta: { form, field, model } } = action
-      let item = action.item
-      if(field.parse) {
-        item = field.parse(item, field.name)
-      }
-      let newState = _.set(state, `${form}.values.${field.name}`, item)
-
-      // if relates is empty push into
-      const relates = _.get(newState, `${form}.relates.${field.name}`)
-      if(!relates || relates.length == 0) {
-        newState = _.set(newState, `${form}.relates.${field.name}`, [ action.item ])
-      }
-      
-      return { ...newState }
-    }
-    return state
-  }
-}
-
-class RelateObjectCls extends React.Component {
-
-  getChildContext() {
-    return { relateObj: this.props.data, relateModel: this.context.model }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.props.id !== nextProps.id) {
-      this.props.getItem(nextProps.id)
-    }
-  }
+@ModelWrap('model.item')
+class RelateContainer extends React.Component {
 
   render() {
-    const { _t } = app.context
     const { data, loading, model } = this.props
     const displayField = model.display_field || 'name'
-    return loading || data == undefined ? 
-      (<div className="text-center"><Icon name="spinner fa-spin fa-4x"/> {_t('loading')}</div>) : 
-      (
-        <div>
-          <h4><Icon name={model.icon} /> {data[displayField]}</h4>
-          <hr/>
-          {this.props.children}
-        </div>
-      )
+    return loading || data == undefined ? <Loading /> : 
+      <>
+        <h4><Icon name={model.icon} /> {data[displayField]}</h4>
+        <hr/>
+        <RelateContext.Provider value={{ item: data, model }}>{this.props.children}</RelateContext.Provider>
+      </>
   }
 
 }
 
-RelateObjectCls.propTypes = {
-  id: PropTypes.string,
-  data: PropTypes.object,
-  loading: PropTypes.bool.isRequired,
-  model: PropTypes.object.isRequired,
-  getItem: PropTypes.func.isRequired
-}
-
-RelateObjectCls.contextTypes = {
-  model: PropTypes.object.isRequired
-}
-
-RelateObjectCls.childContextTypes = {
-  relateObj: PropTypes.object.isRequired,
-  relateModel: PropTypes.object.isRequired
-}
-
-const RelateObject = ModelWrap('model.item')(RelateObjectCls)
-
-const RelateWrap = (SubComponent) => {
-
-  class RelateWrap extends React.Component {
-
-    render() {
-      const { location, ...props } = this.props
-      const { relateObj, relateModel } = this.context
-
-      return <SubComponent {...props} location={{ ...location, query: {  ...location.query, [relateModel.name]: relateObj.id } }} />
-    }
-  }
-  
-  RelateWrap.contextTypes = {
-    relateObj: PropTypes.object.isRequired,
-    relateModel: PropTypes.object.isRequired
-  }
-
-  return RelateWrap
-}
+const RelateWrap = (SubComponent, pname) => ({ location, ...props }) => (
+  <RelateContext.Consumer>
+    {({ item, model }) => <SubComponent {...props} location={{ ...location, query: {  ...location.query, [pname || model.name]: item.id } }} /> }
+  </RelateContext.Consumer>
+)
 
 const routers = (app) => {
-  const models = app.load_dict('models')
+  const models = app.get('models')
   const { _t } = app.context
   const names = Object.keys(models)
   const routes = {}
@@ -396,16 +246,16 @@ const routers = (app) => {
       path: ':id/relations/',
       breadcrumbName: _t('{{name}} List', { name: modelName }),
       component: ({ params: { id }, children }) => {
-        return <RelateObject id={id}>{children}</RelateObject>
+        return <RelateContainer id={id}>{children}</RelateContainer>
       }
     }
 
     // 循环判断每个Model的properties中的object对象
     for(let pname of Object.keys(model.properties || {})) {
       const prop = model.properties[pname]
-      if(prop.type == 'object' && names.indexOf(prop.name) > -1) {
+      if(prop.type == 'object' && prop.relateTo && names.indexOf(prop.relateTo) > -1) {
         // 找到relate对象
-        const relateName = prop.name
+        const relateName = prop.relateTo
         const relateModel = models[relateName]
         const model_routes = []
 
@@ -413,21 +263,21 @@ const routers = (app) => {
           model_routes.push({
             path: 'list',
             breadcrumbName: _t('{{name}} List', { name: modelName }),
-            component: RelateWrap(ModelPages.ModelListPage)
+            component: RelateWrap(ModelPages.ModelListPage, pname)
           })
         }
         if(model.permission && model.permission.add) {
           model_routes.push({
             path: 'add',
             breadcrumbName: _t('Create {{name}}', { name: modelName }),
-            component: RelateWrap(ModelPages.ModelFormPage)
+            component: RelateWrap(ModelPages.ModelFormPage, pname)
           })
         }
         const key = `/app/model/${relateName}/:id/relations/`
         routes[key] = [ ...(routes[key] || []), {
           path: `${name}/`,
           breadcrumbName: _t('{{name}} List', { name: modelName }),
-          component: Model(name, { key: `${relateName}_${name}` }),
+          component: ({ children }) => <Model name={name} modelKey={`${relateName}_${name}`}>{children}</Model>,
           indexRoute: {
             onEnter: ({ location }, replace) => replace({ pathname: location.pathname + 'list' })
           },
@@ -439,12 +289,51 @@ const routers = (app) => {
   return routes
 }
 
+@ModelWrap('model.relate.action')
+class RelateAction extends React.Component {
+
+  render() {
+    const { model, item, variant } = this.props
+    const { _t } = app.context
+    const actions = []
+
+    const models = app.get('models')
+    Object.keys(models).forEach(key => {
+      const m = models[key]
+      for(let pname of Object.keys(m.properties || {})) {
+        const prop = m.properties[pname]
+        if(prop.type == 'object' && (prop.relateTo == model.key || prop.relateTo == model.name)) {
+          actions.push(m)
+          continue
+        }
+      }
+    })
+
+    return actions.length ? (
+      <DropdownButton
+        title={_t('Relates')}
+        variant={ variant || 'primary' }
+        key="dropdown-action-relate"
+        size="sm"
+        className="model-list-action"
+      >
+        { actions.map((m, index) => 
+          (<Dropdown.Item eventKey={index} key={index} 
+            onSelect={()=>app.go(`/app/model/${model.name}/${item.id}/relations/${m.name}/`)}>{m.title || m.name}</Dropdown.Item>)
+        )}
+      </DropdownButton>
+    ) : null
+  }
+}
+
 export default {
   name: 'xadmin.model.relate',
-  mappers,
-  reducers,
   form_fields,
   schema_converter,
-  filter_converter
-  //routers
+  filter_converter,
+  routers
+}
+export {
+  Checkboxes,
+  RelateAction
 }

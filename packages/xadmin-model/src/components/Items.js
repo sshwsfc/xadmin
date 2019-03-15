@@ -6,8 +6,9 @@ import { app } from 'xadmin'
 import { SchemaForm } from 'xadmin-form'
 import { Page, Loading } from 'xadmin-layout'
 
-import { Form, Jumbotron, Row, Col, Table, OverlayTrigger, Popover, Button, ButtonGroup, Dropdown, Panel, Media } from 'react-bootstrap'
+import { Form, Jumbotron, Container, Row, Col, Table, Nav, OverlayTrigger, Popover, Button, ButtonGroup, Dropdown, Card, Media } from 'react-bootstrap'
 import { ModelWrap, ModelBlock } from '../base'
+import './Items.css'
 
 class BaseRow extends React.Component {
 
@@ -16,19 +17,19 @@ class BaseRow extends React.Component {
     const { _t } = app.context
     let actions = (this.props.actions || []).map(Action => <Action {...this.props} />)
     if(canEdit) {
-      actions.push(<Button size="sm" style={{ height: '1.5rem', lineHeight: 1 }} onClick={this.props.editItem}>{_t('Edit')}</Button>)
+      actions.push(<Button key="action-edit" size="sm" className="model-list-action" style={{ height: '1.5rem', lineHeight: 1 }} onClick={this.props.editItem}>{_t('Edit')}</Button>)
     }
     if(canDelete) {
       actions.push((
-        <OverlayTrigger trigger="click" rootClose placement="top" overlay={
-          <Popover title={_t('Comfirm')} id="delete-item-popover">
+        <OverlayTrigger key="action-delete" trigger="click" rootClose placement="top" overlay={
+          <Popover id="delete-item-popover">
             <p><strong>{_t('Comfirm Delete')}？</strong></p>
             <p className="text-center">
               <Button variant="danger" onClick={this.props.deleteItem}>{_t('Delete')}</Button>
             </p>
           </Popover>
         }>
-          <Button size="sm" style={{ height: '1.5rem', lineHeight: 1 }} variant="danger">{_t('Delete')}</Button>
+          <Button size="sm" className="model-list-action" style={{ height: '1.5rem', lineHeight: 1 }} variant="danger">{_t('Delete')}</Button>
         </OverlayTrigger>
       ))
     }
@@ -314,27 +315,26 @@ class ListRowComponent extends BaseRow {
   }
 
   renderRow() {
-    const { item, fields, selected } = this.props
-    const actions = this.actions()
+    const { item, fields, selected, layout={ sm: 12, md: 6 } } = this.props
     return (
-      <Panel variant={selected?'danger':'default'}>
-        <Panel.Body>
-          <input type="checkbox" ref="selector" checked={selected} onChange={this.handleChange.bind(this)} />
-          <Media>
-            <Media.Body>
-              <Media.Heading><Item item={item} field={fields[0]} selected={selected} /></Media.Heading>
+      <Col className="mb-2" {...layout}>
+        <Card border={selected?'warning':'default'}>
+          <Card.Body>
+            <input key="select-checkbox" className="float-right" type="checkbox" ref="selector" checked={selected} onChange={this.handleChange.bind(this)} />
+            <Card.Title><Item item={item} field={fields[0]} selected={selected} /></Card.Title>
+            <Card.Text>
               {React.Children.toArray(fields.slice(1).map(field=>{
                 return (
                   <Item item={item} field={field} selected={selected} wrap={
-                    ({ children, ...props })=><p key={`item-${item.id}-${field}`} {...props}>{children}</p>
+                    ({ children, ...props })=><span key={`item-${item.id}-${field}`} {...props}>{children}</span>
                   } />
                 )
               }))}
-            </Media.Body>
-          </Media>
-        </Panel.Body>
-        <Panel.Footer><ButtonGroup>{actions}</ButtonGroup></Panel.Footer>
-      </Panel>
+            </Card.Text>
+          </Card.Body>
+          <Card.Footer><ButtonGroup>{this.actions()}</ButtonGroup></Card.Footer>
+        </Card>
+      </Col>
     )
   }
 }
@@ -344,7 +344,7 @@ const ListRow = ModelWrap('model.list.row')(ListRowComponent)
 class List extends React.Component {
 
   render() {
-    const { fields, items, loading } = this.props
+    const { fields, items, loading, layout } = this.props
     const { _t } = app.context
 
     if(loading) {
@@ -352,28 +352,23 @@ class List extends React.Component {
     } else {
       if(items.length > 0) {
         return (
-          <div>
-            <div style={{ marginBottom: 10 }}>
+          <>
+            <Nav className="mb-3">
               {React.Children.toArray(fields.map(field=>{
-                return (<Header key={`model-list-header-${field}`} field={field} showText={false} style={{
+                return (<Nav.Item><Header key={`model-list-header-${field}`} field={field} showText={false} style={{
                   marginRight: 10, fontSize: '0.8em'
-                }} />)
+                }} /></Nav.Item>)
               }))}
-            </div>
-            <div>
-              {React.Children.toArray(items.map(item => <ListRow key={item.id} fields={fields} id={item.id} />))}
-            </div>
-          </div>)
+            </Nav>
+            <Row>
+              {React.Children.toArray(items.map(item => <ListRow key={item.id} fields={fields} id={item.id} layout={layout} />))}
+            </Row>
+          </>)
       } else {
         return (<Jumbotron><h5 className="text-center text-muted"><Icon name="file-o" /> {_t('No Data')}</h5></Jumbotron>)
       }
     }
   }
-}
-
-List.WrappedComponent.propTypes = {
-  fields: PropTypes.array.isRequired,
-  items: PropTypes.array.isRequired
 }
 
 export {

@@ -33,8 +33,8 @@ class ModelList extends React.Component {
   }
 
   render() {
-    const { icon, title, componentClass, location, model } = this.props
-    const ItemsComponent = componentClass || Grid
+    const { icon, title, location, model } = this.props
+    const ItemsComponent = (model.components && model.components.model_list) || Grid
     const query = location && location.query
 
     const GridComponents = [

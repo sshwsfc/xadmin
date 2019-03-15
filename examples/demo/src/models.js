@@ -1,9 +1,11 @@
 import React from 'react'
 import { Textarea } from 'xadmin-form/lib/components'
+import { RelateAction } from 'xadmin-model/lib/relate'
+import { List } from 'xadmin-model/lib/components/Items'
 
 export default {
   User: {
-    name: 'user',
+    name: 'User',
     resource_name: 'users',
     type: 'object',
     icon: 'user', // fa-icon
@@ -61,6 +63,7 @@ export default {
       nav: [ 'name', 'email' ],
       sidemenu: [ 'name' ]
     },
+    item_actions: [ (item) => <RelateAction item={item} /> ],
     editable_fields: ['name'],
     batch_change_fields: ['website', 'brithday'],
     search_fields: [ 'name', 'email' ],
@@ -69,7 +72,7 @@ export default {
     list_display: [ 'id', 'name', 'email', 'website', 'address.street' ]
   },
   Post: {
-    name: 'post',
+    name: 'Post',
     resource_name: 'posts',
     type: 'object',
     icon: 'file-o', // fa-icon
@@ -93,10 +96,22 @@ export default {
           id: { type: 'number' },
           name: { type: 'string' }
         }
+      },
+      readers: {
+        type: 'array',
+        name: 'Readers',
+        items: {
+          type: 'object',
+          relateTo: 'User',
+          properties: {
+            name: { type: 'string' },
+            value: { type: 'string' }
+          }
+        }
       }
     },
     permission: { view: true, add: true, edit: true, delete: true },
-    form: [ 'title', 'body', 'user' ],
+    form: [ 'title', 'body', 'user', 'readers' ],
     filters: {
       nav: [ 'title', 'user' ],
       sidemenu: [ 'user' ]
@@ -105,6 +120,9 @@ export default {
     search_fields: [ 'title' ],
     required: [ 'title', 'user', 'body' ],
     readonly: [ 'id' ],
-    list_display: [ 'id', 'title', 'user' ]
+    list_display: [ 'id', 'title', 'user' ],
+    components: {
+      model_list: List
+    }
   }
 }
