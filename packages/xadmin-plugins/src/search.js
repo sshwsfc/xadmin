@@ -1,9 +1,8 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import _ from 'lodash'
-import { Navbar, FormGroup, InputGroup, FormControl, Button } from 'react-bootstrap'
+import { Form, InputGroup, Button } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
-import { Block, StoreWrap, app } from 'xadmin'
+import app from 'xadmin'
 import { ModelWrap } from 'xadmin-model'
 
 @ModelWrap('model.searchbar')
@@ -11,13 +10,11 @@ class SearchBar extends React.Component {
 
   constructor(props, context) {
     super(props, context)
-    this.state = { value: props.searchValue }
+    this.state = { value: props.searchValue || '' }
   }
 
   onSearch(e) {
-    if(this.state.value) {
-      this.props.onSearch(this.state.value)
-    }
+    this.props.onSearch(this.state.value || '')
     event.preventDefault()
   }
 
@@ -38,19 +35,16 @@ class SearchBar extends React.Component {
     if(searchTitles && searchTitles.length > 0) {
       const placeholder = _t('Search') + ' ' + searchTitles.join(', ')
       return (
-        <Navbar.Form pullLeft>
-          <form onSubmit={this.onSearch.bind(this)}>
+        <Form inline onSubmit={this.onSearch.bind(this)}>
           <InputGroup>
-            <FormControl ref="searchInput" value={this.state.value} 
+            <Form.Control value={this.state.value} 
               onKeyPress={this.onKeyPress.bind(this)}
-              type="text" placeholder={placeholder} onChange={(e)=>{this.setState({ value: e.target.value })}} />
-            <InputGroup.Button>
-              { searchValue ? <Button onClick={this.onClean.bind(this)}><Icon name="times" /></Button> : null }
+              placeholder={placeholder} onChange={(e)=>{this.setState({ value: e.target.value })}} />
+            <InputGroup.Append>
               <Button type="submit"><Icon name="search" /></Button>
-            </InputGroup.Button>
+            </InputGroup.Append>
           </InputGroup>
-          </form>
-        </Navbar.Form>
+        </Form>
       )
     }
     return null
@@ -61,7 +55,7 @@ class SearchBar extends React.Component {
 export default {
   name: 'xadmin.model.search',
   blocks: {
-    'model.list.nav': (props) => <SearchBar {...props} />
+    'model.list.nav': (props) => <SearchBar key="searchBar" {...props} />
   },
   mappers: {
     'model.searchbar': {

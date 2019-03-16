@@ -135,8 +135,9 @@ class SubMenu extends React.Component {
       <ButtonToolbar>
         <CountButton />
         <PageSizeButton />
-        <ModelBlock name="model.list.submenu.btngroup" {...this.props} />
+        <ModelBlock name="model.list.submenu.btngroup" el={this} />
         <ColsDropdown />
+        {this.props.children}
       </ButtonToolbar>
     )
   }

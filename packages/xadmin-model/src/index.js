@@ -4,6 +4,7 @@ import Icon from 'react-fontawesome'
 import { Nav } from 'react-bootstrap'
 
 import ModelPages from './components/Pages'
+import ChildrenModelBtn from './components/ChildrenModel'
 import { Model, ModelWrap, ModelContext } from './base'
 import modelReducer from './reducer'
 import effects from './effects'
@@ -92,5 +93,5 @@ const app = {
   field_render
 }
 
-export { Model, ModelWrap, ModelContext }
+export { Model, ModelWrap, ModelContext, ChildrenModelBtn }
 export default app

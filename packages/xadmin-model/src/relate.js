@@ -1,17 +1,14 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import _ from 'lodash'
 import { Checkbox, Form, DropdownButton, Dropdown } from 'react-bootstrap'
 
-import app, { api, Block, StoreWrap } from 'xadmin'
-import { FormWrap } from 'xadmin-form'
+import app, { api } from 'xadmin'
 import { Loading } from 'xadmin-layout'
 import Icon from 'react-fontawesome'
 
 import ModelPages from './components/Pages'
 import { Model, ModelWrap } from './base'
 
-import Select from 'react-select'
 import AsyncSelect from 'react-select/lib/Async'
 
 class RelateBase extends React.Component {

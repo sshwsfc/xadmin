@@ -1,10 +1,7 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import { ButtonToolbar, Button, Modal, Nav, NavItem } from 'react-bootstrap'
-import Icon from 'react-fontawesome'
+import { Nav, NavItem } from 'react-bootstrap'
 import { ModelWrap } from 'xadmin-model'
-import { SchemaForm } from 'xadmin-form'
-import { Block, StoreWrap, app } from 'xadmin'
+import { app } from 'xadmin'
 
 @ModelWrap('modaltab.tabs')
 class ModelTabs extends React.Component {
@@ -15,12 +12,11 @@ class ModelTabs extends React.Component {
     const tabs = model.tabs
     return tabs ? (
       <Nav bsStyle="tabs" activeKey="__current__" style={{ marginBottom: 10 }}>
-        { tabs.map(tab=>{
-          return (
-            <NavItem eventKey={tab.url || '__current__'} onClick={()=>{
-              if(tab.url) onSelect(tab.url)
-            }}>{tab.title}</NavItem>)
-        }) }
+        { tabs.map((tab, i)=>(
+          <Nav.Item key={i} eventKey={tab.url || '__current__'} onClick={()=>{
+            if(tab.url) onSelect(tab.url)
+          }}>{tab.title}</Nav.Item>)
+        ) }
       </Nav>
     ) : null
   }
@@ -30,9 +26,7 @@ class ModelTabs extends React.Component {
 export default {
   name: 'xadmin.model.modaltabs',
   blocks: {
-    'model.list.submenu': ({ nodes, ...props }) => {
-      return <ModelTabs {...props} />
-    }
+    'model.list.submenu': ({ nodes, ...props }) => <ModelTabs key="modelTabs" {...props} />
   },
   mappers: {
     'modaltab.tabs': {

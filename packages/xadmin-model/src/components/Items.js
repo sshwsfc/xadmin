@@ -96,7 +96,7 @@ class Header extends React.Component {
       }[order] || ''
 
     return (
-      <ModelBlock name="model.list.header.menu" {...this.props}>
+      <ModelBlock name="model.list.header.menu" el={this}>
         { bs => {
           const items = [ ...this.renderOrder(), ...(bs||[]) ]
 

@@ -5,7 +5,7 @@ import Icon from 'react-fontawesome'
 import { ModelWrap } from 'xadmin-model'
 import { SchemaForm } from 'xadmin-form'
 import { Block, StoreWrap, app } from 'xadmin'
-import './modalform.css'
+
 @ModelWrap('model.item')
 @ModelWrap('modalform.modal')
 class AddModelBtn extends React.Component {
@@ -29,7 +29,7 @@ class AddModelBtn extends React.Component {
       return (
         <Modal
           {...modalProps}
-          show={show}
+          show={show} size="lg"
           className="xadmin-modal-form"
           onHide={this.hideModal.bind(this)}
         >
@@ -40,14 +40,14 @@ class AddModelBtn extends React.Component {
             <form className="form-horizontal">{children}</form>
           </Modal.Body>
           <Modal.Footer>
-            <Button onClick={onClose}>{_t('Close')}</Button>
+            <Button onClick={onClose} variant="light">{_t('Close')}</Button>
             {invalid ? (
               <OverlayTrigger placement="top" overlay={<Tooltip>{_t('Please be sure to complete all field.')}</Tooltip>}>
-                <Button type="submit" disabled={submitting} onClick={handleSubmit} bsStyle="primary">
+                <Button type="submit" disabled={invalid || submitting} onClick={handleSubmit}>
                   <Icon name="ban"/> {_t('Save')}</Button>
               </OverlayTrigger>
             ) : (
-              <Button type="submit" disabled={submitting} onClick={handleSubmit} bsStyle="primary">
+              <Button type="submit" disabled={invalid || submitting} onClick={handleSubmit}>
                 <Icon name={icon}/> {_t('Save')}</Button>
             )}
           </Modal.Footer>

@@ -28,6 +28,7 @@ const DefaultLayout = (props) => {
     </Form>
   )
 }
+
 class App extends React.Component {
 
   state = { show: false }
@@ -88,4 +89,9 @@ class App extends React.Component {
   }
 }
 
-export default StoreWrap('test', { data: ({ state }) => ({ title: state.test }) })(App);
+export default StoreWrap('test', { 
+  data: ({ state }) => ({ title: state.test }),
+  event: {
+    mount: ({ dispatch }) => dispatch({ type: '@@xadmin/ADD_NOTICE', headline: 'Test', message: 'Test message' })
+  }
+})(App);

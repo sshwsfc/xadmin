@@ -3,7 +3,7 @@ import { StoreWrap } from 'xadmin'
 import { AlertList } from 'react-bs-notifier'
 
 const Notices = StoreWrap('xadmin.notice')(({ notices, onDismiss }) => {
-  return <AlertList alerts={notices} position="top-right" timeout={3000} onDismiss={onDismiss} dismissTitle="Dismiss" />
+  return <AlertList key="notice" alerts={notices} position="top-left" timeout={2000} onDismiss={onDismiss} dismissTitle="Dismiss" />
 })
 
 export default {
@@ -26,9 +26,9 @@ export default {
     }
   },
   reducers: {
-    notices: (state=[], { type, payload }) =>{
+    notices: (state=[], { type, payload, ...props }) =>{
       if(type == '@@xadmin/ADD_NOTICE') {
-        return [ ...state, { ...payload, id: (new Date()).getTime() } ]
+        return [ ...state, { ...props, ...payload, id: (new Date()).getTime() } ]
       } else if(type == '@@xadmin/DISMISS_NOTICE') {
         const idx = state.indexOf(payload)
         if (idx >= 0) {

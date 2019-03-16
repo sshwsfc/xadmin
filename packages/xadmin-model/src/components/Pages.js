@@ -21,10 +21,10 @@ class ModelList extends React.Component {
     const { _t } = app.context
     return [
       <Nav key="nav-left" className="mr-auto">
-        <ModelBlock name="model.list.nav" {...this.props} />
+        <ModelBlock name="model.list.nav" el={this} />
       </Nav>,
       <Nav key="nav-right">
-        <ModelBlock name="model.list.navbtn" {...this.props} />
+        <ModelBlock name="model.list.navbtn" el={this} />
         { canAdd ?
           (<Button variant="primary" onClick={addItem}><Icon name="plus"/> {_t('Add {{object}}', { object: model.title })}</Button>) : null
         }
@@ -49,10 +49,10 @@ class ModelList extends React.Component {
 
     return (
       <Page className={`xadmin-model-list-${model.key}`} title={(<span><Icon name={icon}/> {title}</span>)} nav={this.renderNav()}>
-        <ModelBlock name="model.list.submenu" {...this.props} />
-        <ModelBlock name="model.list.sidemenu" {...this.props}>
+        <ModelBlock name="model.list.submenu" el={this} />
+        <ModelBlock name="model.list.sidemenu" el={this} >
           { sideMenu => (
-            <ModelBlock name="model.list.sidepanel" {...this.props}>
+            <ModelBlock name="model.list.sidepanel" el={this} >
               { sidePanel => (sideMenu || sidePanel) ? (
                 <Row>
                   { sideMenu ? <Col sm={(sideMenu && sidePanel) ? 1 : 2}>{ sideMenu }</Col> : null }
@@ -77,14 +77,25 @@ ModelList.propTypes = {
 
 class ModelForm extends React.Component {
 
+  renderNav() {
+    return [
+      <Nav key="nav-left" className="mr-auto">
+        <ModelBlock name="model.edit.nav" el={this} />
+      </Nav>,
+      <Nav key="nav-right">
+        <ModelBlock name="model.edit.navbtn" el={this} />
+      </Nav>
+    ]
+  }
+
   render() {
     const { params, location: { query }, title, model, onSuccess, componentClass } = this.props
     const FormComponent = componentClass || Form
     return (
-      <Page title={title} className={`xadmin-model-form-${model.key}`}>
-        <ModelBlock name="model.form.before" {...this.props} />
+      <Page title={title} className={`xadmin-model-form-${model.key}`} nav={this.renderNav()}>
+        <ModelBlock name="model.form.before" el={this} />
         <FormComponent id={params && params.id} query={query} onSubmitSuccess={onSuccess} />
-        <ModelBlock name="model.form.after" {...this.props} />
+        <ModelBlock name="model.form.after" el={this} />
       </Page>
     )
   }
@@ -98,20 +109,31 @@ ModelForm.propTypes = {
 
 class ModelDetail extends React.Component {
 
+  renderNav() {
+    const { onClose, onEdit, canEdit } = this.props
+    const { _t } = app.context
+    return [
+      <Nav key="nav-left" className="mr-auto">
+        <ModelBlock name="model.detail.nav" el={this} />
+      </Nav>,
+      <Nav key="nav-right">
+        <ModelBlock name="model.detail.navbtn" el={this} />
+        {canEdit?<Button onClick={onEdit} className="mr-2"><Icon name="pencil"/> {_t('Edit')}</Button>:null}
+        <Button  onClick={onClose} variant="secondary">{_t('Back')}</Button>
+      </Nav>
+    ]
+  }
+
   render() {
-    const { params, title, model, onClose, onEdit, canEdit, componentClass } = this.props
+    const { params, title, model, componentClass } = this.props
     const DetailComponent = componentClass || Info
     const { _t } = app.context
 
     return (
-      <Page title={title} className={`xadmin-model-detail-${model.key}`}>
-        <ModelBlock name="model.detail.before" {...this.props} />
+      <Page title={title} className={`xadmin-model-detail-${model.key}`} nav={this.renderNav()}>
+        <ModelBlock name="model.detail.before" el={this} />
         <DetailComponent id={params && params.id} />
-        <ModelBlock name="model.detail.after" {...this.props} />
-        <div bsSize="small" style={{ textAlign: 'right' }}>
-          <Button onClick={onClose} bsStyle="default">{_t('Back')}</Button>
-          {canEdit?<Button onClick={onEdit} bsStyle="primary" style={{ marginLeft:5 }}>{_t('Edit')}</Button>:null}
-        </div>
+        <ModelBlock name="model.detail.after" el={this} />
       </Page>
     )
   }

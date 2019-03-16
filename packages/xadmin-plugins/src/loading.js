@@ -6,7 +6,7 @@ import { takeEvery, put, all } from 'redux-saga/effects'
 export default {
   name: 'xadmin.loading',
   blocks: {
-    'main': () => <LoadingBar className="loading_bar" style={{ zIndex: 9999, height: 3, position: 'absolute', backgroundColor: 'red' }} />
+    'body': () => <LoadingBar key="loading" style={{ zIndex: 9999, height: 3, position: 'absolute', backgroundColor: 'red' }} />
   },
   reducers: {
     loadingBar: (state=0, action) => {
@@ -25,7 +25,7 @@ export default {
         case 'START_LOADING':
           return { ...state, [key]: true }
         case 'END_LOADING':
-          return omit(state, key)
+          return { ...omit(state, key) }
         default:
           return state
       }

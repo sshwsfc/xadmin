@@ -25,7 +25,7 @@ class Footer extends React.Component {
         <footer className="text-center">
           <p>&copy; <slot>{_c('site.copyright')}</slot></p>
         </footer>
-        <Block name="footer" {...this.props} />
+        <Block name="footer" el={this} />
       </div>
     )}
 }
@@ -35,7 +35,7 @@ class MainMenu extends React.Component {
     return (
       <Card body>
         <Nav variant="pills" className="flex-column">
-          <Block name="main.menu" {...this.props} />
+          <Block name="main.menu" el={this} />
         </Nav>
       </Card>
     )}
@@ -64,11 +64,11 @@ class TopNav extends React.Component {
         <Navbar.Toggle aria-controls="main-navbar-nav" />
         <Navbar.Collapse id="main-navbar-nav">
           <Nav className="mr-auto">
-            <Block name="top.left" {...this.props} />
+            <Block name="top.left" el={this} />
           </Nav>
-          <Block name="top.center" {...this.props} />
+          <Block name="top.center" el={this} />
           <Nav>
-            <Block name="top.right" {...this.props} />
+            <Block name="top.right" el={this} />
           </Nav>
         </Navbar.Collapse>
       </Navbar>
@@ -80,9 +80,10 @@ class Main extends React.Component {
   render() {
     return (
       <>
+        <Block name="body" el={this} />
         <TopNav site_title={_c('site.title', 'Admin')}/>
         <Container fluid className="mt-3">
-          { Block('main', this)}
+          <Block name="main" el={this} />
           {this.props.children}
         </Container>
         <Footer/>

@@ -1,26 +1,35 @@
 import React from 'react'
 import './index.css';
-import App from './App';
 import app from 'xadmin';
 import { Nav } from 'react-bootstrap'
 
 import i18n from 'xadmin-i18n'
 import auth from 'xadmin-auth'
 import form from 'xadmin-form'
-import layout, { Icon } from 'xadmin-layout'
+import layout, { Icon, Loading } from 'xadmin-layout'
 import model from 'xadmin-model'
 import relate from 'xadmin-model/lib/relate'
 // import filter from 'xadmin-model/lib/filter'
 import actions from 'xadmin-model/lib/actions'
+
+import loading from 'xadmin-plugins/lib/loading'
+import notice from 'xadmin-plugins/lib/notice'
+import modalform from 'xadmin-plugins/lib/modalform'
+import search from 'xadmin-plugins/lib/search'
+
 import models from './models'
 import themes from './themes'
 import API from './api'
 
 import 'moment/locale/zh-cn' 
 
+const App = React.lazy(() => import('./App'))
+
 app
 .use(i18n)
 .use(layout)
+.use(loading)
+.use(notice)
 .use(form)
 .use(themes)
 .use({
@@ -37,6 +46,8 @@ app
 .use(actions)
 .use(relate)
 .use(auth)
+.use(modalform)
+.use(search)
 .use({
   config: {
     api: API,
@@ -49,7 +60,11 @@ app
     }
   },
   components: {
-    Dashboard: App
+    Dashboard: () => (
+      <React.Suspense fallback={<Loading />}>
+        <App />
+      </React.Suspense>
+    )
   },
   reducers: {
     test: (state=0, action) => {

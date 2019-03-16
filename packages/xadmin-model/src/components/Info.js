@@ -1,11 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
-import Icon from 'react-fontawesome'
-import { StoreWrap, app } from 'xadmin'
-import { Page, Loading } from 'xadmin-layout'
+import { Loading } from 'xadmin-layout'
 import { convert as schemaConvert } from 'xadmin-form/lib/schema'
-import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Panel, Well, ButtonFormGroup, HelpBlock, FormGroup, Col, FormControl, ControlLabel } from 'react-bootstrap'
+import { Card, Row, Col, Form } from 'react-bootstrap'
 
 import { ModelWrap } from '../base'
 import { Item } from './Items'
@@ -23,26 +21,25 @@ const FieldGroup = ({ label, field, children }) => {
     }
   }
 
-  if (attrs.bsSize) {
-    groupProps['bsSize'] = attrs.bsSize
+  if (attrs.size) {
+    groupProps['size'] = attrs.size
   }
-  if (attrs.bsStyle) {
-    groupProps['bsStyle'] = attrs.bsStyle
+  if (attrs.variant) {
+    groupProps['variant'] = attrs.variant
   }
 
-  const controlComponent = children ? children : (<FormControl {...attrs} />)
+  const controlComponent = children ? children : (<Form.Control {...attrs} />)
   
   return (
-    <FormGroup {...groupProps}>
-      <Col key={0} componentClass={ControlLabel} {...size.label}>
+    <Form.Group as={Row} {...groupProps}>
+      <Form.Label key={0} column {...size.label}>
         {label}
-      </Col>
+      </Form.Label>
       <Col key={1} {...size.control}>
         {controlComponent}
-        <FormControl.Feedback />
-        {help && <HelpBlock>{help}</HelpBlock>}
+        {help && <Form.Text className="text-muted">{help}</Form.Text>}
       </Col>
-    </FormGroup>
+    </Form.Group>
   )
 }
 
@@ -71,9 +68,9 @@ class ModelInfo extends React.Component {
     return schemaConvert(model).fields.map(field => {
       field.option = { ...field.option, ...formProps }
       return (
-        <FieldGroup label={field.label} field={field}>
+        <FieldGroup key={field.key} label={field.label} field={field}>
           <Item item={record} field={field.key} inList={false} selected={false} wrap={
-            ({ children, ...props })=><FormControl.Static>{children}</FormControl.Static>
+            ({ children, ...props })=><div key="value" className="my-1">{children}</div>
           }/>
         </FieldGroup>)
     })
@@ -83,9 +80,9 @@ class ModelInfo extends React.Component {
     const { title, model, loading, componentClass, ...formProps } = this.props
 
     return loading ? <Loading/> : 
-      (<form className="form-horizontal">
-        <Panel><Panel.Body>{this.renderFields()}</Panel.Body></Panel>
-      </form>)
+      (<Form>
+        <Card><Card.Body>{this.renderFields()}</Card.Body></Card>
+      </Form>)
   }
 
 }

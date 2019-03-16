@@ -6,13 +6,15 @@
   "author": "sshwsfc@gmail.com",
   "license": "MIT",
   "dependencies": {
-    "lodash": "^4.17.4",
-    "prop-types": "^15.6.0",
-    "react-bs-notifier": "^4.4.5",
-    "react-redux-loading-bar": "^3.1.1",
-    "redux-saga": "^0.16.0"
+    "lodash": "^4.17.11",
+    "prop-types": "^15.7.2",
+    "react-bs-notifier": "^5.0.0",
+    "react-fontawesome": "^1.6.1",
+    "react-redux-loading-bar": "^4.2.0",
+    "redux-saga": "^1.0.2"
   },
   "peerDependencies": {
+    "react": "1",
     "react-bootstrap": "1",
     "xadmin": "1",
     "xadmin-form": "1",

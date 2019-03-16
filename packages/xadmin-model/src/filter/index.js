@@ -112,7 +112,6 @@ class FilterInline extends React.Component {
         </Col>
       )
     }
-    console.log(data)
     return (<FilterForm
       formKey={formKey}
       filters={filters}

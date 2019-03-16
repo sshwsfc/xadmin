@@ -1,6 +1,7 @@
 import React from 'react'
 import { Textarea } from 'xadmin-form/lib/components'
 import { RelateAction } from 'xadmin-model/lib/relate'
+import { ChildrenModelBtn } from 'xadmin-model'
 import { List } from 'xadmin-model/lib/components/Items'
 
 export default {
@@ -63,7 +64,10 @@ export default {
       nav: [ 'name', 'email' ],
       sidemenu: [ 'name' ]
     },
-    item_actions: [ (item) => <RelateAction item={item} /> ],
+    item_actions: [ 
+      (item) => <RelateAction item={item} />,
+      (item) => <ChildrenModelBtn model="Post" parent={item}>Posts</ChildrenModelBtn>
+    ],
     editable_fields: ['name'],
     batch_change_fields: ['website', 'brithday'],
     search_fields: [ 'name', 'email' ],
