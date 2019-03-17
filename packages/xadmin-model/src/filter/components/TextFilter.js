@@ -1,7 +1,7 @@
 import React from 'react'
 import app from 'xadmin'
-import { InputGroup, FormControl, Button, OverlayTrigger, Tooltip } from 'react-bootstrap'
-import { FieldGroup } from './base'
+import _ from 'lodash'
+import { InputGroup, Form, Button, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
 
 export default class TextFilter extends React.Component {
@@ -54,18 +54,18 @@ export default class TextFilter extends React.Component {
     return (
       <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
         <InputGroup { ...field.attrs }>
-          <InputGroup.Button>
+          <InputGroup.Prepend>
             <OverlayTrigger placement="top" overlay={<Tooltip>{like ? _t('Fuzzy query') : _t('Exact query')}</Tooltip>}>
-              <Button disabled={!text} onClick={()=>this.onLikeChange(!like)}>
+              <Button variant="outline-secondary" disabled={!text} onClick={()=>this.onLikeChange(!like)}>
                 {like ? <Icon name="magic" /> : <Icon name="search" /> }
               </Button>
             </OverlayTrigger>
-          </InputGroup.Button>
-          <FormControl type="text" { ...inputProps} {...field.attrs} value={text}
+          </InputGroup.Prepend>
+          <Form.Control type="text" { ...inputProps} {...field.attrs} value={text}
             onBlur={this.onBlur} onChange={this.onChange} />
-          <InputGroup.Button>
-            <Button onClick={this.clear} style={{ borderLeft: 'none' }}><Icon name="close" /></Button>
-          </InputGroup.Button>
+          <InputGroup.Append>
+            <Button variant="outline-secondary" onClick={this.clear} style={{ borderLeft: 'none' }}><Icon name="close" /></Button>
+          </InputGroup.Append>
         </InputGroup>
       </FieldGroup>
     )

@@ -1,9 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import app from 'xadmin'
-import { Field } from 'redux-form'
-import { FieldGroup } from './base'
-import { FormControl, InputGroup, Button } from 'react-bootstrap'
+import { FormControl, InputGroup } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
 
 export default class NumberFilter extends React.Component {

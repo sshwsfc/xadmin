@@ -1,9 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import app from 'xadmin'
-import { Field } from 'redux-form'
-import { FieldGroup } from './base'
-import { FormControl, InputGroup, Button, ButtonGroup } from 'react-bootstrap'
+import { Button, ButtonGroup } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
 
 export default class BooleanFilter extends React.Component {

@@ -1,8 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
-import { Field } from 'redux-form'
-import { FieldGroup } from './base'
-import { FormControl, Checkbox } from 'react-bootstrap'
+import { Checkbox } from 'react-bootstrap'
 
 export default class EnumFilter extends React.Component {
 

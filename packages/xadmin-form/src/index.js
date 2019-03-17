@@ -1,5 +1,5 @@
 import React from 'react'
-import { reducer as formReducer, SubmissionError } from 'redux-form'
+import { reducer as formReducer, SubmissionError, reduxForm } from 'redux-form'
 import Ajv from 'ajv'
 import default_fields from './fields'
 import { converters } from './schema'
@@ -47,6 +47,7 @@ export {
   Form,
   SchemaForm,
   FormWrap,
+  reduxForm,
   fieldBuilder,
   objectBuilder,
   schemaConvert,

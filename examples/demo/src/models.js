@@ -96,6 +96,7 @@ export default {
         type: 'object',
         name: 'User',
         relateTo: 'User',
+        showDetail: true,
         properties: {
           id: { type: 'number' },
           name: { type: 'string' }

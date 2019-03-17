@@ -1,22 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
-import { ButtonToolbar, Button, Modal, Panel } from 'react-bootstrap'
-import Icon from 'react-fontawesome'
-import { Block, StoreWrap, app } from 'xadmin'
-import { ModelWrap, Model } from 'xadmin-model'
-import { SchemaForm } from 'xadmin-form'
-
-const DetailView = ModelWrap('model.item')(({ id, data, loading, model }) => {
-  return loading ? 
-    (<Panel><div className="text-center"><Icon name="spinner fa-spin fa-4x"/></div></Panel>) : 
-    (data ? <SchemaForm 
-      formKey={`model.${model.key}`}
-      schema={model}
-      initialValues={_.omitBy(data, _.isNil)}
-    /> : null
-    )
-})
+import { Modal } from 'react-bootstrap'
+import app from 'xadmin'
+import { Model } from 'xadmin-model'
+import Info from 'xadmin-model/lib/components/Info'
 
 class DetailModal extends React.Component {
 
@@ -36,7 +24,7 @@ class DetailModal extends React.Component {
     
     return (
       <WrapComponent>
-        <a onClick={this.showModal}>
+        <a style={{ cursor: 'pointer' }} onClick={this.showModal}>
           {children}
         </a>
         { this.state.show && (<Modal
@@ -47,11 +35,8 @@ class DetailModal extends React.Component {
             <Modal.Title>{children}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <DetailView id={id} />
+            <Info id={id} />
           </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={this.hideModal}>{_t('Close')}</Button>
-          </Modal.Footer>
         </Modal>
         )}
       </WrapComponent>
@@ -66,21 +51,17 @@ DetailModal.propTypes = {
 export default {
   name: 'xadmin.model.reldetail',
   field_render: (SubPrev, schema) => {
-    if(schema.type == 'object') {
+    if(schema.type == 'object' && schema.relateTo) {
       return ({ value, wrap }) => {
-        const displayField = schema.display_field || 'name'
         
-        if(value && value.id !== undefined && schema.name && schema.show_detail === true && Object.keys(app.load_dict('models')).indexOf(schema.name) >= 0) {
-          const RelModel = Model(schema.name)
-          const newWrap = ({ children }) => {
-            return (
-              <RelModel>
-                <DetailModal id={value.id} wrap={wrap}>
-                  {children}
-                </DetailModal>
-              </RelModel>
-            )
-          }
+        if(value && value.id !== undefined && schema.showDetail === true && Object.keys(app.get('models')).indexOf(schema.relateTo) >= 0) {
+          const newWrap = ({ children }) => (
+            <Model name={schema.relateTo}>
+              <DetailModal id={value.id} wrap={wrap}>
+                {children}
+              </DetailModal>
+            </Model>
+          )
           return <SubPrev value={value} wrap={newWrap} />
         } else {
           return <SubPrev value={value} wrap={wrap} />

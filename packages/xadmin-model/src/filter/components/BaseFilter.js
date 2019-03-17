@@ -1,7 +1,5 @@
 import React from 'react'
 import _ from 'lodash'
-import { Field } from 'redux-form'
-import { FormControl, Checkbox } from 'react-bootstrap'
 
 export default class BaseFilter extends React.Component {
 

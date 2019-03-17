@@ -1,9 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import moment from 'moment'
-import { Field } from 'redux-form'
-import { FieldGroup } from './base'
-import { FormControl, ButtonGroup, Nav, NavItem, Label, Button, OverlayTrigger, Popover } from 'react-bootstrap'
+import { ButtonGroup, Button, OverlayTrigger, Popover } from 'react-bootstrap'
 
 import { DateRange } from 'react-date-range'
 

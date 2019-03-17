@@ -9,13 +9,14 @@ import form from 'xadmin-form'
 import layout, { Icon, Loading } from 'xadmin-layout'
 import model from 'xadmin-model'
 import relate from 'xadmin-model/lib/relate'
-// import filter from 'xadmin-model/lib/filter'
+import filter from 'xadmin-model/lib/filter'
 import actions from 'xadmin-model/lib/actions'
 
 import loading from 'xadmin-plugins/lib/loading'
 import notice from 'xadmin-plugins/lib/notice'
 import modalform from 'xadmin-plugins/lib/modalform'
 import search from 'xadmin-plugins/lib/search'
+import reldetail from 'xadmin-plugins/lib/reldetail'
 
 import models from './models'
 import themes from './themes'
@@ -43,11 +44,13 @@ app
   },
 })
 .use(model)
+.use(filter)
 .use(actions)
 .use(relate)
 .use(auth)
 .use(modalform)
 .use(search)
+.use(reldetail)
 .use({
   config: {
     api: API,
