@@ -42,7 +42,9 @@ export default [
   // all form field
   (f, fschema, options) => {
     const schema = f.schema || fschema
-    f.name = options.key || schema.name
+
+    f.key = options.key || schema.name
+    f.name = f.key
     f.label = schema.title || f.name
 
     if (schema.description) { f.description = schema.description }

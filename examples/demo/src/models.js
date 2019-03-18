@@ -119,7 +119,8 @@ export default {
     form: [ 'title', 'body', 'user', 'readers' ],
     filters: {
       nav: [ 'title', 'user' ],
-      sidemenu: [ 'user' ]
+      sidemenu: [ 'user' ],
+      submenu: [ 'user', 'title', 'readers', 'body', 'id' ],
     },
     display: (post) => post.title,
     search_fields: [ 'title' ],

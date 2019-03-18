@@ -27,7 +27,8 @@ const FilterForm = (props) => {
   const WrapForm = reduxForm({ 
     form: formKey,
     destroyOnUnmount: false,
-    enableReinitialize: true
+    enableReinitialize: true,
+    onChange: (values) => console.log(values)
   })(BaseForm)
   return <WrapForm fields={fields} {...props}/>
 }
@@ -76,7 +77,7 @@ class FilterInline extends React.Component {
 
   render() {
     const { _t } = app.context
-    const { filters, formKey, data, changeFilter, resetFilter, groupSize } = this.props
+    const { filters, formKey, data, changeFilter, resetFilter, groupSize, hasButtons } = this.props
 
     const FormLayout = (props) => {
       const { children, invalid, pristine, handleSubmit, submitting } = props
@@ -85,40 +86,27 @@ class FilterInline extends React.Component {
           <Row style={{ marginBottom: '-5px' }}>
             {children}
           </Row>
-          <Row>
-            <Col style={{ textAlign: 'center' }} sm={12}>
-              <Button disabled={invalid || submitting} size="sm" onClick={handleSubmit}>{_t('Search')}</Button>
-              {' '}
-              <Button disabled={submitting} onClick={resetFilter} size="sm" variant="light">{_t('Clear')}</Button>
-            </Col>
-          </Row>
+          { hasButtons ? (
+            <Row>
+              <Col style={{ textAlign: 'center' }} sm={12}>
+                <Button disabled={invalid || submitting} size="sm" onClick={handleSubmit}>{_t('Search')}</Button>
+                {' '}
+                <Button disabled={submitting} onClick={resetFilter} size="sm" variant="light">{_t('Clear')}</Button>
+              </Col>
+            </Row> 
+          ): null }
         </form>
       )
     }
-    const groupComponent = ({ id, label, help, error, groupProps, children }) => {
-      return (
-        <Col key={0} sm={6} md={4} lg={4} {...groupSize}>
-          <FormGroup controlId={id} {...groupProps}>
-            <Col key={0} componentClass={ControlLabel} sm={2} md={5} lg={4}>
-              {label}
-            </Col>
-            <Col key={1} sm={10} md={7} lg={8}>
-              {children}
-              {error && <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>}
-              {help && <Form.Text className="text-muted">{help}</Form.Text>}
-            </Col>
-          </FormGroup>
-        </Col>
-      )
-    }
+
     return (<FilterForm
       formKey={formKey}
       filters={filters}
       component={FormLayout}
       initialValues={data}
       onSubmit={changeFilter}
-      group={groupComponent}
-      fieldProps={{ attrs: { bsSize: 'sm' }, mode: 'mini' }}
+      group={InlineGroup}
+      fieldProps={{ attrs: { size: 'sm' }, mode: 'mini' }}
     />)
   }
 
@@ -136,13 +124,12 @@ class FilterMenu extends FilterComponent {
         const { children, invalid, pristine, handleSubmit, submitting } = props
         return (
           <Card>
-            <Card.Header>{_t('Filter Form')}</Card.Header>
             <Card.Body>
               <Form onSubmit={handleSubmit}>
                 {children}
-                <ButtonGroup>
-                  <Button style={{ width: '30%' }} disabled={submitting} onClick={resetFilter} variant="light">{_t('Clear')}</Button>
-                  <Button style={{ width: '70%' }} disabled={invalid || submitting} onClick={handleSubmit}>{_t('Search')}</Button>
+                <ButtonGroup className="w-100">
+                  <Button disabled={submitting} onClick={resetFilter} variant="light">{_t('Clear')}</Button>
+                  <Button disabled={invalid || submitting} onClick={handleSubmit}>{_t('Search')}</Button>
                 </ButtonGroup>
               </Form>
             </Card.Body>
@@ -206,9 +193,7 @@ class FilterModal extends FilterComponent {
           show={this.state.show} size="lg"
           onHide={this.onClose}
         >
-          <Modal.Header closeButton>
-            <Modal.Title>{_t('Filter Form')}</Modal.Title>
-          </Modal.Header>
+          <Modal.Header closeButton>{_t('Filter Form')}</Modal.Header>
           <Modal.Body>
             <form className="form-horizontal">{children}</form>
           </Modal.Body>
@@ -233,6 +218,7 @@ class FilterModal extends FilterComponent {
         </Nav.Link>),
         this.state.show ? (
           <FilterForm
+            key={`filterForm-${formKey}`}
             formKey={formKey}
             filters={filters}
             component={FormLayout}
@@ -253,7 +239,7 @@ class FilterSubMenu extends FilterComponent {
 
   render() {
     const { filters } = this.props
-    return filters && filters.length ? (<Card><Card.Body><FilterInline {...this.props}/></Card.Body></Card>) : null
+    return filters && filters.length ? (<Card className="mb-3"><Card.Body><FilterInline {...this.props}/></Card.Body></Card>) : null
   }
 
 }
@@ -297,8 +283,8 @@ class FilterNavForm extends FilterComponent {
 
 }
 
-const block_func = (Filter, name) => ({ model }) => (
-  (model && model.filters && model.filters[name]) ? <Filter name={name} /> : null
+const block_func = (Filter, name, props) => ({ model }) => (
+  (model && model.filters && model.filters[name]) ? <Filter name={name} {...props} /> : null
 )
 
 export default {

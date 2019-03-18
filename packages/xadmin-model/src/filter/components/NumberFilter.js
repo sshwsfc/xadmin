@@ -60,11 +60,11 @@ export default class NumberFilter extends React.Component {
     return (
       <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
         <InputGroup>
-          <FormControl type="number" { ...inputProps} {...field.attrs} value={gte}
+          <FormControl type="number" { ...inputProps} {...field.attrs} value={gte || ''}
             placeholder={field.minimum ? `Minimum(${field.minimum})` : _t('No limit')} style={{ paddingRight: 5 }}
             onBlur={(e)=>this.onBlur(e, 'gte')} onChange={(e)=>this.onChange(e, 'gte')} />
-          <InputGroup.Addon>~</InputGroup.Addon>
-          <FormControl type="number" { ...inputProps} {...field.attrs} value={lte}
+          <FormControl value="~" style={{ width: '1rem' }} {...field.attrs} readOnly />          
+          <FormControl type="number" { ...inputProps} {...field.attrs} value={lte || ''}
             placeholder={field.maximum ? `Maximum(${field.maximum})` : _t('No limit')} style={{ paddingRight: 5 }}
             onBlur={(e)=>this.onBlur(e, 'lte')} onChange={(e)=>this.onChange(e, 'lte')} />
         </InputGroup>
