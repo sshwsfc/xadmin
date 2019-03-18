@@ -1,6 +1,6 @@
 {
   "name": "xadmin-layout",
-  "version": "1.0.15",
+  "version": "2.0.0",
   "description": "Xadmin Base Layout",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
@@ -11,8 +11,8 @@
     "react-fontawesome": "^1.6.1"
   },
   "peerDependencies": {
-    "xadmin": "1",
-    "react": "16"
+    "react": "16",
+    "xadmin": "1"
   },
   "scripts": {
     "compile": "babel src --out-dir lib",

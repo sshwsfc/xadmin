@@ -1,6 +1,6 @@
 {
   "name": "xadmin-form",
-  "version": "1.0.32",
+  "version": "2.0.0",
   "description": "Xadmin Form",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
@@ -16,8 +16,8 @@
     "redux-form": "^8.1.0"
   },
   "peerDependencies": {
-    "react-redux": "6",
     "moment": "2",
+    "react-redux": "6",
     "xadmin": "1"
   },
   "scripts": {

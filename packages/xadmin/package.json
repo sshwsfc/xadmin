@@ -1,6 +1,6 @@
 {
   "name": "xadmin",
-  "version": "1.0.21",
+  "version": "2.0.0",
   "description": "Xadmin Core",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
@@ -14,8 +14,8 @@
   "peerDependencies": {
     "react": "16",
     "react-dom": "16",
-    "redux": "^4.0.1",
-    "react-redux": "^6.0.1"
+    "react-redux": "^6.0.1",
+    "redux": "^4.0.1"
   },
   "scripts": {
     "compile": "babel src --out-dir lib",
