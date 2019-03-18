@@ -1,6 +1,6 @@
 {
   "name": "xadmin-plugins",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Xadmin Plugins",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
@@ -16,10 +16,10 @@
   "peerDependencies": {
     "react": "1",
     "react-bootstrap": "1",
-    "xadmin": "1",
-    "xadmin-form": "1",
-    "xadmin-i18n": "1",
-    "xadmin-model": "1"
+    "xadmin": "2",
+    "xadmin-form": "2",
+    "xadmin-i18n": "2",
+    "xadmin-model": "2"
   },
   "scripts": {
     "compile": "babel src --out-dir lib",

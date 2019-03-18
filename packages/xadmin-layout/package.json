@@ -1,6 +1,6 @@
 {
   "name": "xadmin-layout",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Xadmin Base Layout",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
@@ -12,7 +12,7 @@
   },
   "peerDependencies": {
     "react": "16",
-    "xadmin": "1"
+    "xadmin": "2"
   },
   "scripts": {
     "compile": "babel src --out-dir lib",

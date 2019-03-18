@@ -1,6 +1,6 @@
 {
   "name": "xadmin-form",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Xadmin Form",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
@@ -18,7 +18,7 @@
   "peerDependencies": {
     "moment": "2",
     "react-redux": "6",
-    "xadmin": "1"
+    "xadmin": "2"
   },
   "scripts": {
     "compile": "babel src --out-dir lib",
