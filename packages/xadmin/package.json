@@ -1,5 +1,5 @@
 {
-  "name": "xadmin",
+  "name": "@xadmin/core",
   "version": "2.0.0",
   "description": "Xadmin Core",
   "main": "./lib/index.js",
@@ -24,5 +24,8 @@
   "files": [
     "lib"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "gitHead": "7a976e3f4034bef2e8042de81f37eeda9abcf50c"
 }
