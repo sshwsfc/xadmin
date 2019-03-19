@@ -4,7 +4,7 @@ import { RESTBaseAPI } from 'xadmin'
 export default class API extends RESTBaseAPI {
 
   getHost() {
-    return 'http://jsonplaceholder.typicode.com/'
+    return 'https://jsonplaceholder.typicode.com/'
   }
 
   fetch(id, options) {
