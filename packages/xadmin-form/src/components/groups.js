@@ -37,7 +37,7 @@ const FieldGroup = ({ label, meta, input, field, children }) => {
   )
 }
 
-const InLineRow = ({ children }) => <Col><Row>{children}</Row></Col>
+const InLineRow = ({ children }) => <Col sm={6} md={4} lg={3}><Row className="mb-2">{children}</Row></Col>
 
 const InlineGroup = ({ label, meta, input, field, children }) => {
   const groupProps = {}
@@ -55,10 +55,12 @@ const InlineGroup = ({ label, meta, input, field, children }) => {
   const controlComponent = children ? children : (<Form.Control {...input} {...attrs} placeholder={label} />)
   return (
     <Form.Group as={InLineRow} controlId={input.name} {...groupProps}>
-      <Form.Label as={Col}>
-        {label}{field && field.required ? <span className="text-danger">*</span> : ''}
-      </Form.Label>
-      <Col>
+      <Col sm={3}>
+        <Form.Label>
+          {label}{field && field.required ? <span className="text-danger">*</span> : ''}
+        </Form.Label>
+      </Col>
+      <Col sm={9}>
         {controlComponent}
         {error && <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>}
         {help && <Form.Text className="text-muted">{help}</Form.Text>}

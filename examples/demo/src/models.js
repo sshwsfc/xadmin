@@ -120,7 +120,7 @@ export default {
     filters: {
       nav: [ 'title', 'user' ],
       sidemenu: [ 'user' ],
-      submenu: [ 'user', 'title', 'readers', 'body', 'id' ],
+      submenu: [ 'id', 'user', 'title', 'body' ],
     },
     display: (post) => post.title,
     search_fields: [ 'title' ],
