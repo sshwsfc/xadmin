@@ -1,6 +1,6 @@
 {
   "name": "xadmin-start",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Xadmin Start Template -- Default",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
@@ -17,10 +17,10 @@
     "redux-saga": "^1.0.2",
     "xadmin": "^2.0.1",
     "xadmin-auth": "^2.0.1",
-    "xadmin-form": "^2.0.1",
+    "xadmin-form": "^2.0.2",
     "xadmin-i18n": "^2.0.1",
     "xadmin-layout": "^2.0.1",
-    "xadmin-model": "^2.0.1",
+    "xadmin-model": "^2.0.2",
     "xadmin-plugins": "^2.0.1"
   },
   "scripts": {
