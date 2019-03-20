@@ -45,7 +45,7 @@ import api from 'xadmin-api-jsonplaceholder'
 app
 .use({
   config: { title: 'Xadmin Demo', api },
-  model: {
+  models: {
     User: {
       name: 'user',
       resource_name: 'users',

@@ -92,6 +92,10 @@ export default {
       body: {
         type: 'string'
       },
+      category: {
+        type: 'string',
+        enum: [ 'Question', 'Idea', 'Isusse' ]
+      },
       user: {
         type: 'object',
         name: 'User',
@@ -116,11 +120,12 @@ export default {
       }
     },
     permission: { view: true, add: true, edit: true, delete: true },
-    form: [ 'title', 'body', 'user', 'readers' ],
+    form: [ 'title', 'body', 'category', 'user', 'readers' ],
     filters: {
       nav: [ 'title', 'user' ],
+      navform: { fields: [ 'title' ], submitOnChange: true },
       sidemenu: [ 'user' ],
-      submenu: [ 'id', 'user', 'title', 'body' ],
+      submenu: { fields: [ 'id', 'user', 'title', 'body', 'category' ], submitOnChange: true },
     },
     display: (post) => post.title,
     search_fields: [ 'title' ],

@@ -1,6 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
-import { Checkbox } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
+import app from 'xadmin'
 
 export default class EnumFilter extends React.Component {
 
@@ -80,22 +81,23 @@ export default class EnumFilter extends React.Component {
   render() {
     const { input: { name, value, onBlur, onChange, ...inputProps }, label, meta, field, group: FieldGroup } = this.props
     const { checks } = this.state
+    const { _t } = app.context 
     const inline = true
     return (
       <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
-        <Checkbox key="check-clear" 
+        <Form.Check key="check-clear" id="check-clear" type="checkbox" label={_t('All')}
           checked={checks.length==0} 
           onChange={(e)=>{
             if(e.target.checked) {
               this.clear()
             }
           }}
-          inline={inline} {...inputProps}> All</Checkbox>
+          inline={inline} {...inputProps} />
         {field.titleMap.map(option => { return (
-          <Checkbox key={option.name} 
+          <Form.Check key={option.name} id={option.name} type="checkbox" label={option.name}
             checked={checks.indexOf(option.value) >= 0} 
             onChange={(e)=>this.onChange(e, option.value)}
-            inline={inline} {...inputProps} value={option.value}> {option.name}</Checkbox>) })}
+            inline={inline} {...inputProps} value={option.value} />) })}
       </FieldGroup>
     )
   }

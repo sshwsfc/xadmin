@@ -19,7 +19,7 @@ const convert = (schema, options) => {
 }
 
 const FilterForm = (props) => {
-  const { formKey, filters, fieldProps } = props
+  const { formKey, filters, fieldProps, onSubmit, options } = props
   const fields = filters.map(filter => {
     const field = convert(filter.schema, { key: filter.key })
     return _.merge(field, filter.field, fieldProps)
@@ -28,7 +28,8 @@ const FilterForm = (props) => {
     form: formKey,
     destroyOnUnmount: false,
     enableReinitialize: true,
-    onChange: (values) => console.log(values)
+    onChange: (options && options.submitOnChange == true) ? onSubmit : undefined,
+    ...(options && options.formProps)
   })(BaseForm)
   return <WrapForm fields={fields} {...props}/>
 }
@@ -45,19 +46,21 @@ class FilterDiv extends React.Component {
 
   render() {
     const { _t } = app.context
-    const { filters, formKey, data, changeFilter, resetFilter } = this.props
+    const { filters, formKey, data, changeFilter, resetFilter, options } = this.props
     const FormLayout = (props) => {
       const { children, invalid, pristine, handleSubmit, submitting } = props
       return (
         <form className="form-horizontal" onSubmit={handleSubmit}>
           {children}
-          <Row>
-            <Col sm={9} xsOffset={3} >
-              <Button disabled={invalid || submitting} onClick={handleSubmit}>{_t('Search')}</Button>
-              {' '}
-              <Button disabled={submitting} onClick={resetFilter} variant="light">{_t('Clear')}</Button>
-            </Col>
-          </Row>
+          {options && options.submitOnChange ? null : (
+            <Row>
+              <Col sm={9} xsOffset={3} >
+                <Button disabled={invalid || submitting} onClick={handleSubmit}>{_t('Search')}</Button>
+                {' '}
+                <Button disabled={submitting} onClick={resetFilter} variant="light">{_t('Clear')}</Button>
+              </Col>
+            </Row>
+          )}
         </form>
       )
     }
@@ -68,6 +71,7 @@ class FilterDiv extends React.Component {
       initialValues={data}
       onSubmit={changeFilter}
       fieldProps={{ mode: 'base' }}
+      options={options}
     />)
   }
 
@@ -77,16 +81,16 @@ class FilterInline extends React.Component {
 
   render() {
     const { _t } = app.context
-    const { filters, formKey, data, changeFilter, resetFilter, groupSize, hasButtons } = this.props
+    const { filters, options, formKey, data, changeFilter, resetFilter, groupSize } = this.props
 
     const FormLayout = (props) => {
       const { children, invalid, pristine, handleSubmit, submitting } = props
       return (
         <form className="form-horizontal" onSubmit={handleSubmit}>
-          <Row style={{ marginBottom: '-5px' }}>
+          <Row>
             {children}
           </Row>
-          { hasButtons ? (
+          {options && options.submitOnChange ? null : (
             <Row>
               <Col style={{ textAlign: 'center' }} sm={12}>
                 <Button disabled={invalid || submitting} size="sm" onClick={handleSubmit}>{_t('Search')}</Button>
@@ -94,7 +98,7 @@ class FilterInline extends React.Component {
                 <Button disabled={submitting} onClick={resetFilter} size="sm" variant="light">{_t('Clear')}</Button>
               </Col>
             </Row> 
-          ): null }
+          )}
         </form>
       )
     }
@@ -107,6 +111,7 @@ class FilterInline extends React.Component {
       onSubmit={changeFilter}
       group={InlineGroup}
       fieldProps={{ attrs: { size: 'sm' }, mode: 'mini' }}
+      options={options}
     />)
   }
 
@@ -117,7 +122,7 @@ class FilterMenu extends FilterComponent {
 
   render() {
     const { _t } = app.context
-    const { filters, formKey, data, changeFilter, resetFilter } = this.props
+    const { filters, options, formKey, data, changeFilter, resetFilter } = this.props
 
     if(filters && filters.length) {
       const FormLayout = (props) => {
@@ -127,10 +132,12 @@ class FilterMenu extends FilterComponent {
             <Card.Body>
               <Form onSubmit={handleSubmit}>
                 {children}
-                <ButtonGroup className="w-100">
-                  <Button disabled={submitting} onClick={resetFilter} variant="light">{_t('Clear')}</Button>
-                  <Button disabled={invalid || submitting} onClick={handleSubmit}>{_t('Search')}</Button>
-                </ButtonGroup>
+                {options && options.submitOnChange ? null : (
+                  <ButtonGroup className="w-100">
+                    <Button disabled={submitting} onClick={resetFilter} variant="light">{_t('Clear')}</Button>
+                    <Button disabled={invalid || submitting} onClick={handleSubmit}>{_t('Search')}</Button>
+                  </ButtonGroup>
+                )}
               </Form>
             </Card.Body>
           </Card>
@@ -143,6 +150,7 @@ class FilterMenu extends FilterComponent {
         initialValues={data}
         onSubmit={changeFilter}
         group={SimpleGroup}
+        options={options}
       />)
     } else {
       return null
@@ -183,7 +191,7 @@ class FilterModal extends FilterComponent {
   
   render() {
     const { _t } = app.context
-    const { filters, formKey, data, changeFilter, resetFilter } = this.props
+    const { filters, options, formKey, data, changeFilter, resetFilter } = this.props
 
     const FormLayout = (props) => {
       const { children, invalid, handleSubmit, submitting, onClose } = props
@@ -197,16 +205,18 @@ class FilterModal extends FilterComponent {
           <Modal.Body>
             <form className="form-horizontal">{children}</form>
           </Modal.Body>
-          <Modal.Footer>
-            <Button key={0} disabled={submitting} onClick={()=>{
-              resetFilter()
-              this.onClose()
-            }} variant="light">{_t('Clear')}</Button>
-            <Button key={1} disabled={invalid || submitting} onClick={()=>{
-              handleSubmit()
-              this.onClose()
-            }}>{_t('Search')}</Button>  
-          </Modal.Footer>
+          {options && options.submitOnChange ? null : (
+            <Modal.Footer>
+              <Button key={0} disabled={submitting} onClick={()=>{
+                resetFilter()
+                this.onClose()
+              }} variant="light">{_t('Clear')}</Button>
+              <Button key={1} disabled={invalid || submitting} onClick={()=>{
+                handleSubmit()
+                this.onClose()
+              }}>{_t('Search')}</Button>  
+            </Modal.Footer>
+          )}
         </Modal>
       )
     }
@@ -225,6 +235,7 @@ class FilterModal extends FilterComponent {
             initialValues={data}
             onSubmit={changeFilter}
             fieldProps={{ mode: 'base' }}
+            options={options}
           />) : null
       ]
     } else {
@@ -249,15 +260,18 @@ class FilterNavForm extends FilterComponent {
 
   renderFilterForm() {
     const { _t } = app.context
-    const { filters, formKey, data, changeFilter, resetFilter } = this.props
+    const { filters, options, formKey, data, changeFilter, resetFilter } = this.props
     const FormLayout = (props) => {
       const { children, invalid, pristine, handleSubmit, submitting } = props
       return (
-        <Form onSubmit={handleSubmit}>
-          {children}{' '}
-          <Button disabled={invalid || submitting} onClick={handleSubmit}>{_t('Search')}</Button>
-          {' '}
-          <Button disabled={submitting} onClick={resetFilter}>{_t('Clear')}</Button>
+        <Form inline className="mr-3" onSubmit={handleSubmit}>
+          {children}
+          {options && options.submitOnChange ? null : (
+            <>
+              <Button className="ml-1" disabled={invalid || submitting} onClick={handleSubmit}>{_t('Search')}</Button>
+              <Button className="ml-1" disabled={submitting} onClick={resetFilter}>{_t('Clear')}</Button>
+            </>
+          )}
         </Form>
       )
     }
@@ -267,8 +281,9 @@ class FilterNavForm extends FilterComponent {
       component={FormLayout}
       initialValues={data}
       onSubmit={changeFilter}
-      group={InlineGroup}
+      group={SimpleGroup}
       fieldProps={{ mode: 'base' }}
+      options={options}
     />)
   }
 
@@ -304,16 +319,32 @@ export default {
         }
       },
       compute: ({ model, modelState }, { data, name }) => {
-        const filters = (model.filters ? (model.filters[name] || []) : []).map(filter => {
-          const key = typeof filter == 'string' ? filter : filter.key
+        const filter = model.filters && model.filters[name]
+        let fields, options
+
+        if(_.isArray(filter)) {
+          options = {}
+          fields = filter
+        } else if(_.isPlainObject(filter) && _.isArray(filter.fields)) {
+          fields = filter.fields
+          options = _.omit(filter, 'fields')
+        } else {
+          return {
+            filters: [], formKey: `filter.${model.name}`
+          }
+        }
+
+        const filters = fields.map(field => {
+          const key = typeof field == 'string' ? field : field.key
           const schema = getFieldProp(model, key)
           return schema ? {
             key, schema,
-            field: typeof filter == 'string' ? { } : filter
+            field: typeof field == 'string' ? { } : field
           } : null
         }).filter(Boolean)
+
         return {
-          filters, data: _.clone(data),
+          filters, data: _.clone(data), options,
           formKey: `filter.${model.name}`
         }
       },
