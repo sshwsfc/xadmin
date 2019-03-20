@@ -7,7 +7,7 @@ const block = (tag, props={}) => {
   const blocks = app.get('blocks')
   if(blocks[tag] !== undefined) {
     const nodes = blocks[tag].reduce((prev, block) => {
-      const ret = block({ nodes: prev, ...(_.omit(props, 'children')) })
+      const ret = block({ nodes: prev, ...props })
       if(ret !== undefined && ret != prev) {
         if(Array.isArray(ret)) {
           prev = prev.concat(ret.map(c => React.cloneElement(c, props)))
@@ -24,10 +24,10 @@ const block = (tag, props={}) => {
   return null
 }
 
-const Block = (props) => {
-  const bs = block(props.name, { ...(props.el && props.el.props), ...props })
-  return _.isFunction(props.children) ? 
-    props.children(bs ? React.Children.toArray(bs) : null) : React.Children.toArray(bs)
+const Block = ({ name, children, ...props }) => {
+  const bs = block(name, props)
+  return _.isFunction(children) ? 
+    children(bs ? React.Children.toArray(bs) : null) : React.Children.toArray(bs)
 }
 
 export { Block, block }

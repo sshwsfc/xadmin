@@ -122,7 +122,7 @@ const wrap_component = (WrappedComponent, tag, defaultMapper) => {
       if(this.methodProps == null) {
         this.methodProps = this.computeMethodProps()
       }
-      return <WrappedComponent {...this.props} {...dataProps} {...computeProps} {...this.methodProps} />
+      return <WrappedComponent {..._.omit(this.props, 'wrapContext')} {...dataProps} {...computeProps} {...this.methodProps} />
     }
   }
 

@@ -17,9 +17,13 @@ class MenuBar extends React.Component {
 
   render() {
     return (
-      <Menu ref="mainmenu" theme="dark" mode={this.props.mode}>
-        <Block name="main.menu" el={this} />
-      </Menu>
+      <Block name="main.menu" el={this}>
+        {items => (
+          <Menu theme="dark" mode={this.props.mode}>
+            {items}
+          </Menu>
+        )}
+      </Block>
     )
   }
 }
