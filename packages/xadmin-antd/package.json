@@ -1,0 +1,25 @@
+{
+  "name": "xadmin-antd",
+  "version": "2.0.0",
+  "description": "Xadmin Antd UI",
+  "main": "./lib/index.js",
+  "author": "sshwsfc@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "ant-design-pro": "^2.2.1",
+    "antd": "^3.15.1",
+    "lodash": "^4.17.11",
+    "react-fontawesome": "^1.6.1"
+  },
+  "peerDependencies": {
+    "react": "16",
+    "xadmin": "2"
+  },
+  "scripts": {
+    "compile": "babel src --out-dir lib",
+    "watch": "babel src --out-dir lib -w"
+  },
+  "files": [
+    "lib"
+  ]
+}

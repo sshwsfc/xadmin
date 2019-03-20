@@ -111,6 +111,12 @@ class Loading extends React.Component {
   }
 }
 
+const NavItem = ({ key, onSelect, children, icon, title, ...props }) => (
+  <Nav.Item key={key} {...props} >
+    <Nav.Link eventKey={key} onSelect={onSelect}>{icon} {title || children}</Nav.Link>
+  </Nav.Item>
+)
+
 export {
-  App, Main, Page, Loading
+  App, Main, Page, Loading, NavItem
 }

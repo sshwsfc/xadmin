@@ -1,0 +1,74 @@
+#xadmin-main{
+  min-height: 865px;
+}
+#xadmin-main .logo {
+  text-align: center;
+  font-size: 20px;
+  padding: 10px;
+}
+
+#xadmin-main .logo img {
+  margin:  0;
+  cursor: pointer;
+  overflow: hidden;
+  width: 140px;
+  height: 60px;
+  margin-bottom: 5px;
+}
+
+#xadmin-main .logo span {
+  font-size: 16px;
+  color: #FFF;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#xadmin-main .ant-layout-sider-collapsed .logo {
+  text-align: center;
+}
+
+#xadmin-main .ant-layout-sider-collapsed .logo img {
+  margin: 15px 0;
+  height: 35px;
+  width: 60px;
+
+}
+#xadmin-main .ant-layout-sider-collapsed .logo span {
+  display: none;
+}
+
+#xadmin-main .ant-layout-sider-collapsed .anticon {
+  font-size: 16px;
+}
+#xadmin-main .ant-layout-sider-collapsed .fa {
+  font-size: 16px;
+}
+
+#xadmin-main .ant-layout-sider-collapsed .nav-text {
+  display: none;
+}
+
+#xadmin-main .ant-layout-sider-collapsed .ant-menu-submenu-vertical > .ant-menu-submenu-title:after {
+  display: none;
+}
+
+#xadmin-main .trigger {
+  font-size: 18px;
+  padding: 0 16px;
+  line-height: 47px;
+  cursor: pointer;
+  transition: color .3s;
+}
+
+#xadmin-main .trigger:hover {
+  color: #108ee9;
+}
+
+#xadmin-main .ant-layout-header .pull-right .ant-menu-horizontal {
+  border-bottom: none;
+}
+#xadmin-main .ant-layout-header .pull-right .ant-menu-horizontal .menu-clock {
+  padding-top: 2px!important;
+}

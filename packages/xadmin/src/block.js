@@ -10,9 +10,9 @@ const block = (tag, props={}) => {
       const ret = block({ nodes: prev, ...(_.omit(props, 'children')) })
       if(ret !== undefined && ret != prev) {
         if(Array.isArray(ret)) {
-          prev = prev.concat(ret)
+          prev = prev.concat(ret.map(c => React.cloneElement(c, props)))
         } else {
-          prev.push(ret)
+          prev.push(React.cloneElement(ret, props))
         }
       }
       return prev

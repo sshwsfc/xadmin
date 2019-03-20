@@ -17,6 +17,7 @@ import notice from 'xadmin-plugins/lib/notice'
 import modalform from 'xadmin-plugins/lib/modalform'
 import search from 'xadmin-plugins/lib/search'
 import reldetail from 'xadmin-plugins/lib/reldetail'
+import antdUI from 'xadmin-antd'
 
 import models from './models'
 import themes from './themes'
@@ -35,11 +36,6 @@ app
 .use(themes)
 .use({
   blocks: {
-    'main.menu': () => (
-      <Nav.Item key={`main-menu-dashboard`} >
-        <Nav.Link eventKey="dashboard" onSelect={()=>app.go('/app/dashboard')}><Icon name="home"/> Home</Nav.Link>
-      </Nav.Item>
-    ),
     'top.right': () => <Nav.Link key="block">Admin</Nav.Link>
   },
 })
@@ -51,6 +47,7 @@ app
 .use(modalform)
 .use(search)
 .use(reldetail)
+.use(antdUI)
 .use({
   config: {
     api: API,

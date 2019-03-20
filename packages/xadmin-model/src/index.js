@@ -1,7 +1,6 @@
 import React from 'react'
-import { combineReducers } from 'redux'
 import Icon from 'react-fontawesome'
-import { Nav } from 'react-bootstrap'
+import { C } from 'xadmin-layout'
 
 import ModelPages from './components/Pages'
 import ChildrenModelBtn from './components/ChildrenModel'
@@ -20,15 +19,12 @@ const app = {
     const models = app.get('models')
     return {
       'main.menu': () => {
+        const NavItem = C('NavItem')
         return Object.keys(models).map((name) => {
           const model = models[name]
           if((!model.permission || model.permission.view) && 
             (!model.ui || model.ui.show_menu)) {
-            return (
-              <Nav.Item key={`main-menu-item-model-${name}`} >
-                <Nav.Link eventKey={`model-${name}`} onSelect={()=>app.go(`/app/model/${name}/list`)}><Icon name={model.icon || name}/> {model.title}</Nav.Link>
-              </Nav.Item>
-            )
+            return <NavItem itemKey={`main-menu-item-model-${name}`} onSelect={()=>app.go(`/app/model/${name}/list`)} icon={<Icon name={model.icon || name}/>}>{model.title}</NavItem>
           }
         }).filter(item => item !== undefined)
       }
