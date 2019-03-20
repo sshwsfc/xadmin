@@ -4,6 +4,10 @@ xadmin3.0版本已经完全重写，完全变成了一个纯前端框架。全�
 
 > 使用xadmin老版本的同学，可使用 django-rest-framework 这个django自动生成RESTful API神奇对接xadmin。xadmin官方也会在近期推出专门针对django的接口。其他语言框架的接口也会陆续推出
 
+## 在线Demo
+
+[![Edit demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/8pk88kwz70?fontsize=14)
+
 ## 文档
 
 一如既往的编写中...
