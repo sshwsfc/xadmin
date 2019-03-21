@@ -1,6 +1,6 @@
 import React from 'react'
 import { app, Block } from 'xadmin'
-import { Page } from 'xadmin-layout'
+import { Page } from 'xadmin-ui'
 
 class Dashboard extends React.Component {
   render() {

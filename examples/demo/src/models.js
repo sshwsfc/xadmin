@@ -1,5 +1,5 @@
 import React from 'react'
-import { Textarea } from 'xadmin-form/lib/components'
+import { Textarea } from 'xadmin-antd/lib/form/components'
 import { RelateAction } from 'xadmin-model/lib/relate'
 import { ChildrenModelBtn } from 'xadmin-model'
 import { List } from 'xadmin-model/lib/components/Items'

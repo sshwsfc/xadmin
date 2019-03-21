@@ -4,7 +4,7 @@ import { Button, Nav, Row, Col } from 'react-bootstrap'
 
 import Icon from 'react-fontawesome'
 import { app } from 'xadmin'
-import { Page } from 'xadmin-layout'
+import { Page } from 'xadmin-ui'
 import { ModelWrap, ModelBlock } from '../base'
 
 import Pagination from './Pagination'

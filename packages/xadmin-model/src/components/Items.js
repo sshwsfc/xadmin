@@ -4,7 +4,7 @@ import _ from 'lodash'
 import Icon from 'react-fontawesome'
 import { app } from 'xadmin'
 import { SchemaForm } from 'xadmin-form'
-import { Page, Loading } from 'xadmin-layout'
+import { Page, Loading } from 'xadmin-ui'
 
 import { Form, Jumbotron, Container, Row, Col, Table, Nav, OverlayTrigger, Popover, Button, ButtonGroup, Dropdown, Card, Media } from 'react-bootstrap'
 import { ModelWrap, ModelBlock } from '../base'

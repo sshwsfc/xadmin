@@ -2,7 +2,7 @@ import app from 'xadmin'
 
 import i18n from 'xadmin-i18n'
 import form from 'xadmin-form'
-import layout from 'xadmin-layout'
+import layout from 'xadmin-ui'
 import model from 'xadmin-model'
 import auth from 'xadmin-auth'
 

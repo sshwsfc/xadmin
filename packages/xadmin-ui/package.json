@@ -5,11 +5,7 @@
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
   "license": "MIT",
-  "dependencies": {
-    "lodash": "^4.17.11",
-    "react-bootstrap": "^1.0.0-beta.5",
-    "react-fontawesome": "^1.6.1"
-  },
+  "dependencies": {},
   "peerDependencies": {
     "react": "16",
     "xadmin": "2"

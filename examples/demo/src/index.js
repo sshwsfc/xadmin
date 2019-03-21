@@ -1,12 +1,11 @@
 import React from 'react'
 import './index.css';
 import app from 'xadmin';
-import { Nav } from 'react-bootstrap'
 
 import i18n from 'xadmin-i18n'
 import auth from 'xadmin-auth'
 import form from 'xadmin-form'
-import layout, { Icon, Loading } from 'xadmin-layout'
+import ui, { Loading } from 'xadmin-ui'
 import model from 'xadmin-model'
 import relate from 'xadmin-model/lib/relate'
 import filter from 'xadmin-model/lib/filter'
@@ -29,16 +28,11 @@ const App = React.lazy(() => import('./App'))
 
 app
 .use(i18n)
-.use(layout)
+.use(ui)
 .use(loading)
 .use(notice)
 .use(form)
 .use(themes)
-.use({
-  blocks: {
-    'top.right': () => <Nav.Link key="block">Admin</Nav.Link>
-  },
-})
 .use(model)
 .use(filter)
 .use(actions)

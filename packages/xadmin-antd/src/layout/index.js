@@ -1,10 +1,14 @@
+import React from 'react'
 import Main from './Main'
 import App from './App'
 import Dashboard from './Dashboard'
 import Page from './Page'
 import Loading from './Loading'
+import { Icon as AntIcon } from 'antd'
 
-export { Main, App, Page, Loading }
+const Icon = ({ name, ...props }) => <AntIcon type={name} {...props} />
+
+export { Main, App, Page, Loading, Icon }
 export default {
   '@' : {
     path: '/',

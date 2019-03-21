@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { Checkbox, Form, DropdownButton, Dropdown } from 'react-bootstrap'
 
 import app, { api } from 'xadmin'
-import { Loading } from 'xadmin-layout'
+import { Loading } from 'xadmin-ui'
 import Icon from 'react-fontawesome'
 
 import ModelPages from './components/Pages'

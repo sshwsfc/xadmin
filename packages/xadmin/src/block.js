@@ -8,10 +8,10 @@ const block = (tag, props={}) => {
   if(blocks[tag] !== undefined) {
     const nodes = blocks[tag].reduce((prev, block) => {
       const ret = block({ nodes: prev, ...props })
-      if(ret !== undefined && ret != prev) {
+      if(ret != undefined && ret != null && ret != prev) {
         if(Array.isArray(ret)) {
           prev = prev.concat(ret.map(c => React.cloneElement(c, props)))
-        } else {
+        } else if(React.isValidElement(ret)) {
           prev.push(React.cloneElement(ret, props))
         }
       }

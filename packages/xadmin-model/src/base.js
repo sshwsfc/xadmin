@@ -54,7 +54,7 @@ const ModelWrap = StoreWrap(Connect => (props) => {
 const ModelBlock = (props) => (
   <ModelContext.Consumer>
     { model => (
-      <Block {...props} >
+      <Block model={model} {...props} >
         { blocks => {
           const modelBlock = model && model.blocks && model.blocks[props.name]
           if(modelBlock) {

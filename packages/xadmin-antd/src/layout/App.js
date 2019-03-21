@@ -17,7 +17,7 @@ class MenuBar extends React.Component {
 
   render() {
     return (
-      <Block name="main.menu" el={this}>
+      <Block name="main.menu">
         {items => (
           <Menu theme="dark" mode={this.props.mode}>
             {items}
@@ -55,7 +55,7 @@ class App extends React.Component {
         >
           <div className="logo">
             {_c('site.logo')}
-            {_c('site.title')}
+            {_c('site.title', 'Admin')}
           </div>
           <MenuBar mode={this.state.mode} />
         </Sider>

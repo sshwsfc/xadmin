@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
-import { Loading } from 'xadmin-layout'
+import { Loading } from 'xadmin-ui'
 import { convert as schemaConvert } from 'xadmin-form/lib/schema'
 import { Card, Row, Col, Form } from 'react-bootstrap'
 

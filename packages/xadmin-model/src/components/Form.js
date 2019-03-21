@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import _ from 'lodash'
 import Icon from 'react-fontawesome'
 import app from 'xadmin'
-import { Loading } from 'xadmin-layout'
+import { Loading } from 'xadmin-ui'
 import { SchemaForm } from 'xadmin-form'
 
 import { OverlayTrigger, Tooltip, Card, Form, Row, Col, Button } from 'react-bootstrap'

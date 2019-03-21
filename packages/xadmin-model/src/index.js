@@ -1,6 +1,5 @@
 import React from 'react'
-import Icon from 'react-fontawesome'
-import { C } from 'xadmin-layout'
+import { C, Icon, Menu } from 'xadmin-ui'
 
 import ModelPages from './components/Pages'
 import ChildrenModelBtn from './components/ChildrenModel'
@@ -19,12 +18,11 @@ const app = {
     const models = app.get('models')
     return {
       'main.menu': () => {
-        const NavItem = C('NavItem')
         return Object.keys(models).map((name) => {
           const model = models[name]
           if((!model.permission || model.permission.view) && 
             (!model.ui || model.ui.show_menu)) {
-            return <NavItem itemKey={`main-menu-item-model-${name}`} onSelect={()=>app.go(`/app/model/${name}/list`)} icon={<Icon name={model.icon || name}/>}>{model.title}</NavItem>
+            return <Menu.Item itemKey={`main-menu-item-model-${name}`} onClick={()=>app.go(`/app/model/${name}/list`)} icon={<Icon name={model.icon || name}/>}>{model.title}</Menu.Item>
           }
         }).filter(item => item !== undefined)
       }

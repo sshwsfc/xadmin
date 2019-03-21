@@ -4,7 +4,7 @@ import Icon from 'react-fontawesome'
 import { StoreWrap, app } from 'xadmin'
 import { Model } from 'xadmin-model'
 import ModelForm from 'xadmin-model/lib/components/Form'
-import { Page } from 'xadmin-layout'
+import { Page } from 'xadmin-ui'
 
 import { UserChangePassword } from '../models'
 

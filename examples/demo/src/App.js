@@ -1,7 +1,7 @@
 import React from 'react';
 import app, { StoreWrap } from 'xadmin';
 import { Button, Navbar, Card, Form, Modal, ButtonGroup, Badge } from 'react-bootstrap';
-import { Page, Icon } from 'xadmin-layout';
+import { Page, Icon } from 'xadmin-ui';
 import { SchemaForm, FormWrap } from 'xadmin-form';
 import { SimpleGroup } from 'xadmin-form/lib/components/groups'
 import models from './models';
