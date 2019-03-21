@@ -12,22 +12,44 @@ class BsDashboard extends React.Component {
 
 const C = props => {
   if(typeof props == 'string') {
-    return app.get('components')[props]
+    const is = props
+    return props => C({ is, ...props })
   } else {
-    const Component = app.get('components')[props.t]
+    const Component = app.get('components')[props.is]
     return <Component {...props} />
   }
 }
 
-const Main = props => C({ t: 'Main', ...props })
-const App = props => C({ t: 'App', ...props })
-const Dashboard = props => C({ t: 'Dashboard', ...props })
-const Page = props => C({ t: 'Page', ...props })
-const Icon = props => C({ t: 'Icon', ...props })
-const Loading = props => C({ t: 'Loading', ...props })
+C.get = is => app.get('components')[is]
+
+const Main = C('Main')
+const App = C('App')
+const Dashboard = C('Dashboard')
+const Page = C('Page')
+const Icon = C('Icon')
+const Loading = C('Loading')
+
+const Dropdown = C('Dropdown')
+const Menu = C('Menu')
+Menu.SubMenu = C('Menu.SubMenu')
+Menu.Item = C('Menu.Item')
+/** UI Components */
+const Badge = C('Badge')
+const Card = C('Card')
+const Modal = C('Modal')
+const Button = C('Button')
+const Popover = C('Popover')
+const Tooltip = C('Tooltip')
+const Table = C('Table')
+const Tabs = C('Tabs')
+Tabs.Item = C('Tabs.Item')
+const Empty = C('Empty')
+const List = C('List')
+List.Item = C('List.Item')
+const Alert = C('Alert')
 
 export default {
-  name: 'xadmin.layout',
+  name: 'xadmin.ui',
   items: {
     components: { type: 'map' }
   },
@@ -68,5 +90,8 @@ export default {
 export {
   C,
   Page, Icon, Loading,
-  Main, Dashboard, App
+  Main, Dashboard, App,
+  Dropdown, Menu, Badge, Card,
+  Modal, Button, Popover, Tooltip, 
+  Table, Tabs, Empty, List, Alert
 }

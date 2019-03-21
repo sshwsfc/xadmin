@@ -1,0 +1,24 @@
+{
+  "name": "xadmin-bootstrap",
+  "version": "2.0.0",
+  "description": "Xadmin Bootstrap UI",
+  "main": "./lib/index.js",
+  "author": "sshwsfc@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "react-bootstrap": "^1.0.0-beta.5",
+    "lodash": "^4.17.11",
+    "react-fontawesome": "^1.6.1"
+  },
+  "peerDependencies": {
+    "react": "16",
+    "xadmin": "2"
+  },
+  "scripts": {
+    "compile": "babel src --out-dir lib",
+    "watch": "babel src --out-dir lib -w"
+  },
+  "files": [
+    "lib"
+  ]
+}
