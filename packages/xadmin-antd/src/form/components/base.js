@@ -88,6 +88,26 @@ const InlineGroup = ({ label, meta, input, field, children }) => {
   )
 }
 
+const SimpleGroup = ({ label, meta, input, field, children }) => {
+  const attrs = field.attrs || {}
+  const error = meta.touched && meta.error
+  const extra = field.description || field.help
+  const groupProps = { extra, required: field.required }
+
+  if (error) {
+    groupProps['validateStatus'] = 'error'
+    groupProps['hasFeedback'] = true
+    groupProps['help'] = error
+  }
+
+  const controlComponent = children ? children : (<Input {...input} {...attrs} />)
+  return (
+    <Form.Item label={label} {...groupProps}>
+      {controlComponent}
+    </Form.Item>
+  )
+}
+
 const ColGroup = ({ label, meta, input, field, children }) => {
   const attrs = field.attrs || {}
   const error = meta.touched && meta.error
@@ -122,5 +142,5 @@ const ColGroup = ({ label, meta, input, field, children }) => {
 }
 
 export {
-  FieldGroup, FieldTableGroup, InlineGroup, ColGroup
+  FieldGroup, FieldTableGroup, InlineGroup, ColGroup, SimpleGroup
 }

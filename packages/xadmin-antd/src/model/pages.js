@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {
-  Layout, Menu, Button
+  Layout, Menu, Button, Card
 } from 'antd'
 
 import { app } from 'xadmin'
@@ -45,13 +45,13 @@ class ModelListPage extends React.Component {
     const query = location && location.query
 
     const GridComponents = [
-      // <div key="model-list-subnav" style={{ display: 'flex', justifyContent: 'space-between' }} className="mb-3">
-      //   <Pagination size="sm" className="my-0"/>
-      //   <SubMenu />
-      // </div>,
-      // <ItemsComponent key="model-list-grid" query={query} />,
+      <div key="model-list-subnav" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '.5rem' }}>
+        <C is="Model.Pagination" size="sm" />
+        <C is="Model.ListSubMenu" />
+      </div>,
+      <ItemsComponent key="model-list-grid" query={query} />,
       // <ActionBar key="model-list-action" />,
-      // <Pagination key="model-list-pagination" />
+      <C is="Model.Pagination" />
     ]
     return (
       <Page className={`xadmin-model-list-${model.key}`} 
@@ -63,10 +63,10 @@ class ModelListPage extends React.Component {
           { sideMenu => (
             <ModelBlock name="model.list.sidepanel" >
               { sidePanel => (sideMenu || sidePanel) ? (
-                <Layout style={{ background: '#fff' }}>
-                  { sideMenu ? <Sider width={200} style={{ background: '#fff' }}>{ sideMenu }</Sider> : null }
-                  <Content>{ null }</Content>
-                  { sidePanel ? <Sider width={200} style={{ background: '#fff' }}>{ sidePanel }</Sider> : null  }
+                <Layout>
+                  { sideMenu ? <Sider width={200} style={{ backgroundColor: 'transparent', marginRight: '.5rem' }}><Card>{ sideMenu }</Card></Sider> : null }
+                  <Content>{GridComponents}</Content>
+                  { sidePanel ? <Sider width={200} style={{ backgroundColor: 'transparent', marginLeft: '.5rem' }}><Card>{ sidePanel }<Card></Card></Card></Sider> : null  }
                 </Layout>
               ) : GridComponents }
             </ModelBlock>

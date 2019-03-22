@@ -3,7 +3,7 @@ import DatePicker from './components/DatePicker'
 import DatetimePicker from './components/DatetimePicker'
 //import ArrayWidget from './components/Array'
 
-import { FieldGroup, InlineGroup, ColGroup } from './components/base'
+import { FieldGroup, InlineGroup, ColGroup, SimpleGroup } from './components/base'
 import { FormLayout } from './components/layout'
 
 export default {
@@ -11,7 +11,7 @@ export default {
     'Form.Layout': FormLayout,
     'Form.FieldGroup': FieldGroup,
     'Form.InlineGroup': InlineGroup,
-    'Form.SimpleGroup': FieldGroup,
+    'Form.SimpleGroup': SimpleGroup,
     'Form.ColGroup': ColGroup
   },
   form_fields: {
