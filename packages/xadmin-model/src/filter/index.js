@@ -4,6 +4,7 @@ import Icon from 'react-fontawesome'
 import app from 'xadmin'
 import { Nav, ButtonGroup, Card, Modal, Form, OverlayTrigger, Popover, Badge, Button, Col, Row, FormGroup, ControlLabel } from 'react-bootstrap'
 import { BaseForm, reduxForm } from 'xadmin-form'
+import { C } from 'xadmin-ui'
 import { InlineGroup, SimpleGroup } from 'xadmin-form/lib/components/groups'
 
 import { ModelWrap } from '../index'
@@ -106,7 +107,7 @@ class FilterInline extends React.Component {
     return (<FilterForm
       formKey={formKey}
       filters={filters}
-      component={FormLayout}
+      component={C('Filter.NavForm')}
       initialValues={data}
       onSubmit={changeFilter}
       group={InlineGroup}
@@ -278,11 +279,10 @@ class FilterNavForm extends FilterComponent {
     return (<FilterForm
       formKey={formKey}
       filters={filters}
-      component={FormLayout}
+      component={C('Filter.NavForm')}
+      group={C('Form.InlineGroup')}
       initialValues={data}
       onSubmit={changeFilter}
-      group={SimpleGroup}
-      fieldProps={{ mode: 'base' }}
       options={options}
     />)
   }
@@ -302,14 +302,52 @@ const block_func = (Filter, name, props) => ({ model }) => (
   (model && model.filters && model.filters[name]) ? <Filter name={name} {...props} /> : null
 )
 
+@ModelWrap('model.list.filter')
+class BaseFilter extends React.Component {
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.state != nextState
+  }
+
+  renderFilterForm() {
+    const { filters, options, component, group, formKey, data, changeFilter, resetFilter } = this.props
+
+    return (<FilterForm
+      formKey={formKey}
+      filters={filters}
+      component={component}
+      group={group}
+      initialValues={data}
+      onSubmit={changeFilter}
+      options={options}
+      resetFilter={resetFilter}
+    />)
+  }
+
+  render() {
+    const { filters } = this.props
+    if(filters && filters.length) {
+      return this.renderFilterForm()
+    } else {
+      return null
+    }
+  }
+
+}
+
+const filter = (name, componentName, groupName) => () => 
+  <BaseFilter name={name} component={C(componentName)} group={groupName && C(groupName)} />
+
 export default {
   name: 'xadmin.filter',
   blocks: {
-    'model.list.nav': () => [ <FilterModal name="nav" />, <FilterNavForm name="navform" /> ],
-    'model.list.modal': block_func(FilterModal, 'modal'),
-    'model.list.popover': block_func(FilterPopover, 'popover'),
-    'model.list.submenu': block_func(FilterSubMenu, 'submenu'),
-    'model.list.sidemenu': block_func(FilterMenu, 'sidemenu')
+    //'model.list.nav': () => [ <FilterModal name="nav" />, <FilterNavForm name="navform" /> ],
+    //'model.list.modal': block_func(FilterModal, 'modal'),
+    //'model.list.popover': block_func(FilterPopover, 'popover'),
+    'model.list.nav': filter('navform', 'Filter.NavForm', 'Form.InlineGroup'),
+    'model.list.navbtn': filter('nav', 'Filter.Modal'),
+    'model.list.submenu': filter('submenu', 'Filter.Submenu', 'Form.ColGroup'),
+    'model.list.sidemenu': filter('sidemenu', 'Filter.Form', 'Form.SimpleGroup')
   },
   mappers: {
     'model.list.filter': {

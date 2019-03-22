@@ -125,7 +125,7 @@ export default {
       nav: [ 'title', 'user' ],
       navform: { fields: [ 'title' ], submitOnChange: false },
       sidemenu: [ 'user' ],
-      submenu: { fields: [ 'id', 'user', 'title', 'body', 'category' ], submitOnChange: true },
+      submenu: { fields: [ 'id', 'title', 'body' ], submitOnChange: true },
     },
     display: (post) => post.title,
     search_fields: [ 'title' ],

@@ -1,6 +1,13 @@
 import { TextFilter, EnumFilter, NumberFilter, DateFilter, DatetimeFilter, BooleanFilter } from './components'
+import { FilterForm, NavForm, Submenu, FilterModal } from './filters'
 
 export default {
+  components: {
+    'Filter.Form': FilterForm,
+    'Filter.NavForm': NavForm,
+    'Filter.Submenu': Submenu,
+    'Filter.Modal': FilterModal
+  },
   form_fields: {
     filter_text: {
       component: TextFilter

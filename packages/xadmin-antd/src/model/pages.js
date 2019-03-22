@@ -35,11 +35,7 @@ class ModelListPage extends React.Component {
 
   renderPageContent() {
     return (
-      <ModelBlock name="model.list.nav">
-        { items => items && (
-          <Menu key="nav-left" mode="horizontal">{items}</Menu>
-        )}
-      </ModelBlock>
+      <ModelBlock name="model.list.nav" />
     )
   }
 
