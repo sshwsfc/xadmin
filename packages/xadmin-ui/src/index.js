@@ -3,16 +3,10 @@ import app from 'xadmin'
 
 const C = args => {
   if(typeof args == 'string') {
-    return props => {
-      const Component = app.get('components')[args]
-      if(Component) 
-        return <Component {...props} />
-      else
-        return <div>Component {args} not found.</div>
-    }
+    return app.get('components')[args]
   } else {
-    const { is, props } = args
-    const Component = app.get('components')[is]
+    const { is, ...props } = args
+    const Component = C(is)
     if(Component) 
       return <Component {...props} />
     else
@@ -20,33 +14,33 @@ const C = args => {
   }
 }
 
-C.get = is => app.get('components')[is]
+C.lazy = is => props => C({ is, ...props })
 
-const Main = C('Main')
-const App = C('App')
-const Dashboard = C('Dashboard')
-const Page = C('Page')
-const Icon = C('Icon')
-const Loading = C('Loading')
+const Main = C.lazy('Main')
+const App = C.lazy('App')
+const Dashboard = C.lazy('Dashboard')
+const Page = C.lazy('Page')
+const Icon = C.lazy('Icon')
+const Loading = C.lazy('Loading')
 
-const Dropdown = C('Dropdown')
-const Menu = C('Menu')
-Menu.SubMenu = C('Menu.SubMenu')
-Menu.Item = C('Menu.Item')
+const Dropdown = C.lazy('Dropdown')
+const Menu = C.lazy('Menu')
+Menu.SubMenu = C.lazy('Menu.SubMenu')
+Menu.Item = C.lazy('Menu.Item')
 /** UI Components */
-const Badge = C('Badge')
-const Card = C('Card')
-const Modal = C('Modal')
-const Button = C('Button')
-const Popover = C('Popover')
-const Tooltip = C('Tooltip')
-const Table = C('Table')
-const Tabs = C('Tabs')
-Tabs.Item = C('Tabs.Item')
-const Empty = C('Empty')
-const List = C('List')
-List.Item = C('List.Item')
-const Alert = C('Alert')
+const Badge = C.lazy('Badge')
+const Card = C.lazy('Card')
+const Modal = C.lazy('Modal')
+const Button = C.lazy('Button')
+const Popover = C.lazy('Popover')
+const Tooltip = C.lazy('Tooltip')
+const Table = C.lazy('Table')
+const Tabs = C.lazy('Tabs')
+Tabs.Item = C.lazy('Tabs.Item')
+const Empty = C.lazy('Empty')
+const List = C.lazy('List')
+List.Item = C.lazy('List.Item')
+const Alert = C.lazy('Alert')
 
 export default {
   name: 'xadmin.ui',

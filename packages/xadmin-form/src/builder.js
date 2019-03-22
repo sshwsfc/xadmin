@@ -1,7 +1,7 @@
 import React from 'react'
 import { Field, reduxForm, reducer as formReducer } from 'redux-form'
 import { app, StoreWrap } from 'xadmin'
-import { FieldGroup } from './components/groups'
+import { C } from 'xadmin-ui'
 
 const defaultUIRender = (fields, option) => {
   return fields.map(field => fieldBuilder(field, option))
@@ -20,7 +20,7 @@ const fieldBuilder = (field, option, ...props) => {
   return (<Field key={field.key} name={field.name} label={field.label} 
     normalize={field.normalize} parse={field.parse} format={field.format}
     component={field.component} field={field} 
-    group={field.group || (option && option.group ? option.group : FieldGroup)} 
+    group={field.group || (option && option.group ? option.group : C('Form.FieldGroup'))} 
     option={option}
     {...props} />)
 }

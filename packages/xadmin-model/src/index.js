@@ -3,7 +3,7 @@ import { C, Icon, Menu } from 'xadmin-ui'
 
 import ModelPages from './components/Pages'
 import ChildrenModelBtn from './components/ChildrenModel'
-import { Model, ModelWrap, ModelContext } from './base'
+import { Model, ModelWrap, ModelContext, ModelBlock } from './base'
 import modelReducer from './reducer'
 import effects from './effects'
 import mappers from './mappers'
@@ -41,28 +41,28 @@ const app = {
         model_routes.push({
           path: 'list',
           breadcrumbName: _t('{{name}} List', { name: modelName }),
-          component: model.components && model.components['page_list'] || ModelPages.ModelListPage
+          component: model.components && model.components['page_list'] || C('Model.ListPage')
         })
       }
       if(model.permission && model.permission.view) {
         model_routes.push({
           path: ':id/detail',
           breadcrumbName: _t('{{name}} Detail', { name: modelName }),
-          component: model.components && model.components['page_detail'] || ModelPages.ModelDetailPage
+          component: model.components && model.components['page_detail'] || C('Model.DetailPage')
         })
       }
       if(model.permission && model.permission.add) {
         model_routes.push({
           path: 'add',
           breadcrumbName: _t('Create {{name}}', { name: modelName }),
-          component: model.components && model.components['page_add'] || ModelPages.ModelFormPage
+          component: model.components && model.components['page_add'] || C('Model.FormPage')
         })
       }
       if(model.permission && model.permission.edit) {
         model_routes.push({
           path: ':id/edit',
           breadcrumbName: _t('Edit {{name}}', { name: modelName }),
-          component: model.components && model.components['page_edit'] || ModelPages.ModelFormPage
+          component: model.components && model.components['page_edit'] || C('Model.FormPage')
         })
       }
       routes = routes.concat({
@@ -87,5 +87,5 @@ const app = {
   field_render
 }
 
-export { Model, ModelWrap, ModelContext, ChildrenModelBtn }
+export { Model, ModelWrap, ModelBlock, ModelContext, ChildrenModelBtn }
 export default app

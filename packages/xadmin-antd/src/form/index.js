@@ -1,11 +1,16 @@
 import { Checkbox, Select, Text, Transfer } from './components'
 import DatePicker from './components/DatePicker'
-import DateFilter from './components/DateFilter'
 import DatetimePicker from './components/DatetimePicker'
-import DatetimeFilter from './components/DatetimeFilter'
-import ArrayWidget from './components/Array'
+//import ArrayWidget from './components/Array'
+
+import { FieldGroup } from './components/base'
+import { FormLayout } from './components/layout'
 
 export default {
+  components: {
+    'Form.Layout': FormLayout,
+    'Form.FieldGroup': FieldGroup
+  },
   form_fields: {
     text: {
       component: Text
@@ -75,18 +80,12 @@ export default {
     },
     relates: {
       component: Transfer
-    },
+    }
     // fieldset: {
     //   component: Fieldset
     // },
     // array: {
     //   component: ArrayWidget
-    // },
-    filter_date: {
-      component: DateFilter
-    },
-    filter_datetime: {
-      component: DatetimeFilter
-    }
+    // }
   }
 }

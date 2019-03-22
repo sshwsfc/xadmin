@@ -7,13 +7,21 @@ import routers, { Main, App, Page, Loading, Icon } from './layout'
 import { Menu, MenuItem } from './components/Menu'
 
 import form from './form'
+import model from './model'
+import filter from './filter'
 
 export default {
   name: 'xadmin.ui.antd',
   components: {
     Main, App, Page, Loading, Icon,
-    Menu, 'Menu.Item': MenuItem
+    Menu, 'Menu.Item': MenuItem,
+    ...form.components,
+    ...model.components,
+    ...filter.components
   },
   routers,
-  ...form
+  form_fields: {
+    ...form.form_fields,
+    ...filter.form_fields
+  }
 }

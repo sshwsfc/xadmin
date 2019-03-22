@@ -60,7 +60,7 @@ class App extends React.Component {
           <MenuBar mode={this.state.mode} />
         </Sider>
         <Layout style={{ marginLeft: this.state.collapsed ? 80 : 200, transition: 'margin .2s' }}>
-          <Header style={{ background: '#fff', padding: 0, height: 47, boxShadow: 'rgba(0, 0, 0, 0.25) 0px 1px 3px', zIndex: 10 }}>
+          <Header style={{ background: '#fff', boxShadow: 'rgba(0, 0, 0, 0.25) 0px 1px 3px', zIndex: 10 }}>
             <Icon
               className="trigger pull-left"
               type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
@@ -73,7 +73,7 @@ class App extends React.Component {
               </Menu>
             </div>
           </Header>
-          <Content style={{ margin: 15,  overflow: 'initial' }}>
+          <Content>
             {this.props.children}
           </Content>
           <Footer style={{ textAlign: 'center' }}>

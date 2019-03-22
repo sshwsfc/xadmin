@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Field, reducer as formReducer, reduxForm } from 'redux-form'
 import { ReduxFormContext } from 'redux-form/es/ReduxFormContext'
 import { StoreWrap, app, config } from 'xadmin'
+import { C } from 'xadmin-ui'
 import { fieldBuilder, objectBuilder } from './builder'
 
 import Ajv from 'ajv'
@@ -21,9 +22,8 @@ const BaseForm = (props) => {
   } else if(children) {
     return children({ ...props, children: build_fields })
   } else {
-    return (
-      <form className="form-horizontal" onSubmit={handleSubmit}>{build_fields}</form>
-    )
+    const FormComponent = C('Form.Layout')
+    return <FormComponent {...props} >{build_fields}</FormComponent>
   }
 }
 
