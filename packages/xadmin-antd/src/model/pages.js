@@ -46,7 +46,7 @@ class ModelListPage extends React.Component {
 
     const GridComponents = [
       <div key="model-list-subnav" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '.5rem' }}>
-        <C is="Model.Pagination" size="sm" />
+        <C is="Model.Pagination" />
         <C is="Model.ListSubMenu" />
       </div>,
       <ItemsComponent key="model-list-grid" query={query} />,
@@ -81,25 +81,17 @@ class ModelListPage extends React.Component {
 @ModelWrap('model.page.form')
 class ModelFormPage extends React.Component {
 
-  renderNav() {
-    return [
-      <Nav key="nav-left" className="mr-auto">
-        <ModelBlock name="model.edit.nav" el={this} />
-      </Nav>,
-      <Nav key="nav-right">
-        <ModelBlock name="model.edit.navbtn" el={this} />
-      </Nav>
-    ]
-  }
-
   render() {
-    const { params, location: { query }, title, model, onSuccess, componentClass } = this.props
-    const FormComponent = componentClass || Form
+    const { params, location: { query }, title, model, onSuccess } = this.props
+    const FormComponent = (model.components && model.components.model_form) || C('Model.DataForm')
     return (
-      <Page title={title} className={`xadmin-model-form-${model.key}`} nav={this.renderNav()}>
-        <ModelBlock name="model.form.before" el={this} />
+      <Page className={`xadmin-model-form-${model.key}`} 
+        title={title} 
+        content={<ModelBlock name="model.edit.nav" />}
+        actions={<ModelBlock name="model.edit.navbtn" />}>
+        <ModelBlock name="model.form.before" />
         <FormComponent id={params && params.id} query={query} onSubmitSuccess={onSuccess} />
-        <ModelBlock name="model.form.after" el={this} />
+        <ModelBlock name="model.form.after" />
       </Page>
     )
   }
@@ -109,31 +101,35 @@ class ModelFormPage extends React.Component {
 @ModelWrap('model.page.detail')
 class ModelDetailPage extends React.Component {
 
-  renderNav() {
+  renderActions() {
     const { onClose, onEdit, canEdit } = this.props
     const { _t } = app.context
-    return [
-      <Nav key="nav-left" className="mr-auto">
-        <ModelBlock name="model.detail.nav" el={this} />
-      </Nav>,
-      <Nav key="nav-right">
-        <ModelBlock name="model.detail.navbtn" el={this} />
-        {canEdit?<Button onClick={onEdit} className="mr-2"><Icon name="pencil"/> {_t('Edit')}</Button>:null}
-        <Button  onClick={onClose} variant="secondary">{_t('Back')}</Button>
-      </Nav>
-    ]
+    return (<>
+      <ModelBlock name="model.detail.navbtn" />
+      { canEdit ?
+        (<Button type="primary" onClick={onEdit}><Icon name="edit"/> {_t('Edit')}</Button>) : null
+      }
+    </>)
+  }
+
+  renderPageContent() {
+    return (
+      <ModelBlock name="model.detail.nav" />
+    )
   }
 
   render() {
-    const { params, title, model, componentClass } = this.props
-    const DetailComponent = componentClass || Info
-    const { _t } = app.context
+    const { params, title, model } = this.props
+    const DetailComponent = (model.components && model.components.model_detail) || C('Model.DataDetail')
 
     return (
-      <Page title={title} className={`xadmin-model-detail-${model.key}`} nav={this.renderNav()}>
-        <ModelBlock name="model.detail.before" el={this} />
+      <Page className={`xadmin-model-detail-${model.key}`} 
+        title={title}
+        content={this.renderPageContent()}
+        actions={this.renderActions()}>
+        <ModelBlock name="model.detail.before" />
         <DetailComponent id={params && params.id} />
-        <ModelBlock name="model.detail.after" el={this} />
+        <ModelBlock name="model.detail.after" />
       </Page>
     )
   }
