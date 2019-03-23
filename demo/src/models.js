@@ -2,7 +2,7 @@ import React from 'react'
 import { Textarea } from 'xadmin-antd/lib/form/components'
 import { RelateAction } from 'xadmin-model/lib/relate'
 import { ChildrenModelBtn } from 'xadmin-model'
-import { List } from 'xadmin-model/lib/components/Items'
+import { C } from 'xadmin-ui'
 
 export default {
   User: {
@@ -133,7 +133,7 @@ export default {
     readonly: [ 'id' ],
     list_display: [ 'id', 'title', 'user' ],
     components: {
-      model_list: List
+      model_list: C.lazy('Model.DataList')
     }
   }
 }

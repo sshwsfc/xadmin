@@ -58,13 +58,15 @@ export default class NumberFilter extends React.Component {
     const { _t } = app.context
     return (
       <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
-        <InputNumber { ...inputProps} {...field.attrs} value={gte || ''}
-          placeholder={field.minimum ? `Minimum(${field.minimum})` : _t('No limit')}
-          onChange={(v)=>this.onChange(v, 'gte')} />
-        ~
-        <InputNumber { ...inputProps} {...field.attrs} value={lte || ''}
-          placeholder={field.maximum ? `Maximum(${field.maximum})` : _t('No limit')}
-          onChange={(v)=>this.onChange(v, 'lte')} />
+        <div style={{ display: 'inline-flex' }}>
+          <InputNumber { ...inputProps} {...field.attrs} style={{ width: 'auto', ...field.style }} value={gte || ''}
+            placeholder={field.minimum ? `Minimum(${field.minimum})` : _t('No limit')}
+            onChange={(v)=>this.onChange(v, 'gte')} />
+          <span style={{ textAlign: 'center', width: '2rem' }}>~</span>
+          <InputNumber { ...inputProps} {...field.attrs} style={{ width: 'auto', ...field.style }} value={lte || ''}
+            placeholder={field.maximum ? `Maximum(${field.maximum})` : _t('No limit')}
+            onChange={(v)=>this.onChange(v, 'lte')} />
+        </div>
       </FieldGroup>
     )
   }

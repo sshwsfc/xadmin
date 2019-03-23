@@ -2,7 +2,7 @@
 import { ModelListPage, ModelFormPage, ModelDetailPage } from './pages'
 import Pagination from './components/Pagination'
 import SubMenu from './components/SubMenu'
-import DataTable from './components/DataTable'
+import { DataTable, DataList } from './components/DataTable'
 
 export default {
   components: {
@@ -11,6 +11,7 @@ export default {
     'Model.DetailPage': ModelDetailPage,
     'Model.Pagination': Pagination,
     'Model.ListSubMenu': SubMenu,
-    'Model.DataTable': DataTable
+    'Model.DataTable': DataTable,
+    'Model.DataList': DataList
   }
 }

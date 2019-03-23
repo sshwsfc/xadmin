@@ -38,8 +38,8 @@ const Submenu = ({ children, invalid, handleSubmit, submitting, options, resetFi
   const { _t } = app.context
   return (
     <Form className="ant-advanced-search-form" onSubmit={handleSubmit}>
-      <Card style={{ marginBottom: '.5rem' }}>
-        <Row gutter={24}>{children}</Row>
+      <Card style={{ marginBottom: '.5rem' }} bodyStyle={{ paddingBottom: 0 }}>
+        <Row gutter={8}>{children}</Row>
         {options && options.submitOnChange ? null : (
           <Row>
             <Col span={24} style={{ textAlign: 'center' }}>
