@@ -15,7 +15,7 @@ export default StoreWrap('auth.reset_password')(({ onSuccess, location: { query 
         <ModelForm 
           initialValues={query}
           successMessage={_t('Reset password success')}
-          onSubmitSuccess={onSuccess} option={{ groupSize : { label: { sm: 3 }, control: { sm: 9 } } }}
+          onSubmitSuccess={onSuccess}
           componentClass={({ error, children, invalid, handleSubmit, submitting }) => (
             <form className="form-horizontal" onSubmit={handleSubmit}>
               <Card style={{ maxWidth: 450, margin: '5rem auto' }} >

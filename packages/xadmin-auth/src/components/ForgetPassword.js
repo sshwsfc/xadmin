@@ -14,7 +14,7 @@ export default StoreWrap('auth.forget_password')(({ onSuccess }) => {
       <Container>
         <ModelForm 
           successMessage={_t('Send reset password email success')}
-          onSubmitSuccess={onSuccess} option={{ groupSize : { label: { sm: 3 }, control: { sm: 9 } } }}
+          onSubmitSuccess={onSuccess}
           componentClass={({ error, children, invalid, handleSubmit, submitting }) => (
             <form className="form-horizontal" onSubmit={handleSubmit}>
               <Card style={{ maxWidth: 550, margin: '5rem auto' }} >

@@ -9,6 +9,7 @@ import { Menu, MenuItem } from './components/Menu'
 import form from './form'
 import model from './model'
 import filter from './filter'
+import auth from './auth'
 
 export default {
   name: 'xadmin.ui.antd',
@@ -17,7 +18,8 @@ export default {
     Menu, 'Menu.Item': MenuItem,
     ...form.components,
     ...model.components,
-    ...filter.components
+    ...filter.components,
+    ...auth.components
   },
   routers,
   form_fields: {
