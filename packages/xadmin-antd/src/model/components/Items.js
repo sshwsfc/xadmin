@@ -17,7 +17,7 @@ class BaseRow extends React.Component {
     }
     if(canDelete) {
       actions.push((
-        <Popconfirm title="Are you sure delete this task?" onConfirm={this.props.deleteItem} okText={_t('Delete')} cancelText={_t('Cancel')}>
+        <Popconfirm title={_t('Comfirm Delete') + '?'} onConfirm={this.props.deleteItem} okText={_t('Delete')} cancelText={_t('Cancel')}>
           <Button size="small" className="model-list-action" type="danger">{_t('Delete')}</Button>
         </Popconfirm>
       ))
@@ -110,11 +110,20 @@ class BaseData extends React.Component {
 
 }
 
+
+@ModelWrap('model.list.row')
+class DataTableActionRender extends BaseRow {
+
+  render() { return this.actions() }
+
+}
+
 @ModelWrap('model.items')
 class DataTable extends BaseData {
 
   renderData() {
     const { fields, items, model, loading, avageWidth=8 ,size, onRow } = this.props
+    const { _t } = app.context
     const lockedFields = model.locked_fields || []
     const columns = []
 
@@ -148,8 +157,14 @@ class DataTable extends BaseData {
       }
     })
 
+    columns.push({
+      title: _t('Actions'),
+      key: '__action__',
+      render: (val, item) => <DataTableActionRender key={item.id} fields={fields} id={item.id} />
+    })
+
     return (
-      <div style={{ marginBottom: '.5rem', backgroundColor: '#FFF' }}>
+      <div style={{ backgroundColor: '#FFF' }}>
         <Table
           columns={columns}
           dataSource={items}
@@ -197,7 +212,7 @@ class DataList extends BaseData {
     const { fields, items, model, size } = this.props
     const RenderItem = (model.components && model.components.listRenderItem) || C('Model.DataListRender') || DataListRender
     return (
-      <Card style={{ marginBottom: '.5rem' }}>
+      <Card>
         <List
           itemLayout="vertical"
           dataSource={items}

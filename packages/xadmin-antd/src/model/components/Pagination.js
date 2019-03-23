@@ -1,5 +1,5 @@
 import React from 'react'
-import { Pagination } from 'antd'
+import { Pagination, Button } from 'antd'
 import app from 'xadmin'
 import { ModelWrap } from 'xadmin-model'
 
@@ -11,7 +11,7 @@ class ModelPagination extends React.Component {
 
     const onSelect = (page) => changePage(page)
 
-    if(items > 1) {
+    if(items > 1 || emptyComponent == undefined) {
       return (
         <Pagination showQuickJumper={items > 10} current={activePage} 
           size={this.props.size == 'sm' ? 'small' : ''} className={this.props.className}
@@ -19,7 +19,7 @@ class ModelPagination extends React.Component {
         />
       )
     } else {
-      return emptyComponent !== undefined ? emptyComponent : <div></div>
+      return emptyComponent !== undefined ? emptyComponent : <Button>{_t('No paging')}</Button>
     }
   }
 

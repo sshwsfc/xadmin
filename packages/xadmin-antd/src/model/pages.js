@@ -50,8 +50,10 @@ class ModelListPage extends React.Component {
         <C is="Model.ListSubMenu" />
       </div>,
       <ItemsComponent key="model-list-grid" query={query} />,
-      // <ActionBar key="model-list-action" />,
-      <C is="Model.Pagination" />
+      <div key="model-list-downnav" style={{ display: 'flex', justifyContent: 'space-between', marginTop: '.5rem' }}>
+        {/* <ActionBar key="model-list-action" /> */}
+        <C is="Model.Pagination" />
+      </div>
     ]
     return (
       <Page className={`xadmin-model-list-${model.key}`} 
