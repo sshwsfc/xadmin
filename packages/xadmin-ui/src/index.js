@@ -42,6 +42,11 @@ const List = C.lazy('List')
 List.Item = C.lazy('List.Item')
 const Alert = C.lazy('Alert')
 
+const Input = C.lazy('Input')
+Input.Static = C.lazy('Input.Static')
+const Check = C.lazy('Check')
+const Select = C.lazy('Select')
+
 export default {
   name: 'xadmin.ui',
   items: {
@@ -75,5 +80,6 @@ export {
   Main, Dashboard, App,
   Dropdown, Menu, Badge, Card,
   Modal, Button, Popover, Tooltip, 
-  Table, Tabs, Empty, List, Alert
+  Table, Tabs, Empty, List, Alert,
+  Input, Check, Select
 }

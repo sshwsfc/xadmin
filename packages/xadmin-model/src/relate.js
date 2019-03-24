@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { Checkbox, Form, DropdownButton, Dropdown } from 'react-bootstrap'
 
 import app, { api } from 'xadmin'
-import { Loading } from 'xadmin-ui'
+import { Loading, C } from 'xadmin-ui'
 import Icon from 'react-fontawesome'
 
 import ModelPages from './components/Pages'
@@ -211,13 +211,10 @@ class RelateContainer extends React.Component {
 
   render() {
     const { data, loading, model } = this.props
-    const displayField = model.display_field || 'name'
     return loading || data == undefined ? <Loading /> : 
-      <>
-        <h4><Icon name={model.icon} /> {data[displayField]}</h4>
-        <hr/>
+      <C is="Relate.Container" model={model} data={data} >
         <RelateContext.Provider value={{ item: data, model }}>{this.props.children}</RelateContext.Provider>
-      </>
+      </C>
   }
 
 }
@@ -260,14 +257,18 @@ const routers = (app) => {
           model_routes.push({
             path: 'list',
             breadcrumbName: _t('{{name}} List', { name: modelName }),
-            component: RelateWrap(ModelPages.ModelListPage, pname)
+            component: RelateWrap(model.components && 
+              (model.components['relate_list'] || model.components['page_list']) || 
+              (C('Relate.ListPage') || C('Model.ListPage')), pname)
           })
         }
         if(model.permission && model.permission.add) {
           model_routes.push({
             path: 'add',
             breadcrumbName: _t('Create {{name}}', { name: modelName }),
-            component: RelateWrap(ModelPages.ModelFormPage, pname)
+            component: RelateWrap(model.components && 
+              (model.components['relate_add'] || model.components['page_add']) || 
+              (C('Relate.FormPage') || C('Model.FormPage')), pname)
           })
         }
         const key = `/app/model/${relateName}/:id/relations/`
@@ -305,21 +306,7 @@ class RelateAction extends React.Component {
         }
       }
     })
-
-    return actions.length ? (
-      <DropdownButton
-        title={_t('Relates')}
-        variant={ variant || 'primary' }
-        key="dropdown-action-relate"
-        size="sm"
-        className="model-list-action"
-      >
-        { actions.map((m, index) => 
-          (<Dropdown.Item eventKey={index} key={index} 
-            onSelect={()=>app.go(`/app/model/${model.name}/${item.id}/relations/${m.name}/`)}>{m.title || m.name}</Dropdown.Item>)
-        )}
-      </DropdownButton>
-    ) : null
+    return actions.length ? <C is="Relate.Action" model={model} actions={actions} item={item} /> : null
   }
 }
 
@@ -332,5 +319,6 @@ export default {
 }
 export {
   Checkboxes,
-  RelateAction
+  RelateAction,
+  RelateBase
 }

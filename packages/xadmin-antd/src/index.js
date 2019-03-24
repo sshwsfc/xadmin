@@ -8,6 +8,7 @@ import { Menu, MenuItem } from './components/Menu'
 
 import form from './form'
 import model from './model'
+import relate from './model/relate'
 import filter from './filter'
 import auth from './auth'
 
@@ -19,11 +20,13 @@ export default {
     ...form.components,
     ...model.components,
     ...filter.components,
+    ...relate.components,
     ...auth.components
   },
   routers,
   form_fields: {
     ...form.form_fields,
-    ...filter.form_fields
+    ...filter.form_fields,
+    ...relate.form_fields
   }
 }
