@@ -1,6 +1,4 @@
 import React from 'react'
-import { FormControl } from 'react-bootstrap'
-
 import Select from 'react-select'
 
 export default ({ input, label, meta, field, group: FieldGroup }) => {

@@ -4,7 +4,7 @@ import React from 'react'
 import { Button, ButtonToolbar, Col, Dropdown, DropdownButton, Form, ListGroup, Modal, OverlayTrigger, Popover, Row } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
 import { app } from 'xadmin'
-import { ModelWrap, ModelBlock } from '../base'
+import { ModelWrap, ModelBlock } from 'xadmin-model'
 
 @ModelWrap('model.list.btn.count')
 class CountButton extends React.Component {

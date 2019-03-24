@@ -111,6 +111,36 @@ class Loading extends React.Component {
   }
 }
 
+class Dashboard extends React.Component {
+  render() {
+    const { _t } = app.context
+    return <Page title={_t('Dashboard')}><div>{_t('Welcome, Have a nice day!')}</div>{Block('dashboard.main', this)}</Page>
+  }
+}
+
 export {
   App, Main, Page, Loading, Icon
+}
+
+export default {
+  '@' : {
+    path: '/',
+    component: Main,
+    breadcrumbName: '',
+    indexRoute: {
+      onEnter: (_, replace) => replace({ pathname: '/app/' })
+    }
+  },
+  '/' : {
+    path: 'app/',
+    component: App,
+    breadcrumbName: 'Home',
+    indexRoute: {
+      onEnter: (_, replace) => replace({ pathname: '/app/dashboard' })
+    }
+  },
+  '/app/': {
+    path: 'dashboard',
+    component: Dashboard
+  }
 }

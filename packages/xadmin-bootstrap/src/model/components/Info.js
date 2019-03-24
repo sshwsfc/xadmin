@@ -5,7 +5,7 @@ import { Loading } from 'xadmin-ui'
 import { convert as schemaConvert } from 'xadmin-form/lib/schema'
 import { Card, Row, Col, Form } from 'react-bootstrap'
 
-import { ModelWrap } from '../base'
+import { ModelWrap } from 'xadmin-model'
 import { Item } from './Items'
 
 const FieldGroup = ({ label, field, children }) => {

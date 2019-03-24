@@ -9,10 +9,6 @@
     "ajv": "^6.10.0",
     "ajv-i18n": "^3.4.0",
     "lodash": "^4.17.11",
-    "react-bootstrap": "^1.0.0-beta.5",
-    "react-datetime": "^2.16.3",
-    "react-fontawesome": "^1.6.1",
-    "react-select": "^2.4.1",
     "redux-form": "^8.1.0"
   },
   "peerDependencies": {

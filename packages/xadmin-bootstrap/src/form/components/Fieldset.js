@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card } from 'react-bootstrap'
-import { objectBuilder } from '../builder'
+import { objectBuilder } from 'xadmin-form/lib/builder'
 
 export default ({ input, label, meta: { touched, error }, field, group, option }) => {
   return (

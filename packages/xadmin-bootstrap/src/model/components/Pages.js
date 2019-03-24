@@ -4,27 +4,27 @@ import { Button, Nav, Row, Col } from 'react-bootstrap'
 
 import Icon from 'react-fontawesome'
 import { app } from 'xadmin'
-import { Page } from 'xadmin-ui'
-import { ModelWrap, ModelBlock } from '../base'
+import { C, Page } from 'xadmin-ui'
+import { ModelWrap, ModelBlock } from 'xadmin-model'
 
 import Pagination from './Pagination'
-import { Grid } from './Items'
 import Form from './Form'
 import Info from './Info'
 import SubMenu from './SubMenu'
 import ActionBar from './ActionBar'
 
-class ModelList extends React.Component {
+@ModelWrap('model.page.list')
+class ModelListPage extends React.Component {
 
   renderNav() {
     const { title, canAdd, addItem, model } = this.props
     const { _t } = app.context
     return [
       <Nav key="nav-left" className="mr-auto">
-        <ModelBlock name="model.list.nav" el={this} />
+        <ModelBlock name="model.list.nav" />
       </Nav>,
       <Nav key="nav-right">
-        <ModelBlock name="model.list.navbtn" el={this} />
+        <ModelBlock name="model.list.navbtn" />
         { canAdd ?
           (<Button variant="primary" onClick={addItem}><Icon name="plus"/> {_t('Add {{object}}', { object: model.title })}</Button>) : null
         }
@@ -34,7 +34,7 @@ class ModelList extends React.Component {
 
   render() {
     const { icon, title, location, model } = this.props
-    const ItemsComponent = (model.components && model.components.model_list) || Grid
+    const ItemsComponent = (model.components && model.components.model_list) || C('Model.DataTable')
     const query = location && location.query
 
     const GridComponents = [
@@ -49,10 +49,10 @@ class ModelList extends React.Component {
 
     return (
       <Page className={`xadmin-model-list-${model.key}`} title={(<span><Icon name={icon}/> {title}</span>)} nav={this.renderNav()}>
-        <ModelBlock name="model.list.submenu" el={this} />
-        <ModelBlock name="model.list.sidemenu" el={this} >
+        <ModelBlock name="model.list.submenu" />
+        <ModelBlock name="model.list.sidemenu" >
           { sideMenu => (
-            <ModelBlock name="model.list.sidepanel" el={this} >
+            <ModelBlock name="model.list.sidepanel" >
               { sidePanel => (sideMenu || sidePanel) ? (
                 <Row>
                   { sideMenu ? <Col sm={(sideMenu && sidePanel) ? 1 : 2}>{ sideMenu }</Col> : null }
@@ -68,56 +68,47 @@ class ModelList extends React.Component {
   }
 
 }
-ModelList.propTypes = {
-  icon: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  canAdd: PropTypes.bool.isRequired,
-  addItem: PropTypes.func.isRequired
-}
 
-class ModelForm extends React.Component {
+@ModelWrap('model.page.form')
+class ModelFormPage extends React.Component {
 
   renderNav() {
     return [
       <Nav key="nav-left" className="mr-auto">
-        <ModelBlock name="model.edit.nav" el={this} />
+        <ModelBlock name="model.edit.nav" />
       </Nav>,
       <Nav key="nav-right">
-        <ModelBlock name="model.edit.navbtn" el={this} />
+        <ModelBlock name="model.edit.navbtn" />
       </Nav>
     ]
   }
 
   render() {
     const { params, location: { query }, title, model, onSuccess, componentClass } = this.props
-    const FormComponent = componentClass || Form
+    const FormComponent = (model.components && model.components.model_form) || C('Model.DataForm')
     return (
       <Page title={title} className={`xadmin-model-form-${model.key}`} nav={this.renderNav()}>
-        <ModelBlock name="model.form.before" el={this} />
+        <ModelBlock name="model.form.before" />
         <FormComponent id={params && params.id} query={query} onSubmitSuccess={onSuccess} />
-        <ModelBlock name="model.form.after" el={this} />
+        <ModelBlock name="model.form.after" />
       </Page>
     )
   }
 
 }
 
-ModelForm.propTypes = {
-  title: PropTypes.string.isRequired,
-  onSuccess: PropTypes.func.isRequired
-}
-
-class ModelDetail extends React.Component {
+@ModelWrap('model.page.detail')
+class ModelDetailPage extends React.Component {
 
   renderNav() {
     const { onClose, onEdit, canEdit } = this.props
     const { _t } = app.context
     return [
       <Nav key="nav-left" className="mr-auto">
-        <ModelBlock name="model.detail.nav" el={this} />
+        <ModelBlock name="model.detail.nav" />
       </Nav>,
       <Nav key="nav-right">
-        <ModelBlock name="model.detail.navbtn" el={this} />
+        <ModelBlock name="model.detail.navbtn" />
         {canEdit?<Button onClick={onEdit} className="mr-2"><Icon name="pencil"/> {_t('Edit')}</Button>:null}
         <Button  onClick={onClose} variant="secondary">{_t('Back')}</Button>
       </Nav>
@@ -126,23 +117,23 @@ class ModelDetail extends React.Component {
 
   render() {
     const { params, title, model, componentClass } = this.props
-    const DetailComponent = componentClass || Info
+    const DetailComponent = (model.components && model.components.model_detail) || C('Model.DataDetail')
     const { _t } = app.context
 
     return (
       <Page title={title} className={`xadmin-model-detail-${model.key}`} nav={this.renderNav()}>
-        <ModelBlock name="model.detail.before" el={this} />
+        <ModelBlock name="model.detail.before" />
         <DetailComponent id={params && params.id} />
-        <ModelBlock name="model.detail.after" el={this} />
+        <ModelBlock name="model.detail.after" />
       </Page>
     )
   }
 
 }
 
-export default {
-  ModelListPage: ModelWrap('model.page.list')(ModelList),
-  ModelFormPage: ModelWrap('model.page.form')(ModelForm),
-  ModelDetailPage: ModelWrap('model.page.detail')(ModelDetail)
+export {
+  ModelListPage,
+  ModelFormPage,
+  ModelDetailPage
 }
 

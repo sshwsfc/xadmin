@@ -1,15 +1,8 @@
 import React from 'react'
 import _ from 'lodash'
-import { Checkbox, Form, DropdownButton, Dropdown } from 'react-bootstrap'
-
 import app, { api } from 'xadmin'
-import { Loading, C } from 'xadmin-ui'
-import Icon from 'react-fontawesome'
-
-import ModelPages from './components/Pages'
+import { Loading, C, Check, Input } from 'xadmin-ui'
 import { Model, ModelWrap } from './base'
-
-import AsyncSelect from 'react-select/lib/Async'
 
 class RelateBase extends React.Component {
 
@@ -54,7 +47,7 @@ class Checkboxes extends RelateBase {
 
     return options.map(({ value, label, item })=>{
       const checked = checkedIds.indexOf(value) >= 0
-      return <Checkbox onChange={()=>{this.onChange(!checked, item)}} checked={checked} {...field.attrs} >{label}</Checkbox>
+      return <Check onChange={()=>{this.onChange(!checked, item)}} checked={checked} {...field.attrs} >{label}</Check>
     })
   }
 
@@ -64,81 +57,13 @@ class Checkboxes extends RelateBase {
     const { loading, options } = this.state
     return (
       <FieldGroup label={label} meta={meta} input={input} field={field}>
-        {loading ? <Form.Control plaintext readOnly defaultValue={_t('loading')} /> : 
-          (options ? this.renderOptions() : <Form.Control plaintext readOnly defaultValue={_t('Empty')} />)
+        {loading ? <Loading /> : 
+          (options ? this.renderOptions() : <Input.Static>{_t('Empty')}</Input.Static>)
         }
       </FieldGroup>
     )
   }
 
-}
-
-//@FormWrap('model.form.fkselect')
-class RelateSelect extends RelateBase {
-
-  onChange = (option) => {
-    this.props.input.onChange(option.item)
-  }
-
-  render() {
-    const { _t } = app.context
-    const { input: { value: item }, label, meta, field, group: FieldGroup } = this.props
-    const displayField = field.displayField || 'name'
-    return (
-      <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
-        <AsyncSelect cacheOptions defaultOptions 
-          selectOption={item ? { item, label: item[displayField], value: item.id } : null} 
-          onChange={this.onChange}
-          loadOptions={this.loadOptions} 
-        />
-      </FieldGroup>
-    )
-  }
-}
-
-class RelateMultiSelect extends RelateBase {
-
-  onChange = (options) => {
-    this.props.input.onChange(options.map(opt => opt.item))
-  }
-
-  render() {
-    const { _t } = app.context
-    const { input: { value: items }, label, meta, field, group: FieldGroup } = this.props
-    const displayField = field.displayField || 'name'
-    return (
-      <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
-        <AsyncSelect cacheOptions defaultOptions isMulti closeMenuOnSelect={false}
-          selectOption={items ? items.map(item => ({ value: item.id, item, label: item[displayField] })) : null} 
-          onChange={this.onChange} 
-          loadOptions={this.loadOptions} 
-        />
-      </FieldGroup>
-    )
-  }
-
-}
-
-class FilterRelateSelect extends RelateBase {
-
-  onChange = (option) => {
-    this.props.input.onChange(option.value)
-  }
-
-  render() {
-    const { _t } = app.context
-    const { input: { value: selectId }, label, meta, field, group: FieldGroup } = this.props
-
-    return (
-      <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
-        <AsyncSelect cacheOptions defaultOptions 
-          isOptionSelected={option => selectId && option.value == selectId}
-          onChange={this.onChange} 
-          loadOptions={this.loadOptions} 
-        />
-      </FieldGroup>
-    )
-  }
 }
 
 const schema_converter = [
@@ -185,24 +110,6 @@ const filter_converter = [
     return f
   } 
 ]
-
-const form_fields = {
-  fkselect: {
-    component: RelateSelect
-  },
-  multi_select: {
-    component: RelateMultiSelect
-  },
-  filter_relate: {
-    component: FilterRelateSelect,
-    parse: (value, name) => {
-      if(value && value.id) {
-        return value.id
-      }
-      return value
-    }
-  }
-}
 
 const RelateContext = React.createContext()
 
@@ -312,7 +219,6 @@ class RelateAction extends React.Component {
 
 export default {
   name: 'xadmin.model.relate',
-  form_fields,
   schema_converter,
   filter_converter,
   routers

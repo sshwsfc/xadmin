@@ -1,5 +1,4 @@
 import React from 'react'
-import { Field } from 'redux-form'
 import moment from 'moment'
 import Icon from 'react-fontawesome'
 import { FormControl, InputGroup } from 'react-bootstrap'

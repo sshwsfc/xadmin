@@ -1,7 +1,7 @@
 import React from 'react'
-import { FieldArray } from 'redux-form'
+import { FieldArray } from 'xadmin-form'
 import { Card, Button, CardGroup } from 'react-bootstrap'
-import { objectBuilder, prefixFieldKey } from '../builder'
+import { objectBuilder, prefixFieldKey } from 'xadmin-form/lib/builder'
 import Icon from 'react-fontawesome'
 import app from 'xadmin'
 

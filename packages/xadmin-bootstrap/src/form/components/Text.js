@@ -1,6 +1,5 @@
 import React from 'react'
-import { Field } from 'redux-form'
-import { FormControl, InputGroup } from 'react-bootstrap'
+import { FormControl } from 'react-bootstrap'
 
 export default ({ input, label, meta, field, group: FieldGroup }) => {
   return (

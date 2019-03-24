@@ -6,9 +6,13 @@
   "author": "sshwsfc@gmail.com",
   "license": "MIT",
   "dependencies": {
-    "react-bootstrap": "^1.0.0-beta.5",
+    "bootstrap": "^4.3.1",
     "lodash": "^4.17.11",
-    "react-fontawesome": "^1.6.1"
+    "react-bootstrap": "^1.0.0-beta.5",
+    "react-date-range": "^0.9.4",
+    "react-datetime": "^2.16.3",
+    "react-fontawesome": "^1.6.1",
+    "react-select": "^2.4.1"
   },
   "peerDependencies": {
     "react": "16",

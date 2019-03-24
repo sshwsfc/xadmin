@@ -2,7 +2,6 @@ import React from 'react'
 import _ from 'lodash'
 import app from 'xadmin'
 import { Button, ButtonGroup } from 'react-bootstrap'
-import Icon from 'react-fontawesome'
 
 export default class BooleanFilter extends React.Component {
 

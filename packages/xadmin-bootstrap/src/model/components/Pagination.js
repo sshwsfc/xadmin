@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Pagination } from 'react-bootstrap'
 import app from 'xadmin'
-import { ModelWrap } from '../base'
+import { ModelWrap } from 'xadmin-model'
 
 class ModelPagination extends React.Component {
 

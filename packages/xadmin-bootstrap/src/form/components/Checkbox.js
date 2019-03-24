@@ -1,5 +1,4 @@
 import React from 'react'
-import { Field } from 'redux-form'
 import { FormControl, Checkbox } from 'react-bootstrap'
 
 export default ({ input, label, meta, field, group: FieldGroup }) => {

@@ -1,5 +1,4 @@
 import React from 'react'
-import { Textarea } from 'xadmin-antd/lib/form/components'
 import { RelateAction } from 'xadmin-model/lib/relate'
 import { ChildrenModelBtn } from 'xadmin-model'
 import { C } from 'xadmin-ui'
@@ -59,7 +58,7 @@ export default {
     },
     permission: { view: true, add: true, edit: true, delete: true },
     form: [ 'name', 'email', 'address', '*',
-      { key: 'website', component: Textarea, attrs: { rows: 5 } } ],
+      { key: 'website', type: 'textarea', attrs: { rows: 5 } } ],
     filters: {
       nav: [ 'name', 'email' ],
       sidemenu: [ 'name' ]

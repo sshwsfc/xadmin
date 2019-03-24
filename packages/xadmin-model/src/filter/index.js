@@ -1,16 +1,11 @@
 import React from 'react'
 import _ from 'lodash'
-import Icon from 'react-fontawesome'
 import app from 'xadmin'
-import { Nav, ButtonGroup, Card, Modal, Form, OverlayTrigger, Popover, Badge, Button, Col, Row, FormGroup, ControlLabel } from 'react-bootstrap'
 import { BaseForm, reduxForm } from 'xadmin-form'
 import { C } from 'xadmin-ui'
-import { InlineGroup, SimpleGroup } from 'xadmin-form/lib/components/groups'
-
 import { ModelWrap } from '../index'
 import { getFieldProp } from '../utils'
 import filter_converter from './filters'
-import filter_fields from './fields'
 
 const convert = (schema, options) => {
   const opts = options || {}
@@ -34,273 +29,6 @@ const FilterForm = (props) => {
   })(BaseForm)
   return <WrapForm fields={fields} {...props}/>
 }
-
-class FilterComponent extends React.Component {
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return this.state != nextState
-  }
-
-}
-
-class FilterDiv extends React.Component {
-
-  render() {
-    const { _t } = app.context
-    const { filters, formKey, data, changeFilter, resetFilter, options } = this.props
-    const FormLayout = (props) => {
-      const { children, invalid, pristine, handleSubmit, submitting } = props
-      return (
-        <form className="form-horizontal" onSubmit={handleSubmit}>
-          {children}
-          {options && options.submitOnChange ? null : (
-            <Row>
-              <Col sm={9} xsOffset={3} >
-                <Button disabled={invalid || submitting} onClick={handleSubmit}>{_t('Search')}</Button>
-                {' '}
-                <Button disabled={submitting} onClick={resetFilter} variant="light">{_t('Clear')}</Button>
-              </Col>
-            </Row>
-          )}
-        </form>
-      )
-    }
-    return (<FilterForm
-      formKey={formKey}
-      filters={filters}
-      component={FormLayout}
-      initialValues={data}
-      onSubmit={changeFilter}
-      fieldProps={{ mode: 'base' }}
-      options={options}
-    />)
-  }
-
-}
-
-class FilterInline extends React.Component {
-
-  render() {
-    const { _t } = app.context
-    const { filters, options, formKey, data, changeFilter, resetFilter, groupSize } = this.props
-
-    const FormLayout = (props) => {
-      const { children, invalid, pristine, handleSubmit, submitting } = props
-      return (
-        <form className="form-horizontal" onSubmit={handleSubmit}>
-          <Row>
-            {children}
-          </Row>
-          {options && options.submitOnChange ? null : (
-            <Row>
-              <Col style={{ textAlign: 'center' }} sm={12}>
-                <Button disabled={invalid || submitting} size="sm" onClick={handleSubmit}>{_t('Search')}</Button>
-                {' '}
-                <Button disabled={submitting} onClick={resetFilter} size="sm" variant="light">{_t('Clear')}</Button>
-              </Col>
-            </Row> 
-          )}
-        </form>
-      )
-    }
-
-    return (<FilterForm
-      formKey={formKey}
-      filters={filters}
-      component={C('Filter.NavForm')}
-      initialValues={data}
-      onSubmit={changeFilter}
-      group={InlineGroup}
-      fieldProps={{ attrs: { size: 'sm' }, mode: 'mini' }}
-      options={options}
-    />)
-  }
-
-}
-
-@ModelWrap('model.list.filter')
-class FilterMenu extends FilterComponent {
-
-  render() {
-    const { _t } = app.context
-    const { filters, options, formKey, data, changeFilter, resetFilter } = this.props
-
-    if(filters && filters.length) {
-      const FormLayout = (props) => {
-        const { children, invalid, pristine, handleSubmit, submitting } = props
-        return (
-          <Card>
-            <Card.Body>
-              <Form onSubmit={handleSubmit}>
-                {children}
-                {options && options.submitOnChange ? null : (
-                  <ButtonGroup className="w-100">
-                    <Button disabled={submitting} onClick={resetFilter} variant="light">{_t('Clear')}</Button>
-                    <Button disabled={invalid || submitting} onClick={handleSubmit}>{_t('Search')}</Button>
-                  </ButtonGroup>
-                )}
-              </Form>
-            </Card.Body>
-          </Card>
-        )
-      }
-      return (<FilterForm
-        formKey={formKey}
-        filters={filters}
-        component={FormLayout}
-        initialValues={data}
-        onSubmit={changeFilter}
-        group={SimpleGroup}
-        options={options}
-      />)
-    } else {
-      return null
-    }
-  }
-
-}
-
-@ModelWrap('model.list.filter')
-class FilterPopover extends FilterComponent {
-
-  render() {
-    const { _t } = app.context
-    const { filters, data } = this.props
-    if(filters && filters.length) {
-      return (
-        <OverlayTrigger trigger="click" rootClose={false} placement="bottom" overlay={
-          <Popover style={{ maxWidth: 580 }}>
-            <FilterDiv {...this.props}/>
-          </Popover>}>
-          <Nav.Link key="filter.popover"><Icon name="filter" /> {_t('Filter')} {(data && Object.keys(data).length) ? (<Badge>{Object.keys(data).length}</Badge>) : null}</Nav.Link>
-        </OverlayTrigger>)
-    } else {
-      return null
-    }
-  }
-
-}
-
-@ModelWrap('model.list.filter')
-class FilterModal extends FilterComponent {
-
-  state = { show: false }
-
-  onClose = () => {
-    this.setState({ show: false })
-  }
-  
-  render() {
-    const { _t } = app.context
-    const { filters, options, formKey, data, changeFilter, resetFilter } = this.props
-
-    const FormLayout = (props) => {
-      const { children, invalid, handleSubmit, submitting, onClose } = props
-      const icon = submitting ? 'spinner fa-spin' : 'floppy-o'
-      return (
-        <Modal
-          show={this.state.show} size="lg"
-          onHide={this.onClose}
-        >
-          <Modal.Header closeButton>{_t('Filter Form')}</Modal.Header>
-          <Modal.Body>
-            <form className="form-horizontal">{children}</form>
-          </Modal.Body>
-          {options && options.submitOnChange ? null : (
-            <Modal.Footer>
-              <Button key={0} disabled={submitting} onClick={()=>{
-                resetFilter()
-                this.onClose()
-              }} variant="light">{_t('Clear')}</Button>
-              <Button key={1} disabled={invalid || submitting} onClick={()=>{
-                handleSubmit()
-                this.onClose()
-              }}>{_t('Search')}</Button>  
-            </Modal.Footer>
-          )}
-        </Modal>
-      )
-    }
-
-    if(filters && filters.length) {
-      return [
-        (<Nav.Link key="filter.model" onClick={()=>this.setState({ show: true })}>
-          <Icon name="filter" /> {_t('Filter')} {(data && Object.keys(data).length) ? (<Badge>{Object.keys(data).length}</Badge>) : null}
-        </Nav.Link>),
-        this.state.show ? (
-          <FilterForm
-            key={`filterForm-${formKey}`}
-            formKey={formKey}
-            filters={filters}
-            component={FormLayout}
-            initialValues={data}
-            onSubmit={changeFilter}
-            fieldProps={{ mode: 'base' }}
-            options={options}
-          />) : null
-      ]
-    } else {
-      return null
-    }
-  }
-
-}
-
-@ModelWrap('model.list.filter')
-class FilterSubMenu extends FilterComponent {
-
-  render() {
-    const { filters } = this.props
-    return filters && filters.length ? (<Card className="mb-3"><Card.Body><FilterInline {...this.props}/></Card.Body></Card>) : null
-  }
-
-}
-
-@ModelWrap('model.list.filter')
-class FilterNavForm extends FilterComponent {
-
-  renderFilterForm() {
-    const { _t } = app.context
-    const { filters, options, formKey, data, changeFilter, resetFilter } = this.props
-    const FormLayout = (props) => {
-      const { children, invalid, pristine, handleSubmit, submitting } = props
-      return (
-        <Form inline className="mr-3" onSubmit={handleSubmit}>
-          {children}
-          {options && options.submitOnChange ? null : (
-            <>
-              <Button className="ml-1" disabled={invalid || submitting} onClick={handleSubmit}>{_t('Search')}</Button>
-              <Button className="ml-1" disabled={submitting} onClick={resetFilter}>{_t('Clear')}</Button>
-            </>
-          )}
-        </Form>
-      )
-    }
-    return (<FilterForm
-      formKey={formKey}
-      filters={filters}
-      component={C('Filter.NavForm')}
-      group={C('Form.InlineGroup')}
-      initialValues={data}
-      onSubmit={changeFilter}
-      options={options}
-    />)
-  }
-
-  render() {
-    const { filters } = this.props
-    if(filters && filters.length) {
-      return this.renderFilterForm()
-    } else {
-      return null
-    }
-  }
-
-}
-
-const block_func = (Filter, name, props) => ({ model }) => (
-  (model && model.filters && model.filters[name]) ? <Filter name={name} {...props} /> : null
-)
 
 @ModelWrap('model.list.filter')
 class BaseFilter extends React.Component {
@@ -341,9 +69,6 @@ const filter = (name, componentName, groupName) => () =>
 export default {
   name: 'xadmin.filter',
   blocks: {
-    //'model.list.nav': () => [ <FilterModal name="nav" />, <FilterNavForm name="navform" /> ],
-    //'model.list.modal': block_func(FilterModal, 'modal'),
-    //'model.list.popover': block_func(FilterPopover, 'popover'),
     'model.list.nav': filter('navform', 'Filter.NavForm', 'Form.InlineGroup'),
     'model.list.navbtn': filter('nav', 'Filter.Modal'),
     'model.list.submenu': filter('submenu', 'Filter.Submenu', 'Form.ColGroup'),
@@ -434,16 +159,8 @@ export default {
       // }
     }
   },
-  form_fields: filter_fields,
   filter_converter
 }
-const FilterNav = FilterModal
 export {
-  FilterForm,
-  FilterSubMenu,
-  FilterPopover,
-  FilterNavForm,
-  FilterMenu,
-  FilterModal,
-  FilterNav
+  BaseFilter
 }

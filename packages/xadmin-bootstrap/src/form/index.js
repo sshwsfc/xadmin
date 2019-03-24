@@ -1,9 +1,16 @@
-import { Checkbox, Select, Text, Transfer, Textarea } from './components'
-import DatePicker from './components/DatePicker'
-import DatetimePicker from './components/DatetimePicker'
-//import ArrayWidget from './components/Array'
+import {
+  Text,
+  Select,
+  Checkbox,
+  Radios,
+  RadioBtn,
+  Textarea,
+  DateTime,
+  Fieldset,
+  ArrayWidget
+} from './components'
 
-import { FieldGroup, InlineGroup, ColGroup, SimpleGroup } from './components/base'
+import { FieldGroup, InlineGroup, SimpleGroup, ColGroup } from './components/groups'
 import { FormLayout } from './components/layout'
 
 export default {
@@ -29,9 +36,7 @@ export default {
       },
       attrs: {
         type: 'number',
-        style: {
-          maxWidth: 200
-        }
+        style: { maxWidth: 200 }
       }
     },
     integer: {
@@ -42,9 +47,7 @@ export default {
       },
       attrs: {
         type: 'number',
-        style: {
-          maxWidth: 200
-        }
+        style: { maxWidth: 200 }
       }
     },
     select: {
@@ -58,23 +61,39 @@ export default {
       }
     },
     date: {
-      component: DatePicker
+      component: DateTime,
+      normalize: (value, previousValue) => {
+        return (value && value.format) ? value.format('YYYY-MM-DD') : value || previousValue
+      },
+      attrs: {
+        dateFormat: true,
+        timeFormat: false,
+        valueFormat: 'L'
+      }
+    },
+    time: {
+      component: DateTime,
+      normalize: (value, previousValue) => {
+        return (value && value.format) ? value.format('HH:mm:ss') : value || previousValue
+      },
+      attrs: {
+        dateFormat: false,
+        timeFormat: true,
+        viewMode: 'time',
+        valueFormat: 'LT'
+      }
     },
     datetime: {
-      component: DatetimePicker
+      component: DateTime,
+      normalize: (value, previousValue) => {
+        return (value && value.format) ? value.format('YYYY-MM-DD HH:mm:ss') : value || previousValue
+      },
+      attrs: {
+        dateFormat: true,
+        timeFormat: true,
+        valueFormat: 'L LT'
+      }
     },
-    // time: {
-    //   component: DateTime,
-    //   normalize: (value, previousValue) => {
-    //     return (value && value.format) ? value.format('HH:mm:ss') : value || previousValue
-    //   },
-    //   attrs: {
-    //     dateFormat: false,
-    //     timeFormat: true,
-    //     viewMode: 'time',
-    //     valueFormat: 'LT'
-    //   }
-    // },
     bool: {
       component: Checkbox,
       normalize: (value, previousValue) => {
@@ -84,14 +103,11 @@ export default {
     checkbox: {
       component: Checkbox
     },
-    relates: {
-      component: Transfer
+    fieldset: {
+      component: Fieldset
+    },
+    array: {
+      component: ArrayWidget
     }
-    // fieldset: {
-    //   component: Fieldset
-    // },
-    // array: {
-    //   component: ArrayWidget
-    // }
   }
 }

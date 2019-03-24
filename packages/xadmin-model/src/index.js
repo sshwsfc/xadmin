@@ -1,7 +1,6 @@
 import React from 'react'
 import { C, Icon, Menu } from 'xadmin-ui'
 
-import ModelPages from './components/Pages'
 import ChildrenModelBtn from './components/ChildrenModel'
 import { Model, ModelWrap, ModelContext, ModelBlock } from './base'
 import modelReducer from './reducer'

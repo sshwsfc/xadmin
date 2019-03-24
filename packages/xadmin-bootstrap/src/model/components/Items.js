@@ -7,7 +7,7 @@ import { SchemaForm } from 'xadmin-form'
 import { Page, Loading } from 'xadmin-ui'
 
 import { Form, Jumbotron, Container, Row, Col, Table, Nav, OverlayTrigger, Popover, Button, ButtonGroup, Dropdown, Card, Media } from 'react-bootstrap'
-import { ModelWrap, ModelBlock } from '../base'
+import { ModelWrap, ModelBlock } from 'xadmin-model'
 import './Items.css'
 
 class BaseRow extends React.Component {
@@ -267,7 +267,7 @@ class GridRowComponent extends BaseRow {
 const GridRow = ModelWrap('model.list.row')(GridRowComponent)
 
 @ModelWrap('model.items')
-class Grid extends React.Component {
+class DataTable extends React.Component {
 
   render() {
     const { fields, items, loading } = this.props
@@ -301,10 +301,6 @@ class Grid extends React.Component {
       }
     }
   }
-}
-Grid.WrappedComponent.propTypes = {
-  fields: PropTypes.array.isRequired,
-  items: PropTypes.array.isRequired
 }
 
 class ListRowComponent extends BaseRow {
@@ -341,7 +337,7 @@ class ListRowComponent extends BaseRow {
 const ListRow = ModelWrap('model.list.row')(ListRowComponent)
 
 @ModelWrap('model.items')
-class List extends React.Component {
+class DataList extends React.Component {
 
   render() {
     const { fields, items, loading, layout } = this.props
@@ -372,5 +368,5 @@ class List extends React.Component {
 }
 
 export {
-  Grid, List, Header, GridRow, ListRow, Item, BaseRow
+  DataTable, DataList, Header, GridRow, ListRow, Item, BaseRow
 }

@@ -7,7 +7,7 @@ import { Loading } from 'xadmin-ui'
 import { SchemaForm } from 'xadmin-form'
 
 import { OverlayTrigger, Tooltip, Card, Form, Row, Col, Button } from 'react-bootstrap'
-import { ModelWrap } from '../base'
+import { ModelWrap } from 'xadmin-model'
 
 const DefaultLayout = (props) => {
   const { children, invalid, handleSubmit, submitting } = props

@@ -16,7 +16,9 @@ import notice from 'xadmin-plugins/lib/notice'
 import modalform from 'xadmin-plugins/lib/modalform'
 import search from 'xadmin-plugins/lib/search'
 import reldetail from 'xadmin-plugins/lib/reldetail'
-import antdUI from 'xadmin-antd'
+
+import components from 'xadmin-antd'
+//import components from 'xadmin-bootstrap'
 
 import models from './models'
 import themes from './themes'
@@ -38,10 +40,10 @@ app
 .use(actions)
 .use(relate)
 .use(auth)
-.use(modalform)
+//.use(modalform)
 //.use(search)
 .use(reldetail)
-.use(antdUI)
+.use(components)
 .use({
   config: {
     api: API,

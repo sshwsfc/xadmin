@@ -37,7 +37,37 @@ const FieldGroup = ({ label, meta, input, field, children }) => {
   )
 }
 
-const InLineRow = ({ children }) => <Col sm={6} md={4} lg={3}><Row className="mb-2">{children}</Row></Col>
+const GroupRow = ({ children }) => <Col sm={6} md={4} lg={3}><Row className="mb-2">{children}</Row></Col>
+
+const ColGroup = ({ label, meta, input, field, children }) => {
+  const groupProps = {}
+  const attrs = field.attrs || {}
+  const error = meta.touched && meta.error
+  const help = field.description || field.help
+
+  if (attrs.size) {
+    groupProps['size'] = attrs.size
+  }
+  if (attrs.variant) {
+    groupProps['variant'] = attrs.variant
+  }
+
+  const controlComponent = children ? children : (<Form.Control {...input} {...attrs} placeholder={label} />)
+  return (
+    <Form.Group as={GroupRow} controlId={input.name} {...groupProps}>
+      <Col sm={3}>
+        <Form.Label>
+          {label}{field && field.required ? <span className="text-danger">*</span> : ''}
+        </Form.Label>
+      </Col>
+      <Col sm={9}>
+        {controlComponent}
+        {error && <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>}
+        {help && <Form.Text className="text-muted">{help}</Form.Text>}
+      </Col>
+    </Form.Group>
+  )
+}
 
 const InlineGroup = ({ label, meta, input, field, children }) => {
   const groupProps = {}
@@ -54,17 +84,10 @@ const InlineGroup = ({ label, meta, input, field, children }) => {
 
   const controlComponent = children ? children : (<Form.Control {...input} {...attrs} placeholder={label} />)
   return (
-    <Form.Group as={InLineRow} controlId={input.name} {...groupProps}>
-      <Col sm={3}>
-        <Form.Label>
-          {label}{field && field.required ? <span className="text-danger">*</span> : ''}
-        </Form.Label>
-      </Col>
-      <Col sm={9}>
-        {controlComponent}
-        {error && <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>}
-        {help && <Form.Text className="text-muted">{help}</Form.Text>}
-      </Col>
+    <Form.Group controlId={input.name} {...groupProps}>
+      {controlComponent}
+      {error && <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>}
+      {help && <Form.Text className="text-muted">{help}</Form.Text>}
     </Form.Group>
   )
 }
@@ -98,5 +121,6 @@ const SimpleGroup = ({ label, meta, input, field, children }) => {
 export {
   FieldGroup,
   InlineGroup,
-  SimpleGroup
+  SimpleGroup,
+  ColGroup
 }
