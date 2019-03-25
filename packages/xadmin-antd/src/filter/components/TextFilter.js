@@ -59,25 +59,21 @@ export default class TextFilter extends React.Component {
   }
 
   render() {
-    const { input: { name, onBlur, onChange, ...inputProps }, label, meta, field, option, group: FieldGroup } = this.props
+    const { input: { name, onBlur, onChange, ...inputProps }, field, option } = this.props
     const { like, value } = this.state
     const { _t } = app.context
     const submitOnChange = option && option.options && option.options.submitOnChange
     const prefix = <Icon type={like ? 'file-search' : 'search'} onClick={()=>this.onLikeChange(!like)} style={{ color: 'rgba(0,0,0,.25)' }} />
 
-    return (
-      <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
-        {submitOnChange ? (
-          <Search { ...inputProps} {...field.attrs} value={value} prefix={prefix}
-            onChange={e => this.onValueChange(e.target.value)}
-            onSearch={value => { this.onValueChange(value); this.onChange() }}
-          />
-        ) : (
-          <Input { ...inputProps} {...field.attrs} value={value} prefix={prefix}
-            onChange={e => this.onValueChange(e.target.value)}
-          />
-        )}
-      </FieldGroup>
+    return submitOnChange ? (
+      <Search { ...inputProps} {...field.attrs} value={value} prefix={prefix}
+        onChange={e => this.onValueChange(e.target.value)}
+        onSearch={value => { this.onValueChange(value); this.onChange() }}
+      />
+    ) : (
+      <Input { ...inputProps} {...field.attrs} value={value} prefix={prefix}
+        onChange={e => this.onValueChange(e.target.value)}
+      />
     )
   }
 

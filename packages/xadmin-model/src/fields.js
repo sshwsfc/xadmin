@@ -2,8 +2,7 @@ import React from 'react'
 import moment from 'moment'
 import _ from 'lodash'
 import app from 'xadmin'
-import Icon from 'react-fontawesome'
-import { Item } from './components/Items'
+import { Icon, C } from 'xadmin-ui'
 
 export default [
   (SubPrev, schema) => {
@@ -54,7 +53,7 @@ export default [
           }
         }
         const renderValue = value ? value.map(item => {
-          return <Item nest={true} item={{ [fieldName]: item }} field={fieldName} schema={schema.items} wrap={itemWrap} />
+          return <C is="Model.DataItem" nest={true} item={{ [fieldName]: item }} field={fieldName} schema={schema.items} wrap={itemWrap} />
         }) : null
         return <WrapComponent>{renderValue}</WrapComponent>
       }
@@ -66,7 +65,7 @@ export default [
       return ({ value, wrap }) => {
         const displayField = schema.display_field || 'name'
         const WrapComponent = wrap
-        return <Item nest={true} item={value} field={displayField} schema={schema.properties[displayField]} wrap={wrap} />
+        return <C is="Model.DataItem" nest={true} item={value} field={displayField} schema={schema.properties[displayField]} wrap={wrap} />
       }
     }
     return SubPrev

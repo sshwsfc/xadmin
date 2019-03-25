@@ -42,7 +42,7 @@ export default class TextFilter extends React.Component {
   }
 
   render() {
-    const { input: { name, value, onBlur, onChange, ...inputProps }, label, meta, field, group: FieldGroup } = this.props
+    const { input: { name, value, onBlur, onChange, ...inputProps }, field } = this.props
     let text = value
     let like = false
     if(value.like) {
@@ -52,22 +52,20 @@ export default class TextFilter extends React.Component {
     const { _t } = app.context
 
     return (
-      <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
-        <InputGroup { ...field.attrs }>
-          <InputGroup.Prepend>
-            <OverlayTrigger placement="top" overlay={<Tooltip>{like ? _t('Fuzzy query') : _t('Exact query')}</Tooltip>}>
-              <Button variant="outline-secondary" disabled={!text} onClick={()=>this.onLikeChange(!like)}>
-                {like ? <Icon name="magic" /> : <Icon name="search" /> }
-              </Button>
-            </OverlayTrigger>
-          </InputGroup.Prepend>
-          <Form.Control type="text" { ...inputProps} {...field.attrs} value={text}
-            onBlur={this.onBlur} onChange={this.onChange} />
-          <InputGroup.Append>
-            <Button variant="outline-secondary" onClick={this.clear} style={{ borderLeft: 'none' }}><Icon name="close" /></Button>
-          </InputGroup.Append>
-        </InputGroup>
-      </FieldGroup>
+      <InputGroup { ...field.attrs }>
+        <InputGroup.Prepend>
+          <OverlayTrigger placement="top" overlay={<Tooltip>{like ? _t('Fuzzy query') : _t('Exact query')}</Tooltip>}>
+            <Button variant="outline-secondary" disabled={!text} onClick={()=>this.onLikeChange(!like)}>
+              {like ? <Icon name="magic" /> : <Icon name="search" /> }
+            </Button>
+          </OverlayTrigger>
+        </InputGroup.Prepend>
+        <Form.Control type="text" { ...inputProps} {...field.attrs} value={text}
+          onBlur={this.onBlur} onChange={this.onChange} />
+        <InputGroup.Append>
+          <Button variant="outline-secondary" onClick={this.clear} style={{ borderLeft: 'none' }}><Icon name="close" /></Button>
+        </InputGroup.Append>
+      </InputGroup>
     )
   }
 

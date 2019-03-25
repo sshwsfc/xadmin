@@ -3,7 +3,7 @@ import { Card, Container, Button } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
 import { StoreWrap, app } from 'xadmin'
 import { Model } from 'xadmin-model'
-import ModelForm from 'xadmin-model/lib/components/Form'
+import { C } from 'xadmin-ui'
 
 import { UserForgetPassword } from '../models'
 
@@ -12,7 +12,7 @@ export default StoreWrap('auth.forget_password')(({ onSuccess }) => {
   return (
     <Model schema={UserForgetPassword(app)}>
       <Container>
-        <ModelForm 
+        <C is="Model.DataForm" 
           successMessage={_t('Send reset password email success')}
           onSubmitSuccess={onSuccess}
           componentClass={({ error, children, invalid, handleSubmit, submitting }) => (

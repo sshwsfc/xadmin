@@ -30,7 +30,7 @@ const defaultItemsRender = ({ fields, meta: { touched, error }, field, fieldsBui
   )
 }
 
-export default ({ input, label, meta, field, option, group: FieldGroup }) => {
+export default ({ input, label, field, option }) => {
   let renderItems = field.itemsRender || defaultItemsRender
   if(typeof renderItems === 'string') {
     renderItems = app.get('array_render')[renderItems]
@@ -45,8 +45,6 @@ export default ({ input, label, meta, field, option, group: FieldGroup }) => {
     return objectBuilder(itemFields, items.render, option)
   }
   return (
-    <FieldGroup label={label} meta={meta} input={input} field={field}>
-      <FieldArray name={field.name} label={label} input={input} component={renderItems} field={field} fieldsBuilder={fieldsBuilder} />
-    </FieldGroup>
+    <FieldArray name={field.name} label={label} input={input} component={renderItems} field={field} fieldsBuilder={fieldsBuilder} />
   )
 }

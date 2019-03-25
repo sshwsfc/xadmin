@@ -65,16 +65,14 @@ class RelateSelect extends RelateBase {
 
   render() {
     const { _t } = app.context
-    const { input: { value: item }, label, meta, field, group: FieldGroup } = this.props
+    const { input: { value: item }, field } = this.props
     const displayField = field.displayField || 'name'
     return (
-      <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
-        <AsyncSelect 
-          value={item ? { item, label: item[displayField], key: item.id } : null} 
-          onChange={this.onChange}
-          loadOptions={this.loadOptions} 
-        />
-      </FieldGroup>
+      <AsyncSelect 
+        value={item ? { item, label: item[displayField], key: item.id } : null} 
+        onChange={this.onChange}
+        loadOptions={this.loadOptions} 
+      />
     )
   }
 }
@@ -87,16 +85,14 @@ class RelateMultiSelect extends RelateBase {
 
   render() {
     const { _t } = app.context
-    const { input: { value: items }, label, meta, field, group: FieldGroup } = this.props
+    const { input: { value: items }, field } = this.props
     const displayField = field.displayField || 'name'
     return (
-      <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
-        <AsyncSelect mode="multiple"
-          value={items ? items.map(item => ({ key: item.id, item, label: item[displayField] })) : null} 
-          onChange={this.onChange} 
-          loadOptions={this.loadOptions} 
-        />
-      </FieldGroup>
+      <AsyncSelect mode="multiple"
+        value={items ? items.map(item => ({ key: item.id, item, label: item[displayField] })) : null} 
+        onChange={this.onChange} 
+        loadOptions={this.loadOptions} 
+      />
     )
   }
 
@@ -110,16 +106,14 @@ class FilterRelateSelect extends RelateBase {
 
   render() {
     const { _t } = app.context
-    const { input: { value: selectId }, label, meta, field, group: FieldGroup } = this.props
+    const { input: { value: selectId } } = this.props
 
     return (
-      <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
-        <AsyncSelect 
-          isOptionSelected={option => selectId && option.key == selectId}
-          onChange={this.onChange} 
-          loadOptions={this.loadOptions} 
-        />
-      </FieldGroup>
+      <AsyncSelect 
+        isOptionSelected={option => selectId && option.key == selectId}
+        onChange={this.onChange} 
+        loadOptions={this.loadOptions} 
+      />
     )
   }
 }

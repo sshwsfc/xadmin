@@ -1,7 +1,7 @@
 import React from 'react'
 import Select from 'react-select'
 
-export default ({ input, label, meta, field, group: FieldGroup }) => {
+export default ({ input, field }) => {
 
   const onValueChange = (select) => {
     input.onChange(select && select.value)
@@ -25,17 +25,15 @@ export default ({ input, label, meta, field, group: FieldGroup }) => {
   }
 
   return (
-    <FieldGroup label={label} meta={meta} input={input} field={field}>
-      <Select id={input.name} theme="bootstrap3"
-        placeholder={field.description}
-        value={value}
-        clearable={false}
-        options={options.map(option=>{ return { label: option.name != undefined ? option.name : 'null', value: option.value } })}
-        onChange={onValueChange}
-        onBlur={onSelectBlur}
-        onFocus={onSelectFocus}
-        {...field.attrs}
-      />
-    </FieldGroup>
+    <Select id={input.name} theme="bootstrap3"
+      placeholder={field.description}
+      value={value}
+      clearable={false}
+      options={options.map(option=>{ return { label: option.name != undefined ? option.name : 'null', value: option.value } })}
+      onChange={onValueChange}
+      onBlur={onSelectBlur}
+      onFocus={onSelectFocus}
+      {...field.attrs}
+    />
   )
 }

@@ -15,16 +15,14 @@ class RelateSelect extends RelateBase {
 
   render() {
     const { _t } = app.context
-    const { input: { value: item }, label, meta, field, group: FieldGroup } = this.props
+    const { input: { value: item }, field } = this.props
     const displayField = field.displayField || 'name'
     return (
-      <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
-        <AsyncSelect cacheOptions defaultOptions 
-          selectOption={item ? { item, label: item[displayField], value: item.id } : null} 
-          onChange={this.onChange}
-          loadOptions={this.loadOptions} 
-        />
-      </FieldGroup>
+      <AsyncSelect cacheOptions defaultOptions 
+        selectOption={item ? { item, label: item[displayField], value: item.id } : null} 
+        onChange={this.onChange}
+        loadOptions={this.loadOptions} 
+      />
     )
   }
 }
@@ -37,16 +35,14 @@ class RelateMultiSelect extends RelateBase {
 
   render() {
     const { _t } = app.context
-    const { input: { value: items }, label, meta, field, group: FieldGroup } = this.props
+    const { input: { value: items }, field } = this.props
     const displayField = field.displayField || 'name'
     return (
-      <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
-        <AsyncSelect cacheOptions defaultOptions isMulti closeMenuOnSelect={false}
-          selectOption={items ? items.map(item => ({ value: item.id, item, label: item[displayField] })) : null} 
-          onChange={this.onChange} 
-          loadOptions={this.loadOptions} 
-        />
-      </FieldGroup>
+      <AsyncSelect cacheOptions defaultOptions isMulti closeMenuOnSelect={false}
+        selectOption={items ? items.map(item => ({ value: item.id, item, label: item[displayField] })) : null} 
+        onChange={this.onChange} 
+        loadOptions={this.loadOptions} 
+      />
     )
   }
 
@@ -60,16 +56,14 @@ class FilterRelateSelect extends RelateBase {
 
   render() {
     const { _t } = app.context
-    const { input: { value: selectId }, label, meta, field, group: FieldGroup } = this.props
+    const { input: { value: selectId } } = this.props
 
     return (
-      <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
-        <AsyncSelect cacheOptions defaultOptions 
-          isOptionSelected={option => selectId && option.value == selectId}
-          onChange={this.onChange} 
-          loadOptions={this.loadOptions} 
-        />
-      </FieldGroup>
+      <AsyncSelect cacheOptions defaultOptions 
+        isOptionSelected={option => selectId && option.value == selectId}
+        onChange={this.onChange} 
+        loadOptions={this.loadOptions} 
+      />
     )
   }
 }

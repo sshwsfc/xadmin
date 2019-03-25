@@ -1,7 +1,6 @@
 import React from 'react'
 import { C, Icon, Menu } from 'xadmin-ui'
 
-import ChildrenModelBtn from './components/ChildrenModel'
 import { Model, ModelWrap, ModelContext, ModelBlock } from './base'
 import modelReducer from './reducer'
 import effects from './effects'
@@ -86,5 +85,5 @@ const app = {
   field_render
 }
 
-export { Model, ModelWrap, ModelBlock, ModelContext, ChildrenModelBtn }
+export { Model, ModelWrap, ModelBlock, ModelContext }
 export default app

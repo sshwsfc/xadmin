@@ -17,11 +17,16 @@ const objectBuilder = (fields, render, option) => {
 }
 
 const fieldBuilder = (field, option, ...props) => {
+  const FieldComponent = field.component
+  const FieldGroup = field.group || (option && option.group ? option.group : C('Form.FieldGroup'))
+  
   return (<Field key={field.key} name={field.name} label={field.label} 
     normalize={field.normalize} parse={field.parse} format={field.format}
-    component={field.component} field={field} 
-    group={field.group || (option && option.group ? option.group : C('Form.FieldGroup'))} 
-    option={option}
+    component={(props) => (
+      <FieldGroup label={props.label} meta={props.meta} input={props.input} field={props.field}>
+        <FieldComponent {...props} />
+      </FieldGroup>
+    )} field={field} option={option} group={FieldGroup}
     {...props} />)
 }
 

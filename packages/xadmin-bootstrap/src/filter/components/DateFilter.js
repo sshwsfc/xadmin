@@ -125,14 +125,10 @@ export default class DateFilter extends React.Component {
   }
 
   render() {
-    const { input, label, meta, field, group: FieldGroup } = this.props
+    const { input, label, field } = this.props
     const { newValue } = this.state
 
-    return (
-      <FieldGroup label={label} meta={meta} input={input} field={field}>
-        {field.mode == 'mini' ? this.renderMini() : this.renderBase()}
-      </FieldGroup>
-    )
+    return field.mode == 'mini' ? this.renderMini() : this.renderBase()
   }
 
 }

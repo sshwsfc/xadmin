@@ -4,7 +4,6 @@ import Icon from 'react-fontawesome'
 import { StoreWrap, app } from 'xadmin'
 import { Model } from 'xadmin-model'
 import { C } from 'xadmin-ui'
-import ModelForm from 'xadmin-model/lib/components/Form'
 
 import { UserSignIn } from '../models'
 
@@ -35,7 +34,7 @@ const SigininLayout = ({ error, children, invalid, handleSubmit, submitting }) =
 const SignInForm = StoreWrap('auth.sign_in')(({ onSignIn }) => {
   return (
     <Model schema={UserSignIn(app)}>
-      <ModelForm 
+      <C is="Model.DataForm"
         onSubmit={onSignIn}
         componentClass={C('Auth.Signin') || SigininLayout}
       />

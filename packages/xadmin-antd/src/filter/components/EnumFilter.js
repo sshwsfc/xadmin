@@ -79,11 +79,11 @@ export default class EnumFilter extends React.Component {
   }
 
   render() {
-    const { input: { name, value, onBlur, onChange, ...inputProps }, label, meta, field, group: FieldGroup } = this.props
+    const { input: { name, value, onBlur, onChange, ...inputProps }, field } = this.props
     const { checks } = this.state
     const { _t } = app.context 
     return (
-      <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
+      <>
         <Checkbox key="check-clear" id="check-clear"
           checked={checks.length==0} 
           onChange={(e)=>{
@@ -96,7 +96,7 @@ export default class EnumFilter extends React.Component {
             checked={checks.indexOf(option.value) >= 0} 
             onChange={(e)=>this.onChange(e, option.value)}
             {...inputProps} value={option.value} >{option.name}</Checkbox>) })}
-      </FieldGroup>
+      </>
     )
   }
 

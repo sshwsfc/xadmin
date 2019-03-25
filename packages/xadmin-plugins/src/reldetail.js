@@ -4,7 +4,7 @@ import _ from 'lodash'
 import { Modal } from 'react-bootstrap'
 import app from 'xadmin'
 import { Model } from 'xadmin-model'
-import Info from 'xadmin-model/lib/components/Info'
+import { C } from 'xadmin-ui'
 
 class DetailModal extends React.Component {
 
@@ -35,7 +35,7 @@ class DetailModal extends React.Component {
             <Modal.Title>{children}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Info id={id} />
+            <C is="Model.DataDetail" id={id} />
           </Modal.Body>
         </Modal>
         )}

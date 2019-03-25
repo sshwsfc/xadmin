@@ -3,8 +3,7 @@ import { Card, Button } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
 import { StoreWrap, app } from 'xadmin'
 import { Model } from 'xadmin-model'
-import ModelForm from 'xadmin-model/lib/components/Form'
-import { Page } from 'xadmin-ui'
+import { Page, C } from 'xadmin-ui'
 
 import { UserChangePassword } from '../models'
 
@@ -13,7 +12,7 @@ export default StoreWrap('auth.change_password')(({ onChange }) => {
   return (
     <Page title={_t('Change Password')}>
       <Model schema={UserChangePassword(app)}>
-        <ModelForm 
+        <C is="Model.DataForm"
           onSubmit={onChange}
           componentClass={({ children, invalid, handleSubmit, submitting }) => {
             const icon = submitting ? 'spinner fa-spin' : 'floppy-o'

@@ -6,7 +6,7 @@ import { SchemaForm } from 'xadmin-form'
 import { app } from 'xadmin'
 import { ModelWrap, Model } from '../index'
 
-import Icon from 'react-fontawesome'
+import { Icon } from 'xadmin-ui'
 
 const FieldGroup = ({ label, meta, input, field, children }) => {
   const groupProps = {}

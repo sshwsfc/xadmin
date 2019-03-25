@@ -3,7 +3,6 @@ import app, { StoreWrap } from 'xadmin';
 import { Button, Navbar, Card, Form, Modal, ButtonGroup, Badge } from 'react-bootstrap';
 import { Page, Icon } from 'xadmin-ui';
 import { SchemaForm, FormWrap } from 'xadmin-form';
-import { SimpleGroup } from 'xadmin-form/lib/components/groups'
 import models from './models';
 
 const ButtonBadge = FormWrap({
@@ -81,7 +80,6 @@ class App extends React.Component {
           initialValues={{ name: 'test' }}
           onSubmit={console.log}
           component={this.renderModal}
-          group={SimpleGroup}
         /> }
       </Page>
     );

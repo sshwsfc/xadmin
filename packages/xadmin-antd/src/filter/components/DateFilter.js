@@ -23,16 +23,12 @@ export default class DatePickerFilter extends React.Component {
   }
 
   render() {
-    const { input, label, meta, field, group: FieldGroup } = this.props
+    const { input, field } = this.props
     let value = input.value
     if(_.isPlainObject(value) && value.gte && value.lte) {
       const format = field.datetimeFormat || 'YYYY-MM-DD'
       value = [ moment(value.gte, format), moment(value.lte, format) ]
     }
-    return (
-      <FieldGroup label={label} meta={meta} input={input} field={field}>
-        <RangePicker onChange={this.onRangeChange} value={value} />
-      </FieldGroup>
-    )
+    return <RangePicker onChange={this.onRangeChange} value={value} />
   }
 }

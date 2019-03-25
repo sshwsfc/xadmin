@@ -53,21 +53,19 @@ export default class NumberFilter extends React.Component {
   }
 
   render() {
-    const { input: { name, value, onBlur, onChange, ...inputProps }, label, meta, field, group: FieldGroup } = this.props
+    const { input: { name, value, onBlur, onChange, ...inputProps }, field } = this.props
     const { gte, lte } = this.state
     const { _t } = app.context
     return (
-      <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
-        <div style={{ display: 'inline-flex' }}>
-          <InputNumber { ...inputProps} {...field.attrs} style={{ width: 'auto', ...field.style }} value={gte || ''}
-            placeholder={field.minimum ? `Minimum(${field.minimum})` : _t('No limit')}
-            onChange={(v)=>this.onChange(v, 'gte')} />
-          <span style={{ textAlign: 'center', width: '2rem' }}>~</span>
-          <InputNumber { ...inputProps} {...field.attrs} style={{ width: 'auto', ...field.style }} value={lte || ''}
-            placeholder={field.maximum ? `Maximum(${field.maximum})` : _t('No limit')}
-            onChange={(v)=>this.onChange(v, 'lte')} />
-        </div>
-      </FieldGroup>
+      <div style={{ display: 'inline-flex' }}>
+        <InputNumber { ...inputProps} {...field.attrs} style={{ width: 'auto', ...field.style }} value={gte || ''}
+          placeholder={field.minimum ? `Minimum(${field.minimum})` : _t('No limit')}
+          onChange={(v)=>this.onChange(v, 'gte')} />
+        <span style={{ textAlign: 'center', width: '2rem' }}>~</span>
+        <InputNumber { ...inputProps} {...field.attrs} style={{ width: 'auto', ...field.style }} value={lte || ''}
+          placeholder={field.maximum ? `Maximum(${field.maximum})` : _t('No limit')}
+          onChange={(v)=>this.onChange(v, 'lte')} />
+      </div>
     )
   }
 

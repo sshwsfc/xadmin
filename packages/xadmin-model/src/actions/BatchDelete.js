@@ -3,7 +3,7 @@ import { Modal, Dropdown, Button, ListGroup, ListGroupItem } from 'react-bootstr
 import { app } from 'xadmin'
 import { ModelWrap } from '../index'
 
-import Icon from 'react-fontawesome'
+import { Icon } from 'xadmin-ui'
 
 @ModelWrap('actons.batch_delete')
 @ModelWrap('model.list.actions')

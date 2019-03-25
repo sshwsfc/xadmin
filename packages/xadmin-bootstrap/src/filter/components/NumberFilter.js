@@ -53,21 +53,19 @@ export default class NumberFilter extends React.Component {
   }
 
   render() {
-    const { input: { name, value, onBlur, onChange, ...inputProps }, label, meta, field, group: FieldGroup } = this.props
+    const { input: { name, value, onBlur, onChange, ...inputProps }, field } = this.props
     const { gte, lte } = this.state
     const { _t } = app.context
     return (
-      <FieldGroup label={label} meta={meta} input={this.props.input} field={field}>
-        <InputGroup>
-          <FormControl type="number" { ...inputProps} {...field.attrs} value={gte || ''}
-            placeholder={field.minimum ? `Minimum(${field.minimum})` : _t('No limit')} style={{ flexGrow: 3 }}
-            onBlur={(e)=>this.onBlur(e, 'gte')} onChange={(e)=>this.onChange(e, 'gte')} />
-          <FormControl value="~" style={{ textAlign: 'center' }} {...field.attrs} readOnly />          
-          <FormControl type="number" { ...inputProps} {...field.attrs} value={lte || ''}
-            placeholder={field.maximum ? `Maximum(${field.maximum})` : _t('No limit')} style={{ flexGrow: 3 }}
-            onBlur={(e)=>this.onBlur(e, 'lte')} onChange={(e)=>this.onChange(e, 'lte')} />
-        </InputGroup>
-      </FieldGroup>
+      <InputGroup>
+        <FormControl type="number" { ...inputProps} {...field.attrs} value={gte || ''}
+          placeholder={field.minimum ? `Minimum(${field.minimum})` : _t('No limit')} style={{ flexGrow: 3 }}
+          onBlur={(e)=>this.onBlur(e, 'gte')} onChange={(e)=>this.onChange(e, 'gte')} />
+        <FormControl value="~" style={{ textAlign: 'center' }} {...field.attrs} readOnly />          
+        <FormControl type="number" { ...inputProps} {...field.attrs} value={lte || ''}
+          placeholder={field.maximum ? `Maximum(${field.maximum})` : _t('No limit')} style={{ flexGrow: 3 }}
+          onBlur={(e)=>this.onBlur(e, 'lte')} onChange={(e)=>this.onChange(e, 'lte')} />
+      </InputGroup>
     )
   }
 

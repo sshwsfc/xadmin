@@ -3,7 +3,7 @@ import { Card, Container, Button } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
 import { StoreWrap, app } from 'xadmin'
 import { Model } from 'xadmin-model'
-import ModelForm from 'xadmin-model/lib/components/Form'
+import { C } from 'xadmin-ui'
 
 import { UserResetPassword } from '../models'
 
@@ -12,7 +12,7 @@ export default StoreWrap('auth.reset_password')(({ onSuccess, location: { query 
   return (
     <Model schema={UserResetPassword(app)}>
       <Container>
-        <ModelForm 
+        <C is="Model.DataForm" 
           initialValues={query}
           successMessage={_t('Reset password success')}
           onSubmitSuccess={onSuccess}

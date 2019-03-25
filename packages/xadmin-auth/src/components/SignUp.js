@@ -3,7 +3,7 @@ import { Card, Container, Button } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
 import { StoreWrap, app } from 'xadmin'
 import { Model } from 'xadmin-model'
-import ModelForm from 'xadmin-model/lib/components/Form'
+import { C } from 'xadmin-ui'
 
 import { UserSignUp } from '../models'
 
@@ -12,7 +12,7 @@ const SignUpForm = StoreWrap('auth.sign_up')(({ onSuccess }) => {
   return (
     <Model schema={UserSignUp(app)}>
       <Container>
-        <ModelForm 
+        <C is="Model.DataForm"
           successMessage={_t('Register success')}
           onSubmitSuccess={onSuccess}
           componentClass={({ error, children, invalid, handleSubmit, submitting }) => (

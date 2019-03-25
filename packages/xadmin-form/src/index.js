@@ -1,7 +1,6 @@
 import React from 'react'
 import { reducer as formReducer, SubmissionError, reduxForm, FieldArray } from 'redux-form'
 import Ajv from 'ajv'
-import default_fields from './fields'
 import { converters } from './schema'
 
 import {
@@ -37,7 +36,6 @@ const app = {
     const plugins = app.get('form_reducer')
     return { form: formReducer.plugin(plugins) }
   },
-  form_fields: default_fields,
   schema_converter: converters
 }
 

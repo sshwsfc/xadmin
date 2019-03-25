@@ -68,13 +68,7 @@ class RelateMultiTransfer extends React.Component {
   }
 
   render() {
-    const { _t } = app.context
-    const { input, options, label, meta, field, group: FieldGroup } = this.props
-    return (
-      <FieldGroup label={label} meta={meta} input={input} field={field}>
-        {options?this.renderTransfer():<Spin />}
-      </FieldGroup>
-    )
+    return this.props.options ? this.renderTransfer() : <Spin />
   }
 
 }

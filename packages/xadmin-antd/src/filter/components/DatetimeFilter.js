@@ -62,7 +62,7 @@ class DateRange extends React.Component {
   }
 
   render() {
-    const { input, label, meta, field, group: FieldGroup } = this.props
+    const { input, field } = this.props
     const format = field.datetimeFormat || 'YYYY-MM-DD HH:mm:ss'
     const inputValue = input.value
 
@@ -72,7 +72,7 @@ class DateRange extends React.Component {
     const endValue = inputValue && inputValue.lte && moment(inputValue.lte)
 
     return (
-      <FieldGroup label={label} meta={meta} input={input} field={field}>
+      <>
         <DatePicker
           disabledDate={this.disabledStartDate}
           showTime
@@ -92,7 +92,7 @@ class DateRange extends React.Component {
           open={endOpen}
           onOpenChange={this.handleEndOpenChange}
         />
-      </FieldGroup>
+      </>
     )
   }
 }
