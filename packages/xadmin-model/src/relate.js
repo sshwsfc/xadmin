@@ -75,7 +75,7 @@ const schema_converter = [
         const model = models[name]
         f.type = 'multi_select'
         f.schema = model
-        f.displayField = model.display_field || 'name'
+        f.displayField = model.displayField || 'name'
       }
     }
     return f
@@ -88,7 +88,7 @@ const schema_converter = [
         const model = models[relateName]
         f.type = 'fkselect'
         f.schema = model
-        f.displayField = model.display_field || 'name'
+        f.displayField = model.displayField || 'name'
       }
     }
     return f
@@ -104,7 +104,7 @@ const filter_converter = [
         const model = models[relateName]
         f.type = 'filter_relate'
         f.schema = model
-        f.displayField = model.display_field || 'name'
+        f.displayField = model.displayField || 'name'
       }
     }
     return f
@@ -165,7 +165,7 @@ const routers = (app) => {
             path: 'list',
             breadcrumbName: _t('{{name}} List', { name: modelName }),
             component: RelateWrap(model.components && 
-              (model.components['relate_list'] || model.components['page_list']) || 
+              (model.components['RelateListPage'] || model.components['ListPage']) || 
               (C('Relate.ListPage') || C('Model.ListPage')), pname)
           })
         }
@@ -174,7 +174,7 @@ const routers = (app) => {
             path: 'add',
             breadcrumbName: _t('Create {{name}}', { name: modelName }),
             component: RelateWrap(model.components && 
-              (model.components['relate_add'] || model.components['page_add']) || 
+              (model.components['RelateFormPage'] || model.components['FormPage']) || 
               (C('Relate.FormPage') || C('Model.FormPage')), pname)
           })
         }

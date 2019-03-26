@@ -187,7 +187,7 @@ class Item extends React.Component {
   render() {
     const { item, field, schema, componentClass, wrap, nest, model, inList=true } = this.props
     const { _t } = app.context
-    const editable_fields = model.editable_fields
+    const editable_fields = model.editableFields
     const RawWrapComponent = wrap || (({ children }) => <span style={{ cursor: 'pointer' }}>{children}</span>)
     const WrapComponent = (nest == true || editable_fields == undefined || editable_fields.indexOf(field) < 0) ? RawWrapComponent : ({ children, ...props }) => {
       return (

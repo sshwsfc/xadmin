@@ -28,7 +28,7 @@ class ModelForm extends React.Component {
         initialValues={this.state.record}
         onSubmit={(values) => saveItem(values)}
         {...formProps}
-        {...model.form_props} />
+        {...model.formProps} />
       )
   }
 

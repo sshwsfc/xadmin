@@ -124,7 +124,7 @@ class DataTable extends BaseData {
   renderData() {
     const { fields, items, model, loading, avageWidth=8 ,size, onRow } = this.props
     const { _t } = app.context
-    const lockedFields = model.locked_fields || []
+    const lockedFields = model.lockedFields || []
     const columns = []
 
     fields.forEach((fieldName, index)=> {
@@ -210,7 +210,7 @@ class DataList extends BaseData {
 
   renderData() {
     const { fields, items, model, size } = this.props
-    const RenderItem = (model.components && model.components.listRenderItem) || C('Model.DataListRender') || DataListRender
+    const RenderItem = (model.components && model.components.DataListRender) || C('Model.DataListRender') || DataListRender
     return (
       <Card>
         <List
@@ -236,7 +236,7 @@ class DataCard extends React.Component {
     } else {
       if(items.length > 0) {
 
-        const lockedFields = model.locked_fields || []
+        const lockedFields = model.lockedFields || []
         const columns = []
 
         fields.forEach((fieldName, index)=> {

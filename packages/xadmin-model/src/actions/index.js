@@ -75,7 +75,7 @@ export default {
       }, 
       (props) => {
         const model = props.model
-        if(model.batch_change_fields && !!model.permission && !!model.permission.edit) {
+        if(model.batchChangeFields && !!model.permission && !!model.permission.edit) {
           return <BatchChange {...props} />
         } else {
           return null
@@ -100,7 +100,7 @@ export default {
     'actons.batch_change': {
       data: ({ model }) => {
         return {
-          fields: model.batch_change_fields || [],
+          fields: model.batchChangeFields || [],
           canEdit: !!model.permission && !!model.permission.edit
         }
       },

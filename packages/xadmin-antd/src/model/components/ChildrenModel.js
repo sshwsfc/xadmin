@@ -28,7 +28,7 @@ class ChildrenModelBtn extends React.Component {
       ...cmodel,
       parent,
       item_actions: [
-        ...(cmodel.item_actions || []),
+        ...(cmodel.itemActions || []),
         item => <EditChildrenModelBtn id={item.id}>{_t('Edit')}</EditChildrenModelBtn>
       ],
       permission: {

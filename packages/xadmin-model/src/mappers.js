@@ -166,8 +166,8 @@ export default {
     },
     compute: ({ model }, { item }) => {
       return {
-        actions: model.item_actions,
-        component: model.item_component,
+        actions: model.itemActions,
+        component: model.itemComponent,
         canEdit: !!model.permission && !!model.permission.edit && item && item._canEdit !== false,
         canDelete: !!model.permission && !!model.permission.delete && item && item._canDelete !== false
       }
@@ -191,17 +191,17 @@ export default {
       const property = schema || getFieldProp(model, field)
       const data = schema ? {} : { schema: property }
       const key = schema ? `${schema.name}.${field}` : field
-      if(model.fields_render == undefined) {
-        model.fields_render = {}
+      if(model.fieldRender == undefined) {
+        model.fieldRender = {}
       }
-      if(model.fields_render[key] == undefined) {
-        model.fields_render[key] = property != undefined ? 
-          app.load_list('field_render').reduce((prev, render) => {
+      if(model.fieldRender[key] == undefined) {
+        model.fieldRender[key] = property != undefined ? 
+          app.get('fieldRenders').reduce((prev, render) => {
             return render(prev, property, field)
           }, null) : null
       }
-      if(model.fields_render[key]) {
-        data['componentClass'] = model.fields_render[key]
+      if(model.fieldRender[key]) {
+        data['componentClass'] = model.fieldRender[key]
       }
       return data
     }

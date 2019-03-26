@@ -141,7 +141,7 @@ class RelateContainer extends React.Component {
 
   render() {
     const { data, model, children } = this.props
-    const displayField = model.display_field || 'name'
+    const displayField = model.displayField || 'name'
     return  (
       <>
         <h4><Icon name={model.icon} /> {data[displayField]}</h4>

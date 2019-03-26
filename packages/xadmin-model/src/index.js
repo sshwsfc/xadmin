@@ -5,12 +5,13 @@ import { Model, ModelWrap, ModelContext, ModelBlock } from './base'
 import modelReducer from './reducer'
 import effects from './effects'
 import mappers from './mappers'
-import field_render from './fields'
+import fieldRenders from './render'
 
 const app = {
   name: 'xadmin.model',
   items: {
-    models: { type: 'map' }
+    models: { type: 'map' },
+    fieldRenders: { type: 'array' }
   },
   blocks: (app) => {
     const models = app.get('models')
@@ -19,7 +20,7 @@ const app = {
         return Object.keys(models).map((name) => {
           const model = models[name]
           if((!model.permission || model.permission.view) && 
-            (!model.ui || model.ui.show_menu)) {
+            (!model.ui || model.ui.showMenu)) {
             return <Menu.Item itemKey={`main-menu-item-model-${name}`} onClick={()=>app.go(`/app/model/${name}/list`)} icon={<Icon name={model.icon || name}/>}>{model.title}</Menu.Item>
           }
         }).filter(item => item !== undefined)
@@ -82,7 +83,7 @@ const app = {
   },
   effects: (app) => effects,
   mappers,
-  field_render
+  fieldRenders
 }
 
 export { Model, ModelWrap, ModelBlock, ModelContext }

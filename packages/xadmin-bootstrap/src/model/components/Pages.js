@@ -34,7 +34,7 @@ class ModelListPage extends React.Component {
 
   render() {
     const { icon, title, location, model } = this.props
-    const ItemsComponent = (model.components && model.components.model_list) || C('Model.DataTable')
+    const ItemsComponent = (model.components && model.components.DataTable) || C('Model.DataTable')
     const query = location && location.query
 
     const GridComponents = [
@@ -85,7 +85,7 @@ class ModelFormPage extends React.Component {
 
   render() {
     const { params, location: { query }, title, model, onSuccess, componentClass } = this.props
-    const FormComponent = (model.components && model.components.model_form) || C('Model.DataForm')
+    const FormComponent = (model.components && model.components.DataForm) || C('Model.DataForm')
     return (
       <Page title={title} className={`xadmin-model-form-${model.key}`} nav={this.renderNav()}>
         <ModelBlock name="model.form.before" />
@@ -117,7 +117,7 @@ class ModelDetailPage extends React.Component {
 
   render() {
     const { params, title, model, componentClass } = this.props
-    const DetailComponent = (model.components && model.components.model_detail) || C('Model.DataDetail')
+    const DetailComponent = (model.components && model.components.DataDetail) || C('Model.DataDetail')
     const { _t } = app.context
 
     return (

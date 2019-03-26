@@ -3,7 +3,7 @@ export default class RESTBaseAPI {
 
   constructor(options) {
     this.options = options
-    this.resource = options.resource_name || options.name
+    this.resource = options.resource || options.name
   }
 
   getHost() {

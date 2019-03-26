@@ -6,7 +6,7 @@ import { C } from 'xadmin-ui'
 export default {
   User: {
     name: 'User',
-    resource_name: 'users',
+    resource: 'users',
     type: 'object',
     icon: 'user', // fa-icon
     title: 'User',
@@ -63,20 +63,20 @@ export default {
       nav: [ 'name', 'email' ],
       sidemenu: [ 'name' ]
     },
-    item_actions: [ 
+    itemActions: [ 
       (item) => <RelateAction item={item} />,
       //(item) => <ChildrenModelBtn model="Post" parent={item}>Posts</ChildrenModelBtn>
     ],
-    editable_fields: ['name'],
-    batch_change_fields: ['website', 'brithday'],
-    search_fields: [ 'name', 'email' ],
+    editableFields: ['name'],
+    batchChangeFields: ['website', 'brithday'],
+    searchFields: [ 'name', 'email' ],
     required: [ 'name', 'email', 'website' ],
     readonly: [ 'id' ],
-    list_display: [ 'id', 'name', 'email', 'website', 'address.street' ]
+    listFields: [ 'id', 'name', 'email', 'website', 'address.street' ]
   },
   Post: {
     name: 'Post',
-    resource_name: 'posts',
+    resource: 'posts',
     type: 'object',
     icon: 'file-o', // fa-icon
     title: 'Post',
@@ -127,12 +127,12 @@ export default {
       submenu: { fields: [ 'id', 'title', 'body' ], submitOnChange: true },
     },
     display: (post) => post.title,
-    search_fields: [ 'title' ],
+    searchFields: [ 'title' ],
     required: [ 'title', 'user', 'body' ],
     readonly: [ 'id' ],
-    list_display: [ 'id', 'title', 'user' ],
+    listFields: [ 'id', 'title', 'user' ],
     components: {
-      model_list: C.lazy('Model.DataList')
+      DataList: C.lazy('Model.DataList')
     }
   }
 }
