@@ -4,7 +4,7 @@ import { ModelWrap, Model } from 'xadmin-model'
 import { getFieldProp } from 'xadmin-model/lib/utils'
 import { app, Block } from 'xadmin'
 import { C, Loading } from 'xadmin-ui'
-import { Table, Empty, Menu, Dropdown, Icon, List, Card, Button, Popconfirm } from 'antd'
+import { Table, Empty, Menu, Dropdown, Icon, List, Card, Button, Popconfirm, Checkbox } from 'antd'
 
 class BaseRow extends React.Component {
 
@@ -118,7 +118,34 @@ class DataTableActionRender extends BaseRow {
 
 }
 
-@ModelWrap('model.items')
+@ModelWrap('model.checkall')
+class AllCheck extends React.Component {
+
+  render() {
+    const { selecteall, changeAllSelect } = this.props
+    return <Checkbox checked={selecteall} onChange={e => changeAllSelect(e.target.checked)} />
+  }
+
+}
+
+@ModelWrap('model.list.row')
+class DataTableCheckRender extends React.Component {
+
+  render() {
+    const { selected, changeSelect } = this.props
+    return <Checkbox checked={selected} onChange={e => changeSelect(e.target.checked)} />
+  }
+}
+
+@ModelWrap('model.checkall')
+@ModelWrap('model.items', {
+  data: ({ modelState }) => ({ selectedRows: modelState.selected }),
+  method: {
+    onSelect: ({ dispatch, model }) => (item, selected) => {
+      dispatch({ model, type: 'SELECT_ITEMS', item, selected })
+    }
+  }
+})
 class DataTable extends BaseData {
 
   renderData() {
@@ -162,17 +189,18 @@ class DataTable extends BaseData {
       key: '__action__',
       render: (val, item) => <DataTableActionRender key={item.id} fields={fields} id={item.id} />
     })
-    
+
+    // columns.unshift({
+    //   title: <AllCheck />,
+    //   key: '__selectrow__',
+    //   width: 50,
+    //   render: (val, item) => <DataTableCheckRender key={item.id} fields={fields} id={item.id} />
+    // })
+
     const rowSelection = {
-      onChange: (selectedRowKeys, selectedRows) => {
-        console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows)
-      },
-      onSelect: (record, selected, selectedRows) => {
-        console.log(record, selected, selectedRows)
-      },
-      onSelectAll: (selected, selectedRows, changeRows) => {
-        console.log(selected, selectedRows, changeRows)
-      }
+      selectedRowKeys: this.props.selectedRows.map(r => r.id),
+      onSelect: this.props.onSelect,
+      onSelectAll: this.props.changeAllSelect
     }
 
     return (
@@ -181,10 +209,11 @@ class DataTable extends BaseData {
           columns={columns}
           dataSource={items}
           bordered
-          rowSelection={rowSelection}
           size={size}
+          rowSelection={rowSelection}
           pagination={false}
           onRow={onRow}
+          rowKey="id"
           //scroll={{ y: Math.min(730, (items.length + 1) * 40 + 36) }}
         />
       </div>
