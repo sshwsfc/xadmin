@@ -63,8 +63,9 @@ class BaseFilter extends React.Component {
 
 }
 
-const filter = (name, componentName, groupName) => () => 
-  <BaseFilter name={name} component={C(componentName)} group={groupName && C(groupName)} />
+const filter = (name, componentName, groupName) => ({ model }) => (
+  (model && model.filters && model.filters[name]) ? <BaseFilter name={name} component={C(componentName)} group={groupName && C(groupName)} /> : null
+)
 
 export default {
   name: 'xadmin.filter',

@@ -65,6 +65,7 @@ class App extends React.Component {
               className="trigger pull-left"
               type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
               onClick={this.toggle}
+              style={{ lineHeight: 'inherit', marginLeft: -40, fontSize: '1.2rem' }}
             />
             {/* <Breadcrumb routes={routes} params={params} itemRender={itemRender} style={{ float: 'left', lineHeight: '47px' }} /> */}
             <div className="pull-right">

@@ -162,6 +162,18 @@ class DataTable extends BaseData {
       key: '__action__',
       render: (val, item) => <DataTableActionRender key={item.id} fields={fields} id={item.id} />
     })
+    
+    const rowSelection = {
+      onChange: (selectedRowKeys, selectedRows) => {
+        console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows)
+      },
+      onSelect: (record, selected, selectedRows) => {
+        console.log(record, selected, selectedRows)
+      },
+      onSelectAll: (selected, selectedRows, changeRows) => {
+        console.log(selected, selectedRows, changeRows)
+      }
+    }
 
     return (
       <div style={{ backgroundColor: '#FFF' }}>
@@ -169,6 +181,7 @@ class DataTable extends BaseData {
           columns={columns}
           dataSource={items}
           bordered
+          rowSelection={rowSelection}
           size={size}
           pagination={false}
           onRow={onRow}
@@ -245,7 +258,6 @@ class DataCard extends React.Component {
             field,
             width: field.width || 100,
             fixed: lockedFields.indexOf(fieldName) >= 0,
-            //title: field.header || field.title || field.name,
             title: <Header key={`model-list-header-${fieldName}`} field={fieldName} />,
             key: fieldName,
             dataIndex: fieldName,

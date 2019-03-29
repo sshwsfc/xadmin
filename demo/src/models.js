@@ -61,7 +61,7 @@ export default {
       { key: 'website', type: 'textarea', attrs: { rows: 5 } } ],
     filters: {
       nav: [ 'name', 'email' ],
-      sidemenu: [ 'name' ]
+      //sidemenu: [ 'name' ]
     },
     itemActions: [ 
       (item) => <RelateAction item={item} />,

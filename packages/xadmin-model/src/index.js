@@ -40,28 +40,28 @@ const app = {
         model_routes.push({
           path: 'list',
           breadcrumbName: _t('{{name}} List', { name: modelName }),
-          component: model.components && model.components['page_list'] || C('Model.ListPage')
+          component: model.components && model.components['ListPage'] || C('Model.ListPage')
         })
       }
       if(model.permission && model.permission.view) {
         model_routes.push({
           path: ':id/detail',
           breadcrumbName: _t('{{name}} Detail', { name: modelName }),
-          component: model.components && model.components['page_detail'] || C('Model.DetailPage')
+          component: model.components && model.components['DetailPage'] || C('Model.DetailPage')
         })
       }
       if(model.permission && model.permission.add) {
         model_routes.push({
           path: 'add',
           breadcrumbName: _t('Create {{name}}', { name: modelName }),
-          component: model.components && model.components['page_add'] || C('Model.FormPage')
+          component: model.components && model.components['AddPage'] || C('Model.FormPage')
         })
       }
       if(model.permission && model.permission.edit) {
         model_routes.push({
           path: ':id/edit',
           breadcrumbName: _t('Edit {{name}}', { name: modelName }),
-          component: model.components && model.components['page_edit'] || C('Model.FormPage')
+          component: model.components && model.components['EditPage'] || C('Model.FormPage')
         })
       }
       routes = routes.concat({

@@ -8,8 +8,6 @@ import { C, Page } from 'xadmin-ui'
 import { ModelWrap, ModelBlock } from 'xadmin-model'
 
 import Pagination from './Pagination'
-import Form from './Form'
-import Info from './Info'
 import SubMenu from './SubMenu'
 import ActionBar from './ActionBar'
 
