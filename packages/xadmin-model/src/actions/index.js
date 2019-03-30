@@ -2,9 +2,7 @@ import React from 'react'
 import { SubmissionError } from 'xadmin-form'
 import { all, fork, put, call, cancelled, takeEvery } from 'redux-saga/effects'
 import app, { api } from 'xadmin'
-
-import BatchDelete from './BatchDelete'
-import BatchChange from './BatchChange'
+import { C } from 'xadmin-ui'
 
 function *handle_delete_items({ model, items, message }) {
   yield put({ type: 'START_LOADING', model, key: `${model.key}.delete_items` })
@@ -68,7 +66,7 @@ export default {
       (props) => {
         const model = props.model
         if(!!model.permission && !!model.permission.delete) {
-          return <BatchDelete {...props} />
+          return <C is="Model.BatchDelete" {...props} />
         } else {
           return null
         }
@@ -76,7 +74,7 @@ export default {
       (props) => {
         const model = props.model
         if(model.batchChangeFields && !!model.permission && !!model.permission.edit) {
-          return <BatchChange {...props} />
+          return <C is="Model.BatchChange" {...props} />
         } else {
           return null
         }

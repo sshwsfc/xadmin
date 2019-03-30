@@ -5,6 +5,9 @@ import SubMenu from './components/SubMenu'
 import { DataTable, DataList, Item } from './components/Items'
 import DataForm from './components/Form'
 import DataDetail from './components/Info'
+import ActionBar from './components/ActionBar'
+import BatchDelete from './actions/BatchDelete'
+import BatchChange from './actions/BatchChange'
 
 export default {
   components: {
@@ -12,11 +15,14 @@ export default {
     'Model.FormPage': ModelFormPage,
     'Model.DetailPage': ModelDetailPage,
     'Model.Pagination': Pagination,
+    'Model.ActionBar': ActionBar,
     'Model.ListSubMenu': SubMenu,
     'Model.DataTable': DataTable,
     'Model.DataList': DataList,
     'Model.DataForm': DataForm,
     'Model.DataDetail': DataDetail,
-    'Model.DataItem': Item
+    'Model.DataItem': Item,
+    'Model.BatchChange': BatchChange,
+    'Model.BatchDelete': BatchDelete
   }
 }

@@ -42,7 +42,7 @@ class ModelListPage extends React.Component {
       </div>,
       <ItemsComponent key="model-list-grid" query={query} />,
       <div key="model-list-downnav" style={{ display: 'flex', justifyContent: 'space-between', marginTop: '.5rem' }}>
-        {/* <ActionBar key="model-list-action" /> */}
+        <C is="Model.ActionBar" />
         <C is="Model.Pagination" />
       </div>
     ]

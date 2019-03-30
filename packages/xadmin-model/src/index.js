@@ -21,7 +21,7 @@ const app = {
           const model = models[name]
           if((!model.permission || model.permission.view) && 
             (!model.ui || model.ui.showMenu)) {
-            return <Menu.Item itemKey={`main-menu-item-model-${name}`} onClick={()=>app.go(`/app/model/${name}/list`)} icon={<Icon name={model.icon || name}/>}>{model.title}</Menu.Item>
+            return <Menu.Item itemKey={`main-menu-item-model-${name}`} onItemClick={()=>app.go(`/app/model/${name}/list`)} icon={<Icon name={model.icon || name}/>}>{model.title}</Menu.Item>
           }
         }).filter(item => item !== undefined)
       }

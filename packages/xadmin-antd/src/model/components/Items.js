@@ -3,22 +3,23 @@ import _ from 'lodash'
 import { ModelWrap, Model } from 'xadmin-model'
 import { getFieldProp } from 'xadmin-model/lib/utils'
 import { app, Block } from 'xadmin'
+import { SchemaForm } from 'xadmin-form'
 import { C, Loading } from 'xadmin-ui'
-import { Table, Empty, Menu, Dropdown, Icon, List, Card, Button, Popconfirm, Checkbox } from 'antd'
+import { Table, Empty, Menu, Dropdown, Icon, Form, List, Card, Button, Popconfirm, Checkbox, Popover } from 'antd'
 
 class BaseRow extends React.Component {
 
   actions() {
     const { canEdit, canDelete } = this.props
     const { _t } = app.context
-    let actions = (this.props.actions || []).map(Action => <Action {...this.props} />)
+    let actions = (this.props.actions || []).map((Action, i) => <Action key={`extra-action-${i}`} {...this.props} />)
     if(canEdit) {
       actions.push(<Button key="action-edit" size="small" className="model-list-action" onClick={this.props.editItem}>{_t('Edit')}</Button>)
     }
     if(canDelete) {
       actions.push((
-        <Popconfirm title={_t('Comfirm Delete') + '?'} onConfirm={this.props.deleteItem} okText={_t('Delete')} cancelText={_t('Cancel')}>
-          <Button size="small" className="model-list-action" type="danger">{_t('Delete')}</Button>
+        <Popconfirm key="action-delete" title={_t('Comfirm Delete') + '?'} onConfirm={this.props.deleteItem} okText={_t('Delete')} cancelText={_t('Cancel')}>
+          <Button key="action-delete" size="small" className="model-list-action" type="danger">{_t('Delete')}</Button>
         </Popconfirm>
       ))
     }
@@ -38,15 +39,59 @@ class BaseRow extends React.Component {
 
 }
 
+const ItemEditFormLayout = (props) => {
+  const { children, pristine, invalid, handleSubmit, submitting } = props
+  const { _t } = app.context
+  return (
+    <Form onSubmit={handleSubmit}>
+      {children}
+      <Button style={{ marginTop: '-1rem' }} block type="submit" loading={submitting} disabled={pristine || invalid} size="small" onClick={handleSubmit}>{_t('Change')}</Button>
+    </Form>
+  )
+}
+
+const ItemEditForm = ModelWrap('model.item')(({ item, field, schema, model, onClose, saveItem }) => {
+  const formField = _.find(model.form || [], obj => obj && obj.key == field ) || { key: field }
+  const required = (model.required || []).indexOf(field) >= 0 ? { required: [ field ] } : {}
+  return (
+    <SchemaForm formKey="ChangeDataForm" 
+      initialValues={item}
+      schema={{
+        type: 'object',
+        properties: {
+          [field]: schema
+        },
+        form: [ formField ],
+        ...required
+      }}
+      option={{ group : C('Form.InlineGroup') }}
+      onSubmit={(values) => saveItem({ ...values, __partial__: true })}
+      onSubmitSuccess={() => onClose()}
+      component={ItemEditFormLayout}/>
+  )
+})
+
 @ModelWrap('model.list.item')
 class Item extends React.Component {
 
-  state = { over: false }
+  state = { visible: false }
 
   render() {
-    const { item, value, field, schema, componentClass, wrap, nest, model: { editable_fields } } = this.props
+    const { item, field, schema, componentClass, wrap, nest, model: { editableFields } } = this.props
     const { _t } = app.context
-    const WrapComponent = wrap || (({ children }) => <span>{children}</span>)
+    const value = _.get(item, field)
+    const RawWrapComponent = wrap || 'span'
+    const WrapComponent = (nest == true || editableFields == undefined || editableFields.indexOf(field) < 0) ? RawWrapComponent : ({ children, ...props }) => {
+      return (
+        <Popover content={(<ItemEditForm item={item} field={field} schema={schema} onClose={()=>this.setState({ visible: false })} />)} 
+          trigger="click" onVisibleChange={visible => this.setState({ visible })} visible={this.state.visible} >
+          <RawWrapComponent {...props} style={{ cursor: 'pointer' }}>{children}</RawWrapComponent>
+        </Popover>
+      )
+    }
+    if(item == undefined || item == null || value == undefined || value == null) {
+      return <WrapComponent><span className="text-muted">{_t('Null')}</span></WrapComponent>
+    }
 
     if(componentClass) {
       const ItemComponent = componentClass
@@ -119,25 +164,6 @@ class DataTableActionRender extends BaseRow {
 }
 
 @ModelWrap('model.checkall')
-class AllCheck extends React.Component {
-
-  render() {
-    const { selecteall, changeAllSelect } = this.props
-    return <Checkbox checked={selecteall} onChange={e => changeAllSelect(e.target.checked)} />
-  }
-
-}
-
-@ModelWrap('model.list.row')
-class DataTableCheckRender extends React.Component {
-
-  render() {
-    const { selected, changeSelect } = this.props
-    return <Checkbox checked={selected} onChange={e => changeSelect(e.target.checked)} />
-  }
-}
-
-@ModelWrap('model.checkall')
 @ModelWrap('model.items', {
   data: ({ modelState }) => ({ selectedRows: modelState.selected }),
   method: {
@@ -165,7 +191,7 @@ class DataTable extends BaseData {
         key: fieldName,
         dataIndex: fieldName,
         render: (value, item) => {
-          return <Item value={value} item={item} field={fieldName} />
+          return <Item item={item} field={fieldName} />
         }
       }
       if(field.level2) {

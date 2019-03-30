@@ -84,11 +84,12 @@ class FilterModal extends React.Component {
 
     return [
       (
-        <Button key="filter.model" onClick={()=>this.setState({ show: true })}>
+        <Button key="filter-btn" onClick={()=>this.setState({ show: true })}>
           <Icon type="filter" /> {_t('Filter')}
         </Button>
       ), (
         <Modal
+          key="filter-modal"
           title={_t('Filter Form')}
           visible={this.state.show}
           {...buttons}

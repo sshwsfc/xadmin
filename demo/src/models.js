@@ -22,6 +22,10 @@ export default {
       username: {
         type: 'string'
       },
+      type: {
+        type: 'string',
+        enum: [ 'Nomral', 'Super', 'God' ]
+      },
       email: {
         type: 'string',
         format: 'email'
@@ -67,12 +71,12 @@ export default {
       (item) => <RelateAction item={item} />,
       //(item) => <ChildrenModelBtn model="Post" parent={item}>Posts</ChildrenModelBtn>
     ],
-    editableFields: ['name'],
+    editableFields: ['name', 'type', 'address.street'],
     batchChangeFields: ['website', 'brithday'],
     searchFields: [ 'name', 'email' ],
     required: [ 'name', 'email', 'website' ],
     readonly: [ 'id' ],
-    listFields: [ 'id', 'name', 'email', 'website', 'address.street' ]
+    listFields: [ 'id', 'name', 'email', 'type', 'website', 'address.street' ]
   },
   Post: {
     name: 'Post',

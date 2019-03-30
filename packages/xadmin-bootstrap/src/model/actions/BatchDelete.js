@@ -1,7 +1,7 @@
 import React from 'react'
 import { Modal, Dropdown, Button, ListGroup, ListGroupItem } from 'react-bootstrap'
 import { app } from 'xadmin'
-import { ModelWrap } from '../index'
+import { ModelWrap } from 'xadmin-model'
 
 import { Icon } from 'xadmin-ui'
 

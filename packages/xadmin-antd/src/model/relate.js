@@ -16,14 +16,15 @@ class AsyncSelect extends React.Component {
   }
 
   fetchOptions = (value) => {
-    this.setState({ data: [], fetching: true })
-    this.props.loadOptions(value)
-      .then(options => {
-        this.setState({ data: options.reduce((prev, opt) => {
-          prev[opt.value] = { key: opt.value, ...opt }
-          return prev
-        }, {}), fetching: false })
-      })
+    this.setState({ data: [], fetching: true }, () => 
+      this.props.loadOptions(value)
+        .then(options => {
+          this.setState({ data: options.reduce((prev, opt) => {
+            prev[opt.value] = { key: opt.value, ...opt }
+            return prev
+          }, {}), fetching: false })
+        })
+    )
   }
 
   onChange = (value) => {
@@ -43,7 +44,7 @@ class AsyncSelect extends React.Component {
         showSearch
         labelInValue
         value={value ? value : ( isOptionSelected ? Object.values(data).filter(isOptionSelected) : undefined )}
-        notFoundContent={fetching ? <Spin size="small" /> : null}
+        notFoundContent={fetching ? <div style={{ margin: '2px', textAlign: 'center' }}><Spin size="small" /></div> : null}
         onSearch={this.fetchOptions}
         onChange={this.onChange}
         filterOption={false}

@@ -58,9 +58,10 @@ export default {
   },
   'model.items': {
     data: ({ modelState, model, state }, props, prev) => {
-      const { ids } = modelState
+      const { ids, items } = modelState
       return {
         ids,
+        itemMap: items,
         fields: modelState.filter.fields,
         loading: state.loading && state.loading[`${model.key}.items`]
       }

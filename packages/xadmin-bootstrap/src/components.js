@@ -1,9 +1,9 @@
 import React from 'react'
 import { Row, Col, Breadcrumb, Card, Nav, Navbar, Container } from 'react-bootstrap'
 
-const MenuItem = ({ eventKey, onSelect, children, icon, title, ...props }) => (
+const MenuItem = ({ eventKey, onItemClick, children, icon, title, ...props }) => (
   <Nav.Item {...props} >
-    <Nav.Link eventKey={eventKey} onSelect={onSelect}>{icon} {title || children}</Nav.Link>
+    <Nav.Link eventKey={eventKey} onSelect={onItemClick}>{icon} {title || children}</Nav.Link>
   </Nav.Item>
 )
 

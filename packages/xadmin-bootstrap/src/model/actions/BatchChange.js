@@ -4,7 +4,7 @@ import { Form, Col, Row, Dropdown, Modal, Button } from 'react-bootstrap'
 import { SchemaForm } from 'xadmin-form'
 
 import { app } from 'xadmin'
-import { ModelWrap, Model } from '../index'
+import { ModelWrap, Model } from 'xadmin-model'
 
 import { Icon } from 'xadmin-ui'
 

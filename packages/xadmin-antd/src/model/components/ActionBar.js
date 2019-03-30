@@ -1,10 +1,10 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import _ from 'lodash'
-import { DropdownButton, ButtonToolbar, MenuItem } from 'react-bootstrap'
+import { Dropdown, Button, Menu, Icon } from 'antd'
 import { app } from 'xadmin'
 import { ModelWrap, ModelBlock } from 'xadmin-model'
 
+@ModelWrap('model.list.actions')
 class ActionBar extends React.Component {
 
   render() {
@@ -14,17 +14,19 @@ class ActionBar extends React.Component {
     return (
       <ModelBlock name="model.list.actions" el={this}>
         { actions => actions && (
-          <DropdownButton className="mb-3" title={ count > 0 ? _t('{{count}} record selected', { count }) : _t('No data selected')} id="model-list-actions" variant="success" drop="up">
-            { React.Children.toArray(actions) }
-          </DropdownButton>
+          <Dropdown id="model-list-actions" overlay={(
+            <Menu>
+              { React.Children.toArray(actions) }
+            </Menu>
+          )}>
+            <Button>
+              { count > 0 ? _t('{{count}} record selected', { count }) : _t('No data selected')} <Icon type="down" />
+            </Button>
+          </Dropdown>
         ) }
       </ModelBlock>
     )
   }
 }
 
-ActionBar.propTypes = {
-  count: PropTypes.number.isRequired
-}
-
-export default ModelWrap('model.list.actions')(ActionBar)
+export default ActionBar
