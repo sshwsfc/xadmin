@@ -126,7 +126,7 @@ export default {
     form: [ 'title', 'body', 'category', 'user', 'readers' ],
     filters: {
       nav: [ 'title', 'user' ],
-      navform: { fields: [ 'title' ], submitOnChange: false },
+      //navform: { fields: [ 'title' ], submitOnChange: false },
       sidemenu: [ 'user' ],
       submenu: { fields: [ 'id', 'title', 'body' ], submitOnChange: true },
     },

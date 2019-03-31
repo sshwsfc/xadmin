@@ -19,8 +19,7 @@
     "xadmin-form": "^2.0.2",
     "xadmin-i18n": "^2.0.1",
     "xadmin-ui": "^2.0.0",
-    "xadmin-model": "^2.0.2",
-    "xadmin-plugins": "^2.0.1"
+    "xadmin-model": "^2.0.2"
   },
   "scripts": {
     "compile": "babel src --out-dir lib",

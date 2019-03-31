@@ -41,7 +41,7 @@ app
 .use(relate)
 .use(auth)
 .use(modalform)
-//.use(search)
+.use(search)
 .use(reldetail)
 .use(components)
 .use(splashscreen)

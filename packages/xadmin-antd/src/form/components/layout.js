@@ -29,7 +29,7 @@ const ModalLayout = ({ children, invalid, handleSubmit, submitting, title, show,
   const { _t } = app.context
 
   return (
-    <Modal visible={show} onClose={onClose}
+    <Modal visible={show} onClose={onClose} style={{ maxWidth: 700 }} width="95%"
       title={title}
       okText={saveText || _t('Save')}
       onOk={handleSubmit}

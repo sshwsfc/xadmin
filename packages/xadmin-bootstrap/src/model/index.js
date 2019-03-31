@@ -6,6 +6,7 @@ import { DataTable, DataList, Item } from './components/Items'
 import DataForm from './components/Form'
 import DataDetail from './components/Info'
 import DetailModal from './components/DetailModal'
+import SearchBar from './components/SearchBar'
 import BatchDelete from './actions/BatchDelete'
 import BatchChange from './actions/BatchChange'
 
@@ -22,6 +23,7 @@ export default {
     'Model.DataDetail': DataDetail,
     'Model.DataItem': Item,
     'Model.DetailModal': DetailModal,
+    'Model.SearchBar': SearchBar,
     'Model.BatchChange': BatchChange,
     'Model.BatchDelete': BatchDelete
   }

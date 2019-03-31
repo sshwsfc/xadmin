@@ -24,12 +24,6 @@ class ModelListPage extends React.Component {
     </>)
   }
 
-  renderPageContent() {
-    return (
-      <ModelBlock name="model.list.nav" />
-    )
-  }
-
   render() {
     const { icon, title, location, model } = this.props
     const ItemsComponent = (model.components && model.components.DataTable) || C('Model.DataTable')
@@ -49,7 +43,7 @@ class ModelListPage extends React.Component {
     return (
       <Page className={`xadmin-model-list-${model.key}`} 
         title={(<span><Icon name={icon}/> {title}</span>)} 
-        content={this.renderPageContent()}
+        subTitle={<ModelBlock name="model.list.nav" />}
         actions={this.renderActions()}>
         <ModelBlock name="model.list.submenu" />
         <ModelBlock name="model.list.sidemenu" >
