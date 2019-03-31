@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Button, Card, Row, Tabs } from 'antd'
+import { Form, Button, Card, Row, Modal } from 'antd'
 import app from 'xadmin'
 
 const FormLayout = props => {
@@ -17,7 +17,7 @@ const FormLayout = props => {
       <Form onSubmit={handleSubmit}>
         {children}
         <Form.Item {...groupProps}>
-          <Button type="primary" onClick={handleSubmit} disabled={invalid}>{_t('Save')}</Button>{' '}
+          <Button type="primary" onClick={handleSubmit} loading={submitting} disabled={invalid}>{_t('Save')}</Button>{' '}
           <Button onClick={() => history.back()}>{_t('Cancel')}</Button>
         </Form.Item>
       </Form>
@@ -25,4 +25,21 @@ const FormLayout = props => {
   )
 }
 
-export { FormLayout }
+const ModalLayout = ({ children, invalid, handleSubmit, submitting, title, show, onClose, saveText }) => {
+  const { _t } = app.context
+
+  return (
+    <Modal visible={show} onClose={onClose}
+      title={title}
+      okText={saveText || _t('Save')}
+      onOk={handleSubmit}
+      okButtonProps={{ disabled: invalid, loading: submitting }}
+      cancelText={_t('Cancel')}
+      onCancel={onClose}
+    >
+      <Form onSubmit={handleSubmit}>{children}</Form>
+    </Modal>
+  )
+}
+
+export { FormLayout, ModalLayout }

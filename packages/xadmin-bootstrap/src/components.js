@@ -3,7 +3,7 @@ import { Row, Col, Breadcrumb, Card, Nav, Navbar, Container } from 'react-bootst
 
 const MenuItem = ({ eventKey, onItemClick, children, icon, title, ...props }) => (
   <Nav.Item {...props} >
-    <Nav.Link eventKey={eventKey} onSelect={onItemClick}>{icon} {title || children}</Nav.Link>
+    <Nav.Link eventKey={eventKey} onClick={onItemClick}>{icon} {title || children}</Nav.Link>
   </Nav.Item>
 )
 

@@ -3,6 +3,14 @@ import { Field, reduxForm, reducer as formReducer } from 'redux-form'
 import { app, StoreWrap } from 'xadmin'
 import { C } from 'xadmin-ui'
 
+const FieldWrapComponent = ({ fieldComponent: FieldComponent, group: FieldGroup, ...props }) => {
+  return (
+    <FieldGroup {...props} >
+      <FieldComponent {...props} group={FieldGroup} />
+    </FieldGroup>
+  )
+}
+
 const defaultUIRender = (fields, option) => {
   return fields.map(field => fieldBuilder(field, option))
 }
@@ -22,11 +30,7 @@ const fieldBuilder = (field, option, ...props) => {
   
   return (<Field key={field.key} name={field.name} label={field.label} 
     normalize={field.normalize} parse={field.parse} format={field.format}
-    component={(props) => (
-      <FieldGroup label={props.label} meta={props.meta} input={props.input} field={props.field}>
-        <FieldComponent {...props} />
-      </FieldGroup>
-    )} field={field} option={option} group={FieldGroup}
+    component={FieldWrapComponent} field={field} option={option} group={FieldGroup} fieldComponent={FieldComponent}
     {...props} />)
 }
 

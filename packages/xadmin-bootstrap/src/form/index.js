@@ -11,11 +11,12 @@ import {
 } from './components'
 
 import { FieldGroup, InlineGroup, SimpleGroup, ColGroup } from './components/groups'
-import { FormLayout } from './components/layout'
+import { FormLayout, ModalLayout } from './components/layout'
 
 export default {
   components: {
     'Form.Layout': FormLayout,
+    'Form.ModalLayout': ModalLayout,
     'Form.FieldGroup': FieldGroup,
     'Form.InlineGroup': InlineGroup,
     'Form.SimpleGroup': SimpleGroup,

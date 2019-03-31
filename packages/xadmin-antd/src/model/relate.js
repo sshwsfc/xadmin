@@ -39,6 +39,11 @@ class AsyncSelect extends React.Component {
   render() {
     const { value, isOptionSelected, onChange, loadOptions, style, ...extraProps } = this.props
     const { fetching, data } = this.state
+    let options = Object.values(data)
+    if(extraProps.mode == 'multiple' && value) {
+      const selected = value.map(v => v.key)
+      options = options.filter(opt => selected.indexOf(opt.key) == -1)
+    }
     return (
       <Select
         showSearch
@@ -51,7 +56,7 @@ class AsyncSelect extends React.Component {
         style={style}
         {...extraProps}
       >
-        {Object.values(data).map(d => <Option key={d.key}>{d.label}</Option>)}
+        {options.map(d => <Option key={d.key}>{d.label}</Option>)}
       </Select>
     )
   }

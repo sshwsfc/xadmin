@@ -9,7 +9,8 @@
     "ant-design-pro": "^2.2.1",
     "antd": "^3.15.1",
     "lodash": "^4.17.11",
-    "react-fontawesome": "^1.6.1"
+    "react-fontawesome": "^1.6.1",
+    "redux-saga": "^1.0.2"
   },
   "peerDependencies": {
     "react": "16",

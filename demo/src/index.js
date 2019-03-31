@@ -11,11 +11,12 @@ import relate from 'xadmin-model/lib/relate'
 import filter from 'xadmin-model/lib/filter'
 import actions from 'xadmin-model/lib/actions'
 
-import loading from 'xadmin-plugins/lib/loading'
-import notice from 'xadmin-plugins/lib/notice'
-import modalform from 'xadmin-plugins/lib/modalform'
-import search from 'xadmin-plugins/lib/search'
-import reldetail from 'xadmin-plugins/lib/reldetail'
+import loading from 'xadmin-ui/lib/loading'
+import splashscreen from 'xadmin-ui/lib/splashscreen'
+
+import modalform from 'xadmin-model/lib/modalform'
+import search from 'xadmin-model/lib/search'
+import reldetail from 'xadmin-model/lib/reldetail'
 
 import components from 'xadmin-antd'
 //import components from 'xadmin-bootstrap'
@@ -32,7 +33,6 @@ app
 .use(i18n)
 .use(ui)
 .use(loading)
-.use(notice)
 .use(form)
 .use(themes)
 .use(model)
@@ -40,10 +40,11 @@ app
 .use(actions)
 .use(relate)
 .use(auth)
-//.use(modalform)
+.use(modalform)
 //.use(search)
 .use(reldetail)
 .use(components)
+.use(splashscreen)
 .use({
   config: {
     api: API,

@@ -1,5 +1,5 @@
 import React from 'react'
-import { FieldArray } from 'redux-form'
+import { FieldArray } from 'xadmin-form'
 import { Card, Button } from 'antd'
 import { objectBuilder, prefixFieldKey } from 'xadmin-form/lib/builder'
 import Icon from 'react-fontawesome'
@@ -9,19 +9,17 @@ const defaultItemsRender = ({ fields, meta: { touched, error }, field, fieldsBui
   const { items, label } = field
   return (
     <div>
-      <h5>{label}{' '}
-        <Button bsSize="xsmall" onClick={() => fields.push()}><Icon name="plus"/></Button>
-      </h5>
+      <Button onClick={() => fields.push()}><Icon name="plus"/></Button>
       {fields.map((name, index) => {
-        const removeBtn = (<Button bsSize="xsmall" onClick={(e) => { fields.remove(index); e.persist() }} style={{ float: 'right' }}><Icon name="minus"/></Button>)
-        const itemLable = (<h6>{label + ' ' + (index + 1)}{removeBtn}</h6>)
+        const removeBtn = (<Button size="small" onClick={(e) => { fields.remove(index); e.persist() }} style={{ float: 'right' }}><Icon name="minus"/></Button>)
         const fieldsComponent = fieldsBuilder(name, index, removeBtn)
         return fieldsComponent.length > 1 ? (
           <Card
             key={`items${index}`}
-            title={itemLable}
+            size="small"
+            title={label + ' ' + (index + 1)}
             extra={removeBtn}
-            style={{ width: '100%' }}
+            style={{ width: '100%', marginTop: '0.5rem' }}
           >
             {fieldsComponent}
           </Card>

@@ -1,14 +1,15 @@
 import { Checkbox, Select, Text, Transfer, Textarea } from './components'
 import DatePicker from './components/DatePicker'
 import DatetimePicker from './components/DatetimePicker'
-//import ArrayWidget from './components/Array'
+import ArrayWidget from './components/Array'
 
 import { FieldGroup, InlineGroup, ColGroup, SimpleGroup } from './components/base'
-import { FormLayout } from './components/layout'
+import { FormLayout, ModalLayout } from './components/layout'
 
 export default {
   components: {
     'Form.Layout': FormLayout,
+    'Form.ModalLayout': ModalLayout,
     'Form.FieldGroup': FieldGroup,
     'Form.InlineGroup': InlineGroup,
     'Form.SimpleGroup': SimpleGroup,
@@ -86,12 +87,12 @@ export default {
     },
     relates: {
       component: Transfer
-    }
+    },
     // fieldset: {
     //   component: Fieldset
     // },
-    // array: {
-    //   component: ArrayWidget
-    // }
+    array: {
+      component: ArrayWidget
+    }
   }
 }

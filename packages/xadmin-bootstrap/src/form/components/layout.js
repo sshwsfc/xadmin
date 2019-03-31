@@ -1,5 +1,5 @@
 import React from 'react'
-import { OverlayTrigger, Tooltip, Card, Form, Row, Col, Button } from 'react-bootstrap'
+import { OverlayTrigger, Tooltip, Card, Form, Row, Col, Button, Modal } from 'react-bootstrap'
 import app from 'xadmin'
 import Icon from 'react-fontawesome'
 
@@ -31,4 +31,23 @@ const FormLayout = props => {
   )
 }
 
-export { FormLayout }
+const ModalLayout = ({ children, invalid, handleSubmit, submitting, title, show, onClose, saveText }) => {
+  const { _t } = app.context
+
+  return (
+    <Modal show={show} size="lg" onHide={onClose}>
+      <Modal.Header closeButton>{title}</Modal.Header>
+      <Modal.Body>
+        <Form onSubmit={handleSubmit}>{children}</Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button key={0} variant="light" onClick={onClose}>{_t('Close')}</Button>
+        <Button key={1} type="submit" disabled={invalid || submitting}  variant="primary" onClick={handleSubmit}>
+          <Icon name={submitting ? 'spinner fa-spin' : 'floppy-o'}/> {saveText || _t('Save')}
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  )
+}
+
+export { FormLayout, ModalLayout }

@@ -184,7 +184,7 @@ class DataTable extends BaseData {
       const field = getFieldProp(model, fieldName)
       const column = {
         field,
-        width: field.width || 100,
+        width: field.width || undefined,
         fixed: lockedFields.indexOf(fieldName) >= 0,
         //title: field.header || field.title || field.name,
         title: <Header key={`model-list-header-${fieldName}`} field={fieldName} />,

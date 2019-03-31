@@ -5,6 +5,7 @@ import SubMenu from './components/SubMenu'
 import { DataTable, DataList, Item } from './components/Items'
 import DataForm from './components/Form'
 import DataDetail from './components/Info'
+import DetailModal from './components/DetailModal'
 import BatchDelete from './actions/BatchDelete'
 import BatchChange from './actions/BatchChange'
 
@@ -20,6 +21,7 @@ export default {
     'Model.DataForm': DataForm,
     'Model.DataDetail': DataDetail,
     'Model.DataItem': Item,
+    'Model.DetailModal': DetailModal,
     'Model.BatchChange': BatchChange,
     'Model.BatchDelete': BatchDelete
   }

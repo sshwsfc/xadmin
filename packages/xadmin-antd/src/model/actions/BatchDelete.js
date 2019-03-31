@@ -31,6 +31,7 @@ class BatchDeleteBtn extends React.Component {
         visible={this.state.show}
         onOk={this.onBatchDelete}
         okText={_t('Delete')}
+        okType="danger"
         cancelText={_t('Cancel')}
         onCancel={this.onClose}
       >

@@ -12,7 +12,7 @@ export default class Main extends React.Component {
   render() {
     return (
       <>
-        <Block name="body" el={this} />
+        <Block name="body" />
         <Layout id="xadmin-main" style={{ backgroundColor: 'transparent' }}>
           {this.props.children}
         </Layout>

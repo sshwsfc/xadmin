@@ -11,6 +11,7 @@ import model from './model'
 import relate from './model/relate'
 import filter from './filter'
 import auth from './auth'
+import effects from './effects'
 
 export default {
   name: 'xadmin.ui.antd',
@@ -28,5 +29,6 @@ export default {
     ...form.form_fields,
     ...filter.form_fields,
     ...relate.form_fields
-  }
+  },
+  effects
 }

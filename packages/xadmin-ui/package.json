@@ -5,7 +5,11 @@
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "lodash": "^4.17.11",
+    "react-redux-loading-bar": "^4.2.0",
+    "redux-saga": "^1.0.2"
+  },
   "peerDependencies": {
     "react": "16",
     "xadmin": "2"
