@@ -1,6 +1,6 @@
 {
   "name": "xadmin-start",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "Xadmin Start Template -- Default",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
@@ -14,12 +14,12 @@
     "react-router": "^3.2.0",
     "redux": "^4.0.1",
     "redux-saga": "^1.0.2",
-    "xadmin": "^2.0.1",
-    "xadmin-auth": "^2.0.1",
-    "xadmin-form": "^2.0.2",
+    "xadmin": "^2.1.0",
+    "xadmin-auth": "^2.1.0",
+    "xadmin-form": "^2.1.0",
     "xadmin-i18n": "^2.0.1",
-    "xadmin-ui": "^2.0.0",
-    "xadmin-model": "^2.0.2"
+    "xadmin-model": "^2.1.0",
+    "xadmin-ui": "^2.1.0"
   },
   "scripts": {
     "compile": "babel src --out-dir lib",
