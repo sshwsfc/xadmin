@@ -18,8 +18,8 @@ import modalform from 'xadmin-model/lib/modalform'
 import search from 'xadmin-model/lib/search'
 import reldetail from 'xadmin-model/lib/reldetail'
 
-import components from 'xadmin-antd'
-//import components from 'xadmin-bootstrap'
+//import components from 'xadmin-antd'
+import components from 'xadmin-bootstrap'
 
 import models from './models'
 import themes from './themes'

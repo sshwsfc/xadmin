@@ -5,7 +5,7 @@ import CaptchaCodeInput from './components/CaptchaCodeInput'
 const UserSignIn = ({ context: { _t } }) => ({
   type: 'object',
   name: 'user_sign_in',
-  resource_name: 'auth/login',
+  resource: 'auth/login',
   title: _t('Sign In'),
   properties: {
     username: {
@@ -36,13 +36,13 @@ const UserSignIn = ({ context: { _t } }) => ({
 const UserSignOut = ({ context: { _t } }) => ({ 
   type: 'object',
   name: 'user_sign_out',
-  resource_name: 'auth/logout'
+  resource: 'auth/logout'
 })
 
 const UserForgetPassword = ({ context: { _t } }) => ({ 
   type: 'object',
   name: 'user_forgot_password',
-  resource_name: 'auth/password/reset',
+  resource: 'auth/password/reset',
   title: _t('Forgot password'),
   properties: {
     email: {
@@ -56,7 +56,7 @@ const UserForgetPassword = ({ context: { _t } }) => ({
 const UserResetPassword = ({ context: { _t } }) => ({ 
   type: 'object',
   name: 'user_reset_password',
-  resource_name: 'auth/password/reset/confirm',
+  resource: 'auth/password/reset/confirm',
   title: _t('Reset Password'),
   properties: {
     new_password1: {
@@ -88,7 +88,7 @@ const UserResetPassword = ({ context: { _t } }) => ({
 const UserChangePassword = ({ context: { _t } }) => ({ 
   type: 'object',
   name: 'user_change_password',
-  resource_name: 'user/password',
+  resource: 'user/password',
   title: _t('Change Password'),
   properties: {
     old_password: {
@@ -122,7 +122,7 @@ const UserChangePassword = ({ context: { _t } }) => ({
 const UserSignUp = ({ context: { _t } }) => ({ 
   type: 'object',
   name: 'user_sign_up',
-  resource_name: 'auth/registration',
+  resource: 'auth/registration',
   title: _t('Sign Up'),
   properties: {
     username: {
@@ -170,7 +170,7 @@ const UserSignUp = ({ context: { _t } }) => ({
 const Permission = ({ context: { _t } }) => ({ 
   type: 'object',
   name: 'auth_permission',
-  resource_name: 'auth/permission',
+  resource: 'auth/permission',
   title: _t('Permission'),
   icon: 'key',
   properties: {
@@ -183,8 +183,8 @@ const Permission = ({ context: { _t } }) => ({
       type: 'string'
     }
   },
-  search_fields: [ 'name' ],
-  ui: { show_menu: false }
+  searchFields: [ 'name' ],
+  ui: { showMenu: false }
 })
 
 const Role = (app) => {
@@ -192,7 +192,7 @@ const Role = (app) => {
   return { 
     type: 'object',
     name: 'auth_role',
-    resource_name: 'auth/role',
+    resource: 'auth/role',
     title: _t('Role'),
     icon: 'group',
     properties: {
@@ -206,8 +206,8 @@ const Role = (app) => {
         items: Permission(app)
       }
     },
-    search_fields: [ 'name' ],
-    ui: { show_menu: false }
+    searchFields: [ 'name' ],
+    ui: { showMenu: false }
   }
 }
 
@@ -216,7 +216,7 @@ const User = (app) => {
   return { 
     type: 'object',
     name: 'auth_user',
-    resource_name: 'user',
+    resource: 'user',
     title: _t('User'),
     icon: 'user',
     properties: {
@@ -252,11 +252,11 @@ const User = (app) => {
         items: Role(app)
       }
     },
-    search_fields: [ 'username', 'email' ],
+    searchFields: [ 'username', 'email' ],
     filters: {
       nav: [ 'emailVerified', 'is_superuser', 'date_joined' ]
     },
-    list_display: [ 'username', 'email', 'is_superuser', 'date_joined' ],
+    listFields: [ 'username', 'email', 'is_superuser', 'date_joined' ],
     form: [ 'username', 'email', 'is_superuser' ],
     permission: { view: true, add: true, edit: true, delete: true },
     ui: { show_menu: false }

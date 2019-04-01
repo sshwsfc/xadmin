@@ -118,15 +118,15 @@ const wrap_component = (WrappedComponent, tag, defaultMapper) => {
     }
 
     render() {
-      const { dataProps, computeProps } = this.state
+      const { forwardedRef, dataProps, computeProps } = this.state
       if(this.methodProps == null) {
         this.methodProps = this.computeMethodProps()
       }
-      return <WrappedComponent {..._.omit(this.props, 'wrapContext')} {...dataProps} {...computeProps} {...this.methodProps} />
+      return <WrappedComponent ref={forwardedRef} {..._.omit(this.props, 'wrapContext')} {...dataProps} {...computeProps} {...this.methodProps} />
     }
   }
 
-  return Connect
+  return React.forwardRef((props, ref) => <Connect { ...props } forwardedRef={ ref } />)
 }
 
 const wrap = (magic, mapper, wrappers=[]) => {
