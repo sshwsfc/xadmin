@@ -4,7 +4,9 @@ import { app, StoreWrap } from 'xadmin'
 import { C } from 'xadmin-ui'
 
 const FieldWrapComponent = ({ fieldComponent: FieldComponent, group: FieldGroup, ...props }) => {
-  return (
+  return FieldComponent.withGroup ? (
+    <FieldComponent {...props} group={FieldGroup} />
+  ) : (
     <FieldGroup {...props} >
       <FieldComponent {...props} group={FieldGroup} />
     </FieldGroup>
