@@ -23,7 +23,7 @@ class BaseRow extends React.Component {
         </Popconfirm>
       ))
     }
-    return <div className="model-list-action">{actions}</div>
+    return <Button.Group size="small" className="model-list-action">{actions}</Button.Group>
   }
 
   render() {
