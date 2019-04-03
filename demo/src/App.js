@@ -22,7 +22,7 @@ class App extends React.Component {
       <Page title="Dashboard">
         <SchemaForm
           formKey="test"
-          schema={models.User}
+          schema={models.Compute}
           initialValues={{ name: 'test' }}
           onSubmit={console.log}
         />

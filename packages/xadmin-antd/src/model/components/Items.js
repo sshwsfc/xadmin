@@ -159,7 +159,7 @@ class BaseData extends React.Component {
 @ModelWrap('model.list.row')
 class DataTableActionRender extends BaseRow {
 
-  render() { return this.actions() }
+  render() { return <div style={{ width: '100%', textAlign: 'center' }}>{this.actions()}</div> }
 
 }
 

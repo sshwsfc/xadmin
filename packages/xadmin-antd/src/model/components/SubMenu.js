@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Button, Dropdown, Menu, Popover, Checkbox, Row, Col } from 'antd'
+import { Button, Dropdown, Menu, Popover, Checkbox, Row, Col, Input } from 'antd'
 import { app } from 'xadmin'
 import { ModelWrap, ModelBlock } from 'xadmin-model'
 
@@ -21,38 +21,49 @@ class PageSizeButton extends React.Component {
 
   constructor(props, context) {
     super(props, context)
-    this.state = { show: false, size: props.size }
+    this.state = { visible: false }
+    this.input = React.createRef()
   }
 
-  setPageSize(e) {
-    this.props.setPageSize(this.state.size)
-    this.setState({ show: false })
-    if(document.all) { window.event.returnValue = false }else{ e.persist() }
+  setPageSize(size) {
+    this.props.setPageSize(size)
+    this.setState({ visible: false })
   }
 
-  showCustomize() {
-    const { _t } = app.context
-    const { size, sizes, setPageSize } = this.props
-    return null
+  onInputSize = (e) => {
+    if (e.key == 'Enter') {
+      const size = parseInt(this.input.current.input.value)
+      this.setPageSize(size)
+      this.input.current.setState({ value: '' })
+    }
+    e.persist()
+  }
+
+  handleVisibleChange = (flag) => {
+    this.setState({ visible: flag })
+  }
+
+  handleMenuClick = (e) => {
+
   }
 
   render() {
     const { _t } = app.context
     const { size, sizes, setPageSize } = this.props
-    return [ (
-      <Dropdown key="page-size-dropdown" overlay={(
-        <Menu>
-          {sizes.map(size => <Menu.Item key={`size-${size}`} onClick={()=>setPageSize(size)} eventKey={`size-${size}`}>{_t('Set {{size}} per page', { size })}</Menu.Item>)}
-          <Menu.Item key="size-custom" onClick={()=>this.setState({ show: true })}>{_t('Customize page size')}</Menu.Item>
+    return (
+      <Dropdown key="page-size-dropdown" onVisibleChange={this.handleVisibleChange} visible={this.state.visible} overlay={(
+        <Menu onClick={this.handleMenuClick}>
+          {sizes.map(size => <Menu.Item key={`size-${size}`} onClick={()=>this.setPageSize(size)} eventKey={`size-${size}`}>{_t('Set {{size}} per page', { size })}</Menu.Item>)}
+          <Menu.Item key="size-custom">
+            <Input placeholder={_t('Customize page size')} ref={this.input} precision={0} onKeyPress={this.onInputSize} style={{ width: 100 }}/>
+          </Menu.Item>
         </Menu>
       )}>
         <Button>
           {_t('{{size}} per page', { size })}
         </Button>
       </Dropdown>
-    ), 
-    this.state.show ? this.showCustomize() : null
-    ]
+    )
   }
 }
 

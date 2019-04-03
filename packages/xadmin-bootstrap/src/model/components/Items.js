@@ -6,7 +6,7 @@ import { app } from 'xadmin'
 import { SchemaForm } from 'xadmin-form'
 import { Page, Loading } from 'xadmin-ui'
 
-import { Form, Jumbotron, Container, Row, Col, Table, Nav, OverlayTrigger, Popover, Button, ButtonGroup, Dropdown, Card, Media } from 'react-bootstrap'
+import { Form, Jumbotron, Container, Row, Col, Table, Nav, Overlay, OverlayTrigger, Popover, Button, ButtonGroup, Dropdown, Card, Media } from 'react-bootstrap'
 import { ModelWrap, ModelBlock } from 'xadmin-model'
 import './Items.css'
 
@@ -132,12 +132,10 @@ const ItemEditFieldGroup = ({ label, meta, input, field, children }) => {
 
   const controlComponent = children ? children : (<Form.Control {...input} {...attrs} />)
   return (
-    <Form.Group as={Row} className="mb-2" controlId={input.name} {...groupProps}>
-      <Col sm={12}>
-        {controlComponent}
-        {error && <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>}
-        {help && <Form.Text className="text-muted">{help}</Form.Text>}
-      </Col>
+    <Form.Group className="mb-2" controlId={input.name} {...groupProps}>
+      {controlComponent}
+      {error && <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>}
+      {help && <Form.Text className="text-muted">{help}</Form.Text>}
     </Form.Group>
   )
 }
@@ -158,7 +156,7 @@ const ItemEditForm = ModelWrap('model.item')(({ item, field, schema, model, onCl
   const formField = _.find(model.form || [], obj => obj && obj.key == field ) || { key: field }
   const required = (model.required || []).indexOf(field) >= 0 ? { required: [ field ] } : {}
   return (
-    <SchemaForm formKey="ChangeDataForm" 
+    <SchemaForm formKey={`ChangeDataForm-${item.id}-${field}`} 
       initialValues={item}
       schema={{
         type: 'object',
@@ -168,12 +166,9 @@ const ItemEditForm = ModelWrap('model.item')(({ item, field, schema, model, onCl
         form: [ formField ],
         ...required
       }}
-      wrapProps={{ destroyOnUnmount: false }}
       option={{ group : ItemEditFieldGroup }}
-      onSubmit={(values) => {
-        saveItem({ ...values, __partial__: true })
-        onClose()
-      }}
+      onSubmit={(values) => saveItem({ ...values, __partial__: true })}
+      onSubmitSuccess={() => onClose()}
       onClose={onClose}
       component={ItemEditFormLayout}/>
   )
@@ -182,7 +177,7 @@ const ItemEditForm = ModelWrap('model.item')(({ item, field, schema, model, onCl
 @ModelWrap('model.list.item')
 class Item extends React.Component {
 
-  state = { over: false }
+  state = { show: false }
 
   render() {
     const { item, field, schema, componentClass, wrap, nest, model, inList=true } = this.props
@@ -191,13 +186,11 @@ class Item extends React.Component {
     const RawWrapComponent = wrap || (({ children }) => <span style={{ cursor: 'pointer' }}>{children}</span>)
     const WrapComponent = (nest == true || editable_fields == undefined || editable_fields.indexOf(field) < 0) ? RawWrapComponent : ({ children, ...props }) => {
       return (
-        <OverlayTrigger trigger="click" rootClose placement="top" overlay={
-          <Popover id="table-item-edit-popover">
-            <ItemEditForm item={item} field={field} schema={schema} onClose={()=>{}} />
-          </Popover>
-        }>
-          <RawWrapComponent {...props} style={{ cursor: 'pointer' }}>{children}</RawWrapComponent>
-        </OverlayTrigger>
+        <RawWrapComponent {...props} style={{ cursor: 'pointer' }}>
+          {this.state.show ? 
+            (<ItemEditForm item={item} field={field} schema={schema} onClose={()=>this.setState({ show: false })} />)
+            :<span onClick={()=>this.setState({ show: true })}>{children}</span>}
+        </RawWrapComponent>
       )
     }
     if(item == undefined || item == null) {
@@ -242,6 +235,7 @@ class GridRowComponent extends BaseRow {
 
   renderRow() {
     const { item, fields, selected } = this.props
+    const actions = this.actions()
     return (
       <tr>
         <td key=".checkbox" className={selected?'bg-warning':''}>
@@ -256,7 +250,7 @@ class GridRowComponent extends BaseRow {
         }))}
         <td key=".action" className={selected?'bg-warning':''} style={{ textAlign: 'center' }}>
           <ButtonGroup>
-            {React.Children.toArray(this.actions())}
+            {React.Children.toArray(actions)}
           </ButtonGroup>
         </td>
       </tr>
@@ -273,7 +267,7 @@ class DataTable extends React.Component {
     const { fields, items, loading } = this.props
     const { _t } = app.context
     if(loading) {
-      return <Loading />
+      return <Table><Loading /></Table>
     } else {
       if(items.length > 0) {
         return (

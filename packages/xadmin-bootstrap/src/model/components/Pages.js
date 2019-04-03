@@ -41,8 +41,10 @@ class ModelListPage extends React.Component {
         <SubMenu />
       </div>,
       <ItemsComponent key="model-list-grid" query={query} />,
-      <ActionBar key="model-list-action" />,
-      <Pagination key="model-list-pagination" />
+      <div key="model-list-subnav" style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <ActionBar key="model-list-action" />
+        <Pagination key="model-list-pagination" />
+      </div>
     ]
 
     return (

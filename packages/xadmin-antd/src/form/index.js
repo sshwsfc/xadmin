@@ -2,6 +2,7 @@ import { Checkbox, Select, Text, Transfer, Textarea } from './components'
 import DatePicker from './components/DatePicker'
 import DatetimePicker from './components/DatetimePicker'
 import ArrayWidget from './components/Array'
+import Fieldset from './components/Fieldset'
 
 import { FieldGroup, InlineGroup, ColGroup, SimpleGroup } from './components/base'
 import { FormLayout, ModalLayout } from './components/layout'
@@ -88,9 +89,9 @@ export default {
     relates: {
       component: Transfer
     },
-    // fieldset: {
-    //   component: Fieldset
-    // },
+    fieldset: {
+      component: Fieldset
+    },
     array: {
       component: ArrayWidget
     }
