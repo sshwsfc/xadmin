@@ -41,7 +41,7 @@ const Submenu = ({ children, invalid, handleSubmit, submitting, options, resetFi
       <Card style={{ marginBottom: '.5rem' }} bodyStyle={{ paddingBottom: 0 }}>
         <Row gutter={8}>{children}</Row>
         {options && options.submitOnChange ? null : (
-          <Row>
+          <Row style={{ marginBottom: '.5rem' }}>
             <Col span={24} style={{ textAlign: 'center' }}>
               <Button disabled={invalid || submitting} type="primary" onClick={handleSubmit}>{_t('Search')}</Button>
               {' '}

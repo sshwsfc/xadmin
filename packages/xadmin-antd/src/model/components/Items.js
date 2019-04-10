@@ -149,7 +149,7 @@ class BaseData extends React.Component {
     if(loading) {
       return <Loading>{items.length > 0 ? this.renderData() : null}</Loading>
     } else {
-      return items.length > 0 ? this.renderData() : <Empty style={{ marginBottom: '.5rem' }}>{_t('No Data')}</Empty>
+      return items.length > 0 ? this.renderData() : <Card><Empty style={{ marginBottom: '.5rem' }}>{_t('No Data')}</Empty></Card>
     }
   }
 
@@ -337,7 +337,7 @@ class DataCard extends React.Component {
         })
 
         return (
-          <div style={{ marginBottom: 20, backgroundColor: '#FFF' }}>
+          <div style={{ backgroundColor: '#FFF' }}>
             <Table
               columns={columns}
               dataSource={items}
@@ -349,7 +349,7 @@ class DataCard extends React.Component {
             />
           </div>)
       } else {
-        return (<Empty>{_t('No Data')}</Empty>)
+        return (<Card><Empty>{_t('No Data')}</Empty></Card>)
       }
     }
   }

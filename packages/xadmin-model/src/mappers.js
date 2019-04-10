@@ -1,4 +1,3 @@
-import React from 'react'
 import _ from 'lodash'
 import { app, config } from 'xadmin'
 import { SubmissionError } from 'xadmin-form'
@@ -45,7 +44,7 @@ export default {
     },
     event: {
       mount: ({ dispatch, model }, { id, data }) => {
-        if(model.forceGetItem || (data == undefined && id !== undefined)) {
+        if(id && (model.forceGetItem || data == undefined)) {
           dispatch({ model, type: 'GET_ITEM', id })
         }
       },
