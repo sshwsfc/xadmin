@@ -10,7 +10,7 @@ const SignInForm = StoreWrap('auth.sign_in')(({ onSignIn }) => {
     <Model schema={UserSignIn(app)}>
       <C is="Model.DataForm"
         onSubmit={onSignIn}
-        component={C('Auth.Signin')}
+        component={C('Auth.Signin') || C('Auth.Form')}
       />
     </Model>
   )

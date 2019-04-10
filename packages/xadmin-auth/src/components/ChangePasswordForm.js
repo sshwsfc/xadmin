@@ -1,6 +1,4 @@
 import React from 'react'
-import { Card, Button } from 'react-bootstrap'
-import Icon from 'react-fontawesome'
 import { StoreWrap, app } from 'xadmin'
 import { Model } from 'xadmin-model'
 import { Page, C } from 'xadmin-ui'
@@ -14,20 +12,8 @@ export default StoreWrap('auth.change_password')(({ onChange }) => {
       <Model schema={UserChangePassword(app)}>
         <C is="Model.DataForm"
           onSubmit={onChange}
-          componentClass={({ children, invalid, handleSubmit, submitting }) => {
-            const icon = submitting ? 'spinner fa-spin' : 'floppy-o'
-            return (
-              <form className="form-horizontal" onSubmit={handleSubmit}>
-                <Card>
-                  <Card.Body>
-                    {children}
-                    <Button type="submit" disabled={invalid || submitting} onClick={handleSubmit}>
-                      <Icon name={icon}/> {_t('Change Password')}</Button>
-                  </Card.Body>
-                </Card>
-              </form>
-            )
-          }}
+          submitText={_t('Change Password')}
+          component={C('Auth.ChangePassword') || C('Auth.Form')}
         />
       </Model>
     </Page>

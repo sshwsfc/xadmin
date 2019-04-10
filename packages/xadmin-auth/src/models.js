@@ -1,5 +1,4 @@
 import { config as _c } from 'xadmin'
-import CaptchaCodeInput from './components/CaptchaCodeInput'
 
 // Forms
 const UserSignIn = ({ context: { _t } }) => ({
@@ -19,7 +18,8 @@ const UserSignIn = ({ context: { _t } }) => ({
     ...(_c('auth.login.captcha')?{
       code: {
         title: _t('Captcha Code'),
-        type: 'string'
+        type: 'string',
+        fieldType: 'captcha'
       }
     }:{})
   },
@@ -28,7 +28,7 @@ const UserSignIn = ({ context: { _t } }) => ({
     'username', 
     { key: 'password', attrs: { type: 'password' } },
     ...(_c('auth.login.captcha')?[ {
-      key: 'code', captcha_url: '/' + _c('auth.login.captcha'), component: CaptchaCodeInput 
+      key: 'code', captcha_url: '/' + _c('auth.login.captcha')
     } ]:[])
   ]
 })
@@ -149,7 +149,8 @@ const UserSignUp = ({ context: { _t } }) => ({
     ...(_c('auth.registration.captcha')?{
       code: {
         title: _t('Captcha Code'),
-        type: 'string'
+        type: 'string',
+        fieldType: 'captcha'
       }
     }:{})
   },
@@ -161,7 +162,7 @@ const UserSignUp = ({ context: { _t } }) => ({
     { key: 'password1', attrs: { type: 'password' } },
     { key: 'password2', attrs: { type: 'password' } },
     ...(_c('auth.registration.captcha')?[ {
-      key: 'code', captcha_url: '/' + _c('auth.registration.captcha'), component: CaptchaCodeInput 
+      key: 'code', captcha_url: '/' + _c('auth.registration.captcha') 
     } ]:[] )
   ]
 })

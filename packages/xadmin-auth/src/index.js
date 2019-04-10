@@ -2,13 +2,12 @@ import React from 'react'
 import localforage from 'localforage'
 import Cookies from 'js-cookie'
 import mappers from './mappers'
-import { App as BaseApp } from 'xadmin-ui'
+import { App as BaseApp, C } from 'xadmin-ui'
 import SignInForm from './components/SignIn'
 import SignUpForm from './components/SignUp'
 import ForgetPasswordForm from './components/ForgetPassword'
 import ResetPasswordForm from './components/ResetPasswordForm'
 import ChangePasswordForm from './components/ChangePasswordForm'
-import UserMenu from './components/UserMenu'
 import reducers from './reducer'
 import models from './models'
 import effects from './effects'
@@ -32,7 +31,7 @@ export default {
     }
   },
   blocks: {
-    'top.right': () => <UserMenu key="auth.user" />
+    'top.right': () => <C is="Auth.UserMenu" key="auth.user" />
   },
   components: {
     App: IsAuthenticated(BaseApp)
