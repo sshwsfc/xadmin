@@ -3,9 +3,9 @@ import { NavDropdown } from 'react-bootstrap'
 
 import Icon from 'react-fontawesome'
 import { StoreWrap, app, Block } from 'xadmin'
+import { _t } from 'xadmin-i18n'
 
 const UserMenu = StoreWrap('auth.user')(({ user, onLogout, onChangePassword }) => {
-  const { _t } = app.context
   return user && (
     <NavDropdown key="user-dorpdown" alignRight
       title={<span><Icon name="user" /> {user.username}</span>} id="basic-nav-dropdown">

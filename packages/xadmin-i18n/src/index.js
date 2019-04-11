@@ -4,6 +4,7 @@ import i18next from 'i18next'
 import XHR from 'i18next-xhr-backend'
 import Cache from 'i18next-localstorage-cache'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import app from 'xadmin'
 
 import zh_Hans from './zh_Hans/translation.json'
 
@@ -12,6 +13,10 @@ const locales = {
     translation: zh_Hans
   }
 }
+
+const _t = (...props) => app.context._t(...props)
+
+export { _t, i18next }
 
 export default {
   name: 'xadmin.i18n',

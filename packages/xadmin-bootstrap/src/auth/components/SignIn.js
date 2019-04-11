@@ -1,10 +1,10 @@
 import React from 'react'
 import app from 'xadmin'
+import { _t } from 'xadmin-i18n'
 import { Card, Container, Button } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
 
-const SigininLayout = ({ error, children, invalid, handleSubmit, submitting }) => {
-  const { _t } = app.context
+export default ({ error, children, invalid, handleSubmit, submitting }) => {
   const { auth } = app.get('config')
   return (
     <Container>
@@ -26,5 +26,3 @@ const SigininLayout = ({ error, children, invalid, handleSubmit, submitting }) =
     </Container>
   )
 }
-
-export default SigininLayout

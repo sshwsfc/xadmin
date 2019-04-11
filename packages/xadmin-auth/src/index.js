@@ -6,8 +6,8 @@ import { App as BaseApp, C } from 'xadmin-ui'
 import SignInForm from './components/SignIn'
 import SignUpForm from './components/SignUp'
 import ForgetPasswordForm from './components/ForgetPassword'
-import ResetPasswordForm from './components/ResetPasswordForm'
-import ChangePasswordForm from './components/ChangePasswordForm'
+import ResetPasswordForm from './components/ResetPassword'
+import ChangePasswordForm from './components/ChangePassword'
 import reducers from './reducer'
 import models from './models'
 import effects from './effects'
@@ -31,7 +31,7 @@ export default {
     }
   },
   blocks: {
-    'top.right': () => <C is="Auth.UserMenu" key="auth.user" />
+    'top.right': (props) => <C is="Auth.UserMenu" key="auth.user" {...props} />
   },
   components: {
     App: IsAuthenticated(BaseApp)
@@ -128,6 +128,12 @@ export default {
         component: ChangePasswordForm
       }
     }
+  },
+  schema_converter: (f, schema) => {
+    if (schema.type === 'string' && schema.fieldType == 'captcha') {
+      f.type = 'captcha'
+    }
+    return f
   },
   models,
   effects,

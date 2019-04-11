@@ -68,10 +68,10 @@ class App extends React.Component {
               style={{ lineHeight: 'inherit', marginLeft: -40, fontSize: '1.2rem' }}
             />
             {/* <Breadcrumb routes={routes} params={params} itemRender={itemRender} style={{ float: 'left', lineHeight: '47px' }} /> */}
-            <div className="pull-right">
-              <Menu mode="horizontal">
-                <Block name="topmenu" el={this} />
-              </Menu>
+            <div style={{ float: 'right' }}>
+              <Block name="top.right">
+                {items => <Menu mode="horizontal" style={{ lineHeight: '62px' }}>{items}</Menu>}
+              </Block>
             </div>
           </Header>
           <Content>
