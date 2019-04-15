@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import _ from 'lodash'
 import { ReactReduxContext } from 'react-redux'
 
@@ -145,9 +145,24 @@ const wrap = (magic, mapper, wrappers=[]) => {
 
 const Wrap = wrap(Connect => Connect)
 
+
+const StoreConnect = ({ store, subscription, children }) => {
+  const [ state, setState ] = useState(store.getState())
+
+  useEffect(() => subscription.addNestedSub(() => {
+    setState(store.getState())
+  }), [ store, subscription ])
+
+  return children(state)
+}
+
 const StoreWrap = wrap(Connect => (props) => (
   <ReactReduxContext.Consumer>
-    {({ store, storeState }) => <Connect {...props} wrapContext={{ store, dispatch: store.dispatch, state: storeState }} />}
+    {({ store, subscription }) => (
+      <StoreConnect store={store} subscription={subscription}>
+        { state => (<Connect {...props} wrapContext={{ store, dispatch: store.dispatch, state: state }} /> )}
+      </StoreConnect>
+    )}
   </ReactReduxContext.Consumer>
 ))
 

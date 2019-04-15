@@ -6,7 +6,7 @@ import { Icon, C } from 'xadmin-ui'
 
 export default [
   (SubPrev, schema) => {
-    if(schema.type == 'string' && [ 'time', 'date', 'datetime' ].indexOf(schema.format) > -1) {
+    if(schema.type == 'string' && [ 'time', 'date', 'date-time' ].indexOf(schema.format) > -1) {
       const dtf = app.load_dict('config').date_format || {}
       const format = schema.dateFormat || { time: dtf.time || 'LT', date: dtf.date || 'LL', datetime: dtf.datetime || 'LLL' }[schema.format]
       return ({ value, wrap: WrapComponent }) => {

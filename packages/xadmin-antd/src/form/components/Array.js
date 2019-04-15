@@ -1,17 +1,16 @@
 import React from 'react'
 import { FieldArray } from 'xadmin-form'
-import { Card, Button } from 'antd'
+import { Card, Button, Icon } from 'antd'
 import { objectBuilder, prefixFieldKey } from 'xadmin-form/lib/builder'
-import Icon from 'react-fontawesome'
 import app from 'xadmin'
 
 const defaultItemsRender = ({ fields, meta: { touched, error }, field, fieldsBuilder }) => {
   const { items, label } = field
   return (
     <div>
-      <Button onClick={() => fields.push()}><Icon name="plus"/></Button>
+      <Button onClick={() => fields.push()}><Icon type="plus"/></Button>
       {fields.map((name, index) => {
-        const removeBtn = (<Button size="small" onClick={(e) => { fields.remove(index); e.persist() }} style={{ float: 'right' }}><Icon name="minus"/></Button>)
+        const removeBtn = (<Button size="small" onClick={(e) => { fields.remove(index); e.persist() }} style={{ float: 'right' }}><Icon type="delete"/></Button>)
         const fieldsComponent = fieldsBuilder(name, index, removeBtn)
         return fieldsComponent.length > 1 ? (
           <Card
