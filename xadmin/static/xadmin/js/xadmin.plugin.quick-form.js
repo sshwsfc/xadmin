@@ -107,9 +107,10 @@
       //     off_check_box[$(this).attr('name')] = '';
       //   }
       // })
-
+      var new_form_data = new FormData($("#"+this.$form[0].id)[0]);
       return $.ajax({
-        data: [this.$form.serialize(), $.param(off_check_box)].join('&'),
+        // data: [this.$form.serialize(), $.param(off_check_box)].join('&'),
+        data: new_form_data, // 修复增加页面图片不能上传问题
         url: this.$form.attr('action'),
         type: "POST",
         dataType: 'json',
