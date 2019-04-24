@@ -37,7 +37,7 @@ class AsyncSelect extends React.Component {
   }
  
   render() {
-    const { value, isOptionSelected, onChange, loadOptions, style, ...extraProps } = this.props
+    const { value, isOptionSelected, label, onChange, loadOptions, style, ...extraProps } = this.props
     const { fetching, data } = this.state
     let options = Object.values(data)
     if(extraProps.mode == 'multiple' && value) {
@@ -53,7 +53,8 @@ class AsyncSelect extends React.Component {
         onSearch={this.fetchOptions}
         onChange={this.onChange}
         filterOption={false}
-        style={style}
+        placeholder={label}
+        style={{ minWidth: 150, ...style }}
         {...extraProps}
       >
         {options.map(d => <Option key={d.key}>{d.label}</Option>)}
@@ -71,12 +72,13 @@ class RelateSelect extends RelateBase {
 
   render() {
     const { _t } = app.context
-    const { input: { value: item }, field } = this.props
+    const { input: { value: item }, label, field } = this.props
     const displayField = field.displayField || 'name'
     return (
       <AsyncSelect 
         value={item ? { item, label: item[displayField], key: item.id } : null} 
         onChange={this.onChange}
+        label={label}
         loadOptions={this.loadOptions} 
       />
     )
@@ -91,12 +93,13 @@ class RelateMultiSelect extends RelateBase {
 
   render() {
     const { _t } = app.context
-    const { input: { value: items }, field } = this.props
+    const { input: { value: items }, label, field } = this.props
     const displayField = field.displayField || 'name'
     return (
       <AsyncSelect mode="multiple"
         value={items ? items.map(item => ({ key: item.id, item, label: item[displayField] })) : null} 
         onChange={this.onChange} 
+        label={label}
         loadOptions={this.loadOptions} 
       />
     )
@@ -112,12 +115,13 @@ class FilterRelateSelect extends RelateBase {
 
   render() {
     const { _t } = app.context
-    const { input: { value: selectId } } = this.props
+    const { input: { value: selectId }, label } = this.props
 
     return (
       <AsyncSelect 
         isOptionSelected={option => selectId && option.key == selectId}
         onChange={this.onChange} 
+        label={label}
         loadOptions={this.loadOptions} 
       />
     )

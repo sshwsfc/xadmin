@@ -117,17 +117,30 @@ export default {
           const formKey = `filter.${model.name}`
           const initial = _.isFunction(model.initialValues) ? model.initialValues() : model.initialValues
           const where = initial && initial.wheres && initial.wheres.filters || {}
-          const values = { ...state.form[formKey], ...where }
+          let values = _.get(state,`form.${formKey}.values`) || {}
+          values = { ...values, ...where }
           const cf = []
           Object.keys(values).forEach(field => {
             if(where[field] !== undefined) {
-              // dispatch(change(formKey, field, where[field]))
+              dispatch({
+                type: '@@redux-form/CHANGE',
+                meta: {
+                  form: formKey, field: field
+                },
+                payload: where[field]
+              })
             } else {
               cf.push(field)
             }
           })
           if(cf.length > 0) {
-            // dispatch(clearFields(formKey, false, false, ...cf))
+            dispatch({
+              type: '@@redux-form/CLEAR_FIELDS',
+              meta: {
+                form: formKey,
+                fields: cf
+              }
+            })
           }
 
           const wheres = (Object.keys(where).length > 0 ? 
@@ -136,7 +149,7 @@ export default {
           dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres })
         },
         changeFilter: ({ dispatch, model, state, modelState }, { name }) => () => {
-          const values = state.form && state.form[`filter.${model.name}`] || {}
+          const values = _.get(state,`form.filter.${model.name}.values`) || {}
           const where = Object.keys(values).reduce((prev, key) => {
             if(!_.isNil(values[key])) {
               prev[key] = values[key]
@@ -149,15 +162,20 @@ export default {
             { ...modelState.wheres, filters: where } : _.omit(modelState.wheres, 'filters'))
           dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres })
         }
+      },
+      event: {
+        mount: ({ dispatch, model }) => {
+          if(model.filterDefault) {
+            const form = `filter.${model.name}`
+            const values = _.isFunction(model.filterDefault) ? model.filterDefault() : model.filterDefault
+            dispatch({
+              type: '@@redux-form/INITIALIZE',
+              meta: { form: form },
+              payload: values
+            })
+          }
+        }
       }
-      // event: {
-      //   mount: ({ dispatch, model }) => {
-      //     if(model.filterDefault) {
-      //       const values = _.isFunction(model.filterDefault) ? model.filterDefault() : model.filterDefault
-      //       dispatch(initialize(`filter.${model.name}`, values))
-      //     }
-      //   }
-      // }
     }
   },
   filter_converter
