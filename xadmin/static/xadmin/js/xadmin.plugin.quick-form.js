@@ -219,11 +219,17 @@
       var input = this.$for_input;
       var selected = [data['obj_id']];
       if (input.attr('multiple')){
+        if (input.hasClass("select2-multiple")) {
+          selected.push($("#" + input.attr("id")).val());
+        } else {
           var opt = 'option';
-          if (input.hasClass('selectdropdown') || input.hasClass('select-multi')){
-              opt = 'option:selected';
+          if (input.hasClass('selectdropdown') || input.hasClass('select-multi')) {
+            opt = 'option:selected';
           }
-          selected.push($.map(input.find(opt) ,function(opt) { return opt.value; }));
+          selected.push($.map(input.find(opt), function (opt) {
+            return opt.value;
+          }));
+        }
       }
       $.get(this.refresh_url + selected.join() ,function(form_html, status, xhr){
         wrap.html($('<body>' + form_html + '</body>').find('#' + wrap.attr('id')).html());
