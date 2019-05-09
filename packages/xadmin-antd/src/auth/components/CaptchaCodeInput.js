@@ -20,12 +20,12 @@ export default class CaptchaCodeInput extends React.Component {
 
     return (
       <Row gutter={8}>
-        <Col span={12}>
+        <Col span={14}>
           <Input {...input} {...field.attrs} />
         </Col>
-        <Col span={12}>
+        <Col span={10}>
           <Tooltip title={_t('Click to refresh captcha code')}>
-            <img style={{ cursor: 'pointer' }} onClick={()=>this.setState({ url: this.getCodeUrl() })} src={ this.state.url } />
+            <img style={{ cursor: 'pointer', width: '100%' }} onClick={()=>this.setState({ url: this.getCodeUrl() })} src={ this.state.url } />
           </Tooltip>
         </Col>
       </Row>

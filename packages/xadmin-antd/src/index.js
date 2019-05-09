@@ -27,7 +27,8 @@ export default {
   form_fields: {
     ...form.form_fields,
     ...filter.form_fields,
-    ...relate.form_fields
+    ...relate.form_fields,
+    ...auth.form_fields
   },
   effects
 }
