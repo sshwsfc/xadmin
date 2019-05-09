@@ -4,6 +4,7 @@ import { C, Icon, Menu } from 'xadmin-ui'
 import { Model, ModelWrap, ModelContext, ModelBlock } from './base'
 import modelReducer from './reducer'
 import effects from './effects'
+import hooks from './hooks'
 import mappers from './mappers'
 import fieldRenders from './render'
 
@@ -83,6 +84,7 @@ const app = {
   },
   effects: (app) => effects,
   mappers,
+  hooks,
   fieldRenders
 }
 

@@ -7,7 +7,7 @@ export default {
   'model.item': {
     data: ({ modelState, model, state }, { id, item }) => {
       return {
-        loading: state.loading && state.loading[`${model.key}.get`],
+        //loading: state.loading && state.loading[`${model.key}.get`],
         item: item || (id ? modelState.items[id] : undefined)
       }
     },

@@ -1,6 +1,6 @@
 import React from 'react'
 import app from 'xadmin'
-import 'antd/dist/antd.min.css'
+//import 'antd/dist/antd.min.css'
 import routers, { Main, App, Page, Loading, Icon } from './layout'
 
 import { Menu, MenuItem } from './components/Menu'

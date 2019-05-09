@@ -88,6 +88,9 @@ export default [
         case 'datetime':
           f.type = 'filter_datetime'
           break
+        case 'date-time':
+          f.type = 'filter_datetime'
+          break
       }
     } else if(schema_type === 'number' || schema_type === 'integer') {
       if(!schema['enum']) {

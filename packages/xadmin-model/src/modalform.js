@@ -2,36 +2,35 @@ import React from 'react'
 import { ModelWrap } from 'xadmin-model'
 import { SchemaForm } from 'xadmin-form'
 import { C } from 'xadmin-ui'
+import { use } from 'xadmin'
 
-@ModelWrap('model.page.list')
-@ModelWrap('model.item')
-@ModelWrap('modalform.modal')
-class AddModelBtn extends React.Component {
+const AddModelBtn = () => {
+  const { model } = use('model')
+  const { canAdd } = use('model.permission')
+  const { saveItem } = use('model.save')
 
-  hideModal = () => {
-    this.props.onClose()
+  const { show, dispatch } = use('redux', {
+    select: state => ({ show: state.showModalAddForm[model.name] || false })
+  })
+  const hideModal = () => {
+    dispatch({ model, type: '@@xadmin-modalform/CLOSE' })
   }
 
-  onSubmitSuccess = (item) => {
-    this.hideModal()
-    this.props.onSuccess(item)
+  const onSubmitSuccess = (item) => {
+    hideModal()
+    dispatch({ model, type: 'GET_ITEMS' })
   }
 
-  render() {
-    const { show, model, title, saveItem, canAdd } = this.props
-    
-    return canAdd ? (
-      <SchemaForm 
-        formKey={`model.modalform.${model.key}`}
-        schema={model}
-        onSubmit={saveItem}
-        onSubmitSuccess={this.onSubmitSuccess}
-      >
-        { props => <C is="Form.ModalLayout" {...props} title={title} show={show} onClose={this.hideModal} />}
-      </SchemaForm>
-    ) : null
-  }
-
+  return canAdd ? (
+    <SchemaForm 
+      formKey={`model.modalform.${model.key}`}
+      schema={model}
+      onSubmit={saveItem}
+      onSubmitSuccess={onSubmitSuccess}
+    >
+      { props => <C is="Form.ModalLayout" {...props} title={model.title} show={show} onClose={hideModal} />}
+    </SchemaForm>
+  ) : null
 }
 
 export default {
@@ -49,25 +48,12 @@ export default {
       return state
     }
   },
-  mappers: {
-    'model.page.list': {
-      method: {
-        addItem: ({ dispatch, model }) => () => {
-          dispatch({ model, type: '@@xadmin-modalform/SHOW' })
-        }
-      }
-    },
-    'modalform.modal': {
-      data: ({ state, model }) => ({
-        show: state.showModalAddForm[model.name] || false
-      }),
-      method: {
-        onClose: ({ model, dispatch }) => (item) => {
-          dispatch({ model, type: '@@xadmin-modalform/CLOSE' })
-        },
-        onSuccess: ({ model, dispatch }) => (item) => {
-          dispatch({ model, type: 'GET_ITEMS' })
-        }
+  hooks: {
+    'model.event': props => {
+      const { modelDispatch } = use('model')
+      return {
+        ...props,
+        onAdd: () => modelDispatch({ type: '@@xadmin-modalform/SHOW' })
       }
     }
   }

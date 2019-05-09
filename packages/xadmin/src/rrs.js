@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
+import _ from 'lodash'
 import { browserHistory, hashHistory, Router } from 'react-router'
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
 import createSagaMiddleware from 'redux-saga'
@@ -141,7 +142,31 @@ const react_app = {
 const react_redux_app = {
   root_component: (app) => (children) => (
     <Provider store={app.context.store}>{children}</Provider>
-  )
+  ),
+  hooks: (app) => ({
+    'redux': props => {
+      const store = app.context.store
+      const { getState, dispatch, subscribe } = store
+
+      if(props && props.select) {
+        const [ values, setValues ] = React.useState(props.select(getState()) || {})
+        const lastValues = React.useRef()
+
+        const updateState = () => {
+          const newValues = props.select(getState())
+          if (!_.isEqual(lastValues.current, newValues)) {
+            lastValues.current = newValues
+            setValues(newValues)
+          }
+        }
+        React.useEffect(() => subscribe(updateState), [])
+
+        return { ...props, store, dispatch: dispatch, ...values }
+      } else {
+        return { ...props, store, dispatch: dispatch, state: getState() }
+      }
+    }
+  })
 }
 
 export default app => {

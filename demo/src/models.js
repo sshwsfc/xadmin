@@ -10,6 +10,7 @@ export default {
     type: 'object',
     icon: 'user', // fa-icon
     title: 'User',
+    persistent: true,
     properties: {
       id: {
         type: 'number',
@@ -64,7 +65,7 @@ export default {
     form: [ 'name', 'email', 'address', '*',
       { key: 'website', type: 'textarea', attrs: { rows: 5 } } ],
     filters: {
-      nav: [ 'name', 'email' ],
+      submenu: [ 'name', 'email', 'type' ],
       //sidemenu: [ 'name' ]
     },
     itemActions: [ 
