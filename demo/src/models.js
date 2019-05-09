@@ -10,6 +10,7 @@ export default {
     type: 'object',
     icon: 'user', // fa-icon
     title: 'User',
+    persistent: true,
     properties: {
       id: {
         type: 'number',

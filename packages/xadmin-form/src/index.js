@@ -8,6 +8,7 @@ import {
   Form,
   SchemaForm,
   FormWrap,
+  useForm,
   fieldBuilder,
   objectBuilder,
   schemaConvert
@@ -35,6 +36,9 @@ const app = {
   reducers: (app) => {
     const plugins = app.get('form_reducer')
     return { form: formReducer.plugin(plugins) }
+  },
+  hooks: {
+    form: useForm
   },
   schema_converter: converters
 }

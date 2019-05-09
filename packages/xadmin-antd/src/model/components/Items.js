@@ -2,7 +2,8 @@ import React from 'react'
 import _ from 'lodash'
 import { ModelWrap, Model } from 'xadmin-model'
 import { getFieldProp } from 'xadmin-model/lib/utils'
-import { app, Block } from 'xadmin'
+import { app, Block, use } from 'xadmin'
+import { _t } from 'xadmin-i18n'
 import { SchemaForm } from 'xadmin-form'
 import { C, Loading } from 'xadmin-ui'
 import { Table, Empty, Menu, Dropdown, Icon, Form, List, Card, Button, Popconfirm, Checkbox, Popover } from 'antd'
@@ -172,7 +173,7 @@ class DataTableActionRender extends BaseRow {
     }
   }
 })
-class DataTable extends BaseData {
+class DataTable2 extends BaseData {
 
   renderData() {
     const { fields, items, model, loading, avageWidth=8 ,size, onRow } = this.props
@@ -230,19 +231,17 @@ class DataTable extends BaseData {
     }
 
     return (
-      <div style={{ backgroundColor: '#FFF' }}>
-        <Table
-          columns={columns}
-          dataSource={items}
-          bordered
-          size={size}
-          rowSelection={rowSelection}
-          pagination={false}
-          onRow={onRow}
-          rowKey="id"
-          //scroll={{ y: Math.min(730, (items.length + 1) * 40 + 36) }}
-        />
-      </div>
+      <Table
+        columns={columns}
+        dataSource={items}
+        bordered
+        size={size}
+        rowSelection={rowSelection}
+        pagination={false}
+        onRow={onRow}
+        rowKey="id"
+        //scroll={{ y: Math.min(730, (items.length + 1) * 40 + 36) }}
+      />
     )
   }
 
@@ -354,6 +353,19 @@ class DataCard extends React.Component {
     }
   }
 
+}
+
+const useBase = ({ loading, items, renderData }) => {
+  if(loading) {
+    return <Loading>{items.length > 0 ? renderData() : null}</Loading>
+  } else {
+    return items.length > 0 ? renderData() : <Card><Empty style={{ marginBottom: '.5rem' }}>{_t('No Data')}</Empty></Card>
+  }
+}
+
+const DataTable = props => {
+  const { loading, items, fields, selected, isSelectedAll, onSelect, onSelectAll } = use('model.grid', props)
+  
 }
 
 export default DataTable

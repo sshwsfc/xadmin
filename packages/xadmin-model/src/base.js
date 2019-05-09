@@ -1,17 +1,28 @@
 import React from 'react'
 import _ from 'lodash'
-import PropTypes from 'prop-types'
 import { Block, StoreWrap, app } from 'xadmin'
 
 const ModelContext = React.createContext(null)
 
-class Model extends React.Component {
+const getModel = (name, key, props) => {
+  const model = app.get('models')[name]
+  if(!model) {
+    throw Error(`Model '${name}' not found!`)
+  }
+  model.name = model.name || name
+  return {
+    ...model,
+    key: key || model.name,
+    ...props
+  }
+}
 
-  constructor(props) {
-    super(props)
-    const { name, schema, modelKey, initialValues, props: modelProps } = props
+const Model = ({ name, schema, modelKey, initialValues, children, props: modelProps }) => {
+  const [ model, setModel ] = React.useState(null)
 
-    const model = name ? this.getModel(name, modelKey, modelProps) : {
+  React.useEffect(() => {
+
+    const model = name ? getModel(name, modelKey, modelProps) : {
       ...schema,
       key: modelKey || schema.name,
       ...modelProps
@@ -21,25 +32,20 @@ class Model extends React.Component {
       initial = _.isFunction(model.initialValues) ? model.initialValues() : model.initialValues
     }
     app.context.store.dispatch({ type: 'INITIALIZE', model, initial })
-    this.state = { model }
-  }
+    setModel(model)
 
-  getModel(name, key, props) {
-    const model = app.get('models')[name]
-    if(!model) {
-      throw Error(`Model '${name}' not found!`)
+    return model.persistent == true ? () => {
+      setModel(null)
+    } : () => {
+      setModel(null)
+      app.context.store.dispatch({ type: 'DESTROY', model })
     }
-    model.name = model.name || name
-    return {
-      ...model,
-      key: key || model.name,
-      ...props
-    }
-  }
 
-  render() {
-    return <ModelContext.Provider value={this.state.model}>{this.props.children}</ModelContext.Provider>
-  }
+  }, [ name, schema, modelKey ])
+
+  if(!model) return null
+
+  return <ModelContext.Provider value={model}>{children}</ModelContext.Provider>
 }
 
 const ModelWrap = StoreWrap(Connect => (props) => {

@@ -26,7 +26,7 @@ import themes from './themes'
 import API from './api'
 
 import 'moment/locale/zh-cn' 
-
+import 'antd/dist/antd.min.css'
 const App = React.lazy(() => import('./App'))
 
 app

@@ -11,7 +11,8 @@ const base = {
     start: { type: 'array' },
     logger: { type: 'array' },
     blocks: { type: 'mapArray' },
-    mappers: { type: 'mapArray' }
+    mappers: { type: 'mapArray' },
+    hooks: { type: 'mapArray' }
   }
 }
 
@@ -24,19 +25,20 @@ const config = (key, default_value) => {
   return app.get('config')[key] || default_value
 }
 
-const API_CACHE = {}
-
 const api = (opt) => {
-  const resource = opt.resource_name || opt.name
-  if(API_CACHE[resource] == undefined) {
-    const API = config('api')
-    if (API) {
-      API_CACHE[resource] = new API(opt)
-    } else {
-      throw 'App API not implement!!!'
-    }
+  const API = config('api')
+  if (API) {
+    return new API(opt)
+  } else {
+    throw 'App API not implement!!!'
   }
-  return API_CACHE[resource]
+}
+
+const use = (key, props) => {
+  const hooks = app.get('hooks')[key]
+  return hooks ? hooks.reduce((prev, hook) => {
+    return hook(prev)
+  }, props || {}) : (props || {})
 }
 
 export default app
@@ -44,6 +46,7 @@ export {
   app,
   api,
   config,
+  use,
   RESTBaseAPI,
   Block,
   Wrap,

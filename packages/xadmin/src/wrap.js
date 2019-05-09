@@ -126,7 +126,7 @@ const wrap_component = (WrappedComponent, tag, defaultMapper) => {
     }
   }
 
-  return React.forwardRef((props, ref) => <Connect { ...props } forwardedRef={ ref } />)
+  return React.forwardRef((props, ref) => <Connect { ...props } ref={ ref } />)
 }
 
 const wrap = (magic, mapper, wrappers=[]) => {
