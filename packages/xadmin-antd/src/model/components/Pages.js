@@ -12,7 +12,7 @@ const ModelListPage = ({ location }) => {
   const { canAdd } = use('model.permission')
   const { onAdd } = use('model.event')
 
-  const ItemsComponent = (model.components && model.components.DataTable) || C('Model.DataTable')
+  const ItemsComponent = (model.components && model.components.DataList) || C('Model.DataTable')
   const query = location && location.query
 
   const icon = model.icon || model.name

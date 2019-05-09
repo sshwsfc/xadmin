@@ -6,7 +6,7 @@ import { _t } from 'xadmin-i18n'
 import { ModelBlock } from 'xadmin-model'
 
 export default props => {
-  const { count } = use('model.actions', props)
+  const { count } = use('model.select', props)
 
   return (
     <ModelBlock name="model.list.actions">

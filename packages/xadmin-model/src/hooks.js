@@ -8,7 +8,7 @@ import { ModelContext } from './base'
 
 export default {
   'model': props => {
-    const model = React.useContext(ModelContext)
+    const model = props.model || React.useContext(ModelContext)
 
     if(props && props.select) {
       const { dispatch, ...values } = use('redux', {
@@ -29,8 +29,7 @@ export default {
   },
   // Get Model Item
   'model.get': props => {
-    const { model, rest } = use('model')
-    const { id, query, item } = props
+    const { model, rest, id, query, item } = use('model', props)
 
     const [ data, setData ] = React.useState(item)
     const [ loading, setLoading ] = React.useState(id && item == null)
@@ -66,7 +65,7 @@ export default {
   // Save Model Item
   'model.save': props => {
     const { dispatch } = use('redux')
-    const { model, rest } = use('model')
+    const { model, rest } = use('model', props)
 
     const saveItem = (item) => {
       return rest.save(item).then(() => dispatch({ type: '@@xadmin/ADD_NOTICE', payload: {
@@ -81,10 +80,10 @@ export default {
   // Delete Model Item
   'model.delete': props => {
     const { dispatch } = use('redux')
-    const { model, rest } = use('model')
+    const { model, rest } = use('model', props)
 
     const deletItem = (id) => {
-      rest.delete(id).then(() => dispatch({ type: '@@xadmin/ADD_NOTICE', payload: {
+      rest.delete(id || props.id).then(() => dispatch({ type: '@@xadmin/ADD_NOTICE', payload: {
         type: 'success', headline: _t('Success'), message: _t('Delete {{object}} success', { object: model.title || model.name })
       } }))
     }
@@ -101,10 +100,23 @@ export default {
     }
   },
   'model.query': props => {
-    return props
+    const { model, rest } = use('model', props)
+
+    const [ data, setData ] = React.useState(null)
+    const [ loading, setLoading ] = React.useState(false)
+
+    React.useEffect(() => {
+      setLoading(true)
+      rest.query().then(({ items, count }) => {
+        setData(items)
+        setLoading(false)
+      })
+    }, [ ])
+
+    return { ...props, items: data, loading, model }
   },
   'model.permission': props => {
-    const { model } = use('model')
+    const { model } = use('model', props)
     return {
       ...props,
       canAdd: !!model.permission && !!model.permission.add,
@@ -113,29 +125,24 @@ export default {
     }
   },
   'model.event': props => {
-    const { model } = use('model')
+    const { model } = use('model', props)
     return {
       ...props,
       onAdd: () => app.go(`/app/model/${model.name}/add`),
       onSave: () => app.go(`/app/model/${model.name}/list`),
       onBack: () => app.go(`/app/model/${model.name}/list`),
-      onEdit: (id) => app.go(`/app/model/${model.name}/${id || props.id}/edit`)
+      onEdit: (id) => app.go(`/app/model/${model.name}/${encodeURIComponent(id || props.id)}/edit`)
     }
   },
 
   // Model List Hooks
-  'model.actions': props => {
-    return { ...props, ...use('model', {
-      select: state => ({ count: state.selected.length, selected: state.selected })
-    }) }
-  },
   'model.pagination': props => {
-    const { count, limit, skip } = use('model', {
+    const { count, limit, skip } = use('model', { ...props,
       select: state => ({ 
         count: state.count, limit: state.filter.limit, skip: state.filter.skip 
       })
     })
-    const { modelState, modelDispatch } = use('model')
+    const { modelState, modelDispatch } = use('model', props)
     
     const items = Math.ceil(count / limit)
     const activePage = Math.floor(skip / limit) + 1
@@ -148,13 +155,11 @@ export default {
     
     return { ...props, items, activePage, changePage }
   },
-  'model.count': props => {
-    return { ...props, ...use('model', {
-      select: state => ({ count: state.count })
-    }) }
-  },
+  'model.count': props => use('model', { ...props,
+    select: state => ({ count: state.count })
+  }),
   'model.pagesize': props => {
-    const { modelState, modelDispatch } = use('model')
+    const { modelState, modelDispatch } = use('model', props)
     const sizes = config('pageSizes', [ 15, 30, 50, 100 ])
 
     const setPageSize = (size) => {
@@ -166,7 +171,7 @@ export default {
     }) }
   },
   'model.fields': props => {
-    const { model, modelState, modelDispatch } = use('model')
+    const { model, modelState, modelDispatch } = use('model', props)
 
     const changeFieldDisplay = ([ field, selected ]) => {
       const filter = modelState.filter
@@ -188,16 +193,15 @@ export default {
     }) }
 
   },
-  'model.grid': props => {
+  'model.list': props => {
     const { ids, items: itemsMap, fields, selected } = use('model', {
       select: state => ({ 
         ids: state.ids,
         items: state.items,
-        selected: state.selected,
         fields: state.filter.fields
       })
     })
-    const { model, modelDispatch, modelState } = use('model')
+    const { model, modelDispatch, modelState } = use('model', props)
 
     const { loading } = use('redux', {
       select: state => ({ loading: state.loading && state.loading[`${model.key}.items`] })
@@ -217,6 +221,16 @@ export default {
       modelDispatch({ type: 'GET_ITEMS', filter: { ...modelState.filter }, wheres })
     }, [])
 
+    const items = ids.map(id => itemsMap[id]).filter(item => !_.isNil(item))
+
+    return { ...props, loading, items, fields, selected }
+  },
+  'model.select': props => {
+    const { selected, ids } = use('model', {
+      select: state => ({ selected: state.selected, ids: state.ids })
+    })
+    const { modelDispatch, modelState } = use('model', props)
+
     const selects = selected.map(item => item.id)
     const isSelectedAll = _.every(ids, id => selects.indexOf(id) >= 0)
 
@@ -233,9 +247,76 @@ export default {
       modelDispatch({ type: 'SELECT_ITEMS', item, selected })
     }
 
-    const items = ids.map(id => itemsMap[id]).filter(item => !_.isNil(item))
+    return { ...props, count: selected.length, selected, isSelectedAll, onSelect, onSelectAll }
+  },
+  'model.list.row': props => {
+    const { selected, item, modelDispatch } = use('model', { ...props,
+      select: state => {
+        let selected = false
+        for (let i of state.selected) {
+          if (i.id === props.id) {
+            selected = true
+            break
+          }
+        }
+        return { 
+          selected,
+          item: state.items[props.id]
+        }
+      }
+    })
 
-    return { ...props, loading, items, fields, selected, isSelectedAll, onSelect, onSelectAll }
+    const changeSelect = (selected) => {
+      modelDispatch({ type: 'SELECT_ITEMS', item, selected })
+    }
+
+    return { ...props, selected, item, changeSelect }
+  },
+  'model.list.header': props => {
+    const { field, model, modelState, modelDispatch } = use('model', props)
+    const property = getFieldProp(model, field) || {}
+    const canOrder = (property.canOrder !== undefined ? property.canOrder : 
+      ( property.orderField !== undefined || (property.type != 'object' && property.type != 'array')))
+
+    const { order } = use('model', { ...props,
+      select: state => {
+        const orders = state.filter.order
+        return { order: orders !== undefined ? (orders[property.orderField || field] || '') : '' }
+      }
+    })
+
+    const changeOrder = (order) => {
+      const filter = modelState.filter
+      const orders = filter.order || {}
+      const property = getFieldProp(model, field) || {}
+      orders[property.orderField || field] = order
+
+      modelDispatch({ type: 'GET_ITEMS', filter: { ...filter, order: orders } })
+    }
+
+    const title = property.header || property.title || _.startCase(field)
+
+    return { ...props, title, changeOrder, canOrder, order, property }
+  },
+  'model.list.item': props => {
+    const { model, schema, field } = use('model', props)
+    const property = schema || getFieldProp(model, field)
+    const data = schema ? {} : { schema: property }
+    const key = schema ? `${schema.name}.${field}` : field
+    if(model.fieldRender == undefined) {
+      model.fieldRender = {}
+    }
+    if(model.fieldRender[key] == undefined) {
+      model.fieldRender[key] = property != undefined ? 
+        app.get('fieldRenders').reduce((prev, render) => {
+          return render(prev, property, field)
+        }, null) : null
+    }
+    if(model.fieldRender[key]) {
+      data['componentClass'] = model.fieldRender[key]
+    }
+
+    return { ...props, ...data }
   }
 
 }
