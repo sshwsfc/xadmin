@@ -1,6 +1,5 @@
 import React from 'react'
 import { RelateAction } from 'xadmin-model/lib/relate'
-//import { ChildrenModelBtn } from 'xadmin-model'
 import { C } from 'xadmin-ui'
 
 export default {
@@ -70,7 +69,7 @@ export default {
     },
     itemActions: [ 
       (item) => <RelateAction item={item} />,
-      //(item) => <ChildrenModelBtn model="Post" parent={item}>Posts</ChildrenModelBtn>
+      (item) => <C is="Model.ChildrenModel" model="Post" parent={item} refField="userId" />
     ],
     editableFields: ['name', 'type', 'address.street'],
     batchChangeFields: ['website', 'brithday'],

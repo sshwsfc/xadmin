@@ -1,5 +1,4 @@
 import React from 'react'
-import { ModelWrap } from 'xadmin-model'
 import { SchemaForm } from 'xadmin-form'
 import { C } from 'xadmin-ui'
 import { use } from 'xadmin'
@@ -9,9 +8,7 @@ const AddModelBtn = () => {
   const { canAdd } = use('model.permission')
   const { saveItem } = use('model.save')
 
-  const { show, dispatch } = use('redux', {
-    select: state => ({ show: state.showModalAddForm[model.name] || false })
-  })
+  const { show, dispatch } = use('redux', state => ({ show: state.showModalAddForm[model.name] || false }))
   const hideModal = () => {
     dispatch({ model, type: '@@xadmin-modalform/CLOSE' })
   }

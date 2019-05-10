@@ -34,10 +34,14 @@ const api = (opt) => {
   }
 }
 
-const use = (key, props) => {
+const use = (key, props, select) => {
   const hooks = app.get('hooks')[key]
+  if(typeof(props) == 'function' && select == undefined) {
+    select = props
+    props = {}
+  }
   return hooks ? hooks.reduce((prev, hook) => {
-    return hook(prev)
+    return hook(prev, select)
   }, props || {}) : (props || {})
 }
 

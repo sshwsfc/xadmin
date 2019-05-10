@@ -144,24 +144,25 @@ const react_redux_app = {
     <Provider store={app.context.store}>{children}</Provider>
   ),
   hooks: (app) => ({
-    'redux': props => {
+    'redux': (props, select) => {
       const store = app.context.store
       const { getState, dispatch, subscribe } = store
 
-      if(props && props.select) {
-        const [ values, setValues ] = React.useState(props.select(getState()) || {})
+      if(select) {
+        const state = getState()
+        const [ values, setValues ] = React.useState(select(state) || {})
         const lastValues = React.useRef()
+        lastValues.current = values
 
         const updateState = () => {
-          const newValues = props.select(getState())
+          const newValues = select(getState())
           if (!_.isEqual(lastValues.current, newValues)) {
-            lastValues.current = newValues
             setValues(newValues)
           }
         }
         React.useEffect(() => subscribe(updateState), [])
 
-        return { ...props, store, dispatch: dispatch, ...values }
+        return { ...props, store, dispatch: dispatch, state, ...values }
       } else {
         return { ...props, store, dispatch: dispatch, state: getState() }
       }

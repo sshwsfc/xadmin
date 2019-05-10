@@ -1,10 +1,9 @@
 import _ from 'lodash'
-import PropTypes from 'prop-types'
 import React from 'react'
 import { Button, Dropdown, Menu, Popover, Checkbox, Row, Col, Input } from 'antd'
 import { app, use } from 'xadmin'
 import { _t } from 'xadmin-i18n'
-import { ModelWrap, ModelBlock } from 'xadmin-model'
+import { ModelBlock } from 'xadmin-model'
 
 const CountButton = props => {
   const { count } = use('model.count', props)

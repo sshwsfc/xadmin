@@ -1,6 +1,5 @@
 import React from 'react'
 import _ from 'lodash'
-import { ModelWrap, Model } from 'xadmin-model'
 import { getFieldProp } from 'xadmin-model/lib/utils'
 import { app, Block, use } from 'xadmin'
 import { _t } from 'xadmin-i18n'
@@ -10,7 +9,6 @@ import { Table, Empty, Menu, Dropdown, Icon, Form, List, Card, Button, Popconfir
 
 const ItemEditFormLayout = (props) => {
   const { children, pristine, invalid, handleSubmit, submitting } = props
-  const { _t } = app.context
   return (
     <Form onSubmit={handleSubmit}>
       {children}
@@ -19,9 +17,12 @@ const ItemEditFormLayout = (props) => {
   )
 }
 
-const ItemEditForm = ModelWrap('model.item')(({ item, field, schema, model, onClose, saveItem }) => {
+const ItemEditForm = props => {
+  const { item, field, schema, model, onClose, saveItem } = use('model.save', props)
+
   const formField = _.find(model.form || [], obj => obj && obj.key == field ) || { key: field }
   const required = (model.required || []).indexOf(field) >= 0 ? { required: [ field ] } : {}
+
   return (
     <SchemaForm formKey="ChangeDataForm" 
       initialValues={item}
@@ -38,38 +39,33 @@ const ItemEditForm = ModelWrap('model.item')(({ item, field, schema, model, onCl
       onSubmitSuccess={() => onClose()}
       component={ItemEditFormLayout}/>
   )
-})
+}
 
-@ModelWrap('model.list.item')
-class Item extends React.Component {
+const Item = props => {
+  const { item, value, field, schema, componentClass, wrap, editable } = use('model.list.item', props)
+  const [ edit, setEdit ] = React.useState(false)
 
-  state = { visible: false }
-
-  render() {
-    const { item, field, schema, componentClass, wrap, nest, model: { editableFields } } = this.props
-    const { _t } = app.context
-    const value = _.get(item, field)
-    const RawWrapComponent = wrap || 'span'
-    const WrapComponent = (nest == true || editableFields == undefined || editableFields.indexOf(field) < 0) ? RawWrapComponent : ({ children, ...props }) => {
-      return (
-        <Popover content={(<ItemEditForm item={item} field={field} schema={schema} onClose={()=>this.setState({ visible: false })} />)} 
-          trigger="click" onVisibleChange={visible => this.setState({ visible })} visible={this.state.visible} >
-          <RawWrapComponent {...props} style={{ cursor: 'pointer' }}>{children}</RawWrapComponent>
-        </Popover>
-      )
-    }
-    if(item == undefined || item == null || value == undefined || value == null) {
-      return <WrapComponent><span className="text-muted">{_t('Null')}</span></WrapComponent>
-    }
-
-    if(componentClass) {
-      const ItemComponent = componentClass
-      return <ItemComponent item={item} value={value} field={field} schema={schema} wrap={WrapComponent} />
-    } else {
-      return <WrapComponent>{value == undefined || value == null?<span className="text-muted">{_t('Null')}</span>:value}</WrapComponent>
-    }
+  const RawWrapComponent = wrap || 'span'
+  const WrapComponent = editable ? RawWrapComponent : ({ children, ...props }) => {
+    return (
+      <Popover content={(<ItemEditForm item={item} field={field} schema={schema} onClose={()=>setEdit(false)} />)} 
+        trigger="click" onVisibleChange={setEdit} visible={edit} placement="right" >
+        <RawWrapComponent {...props} style={{ cursor: 'pointer' }}>{children}</RawWrapComponent>
+      </Popover>
+    )
   }
 
+  if(item == undefined || item == null || value == undefined || value == null) {
+    return <WrapComponent><span className="text-muted">{_t('Null')}</span></WrapComponent>
+  }
+
+  if(componentClass) {
+    const ItemComponent = componentClass
+    return <ItemComponent item={item} value={value} field={field} schema={schema} wrap={WrapComponent} />
+  } else {
+    return <WrapComponent>{value == undefined || value == null?<span className="text-muted">{_t('Null')}</span>:value}</WrapComponent>
+  }
+  
 }
 
 const Header = props => {
@@ -116,7 +112,7 @@ const useActions = props => {
   }
   if(canDelete) {
     actions.push((
-      <Popconfirm key="action-delete" title={_t('Comfirm Delete') + '?'} onConfirm={deletItem} okText={_t('Delete')} cancelText={_t('Cancel')}>
+      <Popconfirm key="action-delete" title={_t('Comfirm Delete') + '?'} onConfirm={()=>deletItem()} okText={_t('Delete')} cancelText={_t('Cancel')}>
         <Button key="action-delete" size="small" className="model-list-action" type="danger">{_t('Delete')}</Button>
       </Popconfirm>
     ))

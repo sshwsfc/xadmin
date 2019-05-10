@@ -10,6 +10,7 @@ import DetailModal from './components/DetailModal'
 import SearchBar from './components/SearchBar'
 import BatchDelete from './actions/BatchDelete'
 import BatchChange from './actions/BatchChange'
+import ChildrenModel from './components/ChildrenModel'
 
 export default {
   components: {
@@ -27,6 +28,7 @@ export default {
     'Model.DetailModal': DetailModal,
     'Model.SearchBar': SearchBar,
     'Model.BatchChange': BatchChange,
-    'Model.BatchDelete': BatchDelete
+    'Model.BatchDelete': BatchDelete,
+    'Model.ChildrenModel': ChildrenModel
   }
 }
