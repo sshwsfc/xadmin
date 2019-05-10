@@ -138,59 +138,5 @@ export default {
     components: {
       DataList: C.lazy('Model.DataList')
     }
-  },
-  Compute: {
-    name: 'Compute',
-    type: 'object',
-    icon: 'user', // fa-icon
-    title: 'Compute',
-    properties: {
-      id: {
-        type: 'string',
-        title: '标识'
-      },
-      name: {
-        type: 'string',
-        title: '名称'
-      },
-      type: {
-        type: 'string',
-        title: '类型',
-        enum: [
-          '输入值',
-          '计算值',
-          '统计值',
-          '映射值'
-        ]
-      },
-      value: {
-        type: 'string',
-        title: '输入值'
-      },
-      compute: {
-        type: 'string',
-        title: '计算公式'
-      },
-      agg: {
-        type: 'object',
-        title: '统计',
-        properties: {
-          tag: { type: 'string', title: '统计点' },
-          method: { type: 'string', title: '统计方法', enum: [ '变化率', '同比', '环比' ] }
-        }
-      },
-      mapping: {
-        type: 'object',
-        title: '映射',
-        properties: {
-          node: { type: 'string', title: '绝对映射' },
-          parent: { type: 'string', title: '父级映射' },
-          child: { type: 'string', title: '子级映射' }
-        }
-      }
-    },
-    permission: { view: true, add: true, edit: true, delete: true },
-    form: [ '*' ],
-    listFields: [ 'id', 'name', 'email', 'type', 'website', 'address.street' ]
   }
 }

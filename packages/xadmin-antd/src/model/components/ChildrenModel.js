@@ -4,7 +4,7 @@ import app, { use } from 'xadmin'
 import { _t } from 'xadmin-i18n'
 import { Button, Modal, Form } from 'antd'
 import { SchemaForm } from 'xadmin-form'
-import { Model, ModelWrap } from 'xadmin-model'
+import { Model } from 'xadmin-model'
 import { C, Icon } from 'xadmin-ui'
 
 const ChildrenModel = props => {

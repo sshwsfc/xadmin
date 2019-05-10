@@ -1,69 +1,32 @@
 import React from 'react'
 import _ from 'lodash'
-import app, { api } from 'xadmin'
+import app, { api, use } from 'xadmin'
+import { _t } from 'xadmin-i18n'
 import { Loading, C, Check, Input } from 'xadmin-ui'
-import { Model, ModelWrap } from './base'
+import { Model } from './base'
 
-class RelateBase extends React.Component {
+const Checkboxes = props => {
+  const { input: { value, onChange }, field, loading, options } = use('model.relate.select', props)
 
-  loadOptions = inputValue => {
-    const { input: { value }, label, meta, field, group: FieldGroup } = this.props
-    const displayField = field.displayField || 'name'
-    return api(field.schema)
-      .query({ limit: 1000, fields: [ 'id', displayField ] }, 
-        inputValue ? { search: { [displayField]: { like: inputValue } } } : {})
-      .then(({ items }) => 
-        items.map(item => 
-          ({ value: item.id, label: item[displayField], item })
-        )
-      )
-  }
-}
-
-class Checkboxes extends RelateBase {
-
-  state = { loading: false, options: [] }
-
-  componentDidMount() {
-    this.setState({ loading: true })
-    this.loadOptions().then(options => {
-      this.setState({ loading: false, options })
-    })
-  }
-
-  onChange(checked, option) {
-    const { input: { value, onChange } } = this.props
+  const onCheckChange = React.useCallback((checked, option) => {
     if(checked) {
       onChange([ ...value, option ])
     } else {
       onChange(value.filter(item => item.id != option.id))
     }
-  }
+  }, [ value, onChange ])
 
-  renderOptions() {
-    const { input, field } = this.props
-    const { options } = this.state
-    const checkedIds = input.value ? input.value.map(item => item.id) : []
+  const renderOptions = () => {
+    const checkedIds = value ? value.map(item => item.id) : []
 
     return options.map(({ value, label, item })=>{
       const checked = checkedIds.indexOf(value) >= 0
-      return <Check onChange={()=>{this.onChange(!checked, item)}} checked={checked} {...field.attrs} >{label}</Check>
+      return <Check onChange={()=>{onCheckChange(!checked, item)}} checked={checked} {...field.attrs} >{label}</Check>
     })
   }
 
-  render() {
-    const { _t } = app.context
-    const { input, label, meta, field, group: FieldGroup } = this.props
-    const { loading, options } = this.state
-    return (
-      <FieldGroup label={label} meta={meta} input={input} field={field}>
-        {loading ? <Loading /> : 
-          (options ? this.renderOptions() : <Input.Static>{_t('Empty')}</Input.Static>)
-        }
-      </FieldGroup>
-    )
-  }
-
+  return loading ? <Loading /> : 
+    (options ? renderOptions() : <Input.Static>{_t('Empty')}</Input.Static>)
 }
 
 const schema_converter = [
@@ -113,24 +76,18 @@ const filter_converter = [
 
 const RelateContext = React.createContext()
 
-@ModelWrap('model.item')
-class RelateContainer extends React.Component {
-
-  render() {
-    const { data, loading, model } = this.props
-    return loading || data == undefined ? <Loading /> : 
-      <C is="Relate.Container" model={model} data={data} >
-        <RelateContext.Provider value={{ item: data, model }}>{this.props.children}</RelateContext.Provider>
-      </C>
-  }
-
+const RelateContainer = props => {
+  const { data, loading, model, children } = use('model.get', props)
+  return loading || data == undefined ? <Loading /> : 
+    <C is="Relate.Container" model={model} data={data} >
+      <RelateContext.Provider value={{ item: data, model }}>{children}</RelateContext.Provider>
+    </C>
 }
 
-const RelateWrap = (SubComponent, pname) => ({ location, ...props }) => (
-  <RelateContext.Consumer>
-    {({ item, model }) => <SubComponent {...props} location={{ ...location, query: {  ...location.query, [pname || model.name]: item.id } }} /> }
-  </RelateContext.Consumer>
-)
+const RelateWrap = (SubComponent, pname) => ({ location, ...props }) => {
+  const { item, model } = React.useContext(RelateContext)
+  return <SubComponent {...props} location={{ ...location, query: {  ...location.query, [pname || model.name]: item.id } }} />
+}
 
 const routers = (app) => {
   const models = app.get('models')
@@ -194,37 +151,60 @@ const routers = (app) => {
   return routes
 }
 
-@ModelWrap('model.relate.action')
-class RelateAction extends React.Component {
+const RelateAction = props => {
+  const { model, item } = use('model', props)
+  const actions = []
 
-  render() {
-    const { model, item, variant } = this.props
-    const { _t } = app.context
-    const actions = []
-
-    const models = app.get('models')
-    Object.keys(models).forEach(key => {
-      const m = models[key]
-      for(let pname of Object.keys(m.properties || {})) {
-        const prop = m.properties[pname]
-        if(prop.type == 'object' && (prop.relateTo == model.key || prop.relateTo == model.name)) {
-          actions.push(m)
-          continue
-        }
+  const models = app.get('models')
+  Object.keys(models).forEach(key => {
+    const m = models[key]
+    for(let pname of Object.keys(m.properties || {})) {
+      const prop = m.properties[pname]
+      if(prop.type == 'object' && (prop.relateTo == model.key || prop.relateTo == model.name)) {
+        actions.push(m)
+        continue
       }
-    })
-    return actions.length ? <C is="Relate.Action" model={model} actions={actions} item={item} /> : null
-  }
+    }
+  })
+
+  return actions.length ? <C is="Relate.Action" model={model} actions={actions} item={item} /> : null
 }
 
 export default {
   name: 'xadmin.model.relate',
   schema_converter,
   filter_converter,
-  routers
+  routers,
+  hooks: {
+    'model.relate.select': props => {
+      const { model, field } = use('model', props)
+      const [ loading, setLoadig ] = React.useState(false)
+      const [ items, setItems ] = React.useState([])
+      
+      const loadOptions = React.useCallback(inputValue => {
+        const displayField = field.displayField || 'name'
+        setLoadig(true)
+        return api(field.schema)
+          .query({ limit: 1000, fields: [ 'id', displayField ] }, 
+            inputValue ? { search: { [displayField]: { like: inputValue } } } : {})
+          .then(({ items }) => {
+            setLoadig(false)
+            setItems(items.map(item => 
+              ({ value: item.id, label: item[displayField], item })
+            ))
+          }
+          )
+      }, [ model, field ])
+
+      React.useEffect(() => {
+        loadOptions()
+      }, [])
+
+      return { ...props, loadOptions, loading, items }
+    }
+  }
 }
 export {
   Checkboxes,
-  RelateAction,
-  RelateBase
+  RelateAction
 }

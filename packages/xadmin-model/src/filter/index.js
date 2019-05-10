@@ -1,9 +1,8 @@
 import React from 'react'
 import _ from 'lodash'
-import app from 'xadmin'
+import app, { use } from 'xadmin'
 import { BaseForm, reduxForm } from 'xadmin-form'
 import { C } from 'xadmin-ui'
-import { ModelWrap } from '../index'
 import { getFieldProp } from '../utils'
 import filter_converter from './filters'
 
@@ -16,50 +15,45 @@ const convert = (schema, options) => {
 
 const FilterForm = (props) => {
   const { formKey, filters, fieldProps, onSubmit, options } = props
-  const fields = filters.map(filter => {
-    const field = convert(filter.schema, { key: filter.key })
-    return _.merge(field, filter.field, fieldProps)
-  })
-  const WrapForm = reduxForm({ 
-    form: formKey,
-    destroyOnUnmount: false,
-    enableReinitialize: true,
-    onChange: (options && options.submitOnChange == true) ? onSubmit : undefined,
-    ...(options && options.formProps)
-  })(BaseForm)
-  return <WrapForm fields={fields} {...props}/>
+  const [ state, setFrom ] = React.useState({ WrapForm: null, fields: null })
+
+  React.useEffect(() => {
+    const fields = filters.map(filter => {
+      const field = convert(filter.schema, { key: filter.key })
+      return _.merge(field, filter.field, fieldProps)
+    })
+    const WrapForm = reduxForm({ 
+      form: formKey,
+      destroyOnUnmount: false,
+      enableReinitialize: true,
+      onChange: (options && options.submitOnChange == true) ? onSubmit : undefined,
+      ...(options && options.formProps)
+    })(BaseForm)
+
+    setFrom({ WrapForm, fields })
+  }, [ formKey, filters, fieldProps, options ])
+
+  const { WrapForm, fields } = state
+  return WrapForm && fields ? <WrapForm fields={fields} {...props}/> : null
 }
 
-@ModelWrap('model.list.filter')
-class BaseFilter extends React.Component {
+const BaseFilter = props => {
+  const { filters, options, component, group, formKey, data, changeFilter, resetFilter } = use('model.list.filter', props)
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return this.state != nextState
+  if(!filters || !filters.length) {
+    return null
   }
 
-  renderFilterForm() {
-    const { filters, options, component, group, formKey, data, changeFilter, resetFilter } = this.props
-
-    return (<FilterForm
-      formKey={formKey}
-      filters={filters}
-      component={component}
-      group={group}
-      initialValues={data}
-      onSubmit={changeFilter}
-      options={options}
-      resetFilter={resetFilter}
-    />)
-  }
-
-  render() {
-    const { filters } = this.props
-    if(filters && filters.length) {
-      return this.renderFilterForm()
-    } else {
-      return null
-    }
-  }
+  return (<FilterForm
+    formKey={formKey}
+    filters={filters}
+    component={component}
+    group={group}
+    initialValues={data}
+    onSubmit={changeFilter}
+    options={options}
+    resetFilter={resetFilter}
+  />)
 
 }
 
@@ -75,106 +69,102 @@ export default {
     'model.list.submenu': filter('submenu', 'Filter.Submenu', 'Form.ColGroup'),
     'model.list.sidemenu': filter('sidemenu', 'Filter.Form', 'Form.SimpleGroup')
   },
-  mappers: {
-    'model.list.filter': {
-      data: ({ model, modelState }, { name }) => {
-        return {
-          data: modelState.wheres.filters
-        }
-      },
-      compute: ({ model, modelState }, { data, name }) => {
-        const filter = model.filters && model.filters[name]
-        let fields, options
+  hooks: {
+    'model.list.filter': props => {
+      const { store, dispatch } = use('redux')
+      const { data, name, model, modelState } = use('model', props, state => state.wheres.filters)
 
-        if(_.isArray(filter)) {
-          options = {}
-          fields = filter
-        } else if(_.isPlainObject(filter) && _.isArray(filter.fields)) {
-          fields = filter.fields
-          options = _.omit(filter, 'fields')
-        } else {
-          return {
-            filters: [], formKey: `filter.${model.name}`
+      const filter = model.filters && model.filters[name]
+      let fields, options
+
+      if(_.isArray(filter)) {
+        options = {}
+        fields = filter
+      } else if(_.isPlainObject(filter) && _.isArray(filter.fields)) {
+        fields = filter.fields
+        options = _.omit(filter, 'fields')
+      } else {
+        return {
+          filters: [], formKey: `filter.${model.name}`
+        }
+      }
+
+      const filters = fields.map(field => {
+        const key = typeof field == 'string' ? field : field.key
+        const schema = getFieldProp(model, key)
+        return schema ? {
+          key, schema,
+          field: typeof field == 'string' ? { } : field
+        } : null
+      }).filter(Boolean)
+
+      const resetFilter = React.useCallback(() => {
+        const formKey = `filter.${model.name}`
+        const initial = _.isFunction(model.initialValues) ? model.initialValues() : model.initialValues
+        const where = initial && initial.wheres && initial.wheres.filters || {}
+        let values = _.get(store.getState(),`form.${formKey}.values`) || {}
+        values = { ...values, ...where }
+        const cf = []
+        Object.keys(values).forEach(field => {
+          if(where[field] !== undefined) {
+            dispatch({
+              type: '@@redux-form/CHANGE',
+              meta: {
+                form: formKey, field: field
+              },
+              payload: where[field]
+            })
+          } else {
+            cf.push(field)
           }
-        }
-
-        const filters = fields.map(field => {
-          const key = typeof field == 'string' ? field : field.key
-          const schema = getFieldProp(model, key)
-          return schema ? {
-            key, schema,
-            field: typeof field == 'string' ? { } : field
-          } : null
-        }).filter(Boolean)
-
-        return {
-          filters, data: _.clone(data), options,
-          formKey: `filter.${model.name}`
-        }
-      },
-      method: {
-        resetFilter: ({ dispatch, model, state, modelState }) => (e) => {
-          const formKey = `filter.${model.name}`
-          const initial = _.isFunction(model.initialValues) ? model.initialValues() : model.initialValues
-          const where = initial && initial.wheres && initial.wheres.filters || {}
-          let values = _.get(state,`form.${formKey}.values`) || {}
-          values = { ...values, ...where }
-          const cf = []
-          Object.keys(values).forEach(field => {
-            if(where[field] !== undefined) {
-              dispatch({
-                type: '@@redux-form/CHANGE',
-                meta: {
-                  form: formKey, field: field
-                },
-                payload: where[field]
-              })
-            } else {
-              cf.push(field)
+        })
+        if(cf.length > 0) {
+          dispatch({
+            type: '@@redux-form/CLEAR_FIELDS',
+            meta: {
+              form: formKey,
+              fields: cf
             }
           })
-          if(cf.length > 0) {
-            dispatch({
-              type: '@@redux-form/CLEAR_FIELDS',
-              meta: {
-                form: formKey,
-                fields: cf
-              }
-            })
-          }
-
-          const wheres = (Object.keys(where).length > 0 ? 
-            { ...modelState.wheres, filters: where } : _.omit(modelState.wheres, 'filters'))
-
-          dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres })
-        },
-        changeFilter: ({ dispatch, model, state, modelState }, { name }) => () => {
-          const values = _.get(state,`form.filter.${model.name}.values`) || {}
-          const where = Object.keys(values).reduce((prev, key) => {
-            if(!_.isNil(values[key])) {
-              prev[key] = values[key]
-            } else {
-              prev = _.omit(prev, key)
-            }
-            return prev
-          }, { ...modelState.wheres.filters })
-          const wheres = (Object.keys(where).length > 0 ? 
-            { ...modelState.wheres, filters: where } : _.omit(modelState.wheres, 'filters'))
-          dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres })
         }
-      },
-      event: {
-        mount: ({ dispatch, model }) => {
-          if(model.filterDefault) {
-            const form = `filter.${model.name}`
-            const values = _.isFunction(model.filterDefault) ? model.filterDefault() : model.filterDefault
-            dispatch({
-              type: '@@redux-form/INITIALIZE',
-              meta: { form: form },
-              payload: values
-            })
+
+        const wheres = (Object.keys(where).length > 0 ? 
+          { ...modelState.wheres, filters: where } : _.omit(modelState.wheres, 'filters'))
+
+        dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres })
+      }, [ store, model, name, modelState.wheres, modelState.filter ])
+
+      const changeFilter = React.useCallback(() => {
+        const values = _.get(store.getState(),`form.filter.${model.name}.values`) || {}
+        const where = Object.keys(values).reduce((prev, key) => {
+          if(!_.isNil(values[key])) {
+            prev[key] = values[key]
+          } else {
+            prev = _.omit(prev, key)
           }
+          return prev
+        }, { ...modelState.wheres.filters })
+        const wheres = (Object.keys(where).length > 0 ? 
+          { ...modelState.wheres, filters: where } : _.omit(modelState.wheres, 'filters'))
+        dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres })
+      }, [ store, model, name, modelState.wheres ])
+
+      React.useEffect(() => {
+        if(model.filterDefault) {
+          const form = `filter.${model.name}`
+          const values = _.isFunction(model.filterDefault) ? model.filterDefault() : model.filterDefault
+          dispatch({
+            type: '@@redux-form/INITIALIZE',
+            meta: { form: form },
+            payload: values
+          })
         }
+      }, [ model.filterDefault ])
+
+      return { ...props,
+        filters, data: _.clone(data), options,
+        formKey: `filter.${model.name}`,
+        resetFilter, changeFilter
       }
     }
   },
