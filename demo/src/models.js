@@ -123,7 +123,7 @@ export default {
       }
     },
     permission: { view: true, add: true, edit: true, delete: true },
-    form: [ 'title', 'body', 'category', 'user', 'readers' ],
+    form: [ 'title', 'body', 'category', 'user', { key: 'readers', type: 'transfer' } ],
     filters: {
       nav: [ 'title', 'user' ],
       //navform: { fields: [ 'title' ], submitOnChange: false },

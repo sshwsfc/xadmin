@@ -86,7 +86,7 @@ export default {
     checkbox: {
       component: Checkbox
     },
-    relates: {
+    transfer: {
       component: Transfer
     },
     fieldset: {

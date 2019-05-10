@@ -179,7 +179,7 @@ export default {
     'model.relate.select': props => {
       const { model, field } = use('model', props)
       const [ loading, setLoadig ] = React.useState(false)
-      const [ items, setItems ] = React.useState([])
+      const [ options, setOptions ] = React.useState([])
       
       const loadOptions = React.useCallback(inputValue => {
         const displayField = field.displayField || 'name'
@@ -189,7 +189,7 @@ export default {
             inputValue ? { search: { [displayField]: { like: inputValue } } } : {})
           .then(({ items }) => {
             setLoadig(false)
-            setItems(items.map(item => 
+            setOptions(items.map(item => 
               ({ value: item.id, label: item[displayField], item })
             ))
           }
@@ -200,7 +200,7 @@ export default {
         loadOptions()
       }, [])
 
-      return { ...props, loadOptions, loading, items }
+      return { ...props, loadOptions, loading, options }
     }
   }
 }

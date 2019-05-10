@@ -9,18 +9,18 @@ import { Icon } from 'xadmin-ui'
 const Option = Select.Option
 
 const AsyncSelect = props => {
-  const { loadOptions, loading, items, value, isOptionSelected, label, onChange, style, ...extraProps } = use('model.relate.select', props)
+  const { loadOptions, loading, options, value, isOptionSelected, label, onChange, style, ...extraProps } = use('model.relate.select', props)
   
-  const data = React.useMemo(() => items.reduce((prev, opt) => {
+  const data = React.useMemo(() => options.reduce((prev, opt) => {
     prev[opt.value] = { key: opt.value, ...opt }
     return prev
-  }, {}), [ items ])
+  }, {}), [ options ])
 
   const onItemChange = (value) => {
     onChange(_.isArray(value) ? value.map(({ key }) => data[key]) : data[value.key])
   }
 
-  const options = React.useMemo(() => {
+  const useOptions = React.useMemo(() => {
     let options = Object.values(data)
     if(extraProps.mode == 'multiple' && value) {
       const selected = value.map(v => v.key)
@@ -42,7 +42,7 @@ const AsyncSelect = props => {
       style={{ minWidth: 150, ...style }}
       {...extraProps}
     >
-      {options.map(d => <Option key={d.key}>{d.label}</Option>)}
+      {useOptions.map(d => <Option key={d.key}>{d.label}</Option>)}
     </Select>
   )
 
