@@ -160,7 +160,9 @@ const react_redux_app = {
             setValues(newValues)
           }
         }
-        React.useEffect(() => subscribe(updateState), [])
+        React.useEffect(() => {
+          return subscribe(updateState)
+        }, [])
 
         return { ...props, store, dispatch: dispatch, state, ...values }
       } else {

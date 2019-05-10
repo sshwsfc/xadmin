@@ -1,7 +1,7 @@
 import React from 'react'
 import { SubmissionError } from 'xadmin-form'
 import { all, fork, put, call, cancelled, takeEvery } from 'redux-saga/effects'
-import app, { api } from 'xadmin'
+import app, { api, use } from 'xadmin'
 import { C } from 'xadmin-ui'
 
 function *handle_delete_items({ model, items, message }) {
@@ -81,38 +81,32 @@ export default {
       }
     ]
   },
-  mappers: {
-    'actons.batch_delete': {
-      data: ({ model }) => {
-        return {
-          canDelete: !!model.permission && !!model.permission.delete
-        }
-      },
-      method: {
-        onBatchDelete: ({ model, modelState, dispatch }) => () => {
-          const items = modelState.selected
-          dispatch({ model, type: 'DELETE_ITEMS', items })
-        }
-      }
-    },
-    'actons.batch_change': {
-      data: ({ model }) => {
-        return {
-          fields: model.batchChangeFields || [],
-          canEdit: !!model.permission && !!model.permission.edit
-        }
-      },
-      method: {
-        onBatchChange: ({ model, modelState, dispatch }, { successMessage }) => (value) => {
-          const items = modelState.selected
+  hooks: {
+    'actons.batch_delete': props => {
+      const { getModelState, modelDispatch } = use('model', props)
+      const { canDelete } = use('model.permission', props)
 
-          return new Promise((resolve, reject) => {
-            dispatch({ model, type: 'SAVE_ITEMS', items, value, promise: { resolve, reject }, message: successMessage })
-          }).catch(err => {
-            throw new SubmissionError(err.json)
-          })
-        }
+      const onBatchDelete = () => {
+        const items = getModelState().selected
+        modelDispatch({ type: 'DELETE_ITEMS', items })
       }
+
+      return { ...props, canDelete, onBatchDelete }
+    },
+    'actons.batch_change': props => {
+      const { model, getModelState, modelDispatch, successMessage } = use('model', props)
+      const { canEdit } = use('model.permission', props)
+
+      const onBatchChange = (value) => {
+        const items = getModelState().selected
+        return new Promise((resolve, reject) => {
+          modelDispatch({ type: 'SAVE_ITEMS', items, value, promise: { resolve, reject }, message: successMessage })
+        }).catch(err => {
+          throw new SubmissionError(err.json)
+        })
+      }
+
+      return { ...props, fields: model.batchChangeFields || [], canEdit, onBatchChange }
     }
   },
   effects: function *() {

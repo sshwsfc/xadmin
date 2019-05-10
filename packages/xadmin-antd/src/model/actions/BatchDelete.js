@@ -1,39 +1,34 @@
 import React from 'react'
 import { Modal, Menu, List } from 'antd'
-import { app } from 'xadmin'
-import { ModelWrap } from 'xadmin-model'
+import { app, use } from 'xadmin'
 
 import { Icon } from 'xadmin-ui'
 
-@ModelWrap('actons.batch_delete')
-@ModelWrap('model.list.actions')
-class BatchDeleteBtn extends React.Component {
+const BatchDeleteBtn = props => {
+  const { _t } = app.context
+  const [ show, setShow ] = React.useState(false)
+  const { canDelete, onBatchDelete } = use('actons.batch_delete', props)
+  const { selected } = use('model.select', props)
+  const { model } = use('model', props)
 
-  state = { show: false }
-
-  onClose = () => {
-    this.setState({ show: false })
+  const onClose = () => {
+    setShow(false)
   }
 
-  onBatchDelete = () => {
-    this.props.onBatchDelete()
-    this.onClose()
-  }
-
-  renderModel() {
-    const { selected, model } = this.props
-    const { _t } = app.context
-
+  const renderModel = () => {
     return (
       <Modal
         key="actions_batch_delete_modal"
         title={_t('Confirm to delete selected items')}
-        visible={this.state.show}
-        onOk={this.onBatchDelete}
+        visible={show}
+        onOk={() => {
+          onBatchDelete()
+          onClose()
+        }}
         okText={_t('Delete')}
         okType="danger"
         cancelText={_t('Cancel')}
-        onCancel={this.onClose}
+        onCancel={onClose}
       >
         <List
           dataSource={selected}
@@ -43,22 +38,17 @@ class BatchDeleteBtn extends React.Component {
     )
   }
 
-  render() {
-    const { selected, canDelete, onBatchDelete, ...props } = this.props
-    const { _t } = app.context
-
-    return canDelete ? [ (
-      <Menu.Item {...props} key={'actions_batch_delete'} 
-        onClick={(e)=>{
-          props.onClick(e)
-          this.setState({ show: true })
-        }} disabled={selected.length == 0}>
-        {_t('Batch Delete Items')}
-      </Menu.Item>
-    ),
-    selected.length > 0 ? this.renderModel() : null
-    ] : null
-  }
+  return canDelete ? [ (
+    <Menu.Item {...props} key={'actions_batch_delete'} 
+      onClick={(e)=>{
+        props.onClick(e)
+        setShow(true)
+      }} disabled={selected.length == 0}>
+      {_t('Batch Delete Items')}
+    </Menu.Item>
+  ),
+  selected.length > 0 ? renderModel() : null
+  ] : null
 
 }
 

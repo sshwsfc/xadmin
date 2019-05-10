@@ -89,9 +89,9 @@ const EditChildrenModelBtn = props => {
 
   return canChildEdit && [
     <Button key={0} size="sm" className="model-list-action" onClick={() => setShow(true)}>{_t('Edit')}</Button>,
-    <ChildrenFormModel key={1} onSuccess={getItems} id={id} refData={refData} show={show} onClose={() => {
+    show ? <ChildrenFormModel key={1} onSuccess={getItems} id={id} refData={refData} show={show} onClose={() => {
       setShow(false)
-    }} />
+    }} /> : null
   ]
 }
 

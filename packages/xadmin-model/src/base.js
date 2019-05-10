@@ -18,32 +18,35 @@ const getModel = (name, key, props) => {
 }
 
 const Model = ({ name, schema, modelKey, initialValues, children, props: modelProps }) => {
-  const [ model, setModel ] = React.useState(null)
+  const [ state, setState ] = React.useState(null)
 
-  React.useEffect(() => {
-
-    const model = name ? getModel(name, modelKey, modelProps) : {
+  const model = React.useMemo(() => {
+    return name ? getModel(name, modelKey, modelProps) : {
       ...schema,
       key: modelKey || schema.name,
       ...modelProps
     }
-    let initial = initialValues
-    if(!initial && model.initialValues) {
-      initial = _.isFunction(model.initialValues) ? model.initialValues() : model.initialValues
-    }
-    app.context.store.dispatch({ type: 'INITIALIZE', model, initial })
-    setModel(model)
-
-    return model.persistent == true ? () => {
-      setModel(null)
-    } : () => {
-      setModel(null)
-      app.context.store.dispatch({ type: 'DESTROY', model })
-    }
-
   }, [ name, schema, modelKey ])
 
-  if(!model) return null
+  React.useEffect(() => () => {
+    if(model.persistent != true) {
+      setState('DESTROY')
+    }
+  }, [])
+
+  React.useEffect(() => {
+    if(state == null) {
+      let initial = initialValues
+      if(!initial && model.initialValues) {
+        initial = _.isFunction(model.initialValues) ? model.initialValues() : model.initialValues
+      }
+      app.context.store.dispatch({ type: 'INITIALIZE', model, initial })
+      setState('INITIALIZE')
+    } else if(state == 'DESTROY') {
+      app.context.store.dispatch({ type: 'DESTROY', model })
+    }
+  }, [ state ])
+  if(!model || state != 'INITIALIZE') return null
 
   return <ModelContext.Provider value={model}>{children}</ModelContext.Provider>
 }

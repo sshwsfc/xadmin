@@ -2,29 +2,18 @@ import React from 'react'
 import _ from 'lodash'
 import { Modal, Menu, Form } from 'antd'
 import { SchemaForm } from 'xadmin-form'
+import { app, use } from 'xadmin'
 
-import { app } from 'xadmin'
-import { ModelWrap, Model } from 'xadmin-model'
+const BatchChangeBtn = props => {
+  const { _t } = app.context
+  const [ show, setShow ] = React.useState(false)
+  const { canEdit, fields, onBatchChange } = use('actons.batch_change', props)
+  const { selected } = use('model.select', props)
+  const { model } = use('model', props)
 
-@ModelWrap('actons.batch_change')
-@ModelWrap('model.list.actions')
-class BatchChangeBtn extends React.Component {
+  const onClose = () => setShow(false)
 
-  state = { show: false }
-
-  onClose = () => {
-    this.setState({ show: false })
-  }
-
-  onBatchChange = (value) => {
-    this.props.onBatchChange(value)
-  }
-
-  renderModel() {
-    const { model, fields } = this.props
-    const { _t } = app.context
-    const show = this.state.show
-
+  const renderModel = () => {
     return (
       <SchemaForm key="actions_batch_change_form" formKey={`model_batch.${model.key}`} 
         schema={_.omit({
@@ -33,9 +22,9 @@ class BatchChangeBtn extends React.Component {
           form: model.form !== undefined ? model.form.filter(obj => {
             return obj == '*' || fields.indexOf(obj) >= 0 || fields.indexOf(obj.key) >= 0 }) : [ '*' ]
         }, 'required')}
-        onSubmit={(values) => this.onBatchChange(values)}
-        onSubmitSuccess={this.onClose}
-        onClose={this.onClose}>
+        onSubmit={onBatchChange}
+        onSubmitSuccess={onClose}
+        onClose={onClose}>
         { ({ children, invalid, handleSubmit, submitting, onClose }) => (
           <Modal key="actions_batch_change_modal" visible={show} onClose={onClose}
             title={_t('Please input the value to batch change items')}
@@ -43,7 +32,7 @@ class BatchChangeBtn extends React.Component {
             onOk={handleSubmit}
             okButtonDisabled={invalid || submitting}
             cancelText={_t('Cancel')}
-            onCancel={this.onClose}
+            onCancel={onClose}
           >
             <Form onSubmit={handleSubmit}>{children}</Form>
           </Modal>
@@ -52,22 +41,17 @@ class BatchChangeBtn extends React.Component {
     )
   }
 
-  render() {
-    const { selected, canEdit, fields, onBatchChange, ...props } = this.props
-    const { _t } = app.context
-
-    return (canEdit && fields.length > 0) ? [ (
-      <Menu.Item {...props} key="actions_batch_change" 
-        onClick={(e)=>{
-          props.onClick(e)
-          this.setState({ show: true })
-        }} disabled={selected.length == 0}>
-        {_t('Batch Change Items')}
-      </Menu.Item>
-    ),
-    selected.length > 0 ? this.renderModel() : null
-    ] : null
-  }
+  return (canEdit && fields.length > 0) ? [ (
+    <Menu.Item {...props} key="actions_batch_change" 
+      onClick={(e)=>{
+        props.onClick(e)
+        setShow(true)
+      }} disabled={selected.length == 0}>
+      {_t('Batch Change Items')}
+    </Menu.Item>
+  ),
+  selected.length > 0 ? renderModel() : null
+  ] : null
 
 }
 
