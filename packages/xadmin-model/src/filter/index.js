@@ -72,31 +72,38 @@ export default {
   hooks: {
     'model.list.filter': props => {
       const { store, dispatch } = use('redux')
-      const { data, name, model, modelState } = use('model', props, state => state.wheres.filters)
+      const { data, model, modelState } = use('model', state => ({ data: state.wheres.filters }))
+      const { name } = props
 
-      const filter = model.filters && model.filters[name]
-      let fields, options
-
-      if(_.isArray(filter)) {
-        options = {}
-        fields = filter
-      } else if(_.isPlainObject(filter) && _.isArray(filter.fields)) {
-        fields = filter.fields
-        options = _.omit(filter, 'fields')
-      } else {
-        return {
-          filters: [], formKey: `filter.${model.name}`
+      const { filters, options, formKey } = React.useMemo(() => {
+        const formKey = `filter.${model.name}`
+        const filter = model.filters && model.filters[name]
+        let fields, options
+  
+        if(_.isArray(filter)) {
+          options = {}
+          fields = filter
+        } else if(_.isPlainObject(filter) && _.isArray(filter.fields)) {
+          fields = filter.fields
+          options = _.omit(filter, 'fields')
+        } else {
+          return {
+            filters: [], formKey, options: {}
+          }
         }
-      }
+  
+        const filters = fields.map(field => {
+          const key = typeof field == 'string' ? field : field.key
+          const schema = getFieldProp(model, key)
+          return schema ? {
+            key, schema,
+            field: typeof field == 'string' ? { } : field
+          } : null
+        }).filter(Boolean)
 
-      const filters = fields.map(field => {
-        const key = typeof field == 'string' ? field : field.key
-        const schema = getFieldProp(model, key)
-        return schema ? {
-          key, schema,
-          field: typeof field == 'string' ? { } : field
-        } : null
-      }).filter(Boolean)
+        return { filters, formKey, options }
+
+      }, [ model, name ])
 
       const resetFilter = React.useCallback(() => {
         const formKey = `filter.${model.name}`
@@ -162,8 +169,7 @@ export default {
       }, [ model.filterDefault ])
 
       return { ...props,
-        filters, data: _.clone(data), options,
-        formKey: `filter.${model.name}`,
+        filters, options, formKey, data: _.clone(data),
         resetFilter, changeFilter
       }
     }
