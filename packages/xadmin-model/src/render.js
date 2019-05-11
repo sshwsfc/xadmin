@@ -40,7 +40,7 @@ export default [
       }
     } else if(schema.type == 'boolean') {
       return ({ value, wrap: WrapComponent }) => {
-        return <WrapComponent style={{ textAlign: 'center' }}>{value ? <Icon name="check-circle" style={{ color: 'green' }} /> : <Icon name="times-circle" />}</WrapComponent>
+        return <WrapComponent style={{ textAlign: 'center' }}><C is="Model.BooleanIcon" value={value} schema={schema} /></WrapComponent>
       }
     } else if(schema.type == 'array') {
       return ({ value, field, wrap: WrapComponent }) => {

@@ -24,12 +24,8 @@ export default {
   'model.get': props => {
     const { model, rest, id, query, item } = use('model', props)
 
-    const [ data, setData ] = useState(item)
-    const [ loading, setLoading ] = useState(id && item == null)
-  
-    useEffect(() => {
+    const [ state, setState ] = useState(() => {
       let data = item
-
       if(!data) {
         if(model.defaultValue) {
           data = _.isFunction(model.defaultValue) ? model.defaultValue() : model.defaultValue
@@ -38,22 +34,22 @@ export default {
           data = { ...data, ...query }
         }
       }
-
+      return { data, loading: false }
+    })
+  
+    useEffect(() => {
+      const { data } = state
       if(!data && id) {
-        setLoading(true)
+        setState({ data, loading: true })
         rest.get(id).then(payload => {
-          setData(payload)
-          setLoading(false)
+          setState({ data: payload, loading: false })
         })
-      } else {
-        setData(data)
       }
-
-    }, [ id, item, query ])
+    }, [ id ])
 
     const title = id ? _t('Edit {{title}}', { title: model.title }) : _t('Create {{title}}', { title: model.title })
 
-    return { ...props, model, data, title, loading }
+    return { ...props, model, title, ...state }
   },
   // Save Model Item
   'model.save': props => {
@@ -130,8 +126,8 @@ export default {
     return {
       ...props,
       onAdd: () => app.go(`/app/model/${model.name}/add`),
-      onSave: () => app.go(`/app/model/${model.name}/list`),
-      onBack: () => app.go(`/app/model/${model.name}/list`),
+      onSaved: () => (history && history.length > 1) && history.back() || app.go(`/app/model/${model.name}/list`),
+      onBack: () => (history && history.length > 1) && history.back() || app.go(`/app/model/${model.name}/list`),
       onEdit: (id) => app.go(`/app/model/${model.name}/${encodeURIComponent(id || props.id)}/edit`)
     }
   },

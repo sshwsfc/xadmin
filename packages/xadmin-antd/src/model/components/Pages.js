@@ -64,7 +64,7 @@ const ModelListPage = ({ location }) => {
 
 const ModelFormPage = ({ params, location: { query } }) => {
   const { model } = use('model')
-  const { onSave } = use('model.event')
+  const { onSaved } = use('model.event')
 
   const title = params && params.id ? _t('Edit {{title}}', { title: model.title }) : _t('Create {{title}}', { title: model.title })
   const FormComponent = (model.components && model.components.DataForm) || C('Model.DataForm')
@@ -75,7 +75,7 @@ const ModelFormPage = ({ params, location: { query } }) => {
       subTitle={<ModelBlock name="model.edit.nav" />}
       actions={<ModelBlock name="model.edit.navbtn" />}>
       <ModelBlock name="model.form.before" />
-      <FormComponent id={params && params.id} query={query} onSubmitSuccess={onSave} />
+      <FormComponent id={params && params.id} query={query} onSubmitSuccess={onSaved} />
       <ModelBlock name="model.form.after" />
     </Page>
   )

@@ -121,5 +121,5 @@ class SubmitOnChangeWrap extends React.Component {
 
 export default ({ option, ...props }) => {
   const submitOnChange = option && option.options && option.options.submitOnChange
-  return !submitOnChange ? <SubmitOnChangeWrap {...props} option={option} /> : <TextFilter {...props} option={option}/>
+  return submitOnChange ? <SubmitOnChangeWrap {...props} option={option} /> : <TextFilter {...props} option={option}/>
 }

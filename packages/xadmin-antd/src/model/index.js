@@ -11,6 +11,7 @@ import SearchBar from './components/SearchBar'
 import BatchDelete from './actions/BatchDelete'
 import BatchChange from './actions/BatchChange'
 import ChildrenModel from './components/ChildrenModel'
+import BooleanIcon from './components/BooleanIcon'
 
 export default {
   components: {
@@ -29,6 +30,7 @@ export default {
     'Model.SearchBar': SearchBar,
     'Model.BatchChange': BatchChange,
     'Model.BatchDelete': BatchDelete,
-    'Model.ChildrenModel': ChildrenModel
+    'Model.ChildrenModel': ChildrenModel,
+    'Model.BooleanIcon': BooleanIcon
   }
 }

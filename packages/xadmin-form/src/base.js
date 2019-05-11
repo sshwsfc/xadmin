@@ -44,11 +44,10 @@ const validateByFields = (errors, values, fields) => {
 
 const Form = (props) => {
   const { formKey, validate, fields, wrapProps } = props
-  const [ WrapForm, setFrom ] = useState(null)
 
-  useEffect(() => {
+  const WrapForm = React.useMemo(() => {
     const formConfig = config('redux-form-config')
-    const WrapForm = reduxForm({ 
+    return reduxForm({ 
       form: formKey,
       ...formConfig,
       ...wrapProps,
@@ -57,7 +56,6 @@ const Form = (props) => {
         return validateByFields(errors, values, fields)
       }
     })(BaseForm)
-    setFrom(WrapForm)
   }, [ formKey ])
 
   return WrapForm ? <WrapForm {...props}/> : null
@@ -65,9 +63,11 @@ const Form = (props) => {
 
 const SchemaForm = (props) => {
   const { formKey, schema, wrapProps } = props
-  const [ state, setFrom ] = useState({ WrapForm: null, fields: null })
 
-  useEffect(() => {
+  const { WrapForm, fields } = React.useMemo(() => {
+    if(!_.isPlainObject(schema)) {
+      return { WrapForm: null, fields: [] }
+    }
     const ajValidate = ajv.compile(schema)
     const fields = schemaConvert(schema).fields
     const formConfig = config('redux-form-config')
@@ -97,10 +97,9 @@ const SchemaForm = (props) => {
         return errors
       }
     })(BaseForm)
-    setFrom({ WrapForm, fields })
+    return { WrapForm, fields }
   }, [ formKey, schema ])
 
-  const { WrapForm, fields } = state
   return WrapForm && fields ? <WrapForm fields={fields} {...props}/> : null
 }
 

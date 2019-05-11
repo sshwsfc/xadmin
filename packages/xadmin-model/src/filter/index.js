@@ -15,9 +15,8 @@ const convert = (schema, options) => {
 
 const FilterForm = (props) => {
   const { formKey, filters, fieldProps, onSubmit, options } = props
-  const [ state, setFrom ] = React.useState({ WrapForm: null, fields: null })
 
-  React.useEffect(() => {
+  const { WrapForm, fields } = React.useMemo(() => {
     const fields = filters.map(filter => {
       const field = convert(filter.schema, { key: filter.key })
       return _.merge(field, filter.field, fieldProps)
@@ -30,10 +29,9 @@ const FilterForm = (props) => {
       ...(options && options.formProps)
     })(BaseForm)
 
-    setFrom({ WrapForm, fields })
+    return { WrapForm, fields }
   }, [ formKey, filters, fieldProps, options ])
 
-  const { WrapForm, fields } = state
   return WrapForm && fields ? <WrapForm fields={fields} {...props}/> : null
 }
 
