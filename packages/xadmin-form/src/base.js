@@ -113,10 +113,14 @@ const FormWrap = StoreWrap(Connect => (props) => {
   )
 })
 
-const useForm = props => {
-  const { state } = use('redux')
+const useForm = (props, select) => {
   const _reduxForm = React.useContext(ReduxFormContext)
-  return { ...props, form: _reduxForm, formState: _reduxForm.getFormState(state) }
+  const { dispatch, store, state, ...values } = select ? 
+    use('redux', state => select((_reduxForm ? _reduxForm.getFormState(state) : {}) || {})) : use('redux')
+
+  return { ...props, form: _reduxForm, ...values,
+    getFormState: React.useCallback(() => (_reduxForm ? _reduxForm.getFormState(store.getState()) : {}) || {}, [ _reduxForm, store ]),
+    formState: _reduxForm.getFormState(state) }
 }
 
 export {
