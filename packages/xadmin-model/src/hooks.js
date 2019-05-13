@@ -34,7 +34,7 @@ export default {
           data = { ...data, ...query }
         }
       }
-      return { data, loading: false }
+      return { data, loading: Boolean(!data && id) }
     })
   
     useEffect(() => {
