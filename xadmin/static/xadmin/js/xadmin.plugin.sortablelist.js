@@ -32,6 +32,8 @@
             update: function(event, ui) {
                 var $rows = $(this);
                 $("#save-order").on("click", function(e) {
+                    self = $(this);
+                    self.addClass('disabled');
                     $.ajax({
                         url: $(this).attr('post-url'),
                         method: 'POST',
@@ -40,7 +42,10 @@
                             expression: (/(.+)_(.+)/),
                         })
                     }).done(function () {
+                        self.removeClass('disabled'); // for safety
                         location.reload(true);
+                    }).fail(function () {
+                        self.removeClass('disabled');
                     });
                 }).show();
             }
