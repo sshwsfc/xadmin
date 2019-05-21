@@ -39,8 +39,9 @@
                             attribute: 'order-key',
                             expression: (/(.+)_(.+)/),
                         })
+                    }).done(function () {
+                        location.reload(true);
                     });
-                    location.reload(true);
                 }).show();
             }
         });
