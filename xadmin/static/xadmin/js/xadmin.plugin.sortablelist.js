@@ -40,7 +40,7 @@
                             expression: (/(.+)_(.+)/),
                         })
                     });
-                    location.reload();
+                    location.reload(true);
                 }).show();
             }
         });
