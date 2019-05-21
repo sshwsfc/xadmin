@@ -101,7 +101,7 @@ select.selectmultiple {
     max-width: 350px;
   }
   .select2-container, .selectize-control{
-    max-width: 600px;
+    max-width: 450px;
   }
 
   .form-actions.fixed{
