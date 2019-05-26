@@ -104,7 +104,7 @@ const Header = props => {
 const useActions = props => {
   const { canEdit, canDelete } = use('model.permission', props)
   const { onEdit } = use('model.event', props)
-  const { deletItem } = use('model.delete', props)
+  const { deleteItem } = use('model.delete', props)
 
   let actions = (props.actions || []).map((Action, i) => <Action key={`extra-action-${i}`} {...props} />)
   if(canEdit) {
@@ -112,7 +112,7 @@ const useActions = props => {
   }
   if(canDelete) {
     actions.push((
-      <Popconfirm key="action-delete" title={_t('Comfirm Delete') + '?'} onConfirm={()=>deletItem()} okText={_t('Delete')} cancelText={_t('Cancel')}>
+      <Popconfirm key="action-delete" title={_t('Comfirm Delete') + '?'} onConfirm={()=>deleteItem()} okText={_t('Delete')} cancelText={_t('Cancel')}>
         <Button key="action-delete" size="small" className="model-list-action" type="danger">{_t('Delete')}</Button>
       </Popconfirm>
     ))
@@ -136,7 +136,7 @@ const DataTableActionRender = props => {
   return <div style={{ width: '100%', textAlign: 'center' }}>{useActions(use('model.list.row', props))}</div>
 }
 
-const DataTable = useList(({ model, items, fields, size, onRow }) => {
+const DataTable = useList(({ model, items, fields, size, onRow, tableProps }) => {
   const { selected, onSelect, onSelectAll } = use('model.select')
 
   const lockedFields = model.lockedFields || []
@@ -192,6 +192,7 @@ const DataTable = useList(({ model, items, fields, size, onRow }) => {
       pagination={false}
       onRow={onRow}
       rowKey="id"
+      {...tableProps}
       //scroll={{ y: Math.min(730, (items.length + 1) * 40 + 36) }}
     />
   )

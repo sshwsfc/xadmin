@@ -1,6 +1,6 @@
 {
   "name": "xadmin-auth",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "Xadmin Auth",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
@@ -13,7 +13,6 @@
     "redux-auth-wrapper": "^2.1.0"
   },
   "peerDependencies": {
-    "react-bootstrap": "1",
     "redux-saga": "1",
     "xadmin": "2",
     "xadmin-form": "2",

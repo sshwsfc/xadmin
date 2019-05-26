@@ -39,7 +39,7 @@ export default {
   
     useEffect(() => {
       const { data } = state
-      if(!data && id) {
+      if((!data && id) || ( data && data.id != id) ) {
         setState({ data, loading: true })
         rest.get(id).then(payload => {
           setState({ data: payload, loading: false })
@@ -69,13 +69,13 @@ export default {
   'model.delete': props => {
     const { model, getModelState, modelDispatch } = use('model', props)
 
-    const deletItem = useCallback((id) => {
+    const deleteItem = useCallback((id) => {
       id = id || props.id
       const item = getModelState().items[id] || { id }
       modelDispatch({ type: 'DELETE_ITEM', item })
     }, [ model, props.id ])
 
-    return { ...props, model, deletItem }
+    return { ...props, model, deleteItem }
   },
   // Delete Model Item
   'model.getItems': props => {

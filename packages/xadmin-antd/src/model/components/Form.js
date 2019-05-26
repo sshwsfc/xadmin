@@ -4,7 +4,8 @@ import { Loading } from 'xadmin-ui'
 import { SchemaForm } from 'xadmin-form'
 import { use } from 'xadmin'
 
-const ModelForm = ({ data, title, schema, model, loading, saveItem, ...formProps }) => {
+const ModelForm = props => {
+  const { data, title, schema, model, loading, saveItem, ...formProps } = use('model.item', props)
   return loading ? <Loading /> : 
     (<SchemaForm 
       formKey={`model.${model.key}`}
@@ -16,4 +17,4 @@ const ModelForm = ({ data, title, schema, model, loading, saveItem, ...formProps
     )
 }
 
-export default (props) => <ModelForm {...use('model.item', props)} />
+export default ModelForm
