@@ -18,7 +18,7 @@ const AddModelBtn = () => {
     dispatch({ model, type: 'GET_ITEMS' })
   }
 
-  return canAdd ? (
+  return (canAdd && show) ? (
     <SchemaForm 
       formKey={`model.modalform.${model.key}`}
       schema={model}

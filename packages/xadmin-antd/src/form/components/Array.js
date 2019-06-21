@@ -8,7 +8,7 @@ const defaultItemsRender = ({ fields, meta: { touched, error }, field, fieldsBui
   const { items, label } = field
   return (
     <div>
-      <Button onClick={() => fields.push()}><Icon type="plus"/></Button>
+      <Button onClick={() => fields.push(items ? {} : null)}><Icon type="plus"/></Button>
       {fields.map((name, index) => {
         const removeBtn = (<Button size="small" onClick={(e) => { fields.remove(index); e.persist() }} style={{ float: 'right' }}><Icon type="delete"/></Button>)
         const fieldsComponent = fieldsBuilder(name, index, removeBtn)

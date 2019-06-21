@@ -27,13 +27,17 @@ const objectBuilder = (fields, render, option) => {
 }
 
 const fieldBuilder = (field, option, ...props) => {
-  const FieldComponent = field.component
-  const FieldGroup = field.group || (option && option.group ? option.group : C('Form.FieldGroup'))
-  
-  return (<Field key={field.key} name={field.name} label={field.label} 
-    normalize={field.normalize} parse={field.parse} format={field.format}
-    component={FieldWrapComponent} field={field} option={option} group={FieldGroup} fieldComponent={FieldComponent}
-    {...props} />)
+  if(field.render) {
+    return field.render(field, option, fieldBuilder, objectBuilder, ...props)
+  } else {
+    const FieldComponent = field.component
+    const FieldGroup = field.group || (option && option.group ? option.group : C('Form.FieldGroup'))
+    
+    return (<Field key={field.key} name={field.name} label={field.label} 
+      normalize={field.normalize} parse={field.parse} format={field.format}
+      component={FieldWrapComponent} field={field} option={option} group={FieldGroup} fieldComponent={FieldComponent}
+      {...props} />)
+  }
 }
 
 const prefixFieldKey = (field, prefix) => {

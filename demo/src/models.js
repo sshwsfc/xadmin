@@ -31,7 +31,8 @@ export default {
         format: 'email'
       },
       website: {
-        type: 'string'
+        type: 'string',
+        maxLength: 5
       },
       brithday: {
         type: 'string',
@@ -45,9 +46,10 @@ export default {
       address: {
         type: 'object',
         properties: {
-          street: { type: 'string' },
+          street: { type: 'string', maxLength: 5 },
           suite: { type: 'string' }
-        }
+        },
+        required:[ 'street', 'suite' ]
       },
       property: {
         type: 'array',
@@ -56,7 +58,8 @@ export default {
           properties: {
             name: { type: 'string' },
             value: { type: 'string' }
-          }
+          },
+          required:[ 'name' ]
         }
       }
     },
@@ -74,7 +77,7 @@ export default {
     editableFields: ['name', 'type', 'address.street'],
     batchChangeFields: ['website', 'brithday'],
     searchFields: [ 'name', 'email' ],
-    required: [ 'name', 'email', 'website' ],
+    required: [ 'name', 'email', 'website', 'address' ],
     readonly: [ 'id' ],
     listFields: [ 'id', 'name', 'email', 'type', 'website', 'address.street' ]
   },

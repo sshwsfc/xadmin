@@ -77,6 +77,7 @@ const SchemaForm = (props) => {
       ...wrapProps,
       validate: (values) => {
         const valid = ajValidate(_.omitBy(values, v=> v == null || v === undefined || v === ''))
+
         if(!valid) {
           const { i18n } = app.context
           if(i18n && ajvLocalize[i18n.language]) {
@@ -86,11 +87,12 @@ const SchemaForm = (props) => {
           }
         }
         let errors = valid ? {} : ajValidate.errors.reduce((prev, err) => {
-          if(err.dataPath.length > 1) {
-            prev[err.dataPath.substr(1)] = err.message
-          } else if(err.dataPath == '' && err.keyword == 'required') {
-            prev[err.params.missingProperty] = err.message
-          }
+          const path = [
+            err.dataPath.length > 1 ? err.dataPath.substr(1) : '',
+            err.keyword == 'required' && err.params.missingProperty
+          ].filter(Boolean).join('.')
+          _.set(prev, path, err.message)
+
           return prev
         }, {})
         errors = validateByFields(errors, values, fields)
