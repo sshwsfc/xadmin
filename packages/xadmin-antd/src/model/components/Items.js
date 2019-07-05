@@ -122,13 +122,22 @@ const useActions = props => {
 
 const useList = render => props => {
   const state = use('model.list', use('model', props))
-  const { loading, items } = state
+  const { loading, items, model } = state
   const list = render(state)
 
   if(loading) {
     return <Loading>{items.length > 0 ? list : null}</Loading>
   } else {
-    return items.length > 0 ? list : <Card><Empty style={{ marginBottom: '.5rem' }}>{_t('No Data')}</Empty></Card>
+    if(items.length > 0) {
+      return list
+    } else {
+      const EmptyComponent = model.components && model.components.DataEmpty
+      if(EmptyComponent) {
+        return <EmptyComponent />
+      } else {
+        return <Card><Empty style={{ marginBottom: '.5rem' }} description={_t('No Data')} /></Card>
+      }
+    }
   }
 }
 

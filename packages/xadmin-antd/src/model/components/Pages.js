@@ -1,5 +1,6 @@
 import { Button, Layout } from 'antd'
 import React from 'react'
+import _ from 'lodash'
 import { use } from 'xadmin'
 import { _t } from 'xadmin-i18n'
 import { ModelBlock } from 'xadmin-model'
@@ -15,7 +16,10 @@ const ModelListPage = ({ location }) => {
   const ItemsComponent = (model.components && model.components.DataList) || C('Model.DataTable')
   const query = location && location.query
 
-  const icon = model.icon || model.name
+  let icon = model.icon || model.name
+  if(_.isString(icon)) {
+    icon = <Icon name={icon}/>
+  }
   const title = model.title
 
   const renderActions = () => {
@@ -41,7 +45,7 @@ const ModelListPage = ({ location }) => {
   
   return (
     <Page className={`xadmin-model-list-${model.key}`} 
-      title={(<span><Icon name={icon}/> {title}</span>)} 
+      title={(<span>{icon} {title}</span>)} 
       subTitle={<ModelBlock name="model.list.nav" />}
       actions={renderActions()}>
       <ModelBlock name="model.list.submenu" />
