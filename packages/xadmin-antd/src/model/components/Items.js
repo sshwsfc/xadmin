@@ -181,7 +181,7 @@ const DataTable = useList(({ model, items, fields, size, onRow, tableProps }) =>
   })
 
   columns.push({
-    title: _t('Actions'),
+    title: '',
     key: '__action__',
     render: (val, item) => <DataTableActionRender key={item.id} fields={fields} id={item.id} />
   })

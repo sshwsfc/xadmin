@@ -115,11 +115,11 @@ const ColGroup = ({ label, meta, input, field, children }) => {
   const size = (field.option && field.option.groupSize) || attrs.groupSize || { 
     labelCol: {
       xs: { span: 24 },
-      sm: { span: 5 }
+      sm: { span: 8 }
     },
     wrapperCol: {
       xs: { span: 24 },
-      sm: { span: 18 }
+      sm: { span: 16 }
     }
   }
 
@@ -133,7 +133,7 @@ const ColGroup = ({ label, meta, input, field, children }) => {
 
   const controlComponent = children ? children : (<Input {...input} {...attrs} />)
   return (
-    <Col span={6}>
+    <Col span={8} xs={24} sm={12} md={12} lg={8} xl={8} xxl={6}>
       <Form.Item label={label} {...groupProps}>
         {controlComponent}
       </Form.Item>

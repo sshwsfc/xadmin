@@ -4,10 +4,10 @@ import React from 'react'
 
 class Page extends React.Component {
   render() {
-    const { title, subTitle, content, breadcrumb, extra, actions, tabs, footer } = this.props
+    const { title, subTitle, content, breadcrumb, extra, actions, tabs, footer, className, style, children, ...pageProps } = this.props
     
     return (
-      <div className={this.props.className} style={this.props.style}>
+      <div className={className} style={style}>
         <PageHeader
           title={title}
           subTitle={subTitle}
@@ -16,6 +16,7 @@ class Page extends React.Component {
           breadcrumb={breadcrumb}
           footer={footer}
           style={{ margin: 10 }}
+          {...pageProps}
         >
           { (content || extra) ? (
             <>
@@ -25,7 +26,7 @@ class Page extends React.Component {
           ): null }
         </PageHeader>
         <div style={{ margin: 10 }}>
-          {this.props.children}
+          {children}
         </div>
       </div>
     )

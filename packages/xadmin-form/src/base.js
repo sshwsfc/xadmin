@@ -11,7 +11,7 @@ import _ from 'lodash'
 import ajvLocalize from './locales'
 import { convert as schemaConvert } from './schema'
 
-const ajv = new Ajv({ allErrors: true, verbose: true })
+const ajv = new Ajv({ allErrors: true, verbose: true, formats: { datetime: /^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])\s+(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/ } })
 
 const BaseForm = (props) => {
   const { fields, render, option, component, children, handleSubmit, ...formProps } = props

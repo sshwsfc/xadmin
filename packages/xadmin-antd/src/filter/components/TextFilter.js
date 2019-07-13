@@ -62,13 +62,14 @@ class TextFilter extends React.Component {
   }
 
   render() {
-    const { input: { name, onBlur, onChange, ...inputProps }, field } = this.props
+    const { input: { name, onBlur, onChange, ...inputProps }, label, field } = this.props
     const { like, value } = this.state
     const { _t } = app.context
     const prefix = <Icon type={like ? 'file-search' : 'search'} onClick={()=>this.onLikeChange(!like)} style={{ color: 'rgba(0,0,0,.25)' }} />
     return (
       <Input { ...inputProps} {...field.attrs} value={value} prefix={prefix}
         onChange={e => this.onValueChange(e.target.value)}
+        placeholder={_t('Search {{label}}', { label })}
       />
     )
   }
@@ -79,7 +80,7 @@ class TextFilter extends React.Component {
 class SearchTextFilter extends TextFilter {
 
   render() {
-    const { input: { name, onBlur, onChange, ...inputProps }, onSubmit, field, option } = this.props
+    const { input: { name, onBlur, onChange, ...inputProps }, label, onSubmit, field, option } = this.props
     const { like, value } = this.state
     const { _t } = app.context
     const prefix = <Icon type={like ? 'file-search' : 'search'} onClick={()=>this.onLikeChange(!like)} style={{ color: 'rgba(0,0,0,.25)' }} />
@@ -88,6 +89,7 @@ class SearchTextFilter extends TextFilter {
       <Search { ...inputProps} {...field.attrs} value={value} prefix={prefix}
         onChange={e => this.onValueChange(e.target.value)}
         onSearch={value => { this.onValueChange(value); onSubmit && onSubmit() }}
+        placeholder={_t('Search {{label}}', { label })}
       />
     )
   }

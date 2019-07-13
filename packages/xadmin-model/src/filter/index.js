@@ -70,7 +70,7 @@ export default {
   hooks: {
     'model.list.filter': props => {
       const { store, dispatch } = use('redux')
-      const { data, model, modelState } = use('model', state => ({ data: state.wheres.filters }))
+      const { data, model, getModelState } = use('model', state => ({ data: state.wheres.filters }))
       const { name } = props
 
       const { filters, options, formKey } = React.useMemo(() => {
@@ -104,7 +104,7 @@ export default {
       }, [ model, name ])
 
       const resetFilter = React.useCallback(() => {
-        const formKey = `filter.${model.name}`
+        const formKey = `filter.${model.key || model.name}`
         const initial = _.isFunction(model.initialValues) ? model.initialValues() : model.initialValues
         const where = initial && initial.wheres && initial.wheres.filters || {}
         let values = _.get(store.getState(),`form.${formKey}.values`) || {}
@@ -132,14 +132,15 @@ export default {
             }
           })
         }
-
+        const modelState = getModelState()
         const wheres = (Object.keys(where).length > 0 ? 
           { ...modelState.wheres, filters: where } : _.omit(modelState.wheres, 'filters'))
 
         dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres })
-      }, [ store, model, name, modelState.wheres, modelState.filter ])
+      }, [ store, model, name ])
 
       const changeFilter = React.useCallback(() => {
+        const modelState = getModelState()
         const values = _.get(store.getState(),`form.filter.${model.name}.values`) || {}
         const where = Object.keys(values).reduce((prev, key) => {
           if(!_.isNil(values[key])) {
@@ -152,7 +153,7 @@ export default {
         const wheres = (Object.keys(where).length > 0 ? 
           { ...modelState.wheres, filters: where } : _.omit(modelState.wheres, 'filters'))
         dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres })
-      }, [ store, model, name, modelState.wheres ])
+      }, [ store, model, name ])
 
       React.useEffect(() => {
         if(model.filterDefault) {

@@ -163,6 +163,7 @@ const converters = [
           f.type = 'time'
           break
         case 'datetime':
+        case 'date-time':
           f.type = 'datetime'
           break
       }

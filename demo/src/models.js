@@ -40,8 +40,7 @@ export default {
       },
       loginTime: {
         type: 'string',
-        format: 'date-time',
-        convert: 'node-link'
+        format: 'datetime'
       },
       address: {
         type: 'object',
