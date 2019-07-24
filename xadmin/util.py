@@ -274,8 +274,9 @@ def model_ngettext(obj, n=None):
 def is_rel_field(name, model):
     if hasattr(name, 'split') and name.find("__") > 0:
         parts = name.split("__")
-        if parts[0] in model._meta.get_all_field_names():
-            return True
+        for field in model._meta.get_fields():
+            if parts[0] == field.name:
+                return True
     return False
 
 
