@@ -74,7 +74,7 @@ export default {
       const { name } = props
 
       const { filters, options, formKey } = React.useMemo(() => {
-        const formKey = `filter.${model.name}`
+        const formKey = `filter.${model.key || model.name}`
         const filter = model.filters && model.filters[name]
         let fields, options
   
@@ -104,7 +104,6 @@ export default {
       }, [ model, name ])
 
       const resetFilter = React.useCallback(() => {
-        const formKey = `filter.${model.key || model.name}`
         const initial = _.isFunction(model.initialValues) ? model.initialValues() : model.initialValues
         const where = initial && initial.wheres && initial.wheres.filters || {}
         let values = _.get(store.getState(),`form.${formKey}.values`) || {}
@@ -141,7 +140,7 @@ export default {
 
       const changeFilter = React.useCallback(() => {
         const modelState = getModelState()
-        const values = _.get(store.getState(),`form.filter.${model.name}.values`) || {}
+        const values = _.get(store.getState(),`form.${formKey}.values`) || {}
         const where = Object.keys(values).reduce((prev, key) => {
           if(!_.isNil(values[key])) {
             prev[key] = values[key]
@@ -157,11 +156,10 @@ export default {
 
       React.useEffect(() => {
         if(model.filterDefault) {
-          const form = `filter.${model.name}`
           const values = _.isFunction(model.filterDefault) ? model.filterDefault() : model.filterDefault
           dispatch({
             type: '@@redux-form/INITIALIZE',
-            meta: { form: form },
+            meta: { form: formKey },
             payload: values
           })
         }

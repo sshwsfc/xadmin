@@ -42,7 +42,7 @@ const ItemEditForm = props => {
 }
 
 const Item = props => {
-  const { item, value, field, schema, componentClass, wrap, editable } = use('model.list.item', props)
+  const { item, value, field, schema, componentClass, wrap, editable, ...itemProps } = use('model.list.item', props)
   const [ edit, setEdit ] = React.useState(false)
 
   const RawWrapComponent = wrap || 'span'
@@ -55,13 +55,13 @@ const Item = props => {
     )
   }
 
-  if(item == undefined || item == null || value == undefined || value == null) {
+  if(item == undefined || item == null) {
     return <WrapComponent><span className="text-muted">{_t('Null')}</span></WrapComponent>
   }
 
   if(componentClass) {
     const ItemComponent = componentClass
-    return <ItemComponent item={item} value={value} field={field} schema={schema} wrap={WrapComponent} />
+    return <ItemComponent item={item} value={value} field={field} schema={schema} wrap={WrapComponent} {...itemProps} />
   } else {
     return <WrapComponent>{value == undefined || value == null?<span className="text-muted">{_t('Null')}</span>:value}</WrapComponent>
   }
@@ -161,8 +161,9 @@ const DataTable = useList(({ model, items, fields, size, onRow, tableProps }) =>
       key: fieldName,
       dataIndex: fieldName,
       render: (value, item) => {
-        return <Item item={item} field={fieldName} />
-      }
+        return <Item item={item} field={fieldName} inList={true} />
+      },
+      ...field.column
     }
     if(field.level2) {
       if(columns.length > 0 &&
@@ -218,7 +219,7 @@ const DataListRender = props => {
       />
       {React.Children.toArray(fields.slice(2).map(field=>{
         return (
-          <Item item={item} field={field} value={item[field]} selected={selected} wrap={
+          <Item item={item} field={field} value={item[field]} selected={selected} inList={true} wrap={
             ({ children, ...props })=><div key={`item-${item.id}-${field}`} {...props}>{children}</div>
           } />
         )

@@ -47,10 +47,12 @@ const UserForgetPassword = ({ context: { _t } }) => ({
   properties: {
     email: {
       title: _t('Register Email'),
-      type: 'string'
+      type: 'string',
+      format: 'email'
     }
   },
-  required: [ 'email' ]
+  required: [ 'email' ],
+  form: [ 'email' ]
 })
 
 const UserResetPassword = ({ context: { _t } }) => ({ 

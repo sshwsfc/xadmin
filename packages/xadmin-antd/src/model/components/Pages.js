@@ -75,7 +75,7 @@ const ModelFormPage = ({ params, location: { query } }) => {
 
   return (
     <Page className={`xadmin-model-form-${model.key}`} 
-      title={title} 
+      title={title} onBack={()=>history.back()}
       subTitle={<ModelBlock name="model.edit.nav" />}
       actions={<ModelBlock name="model.edit.navbtn" />}>
       <ModelBlock name="model.form.before" />
@@ -104,7 +104,7 @@ const ModelDetailPage = ({ params }) => {
 
   return (
     <Page className={`xadmin-model-detail-${model.key}`} 
-      title={model.title}
+      title={model.title} onBack={()=>history.back()}
       subTitle={<ModelBlock name="model.detail.nav" />}
       actions={renderActions()}>
       <ModelBlock name="model.detail.before" />

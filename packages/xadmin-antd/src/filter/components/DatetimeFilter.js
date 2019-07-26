@@ -34,7 +34,7 @@ class DateRange extends React.Component {
 
   onChange = (fieldKey, newValue) => {
     const { onChange, value } = this.props.input
-    const format = this.props.field.datetimeFormat || 'YYYY-MM-DDTHH:mm:ssZ'
+    const format = this.props.field.datetimeFormat || 'YYYY-MM-DD HH:mm:ss'
 
     onChange({
       ...value,
