@@ -368,8 +368,7 @@ class AdminSite(object):
         # Gives plugins the ability to add your translation scripts.
         packages = getattr(settings, 'XADMIN_I18N_JAVASCRIPT_PACKAGES', [])
         try:
-            packages.extend(['django.conf', 
-                             'django.contrib.admin',
+            packages.extend(['django.contrib.admin',
                              'xadmin'])
         except AttributeError:
             raise ImproperlyConfigured('Expected list type as attribute '
