@@ -558,7 +558,11 @@ class Dashboard(CommAdminView):
                             try:
                                 widget = user_widgets.get(int(wid))
                                 if widget:
-                                    ws.append(self.get_widget(widget))
+                                    try:
+                                        ws.append(self.get_widget(widget))
+                                    except LookupError:
+                                        # remove invalid widget
+                                        widget.delete()
                             except Exception as e:
                                 import logging
                                 logging.error(e, exc_info=True)

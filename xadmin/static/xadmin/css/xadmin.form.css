@@ -83,7 +83,7 @@ select.selectmultiple {
   .input-group ~ .textinput,
   .input-group ~ .url-field
    {
-    max-width: 300px;
+    max-width: 450px;
   }
   .input-group.date{ max-width: 300px;}
   .input-group.time{ max-width: 180px;}
@@ -101,7 +101,7 @@ select.selectmultiple {
     max-width: 350px;
   }
   .select2-container, .selectize-control{
-    max-width: 300px;
+    max-width: 450px;
   }
 
   .form-actions.fixed{

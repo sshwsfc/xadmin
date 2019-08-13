@@ -358,14 +358,24 @@ class AdminSite(object):
         return self.get_urls(), self.name, self.app_name
 
     def i18n_javascript(self, request):
-        from django.views.i18n import JavaScriptCatalog
         """
         Displays the i18n JavaScript that the Django admin requires.
 
         This takes into account the USE_I18N setting. If it's set to False, the
         generated JavaScript will be leaner and faster.
         """
-        return JavaScriptCatalog.as_view(packages=['django.contrib.admin'])(request)
+        from django.views.i18n import JavaScriptCatalog
+        # Gives plugins the ability to add your translation scripts.
+        packages = getattr(settings, 'XADMIN_I18N_JAVASCRIPT_PACKAGES', [])
+        try:
+            packages.extend(['django.conf', 
+                             'django.contrib.admin',
+                             'xadmin'])
+        except AttributeError:
+            raise ImproperlyConfigured('Expected list type as attribute '
+                                       'in "XADMIN_I18N_JAVASCRIPT_PACKAGES"')
+        return JavaScriptCatalog.as_view(packages=packages)(request)
+
 
 # This global object represents the default admin site, for the common case.
 # You can instantiate AdminSite in your own code to create a custom admin site.
