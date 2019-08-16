@@ -71,8 +71,10 @@ export default {
     },
     itemActions: [ 
       (item) => <RelateAction item={item} />,
-      (item) => <C is="Model.ChildrenModel" model="Post" parent={item} refField="userId" />
+      (item) => <C is="Model.ChildrenModel" model="Post" parent={item} refField="userId" />,
+      'edit', 'delete'
     ],
+    // batchActions: null,
     editableFields: ['name', 'type', 'address.street'],
     batchChangeFields: ['website', 'brithday'],
     searchFields: [ 'name', 'email' ],

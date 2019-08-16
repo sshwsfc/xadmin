@@ -210,6 +210,24 @@ export default {
 
     return { ...props, loading, items, fields, selected }
   },
+  'model.actions': props => {
+    const { model } = use('model', props)
+    const modelActions = app.get('modelActions')
+    const actions = model.itemActions === undefined ? 
+      Object.keys(modelActions).filter(k => modelActions[k].default) : model.itemActions
+
+    const renderActions = React.useCallback(actProps => {
+      return actions ? actions.map((action, i) => {
+        const Action = _.isString(action) && modelActions[action] ? modelActions[action].component : action
+        if(Action) {
+          return <Action key={`model-action-${i}`} {...actProps} />
+        }
+        return null
+      }).filter(Boolean) : null
+    }, [ actions ])
+
+    return { ...props, actions, renderActions }
+  },
   'model.select': props => {
     const { selected, ids, modelDispatch, modelState } = 
       use('model', props, state => ({ selected: state.selected, ids: state.ids }))
@@ -251,7 +269,7 @@ export default {
       modelDispatch({ type: 'SELECT_ITEMS', item, selected })
     }, [ modelDispatch, item ])
 
-    return { ...props, selected, item, changeSelect, actions: model.itemActions }
+    return { ...props, selected, item, changeSelect, actions: model.itemActions || [ 'edit', 'delete' ] }
   },
   'model.list.header': props => {
     const { field, model, modelState, modelDispatch } = use('model', props)

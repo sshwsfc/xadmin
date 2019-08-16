@@ -1,4 +1,5 @@
 import React from 'react'
+import _ from 'lodash'
 import { SubmissionError } from 'xadmin-form'
 import { all, fork, put, call, cancelled, takeEvery } from 'redux-saga/effects'
 import app, { api, use } from 'xadmin'
@@ -61,17 +62,13 @@ function *handle_change_items({ model, items, value, promise, message }) {
 }
 
 export default {
-  blocks: {
-    'model.list.actions': [ 
-      (props) => {
-        const model = props.model
-        if(!!model.permission && !!model.permission.delete) {
-          return <C is="Model.BatchDelete" {...props} />
-        } else {
-          return null
-        }
-      }, 
-      (props) => {
+  items: {
+    modelBatchActions: { type: 'map' }
+  },
+  modelBatchActions: {
+    edit: {
+      default: true, 
+      component: (props) => {
         const model = props.model
         if(model.batchChangeFields && !!model.permission && !!model.permission.edit) {
           return <C is="Model.BatchChange" {...props} />
@@ -79,9 +76,38 @@ export default {
           return null
         }
       }
-    ]
+    },
+    delete: {
+      default: true, 
+      component: (props) => {
+        const model = props.model
+        if(!!model.permission && !!model.permission.delete) {
+          return <C is="Model.BatchDelete" {...props} />
+        } else {
+          return null
+        }
+      }
+    }
   },
   hooks: {
+    'model.batchActions': props => {
+      const { model } = use('model', props)
+      const modelActions = app.get('modelBatchActions')
+      const actions = model.batchActions === undefined ? 
+        Object.keys(modelActions).filter(k => modelActions[k].default) : model.batchActions
+  
+      const renderActions = React.useCallback(actProps => {
+        return actions ? actions.map((action, i) => {
+          const Action = _.isString(action) && modelActions[action] ? modelActions[action].component : action
+          if(Action) {
+            return <Action key={`model--batch-action-${i}`} {...actProps} />
+          }
+          return null
+        }).filter(Boolean) : null
+      }, [ actions ])
+  
+      return { ...props, actions, renderActions }
+    },
     'actons.batch_delete': props => {
       const { getModelState, modelDispatch } = use('model', props)
       const { canDelete } = use('model.permission', props)

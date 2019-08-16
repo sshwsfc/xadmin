@@ -5,7 +5,7 @@ import { app, Block, use } from 'xadmin'
 import { _t } from 'xadmin-i18n'
 import { SchemaForm } from 'xadmin-form'
 import { C, Loading } from 'xadmin-ui'
-import { Table, Empty, Menu, Dropdown, Icon, Form, List, Card, Button, Popconfirm, Checkbox, Popover } from 'antd'
+import { Table, Tooltip, Empty, Menu, Dropdown, Icon, Form, List, Card, Button, Popconfirm, Checkbox, Popover } from 'antd'
 
 const ItemEditFormLayout = (props) => {
   const { children, pristine, invalid, handleSubmit, submitting } = props
@@ -102,22 +102,8 @@ const Header = props => {
 }
 
 const useActions = props => {
-  const { canEdit, canDelete } = use('model.permission', props)
-  const { onEdit } = use('model.event', props)
-  const { deleteItem } = use('model.delete', props)
-
-  let actions = (props.actions || []).map((Action, i) => <Action key={`extra-action-${i}`} {...props} />)
-  if(canEdit) {
-    actions.push(<Button key="action-edit" size="small" className="model-list-action" onClick={() => onEdit(props.id)}>{_t('Edit')}</Button>)
-  }
-  if(canDelete) {
-    actions.push((
-      <Popconfirm key="action-delete" title={_t('Comfirm Delete') + '?'} onConfirm={()=>deleteItem()} okText={_t('Delete')} cancelText={_t('Cancel')}>
-        <Button key="action-delete" size="small" className="model-list-action" type="danger">{_t('Delete')}</Button>
-      </Popconfirm>
-    ))
-  }
-  return <Button.Group size="small" className="model-list-action">{actions}</Button.Group>
+  const { renderActions } = use('model.actions')
+  return <Button.Group size="small" className="model-list-action">{renderActions(props)}</Button.Group>
 }
 
 const useList = render => props => {
@@ -147,12 +133,16 @@ const DataTableActionRender = props => {
 
 const DataTable = useList(({ model, items, fields, size, onRow, tableProps }) => {
   const { selected, onSelect, onSelectAll } = use('model.select')
+  const { actions } = use('model.actions')
+  const { actions: batchActions } = use('model.batchActions')
 
   const lockedFields = model.lockedFields || []
   const columns = []
 
   fields.forEach((fieldName)=> {
     const field = getFieldProp(model, fieldName)
+    if(!field) return
+    
     const column = {
       field,
       width: field.width || undefined,
@@ -181,16 +171,17 @@ const DataTable = useList(({ model, items, fields, size, onRow, tableProps }) =>
     }
   })
 
-  columns.push({
-    title: '',
-    key: '__action__',
-    render: (val, item) => <DataTableActionRender key={item.id} fields={fields} id={item.id} />
-  })
+  if(actions && actions.length > 0)
+    columns.push({
+      title: '',
+      key: '__action__',
+      render: (val, item) => <DataTableActionRender key={item.id} fields={fields} id={item.id} />
+    })
 
-  const rowSelection = {
+  const rowSelection = batchActions && batchActions.length > 0 ? {
     selectedRowKeys: selected.map(r => r.id),
     onSelect, onSelectAll
-  }
+  } : undefined
 
   return (
     <Table
@@ -209,10 +200,10 @@ const DataTable = useList(({ model, items, fields, size, onRow, tableProps }) =>
 })
 
 const DataListRender = props => {
-  const { item, fields, selected, actions } = use('model.list.row', props)
+  const { item, fields, selected } = use('model.list.row', props)
 
   return (
-    <List.Item actions={[ useActions({ actions, ...props }) ]}>
+    <List.Item actions={[ useActions(props) ]}>
       <List.Item.Meta
         title={<Item item={item} field={fields[0]} value={item[fields[0]]} selected={selected} />}
         description={<Item item={item} field={fields[1]} value={item[fields[1]]} selected={selected} />}
@@ -244,7 +235,39 @@ const DataList = useList(({ model, items, fields, size }) => {
  
 const DataCard = DataTable
 
+const ActionEdit = props => {
+  const { canEdit } = use('model.permission', props)
+  const { onEdit } = use('model.event', props)
+
+  if(canEdit) {
+    return (<Tooltip placement="top" title={_t('Edit')}><Button key="action-edit" size="small" className="model-list-action" onClick={() => onEdit(props.id)}>
+      <Icon type="edit" />
+    </Button></Tooltip>)
+  }
+
+  return null
+}
+
+const ActionDelete = props => {
+  const { canDelete } = use('model.permission', props)
+  const { deleteItem } = use('model.delete', props)
+
+  if(canDelete) {
+    return (
+      <Popconfirm key="action-delete" title={_t('Comfirm Delete') + '?'} onConfirm={()=>deleteItem()} okText={_t('Delete')} cancelText={_t('Cancel')}>
+        <Tooltip placement="top" title={_t('Delete')}>
+          <Button key="action-delete" size="small" className="model-list-action" type="danger">
+            <Icon type="delete" />
+          </Button>
+        </Tooltip>
+      </Popconfirm>
+    )
+  }
+
+  return null
+}
+
 export default DataTable
 export {
-  Item, Header, DataTable, DataList, DataCard
+  Item, Header, DataTable, DataList, DataCard, ActionEdit, ActionDelete
 }

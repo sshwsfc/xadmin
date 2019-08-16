@@ -2,7 +2,7 @@
 import { ModelListPage, ModelFormPage, ModelDetailPage } from './components/Pages'
 import Pagination from './components/Pagination'
 import SubMenu from './components/SubMenu'
-import { DataTable, DataList, Item } from './components/Items'
+import { DataTable, DataList, Item, ActionEdit, ActionDelete } from './components/Items'
 import DataForm from './components/Form'
 import DataDetail from './components/Info'
 import ActionBar from './components/ActionBar'
@@ -31,6 +31,8 @@ export default {
     'Model.BatchChange': BatchChange,
     'Model.BatchDelete': BatchDelete,
     'Model.ChildrenModel': ChildrenModel,
-    'Model.BooleanIcon': BooleanIcon
+    'Model.BooleanIcon': BooleanIcon,
+    'Model.ActionEdit': ActionEdit,
+    'Model.ActionDelete': ActionDelete
   }
 }

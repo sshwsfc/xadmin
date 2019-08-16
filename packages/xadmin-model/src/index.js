@@ -12,7 +12,8 @@ const app = {
   name: 'xadmin.model',
   items: {
     models: { type: 'map' },
-    fieldRenders: { type: 'array' }
+    fieldRenders: { type: 'array' },
+    modelActions: { type: 'map' }
   },
   blocks: (app) => {
     const models = app.get('models')
@@ -85,7 +86,15 @@ const app = {
   effects: (app) => effects,
   mappers,
   hooks,
-  fieldRenders
+  fieldRenders,
+  modelActions: {
+    edit: {
+      default: true, component: C.lazy('Model.ActionEdit')
+    },
+    delete: {
+      default: true, component: C.lazy('Model.ActionDelete')
+    }
+  }
 }
 
 export { Model, ModelWrap, ModelBlock, ModelContext }
