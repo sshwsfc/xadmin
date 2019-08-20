@@ -1,3 +1,9 @@
+'''
+@Date: 2019-08-20 22:46:33
+@Author: Guan
+@Github: https://github.com/youguanxinqing
+@LastEditTime: 2019-08-20 23:15:55
+'''
 #coding:utf-8
 from __future__ import print_function
 import requests
@@ -73,8 +79,6 @@ class ThemePlugin(BaseAdminPlugin):
                 try:
                     headers = {"Accept": "application/json", "User-Agent": self.request.META['HTTP_USER_AGENT']}
                     content = requests.get("https://bootswatch.com/api/3.json", headers=headers)
-                    if six.PY3:
-                        content = content.text.decode()
                     watch_themes = json.loads(content.text)['themes']
                     ex_themes.extend([{'name': t['name'], 'description': t['description'], 'css': t['cssMin'],
                                        'thumbnail': t['thumbnail']} for t in watch_themes])
@@ -84,7 +88,7 @@ class ThemePlugin(BaseAdminPlugin):
                 cache.set(THEME_CACHE_KEY, json.dumps(ex_themes), 24 * 3600)
                 themes.extend(ex_themes)
 
-        nodes.append(loader.render_to_string('xadmin/blocks/comm.top.theme.html', {'themes': themes, 'select_css': select_css}))
+        nodes.append(loader.render_to_string('xadmin/blocks/comm.top.theme.html', {'themes': themes, 'select_csss': select_css}))
 
 
 site.register_plugin(ThemePlugin, BaseAdminView)
