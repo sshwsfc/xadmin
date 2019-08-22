@@ -227,20 +227,24 @@ class InlineModelAdmin(ModelFormAdminView):
         if readonly_fields:
             for form in instance:
                 form.readonly_fields = []
-                inst = form.save(commit=False)
-                if inst:
-                    instance_fields = dict([(f.name, f) for f in inst._meta.get_fields()])
+                try:
+                    # only a valid form can execute the save method
+                    form_instance = form.save(commit=False)
+                except ValueError:
+                    form_instance = form.instance
+                if form_instance:
+                    instance_fields = dict([(f.name, f) for f in form_instance._meta.get_fields()])
                     for readonly_field in readonly_fields:
                         value = None
                         label = None
                         if readonly_field in instance_fields:
                             label = instance_fields[readonly_field].verbose_name
-                            value = smart_text(getattr(inst, readonly_field))
-                        elif inspect.ismethod(getattr(inst, readonly_field, None)):
-                            value = getattr(inst, readonly_field)()
-                            label = getattr(getattr(inst, readonly_field), 'short_description', readonly_field)
+                            value = smart_text(getattr(form_instance, readonly_field))
+                        elif inspect.ismethod(getattr(form_instance, readonly_field, None)):
+                            value = getattr(form_instance, readonly_field)()
+                            label = getattr(getattr(form_instance, readonly_field), 'short_description', readonly_field)
                         elif inspect.ismethod(getattr(self, readonly_field, None)):
-                            value = getattr(self, readonly_field)(inst)
+                            value = getattr(self, readonly_field)(form_instance)
                             label = getattr(getattr(self, readonly_field), 'short_description', readonly_field)
                         if value:
                             form.readonly_fields.append({'label': label, 'contents': value})
