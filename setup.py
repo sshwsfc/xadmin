@@ -19,6 +19,7 @@ setup(
     install_requires=[
         'setuptools',
         'django>=1.9.0',
+        'requests',
         'django-crispy-forms>=1.6.0',
         'django-import-export>=0.5.1',
         'django-reversion>=2.0.0',
