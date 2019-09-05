@@ -1,7 +1,7 @@
 import React from 'react'
 import { Form, Input, Col } from 'antd'
 
-const FieldGroup = ({ label, meta, input, field, children }) => {
+const FieldGroup = ({ label, meta, input, field, tailLayout, children }) => {
   const attrs = field.attrs || {}
   const error = meta.touched && meta.error
   const extra = field.description || field.help
@@ -12,7 +12,7 @@ const FieldGroup = ({ label, meta, input, field, children }) => {
     },
     wrapperCol: {
       xs: { span: 24 },
-      sm: { span: 18 }
+      sm: { span: 19,  offset: tailLayout ? 5 : 0 }
     }
   }
 

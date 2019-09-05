@@ -34,6 +34,9 @@ export default {
         type: 'string',
         maxLength: 5
       },
+      superUser: {
+        type: 'boolean',
+      },
       brithday: {
         type: 'string',
         format: 'date'
@@ -66,7 +69,7 @@ export default {
     form: [ 'name', 'email', 'address', '*',
       { key: 'website', type: 'textarea', attrs: { rows: 5 } } ],
     filters: {
-      submenu: [ 'name', 'email', 'type' ],
+      submenu: [ 'name', 'email', 'type', 'superUser' ],
       //sidemenu: [ 'name' ]
     },
     itemActions: [ 
