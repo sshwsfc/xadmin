@@ -8,6 +8,10 @@ import { C, Icon, Page } from 'xadmin-ui'
 
 const { Content, Sider } = Layout
 
+const DefaultAddButton = ({ onAdd, children }) => (
+  <Button type="primary" onClick={onAdd}>{children}</Button>
+)
+
 const ModelListPage = ({ location }) => {
   const { model } = use('model')
   const { canAdd } = use('model.permission')
@@ -23,10 +27,11 @@ const ModelListPage = ({ location }) => {
   const title = model.title
 
   const renderActions = () => {
+    const AddButton = (model.components && model.components.AddButton) || C('Model.AddButton') || DefaultAddButton
     return (<>
       <ModelBlock name="model.list.navbtn" />
       { canAdd ?
-        (<Button type="primary" onClick={onAdd}><Icon name="plus"/> {_t('Add {{object}}', { object: model.title })}</Button>) : null
+        (<AddButton onAdd={onAdd}><Icon name="plus"/> {_t('Add {{object}}', { object: model.title })}</AddButton>) : null
       }
     </>)
   }
