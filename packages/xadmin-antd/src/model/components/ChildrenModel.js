@@ -9,7 +9,7 @@ import { C, Icon } from 'xadmin-ui'
 
 const ChildrenModel = props => {
   const [ show, setShow ] = React.useState(false)
-  const { parent, model, refFilter, refData, refField, modelProps, children, header, value, onClose, ...extProps } = props
+  const { parent, model, refFilter, refData, refField, modelProps, children, header, value, onClose, refreshTimeout, ...extProps } = props
   
   const handleCancel = () => {
     setShow(false)
@@ -22,7 +22,7 @@ const ChildrenModel = props => {
     parent,
     itemActions: [
       ...(cmodel.itemActions || []),
-      item => <EditChildrenModelBtn id={item.id}>{_t('Edit')}</EditChildrenModelBtn>
+      item => <EditChildrenModelBtn id={item.id} refData={refData} refreshTimeout={refreshTimeout}>{_t('Edit')}</EditChildrenModelBtn>
     ],
     permission: {
       ...cmodel.permission,
@@ -73,23 +73,39 @@ const AddChildrenModelBtn = props => {
   const [ show, setShow ] = React.useState(false)
   const { model, getItems } = use('model.getItems')
   const { canAdd } = use('model.permission')
-  const { refData } = props
+  const { refData, refreshTimeout } = props
+
+  const onSuccess = () => {
+    if(refreshTimeout) {
+      setTimeout(getItems, refreshTimeout)
+    } else {
+      getItems()
+    }
+  }
 
   return canAdd ? [
     <Button key={0} style={{ marginLeft: '.5rem' }} onClick={() => setShow(true)}>{_t('Add {{object}}', { object: model.title })}</Button>,
-    <ChildrenFormModel key={1} onSuccess={getItems} refData={refData} show={show} onClose={() => setShow(false)} />
+    <ChildrenFormModel key={1} onSuccess={onSuccess} refData={refData} show={show} onClose={() => setShow(false)} />
   ] : null
 }
 
 const EditChildrenModelBtn = props => {
   const [ show, setShow ] = React.useState(false)
   const { model, getItems } = use('model.getItems')
-  const { id, refData } = props
+  const { id, refData, refreshTimeout } = props
   const canChildEdit = !!model.permission && !!model.permission.childEdit
+
+  const onSuccess = () => {
+    if(refreshTimeout) {
+      setTimeout(getItems, refreshTimeout)
+    } else {
+      getItems()
+    }
+  }
 
   return canChildEdit && [
     <Button key={0} size="sm" className="model-list-action" onClick={() => setShow(true)}>{_t('Edit')}</Button>,
-    show ? <ChildrenFormModel key={1} onSuccess={getItems} id={id} refData={refData} show={show} onClose={() => {
+    show ? <ChildrenFormModel key={1} onSuccess={onSuccess} id={id} refData={refData} show={show} onClose={() => {
       setShow(false)
     }} /> : null
   ]

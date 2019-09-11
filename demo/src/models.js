@@ -74,7 +74,7 @@ export default {
     },
     itemActions: [ 
       (item) => <RelateAction item={item} />,
-      (item) => <C is="Model.ChildrenModel" model="Post" parent={item} refField="userId" />,
+      (item) => <C is="Model.ChildrenModel" model="Post" parent={item} refField="userId" refreshTimeout={3000} />,
       'edit', 'delete'
     ],
     // batchActions: null,

@@ -54,6 +54,9 @@ app
     auth: { can_signin: true, can_signup: true, can_reset_password: true, persist_type: 'session-storage' },
     date_format: {
       time: 'HH:mm:ss', date: 'YYYY-MM-DD', datetime: 'YYYY-MM-DD HH:mm:ss'
+    },
+    filter: {
+      textDefaultSearch: true
     }
   },
   components: {

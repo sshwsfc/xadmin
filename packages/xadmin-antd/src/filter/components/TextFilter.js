@@ -1,18 +1,21 @@
 import React from 'react'
-import app from 'xadmin'
+import { config } from 'xadmin'
 import _ from 'lodash'
+import { _t } from 'xadmin-i18n'
 import { Input, Icon } from 'antd'
 const Search = Input.Search
 
-class TextFilter extends React.Component {
+const useTextFilter = ({ input }) => {
+  const [ state, setState ] = React.useState({ like: true, value: null })
 
-  state = { like: true, value: null }
-
-  static getDerivedStateFromProps(props, state) {
-    let value = props.input.value
+  React.useEffect(() => {
+    let value = input.value
     let like = null
-
-    if(value && value.like !== undefined) {
+    
+    if(value == null || value == undefined || value == '') {
+      value = ''
+      like = state.like
+    } else if(value && value.like !== undefined) {
       value = value.like
       like = true
     } else {
@@ -20,105 +23,93 @@ class TextFilter extends React.Component {
     }
 
     if(state.like != like || state.value != value) {
-      return { like, value }
+      setState({ like, value })
     }
-    return null
-  }
+  }, [ input.value ])
 
-  componentDidMount() {
-    // this.onChange({ ...this.state, like: true })
-  }
+  React.useEffect(() => {
+    let like = config('filter') && config('filter').textDefaultSearch == true
+    setState({ like, value: state.value })
+  }, [])
 
-  onChange = ({ value, like }) => {
-    const { onChange } = this.props.input
+  const onChange = ({ value, like }) => {
     if(like) {
-      onChange({ like: value })
+      input.onChange({ like: value })
     } else {
-      onChange(value)
+      input.onChange(value)
     }
   }
 
-  onValueChange = value => {
-    const { onChange } = this.props.input
-    if(this.state.like) {
-      onChange({ like: value })
+  const onValueChange = value => {
+    if(state.like) {
+      input.onChange({ like: value })
     } else {
-      onChange(value)
+      input.onChange(value)
     }
   }
 
-  onLikeChange = (like) => {
-    const { onChange } = this.props.input
+  const onLikeChange = (like) => {
     if(like) {
-      onChange({ like: this.state.value })
+      input.onChange({ like: state.value })
     } else {
-      onChange(this.state.value)
+      input.onChange(state.value)
     }
   }
 
-  clear = () => {
-    const { onChange } = this.props.input
-    this.onValueChange(null)
-  }
+  const clear = () => onValueChange(null)
 
-  render() {
-    const { input: { name, onBlur, onChange, ...inputProps }, label, field } = this.props
-    const { like, value } = this.state
-    const { _t } = app.context
-    const prefix = <Icon type={like ? 'file-search' : 'search'} onClick={()=>this.onLikeChange(!like)} style={{ color: 'rgba(0,0,0,.25)' }} />
-    return (
-      <Input { ...inputProps} {...field.attrs} value={value} prefix={prefix}
-        onChange={e => this.onValueChange(e.target.value)}
-        placeholder={_t('Search {{label}}', { label })}
-      />
-    )
-  }
+  const prefix = <Icon type={state.like ? 'file-search' : 'search'} onClick={()=>onLikeChange(!state.like)} style={{ color: 'rgba(0,0,0,.25)' }} />
+
+  return { ...state, onChange, onValueChange, onLikeChange, clear, prefix }
+}
+
+const TextFilter = props => {
+
+  const { input: { name, onBlur, onChange, ...inputProps }, label, field } = props
+  const { value, prefix, onValueChange } = useTextFilter(props)
+
+  return (
+    <Input { ...inputProps} {...field.attrs} value={value} prefix={prefix}
+      onChange={e => onValueChange(e.target.value)}
+      placeholder={_t('Search {{label}}', { label })}
+    />
+  )
 
 }
 
 
-class SearchTextFilter extends TextFilter {
+const SearchTextFilter = props => {
 
-  render() {
-    const { input: { name, onBlur, onChange, ...inputProps }, label, onSubmit, field, option } = this.props
-    const { like, value } = this.state
-    const { _t } = app.context
-    const prefix = <Icon type={like ? 'file-search' : 'search'} onClick={()=>this.onLikeChange(!like)} style={{ color: 'rgba(0,0,0,.25)' }} />
-
-    return (
-      <Search { ...inputProps} {...field.attrs} value={value} prefix={prefix}
-        onChange={e => this.onValueChange(e.target.value)}
-        onSearch={value => { this.onValueChange(value); onSubmit && onSubmit() }}
-        placeholder={_t('Search {{label}}', { label })}
-      />
-    )
-  }
-
+  const { input: { name, onBlur, onChange, ...inputProps }, onSubmit, label, field } = props
+  const { value, prefix, onValueChange } = useTextFilter(props)
+  
+  return (
+    <Search { ...inputProps} {...field.attrs} value={value} prefix={prefix}
+      onChange={e => onValueChange(e.target.value)}
+      onSearch={value => { onValueChange(value); onSubmit && onSubmit() }}
+      placeholder={_t('Search {{label}}', { label })}
+    />
+  )
 }
 
-class SubmitOnChangeWrap extends React.Component {
+const SubmitOnChangeWrap = ({ input, ...props }) => {
+  const [ state, setState ] = React.useState({ value: null, typing: false })
 
-  state = { value: null, typing: false }
-
-  static getDerivedStateFromProps(props, state) {
+  React.useEffect(() => {
     if(!state.typing) {
-      return { value: props.input.value }
+      setState({ value: input.value, typing: false })
     }
-    return null
+  }, [ input.value ])
+
+
+  const onSubmit = () => {
+    input.onChange(state.value)
+    setState({ ...state, typing: false })
   }
 
+  const onChange = value => setState({ value, typing: true })
 
-  onSubmit = () => {
-    this.props.input.onChange(this.state.value)
-    this.setState({ typing: false })
-  }
-
-  onChange = value => this.setState({ value, typing: true })
-
-  render() {
-    const { input, ...props } = this.props
-    return <SearchTextFilter input={{ ...input, onChange: this.onChange, value: this.state.value }} {...props} onSubmit={this.onSubmit} />
-  }
+  return <SearchTextFilter input={{ ...input, onChange: onChange, value: state.value }} {...props} onSubmit={onSubmit} />
 }
 
 export default ({ option, ...props }) => {
