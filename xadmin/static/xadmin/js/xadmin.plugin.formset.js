@@ -62,6 +62,7 @@
                             updateRowIndex(forms.eq(i), i);
                         }
                     }
+                    $(document).trigger("formset:removed", [row]);
                     return false;
                 });
             };
@@ -100,6 +101,7 @@
                 $('#id_' + options.prefix + '-TOTAL_FORMS').val(formCount + 1);
                 // If a post-add callback was supplied, call it with the added form:
                 if (options.added) options.added(row, $$);
+                $(document).trigger("formset:added", [row]);
                 return false;
             });
         }
