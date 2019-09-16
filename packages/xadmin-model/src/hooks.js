@@ -193,6 +193,8 @@ export default {
     const { loading } = use('redux', state => ({ loading: state.loading && state.loading[`${model.key}.items`] }))
 
     useEffect(() => {
+      if(model.initQuery == false) return
+      
       let wheres
       const query = props && props.query
       if(query && Object.keys(query).length > 0) {

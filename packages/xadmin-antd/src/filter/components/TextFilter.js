@@ -2,35 +2,23 @@ import React from 'react'
 import { config } from 'xadmin'
 import _ from 'lodash'
 import { _t } from 'xadmin-i18n'
-import { Input, Icon } from 'antd'
+import { Input, Icon, Tooltip } from 'antd'
 const Search = Input.Search
 
 const useTextFilter = ({ input }) => {
-  const [ state, setState ] = React.useState({ like: true, value: null })
 
-  React.useEffect(() => {
-    let value = input.value
-    let like = null
-    
-    if(value == null || value == undefined || value == '') {
-      value = ''
-      like = state.like
-    } else if(value && value.like !== undefined) {
-      value = value.like
-      like = true
-    } else {
-      like = false
-    }
-
-    if(state.like != like || state.value != value) {
-      setState({ like, value })
-    }
-  }, [ input.value ])
-
-  React.useEffect(() => {
-    let like = config('filter') && config('filter').textDefaultSearch == true
-    setState({ like, value: state.value })
-  }, [])
+  let value = input.value
+  let like = null
+  
+  if(value == null || value == undefined || value == '') {
+    value = ''
+    like = config('filter') && config('filter').textDefaultSearch == true
+  } else if(value && value.like !== undefined) {
+    value = value.like
+    like = true
+  } else {
+    like = false
+  }
 
   const onChange = ({ value, like }) => {
     if(like) {
@@ -41,7 +29,7 @@ const useTextFilter = ({ input }) => {
   }
 
   const onValueChange = value => {
-    if(state.like) {
+    if(like) {
       input.onChange({ like: value })
     } else {
       input.onChange(value)
@@ -50,17 +38,17 @@ const useTextFilter = ({ input }) => {
 
   const onLikeChange = (like) => {
     if(like) {
-      input.onChange({ like: state.value })
+      input.onChange({ like: value })
     } else {
-      input.onChange(state.value)
+      input.onChange(value)
     }
   }
 
   const clear = () => onValueChange(null)
 
-  const prefix = <Icon type={state.like ? 'file-search' : 'search'} onClick={()=>onLikeChange(!state.like)} style={{ color: 'rgba(0,0,0,.25)' }} />
+  const prefix = <Tooltip title={_t(like ? 'Fuzzy search' : 'Exact Search')}><Icon type={like ? 'file-search' : 'search'} onClick={()=>onLikeChange(!like)} style={{ color: 'rgba(0,0,0,.25)' }} /></Tooltip>
 
-  return { ...state, onChange, onValueChange, onLikeChange, clear, prefix }
+  return { like, value, onChange, onValueChange, onLikeChange, clear, prefix }
 }
 
 const TextFilter = props => {

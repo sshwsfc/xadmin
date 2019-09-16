@@ -11,9 +11,11 @@ import relate from './model/relate'
 import filter from './filter'
 import auth from './auth'
 import effects from './effects'
+import locales from './locales'
 
 export default {
   name: 'xadmin.ui.antd',
+  locales,
   components: {
     Main, App, Page, Loading, Icon,
     Menu, 'Menu.Item': MenuItem,

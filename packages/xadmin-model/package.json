@@ -1,6 +1,6 @@
 {
   "name": "xadmin-model",
-  "version": "2.1.21",
+  "version": "2.1.22",
   "description": "Xadmin Model",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
