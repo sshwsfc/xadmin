@@ -28,16 +28,26 @@ const BaseForm = (props) => {
 }
 
 const validateByFields = (errors, values, fields) => {
+  const { _t } = app.context
+
   fields.forEach(field => {
+    const name = field.name
+    const value = _.get(values, name) || null
+    const orgErr = _.get(errors, name) || []
+
     if(_.isFunction(field.validate)) {
-      const name = field.name
-      const err = field.validate(_.get(values, field.name) || null, values)
+      const err = field.validate(value, values)
       if(_.isArray(err)) {
-        errors[name] = [ ...(errors[name] || []), ...err ]
+        _.set(errors, name, [ ...orgErr, ...err ])
       } else if(err) {
-        errors[name] = [ ...(errors[name] || []), err ]
+        _.set(errors, name, [ ...orgErr, err ])
+      }
+    } else if(field.required == true) {
+      if(value == null || value == undefined || value == '') {
+        _.set(errors, name, [ ...orgErr, _t('{{label}} is required', { label: field.label || name }) ])
       }
     }
+
   })
   return errors
 }

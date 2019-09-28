@@ -98,5 +98,6 @@
   "{{count}} records": "{{count}} 条数据",
   "{{name}} Detail": "{{name}}详情",
   "{{name}} List": "{{name}}列表",
-  "{{size}} per page": "每页{{size}}条"
+  "{{size}} per page": "每页{{size}}条",
+  "{{label}} is required": "{{label}}是必填项"
 }
