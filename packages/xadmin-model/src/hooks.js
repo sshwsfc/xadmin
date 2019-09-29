@@ -134,7 +134,7 @@ export default {
 
   // Model List Hooks
   'model.pagination': props => {
-    const { count, limit, skip, modelState, modelDispatch } = use('model', props,
+    const { count, limit, skip, getModelState, modelDispatch } = use('model', props,
       state => ({ 
         count: state.count, limit: state.filter.limit, skip: state.filter.skip 
       })
@@ -144,30 +144,32 @@ export default {
     const activePage = Math.floor(skip / limit) + 1
 
     const changePage = useCallback((page) => {
-      const pageSize = modelState.filter.limit
+      const filter = getModelState().filter
+      const pageSize = filter.limit
         , skip = pageSize * (page - 1)
-      modelDispatch({ type: 'GET_ITEMS', filter: { ...modelState.filter, skip: skip } })
-    }, [ modelState.filter, modelDispatch ] )
+      modelDispatch({ type: 'GET_ITEMS', filter: { ...filter, skip: skip } })
+    }, [ getModelState, modelDispatch ])
     
     return { ...props, items, activePage, changePage }
   },
   'model.count': props => use('model', props, state => ({ count: state.count })),
   'model.pagesize': props => {
-    const { size, modelState, modelDispatch } = use('model', props, state => ({ size: state.filter.limit }) )
+    const { size, getModelState, modelDispatch } = use('model', props, state => ({ size: state.filter.limit }) )
     const sizes = config('pageSizes', [ 15, 30, 50, 100 ])
 
     const setPageSize = useCallback((size) => {
-      modelDispatch({ type: 'GET_ITEMS', filter: { ...modelState.filter, limit: size, skip: 0 } })
-    }, [ modelState.filter, modelDispatch ] )
+      const filter = getModelState().filter
+      modelDispatch({ type: 'GET_ITEMS', filter: { ...filter, limit: size, skip: 0 } })
+    }, [ getModelState, modelDispatch ] )
 
     return { ...props, sizes, setPageSize, size }
   },
   'model.fields': props => {
-    const { selected, model, modelState, modelDispatch } = 
+    const { selected, model, getModelState, modelDispatch } = 
       use('model', props, state => ({ selected: state.filter.fields }))
 
     const changeFieldDisplay = useCallback(([ field, selected ]) => {
-      const filter = modelState.filter
+      const filter = getModelState().filter
       const fields = [].concat(filter.fields || [])
       const index = _.indexOf(fields, field)
 
@@ -179,7 +181,7 @@ export default {
       const list = Array.from(new Set([ ...model.listFields, ...Object.keys(model.properties) ]))
       modelDispatch({ type: 'GET_ITEMS', filter: { ...filter, 
         fields: list.filter(f => fields.indexOf(f) >= 0) } })
-    }, [ modelState.filter, modelDispatch, model ] )
+    }, [ getModelState, modelDispatch, model ] )
 
     return { ...props, fields: model.properties, changeFieldDisplay, selected }
 
