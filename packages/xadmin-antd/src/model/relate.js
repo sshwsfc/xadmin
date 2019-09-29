@@ -1,7 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import { _t } from 'xadmin-i18n'
-import { Button, Dropdown, Select, Menu, Spin } from 'antd'
+import { Button, Dropdown, Select, Menu, Spin, Empty } from 'antd'
 
 import app, { use } from 'xadmin'
 import { Icon } from 'xadmin-ui'
@@ -27,14 +27,14 @@ const AsyncSelect = props => {
       options = options.filter(opt => selected.indexOf(opt.key) == -1)
     }
     return options
-  }, [ data, extraProps.mode ])
+  }, [ data, extraProps.mode, value ])
 
   return (
     <Select
       showSearch
       labelInValue
       value={value ? value : ( isOptionSelected ? Object.values(data).filter(isOptionSelected) : undefined )}
-      notFoundContent={loading ? <div style={{ margin: '2px', textAlign: 'center' }}><Spin size="small" /></div> : null}
+      notFoundContent={loading ? <div style={{ margin: '2px', textAlign: 'center' }}><Spin size="small" /></div> : <Empty />}
       onSearch={loadOptions}
       onChange={onItemChange}
       filterOption={false}
