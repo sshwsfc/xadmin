@@ -46,6 +46,7 @@ export default [
       return ({ value, field, wrap: WrapComponent }) => {
         const fieldName = `${field}__items`
         const itemWrap = ({ children })=><span>{children}{', '}</span>
+        const lastItemWrap = ({ children })=><span>{children}</span>
         if(!_.isArray(value)) {
           if(_.isString(value)) {
             value = value.split(',')
@@ -53,8 +54,8 @@ export default [
             value = [ value ]
           }
         }
-        const renderValue = value ? value.map(item => {
-          return <C is="Model.DataItem" nest={true} item={{ [fieldName]: item }} field={fieldName} schema={schema.items} wrap={itemWrap} />
+        const renderValue = value ? value.map((item, index) => {
+          return <C is="Model.DataItem" nest={true} item={{ [fieldName]: item }} field={fieldName} schema={schema.items} wrap={value.length - 1 > index ? itemWrap : lastItemWrap} />
         }) : null
         return <WrapComponent>{renderValue}</WrapComponent>
       }
