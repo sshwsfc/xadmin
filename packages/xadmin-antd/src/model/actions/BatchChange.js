@@ -18,7 +18,7 @@ const BatchChangeBtn = props => {
       <SchemaForm key="actions_batch_change_form" formKey={`model_batch.${model.key}`} 
         schema={_.omit({
           ...model,
-          properties: _.pick(model.properties, fields),
+          properties: _.pick(model.properties, fields.map(f => f.split('.')[0])),
           form: model.form !== undefined ? model.form.filter(obj => {
             return obj == '*' || fields.indexOf(obj) >= 0 || fields.indexOf(obj.key) >= 0 }) : [ '*' ]
         }, 'required')}
