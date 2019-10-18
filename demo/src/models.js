@@ -79,7 +79,7 @@ export default {
     ],
     // batchActions: null,
     editableFields: ['name', 'type', 'address.street'],
-    batchChangeFields: ['website', 'brithday'],
+    batchChangeFields: ['website', 'brithday', 'address.street'],
     searchFields: [ 'name', 'email' ],
     required: [ 'name', 'email', 'website', 'address' ],
     readonly: [ 'id' ],

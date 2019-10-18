@@ -14,13 +14,13 @@ const BatchChangeBtn = props => {
   const onClose = () => setShow(false)
 
   const renderModel = () => {
+    const fs = fields.map(f => f.split('.')[0])
     return (
       <SchemaForm key="actions_batch_change_form" formKey={`model_batch.${model.key}`} 
         schema={_.omit({
           ...model,
-          properties: _.pick(model.properties, fields.map(f => f.split('.')[0])),
-          form: model.form !== undefined ? model.form.filter(obj => {
-            return obj == '*' || fields.indexOf(obj) >= 0 || fields.indexOf(obj.key) >= 0 }) : [ '*' ]
+          properties: _.pick(model.properties, fs),
+          form: model.form !== undefined ? fs.map(name => _.find(model.form, f => f && f.key == name) || name ) : [ '*' ]
         }, 'required')}
         onSubmit={onBatchChange}
         onSubmitSuccess={onClose}
