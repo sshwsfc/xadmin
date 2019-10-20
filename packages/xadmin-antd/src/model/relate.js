@@ -16,10 +16,10 @@ const AsyncSelect = props => {
     return prev
   }, {}), [ options ])
 
-  const onItemChange = (value) => {
-    onChange(_.isArray(value) ? value.map(({ key }) => 
-      data[key] || (value && _.find(value, v => v.id == key))).filter(Boolean) : 
-      data[value.key])
+  const onItemChange = (selectOpt) => {
+    onChange(_.isArray(selectOpt) ?
+      selectOpt.map(({ key }) => data[key] || _.find(value, v => v.key == key) || null).filter(Boolean) :
+      data[selectOpt.key])
   }
 
   const useOptions = React.useMemo(() => {
