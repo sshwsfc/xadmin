@@ -50,7 +50,7 @@ const Item = props => {
     return (
       <Popover content={(<ItemEditForm item={item} field={field} schema={schema} onClose={()=>setEdit(false)} />)} 
         trigger="click" onVisibleChange={setEdit} visible={edit} placement="right" >
-        <RawWrapComponent {...props} style={{ cursor: 'pointer' }}>{children}</RawWrapComponent>
+        <RawWrapComponent {...props} style={{ cursor: 'pointer' }}>{children} <Icon type="edit" /></RawWrapComponent>
       </Popover>
     )
   }

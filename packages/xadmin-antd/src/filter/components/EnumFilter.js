@@ -1,103 +1,41 @@
 import React from 'react'
 import _ from 'lodash'
-import { Checkbox } from 'antd'
-import app from 'xadmin'
+import { Select } from 'antd'
 
-export default class EnumFilter extends React.Component {
+const FilterEnum = props => {
+  const { input: { value, onChange }, field } = props
+  const placeholder = field && field.placeholder
+  const titleMap = field && field.titleMap
 
-  constructor(props, context) {
-    super(props, context)
-    const value = props.input.value
-    // like
-    if(value) {
-      if(typeof value != 'object') {
-        this.state = { checks: [ value ] }
-      } else {
-        this.state = { checks: [ ...value['inq'] ] }
-      }
-    } else {
-      this.state = { checks: [] }
+  const selectChange = values => {
+    let v = null
+    if (values.length > 1) {
+      v = { $in: values }
+    } else if (values.length > 0) {
+      v = values[0]
     }
+    onChange(v)
   }
-
-  getValue(e) {
-    const { checks } = this.state
-    if(checks.length > 1) {
-      return { inq: checks }
-    } else if(checks.length > 0) {
-      return checks[0]
-    } else {
-      return null
-    }
+  let seleted = []
+  // 初始化value
+  if (value && value != '') {
+    if (_.isString(value)) seleted = [ value ]
+    if (_.isObject(value)) seleted = value.$in
   }
-
-  onChange = (e, value) => {
-    const { onChange } = this.props.input
-    const { checks } = this.state
-    let newChecks = checks
-    if(e.target.checked) {
-      if(checks.indexOf(value) == -1) {
-        newChecks = [ ...checks, value ]
-      }
-    } else {
-      if(checks.indexOf(value) >= 0) {
-        newChecks = [ ..._.pull(checks, value) ]
-      }
-    }
-    if(newChecks != checks) {
-      this.setState({ checks: newChecks }, ()=>{
-        onChange(this.getValue())
-      })
-    }
-  }
-
-  clear = () => {
-    const { onChange } = this.props.input
-    this.setState({ checks: [] }, ()=>{
-      onChange(this.getValue())
-    })
-  }
-
-  shouldComponentUpdate(nextProps) {
-    return this.props != nextProps
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if(this.props != nextProps) {
-      const value = nextProps.input.value
-      // like
-      if(value) {
-        if(typeof value != 'object') {
-          this.setState({ checks: [ value ] })
-        } else {
-          this.setState({ checks: [ ...value['inq'] ] })
-        }
-      } else {
-        this.setState({ checks: [] })
-      }
-    }
-  }
-
-  render() {
-    const { input: { name, value, onBlur, onChange, ...inputProps }, field } = this.props
-    const { checks } = this.state
-    const { _t } = app.context 
-    return (
-      <>
-        <Checkbox key="check-clear" id="check-clear"
-          checked={checks.length==0} 
-          onChange={(e)=>{
-            if(e.target.checked) {
-              this.clear()
-            }
-          }} {...inputProps} >{_t('All')}</Checkbox>
-        {field.titleMap.map(option => { return (
-          <Checkbox key={option.name} id={option.name}
-            checked={checks.indexOf(option.value) >= 0} 
-            onChange={(e)=>this.onChange(e, option.value)}
-            {...inputProps} value={option.value} >{option.name}</Checkbox>) })}
-      </>
-    )
-  }
-
+  return (
+    <Select
+      mode="multiple"
+      style={{ width: '100%' }}
+      placeholder={placeholder ? placeholder : '请选择'}
+      value={seleted}
+      onChange={selectChange}
+    >
+      {titleMap && titleMap.length > 0 && titleMap.map(item => {
+        return <Select.Option key={item.value}>{item.name}</Select.Option>
+      })}
+    </Select>
+  )
 }
+
+export default FilterEnum
+

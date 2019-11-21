@@ -69,7 +69,7 @@ export default {
     form: [ 'name', 'email', 'address', '*',
       { key: 'website', type: 'textarea', attrs: { rows: 5 } } ],
     filters: {
-      submenu: [ 'name', 'email', 'type', 'superUser' ],
+      submenu: [ 'name', 'email', 'type', 'superUser', 'id' ],
       //sidemenu: [ 'name' ]
     },
     itemActions: [ 
