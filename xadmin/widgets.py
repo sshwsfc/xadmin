@@ -113,7 +113,7 @@ class AdminRadioFieldRenderer(forms.RadioSelect):
             yield AdminRadioInput(self.name, self.value, self.attrs.copy(), choice, i)
 
     def __getitem__(self, idx):
-        choice = self.choices[idx]  # Let the IndexError propogate
+        choice = self.choices[idx]  # Let the IndexError propagate
         return AdminRadioInput(self.name, self.value, self.attrs.copy(), choice, idx)
 
     def render(self):
