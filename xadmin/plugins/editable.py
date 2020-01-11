@@ -2,6 +2,7 @@ from django import template
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.db import models, transaction
 from django.forms.models import modelform_factory
+from django.forms import Media
 from django.http import Http404, HttpResponse
 from django.utils.encoding import force_text, smart_text
 from django.utils.html import escape, conditional_escape
@@ -32,7 +33,7 @@ class EditablePlugin(BaseAdminPlugin):
         return active
 
     def result_item(self, item, obj, field_name, row):
-        if self.list_editable and item.field and item.field.editable and (field_name in self.list_editable):            
+        if self.list_editable and item.field and item.field.editable and (field_name in self.list_editable):
             pk = getattr(obj, obj._meta.pk.attname)
             field_label = label_for_field(field_name, obj,
                                           model_admin=self.admin_view,
@@ -52,7 +53,12 @@ class EditablePlugin(BaseAdminPlugin):
     # Media
     def get_media(self, media):
         if self.editable_need_fields:
-            media = media + self.model_form.media + \
+
+            try:
+                m = self.model_form.media
+            except:
+                m = Media()
+            media = media + m +\
                 self.vendor(
                     'xadmin.plugin.editable.js', 'xadmin.widget.editable.css')
         return media
@@ -75,7 +81,7 @@ class EditPatchView(ModelFormAdminView, ListAdminView):
 
     def get_new_field_html(self, f):
         result = self.result_item(self.org_obj, f, {'is_display_first':
-                                  False, 'object': self.org_obj})
+                                                    False, 'object': self.org_obj})
         return mark_safe(result.text) if result.allow_tags else conditional_escape(result.text)
 
     def _get_new_field_html(self, field_name):
@@ -155,6 +161,7 @@ class EditPatchView(ModelFormAdminView, ListAdminView):
             result['errors'] = JsonErrorDict(form.errors, form).as_json()
 
         return self.render_response(result)
+
 
 site.register_plugin(EditablePlugin, ListAdminView)
 site.register_modelview(r'^(.+)/patch/$', EditPatchView, name='%s_%s_patch')
