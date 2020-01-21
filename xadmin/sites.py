@@ -229,8 +229,13 @@ class AdminSite(object):
         return update_wrapper(inner, view)
 
     def _get_merge_attrs(self, option_class, plugin_class):
-        return dict([(name, getattr(option_class, name)) for name in dir(option_class)
-                     if name[0] != '_' and not callable(getattr(option_class, name)) and hasattr(plugin_class, name)])
+        attrs = {}
+        for name in dir(option_class):
+            if name[0] != '_' and hasattr(plugin_class, name):
+                attr = getattr(option_class, name)
+                if not callable(attr):
+                    attrs[name] = attr
+        return attrs
 
     def _get_settings_class(self, admin_view_class):
         name = admin_view_class.__name__.lower()
@@ -249,14 +254,21 @@ class AdminSite(object):
             if option_classes:
                 attrs = {}
                 bases = [plugin_class]
+                plugin_class_name = plugin_class.__name__
+                meta_class_names = (plugin_class_name,
+                                    plugin_class_name.replace('Plugin', ''))
                 for oc in option_classes:
                     attrs.update(self._get_merge_attrs(oc, plugin_class))
-                    meta_class = getattr(oc, plugin_class.__name__, getattr(oc, plugin_class.__name__.replace('Plugin', ''), None))
-                    if meta_class:
-                        bases.insert(0, meta_class)
+                    for meta_name in meta_class_names:
+                        try:
+                            meta_class = getattr(oc, meta_name)
+                            if meta_class:
+                                bases.insert(0, meta_class)
+                        except AttributeError:
+                            continue
                 if attrs:
                     plugin_class = MergeAdminMetaclass(
-                        '%s%s' % (''.join([oc.__name__ for oc in option_classes]), plugin_class.__name__),
+                        '%s%s' % (''.join([oc.__name__ for oc in option_classes]), plugin_class_name),
                         tuple(bases), attrs)
             return plugin_class
         return merge_class
@@ -276,8 +288,7 @@ class AdminSite(object):
                     merge_opts.append(settings_class)
                 merge_opts.extend(opts)
                 ps = self._registry_plugins.get(klass, [])
-                plugins.extend(map(self._create_plugin(
-                    merge_opts), ps) if merge_opts else ps)
+                plugins.extend(map(self._create_plugin(merge_opts), ps) if merge_opts else ps)
         return plugins
 
     def get_view_class(self, view_class, option_class=None, **opts):
