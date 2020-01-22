@@ -264,6 +264,7 @@ class AdminSite(object):
                             meta_class = getattr(oc, meta_name)
                             if meta_class:
                                 bases.insert(0, meta_class)
+                                break
                         except AttributeError:
                             continue
                 if attrs:
