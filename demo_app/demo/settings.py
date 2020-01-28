@@ -50,6 +50,7 @@ LANGUAGE_CODE = 'en-us'
 LANGUAGES = (
     ('en', _('English')),
     ('zh-hans', _('Chinese')),
+    ('pt-br', _('Portuguese')),
 )
 
 SITE_ID = 1
@@ -149,9 +150,10 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.admin',
 
     'xadmin',
+
+    'django.contrib.admin',
     'crispy_forms',
     'reversion',
 
