@@ -128,7 +128,8 @@ export default {
       onAdd: () => app.go(`/app/model/${model.name}/add`),
       onSaved: () => (history && history.length > 1) && history.back() || app.go(`/app/model/${model.name}/list`),
       onBack: () => (history && history.length > 1) && history.back() || app.go(`/app/model/${model.name}/list`),
-      onEdit: (id) => app.go(`/app/model/${model.name}/${encodeURIComponent(id || props.id)}/edit`)
+      onEdit: (id) => app.go(`/app/model/${model.name}/${encodeURIComponent(id || props.id)}/edit`),
+      ...model.events
     }
   },
 
