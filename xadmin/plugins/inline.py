@@ -1,5 +1,7 @@
 import copy
 import inspect
+import six
+
 from django import forms
 from django.forms.formsets import all_valid, DELETION_FIELD_NAME
 from django.forms.models import inlineformset_factory, BaseInlineFormSet, modelform_defines_fields
@@ -7,7 +9,6 @@ from django.contrib.contenttypes.forms import BaseGenericInlineFormSet, generic_
 from django.template import loader
 from django.template.loader import render_to_string
 from django.contrib.auth import get_permission_codename
-from django.utils import six
 from django.utils.encoding import smart_text
 from crispy_forms.utils import TEMPLATE_PACK
 

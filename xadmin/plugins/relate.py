@@ -1,9 +1,9 @@
 # coding=UTF-8
 from itertools import chain
+import six
 
 from django.urls.base import reverse
 from django.db.models.options import PROXY_PARENTS
-from django.utils import six
 from django.utils.encoding import force_text
 from django.utils.encoding import smart_str
 from django.utils.safestring import mark_safe

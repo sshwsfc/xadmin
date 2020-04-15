@@ -1,4 +1,6 @@
 import operator
+import six
+
 from future.utils import iteritems
 from xadmin import widgets
 from xadmin.plugins.utils import get_context_dict
@@ -10,7 +12,6 @@ from django.db.models.fields import FieldDoesNotExist
 from django.db.models.constants import LOOKUP_SEP
 # from django.db.models.sql.constants import QUERY_TERMS
 from django.template import loader
-from django.utils import six
 from django.utils.encoding import smart_str
 from django.utils.translation import ugettext as _
 

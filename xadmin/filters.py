@@ -1,4 +1,6 @@
 from __future__ import absolute_import
+import six
+
 from django.db import models
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.encoding import smart_text
@@ -6,12 +8,10 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.template.loader import get_template
 from django.template.context import Context
-from django.utils import six
 from django.utils.safestring import mark_safe
 from django.utils.html import escape, format_html
 from django.utils.text import Truncator
 from django.core.cache import cache, caches
-
 from xadmin.views.list import EMPTY_CHANGELIST_VALUE
 from xadmin.util import is_related_field, is_related_field2
 import datetime
@@ -202,7 +202,7 @@ class ChoicesFieldListFilter(ListFieldFilter):
 
     def choices(self):
         yield {
-            'selected': self.lookup_exact_val is '',
+            'selected': self.lookup_exact_val == '',
             'query_string': self.query_string({}, [self.lookup_exact_name]),
             'display': _('All')
         }
@@ -548,7 +548,7 @@ class AllValuesFieldListFilter(ListFieldFilter):
 
     def choices(self):
         yield {
-            'selected': (self.lookup_exact_val is '' and self.lookup_isnull_val is ''),
+            'selected': (self.lookup_exact_val == '' and self.lookup_isnull_val == ''),
             'query_string': self.query_string({}, [self.lookup_exact_name, self.lookup_isnull_name]),
             'display': _('All'),
         }

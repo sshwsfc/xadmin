@@ -1,3 +1,5 @@
+import six
+
 from crispy_forms.utils import TEMPLATE_PACK
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
@@ -8,7 +10,6 @@ from django.forms.models import model_to_dict
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
-from django.utils import six
 from django.utils.encoding import force_text, smart_text
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst

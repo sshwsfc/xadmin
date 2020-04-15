@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 import copy
+import six
 
 from crispy_forms.utils import TEMPLATE_PACK
 from django import forms
@@ -10,7 +11,6 @@ from django.forms.models import modelform_factory
 from django.http import Http404
 from django.template import loader
 from django.template.response import TemplateResponse
-from django.utils import six
 from django.utils.encoding import force_text, smart_text
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
