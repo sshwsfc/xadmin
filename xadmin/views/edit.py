@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 import copy
+import six
 
 from crispy_forms.utils import TEMPLATE_PACK
 from django import forms
@@ -9,7 +10,6 @@ from django.db import models, transaction
 from django.forms.models import modelform_factory, modelform_defines_fields
 from django.http import Http404, HttpResponseRedirect
 from django.template.response import TemplateResponse
-from django.utils import six
 from django.utils.encoding import force_text
 from django.utils.html import escape
 from django.utils.text import capfirst, get_text_list

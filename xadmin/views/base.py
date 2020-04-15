@@ -2,6 +2,7 @@ import copy
 import functools
 import datetime
 import decimal
+import six
 from functools import update_wrapper
 from inspect import getfullargspec
 
@@ -16,7 +17,6 @@ from django.urls.base import reverse
 from django.http import HttpResponse
 from django.template import Context, Template
 from django.template.response import TemplateResponse
-from django.utils import six
 from django.utils.decorators import method_decorator, classonlymethod
 from django.utils.encoding import force_text, smart_text, smart_str
 from django.utils.functional import Promise
