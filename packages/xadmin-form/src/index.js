@@ -1,7 +1,7 @@
 import React from 'react'
-import { reducer as formReducer, SubmissionError, reduxForm, FieldArray } from 'redux-form'
 import Ajv from 'ajv'
 import { converters } from './schema'
+import { FieldArray } from 'react-final-form-arrays'
 
 import {
   BaseForm,
@@ -33,10 +33,6 @@ const app = {
       ajv.addFormat(args[0], args[1])
     })
   },
-  reducers: (app) => {
-    const plugins = app.get('form_reducer')
-    return { form: formReducer.plugin(plugins) }
-  },
   hooks: {
     form: useForm
   },
@@ -49,10 +45,8 @@ export {
   Form,
   SchemaForm,
   FormWrap,
-  reduxForm,
   fieldBuilder,
   objectBuilder,
   schemaConvert,
-  SubmissionError,
   FieldArray
 }

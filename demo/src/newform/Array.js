@@ -1,9 +1,16 @@
 import React from 'react'
-import { FieldArray } from 'xadmin-form'
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
-import { Card, Button } from 'antd'
-import { objectBuilder, prefixFieldKey } from 'xadmin-form/lib/builder'
+import { FieldArray, objectBuilder } from 'xadmin-newform'
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { Card, Button } from 'antd';
 import app from 'xadmin'
+
+const prefixFieldKey = (field, prefix) => {
+  const f = { ...field, key: prefix + field.key, name: prefix + field.name }
+  if(field.fields && field.fields.length > 0) {
+    f.fields = field.fields.map(cf => prefixFieldKey(cf, prefix))
+  }
+  return f
+}
 
 const defaultItemsRender = ({ fields, meta: { touched, error }, field, fieldsBuilder }) => {
   const { items, label } = field

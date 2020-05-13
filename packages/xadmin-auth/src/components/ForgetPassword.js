@@ -1,12 +1,13 @@
 import React from 'react'
-import { StoreWrap, app } from 'xadmin'
+import { use, app } from 'xadmin'
 import { Model } from 'xadmin-model'
 import { C } from 'xadmin-ui'
 
 import { UserForgetPassword } from '../models'
 
-export default StoreWrap('auth.forget_password')(({ onSuccess }) => {
+export default props => {
   const { _t } = app.context
+  const { onSuccess } = use('auth.forget_password', props)
   return (
     <Model schema={UserForgetPassword(app)}>
       <C is="Model.DataForm" 
@@ -16,4 +17,4 @@ export default StoreWrap('auth.forget_password')(({ onSuccess }) => {
       />
     </Model>
   )
-})
+}

@@ -68,6 +68,26 @@ export default {
     permission: { view: true, add: true, edit: true, delete: true },
     form: [ 'name', 'email', 'address', '*',
       { key: 'website', type: 'textarea', attrs: { rows: 5 } } ],
+    formEffect: form => {
+
+      form.useField('type', state => {
+        if(state.value === 'Nomral') {
+          form.change('name', 'hi Nomral')
+          form.setFieldData('website', { display: false })
+        } else {
+          form.change('name', 'hi ' + state.value)
+          form.setFieldData('website', { display: true })
+        }
+      })
+
+      form.useEffect(({ values }) => {
+        const { email, type } = values
+        if(email && type === 'Super') {
+          form.change('name', 'hi Nomral')
+        }
+      }, [ 'values' ])
+
+    },
     filters: {
       submenu: [ 'name', 'email', 'type', 'superUser', 'id' ],
       //sidemenu: [ 'name' ]

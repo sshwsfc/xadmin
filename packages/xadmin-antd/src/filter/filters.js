@@ -1,6 +1,7 @@
 import React from 'react'
 import app from 'xadmin'
-import { Form, Row, Col, Input, Button, Icon, Card, Modal } from 'antd'
+import { FilterOutlined } from '@ant-design/icons'
+import { Row, Col, Form, Input, Button, Card, Modal } from 'antd'
 
 const FilterForm = ({ children, invalid, handleSubmit, submitting, options, resetFilter }) => {
   const { _t } = app.context
@@ -85,7 +86,7 @@ class FilterModal extends React.Component {
     return [
       (
         <Button key="filter-btn" onClick={()=>this.setState({ show: true })}>
-          <Icon type="filter" /> {_t('Filter')}
+          <FilterOutlined /> {_t('Filter')}
         </Button>
       ), (
         <Modal
@@ -97,7 +98,7 @@ class FilterModal extends React.Component {
           <Form onSubmit={handleSubmit}>{children}</Form>
         </Modal>
       )
-    ]
+    ];
   }
 
 }

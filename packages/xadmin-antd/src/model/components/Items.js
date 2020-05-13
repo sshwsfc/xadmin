@@ -5,7 +5,29 @@ import { app, Block, use } from 'xadmin'
 import { _t } from 'xadmin-i18n'
 import { SchemaForm } from 'xadmin-form'
 import { C, Loading } from 'xadmin-ui'
-import { Table, Tooltip, Empty, Menu, Dropdown, Icon, Form, List, Card, Button, Popconfirm, Checkbox, Popover } from 'antd'
+
+import {
+  CaretDownOutlined,
+  CaretUpOutlined,
+  CloseOutlined,
+  DeleteOutlined,
+  EditOutlined,
+} from '@ant-design/icons';
+
+import {
+  Table,
+  Tooltip,
+  Empty,
+  Menu,
+  Dropdown,
+  List,
+  Card,
+  Button,
+  Popconfirm,
+  Checkbox,
+  Popover,
+  Form
+} from 'antd';
 
 const ItemEditFormLayout = (props) => {
   const { children, pristine, invalid, handleSubmit, submitting } = props
@@ -50,9 +72,9 @@ const Item = props => {
     return (
       <Popover content={(<ItemEditForm item={item} field={field} schema={schema} onClose={()=>setEdit(false)} />)} 
         trigger="click" onVisibleChange={setEdit} visible={edit} placement="right" >
-        <RawWrapComponent {...props} style={{ cursor: 'pointer' }}>{children} <Icon type="edit" /></RawWrapComponent>
+        <RawWrapComponent {...props} style={{ cursor: 'pointer' }}>{children} <EditOutlined /></RawWrapComponent>
       </Popover>
-    )
+    );
   }
 
   if(item == undefined || item == null) {
@@ -76,18 +98,18 @@ const Header = props => {
 
     if(canOrder) {
       orderItems = [
-        <Menu.Item onClick={e=>{ changeOrder('ASC') }} key="ASC"><Icon type="caret-up" /> {_t('Sort ASC')}</Menu.Item>,
-        <Menu.Item onClick={e=>{ changeOrder('DESC') }} key="DESC"><Icon type="caret-down" /> {_t('Sort DESC')}</Menu.Item>
+        <Menu.Item onClick={e=>{ changeOrder('ASC') }} key="ASC"><CaretUpOutlined /> {_t('Sort ASC')}</Menu.Item>,
+        <Menu.Item onClick={e=>{ changeOrder('DESC') }} key="DESC"><CaretDownOutlined /> {_t('Sort DESC')}</Menu.Item>
       ]
       if(order != '') {
-        orderItems.push(<Menu.Item onClick={e=>{ changeOrder('') }}><Icon type="close" /> {_t('Clear order')}</Menu.Item>)
+        orderItems.push(<Menu.Item onClick={e=>{ changeOrder('') }}><CloseOutlined /> {_t('Clear order')}</Menu.Item>)
       }
     }
     return orderItems
   }
   const icon = {
-    'ASC' : <Icon type="caret-up" />,
-    'DESC' : <Icon type="caret-down" />
+    'ASC' : <CaretUpOutlined />,
+    'DESC' : <CaretDownOutlined />
   }[order] || ''
   const items = [ ...renderOrder(), ...(Block('model.list.header.menu') || []) ]
   
@@ -232,7 +254,7 @@ const DataList = useList(({ model, items, fields, size }) => {
     </Card>
   )
 })
- 
+
 const DataCard = DataTable
 
 const ActionEdit = props => {
@@ -240,9 +262,11 @@ const ActionEdit = props => {
   const { onEdit } = use('model.event', props)
 
   if(canEdit) {
-    return (<Tooltip placement="top" title={_t('Edit')}><Button key="action-edit" size="small" className="model-list-action" onClick={() => onEdit(props.id)}>
-      <Icon type="edit" />
-    </Button></Tooltip>)
+    return (
+      <Tooltip placement="top" title={_t('Edit')}><Button key="action-edit" size="small" className="model-list-action" onClick={() => onEdit(props.id)}>
+        <EditOutlined />
+      </Button></Tooltip>
+    );
   }
 
   return null
@@ -257,11 +281,11 @@ const ActionDelete = props => {
       <Popconfirm key="action-delete" title={_t('Comfirm Delete') + '?'} onConfirm={()=>deleteItem()} okText={_t('Delete')} cancelText={_t('Cancel')}>
         <Tooltip placement="top" title={_t('Delete')}>
           <Button key="action-delete" size="small" className="model-list-action" type="danger">
-            <Icon type="delete" />
+            <DeleteOutlined />
           </Button>
         </Tooltip>
       </Popconfirm>
-    )
+    );
   }
 
   return null

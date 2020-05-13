@@ -1,19 +1,18 @@
 import React from 'react'
-import { StoreWrap, app } from 'xadmin'
+import { use, app } from 'xadmin'
 import { Model } from 'xadmin-model'
 import { C } from 'xadmin-ui'
 
 import { UserSignIn } from '../models'
 
-const SignInForm = StoreWrap('auth.sign_in')(({ onSignIn }) => {
+const SignInForm = props => {
+  const { onSignIn } = use('auth.login', props)
   return (
-    <Model schema={UserSignIn(app)}>
-      <C is="Model.DataForm"
-        onSubmit={onSignIn}
-        component={C('Auth.Signin') || C('Auth.Form')}
-      />
-    </Model>
+    <C is="Model.DataForm"
+      onSubmit={onSignIn}
+      component={C('Auth.Signin') || C('Auth.Form')}
+    />
   )
-})
+}
 
-export default SignInForm
+export default props => <Model schema={UserSignIn(app)}><SignInForm {...props} /></Model>

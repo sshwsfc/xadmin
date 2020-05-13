@@ -2,7 +2,8 @@ import React from 'react'
 import { config } from 'xadmin'
 import _ from 'lodash'
 import { _t } from 'xadmin-i18n'
-import { Input, Icon, Tooltip } from 'antd'
+import { FileSearchOutlined, SearchOutlined } from '@ant-design/icons'
+import { Input, Tooltip } from 'antd'
 const Search = Input.Search
 
 const useTextFilter = ({ input }) => {
@@ -45,8 +46,8 @@ const useTextFilter = ({ input }) => {
   }
 
   const clear = () => onValueChange(null)
-
-  const prefix = <Tooltip title={_t(like ? 'Fuzzy search' : 'Exact Search')}><Icon type={like ? 'file-search' : 'search'} onClick={()=>onLikeChange(!like)} style={{ color: 'rgba(0,0,0,.25)' }} /></Tooltip>
+  const Icon = like ? FileSearchOutlined : SearchOutlined
+  const prefix = <Tooltip title={_t(like ? 'Fuzzy search' : 'Exact Search')}><Icon onClick={()=>onLikeChange(!like)} style={{ color: 'rgba(0,0,0,.25)' }} /></Tooltip>
 
   return { like, value, onChange, onValueChange, onLikeChange, clear, prefix }
 }

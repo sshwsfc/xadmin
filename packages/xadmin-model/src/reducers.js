@@ -1,6 +1,6 @@
 
 import _ from 'lodash'
-import { combineReducers } from 'redux'
+import { combineReducers } from './utils'
 
 const cacheDuration = 10 * 60 * 1000 // ten minutes
 
@@ -131,24 +131,4 @@ const reducers = combineReducers({
   }
 })
 
-const modelReducer = (state={}, action={}) => {
-  const model = action && action.model
-  if(!model) {
-    return state
-  }
-  const path = model.key || model.name
-  if(action.type == 'DESTROY') {
-    return _.omit(state, path)
-  }
-  const modelState = _.get(state, path) || {}
-  if(action.type == 'INITIALIZE' && !_.isEmpty(modelState)) {
-    return state
-  }
-  let result = reducers(modelState, action)
-  if(action.type == 'INITIALIZE' && action.initial) {
-    result = _.merge(result, action.initial)
-  }
-  return result === modelState ? state : { ..._.set(state, path, result) }
-}
-
-export default modelReducer
+export default reducers

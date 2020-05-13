@@ -1,8 +1,10 @@
 import React from 'react'
 import _ from 'lodash'
-import { Block, StoreWrap, app } from 'xadmin'
+import { Block, StoreWrap, app, use } from 'xadmin'
+import reducers from './reducers'
 
 const ModelContext = React.createContext(null)
+const ModelStateContext = React.createContext(null)
 
 const getModel = (name, key, props) => {
   const model = app.get('models')[name]
@@ -18,7 +20,6 @@ const getModel = (name, key, props) => {
 }
 
 const Model = ({ name, schema, modelKey, initialValues, children, props: modelProps }) => {
-  const [ state, setState ] = React.useState(null)
 
   const model = React.useMemo(() => {
     return name ? getModel(name, modelKey, modelProps) : {
@@ -28,27 +29,29 @@ const Model = ({ name, schema, modelKey, initialValues, children, props: modelPr
     }
   }, [ name, schema, modelKey ])
 
-  React.useEffect(() => () => {
-    if(model.persistent != true) {
-      setState('DESTROY')
-    }
-  }, [])
+  return <ModelProvider model={model} initialValues={initialValues}>{children}</ModelProvider>
+}
 
-  React.useEffect(() => {
-    if(state == null) {
-      let initial = initialValues
-      if(!initial && model.initialValues) {
-        initial = _.isFunction(model.initialValues) ? model.initialValues() : model.initialValues
-      }
-      app.context.store.dispatch({ type: 'INITIALIZE', model, initial })
-      setState('INITIALIZE')
-    } else if(state == 'DESTROY') {
-      app.context.store.dispatch({ type: 'DESTROY', model })
+const ModelProvider = ({ model, initialValues, children }) => {
+  const stateRef = React.useRef(null)
+  const [ state, dispatch ] = React.useReducer(reducers, {}, () => {
+    let initial = initialValues || {}
+    if(!initial && model.initialValues) {
+      initial = _.isFunction(model.initialValues) ? model.initialValues() : model.initialValues
     }
-  }, [ state ])
-  if(!model || state != 'INITIALIZE') return null
+    return reducers(initial, { type: 'INITIALIZE', model })
+  })
+  stateRef.current = state
 
-  return <ModelContext.Provider value={model}>{children}</ModelContext.Provider>
+  const getState = React.useCallback(() => stateRef.current, [])
+
+  return (
+    <ModelContext.Provider value={{ model, getState, dispatch }}>
+      <ModelStateContext.Provider value={state}>
+        {children}
+      </ModelStateContext.Provider>
+    </ModelContext.Provider>
+  )
 }
 
 const ModelWrap = StoreWrap(Connect => (props) => {
@@ -62,7 +65,7 @@ const ModelWrap = StoreWrap(Connect => (props) => {
 
 const ModelBlock = (props) => (
   <ModelContext.Consumer>
-    { model => (
+    { ({ model }) => (
       <Block model={model} {...props} >
         { blocks => {
           const modelBlock = model && model.blocks && model.blocks[props.name]
@@ -79,6 +82,7 @@ const ModelBlock = (props) => (
 
 export {
   ModelContext,
+  ModelStateContext,
   ModelWrap,
   ModelBlock,
   Model

@@ -1,12 +1,13 @@
 {
   "name": "xadmin-antd",
-  "version": "2.1.41",
+  "version": "3.0.0",
   "description": "Xadmin Antd UI",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
   "license": "MIT",
   "dependencies": {
-    "antd": "^3.20.3",
+    "@ant-design/icons": "^4.0.3",
+    "antd": "^4.0.3",
     "lodash": "^4.17.11",
     "react-fontawesome": "^1.6.1",
     "redux-saga": "^1.0.2"

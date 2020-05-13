@@ -80,14 +80,14 @@ const converters = [
     f.schema = schema
     lookup[f.key] = f
 
-    return f
+    return { ...f, ...schema.field }
   },
   // object
   (f, schema, options) => {
     if(stripNullType(schema.type) === 'object') {
       f.type = 'fieldset'
 
-      const props = schema.properties
+      const props = schema.properties || {}
       const opts = { ...options }
 
       opts.required = schema.required || []
@@ -122,7 +122,7 @@ const converters = [
         return props[key] !== undefined ? _.merge(convert(props[key], opts), form[key] || {}) : form[key]
       })
 
-      f.render = schema.form_render
+      f.render = schema.formRender
       f.fields = fields
     }
     return f

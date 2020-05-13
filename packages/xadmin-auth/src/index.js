@@ -2,6 +2,7 @@ import React from 'react'
 import localforage from 'localforage'
 import Cookies from 'js-cookie'
 import mappers from './mappers'
+import hooks from './hooks'
 import { App as BaseApp, C } from 'xadmin-ui'
 import SignInForm from './components/SignIn'
 import SignUpForm from './components/SignUp'
@@ -138,6 +139,7 @@ export default {
   models,
   effects,
   mappers,
+  hooks,
   reducers
 }
 

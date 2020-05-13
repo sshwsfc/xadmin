@@ -8,5 +8,5 @@ const CheckboxComponent = ({ input, label, field, meta, group: FieldGroup }) => 
     </FieldGroup>
   )
 }
-CheckboxComponent.withGroup = true
+CheckboxComponent.useGroup = false
 export default CheckboxComponent

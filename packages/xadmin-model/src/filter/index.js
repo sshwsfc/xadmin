@@ -1,7 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import app, { use } from 'xadmin'
-import { BaseForm, reduxForm } from 'xadmin-form'
+import { Form } from 'xadmin-form'
 import { C } from 'xadmin-ui'
 import { getFieldProp } from '../utils'
 import filter_converter from './filters'
@@ -14,25 +14,23 @@ const convert = (schema, options) => {
 }
 
 const FilterForm = (props) => {
-  const { formKey, filters, fieldProps, onSubmit, options } = props
+  const { filters, fieldProps, onSubmit, options, ...formProps } = props
 
-  const { WrapForm, fields } = React.useMemo(() => {
-    const fields = filters.map(filter => {
-      const field = convert(filter.schema, { key: filter.key })
-      return _.merge(field, filter.field, fieldProps)
-    })
-    const WrapForm = reduxForm({ 
-      form: formKey,
-      destroyOnUnmount: false,
-      enableReinitialize: true,
-      onChange: (options && options.submitOnChange == true) ? onSubmit : undefined,
-      ...(options && options.formProps)
-    })(BaseForm)
+  const fields = filters.map(filter => {
+    const field = convert(filter.schema, { key: filter.key })
+    return _.merge(field, filter.field, fieldProps)
+  })
 
-    return { WrapForm, fields }
-  }, [ formKey, filters, fieldProps, options ])
+  if(!fields) {
+    return null
+  }
 
-  return WrapForm && fields ? <WrapForm fields={fields} {...props}/> : null
+  const effects = (options && options.submitOnChange == true) ? 
+    (form) => {
+
+    } : undefined
+
+  return <Form fields={fields} onSubmit={onSubmit} {...formProps} />
 }
 
 const BaseFilter = props => {
@@ -69,8 +67,8 @@ export default {
   },
   hooks: {
     'model.list.filter': props => {
-      const { store, dispatch } = use('redux')
-      const { data, model, getModelState } = use('model', state => ({ data: state.wheres.filters }))
+      const { data, model, getState } = use('model', state => ({ data: state.wheres.filters }))
+      const { getItems } = use('model.getItems')
       const { name } = props
 
       const { filters, options, formKey } = React.useMemo(() => {
@@ -106,41 +104,17 @@ export default {
       const resetFilter = React.useCallback(() => {
         const initial = _.isFunction(model.initialValues) ? model.initialValues() : model.initialValues
         const where = initial && initial.wheres && initial.wheres.filters || {}
-        let values = _.get(store.getState(),`form.${formKey}.values`) || {}
-        values = { ...values, ...where }
-        const cf = []
-        Object.keys(values).forEach(field => {
-          if(where[field] !== undefined) {
-            dispatch({
-              type: '@@redux-form/CHANGE',
-              meta: {
-                form: formKey, field: field
-              },
-              payload: where[field]
-            })
-          } else {
-            cf.push(field)
-          }
-        })
-        if(cf.length > 0) {
-          dispatch({
-            type: '@@redux-form/CLEAR_FIELDS',
-            meta: {
-              form: formKey,
-              fields: cf
-            }
-          })
-        }
-        const modelState = getModelState()
+        //form.reset(where)
+
+        const modelState = getState()
         const wheres = (Object.keys(where).length > 0 ? 
           { ...modelState.wheres, filters: where } : _.omit(modelState.wheres, 'filters'))
 
-        dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres })
-      }, [ store, model, name ])
+        getItems({ ...modelState.filter, skip: 0 }, wheres )
+      }, [ model, name ])
 
-      const changeFilter = React.useCallback(() => {
-        const modelState = getModelState()
-        const values = _.get(store.getState(),`form.${formKey}.values`) || {}
+      const changeFilter = React.useCallback((values) => {
+        const modelState = getState()
         const where = Object.keys(values).reduce((prev, key) => {
           if(!_.isNil(values[key])) {
             prev[key] = values[key]
@@ -151,17 +125,13 @@ export default {
         }, { ...modelState.wheres.filters })
         const wheres = (Object.keys(where).length > 0 ? 
           { ...modelState.wheres, filters: where } : _.omit(modelState.wheres, 'filters'))
-        dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres })
-      }, [ store, model, name ])
+        getItems({ ...modelState.filter, skip: 0 }, wheres )
+      }, [ model, name ])
 
       React.useEffect(() => {
         if(model.filterDefault) {
           const values = _.isFunction(model.filterDefault) ? model.filterDefault() : model.filterDefault
-          dispatch({
-            type: '@@redux-form/INITIALIZE',
-            meta: { form: formKey },
-            payload: values
-          })
+          //form.reset(values)
         }
       }, [ model.filterDefault ])
 

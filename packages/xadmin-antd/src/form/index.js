@@ -25,9 +25,11 @@ export default {
     },
     number: {
       component: Text,
-      normalize: (value, previousValue) => {
-        const ret = parseFloat(value)
-        return Number.isNaN(ret) ? value : ret
+      format: (value) => {
+        return parseFloat(value)
+      },
+      parse: (value) => {
+        return value === '' || value == null ? undefined : value
       },
       attrs: {
         type: 'number',
@@ -38,9 +40,11 @@ export default {
     },
     integer: {
       component: Text,
-      normalize: (value, previousValue) => {
-        const ret = parseInt(value)
-        return Number.isNaN(ret) ? value : ret
+      format: (value) => {
+        return parseFloat(value)
+      },
+      parse: (value) => {
+        return value === '' || value == null ? undefined : value
       },
       attrs: {
         type: 'number',
@@ -54,9 +58,11 @@ export default {
     },
     numselect: {
       component: Select,
-      normalize: (value, previousValue) => {
-        const ret = parseFloat(value)
-        return Number.isNaN(ret) ? value : ret
+      format: (value) => {
+        return parseFloat(value)
+      },
+      parse: (value) => {
+        return value === '' || value == null ? undefined : value
       }
     },
     date: {

@@ -4,9 +4,9 @@ import App from './App'
 import Dashboard from './Dashboard'
 import Page from './Page'
 import Loading from './Loading'
-import { Icon as AntIcon } from 'antd'
+import { AlertOutlined } from '@ant-design/icons'
 
-const Icon = ({ name, ...props }) => <AntIcon type={name} {...props} />
+const Icon = ({ name, ...props }) => <AlertOutlined type={name} {...props} />
 
 export { Main, App, Page, Loading, Icon }
 export default {

@@ -1,11 +1,12 @@
 import React from 'react'
-import { StoreWrap, app } from 'xadmin'
+import { use, app } from 'xadmin'
 import { Model } from 'xadmin-model'
 import { C } from 'xadmin-ui'
 
 import { UserSignUp } from '../models'
 
-const SignUpForm = StoreWrap('auth.sign_up')(({ onSuccess }) => {
+const SignUpForm = props => {
+  const { onSuccess } = use('auth.sign_up', props)
   const { _t } = app.context
   return (
     <Model schema={UserSignUp(app)}>
@@ -15,6 +16,6 @@ const SignUpForm = StoreWrap('auth.sign_up')(({ onSuccess }) => {
       />
     </Model>
   )
-})
+}
 
 export default SignUpForm

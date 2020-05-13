@@ -18,12 +18,16 @@ import modalform from 'xadmin-model/lib/modalform'
 import search from 'xadmin-model/lib/search'
 import reldetail from 'xadmin-model/lib/reldetail'
 
+import newform from 'xadmin-newform'
 import components from 'xadmin-antd'
 //import components from 'xadmin-bootstrap'
 
 import models from './models'
-import themes from './themes'
+// import themes from './themes'
 import API from './api'
+
+import Fieldset from './newform/Fieldset'
+import ArrayWidget from './newform/Array'
 
 import 'moment/locale/zh-cn' 
 import 'antd/dist/antd.min.css'
@@ -34,6 +38,7 @@ app
 .use(ui)
 .use(loading)
 .use(form)
+.use(newform)
 //.use(themes)
 .use(model)
 .use(filter)
@@ -77,6 +82,14 @@ app
       method: {
         add: ({ dispatch }) => () => dispatch({ type: 'TEST_ADD' })
       }
+    }
+  },
+  newform_fields: {
+    fieldset: {
+      component: Fieldset
+    },
+    array: {
+      component: ArrayWidget
     }
   },
   models

@@ -1,7 +1,8 @@
 import React from 'react'
 import { StoreWrap, config as _c, Block, app } from 'xadmin'
 import { IsAuthenticated } from 'xadmin-auth'
-import { Layout, Menu, Breadcrumb, Icon } from 'antd'
+import { Layout, Menu, Breadcrumb } from 'antd'
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 
 const { Header, Content, Footer, Sider } = Layout
 const SubMenu = Menu.SubMenu
@@ -45,6 +46,7 @@ class App extends React.Component {
 
   render() {
     const { routes, params } = this.props
+    const Icon = this.state.collapsed ? MenuFoldOutlined : MenuUnfoldOutlined
     return (
       <Layout style={{ minHeight: '100vh' }}>
         <Sider
@@ -63,7 +65,6 @@ class App extends React.Component {
           <Header style={{ background: '#fff', boxShadow: 'rgba(0, 0, 0, 0.25) 0px 1px 3px', zIndex: 10 }}>
             <Icon
               className="trigger pull-left"
-              type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
               onClick={this.toggle}
               style={{ lineHeight: 'inherit', marginLeft: -40, fontSize: '1.2rem' }}
             />
@@ -82,7 +83,7 @@ class App extends React.Component {
           </Footer>
         </Layout>
       </Layout>
-    )
+    );
   }
 
 }

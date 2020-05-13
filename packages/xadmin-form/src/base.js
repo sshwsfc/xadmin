@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
-import { Field, reducer as formReducer, reduxForm } from 'redux-form'
-import { ReduxFormContext } from 'redux-form/es/ReduxFormContext'
 import { StoreWrap, app, config, use } from 'xadmin'
+import { Form as RForm, useForm as rUseForm } from 'react-final-form'
+import arrayMutators from 'final-form-arrays'
 import { C } from 'xadmin-ui'
 import { fieldBuilder, objectBuilder } from './builder'
 
@@ -11,11 +10,17 @@ import _ from 'lodash'
 import ajvLocalize from './locales'
 import { convert as schemaConvert } from './schema'
 
-const ajv = new Ajv({ allErrors: true, verbose: true, formats: { datetime: /^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])\s+(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/ } })
+const datetimeRegex = /^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])\s+(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/
+const ajv = new Ajv({ allErrors: true, verbose: true, formats: { datetime: datetimeRegex, 'date-time': datetimeRegex } })
 
 const BaseForm = (props) => {
-  const { fields, render, option, component, children, handleSubmit, ...formProps } = props
-  const build_fields = objectBuilder(fields, render, { ...option, ...formProps })
+  const { effect, fields, render, option, component, children, handleSubmit, ...formProps } = props
+  const { form } = use('form')
+
+  const build_fields = objectBuilder(fields, render, { form, ...option, ...formProps })
+
+  useEffect(() => effect && effect(form), [ form ])
+
   if(component) {
     const FormComponent = component
     return <FormComponent {...props} >{build_fields}</FormComponent>
@@ -53,85 +58,110 @@ const validateByFields = (errors, values, fields) => {
 }
 
 const Form = (props) => {
-  const { formKey, validate, fields, wrapProps } = props
+  const { validate, effect, fields, render, option, component, children, wrapProps, 
+    onChange, onSubmitSuccess, onSubmit, ...formProps } = props
+  const formConfig = config('form-config')
 
-  const WrapForm = React.useMemo(() => {
-    const formConfig = config('redux-form-config')
-    return reduxForm({ 
-      form: formKey,
-      ...formConfig,
-      ...wrapProps,
-      validate: (values) => {
-        let errors = validate ? validate(values) : {}
-        return validateByFields(errors, values, fields)
+  const mutators = { 
+    setFieldData: ([ name, data ], state) => {
+      const field = state.fields[name]
+      if (field) {
+        field.data = { ...field.data, ...data }
       }
-    })(BaseForm)
-  }, [ formKey ])
+    }
+  }
 
-  return WrapForm ? <WrapForm {...props}/> : null
+  const formEffect = form => {
+    if(onChange != undefined && typeof onChange === 'function') {
+      form.useEffect(({ values, modified }) => {
+        _.some(Object.values(modified)) && onChange(values)
+      }, [ 'values', 'modified' ])
+    }
+
+    if(onSubmitSuccess != undefined && typeof onSubmitSuccess === 'function') {
+      form.useEffect(({ submitSucceeded }) => {
+        submitSucceeded && onSubmitSuccess(form.getState().values)
+      }, [ 'submitSucceeded' ])
+    }
+
+    effect && effect(form)
+  }
+
+  return (<RForm validate={(values) => {
+    let errors = validate ? validate(values) : {}
+    return errors
+    // return validateByFields(errors, values, fields)
+  }} 
+  mutators={{
+    ...arrayMutators,
+    ...mutators
+  }}
+  onSubmit={onSubmit || (()=>{})}
+  subscription={{ submitting: true, pristine: true, invalid: true }}
+  {...formConfig} {...formProps} {...wrapProps}>
+    {props => <BaseForm {...props} effect={formEffect} fields={fields} render={render} option={option} component={component} children={children} />}
+  </RForm>)
 }
 
 const SchemaForm = (props) => {
-  const { formKey, schema, wrapProps } = props
+  const { schema } = props
 
-  const { WrapForm, fields } = React.useMemo(() => {
-    if(!_.isPlainObject(schema)) {
-      return { WrapForm: null, fields: [] }
-    }
-    const ajValidate = ajv.compile(schema)
-    const fields = schemaConvert(schema).fields
-    const formConfig = config('redux-form-config')
-    const WrapForm = reduxForm({ 
-      form: formKey,
-      ...formConfig,
-      ...wrapProps,
-      validate: (values) => {
-        const valid = ajValidate(_.omitBy(values, v=> v == null || v === undefined || v === ''))
+  if(!_.isPlainObject(schema)) {
+    return null
+  }
 
-        if(!valid) {
-          const { i18n } = app.context
-          if(i18n && ajvLocalize[i18n.language]) {
-            ajvLocalize[i18n.language](ajValidate.errors)
-          } else {
-            ajvLocalize['en'](ajValidate.errors)
-          }
-        }
-        let errors = valid ? {} : ajValidate.errors.reduce((prev, err) => {
-          const path = [
-            err.dataPath.length > 1 ? err.dataPath.substr(1) : '',
-            err.keyword == 'required' && err.params.missingProperty
-          ].filter(Boolean).join('.')
-          _.set(prev, path, err.message)
+  const ajValidate = ajv.compile(schema)
+  const { fields } = schemaConvert(schema)
+  
+  const validate = (values) => {
+    const valid = ajValidate(_.omitBy(values, v=> v == null || v === undefined || v === ''))
 
-          return prev
-        }, {})
-        errors = validateByFields(errors, values, fields)
-        return errors
+    if(!valid) {
+      const { i18n } = app.context
+      if(i18n && ajvLocalize[i18n.language]) {
+        ajvLocalize[i18n.language](ajValidate.errors)
+      } else {
+        ajvLocalize['en'](ajValidate.errors)
       }
-    })(BaseForm)
-    return { WrapForm, fields }
-  }, [ formKey, schema ])
+    }
+    let errors = valid ? {} : ajValidate.errors.reduce((prev, err) => {
+      const path = [
+        err.dataPath.length > 1 ? err.dataPath.substr(1) : '',
+        err.keyword == 'required' && err.params.missingProperty
+      ].filter(Boolean).join('.')
+      _.set(prev, path, err.message)
 
-  return WrapForm && fields ? <WrapForm fields={fields} {...props}/> : null
+      return prev
+    }, {})
+    //errors = validateByFields(errors, values, fields)
+    return errors
+  }
+
+  return <Form validate={validate} fields={fields} effect={schema.formEffect} {...props} />
 }
 
-const FormWrap = StoreWrap(Connect => (props) => {
-  const { state } = props.wrapContext
-  return (
-    <ReduxFormContext.Consumer>
-      { _reduxForm => <Connect {...props} wrapContext={{ ...props.wrapContext, form: _reduxForm, formState: _reduxForm.getFormState(state) }} /> }
-    </ReduxFormContext.Consumer>
-  )
-})
-
 const useForm = (props, select) => {
-  const _reduxForm = React.useContext(ReduxFormContext)
-  const { dispatch, store, state, ...values } = select ? 
-    use('redux', state => select((_reduxForm ? _reduxForm.getFormState(state) : {}) || {})) : use('redux')
+  const form = rUseForm()
 
-  return { ...props, form: _reduxForm, ...values,
-    getFormState: React.useCallback(() => (_reduxForm ? _reduxForm.getFormState(store.getState()) : {}) || {}, [ _reduxForm, store ]),
-    formState: _reduxForm.getFormState(state) }
+  form.useField = (name, subscriber, effects=[ 'value' ]) => {
+    form.registerField(name, subscriber, effects && effects.reduce((prev, ef) => {
+      prev[ef] = true; return prev
+    }, {}))
+  }
+
+  form.setFieldData = form.mutators.setFieldData
+
+  form.useEffect = (subscriber, effects=[ 'values' ]) => {
+    form.subscribe(subscriber, effects && effects.reduce((prev, ef) => {
+      prev[ef] = true; return prev
+    }, {}))
+  }
+
+  const formState = form.getState()
+
+  const values = select ? select(formState) : {}
+
+  return { ...props, ...values, form, getFormState: form.getState, formState }
 }
 
 export {
@@ -139,7 +169,6 @@ export {
   Form,
   SchemaForm,
   useForm,
-  FormWrap,
   fieldBuilder,
   objectBuilder,
   schemaConvert

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Block } from 'xadmin'
 
-import { Layout, Menu, Breadcrumb, Icon } from 'antd'
+import { Layout, Menu, Breadcrumb } from 'antd';
 const { Header, Content, Footer, Sider } = Layout
 const SubMenu = Menu.SubMenu
 

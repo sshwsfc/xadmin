@@ -1,7 +1,7 @@
 import React from 'react';
-import app, { StoreWrap } from 'xadmin';
-import { Page, Icon } from 'xadmin-ui';
-import { SchemaForm, FormWrap } from 'xadmin-form';
+import { StoreWrap } from 'xadmin';
+import { Page } from 'xadmin-ui';
+import { SchemaForm } from 'xadmin-form';
 import models from './models';
 
 class App extends React.Component {
@@ -17,14 +17,16 @@ class App extends React.Component {
   }
 
   render() {
-    const { _t } = app.context
     return (
       <Page title="Dashboard">
         <SchemaForm
           formKey="test"
           schema={models.User}
           initialValues={{ name: 'test' }}
-          onSubmit={console.log}
+          onSubmit={values => {
+            console.log(values)
+            return { username: '123' }
+          }}
         />
       </Page>
     );

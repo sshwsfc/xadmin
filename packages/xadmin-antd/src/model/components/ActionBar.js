@@ -1,6 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
-import { Dropdown, Button, Menu, Icon } from 'antd'
+import { DownOutlined } from '@ant-design/icons';
+import { Dropdown, Button, Menu } from 'antd';
 import { app, use } from 'xadmin'
 import { _t } from 'xadmin-i18n'
 
@@ -16,8 +17,8 @@ export default props => {
       </Menu>
     )}>
       <Button>
-        { count > 0 ? _t('{{count}} record selected', { count }) : _t('No data selected')} <Icon type="down" />
+        { count > 0 ? _t('{{count}} record selected', { count }) : _t('No data selected')} <DownOutlined />
       </Button>
     </Dropdown>
-  ) : null
+  ) : null;
 }
