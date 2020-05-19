@@ -32,7 +32,7 @@ const validateByFields = (errors, values, fields) => {
 
   fields.forEach(field => {
     const name = field.name
-    const value = _.get(values, name) || null
+    const value = _.get(values, name)
     const orgErr = _.get(errors, name) || []
 
     if(_.isFunction(field.validate)) {
@@ -43,7 +43,7 @@ const validateByFields = (errors, values, fields) => {
         _.set(errors, name, [ ...orgErr, err ])
       }
     } else if(field.required == true) {
-      if(value == null || value == undefined || value == '') {
+      if(value == null || value == undefined) {
         _.set(errors, name, [ ...orgErr, _t('{{label}} is required', { label: field.label || name }) ])
       }
     }
@@ -86,7 +86,7 @@ const SchemaForm = (props) => {
       ...formConfig,
       ...wrapProps,
       validate: (values) => {
-        const valid = ajValidate(_.omitBy(values, v=> v == null || v === undefined || v === ''))
+        const valid = ajValidate(_.omitBy(values, v=> v == null || v === undefined))
 
         if(!valid) {
           const { i18n } = app.context
