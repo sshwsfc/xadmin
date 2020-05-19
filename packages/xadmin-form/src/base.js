@@ -37,22 +37,22 @@ const validateByFields = (errors, values, fields) => {
 
   fields.forEach(field => {
     const name = field.name
-    const value = _.get(values, name) || null
-    const orgErr = _.get(errors, name) || []
 
-    if(_.isFunction(field.validate)) {
-      const err = field.validate(value, values)
-      if(_.isArray(err)) {
-        _.set(errors, name, [ ...orgErr, ...err ])
-      } else if(err) {
-        _.set(errors, name, [ ...orgErr, err ])
-      }
-    } else if(field.required == true) {
-      if(value == null || value == undefined || value == '') {
-        _.set(errors, name, [ ...orgErr, _t('{{label}} is required', { label: field.label || name }) ])
+    if(!_.get(errors, name)) {
+      const value = _.get(values, name)
+      if(_.isFunction(field.validate)) {
+        const err = field.validate(value, values)
+        if(_.isArray(err)) {
+          _.set(errors, name, err.join(' '))
+        } else if(err) {
+          _.set(errors, name, err.toString())
+        }
+      } else if(field.required == true) {
+        if(value == null || value == undefined) {
+          _.set(errors, name, _t('{{label}} is required', { label: field.label || name }))
+        }
       }
     }
-
   })
   return errors
 }
@@ -73,9 +73,12 @@ const Form = (props) => {
 
   const formEffect = form => {
     if(onChange != undefined && typeof onChange === 'function') {
-      form.useEffect(({ values, modified }) => {
-        _.some(Object.values(modified)) && onChange(values)
-      }, [ 'values', 'modified' ])
+      form.useEffect(({ values }) => {
+        const { dirty, modified } = form.getState()
+        if(dirty || _.some(Object.values(modified))) {
+          onChange(values)
+        }
+      }, [ 'values' ])
     }
 
     if(onSubmitSuccess != undefined && typeof onSubmitSuccess === 'function') {
@@ -89,8 +92,7 @@ const Form = (props) => {
 
   return (<RForm validate={(values) => {
     let errors = validate ? validate(values) : {}
-    return errors
-    // return validateByFields(errors, values, fields)
+    return validateByFields(errors, values, fields)
   }} 
   mutators={{
     ...arrayMutators,
@@ -114,7 +116,7 @@ const SchemaForm = (props) => {
   const { fields } = schemaConvert(schema)
   
   const validate = (values) => {
-    const valid = ajValidate(_.omitBy(values, v=> v == null || v === undefined || v === ''))
+    const valid = ajValidate(_.omitBy(values, v=> v == null || v === undefined))
 
     if(!valid) {
       const { i18n } = app.context

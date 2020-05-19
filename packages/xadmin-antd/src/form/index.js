@@ -29,7 +29,7 @@ export default {
         return parseFloat(value)
       },
       parse: (value) => {
-        return value === '' || value == null ? undefined : value
+        return value === '' || value == null ? undefined : parseFloat(value)
       },
       attrs: {
         type: 'number',
@@ -44,7 +44,7 @@ export default {
         return parseFloat(value)
       },
       parse: (value) => {
-        return value === '' || value == null ? undefined : value
+        return value === '' || value == null ? undefined : parseFloat(value)
       },
       attrs: {
         type: 'number',
@@ -62,7 +62,7 @@ export default {
         return parseFloat(value)
       },
       parse: (value) => {
-        return value === '' || value == null ? undefined : value
+        return value === '' || value == null ? undefined : parseFloat(value)
       }
     },
     date: {

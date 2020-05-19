@@ -101,7 +101,7 @@ export default {
     editableFields: ['name', 'type', 'address.street'],
     batchChangeFields: ['website', 'brithday', 'address.street'],
     searchFields: [ 'name', 'email' ],
-    required: [ 'name', 'email', 'website', 'address' ],
+    required: [ 'id', 'name', 'email', 'website', 'address' ],
     readonly: [ 'id' ],
     listFields: [ 'id', 'name', 'email', 'type', 'website', 'address.street' ]
   },
