@@ -12,7 +12,7 @@ import re
 
 
 class QuickFormPlugin(BaseAdminPlugin):
-    inline_field_pattern = re.compile('\w+-\d+-(?P<field>\w+)')
+    inline_field_pattern = re.compile(r'\w+-\d+-(?P<field>\w+)')
 
     def init_request(self, *args, **kwargs):
         if self.request.method == 'GET' and self.request.is_ajax() or self.request.GET.get('_ajax'):
