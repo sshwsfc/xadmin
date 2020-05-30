@@ -1,7 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import app, { use } from 'xadmin'
-import { BaseForm, reduxForm } from 'xadmin-form'
+import { Form } from 'xadmin-form'
 import { C } from 'xadmin-ui'
 import { getFieldProp } from '../utils'
 import filter_converter from './filters'
@@ -16,23 +16,17 @@ const convert = (schema, options) => {
 const FilterForm = (props) => {
   const { formKey, filters, fieldProps, onSubmit, options } = props
 
-  const { WrapForm, fields } = React.useMemo(() => {
-    const fields = filters.map(filter => {
-      const field = convert(filter.schema, { key: filter.key })
-      return _.merge(field, filter.field, fieldProps)
-    })
-    const WrapForm = reduxForm({ 
-      form: formKey,
-      destroyOnUnmount: false,
-      enableReinitialize: true,
-      onChange: (options && options.submitOnChange == true) ? onSubmit : undefined,
-      ...(options && options.formProps)
-    })(BaseForm)
+  const fields = React.useMemo(() => filters.map(filter => {
+    const field = convert(filter.schema, { key: filter.key })
+    return _.merge(field, filter.field, fieldProps)
+  }), [ filters, fieldProps ])
 
-    return { WrapForm, fields }
-  }, [ formKey, filters, fieldProps, options ])
+  const onChange = (options && options.submitOnChange == true) ? onSubmit : undefined
 
-  return WrapForm && fields ? <WrapForm fields={fields} {...props}/> : null
+  return fields ? (<Form formKey={formKey} fields={fields} onChange={onChange} wrapProps={{
+    destroyOnUnmount: false,
+    enableReinitialize: true
+  }}/>) : null
 }
 
 const BaseFilter = props => {
