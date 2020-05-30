@@ -3,7 +3,7 @@ import { Form, Input, Col } from 'antd'
 
 const FieldGroup = ({ label, meta, input, field, tailLayout, children }) => {
   const attrs = field.attrs || {}
-  const error = meta.touched && meta.error
+  const error = meta.touched && (meta.error || meta.submitError)
   const extra = field.description || field.help
   const size = (field.option && field.option.groupSize) || attrs.groupSize || { 
     labelCol: {
@@ -35,7 +35,7 @@ const FieldGroup = ({ label, meta, input, field, tailLayout, children }) => {
 
 const FieldTableGroup = ({ label, meta, input, field, nav, children }) => {
   const attrs = field.attrs || {}
-  const error = meta.touched && meta.error
+  const error = meta.touched && (meta.error || meta.submitError)
   const extra = field.description || field.help
   const size = (field.option && field.option.groupSize) || attrs.groupSize || { 
     labelCol: {
@@ -70,7 +70,7 @@ const FieldTableGroup = ({ label, meta, input, field, nav, children }) => {
 
 const InlineGroup = ({ label, meta, input, field, children }) => {
   const attrs = field.attrs || {}
-  const error = meta.touched && meta.error
+  const error = meta.touched && (meta.error || meta.submitError)
   const extra = field.description || field.help
   const groupProps = { extra, required: field.required }
 
@@ -90,7 +90,7 @@ const InlineGroup = ({ label, meta, input, field, children }) => {
 
 const SimpleGroup = ({ label, meta, input, field, children }) => {
   const attrs = field.attrs || {}
-  const error = meta.touched && meta.error
+  const error = meta.touched && (meta.error || meta.submitError)
   const extra = field.description || field.help
   const groupProps = { extra, required: field.required }
 
@@ -110,7 +110,7 @@ const SimpleGroup = ({ label, meta, input, field, children }) => {
 
 const ColGroup = ({ label, meta, input, field, children }) => {
   const attrs = field.attrs || {}
-  const error = meta.touched && meta.error
+  const error = meta.touched && (meta.error || meta.submitError)
   const extra = field.description || field.help
   const size = (field.option && field.option.groupSize) || attrs.groupSize || { 
     labelCol: {

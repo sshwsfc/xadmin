@@ -3,7 +3,7 @@ import { Form, Button, Card, Row, Modal } from 'antd'
 import app from 'xadmin'
 
 const FormLayout = props => {
-  const { children, invalid, handleSubmit, onDelete, schema, submitting } = props
+  const { children, invalid, handleSubmit, submitting } = props
   const { _t } = app.context
   const groupProps = {
     wrapperCol: {
