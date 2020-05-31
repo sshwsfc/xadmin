@@ -16,21 +16,14 @@ const convert = (schema, options) => {
 const FilterForm = (props) => {
   const { filters, fieldProps, onSubmit, options, ...formProps } = props
 
-  const fields = filters.map(filter => {
+  const fields = React.useMemo(() => filters.map(filter => {
     const field = convert(filter.schema, { key: filter.key })
     return _.merge(field, filter.field, fieldProps)
-  })
+  }), [ filters, fieldProps ])
 
-  if(!fields) {
-    return null
-  }
+  const onChange = (options && options.submitOnChange == true) ? onSubmit : undefined
 
-  const effects = (options && options.submitOnChange == true) ? 
-    (form) => {
-
-    } : undefined
-
-  return <Form fields={fields} onSubmit={onSubmit} {...formProps} />
+  return fields ? <Form fields={fields} onSubmit={onSubmit} onChange={onChange} {...formProps} /> : null
 }
 
 const BaseFilter = props => {
