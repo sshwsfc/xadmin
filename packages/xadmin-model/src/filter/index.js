@@ -14,7 +14,7 @@ const convert = (schema, options) => {
 }
 
 const FilterForm = (props) => {
-  const { formKey, filters, fieldProps, onSubmit, options } = props
+  const { formKey, filters, fieldProps, onSubmit, options, ...formProps } = props
 
   const fields = React.useMemo(() => filters.map(filter => {
     const field = convert(filter.schema, { key: filter.key })
@@ -25,8 +25,9 @@ const FilterForm = (props) => {
 
   return fields ? (<Form formKey={formKey} fields={fields} onChange={onChange} wrapProps={{
     destroyOnUnmount: false,
-    enableReinitialize: true
-  }}/>) : null
+    enableReinitialize: true,
+    ...(options && options.formProps)
+  }} {...formProps}/>) : null
 }
 
 const BaseFilter = props => {
