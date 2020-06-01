@@ -59,7 +59,7 @@ const validateByFields = (errors, values, fields) => {
 
 const Form = (props) => {
   const { validate, effect, fields, render, option, component, children, wrapProps, 
-    onChange, onSubmitSuccess, onSubmit, ...formProps } = props
+    onChange, onSubmitSuccess, onSubmit, data, ...formProps } = props
   const formConfig = config('form-config')
 
   const mutators = { 
@@ -87,6 +87,7 @@ const Form = (props) => {
       }, [ 'submitSucceeded' ])
     }
 
+    form.data = data
     effect && effect(form)
   }
 
