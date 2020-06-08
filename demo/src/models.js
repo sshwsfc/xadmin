@@ -1,4 +1,5 @@
 import React from 'react'
+import { use } from 'xadmin'
 import { RelateAction } from 'xadmin-model/lib/relate'
 import { C } from 'xadmin-ui'
 
@@ -13,7 +14,20 @@ export default {
     properties: {
       id: {
         type: 'number',
-        title: 'User ID'
+        title: 'User ID',
+        field: {
+          effect: ({ value }, form) => {
+            if(value === 1) {
+              form.setFieldData('type', { field: {
+                titleMap: [ { name: 'A', value: 'A' }, { name: 'B', value: 'B' } ]
+              }})
+            } else {
+              form.setFieldData('type', { field: {
+                titleMap: [ { name: 'C', value: 'C' }, { name: 'D', value: 'D' } ]
+              }})
+            }
+          }
+        }
       },
       name: {
         type: 'string',
@@ -28,7 +42,14 @@ export default {
       },
       email: {
         type: 'string',
-        format: 'email'
+        format: 'email',
+        // field: {
+        //   component: props => {
+        //     const { test } = use('form', state => ({ test: state.values && state.values.type }))
+        //     console.log(test)
+        //     return test || 'null'
+        //   }
+        // }
       },
       website: {
         type: 'string',

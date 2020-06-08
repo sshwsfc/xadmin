@@ -145,24 +145,30 @@ const SchemaForm = (props) => {
 
 const useForm = (props, select) => {
   const form = rUseForm()
-
-  form.useField = (name, subscriber, effects=[ 'value' ]) => {
-    form.registerField(name, subscriber, effects && effects.reduce((prev, ef) => {
-      prev[ef] = true; return prev
-    }, {}))
-  }
-
-  form.setFieldData = form.mutators.setFieldData
-
-  form.useEffect = (subscriber, effects=[ 'values' ]) => {
-    form.subscribe(subscriber, effects && effects.reduce((prev, ef) => {
-      prev[ef] = true; return prev
-    }, {}))
-  }
-
   const formState = form.getState()
+  const [ values, setValues ] = React.useState(select ? select(formState) : {})
 
-  const values = select ? select(formState) : {}
+  React.useEffect(() => {
+    form.useField = (name, subscriber, effects=[ 'value' ]) => {
+      form.registerField(name, subscriber, effects && effects.reduce((prev, ef) => {
+        prev[ef] = true; return prev
+      }, {}))
+    }
+  
+    form.setFieldData = form.mutators.setFieldData
+  
+    form.useEffect = (subscriber, effects=[ 'values' ]) => {
+      form.subscribe(subscriber, effects && effects.reduce((prev, ef) => {
+        prev[ef] = true; return prev
+      }, {}))
+    }
+  
+    if(select) {
+      form.subscribe(state => {
+        setValues(select(state))
+      }, { values: true })
+    }
+  }, [])
 
   return { ...props, ...values, form, getFormState: form.getState, formState }
 }

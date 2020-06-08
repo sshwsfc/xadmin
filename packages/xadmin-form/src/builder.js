@@ -5,20 +5,26 @@ import { C } from 'xadmin-ui'
 
 const FieldWrapComponent = ({ fieldComponent: FieldComponent, group: FieldGroup, ...props }) => {
   const { data } = props.meta
-  const { effect } = props.field
+  const { effect, formEffect, name } = props.field
   const { form } = use('form')
 
-  React.useEffect(() => effect && effect(form, props), [ form ])
+  React.useEffect(() => {
+    formEffect && formEffect(form, props)
+    if(effect) {
+      form.useField(name, state => effect(state, form, props.field))
+    }
+  }, [ form ])
 
   if(data.display === false) {
     return null
   }
+  const newField = (data.field) ? { ...props.field, ...data.field } : props.field
 
   return FieldComponent.useGroup === false ? (
-    <FieldComponent {...props} group={FieldGroup} />
+    <FieldComponent {...props} field={newField} group={FieldGroup} />
   ) : (
-    <FieldGroup {...props} >
-      <FieldComponent {...props} group={FieldGroup} />
+    <FieldGroup {...props} field={newField}>
+      <FieldComponent {...props} field={newField} group={FieldGroup} />
     </FieldGroup>
   )
 }

@@ -25,9 +25,6 @@ export default {
     },
     number: {
       component: Text,
-      format: (value) => {
-        return parseFloat(value)
-      },
       parse: (value) => {
         return value === '' || value == null ? undefined : parseFloat(value)
       },
@@ -40,9 +37,6 @@ export default {
     },
     integer: {
       component: Text,
-      format: (value) => {
-        return parseFloat(value)
-      },
       parse: (value) => {
         return value === '' || value == null ? undefined : parseFloat(value)
       },
@@ -58,9 +52,6 @@ export default {
     },
     numselect: {
       component: Select,
-      format: (value) => {
-        return parseFloat(value)
-      },
       parse: (value) => {
         return value === '' || value == null ? undefined : parseFloat(value)
       }
