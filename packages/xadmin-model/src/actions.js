@@ -1,7 +1,65 @@
 import React from 'react'
 import _ from 'lodash'
-import app, { use } from 'xadmin'
+import { SubmissionError } from 'xadmin-form'
+import { all, fork, put, call, cancelled, takeEvery } from 'redux-saga/effects'
+import app, { api, use } from 'xadmin'
 import { C } from 'xadmin-ui'
+
+function *handle_delete_items({ model, items, message }) {
+  yield put({ type: 'START_LOADING', model, key: `${model.key}.delete_items` })
+  const { _t } = app.context
+  const API = api(model)
+
+  try {
+    if(API.batchDelte) {
+      yield API.batchDelte(items.map(item=>item.id))
+    } else {
+      yield all(items.map(item => call([ API, API.delete ], item.id)))
+    }
+    for(let item of items) {
+      yield put({ type: 'SELECT_ITEMS', selected: false, item, model })
+    }
+    yield put({ type: 'GET_ITEMS', model })
+  } catch(err) {
+    app.error(err)
+  }
+
+  yield put({ type: 'END_LOADING', model, key: `${model.key}.delete_items` })
+}
+
+function *handle_change_items({ model, items, value, promise, message }) {
+  yield put({ type: 'START_LOADING', model, key: `${model.key}.save_items` })
+  const { _t } = app.context
+  const API = api(model)
+  let ret
+
+  try {
+    if(API.batchSave) {
+      ret = yield API.batchSave(items, value)
+    } else {
+      ret = yield all(items.map(item => call([ API, API.save ], { id: item.id, ...value }, true)))
+    }
+    yield put({ type: 'GET_ITEMS', model })
+
+    if(promise) {
+      promise.resolve(ret)
+    }
+
+    if( message !== false) {
+      const object = model.title || model.name
+      const noticeMessage = message || _t('Batch Save {{object}} success', { object })
+      yield put({ type: '@@xadmin/ADD_NOTICE', payload: {
+        type: 'success', headline: 'Success', message: noticeMessage
+      } }) 
+    }
+  } catch(err) {
+    app.error(err)
+    if(promise) {
+      promise.reject(err)
+    }
+  }
+  yield put({ type: 'END_LOADING', model , key: `${model.key}.save_items` })
+}
 
 export default {
   items: {
@@ -51,73 +109,36 @@ export default {
       return { ...props, actions, renderActions }
     },
     'actons.batch_delete': props => {
-      const { model, rest, getState, dispatch } = use('model', props)
-      const { getItems } = use('model.getItems')
+      const { getModelState, modelDispatch } = use('model', props)
       const { canDelete } = use('model.permission', props)
-      const { dispatch: put } = use('redux')
 
-      const batchDelete = React.useCallback(async () => {
-        const items = getState().selected
-        put({ type: 'START_LOADING', model, key: `${model.key}.delete_items` })
-        
-        try {
-          if(rest.batchDelte) {
-            await rest.batchDelte(items.map(item=>item.id))
-          } else {
-            await Promise.all(items.map(item => rest.delete(item.id)))
-          }
-          for(let item of items) {
-            dispatch({ type: 'SELECT_ITEMS', selected: false, item })
-          }
-          await getItems()
-        } catch(err) {
-          app.error(err)
-        }
-      
-        put({ type: 'END_LOADING', model, key: `${model.key}.delete_items` })
-      }, [ model ])
+      const onBatchDelete = () => {
+        const items = getModelState().selected
+        modelDispatch({ type: 'DELETE_ITEMS', items })
+      }
 
-      return { ...props, canDelete, batchDelete }
+      return { ...props, canDelete, onBatchDelete }
     },
     'actons.batch_change': props => {
+      const { model, getModelState, modelDispatch, successMessage } = use('model', props)
       const { canEdit } = use('model.permission', props)
-      const { model, rest, getState, successMessage: message } = use('model', props)
-      const { getItems } = use('model.getItems')
-      const { dispatch: put } = use('redux')
 
-      const batchChange = React.useCallback(async (value) => {
-        const items = getState().selected
+      const onBatchChange = (value) => {
+        const items = getModelState().selected
+        return new Promise((resolve, reject) => {
+          modelDispatch({ type: 'SAVE_ITEMS', items, value, promise: { resolve, reject }, message: successMessage })
+        }).catch(err => {
+          throw new SubmissionError(err.json)
+        })
+      }
 
-        put({ type: 'START_LOADING', model, key: `${model.key}.save_items` })
-
-        const { _t } = app.context
-        let ret
-
-        try {
-          if(rest.batchSave) {
-            ret = await rest.batchSave(items, value)
-          } else {
-            ret = await Promise.all(items.map(item => rest.save({ id: item.id, ...value }, true)))
-          }
-          await getItems()
-
-          if( message !== false) {
-            const object = model.title || model.name
-            const noticeMessage = message || _t('Batch Save {{object}} success', { object })
-            put({ type: '@@xadmin/ADD_NOTICE', payload: {
-              type: 'success', headline: 'Success', message: noticeMessage
-            } }) 
-          }
-        } catch(err) {
-          throw new Error(err.json)
-        }
-
-        put({ type: 'END_LOADING', model , key: `${model.key}.save_items` })
-
-        return ret
-      })
-
-      return { ...props, fields: model.batchChangeFields || [], canEdit, batchChange }
+      return { ...props, fields: model.batchChangeFields || [], canEdit, onBatchChange }
     }
+  },
+  effects: function *() {
+    yield all([
+      takeEvery(action => action.model && action.type == 'DELETE_ITEMS' && action.success !== true, handle_delete_items),
+      takeEvery(action => action.model && action.type == 'SAVE_ITEMS' && action.success !== true, handle_change_items)
+    ])
   }
 }

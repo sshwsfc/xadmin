@@ -60,8 +60,8 @@ export default {
   },
   hooks: {
     'model.list.filter': props => {
-      const { data, model, getState } = use('model', state => ({ data: state.wheres.filters }))
-      const { getItems } = use('model.getItems')
+      const { store, dispatch } = use('redux')
+      const { data, model, getModelState } = use('model', state => ({ data: state.wheres.filters }))
       const { name } = props
 
       const { filters, options, formKey } = React.useMemo(() => {
@@ -97,17 +97,41 @@ export default {
       const resetFilter = React.useCallback(() => {
         const initial = _.isFunction(model.initialValues) ? model.initialValues() : model.initialValues
         const where = initial && initial.wheres && initial.wheres.filters || {}
-        //form.reset(where)
-
-        const modelState = getState()
+        let values = _.get(store.getState(),`form.${formKey}.values`) || {}
+        values = { ...values, ...where }
+        const cf = []
+        Object.keys(values).forEach(field => {
+          if(where[field] !== undefined) {
+            dispatch({
+              type: '@@redux-form/CHANGE',
+              meta: {
+                form: formKey, field: field
+              },
+              payload: where[field]
+            })
+          } else {
+            cf.push(field)
+          }
+        })
+        if(cf.length > 0) {
+          dispatch({
+            type: '@@redux-form/CLEAR_FIELDS',
+            meta: {
+              form: formKey,
+              fields: cf
+            }
+          })
+        }
+        const modelState = getModelState()
         const wheres = (Object.keys(where).length > 0 ? 
           { ...modelState.wheres, filters: where } : _.omit(modelState.wheres, 'filters'))
 
-        getItems({ ...modelState.filter, skip: 0 }, wheres )
-      }, [ model, name ])
+        dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres })
+      }, [ store, model, name ])
 
-      const changeFilter = React.useCallback((values) => {
-        const modelState = getState()
+      const changeFilter = React.useCallback(() => {
+        const modelState = getModelState()
+        const values = _.get(store.getState(),`form.${formKey}.values`) || {}
         const where = Object.keys(values).reduce((prev, key) => {
           if(!_.isNil(values[key])) {
             prev[key] = values[key]
@@ -118,8 +142,8 @@ export default {
         }, { ...modelState.wheres.filters })
         const wheres = (Object.keys(where).length > 0 ? 
           { ...modelState.wheres, filters: where } : _.omit(modelState.wheres, 'filters'))
-        getItems({ ...modelState.filter, skip: 0 }, wheres )
-      }, [ model, name ])
+        dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres })
+      }, [ store, model, name ])
 
       React.useEffect(() => {
         if(model.filterDefault) {

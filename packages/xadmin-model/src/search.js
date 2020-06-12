@@ -10,14 +10,14 @@ export default {
   },
   hooks: {
     'model.searchbar': props => {
-      const { model, searchValue, state, dispatch } = use('model', props, state => ({
+      const { model, searchValue, modelState, modelDispatch } = use('model', props, state => ({
         searchValue: state.filter.search
       }))
       const searchFields = model.searchFields
       const searchTitles = model.searchFields && model.searchFields.map(field => model.properties[field].title || field)
 
       const onSearch = React.useCallback((search) => {
-        let wheres = state.wheres || {}
+        let wheres = modelState.wheres || {}
         if(search) {
           const searchs = model.searchFields.map(field => {
             return { [field]: { like: search } }
@@ -30,8 +30,8 @@ export default {
         } else {
           wheres = _.omit(wheres, 'searchbar')
         }
-        dispatch({ type: 'GET_ITEMS', filter: { ...state.filter, skip: 0, search }, wheres })
-      }, [ model.searchFields, dispatch, state.wheres, state.filter ])
+        modelDispatch({ type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0, search }, wheres })
+      }, [ model.searchFields, modelDispatch, modelState.wheres, modelState.filter ])
 
       return { ...props, searchValue, searchFields, searchTitles, onSearch }
     }

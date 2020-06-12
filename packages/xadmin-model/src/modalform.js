@@ -25,7 +25,7 @@ const AddModelBtn = () => {
       onSubmit={saveItem}
       onSubmitSuccess={onSubmitSuccess}
     >
-      { props => <C is="Form.ModalLayout" {...props} title={model.title} show={show} onClose={hideModal} /> }
+      { props => <C is="Form.ModalLayout" {...props} title={model.title} show={show} onClose={hideModal} />}
     </SchemaForm>
   ) : null
 }
@@ -47,11 +47,10 @@ export default {
   },
   hooks: {
     'model.event': props => {
-      const { model } = use('model')
-      const { dispatch } = use('redux')
+      const { modelDispatch } = use('model')
       return {
         ...props,
-        onAdd: () => dispatch({ model, type: '@@xadmin-modalform/SHOW' })
+        onAdd: () => modelDispatch({ type: '@@xadmin-modalform/SHOW' })
       }
     }
   }

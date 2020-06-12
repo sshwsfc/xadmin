@@ -1,70 +1,25 @@
 import React, { useState, useEffect, useContext, useCallback, useMemo } from 'react'
 import _ from 'lodash'
 import { app, config, use, api } from 'xadmin'
+import { SubmissionError } from 'xadmin-form'
 import { _t } from 'xadmin-i18n'
 import { getFieldProp } from './utils'
-import { ModelContext, ModelStateContext } from './base'
+import { ModelContext } from './base'
 
 export default {
-  'model.store': ({ reducers, initial, value }) => {
-    const [ state, dispatch ] = React.useReducer(reducers, initial)
-
-    const subscribers = React.useRef([])
-
-    const subscribe = func => {
-      subscribers.current.push(func)
-      return () => {
-        const idx = subscribers.current.indexOf(func)
-        if(idx != -1) {
-          subscribers.current = subscribers.current.slice(idx, idx + 1)
-        }
-      }
-    }
-    
-    const select = select => {
-
-      const [ values, setValues ] = React.useState(select(state) || {})
-      const lastValues = React.useRef()
-      lastValues.current = values
-
-      const updateState = (newState) => {
-        const newValues = select(newState)
-        if (!_.isEqual(lastValues.current, newValues)) {
-          setValues(newValues)
-        }
-      }
-      React.useEffect(() => {
-        return subscribe(updateState)
-      }, [])
-
-      return values
-    }
-
-    const valueRef = React.useRef({
-      select, dispatch, ...value
-    })
-
-    React.useEffect(() => {
-      subscribers.current.forEach(func => func(state))
-    }, [ state ])
-
-    return valueRef.current
-  },
-
-  // model base hooks
-  'model': (props, selector) => {
-    const { model, dispatch, getState } = useContext(ModelContext)
+  'model': (props, select) => {
+    const model = props.model || useContext(ModelContext)
     const rest = useMemo(() => api(model), [ model ])
-    let values = { ...props, model,  dispatch, getState, rest }
 
-    if(selector) {
-      const state = useContext(ModelStateContext)
-      values = { ...values, state, ...selector(state) }
+    const { dispatch, store, state, ...values } = select ? 
+      use('redux', state => select(model ? state.model[model.key] : {})) : use('redux')
+
+    return { ...props, model, rest, ...values,
+      modelState: model ? state.model[model.key] : {},
+      getModelState: useCallback(() => model ? store.getState().model[model.key] : {}, [ model, store ]),
+      modelDispatch: useCallback(action => dispatch({ ...action, model }), [ model, dispatch ])
     }
-
-    return values
   },
-
   // Get Model Item
   'model.get': props => {
     const { model, rest, id, query, item } = use('model', props)
@@ -98,74 +53,37 @@ export default {
   },
   // Save Model Item
   'model.save': props => {
-    const { model, rest, dispatch, successMessage } = use('model', props)
-    const { dispatch: put } = use('redux')
+    const { model, modelDispatch, successMessage } = use('model', props)
 
     const saveItem = useCallback((item, partial, ...args) => {
-      if(model.partialSave || item['__partial__']) {
-        partial = true
-      }
-      return rest.save(item, partial)
-        .then(data => {
-          dispatch({ type: 'SAVE_ITEM', item: data || item, partial, success: true })
-          if( successMessage !== false) {
-            const object = model.title || model.name
-            const noticeMessage = successMessage || (item.id == undefined ? 
-              _t('Create {{object}} success', { object }) : 
-              _t('Save {{object}} success', { object }))
-            put({ type: '@@xadmin/ADD_NOTICE', payload: {
-              type: 'success', headline: _t('Success'), message: noticeMessage
-            } }) 
-          }
-        })
-        .catch(err => {
-          throw new Error(err.formError || err.json)
-        })
+      return new Promise((resolve, reject) => {
+        modelDispatch({ type: 'SAVE_ITEM', item, partial, promise: { resolve, reject }, message: successMessage })
+      }).catch(err => {
+        throw new SubmissionError(err.formError || err.json)
+      })
     }, [ model ])
 
     return { ...props, model, saveItem }
   },
   // Delete Model Item
   'model.delete': props => {
-    const { model, getState, dispatch, rest, message } = use('model', props)
-    const { getItems } = use('model.getItems')
-    const { dispatch: put } = use('redux')
+    const { model, getModelState, modelDispatch } = use('model', props)
 
     const deleteItem = useCallback((id) => {
       id = id || props.id
-      const item = getState().items[id] || { id }
-      return rest.delete(item.id)
-        .then(() => {
-          dispatch({ type: 'SELECT_ITEMS', selected: false, item })
-          put({ type: '@@xadmin/ADD_NOTICE', payload: {
-            type: 'success', headline: _t('Success'), message: message || _t('Delete {{object}} success', { object: model.title || model.name })
-          } })
-          getItems()
-        })
+      const item = getModelState().items[id] || { id }
+      modelDispatch({ type: 'DELETE_ITEM', item })
     }, [ model, props.id ])
 
     return { ...props, model, deleteItem }
   },
   // Delete Model Item
   'model.getItems': props => {
-    const { model, rest, getState, dispatch } = use('model', props)
-    const { dispatch: put } = use('redux')
+    const { model, modelDispatch } = use('model', props)
 
-    const getItems = useCallback((filter, wheres) => {
-      const state = getState()
-      put({ type: 'START_LOADING', model, key: `${model.key}.items` })
-      return rest.query(filter || state.filter, wheres || state.wheres)
-        .then(({ items, total }) => {
-          dispatch(({ type: 'GET_ITEMS', items: items || [], filter, wheres, count: total }))
-          put({ type: 'END_LOADING', model, key: `${model.key}.items` })
-          return { items, total }
-        })
-        .catch(err => {
-          app.error(err)
-          dispatch(({ type: 'GET_ITEMS', items: [], filter, wheres, count: 0 }))
-          put({ type: 'END_LOADING', model, key: `${model.key}.items` })
-        })
-    }, [ dispatch ])
+    const getItems = useCallback(() => {
+      modelDispatch({ type: 'GET_ITEMS' })
+    }, [ modelDispatch ])
 
     return { ...props, model, getItems }
   },
@@ -217,45 +135,42 @@ export default {
 
   // Model List Hooks
   'model.pagination': props => {
-    const { count, limit, skip, getState, dispatch } = use('model', props,
+    const { count, limit, skip, getModelState, modelDispatch } = use('model', props,
       state => ({ 
         count: state.count, limit: state.filter.limit, skip: state.filter.skip 
       })
     )
-    const { getItems } = use('model.getItems')
     
     const items = Math.ceil(count / limit)
     const activePage = Math.floor(skip / limit) + 1
 
     const changePage = useCallback((page) => {
-      const filter = getState().filter
+      const filter = getModelState().filter
       const pageSize = filter.limit
         , skip = pageSize * (page - 1)
-      getItems({ ...filter, skip: skip })
-    }, [ getState, dispatch ])
+      modelDispatch({ type: 'GET_ITEMS', filter: { ...filter, skip: skip } })
+    }, [ getModelState, modelDispatch ])
     
     return { ...props, items, activePage, changePage }
   },
   'model.count': props => use('model', props, state => ({ count: state.count })),
   'model.pagesize': props => {
-    const { size, getState, dispatch } = use('model', props, state => ({ size: state.filter.limit }) )
+    const { size, getModelState, modelDispatch } = use('model', props, state => ({ size: state.filter.limit }) )
     const sizes = config('pageSizes', [ 15, 30, 50, 100 ])
-    const { getItems } = use('model.getItems')
 
     const setPageSize = useCallback((size) => {
-      const filter = getState().filter
-      getItems({ ...filter, limit: size, skip: 0 })
-    }, [ getState, dispatch ] )
+      const filter = getModelState().filter
+      modelDispatch({ type: 'GET_ITEMS', filter: { ...filter, limit: size, skip: 0 } })
+    }, [ getModelState, modelDispatch ] )
 
     return { ...props, sizes, setPageSize, size }
   },
   'model.fields': props => {
-    const { selected, model, getState, dispatch } = 
+    const { selected, model, getModelState, modelDispatch } = 
       use('model', props, state => ({ selected: state.filter.fields }))
-    const { getItems } = use('model.getItems')
 
     const changeFieldDisplay = useCallback(([ field, selected ]) => {
-      const filter = getState().filter
+      const filter = getModelState().filter
       const fields = [].concat(filter.fields || [])
       const index = _.indexOf(fields, field)
 
@@ -265,19 +180,19 @@ export default {
         _.remove(fields, (i) => { return i === field })
       }
       const list = Array.from(new Set([ ...model.listFields, ...Object.keys(model.properties) ]))
-      getItems({ ...filter, 
-        fields: list.filter(f => fields.indexOf(f) >= 0) })
-    }, [ getState, dispatch, model ] )
+      modelDispatch({ type: 'GET_ITEMS', filter: { ...filter, 
+        fields: list.filter(f => fields.indexOf(f) >= 0) } })
+    }, [ getModelState, modelDispatch, model ] )
 
     return { ...props, fields: model.properties, changeFieldDisplay, selected }
 
   },
   'model.list': props => {
-    const { ids, items: itemsMap, fields, selected, model, dispatch, state } = 
+    const { ids, items: itemsMap, fields, selected, model, modelDispatch, modelState } = 
       use('model', props, state => ({ 
         ids: state.ids, items: state.items, fields: state.filter.fields
       }))
-    const { getItems } = use('model.getItems')
+
     const { loading } = use('redux', state => ({ loading: state.loading && state.loading[`${model.key}.items`] }))
 
     useEffect(() => {
@@ -286,14 +201,14 @@ export default {
       let wheres
       const query = props && props.query
       if(query && Object.keys(query).length > 0) {
-        wheres = { ...state.wheres, param_filter: query }
+        wheres = { ...modelState.wheres, param_filter: query }
       } else {
-        wheres = _.omit(state.wheres, 'param_filter')
+        wheres = _.omit(modelState.wheres, 'param_filter')
       }
-      if(!_.isEqual(wheres, state.wheres)) {
-        dispatch({ type: 'GET_ITEMS', items: [], filter: { ...state.filter, skip: 0 }, success: true })
+      if(!_.isEqual(wheres, modelState.wheres)) {
+        modelDispatch({ type: 'GET_ITEMS', items: [], filter: { ...modelState.filter, skip: 0 }, success: true })
       }
-      getItems({ ...state.filter }, wheres)
+      modelDispatch({ type: 'GET_ITEMS', filter: { ...modelState.filter }, wheres })
     }, [])
 
     const items = ids.map(id => itemsMap[id]).filter(item => !_.isNil(item))
@@ -319,7 +234,7 @@ export default {
     return { ...props, actions, renderActions }
   },
   'model.select': props => {
-    const { selected, ids, dispatch, state } = 
+    const { selected, ids, modelDispatch, modelState } = 
       use('model', props, state => ({ selected: state.selected, ids: state.ids }))
 
     const selects = selected.map(item => item.id)
@@ -327,21 +242,21 @@ export default {
 
     const onSelectAll = useCallback((selected) => {
       if(selected) {
-        const items = state.items
-        dispatch({ type: 'SELECT_ITEMS', items: state.ids.map(id=>items[id]), selected })
+        const items = modelState.items
+        modelDispatch({ type: 'SELECT_ITEMS', items: modelState.ids.map(id=>items[id]), selected })
       } else {
-        dispatch({ type: 'SELECT_CLEAR' })
+        modelDispatch({ type: 'SELECT_CLEAR' })
       }
-    }, [ dispatch, state.items, state.ids ])
+    }, [ modelDispatch, modelState.items, modelState.ids ])
 
     const onSelect = useCallback((item, selected) => {
-      dispatch({ type: 'SELECT_ITEMS', item, selected })
-    }, [ dispatch ])
+      modelDispatch({ type: 'SELECT_ITEMS', item, selected })
+    }, [ modelDispatch ])
 
     return { ...props, count: selected.length, selected, isSelectedAll, onSelect, onSelectAll }
   },
   'model.list.row': props => {
-    const { model, selected, item, dispatch } = use('model', props, state => {
+    const { model, selected, item, modelDispatch } = use('model', props, state => {
       let selected = false
       for (let i of state.selected) {
         if (i.id === props.id) {
@@ -356,28 +271,32 @@ export default {
     })
 
     const changeSelect = useCallback((selected) => {
-      dispatch({ type: 'SELECT_ITEMS', item, selected })
-    }, [ dispatch, item ])
+      modelDispatch({ type: 'SELECT_ITEMS', item, selected })
+    }, [ modelDispatch, item ])
 
     return { ...props, selected, item, changeSelect, actions: model.itemActions || [ 'edit', 'delete' ] }
   },
   'model.list.header': props => {
-    const { field, model, filter, dispatch } = use('model', props, state => ({ filter: state.filter }))
-    const { getItems } = use('model.getItems')
+    const { field, model, modelState, modelDispatch } = use('model', props)
 
     const property = getFieldProp(model, field) || {}
     const canOrder = (property.canOrder !== undefined ? property.canOrder : 
       ( property.orderField !== undefined || (property.type != 'object' && property.type != 'array')))
 
     const changeOrder = useCallback((order) => {
+      const filter = modelState.filter
       const orders = filter.order || {}
       const property = getFieldProp(model, field) || {}
       orders[property.orderField || field] = order
 
-      getItems({ ...filter, order: orders })
-    }, [ dispatch, filter ])
+      modelDispatch({ type: 'GET_ITEMS', filter: { ...filter, order: orders } })
+    }, [ modelDispatch, modelState.filter ])
 
-    const order = filter.order !== undefined ? (filter.order[property.orderField || field] || '') : ''
+    const { order } = use('model', props, state => {
+      const orders = state.filter.order
+      return { order: orders !== undefined ? (orders[property.orderField || field] || '') : '' }
+    })
+
     const title = property.header || property.title || _.startCase(field)
 
     return { ...props, title, changeOrder, canOrder, order, property }
