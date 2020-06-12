@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext, useCallback, useMemo } from 'react'
 import _ from 'lodash'
 import { app, config, use, api } from 'xadmin'
-import { SubmissionError } from 'xadmin-form'
 import { _t } from 'xadmin-i18n'
 import { getFieldProp } from './utils'
 import { ModelContext } from './base'
@@ -59,7 +58,7 @@ export default {
       return new Promise((resolve, reject) => {
         modelDispatch({ type: 'SAVE_ITEM', item, partial, promise: { resolve, reject }, message: successMessage })
       }).catch(err => {
-        throw new SubmissionError(err.formError || err.json)
+        throw new Error(err.formError || err.json)
       })
     }, [ model ])
 

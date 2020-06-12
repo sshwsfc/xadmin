@@ -1,6 +1,5 @@
 import React from 'react'
 import _ from 'lodash'
-import { SubmissionError } from 'xadmin-form'
 import { all, fork, put, call, cancelled, takeEvery } from 'redux-saga/effects'
 import app, { api, use } from 'xadmin'
 import { C } from 'xadmin-ui'
@@ -128,7 +127,7 @@ export default {
         return new Promise((resolve, reject) => {
           modelDispatch({ type: 'SAVE_ITEMS', items, value, promise: { resolve, reject }, message: successMessage })
         }).catch(err => {
-          throw new SubmissionError(err.json)
+          throw new Error(err.json)
         })
       }
 

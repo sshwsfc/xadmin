@@ -73,7 +73,7 @@ const ColsDropdown = props => {
   }
 
   return (
-    <Popover placement="bottomRight" content={(
+    <Popover placement="bottomRight" overlayStyle={{ maxWidth: '80%' }} content={(
       menuShow ? items :
         <Row gutter={12}>{items}</Row>
     )} trigger="click">

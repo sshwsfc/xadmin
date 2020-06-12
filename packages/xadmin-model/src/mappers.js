@@ -1,6 +1,5 @@
 import _ from 'lodash'
 import { app, config } from 'xadmin'
-import { SubmissionError } from 'xadmin-form'
 import { getFieldProp } from './utils'
 
 export default {
@@ -38,7 +37,7 @@ export default {
         return new Promise((resolve, reject) => {
           dispatch({ model, type: 'SAVE_ITEM', item, partial, promise: { resolve, reject }, message: successMessage })
         }).catch(err => {
-          throw new SubmissionError(err.formError || err.json)
+          throw new Error(err.formError || err.json)
         })
       }
     },

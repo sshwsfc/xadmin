@@ -37,8 +37,8 @@ export default {
         type: 'string'
       },
       type: {
-        type: 'string',
-        enum: [ 'Nomral', 'Super', 'God' ]
+        type: 'number',
+        enum: [ 1, 2, 3 ]
       },
       email: {
         type: 'string',

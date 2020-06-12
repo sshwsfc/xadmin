@@ -1,6 +1,6 @@
 {
   "name": "xadmin-antd",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Xadmin Antd UI",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
