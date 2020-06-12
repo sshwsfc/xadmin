@@ -9,6 +9,9 @@
     "lodash": "^4.17.4"
   },
   "peerDependencies": {
+    "redux": "4",
+    "redux-form": "8",
+    "redux-saga": "1",
     "xadmin": "2",
     "xadmin-form": "2",
     "xadmin-i18n": "2",
