@@ -11,7 +11,7 @@ import ajvLocalize from './locales'
 import { convert as schemaConvert } from './schema'
 
 const datetimeRegex = /^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])\s+(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/
-const ajv = new Ajv({ allErrors: true, verbose: true, formats: { datetime: datetimeRegex, 'date-time': datetimeRegex } })
+const ajv = new Ajv({ allErrors: true, verbose: true, formats: { datetime: datetimeRegex } })
 
 const BaseForm = (props) => {
   const { effect, fields, render, option, component, children, handleSubmit, ...formProps } = props
@@ -57,8 +57,13 @@ const validateByFields = (errors, values, fields) => {
   return errors
 }
 
+const isPromise = obj =>
+  !!obj &&
+  (typeof obj === 'object' || typeof obj === 'function') &&
+  typeof obj.then === 'function'
+
 const Form = (props) => {
-  const { validate, effect, fields, render, option, component, children, wrapProps, 
+  const { formKey, validate, effect, fields, render, option, component, children, wrapProps, 
     onChange, onSubmitSuccess, onSubmit, data, ...formProps } = props
   const formConfig = config('form-config')
 
@@ -91,7 +96,20 @@ const Form = (props) => {
     effect && effect(form)
   }
 
-  return (<RForm validate={(values) => {
+  const onSubmitHandler = React.useCallback((values, form, callback) => {
+    console.log(values)
+    const result = onSubmit(values, form, callback)
+
+    if (result && isPromise(result)) {
+      return result.then(() => null, error => {
+        callback(error)
+      })
+    } else if(onSubmit.length < 3) {
+      callback(result)
+    }
+  }, [ onSubmit ])
+
+  return (<RForm key={formKey} validate={(values) => {
     let errors = validate ? validate(values) : {}
     return validateByFields(errors, values, fields)
   }} 
@@ -99,7 +117,7 @@ const Form = (props) => {
     ...arrayMutators,
     ...mutators
   }}
-  onSubmit={onSubmit || (()=>{})}
+  onSubmit={onSubmitHandler}
   subscription={{ submitting: true, pristine: true, invalid: true }}
   {...formConfig} {...formProps} {...wrapProps}>
     {props => <BaseForm {...props} effect={formEffect} fields={fields} render={render} option={option} component={component} children={children} />}
@@ -136,7 +154,7 @@ const SchemaForm = (props) => {
 
       return prev
     }, {})
-    //errors = validateByFields(errors, values, fields)
+    errors = validateByFields(errors, values, fields)
     return errors
   }
 
@@ -148,21 +166,21 @@ const useForm = (props, select) => {
   const formState = form.getState()
   const [ values, setValues ] = React.useState(select ? select(formState) : {})
 
+  form.useField = (name, subscriber, effects=[ 'value' ]) => {
+    form.registerField(name, subscriber, effects && effects.reduce((prev, ef) => {
+      prev[ef] = true; return prev
+    }, {}))
+  }
+
+  form.setFieldData = form.mutators.setFieldData
+
+  form.useEffect = (subscriber, effects=[ 'values' ]) => {
+    form.subscribe(subscriber, effects && effects.reduce((prev, ef) => {
+      prev[ef] = true; return prev
+    }, {}))
+  }
+
   React.useEffect(() => {
-    form.useField = (name, subscriber, effects=[ 'value' ]) => {
-      form.registerField(name, subscriber, effects && effects.reduce((prev, ef) => {
-        prev[ef] = true; return prev
-      }, {}))
-    }
-  
-    form.setFieldData = form.mutators.setFieldData
-  
-    form.useEffect = (subscriber, effects=[ 'values' ]) => {
-      form.subscribe(subscriber, effects && effects.reduce((prev, ef) => {
-        prev[ef] = true; return prev
-      }, {}))
-    }
-  
     if(select) {
       form.subscribe(state => {
         setValues(select(state))

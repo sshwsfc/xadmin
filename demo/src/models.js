@@ -101,12 +101,15 @@ export default {
         }
       })
 
-      form.useEffect(({ values }) => {
+      form.useEffect(({ values, errors }) => {
         const { email, type } = values
         if(email && type === 'Super') {
           form.change('name', 'hi Nomral')
         }
-      }, [ 'values' ])
+        if(errors) {
+          console.error(errors)
+        }
+      }, [ 'values', 'errors' ])
 
     },
     filters: {
@@ -122,7 +125,7 @@ export default {
     editableFields: ['name', 'type', 'address.street'],
     batchChangeFields: ['website', 'brithday', 'address.street'],
     searchFields: [ 'name', 'email' ],
-    required: [ 'id', 'name', 'email', 'website', 'address' ],
+    required: [ 'name' ],
     readonly: [ 'id' ],
     listFields: [ 'id', 'name', 'email', 'type', 'website', 'address.street' ]
   },
