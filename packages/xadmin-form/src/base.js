@@ -88,7 +88,7 @@ const Form = (props) => {
 
     if(onSubmitSuccess != undefined && typeof onSubmitSuccess === 'function') {
       form.useEffect(({ submitSucceeded }) => {
-        submitSucceeded && onSubmitSuccess(form.getState().values)
+        submitSucceeded && onSubmitSuccess(form.getState().values, form)
       }, [ 'submitSucceeded' ])
     }
 
@@ -97,11 +97,13 @@ const Form = (props) => {
   }
 
   const onSubmitHandler = React.useCallback((values, form, callback) => {
-    console.log(values)
     const result = onSubmit(values, form, callback)
 
     if (result && isPromise(result)) {
-      return result.then(() => null, error => {
+      return result.then(retValue => {
+        form.data.submitReturnValue = retValue
+        return null
+      }, error => {
         callback(error)
       })
     } else if(onSubmit.length < 3) {
