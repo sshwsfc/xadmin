@@ -14,7 +14,7 @@ def view_block(context, block_name, *args, **kwargs):
 
     admin_view = context['admin_view']
     nodes = []
-    method_name = 'block_%s' % block_name
+    method_name = 'block_%s' % block_name.replace('-', '_')
 
     cls_str = str if six.PY3 else basestring
     for view in [admin_view] + admin_view.plugins:
