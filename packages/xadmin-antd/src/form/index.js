@@ -18,15 +18,17 @@ export default {
   },
   form_fields: {
     text: {
-      component: Text
+      component: Text,
+      parse: (value) => value === '' ? null : value
     },
     textarea: {
-      component: Textarea
+      component: Textarea,
+      parse: (value) => value === '' ? null : value
     },
     number: {
       component: Text,
       parse: (value) => {
-        return value === '' || value == null ? undefined : parseFloat(value)
+        return value === '' || value == null ? null : parseFloat(value)
       },
       attrs: {
         type: 'number',
@@ -38,7 +40,7 @@ export default {
     integer: {
       component: Text,
       parse: (value) => {
-        return value === '' || value == null ? undefined : parseFloat(value)
+        return value === '' || value == null ? null : parseFloat(value)
       },
       attrs: {
         type: 'number',
@@ -48,12 +50,13 @@ export default {
       }
     },
     select: {
-      component: Select
+      component: Select,
+      parse: (value) => value
     },
     numselect: {
       component: Select,
       parse: (value) => {
-        return value === '' || value == null ? undefined : parseFloat(value)
+        return value === '' || value == null ? null : parseFloat(value)
       }
     },
     date: {

@@ -11,7 +11,7 @@ const ModelForm = props => {
       formKey={`model.${model.key}`}
       schema={schema || model}
       initialValues={data}
-      onSubmit={saveItem}
+      onSubmit={(item) => saveItem(item)}
       {...formProps}
       {...model.formProps} />
     )

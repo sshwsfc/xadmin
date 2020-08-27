@@ -54,11 +54,12 @@ export default {
   'model.save': props => {
     const { model, modelDispatch, successMessage } = use('model', props)
 
-    const saveItem = useCallback((item, partial, ...args) => {
+    const saveItem = useCallback((item, partial) => {
       return new Promise((resolve, reject) => {
-        modelDispatch({ type: 'SAVE_ITEM', item, partial, promise: { resolve, reject }, message: successMessage })
-      }).catch(err => {
-        throw new Error(err.formError || err.json)
+        modelDispatch({ type: 'SAVE_ITEM', item, partial, 
+          promise: { resolve, reject: err => {
+            reject(err.formError || err.json)
+          } }, message: successMessage })
       })
     }, [ model ])
 

@@ -197,6 +197,7 @@ const DataTable = useList(({ model, items, fields, size, onRow, tableProps }) =>
     columns.push({
       title: '',
       key: '__action__',
+      fixed: true,
       render: (val, item) => <DataTableActionRender key={item.id} fields={fields} id={item.id} />
     })
 
@@ -215,8 +216,8 @@ const DataTable = useList(({ model, items, fields, size, onRow, tableProps }) =>
       pagination={false}
       onRow={onRow}
       rowKey="id"
+      //scroll={{ x: 700 }}
       {...tableProps}
-      //scroll={{ y: Math.min(730, (items.length + 1) * 40 + 36) }}
     />
   )
 })

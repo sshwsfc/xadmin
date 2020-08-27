@@ -25,7 +25,7 @@ class App extends React.Component {
           initialValues={{ name: 'test' }}
           onSubmit={values => {
             console.log(values)
-            return { username: '123' }
+            return null
           }}
         />
       </Page>
