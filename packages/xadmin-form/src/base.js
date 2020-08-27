@@ -14,21 +14,22 @@ const datetimeRegex = /^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])\s+
 const ajv = new Ajv({ allErrors: true, verbose: true, formats: { datetime: datetimeRegex } })
 
 const BaseForm = (props) => {
-  const { effect, fields, render, option, component, children, handleSubmit, ...formProps } = props
+  const { effect, fields, render, option, component, children, handleSubmit, errors, ...formProps } = props
   const { form } = use('form')
+  const invalid = !(_.isNil(errors) || _.isEmpty(errors))
 
-  const build_fields = objectBuilder(fields, render, { form, ...option, ...formProps })
+  const build_fields = objectBuilder(fields, render, { form, ...option, invalid, ...formProps })
 
   useEffect(() => effect && effect(form), [ form ])
 
   if(component) {
     const FormComponent = component
-    return <FormComponent {...props} >{build_fields}</FormComponent>
+    return <FormComponent {...props} invalid={invalid} >{build_fields}</FormComponent>
   } else if(children) {
-    return children({ ...props, children: build_fields })
+    return children({ ...props, invalid, children: build_fields })
   } else {
     const FormComponent = C('Form.Layout')
-    return <FormComponent {...props} >{build_fields}</FormComponent>
+    return <FormComponent {...props} invalid={invalid} >{build_fields}</FormComponent>
   }
 }
 
@@ -122,7 +123,7 @@ const Form = (props) => {
     ...mutators
   }}
   onSubmit={onSubmitHandler}
-  subscription={{ submitting: true, pristine: true, invalid: true }}
+  subscription={{ submitting: true, pristine: true, errors: true, submitErrors: true }}
   {...formConfig} {...formProps} {...wrapProps}>
     {props => <BaseForm {...props} effect={formEffect} fields={fields} render={render} option={option} component={component} children={children} />}
   </RForm>)
