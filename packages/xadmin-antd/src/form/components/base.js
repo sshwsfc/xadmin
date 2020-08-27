@@ -1,4 +1,5 @@
 import React from 'react'
+import _ from 'lodash'
 import { Form, Input, Col } from 'antd'
 
 const FieldGroup = ({ label, meta, input, field, tailLayout, children }) => {
@@ -21,7 +22,9 @@ const FieldGroup = ({ label, meta, input, field, tailLayout, children }) => {
   if (error) {
     groupProps['validateStatus'] = 'error'
     groupProps['hasFeedback'] = true
-    groupProps['help'] = error
+    if(_.isString(error)) {
+      groupProps['help'] = error
+    }
   }
 
 

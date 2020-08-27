@@ -111,6 +111,9 @@ export default {
         }
       }, [ 'values', 'errors' ])
 
+      form.useEffect(({ submitSucceeded, submitErrors, submitFailed }) => {
+        console.log('submitSucceeded', submitSucceeded, submitErrors, submitFailed)
+      }, [ 'submitSucceeded', 'submitErrors', 'submitFailed' ])
     },
     filters: {
       submenu: [ 'name', 'email', 'type', 'superUser', 'id' ],

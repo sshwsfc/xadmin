@@ -11,6 +11,7 @@ export default class API extends RESTBaseAPI {
     return fetch(this.getHost() + this.resource + (id ? ('/' + id) : '') , options).then((resp) => {
       return resp.json()
     }).catch(console.error)
+    //return new Promise((resolve, reject) => { reject({ json: { name: 'User Name error' }})})
   }
 
 }

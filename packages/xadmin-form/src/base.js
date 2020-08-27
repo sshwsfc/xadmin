@@ -11,7 +11,7 @@ import ajvLocalize from './locales'
 import { convert as schemaConvert } from './schema'
 
 const datetimeRegex = /^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])\s+(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/
-const ajv = new Ajv({ allErrors: true, verbose: true, formats: { datetime: datetimeRegex } })
+const ajv = new Ajv({ allErrors: true, verbose: true, nullable: true, formats: { datetime: datetimeRegex } })
 
 const BaseForm = (props) => {
   const { effect, fields, render, option, component, children, handleSubmit, errors, ...formProps } = props
@@ -129,6 +129,20 @@ const Form = (props) => {
   </RForm>)
 }
 
+const omitNull = obj => {
+  return Object.keys(obj).reduce((p, k) => {
+    const v = obj[k]
+    if(_.isPlainObject(v)) {
+      p[k] = omitNull(v)
+    } else if(_.isArray(v)) {
+      p[k] = v.map(omitNull)
+    } else if(!_.isNil(v)) {
+      p[k] = v
+    }
+    return p
+  }, {})
+}
+
 const SchemaForm = (props) => {
   const { schema } = props
 
@@ -140,7 +154,7 @@ const SchemaForm = (props) => {
   const { fields } = schemaConvert(schema)
   
   const validate = (values) => {
-    const valid = ajValidate(_.omitBy(values, v=> v == null || v === undefined))
+    const valid = ajValidate(omitNull(values))
 
     if(!valid) {
       const { i18n } = app.context
