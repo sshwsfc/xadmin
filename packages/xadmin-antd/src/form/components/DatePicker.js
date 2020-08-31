@@ -19,6 +19,6 @@ export default class DatePickerInput extends React.Component {
   render() {
     const { input, field } = this.props
     const format = field.datetimeFormat || 'YYYY-MM-DD'
-    return <DatePicker onChange={this.onChange} value={input.value ? moment(input.value): null} format={format} placeholder="选择日期" />
+    return <DatePicker allowClear onChange={this.onChange} value={input.value ? moment(input.value): null} format={format} placeholder="选择日期" />
   }
 }

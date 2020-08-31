@@ -4,7 +4,7 @@ import { all, fork, put, call, cancelled, takeEvery } from 'redux-saga/effects'
 import app, { api, use } from 'xadmin'
 import { C } from 'xadmin-ui'
 
-function *handle_delete_items({ model, items, message }) {
+function *handle_delete_items({ model, items, promise, message }) {
   yield put({ type: 'START_LOADING', model, key: `${model.key}.delete_items` })
   const { _t } = app.context
   const API = api(model)
@@ -18,9 +18,23 @@ function *handle_delete_items({ model, items, message }) {
     for(let item of items) {
       yield put({ type: 'SELECT_ITEMS', selected: false, item, model })
     }
+
+    if(promise) {
+      promise.resolve(null)
+    }
+    if( message !== false) {
+      const object = model.title || model.name
+      const noticeMessage = message || _t('Delete {{object}} success', { object })
+      yield put({ type: '@@xadmin/ADD_NOTICE', payload: {
+        type: 'success', headline: 'Success', message: noticeMessage
+      } }) 
+    }
     yield put({ type: 'GET_ITEMS', model })
   } catch(err) {
     app.error(err)
+    if(promise) {
+      promise.reject(err)
+    }
   }
 
   yield put({ type: 'END_LOADING', model, key: `${model.key}.delete_items` })
@@ -108,12 +122,17 @@ export default {
       return { ...props, actions, renderActions }
     },
     'actons.batch_delete': props => {
-      const { getModelState, modelDispatch } = use('model', props)
+      const { getModelState, modelDispatch, successMessage } = use('model', props)
       const { canDelete } = use('model.permission', props)
 
       const onBatchDelete = () => {
         const items = getModelState().selected
-        modelDispatch({ type: 'DELETE_ITEMS', items })
+        return new Promise((resolve, reject) => {
+          modelDispatch({ type: 'DELETE_ITEMS', items, 
+            promise: { resolve, reject: err => {
+              reject(err.formError || err.json)
+            } }, message: successMessage })
+        })
       }
 
       return { ...props, canDelete, onBatchDelete }
@@ -125,9 +144,10 @@ export default {
       const onBatchChange = (value) => {
         const items = getModelState().selected
         return new Promise((resolve, reject) => {
-          modelDispatch({ type: 'SAVE_ITEMS', items, value, promise: { resolve, reject }, message: successMessage })
-        }).catch(err => {
-          throw new Error(err.json)
+          modelDispatch({ type: 'SAVE_ITEMS', items, value, 
+            promise: { resolve, reject: err => {
+              reject(err.formError || err.json)
+            } }, message: successMessage })
         })
       }
 

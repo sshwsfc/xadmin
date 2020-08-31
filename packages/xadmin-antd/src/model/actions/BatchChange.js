@@ -7,7 +7,7 @@ import { app, use } from 'xadmin'
 const BatchChangeBtn = props => {
   const { _t } = app.context
   const [ show, setShow ] = React.useState(false)
-  const { canEdit, fields, batchChange } = use('actons.batch_change', props)
+  const { canEdit, fields, onBatchChange } = use('actons.batch_change', props)
   const { selected } = use('model.select', props)
   const { model } = use('model', props)
 
@@ -22,7 +22,7 @@ const BatchChangeBtn = props => {
           properties: _.pick(model.properties, fs),
           form: model.form !== undefined ? fs.map(name => _.find(model.form, f => f && f.key == name) || name ) : [ '*' ]
         }, 'required')}
-        onSubmit={batchChange}
+        onSubmit={onBatchChange}
         onSubmitSuccess={onClose}
         onClose={onClose}>
         { ({ children, invalid, handleSubmit, submitting, onClose }) => (

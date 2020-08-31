@@ -23,6 +23,7 @@ class DatetimePicker extends React.Component {
       <DatePicker
         disabledDate={this.disabledStartDate}
         showTime
+        allowClear
         format={format}
         placeholder="请选择时间"
         value={input.value ? moment(input.value): null}

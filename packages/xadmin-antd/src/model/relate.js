@@ -39,6 +39,7 @@ const AsyncSelect = props => {
       notFoundContent={loading ? <div style={{ margin: '2px', textAlign: 'center' }}><Spin size="small" /></div> : <Empty />}
       onSearch={loadOptions}
       onChange={onItemChange}
+      onBlur={()=>{ loadOptions(null) }}
       filterOption={false}
       placeholder={label}
       style={{ minWidth: 150, ...style }}
