@@ -134,7 +134,8 @@ export default {
     searchFields: [ 'name', 'email' ],
     required: [ 'name' ],
     readonly: [ 'id' ],
-    listFields: [ 'id', 'name', 'email', 'type', 'website', 'address.street' ]
+    listFields: [ 'id', 'name', 'email', 'type', 'website', 'address.street' ],
+    defaultPageSize: 1
   },
   Post: {
     name: 'Post',

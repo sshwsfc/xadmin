@@ -97,7 +97,7 @@ const reducers = combineReducers({
     switch (action.type) {
       case 'INITIALIZE': {
         const model = action.model
-        return { fields: [].concat(model.listFields), order: model.orders || {}, limit: 15, skip: 0 }
+        return { fields: [].concat(model.listFields), order: model.orders || {}, limit: model.defaultPageSize || 15, skip: 0 }
       }
       case 'UPDATE_FILTER':
         return { ...state, ...action.payload }

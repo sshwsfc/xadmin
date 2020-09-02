@@ -104,7 +104,7 @@ const Form = (props) => {
       return new Promise(( resolve, reject) => { 
         result.then(retValue => {
           form.submitReturnValue = retValue
-          resolve(null)
+          resolve()
         }).catch(err => {
           resolve(err)
         })

@@ -42,22 +42,31 @@ const ItemEditFormLayout = (props) => {
 const ItemEditForm = props => {
   const { item, field, schema, model, onClose, saveItem } = use('model.save', props)
 
-  const formField = _.find(model.form || [], obj => obj && obj.key == field ) || { key: field }
-  const required = (model.required || []).indexOf(field) >= 0 ? { required: [ field ] } : {}
+  const getSchema = () => {
+    const formField = _.find(model.form || [], obj => obj && obj.key == field ) || { key: field }
+    const required = (model.required || []).indexOf(field) >= 0 ? { required: [ field ] } : {}
+    return {
+      type: 'object',
+      properties: {
+        [field]: schema
+      },
+      form: [ formField ],
+      ...required
+    }
+  }
+
+  const [ formSchema, setFormSchema ] = React.useState(getSchema)
+
+  React.useEffect(() => {
+    setFormSchema(getSchema())
+  }, [ model, field, schema ])
 
   return (
-    <SchemaForm formKey="ChangeDataForm" 
-      initialValues={item}
-      schema={{
-        type: 'object',
-        properties: {
-          [field]: schema
-        },
-        form: [ formField ],
-        ...required
-      }}
+    <SchemaForm
+      initialValues={{ id: item['id'], [field]: item[field] }}
+      schema={formSchema}
       option={{ group : C('Form.InlineGroup') }}
-      onSubmit={(values) => saveItem({ ...values, __partial__: true })}
+      onSubmit={(values) => saveItem(values, true)}
       onSubmitSuccess={() => onClose()}
       component={ItemEditFormLayout}/>
   )
@@ -65,16 +74,16 @@ const ItemEditForm = props => {
 
 const Item = props => {
   const { item, value, field, schema, componentClass, wrap, editable, ...itemProps } = use('model.list.item', props)
-  const [ edit, setEdit ] = React.useState(false)
-
+  
   const RawWrapComponent = wrap || 'span'
   const WrapComponent = editable ? RawWrapComponent : ({ children, ...props }) => {
+    const [ edit, setEdit ] = React.useState(false)
     return (
       <Popover content={(<ItemEditForm item={item} field={field} schema={schema} onClose={()=>setEdit(false)} />)} 
         trigger="click" onVisibleChange={setEdit} visible={edit} placement="right" >
         <RawWrapComponent {...props} style={{ cursor: 'pointer' }}>{children} <EditOutlined /></RawWrapComponent>
       </Popover>
-    );
+    )
   }
 
   if(item == undefined || item == null) {

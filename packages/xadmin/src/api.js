@@ -38,15 +38,24 @@ export default class RESTBaseAPI {
     })
   }
 
+  patch(id, data) {
+    return this.fetch(id, { method: 'PATCH', body: JSON.stringify(data) }).then((item) => {
+      return { ...data, ...item }
+    })
+  }
+
   post(data) {
     return this.fetch(null, { method: 'POST', body: JSON.stringify(data) }).then((item) => {
       return { ...data, ...item }
     })
   }
 
-  save(data) {
+  save(data, partial) {
     if (data.id) {
       let id = data.id
+      if(partial) {
+        return this.patch(id, data)
+      }
       return this.put(id, data)
     } else {
       return this.post(data)
