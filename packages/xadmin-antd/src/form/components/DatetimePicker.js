@@ -25,7 +25,6 @@ class DatetimePicker extends React.Component {
         showTime
         allowClear
         format={format}
-        placeholder="请选择时间"
         value={input.value ? moment(input.value): null}
         onChange={this.onChange}
         onBlur={input.onBlur}

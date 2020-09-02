@@ -1,5 +1,6 @@
 import { Checkbox, Select, Text, Transfer, Textarea } from './components'
 import DatePicker from './components/DatePicker'
+import TimePicker from './components/TimePicker'
 import DatetimePicker from './components/DatetimePicker'
 import ArrayWidget from './components/Array'
 import Fieldset from './components/Fieldset'
@@ -65,18 +66,9 @@ export default {
     datetime: {
       component: DatetimePicker
     },
-    // time: {
-    //   component: DateTime,
-    //   normalize: (value, previousValue) => {
-    //     return (value && value.format) ? value.format('HH:mm:ss') : value || previousValue
-    //   },
-    //   attrs: {
-    //     dateFormat: false,
-    //     timeFormat: true,
-    //     viewMode: 'time',
-    //     valueFormat: 'LT'
-    //   }
-    // },
+    time: {
+      component: TimePicker
+    },
     bool: {
       component: Checkbox,
       normalize: (value, previousValue) => {
