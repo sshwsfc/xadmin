@@ -129,18 +129,20 @@ const Form = (props) => {
   </RForm>)
 }
 
-const omitNull = obj => {
-  return Object.keys(obj).reduce((p, k) => {
-    const v = obj[k]
-    if(_.isPlainObject(v)) {
-      p[k] = omitNull(v)
-    } else if(_.isArray(v)) {
-      p[k] = v.map(omitNull)
-    } else if(!_.isNil(v)) {
-      p[k] = v
-    }
-    return p
-  }, {})
+const omitNull = value => {
+  if(_.isPlainObject(value)) {
+    Object.keys(value).forEach(k => {
+      let ret = omitNull(value[k])
+      if(ret == null) {
+        delete value[k]
+      } else {
+        value[k] = ret
+      }
+    })
+  } else if(_.isArray(value)) {
+    value.forEach(omitNull)
+  }
+  return value
 }
 
 const SchemaForm = (props) => {

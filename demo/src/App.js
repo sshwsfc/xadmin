@@ -22,11 +22,12 @@ class App extends React.Component {
         <SchemaForm
           formKey="test"
           schema={models.User}
-          initialValues={{ name: 'test' }}
+          initialValues={{ superUser: true }}
           onSubmit={values => {
             console.log(values)
             return null
           }}
+          onChange={value => { console.log('changed', value) }}
         />
       </Page>
     );

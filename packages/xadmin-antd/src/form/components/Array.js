@@ -9,7 +9,7 @@ const defaultItemsRender = ({ fields, meta: { touched, error }, field, fieldsBui
   const { items, label } = field
   return (
     <div>
-      <Button onClick={() => fields.push(items ? {} : null)}><PlusOutlined /></Button>
+      <Button onClick={() => fields.push(null)}><PlusOutlined /></Button>
       {fields.map((name, index) => {
         const removeBtn = (<Button size="small" onClick={(e) => { fields.remove(index); e.persist() }} style={{ float: 'right' }}><DeleteOutlined /></Button>)
         const fieldsComponent = fieldsBuilder(name, index, removeBtn)
@@ -23,9 +23,7 @@ const defaultItemsRender = ({ fields, meta: { touched, error }, field, fieldsBui
           >
             {fieldsComponent}
           </Card>
-        ) : (
-          <div>{fieldsComponent}</div>
-        )
+        ) : fieldsComponent
       })}
       {(touched && error) ? error : null}
     </div>
