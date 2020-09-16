@@ -366,7 +366,8 @@ class ExportMixin(object):
 
     def get_export_filename(self, file_format):
         date_str = datetime.now().strftime('%Y-%m-%d-%H%M%S')
-        filename = "%s-%s.%s" % (self.opts.verbose_name.encode('utf-8'),
+        filename = "%s-%s.%s" % (force_text(self.opts.verbose_name,
+                                            encoding='utf-8'),
                                  date_str,
                                  file_format.get_extension())
         return filename

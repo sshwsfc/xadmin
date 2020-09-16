@@ -14,7 +14,7 @@ from xadmin.views import BaseAdminPlugin, ModelFormAdminView
 
 
 class QuickFormPlugin(BaseAdminPlugin):
-    inline_field_pattern = re.compile('\w+-\d+-(?P<field>\w+)')
+    inline_field_pattern = re.compile(r'\w+-\d+-(?P<field>\w+)')
 
     def init_request(self, *args, **kwargs):
         if self.request.method == 'GET' and self.request.is_ajax() or self.request.GET.get('_ajax'):
@@ -132,9 +132,22 @@ class RelatedFieldWidgetWrapper(forms.Widget):
 
 
 class QuickAddBtnPlugin(BaseAdminPlugin):
+    # Allows you to delete fields changed by the plugin
+    quick_addbtn_fields_exclude = ()
+    # Allows exclude db field like (modes.CharField)
+    quick_addbtn_db_fields_exclude = ()
+    # Always enable
+    quick_addbtn_enabled = True
+
+    def init_request(self, *args, **kwargs):
+        return self.quick_addbtn_enabled
 
     def formfield_for_dbfield(self, formfield, db_field, **kwargs):
-        if formfield and self.model in self.admin_site._registry and isinstance(db_field, (models.ForeignKey, models.ManyToManyField)):
+        if db_field.name in self.quick_addbtn_fields_exclude or \
+           isinstance(db_field, self.quick_addbtn_db_fields_exclude):
+            return formfield  # disabled to this types
+        elif formfield and self.model in self.admin_site._registry and \
+                isinstance(db_field, (models.ForeignKey, models.ManyToManyField)):
             rel_model = get_model_from_relation(db_field)
             if rel_model in self.admin_site._registry and self.has_model_perm(rel_model, 'add'):
                 add_url = self.get_model_url(rel_model, 'add')

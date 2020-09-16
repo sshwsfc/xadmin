@@ -27,6 +27,7 @@ DEBUG = True
 LANGUAGES = (
     ('en', _('English')),
     ('zh-hans', _('Chinese')),
+    ('pt-br', _('Portuguese')),
 )
 
 ALLOWED_HOSTS = []
@@ -78,7 +79,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'demo.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases

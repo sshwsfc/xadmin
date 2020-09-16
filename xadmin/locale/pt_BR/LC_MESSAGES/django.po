@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xadmin-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-22 15:09-0300\n"
+"POT-Creation-Date: 2020-01-28 14:16-0300\n"
 "PO-Revision-Date: 2013-11-20 10:21+0000\n"
 "Last-Translator: gladson <gladson@immensa.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/"
@@ -175,15 +175,15 @@ msgstr "ID do objeto"
 
 #: .\models.py:161
 msgid "object repr"
-msgstr "Repr. do objeto"
+msgstr "Objeto"
 
 #: .\models.py:162
 msgid "action flag"
-msgstr "Tipo de ação"
+msgstr "Ação"
 
 #: .\models.py:163
 msgid "change message"
-msgstr "Alterar mensagem"
+msgstr "Descrição"
 
 #: .\models.py:166
 msgid "log entry"
@@ -424,8 +424,8 @@ msgstr "Detalhes de %s"
 msgid "Enter %s"
 msgstr "Entrar %s"
 
-#: .\plugins\editable.py:73 .\views\dashboard.py:652 .\views\delete.py:28
-#: .\views\detail.py:145 .\views\edit.py:454
+#: .\plugins\editable.py:73 .\views\dashboard.py:656 .\views\delete.py:28
+#: .\views\detail.py:145 .\views\edit.py:455
 #, python-format
 msgid "%(name)s object with primary key %(key)r does not exist."
 msgstr "%(name)s objeto com chave primária %(key)r não existe."
@@ -450,7 +450,7 @@ msgstr "O arquivo será enviado para seu endereço de email: "
 msgid "Your account does not have an email address."
 msgstr "Sua conta não tem um endereço de email cadastrado."
 
-#: .\plugins\filters.py:136 .\plugins\quickfilter.py:142
+#: .\plugins\filters.py:141 .\plugins\quickfilter.py:142
 #, python-format
 msgid "<b>Filtering error:</b> %s"
 msgstr "<b>Filtrar erro:</b> %s"
@@ -560,8 +560,8 @@ msgstr "Bootstrap2"
 msgid "Bootstrap 2.x theme"
 msgstr "Tema Bootstrap 2.x"
 
-#: .\plugins\topnav.py:62 .\views\dashboard.py:468 .\views\edit.py:387
-#: .\views\edit.py:396
+#: .\plugins\topnav.py:62 .\views\dashboard.py:468 .\views\edit.py:388
+#: .\views\edit.py:397
 #, python-format
 msgid "Add %s"
 msgstr "Adicionar %s"
@@ -921,37 +921,37 @@ msgstr "Gráficos"
 #: .\templates\xadmin\blocks\model_list.top_toolbar.exports.html:4
 #: .\templates\xadmin\blocks\model_list.top_toolbar.exports.html:8
 #: .\templates\xadmin\blocks\model_list.top_toolbar.exports.html:19
-#: .\templates\xadmin\blocks\model_list.top_toolbar.exports.html:53
+#: .\templates\xadmin\blocks\model_list.top_toolbar.exports.html:58
 #: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:4
 #: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:11
-#: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:90
+#: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:94
 #: .\templates\xadmin\import_export\export_action.html:7
 #: .\templates\xadmin\import_export\export_action.html:15
 msgid "Export"
 msgstr "Exportar"
 
-#: .\templates\xadmin\blocks\model_list.top_toolbar.exports.html:27
-#: .\templates\xadmin\blocks\model_list.top_toolbar.exports.html:30
-#: .\templates\xadmin\blocks\model_list.top_toolbar.exports.html:33
+#: .\templates\xadmin\blocks\model_list.top_toolbar.exports.html:28
+#: .\templates\xadmin\blocks\model_list.top_toolbar.exports.html:31
+#: .\templates\xadmin\blocks\model_list.top_toolbar.exports.html:34
 msgid "Export with table header."
 msgstr "Exportar com cabeçalho da tabela"
 
-#: .\templates\xadmin\blocks\model_list.top_toolbar.exports.html:36
-#: .\templates\xadmin\blocks\model_list.top_toolbar.exports.html:39
+#: .\templates\xadmin\blocks\model_list.top_toolbar.exports.html:37
+#: .\templates\xadmin\blocks\model_list.top_toolbar.exports.html:40
 msgid "Export with format."
 msgstr "Exportar com o formato."
 
-#: .\templates\xadmin\blocks\model_list.top_toolbar.exports.html:43
+#: .\templates\xadmin\blocks\model_list.top_toolbar.exports.html:45
 msgid "Export all data."
 msgstr "Exportar todos os dados."
 
-#: .\templates\xadmin\blocks\model_list.top_toolbar.exports.html:46
-#: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:81
+#: .\templates\xadmin\blocks\model_list.top_toolbar.exports.html:50
+#: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:84
 msgid "Send result file via email."
 msgstr "Enviar arquivo de resultado por email."
 
-#: .\templates\xadmin\blocks\model_list.top_toolbar.exports.html:52
-#: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:88
+#: .\templates\xadmin\blocks\model_list.top_toolbar.exports.html:57
+#: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:92
 #: .\templates\xadmin\widgets\base.html:41
 msgid "Close"
 msgstr "Fechar"
@@ -960,19 +960,19 @@ msgstr "Fechar"
 msgid "Export all data"
 msgstr "Exportar todos os dados."
 
-#: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:39
+#: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:40
 msgid "with filter"
 msgstr "com filtro"
 
-#: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:49
+#: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:51
 msgid "Export current page data."
 msgstr "Exportar dados da página atual."
 
-#: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:60
+#: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:62
 msgid "Export selected data."
 msgstr "Exportar dados selecionados."
 
-#: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:71
+#: .\templates\xadmin\blocks\model_list.top_toolbar.importexport.export.html:73
 msgid "Export header only."
 msgstr "Exportar somente cabeçalhos da tabela."
 
@@ -1494,7 +1494,7 @@ msgstr "Widget de adição de qualquer objeto."
 msgid "Dashboard"
 msgstr "Painel"
 
-#: .\views\dashboard.py:636
+#: .\views\dashboard.py:640
 #, python-format
 msgid "%s Dashboard"
 msgstr "%s Painel"
@@ -1513,43 +1513,43 @@ msgstr "Outros Campos"
 msgid "%s Detail"
 msgstr "%s Detalhes"
 
-#: .\views\edit.py:252
+#: .\views\edit.py:253
 msgid "Added."
 msgstr "Adicionado."
 
-#: .\views\edit.py:254
+#: .\views\edit.py:255
 #, python-format
 msgid "Changed %s."
 msgstr "Alterado %s"
 
-#: .\views\edit.py:254
+#: .\views\edit.py:255
 msgid "and"
 msgstr "e"
 
-#: .\views\edit.py:257
+#: .\views\edit.py:258
 msgid "No fields changed."
 msgstr "Nenhum campo alterado."
 
-#: .\views\edit.py:420
+#: .\views\edit.py:421
 #, python-format
 msgid "The %(name)s \"%(obj)s\" was added successfully."
 msgstr "%(name)s \"%(obj)s\" adicionado(a) com sucesso."
 
-#: .\views\edit.py:425 .\views\edit.py:520
+#: .\views\edit.py:426 .\views\edit.py:521
 msgid "You may edit it again below."
 msgstr "Você pode editar novamente abaixo."
 
-#: .\views\edit.py:429 .\views\edit.py:523
+#: .\views\edit.py:430 .\views\edit.py:524
 #, python-format
 msgid "You may add another %s below."
 msgstr "Você pode adicionar outro(a) %s abaixo."
 
-#: .\views\edit.py:471
+#: .\views\edit.py:472
 #, python-format
 msgid "Change %s"
 msgstr "Alterar %s"
 
-#: .\views\edit.py:516
+#: .\views\edit.py:517
 #, python-format
 msgid "The %(name)s \"%(obj)s\" was changed successfully."
 msgstr "%(name)s \"%(obj)s\" alterado(a) com sucesso."
