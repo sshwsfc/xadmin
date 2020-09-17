@@ -66,10 +66,11 @@ vendors = {
     },
     "datepicker": {
         "css": {
-            'dev': 'xadmin/vendor/bootstrap-datepicker/css/datepicker.css'
+            'dev': 'xadmin/vendor/bootstrap-datepicker/css/bootstrap-datepicker.css'
         },
         "js": {
             'dev': 'xadmin/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js',
+            'production': 'xadmin/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js',
         }
     },
     "flot": {
