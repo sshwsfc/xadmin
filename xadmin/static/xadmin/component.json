@@ -12,7 +12,7 @@
     "font-awesome": ">=3.0.2",
     "load-image": "blueimp/JavaScript-Load-Image",
     "bootstrap-image-gallery": "blueimp/Bootstrap-Image-Gallery",
-    "select2": ">=3.3.2",
+    "select2": "~4.0",
     "selectize": ">=0.8.4",
     "datejs": "datejs/Datejs",
     "bootstrap-multiselect": "davidstutz/bootstrap-multiselect"
