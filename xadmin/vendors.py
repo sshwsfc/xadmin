@@ -97,12 +97,22 @@ vendors = {
                     'xadmin/vendor/selectize/selectize.bootstrap3.css'],
         },
         "js": {
-            'dev': ['xadmin/vendor/selectize/selectize.js',
-                    'xadmin/vendor/select2/js/select2.js',
-                    'xadmin/vendor/select2/js/i18n/%(lang)s.js'],
-            'production': ['xadmin/vendor/selectize/selectize.min.js',
-                           'xadmin/vendor/select2/select2.min.js',
-                           'xadmin/vendor/select2/js/i18n/%(lang)s.js']
+            'dev': [
+                # required by selectize
+                'xadmin/vendor/sifter/sifter.js',
+                'xadmin/vendor/microplugin/microplugin.js',
+                'xadmin/vendor/selectize/selectize.js',
+                'xadmin/vendor/select2/js/select2.js',
+                'xadmin/vendor/select2/js/i18n/%(lang)s.js'
+            ],
+            'production': [
+                # required by selectize
+                'xadmin/vendor/sifter/sifter.min.js',
+                'xadmin/vendor/microplugin/microplugin.js',
+                'xadmin/vendor/selectize/selectize.min.js',
+                'xadmin/vendor/select2/select2.min.js',
+                'xadmin/vendor/select2/js/i18n/%(lang)s.js'
+            ]
         }
     },
     "multiselect": {
