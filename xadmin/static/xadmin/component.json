@@ -6,7 +6,7 @@
     "jquery-ui": ">=1.10.0",
     "bootstrap": "http://twitter.github.io/bootstrap/assets/bootstrap.zip",
     "bootstrap-timepicker": ">=0.2.3",
-    "bootstrap-datepicker": ">=1.0.0",
+    "bootstrap-datepicker": ">=1.9.0",
     "bootstrap-modal": ">=2.1",
     "flot": ">=0.8",
     "font-awesome": ">=3.0.2",
