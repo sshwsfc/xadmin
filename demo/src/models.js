@@ -82,7 +82,12 @@ export default {
           street: { type: 'string', maxLength: 5 },
           suite: { type: 'string' }
         },
-        required:[ 'street', 'suite' ]
+        required:[ 'street', 'suite' ],
+        field: {
+          validate: () => {
+            return 'null'
+          }
+        }
       },
       property: {
         type: 'array',

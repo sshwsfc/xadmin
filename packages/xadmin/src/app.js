@@ -141,7 +141,7 @@ export default class App {
   }
 
   config(key) {
-    this.get('config')[key]
+    return this.get('config')[key]
   }
 
   start(init_context={}) {

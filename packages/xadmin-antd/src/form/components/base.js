@@ -27,7 +27,6 @@ const FieldGroup = ({ label, meta, input, field, tailLayout, children }) => {
     }
   }
 
-
   const controlComponent = children ? children : (<Input {...input} {...attrs} />)
   return (
     <Form.Item label={label} {...groupProps}>

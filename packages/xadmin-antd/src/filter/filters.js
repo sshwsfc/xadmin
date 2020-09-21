@@ -39,10 +39,10 @@ const Submenu = ({ children, invalid, handleSubmit, submitting, options, resetFi
   const { _t } = app.context
   return (
     <Form className="ant-advanced-search-form" onSubmit={handleSubmit}>
-      <Card style={{ marginBottom: '.5rem' }} bodyStyle={{ paddingBottom: 0 }}>
+      <Card style={{ marginBottom: '.5rem' }}>
         <Row gutter={8}>{children}</Row>
         {options && options.submitOnChange ? null : (
-          <Row style={{ marginBottom: '.5rem' }}>
+          <Row>
             <Col span={24} style={{ textAlign: 'center' }}>
               <Button disabled={invalid || submitting} type="primary" onClick={handleSubmit}>{_t('Search')}</Button>
               {' '}
@@ -98,7 +98,7 @@ class FilterModal extends React.Component {
           <Form onSubmit={handleSubmit}>{children}</Form>
         </Modal>
       )
-    ];
+    ]
   }
 
 }
