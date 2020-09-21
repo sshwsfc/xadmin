@@ -36,7 +36,7 @@ class ChangeFieldWidgetWrapper(forms.Widget):
         media = self.widget.media + vendor('xadmin.plugin.batch.js')
         return media
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, **kwargs):
         output = []
         is_required = self.widget.is_required
         output.append(u'<label class="btn btn-info btn-xs">'

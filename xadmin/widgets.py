@@ -115,7 +115,7 @@ class AdminRadioFieldRenderer(forms.RadioSelect):
         choice = self.choices[idx]  # Let the IndexError propogate
         return AdminRadioInput(self.name, self.value, self.attrs.copy(), choice, idx)
 
-    def render(self):
+    def render(self, *args, **kwargs):
         return mark_safe(u'\n'.join([force_text(w) for w in self]))
 
 
@@ -125,7 +125,7 @@ class AdminRadioSelect(forms.RadioSelect):
 
 class AdminCheckboxSelect(forms.CheckboxSelectMultiple):
 
-    def render(self, name, value, attrs=None, choices=()):
+    def render(self, name, value, attrs=None, choices=(), **kwargs):
         if value is None:
             value = []
         has_id = attrs and 'id' in attrs

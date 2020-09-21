@@ -35,7 +35,7 @@ class ForeignKeySearchWidget(forms.Widget):
         attrs.update(kwargs)
         return super(ForeignKeySearchWidget, self).build_attrs(attrs, extra_attrs=extra_attrs)
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, **kwargs):
         final_attrs = self.build_attrs(attrs, extra_attrs={'name': name})
         output = [format_html('<select{0}>', flatatt(final_attrs))]
         if value:
