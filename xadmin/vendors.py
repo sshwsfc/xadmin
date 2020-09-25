@@ -111,7 +111,7 @@ vendors = {
                 'xadmin/vendor/sifter/sifter.min.js',
                 'xadmin/vendor/microplugin/microplugin.js',
                 'xadmin/vendor/selectize/selectize.min.js',
-                'xadmin/vendor/select2/select2.min.js',
+                'xadmin/vendor/select2/js/select2.min.js',
                 'xadmin/vendor/select2/js/i18n/%(lang)s.js'
             ]
         }
