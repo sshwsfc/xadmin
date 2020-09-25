@@ -40,17 +40,17 @@ const ItemEditFormLayout = (props) => {
 }
 
 const ItemEditForm = props => {
-  const { item, field, schema, model, onClose, saveItem } = use('model.save', props)
+  const { item, field, value, schema, model, onClose, saveItem } = use('model.save', props)
 
   const getSchema = () => {
     const formField = _.find(model.form || [], obj => obj && obj.key == field ) || { key: field }
-    const required = (model.required || []).indexOf(field) >= 0 ? { required: [ field ] } : {}
+    const required = (model.required || []).indexOf(field) >= 0 ? { required: [ 'value' ] } : {}
     return {
       type: 'object',
       properties: {
-        [field]: schema
+        value: schema
       },
-      form: [ formField ],
+      form: [ { ...formField, key: 'value' } ],
       ...required
     }
   }
@@ -63,10 +63,13 @@ const ItemEditForm = props => {
 
   return (
     <SchemaForm
-      initialValues={{ id: item['id'], [field]: item[field] }}
+      initialValues={{ id: item['id'], value }}
       schema={formSchema}
       option={{ group : C('Form.InlineGroup') }}
-      onSubmit={(values) => saveItem(values, true)}
+      onSubmit={(values) => saveItem({
+        id: values.id,
+        [field]: values.value
+      }, true)}
       onSubmitSuccess={() => onClose()}
       component={ItemEditFormLayout}/>
   )
@@ -79,7 +82,7 @@ const Item = props => {
   const WrapComponent = editable ? RawWrapComponent : ({ children, ...props }) => {
     const [ edit, setEdit ] = React.useState(false)
     return (
-      <Popover content={(<ItemEditForm item={item} field={field} schema={schema} onClose={()=>setEdit(false)} />)} 
+      <Popover content={(<C is="Model.ItemEditForm" item={item} field={field} value={value} schema={schema} onClose={()=>setEdit(false)} />)} 
         trigger="click" onVisibleChange={setEdit} visible={edit} placement="right" >
         <RawWrapComponent {...props} style={{ cursor: 'pointer' }}>{children} <EditOutlined /></RawWrapComponent>
       </Popover>
@@ -182,7 +185,7 @@ const DataTable = useList(({ model, items, fields, size, onRow, tableProps }) =>
       key: fieldName,
       dataIndex: fieldName,
       render: (value, item) => {
-        return <Item item={item} field={fieldName} inList={true} />
+        return <C is="Model.DataItem" item={item} field={fieldName} inList={true} />
       },
       ...field.column
     }
@@ -233,7 +236,8 @@ const DataTable = useList(({ model, items, fields, size, onRow, tableProps }) =>
 
 const DataListRender = props => {
   const { item, fields, selected } = use('model.list.row', props)
-
+  const Item = C('Model.DataItem')
+  
   return (
     <List.Item actions={[ useActions(props) ]}>
       <List.Item.Meta
@@ -303,5 +307,5 @@ const ActionDelete = props => {
 
 export default DataTable
 export {
-  Item, Header, DataTable, DataList, DataCard, ActionEdit, ActionDelete
+  Item, Header, DataTable, DataList, DataCard, ActionEdit, ActionDelete, ItemEditForm
 }

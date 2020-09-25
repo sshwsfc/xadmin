@@ -2,7 +2,7 @@
 import { ModelListPage, ModelFormPage, ModelDetailPage } from './components/Pages'
 import Pagination from './components/Pagination'
 import SubMenu from './components/SubMenu'
-import { DataTable, DataList, Item, ActionEdit, ActionDelete } from './components/Items'
+import { DataTable, DataList, Item, ActionEdit, ActionDelete, ItemEditForm } from './components/Items'
 import DataForm from './components/Form'
 import DataDetail from './components/Info'
 import ActionBar from './components/ActionBar'
@@ -26,6 +26,7 @@ export default {
     'Model.DataForm': DataForm,
     'Model.DataDetail': DataDetail,
     'Model.DataItem': Item,
+    'Model.ItemEditForm': ItemEditForm,
     'Model.DetailModal': DetailModal,
     'Model.SearchBar': SearchBar,
     'Model.BatchChange': BatchChange,
