@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React from 'react'
-import { Button, Dropdown, Menu, Popover, Checkbox, Row, Col, Input } from 'antd'
+import { Button, Dropdown, Menu, Popover, Checkbox, Row, Col, Input, Space } from 'antd'
 import { app, use } from 'xadmin'
 import { _t } from 'xadmin-i18n'
 import { ModelBlock } from 'xadmin-model'
@@ -83,11 +83,11 @@ const ColsDropdown = props => {
 }
 
 export default ({ children }) => (
-  <div>
-    <CountButton />{' '}
-    <PageSizeButton />{' '}
+  <Space>
+    <CountButton />
+    <PageSizeButton />
     <ModelBlock name="model.list.submenu.btngroup" />
     <ColsDropdown />
     {children}
-  </div>
+  </Space>
 )

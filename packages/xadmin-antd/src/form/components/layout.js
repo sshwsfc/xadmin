@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Button, Card, Row, Modal } from 'antd'
+import { Form, Button, Card, Space, Modal } from 'antd'
 import app from 'xadmin'
 
 const FormLayout = props => {
@@ -11,14 +11,16 @@ const FormLayout = props => {
       sm: { span: 18, offset: 5 }
     }
   }
-
+  
   return (
     <Card>
       <Form onSubmit={handleSubmit}>
         {children}
         <Form.Item {...groupProps}>
-          <Button type="primary" onClick={handleSubmit} loading={submitting} disabled={invalid}>{_t('Save')}</Button>{' '}
-          <Button onClick={() => history.back()}>{_t('Cancel')}</Button>
+          <Space>
+            <Button type="primary" onClick={handleSubmit} loading={submitting} disabled={invalid}>{_t('Save')}</Button>
+            <Button onClick={() => history.back()}>{_t('Cancel')}</Button>
+          </Space>
         </Form.Item>
       </Form>
     </Card>

@@ -1,7 +1,7 @@
 import React from 'react'
 import app from 'xadmin'
 import { FilterOutlined } from '@ant-design/icons'
-import { Row, Col, Form, Input, Button, Card, Modal } from 'antd'
+import { Row, Col, Form, Space, Button, Card, Modal } from 'antd'
 
 const FilterForm = ({ children, invalid, handleSubmit, submitting, options, resetFilter }) => {
   const { _t } = app.context
@@ -10,9 +10,10 @@ const FilterForm = ({ children, invalid, handleSubmit, submitting, options, rese
       {children}
       {options && options.submitOnChange ? null : (
         <Form.Item style={{ textAlign: 'center' }}>
-          <Button disabled={invalid || submitting} type="primary" onClick={handleSubmit}>{_t('Search')}</Button>
-          {' '}
-          <Button disabled={submitting} onClick={resetFilter}>{_t('Clear')}</Button>
+          <Space>
+            <Button disabled={invalid || submitting} type="primary" onClick={handleSubmit}>{_t('Search')}</Button>
+            <Button disabled={submitting} onClick={resetFilter}>{_t('Clear')}</Button>
+          </Space>
         </Form.Item>
       )}
     </Form>
@@ -26,9 +27,10 @@ const NavForm = ({ children, invalid, handleSubmit, submitting, options, resetFi
       {children}
       {options && options.submitOnChange ? null : (
         <Form.Item>
-          <Button disabled={invalid || submitting} type="primary" onClick={handleSubmit}>{_t('Search')}</Button>
-          {' '}
-          <Button disabled={submitting} onClick={resetFilter}>{_t('Clear')}</Button>
+          <Space>
+            <Button disabled={invalid || submitting} type="primary" onClick={handleSubmit}>{_t('Search')}</Button>
+            <Button disabled={submitting} onClick={resetFilter}>{_t('Clear')}</Button>
+          </Space>
         </Form.Item>
       )}
     </Form>
@@ -44,9 +46,10 @@ const Submenu = ({ children, invalid, handleSubmit, submitting, options, resetFi
         {options && options.submitOnChange ? null : (
           <Row>
             <Col span={24} style={{ textAlign: 'center' }}>
-              <Button disabled={invalid || submitting} type="primary" onClick={handleSubmit}>{_t('Search')}</Button>
-              {' '}
-              <Button disabled={submitting} onClick={resetFilter}>{_t('Clear')}</Button>
+              <Space>
+                <Button disabled={invalid || submitting} type="primary" onClick={handleSubmit}>{_t('Search')}</Button>
+                <Button disabled={submitting} onClick={resetFilter}>{_t('Clear')}</Button>
+              </Space>
             </Col>
           </Row>
         )}

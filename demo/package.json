@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "antd": "^4.0.3",
+    "antd": "^4.6.6",
     "isomorphic-fetch": "^2.2.1",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.0-beta.6",

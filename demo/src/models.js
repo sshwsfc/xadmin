@@ -139,6 +139,10 @@ export default {
       (item) => <C is="Model.ChildrenModel" model="Post" parent={item} refField="userId" refreshTimeout={3000} />,
       'edit', 'delete'
     ],
+    dataTableProps: (columns) => ({
+      scroll: { x: 1500 },
+      columns: columns.map(c => c.key === '__action__' ? { ...c, width: 200 } : c )
+    }),
     // batchActions: null,
     editableFields: ['name', 'type', 'address.street'],
     batchChangeFields: ['website', 'brithday', 'address.street'],

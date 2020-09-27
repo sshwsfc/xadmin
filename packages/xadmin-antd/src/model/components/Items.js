@@ -165,7 +165,7 @@ const DataTableActionRender = props => {
   return <div style={{ width: '100%', textAlign: 'center' }}>{useActions(use('model.list.row', props))}</div>
 }
 
-const DataTable = useList(({ model, items, fields, size, onRow, tableProps }) => {
+const DataTable = useList(({ model, items, fields, size, onRow }) => {
   const { selected, onSelect, onSelectAll } = use('model.select')
   const { actions } = use('model.actions')
   const { actions: batchActions } = use('model.batchActions')
@@ -209,7 +209,7 @@ const DataTable = useList(({ model, items, fields, size, onRow, tableProps }) =>
     columns.push({
       title: '',
       key: '__action__',
-      fixed: true,
+      fixed: 'right',
       render: (val, item) => <DataTableActionRender key={item.id} fields={fields} id={item.id} />
     })
 
@@ -217,6 +217,11 @@ const DataTable = useList(({ model, items, fields, size, onRow, tableProps }) =>
     selectedRowKeys: selected.map(r => r.id),
     onSelect, onSelectAll
   } : undefined
+
+  const tableProps = model.dataTableProps ? (
+    typeof model.dataTableProps == 'function' ? 
+      model.dataTableProps(columns, items) : model.dataTableProps
+  ) : {}
 
   return (
     <Table
@@ -264,6 +269,7 @@ const DataList = useList(({ model, items, fields, size }) => {
         dataSource={items}
         size={size}
         renderItem={item => <RenderItem key={item.id} fields={fields} id={item.id} />}
+        {...model.dataListProps}
       />
     </Card>
   )
@@ -280,7 +286,7 @@ const ActionEdit = props => {
       <Tooltip placement="top" title={_t('Edit')}><Button key="action-edit" size="small" className="model-list-action" onClick={() => onEdit(props.id)}>
         <EditOutlined />
       </Button></Tooltip>
-    );
+    )
   }
 
   return null
