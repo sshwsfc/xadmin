@@ -449,6 +449,7 @@ class ExportMenuPlugin(ExportMixin, BaseAdminPlugin):
             'form': form,
             'opts': self.opts,
             'form_params': self.admin_view.get_form_params({'_action_': 'export'}),
+            'export_to_email': bool(self.import_export_args.get('export_to_email', True))
         })
         nodes.append(loader.render_to_string('xadmin/blocks/model_list.top_toolbar.importexport.export.html',
                                              context=context))
