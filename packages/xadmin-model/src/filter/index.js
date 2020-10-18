@@ -76,8 +76,10 @@ const BaseFilter = props => {
     }, { ...modelState.wheres.filters })
     const wheres = (Object.keys(where).length > 0 ? 
       { ...modelState.wheres, filters: where } : _.omit(modelState.wheres, 'filters'))
-      
-    dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres })
+    
+    return new Promise((resolve, reject) => {
+      dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres, promise: { resolve, reject } })
+    })
   }, [ model ])
 
   const onChange = (options && options.submitOnChange == true) ? onSubmit : undefined

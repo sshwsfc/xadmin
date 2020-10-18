@@ -37,7 +37,7 @@ const ChildrenModel = props => {
 
   const action = children && !_.isString(children) && React.isValidElement(children) ?
     React.cloneElement(children, { onClick: () => setShow(true) }) : 
-    <Button size="small" key="child-model-action" className="model-list-action" refData={refData || { [refField]: parent }} {...extProps} onClick={() => setShow(true)} >{children || cmodel.title || cmodel.name}</Button>
+    <Button size="small" key="child-model-action" className="model-list-action" {...extProps} onClick={() => setShow(true)} >{children || cmodel.title || cmodel.name}</Button>
 
   const ItemsComponent = (cmodel.components && cmodel.components.DataList) || C('Model.DataTable')
 

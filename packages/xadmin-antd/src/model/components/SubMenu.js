@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import React from 'react'
 import { Button, Dropdown, Menu, Popover, Checkbox, Row, Col, Input, Space } from 'antd'
+import { SettingOutlined } from '@ant-design/icons'
 import { app, use } from 'xadmin'
 import { _t } from 'xadmin-i18n'
 import { ModelBlock } from 'xadmin-model'
@@ -77,7 +78,7 @@ const ColsDropdown = props => {
       menuShow ? items :
         <Row gutter={12}>{items}</Row>
     )} trigger="click">
-      <Button>{_t('Columns')}</Button>
+      <Button type="text"><SettingOutlined /></Button>
     </Popover>
   )
 }

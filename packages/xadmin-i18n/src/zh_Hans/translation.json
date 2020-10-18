@@ -99,5 +99,8 @@
   "{{name}} Detail": "{{name}}详情",
   "{{name}} List": "{{name}}列表",
   "{{size}} per page": "每页{{size}}条",
-  "{{label}} is required": "{{label}}是必填项"
+  "{{label}} is required": "{{label}}是必填项",
+  "Collapse": "收起",
+  "Expand": "展开",
+  "Reset": "重置"
 }

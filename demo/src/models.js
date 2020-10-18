@@ -26,12 +26,13 @@ export default {
                 titleMap: [ { name: 'C', value: 'C' }, { name: 'D', value: 'D' } ]
               }})
             }
-          }
+          },
+          formText: 'User'
         }
       },
       name: {
         type: 'string',
-        description: '用户的真实姓名'
+        //description: '用户的真实姓名'
       },
       username: {
         type: 'string'
@@ -70,7 +71,10 @@ export default {
       },
       time: {
         type: 'string',
-        format: 'time'
+        format: 'time',
+        field: {
+          formText: 'T'
+        }
       },
       loginTime: {
         type: 'string',

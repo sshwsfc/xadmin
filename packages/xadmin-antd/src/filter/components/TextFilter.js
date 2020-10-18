@@ -1,13 +1,13 @@
 import React from 'react'
-import { config } from 'xadmin'
+import { config, use } from 'xadmin'
 import _ from 'lodash'
 import { _t } from 'xadmin-i18n'
-import { FileSearchOutlined, SearchOutlined } from '@ant-design/icons'
-import { Input, Tooltip } from 'antd'
+import { AimOutlined, SearchOutlined } from '@ant-design/icons'
+import { Input, Tooltip, Typography } from 'antd'
 const Search = Input.Search
 
 const useTextFilter = ({ input }) => {
-
+  const { form } = use('form')
   let value = input.value
   let like = null
   
@@ -45,21 +45,31 @@ const useTextFilter = ({ input }) => {
     }
   }
 
-  const clear = () => onValueChange(null)
-  const Icon = like ? FileSearchOutlined : SearchOutlined
-  const prefix = <Tooltip title={_t(like ? 'Fuzzy search' : 'Exact Search')}><Icon onClick={()=>onLikeChange(!like)} style={{ color: 'rgba(0,0,0,.25)' }} /></Tooltip>
+  const onKeyPress = (e) => {
+    if(value && e.key === 'Enter') {
+      form.submit()
+    }
+  }
 
-  return { like, value, onChange, onValueChange, onLikeChange, clear, prefix }
+  const clear = () => onValueChange(null)
+  const changeModeBtn = (<Tooltip title={_t('Exact search')}>
+    <Typography.Text type={!like ? 'success' : 'secondary'} onClick={()=>onLikeChange(!like)} style={{ cursor: 'pointer' }}>
+      { (value == null || value == undefined || value == '') ? null : <AimOutlined /> }
+    </Typography.Text>
+  </Tooltip>)
+
+  return { like, value, onChange, onValueChange, onLikeChange, onKeyPress, clear, changeModeBtn }
 }
 
 const TextFilter = props => {
 
   const { input: { name, onBlur, onChange, ...inputProps }, label, field } = props
-  const { value, prefix, onValueChange } = useTextFilter(props)
+  const { value, changeModeBtn, onValueChange, onKeyPress } = useTextFilter(props)
 
   return (
-    <Input { ...inputProps} {...field.attrs} value={value} prefix={prefix}
+    <Input { ...inputProps} {...field.attrs} value={value} suffix={changeModeBtn}
       onChange={e => onValueChange(e.target.value)}
+      onKeyPress={onKeyPress}
       placeholder={_t('Search {{label}}', { label })}
     />
   )
@@ -70,10 +80,10 @@ const TextFilter = props => {
 const SearchTextFilter = props => {
 
   const { input: { name, onBlur, onChange, ...inputProps }, onSubmit, label, field } = props
-  const { value, prefix, onValueChange } = useTextFilter(props)
+  const { value, changeModeBtn, onValueChange } = useTextFilter(props)
   
   return (
-    <Search { ...inputProps} {...field.attrs} value={value} prefix={prefix}
+    <Search { ...inputProps} {...field.attrs} value={value} suffix={changeModeBtn}
       onChange={e => onValueChange(e.target.value)}
       onSearch={value => { onValueChange(value); onSubmit && onSubmit() }}
       placeholder={_t('Search {{label}}', { label })}

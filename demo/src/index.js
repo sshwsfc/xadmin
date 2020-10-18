@@ -56,7 +56,8 @@ app
       time: 'HH:mm:ss', date: 'YYYY-MM-DD', datetime: 'YYYY-MM-DD HH:mm:ss'
     },
     filter: {
-      textDefaultSearch: true
+      textDefaultSearch: true,
+      submenuShowAllFilter: true
     }
   },
   components: {

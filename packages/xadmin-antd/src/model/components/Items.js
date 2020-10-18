@@ -11,8 +11,8 @@ import {
   CaretUpOutlined,
   CloseOutlined,
   DeleteOutlined,
-  EditOutlined,
-} from '@ant-design/icons';
+  EditOutlined
+} from '@ant-design/icons'
 
 import {
   Table,
@@ -27,7 +27,7 @@ import {
   Checkbox,
   Popover,
   Form
-} from 'antd';
+} from 'antd'
 
 const ItemEditFormLayout = (props) => {
   const { children, pristine, invalid, handleSubmit, submitting } = props
@@ -305,7 +305,7 @@ const ActionDelete = props => {
           </Button>
         </Tooltip>
       </Popconfirm>
-    );
+    )
   }
 
   return null

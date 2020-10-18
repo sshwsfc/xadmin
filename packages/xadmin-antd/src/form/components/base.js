@@ -6,6 +6,7 @@ const FieldGroup = ({ label, meta, input, field, tailLayout, children }) => {
   const attrs = field.attrs || {}
   const error = meta.touched && (meta.error || meta.submitError)
   const extra = field.description || field.help
+
   const size = (field.option && field.option.groupSize) || attrs.groupSize || { 
     labelCol: {
       xs: { span: 24 },
@@ -31,6 +32,7 @@ const FieldGroup = ({ label, meta, input, field, tailLayout, children }) => {
   return (
     <Form.Item label={label} {...groupProps}>
       {controlComponent}
+      {field.formText ? <span className="ant-form-text"> {field.formText}</span> : null}
     </Form.Item>
   )
 }
@@ -64,6 +66,7 @@ const FieldTableGroup = ({ label, meta, input, field, nav, children }) => {
     <>
       <Form.Item label={label} {...groupProps}>
         {nav}
+        {field.formText ? <span className="ant-form-text"> {field.formText}</span> : null}
       </Form.Item>
       {controlComponent}
     </>
@@ -86,6 +89,7 @@ const InlineGroup = ({ label, meta, input, field, children }) => {
   return (
     <Form.Item {...groupProps}>
       {React.cloneElement(controlComponent, { inline: true } )}
+      {field.formText ? <span className="ant-form-text"> {field.formText}</span> : null}
     </Form.Item>
   )
 }
@@ -106,6 +110,7 @@ const SimpleGroup = ({ label, meta, input, field, children }) => {
   return (
     <Form.Item label={label} {...groupProps}>
       {controlComponent}
+      {field.formText ? <span className="ant-form-text"> {field.formText}</span> : null}
     </Form.Item>
   )
 }
@@ -138,6 +143,7 @@ const ColGroup = ({ label, meta, input, field, children }) => {
     <Col span={8} xs={24} sm={12} md={12} lg={8} xl={8} xxl={6}>
       <Form.Item label={label} {...groupProps}>
         {controlComponent}
+        {field.formText ? <span className="ant-form-text">{field.formText}</span> : null}
       </Form.Item>
     </Col>
   )

@@ -1,7 +1,7 @@
 import { all, fork, put, call, cancelled, takeEvery } from 'redux-saga/effects'
 import app, { api } from 'xadmin'
 
-function *handle_get_list({ model, filter, wheres }) {
+function *handle_get_list({ model, filter, wheres, promise }) {
   yield put({ type: 'START_LOADING', model, key: `${model.key}.items` })
   const { store } = app.context
   const modelState = store.getState().model[model.key]
@@ -9,15 +9,17 @@ function *handle_get_list({ model, filter, wheres }) {
   try {
     const { items, total } = yield api(model).query(filter || modelState.filter, wheres || modelState.wheres)
     yield put({ type: 'GET_ITEMS', model: model, items: items || [], filter, wheres, count: total })
+    promise && promise.resolve(items)
   } catch(err) {
     app.error(err)
     yield put({ type: 'GET_ITEMS', model: model, items: [], filter, wheres, count: 0 })
+    promise && promise.reject(err)
   }
 
   yield put({ type: 'END_LOADING', model, key: `${model.key}.items` })
 }
 
-function *handle_delete_item({ model, item, message }) {
+function *handle_delete_item({ model, item, message, promise }) {
   yield put({ type: 'START_LOADING', model, key: `${model.key}.delete` })
   const { _t } = app.context
 
@@ -28,14 +30,16 @@ function *handle_delete_item({ model, item, message }) {
       type: 'success', headline: _t('Success'), message: message || _t('Delete {{object}} success', { object: model.title || model.name })
     } })
     yield put({ type: 'GET_ITEMS', model })
+    promise && promise.resolve()
   } catch(err) {
     app.error(err)
+    promise && promise.reject(err)
   }
 
   yield put({ type: 'END_LOADING', model, key: `${model.key}.delete` })
 }
 
-function *handle_get_item({ model, id }) {
+function *handle_get_item({ model, id, promise }) {
   yield put({ type: 'START_LOADING', model, key: `${model.key}.get` })
   const { _t } = app.context
 
@@ -44,8 +48,10 @@ function *handle_get_item({ model, id }) {
     if(item) {
       yield put({ type: 'GET_ITEM', model, item, success: true })
     }
+    promise && promise.resolve(item)
   } catch(err) {
     app.error(err)
+    promise && promise.reject(err)
   }
 
   yield put({ type: 'END_LOADING', model, key: `${model.key}.get` })
