@@ -47,12 +47,12 @@ except:
 
 
 class ExportMenuPlugin(BaseAdminPlugin):
+    export_menu_block_template = 'xadmin/blocks/model_list.top_toolbar.exports.html'
 
     list_export = ('xlsx', 'xls', 'csv', 'xml', 'json')
     export_names = {'xlsx': 'Excel 2007', 'xls': 'Excel', 'csv': 'CSV',
                     'xml': 'XML', 'json': 'JSON'}
-
-    export_menu_block_template = 'xadmin/blocks/model_list.top_toolbar.exports.html'
+    export_to_email = True
 
     def init_request(self, *args, **kwargs):
         self.list_export = [
@@ -65,6 +65,7 @@ class ExportMenuPlugin(BaseAdminPlugin):
                 'show_export_all': self.admin_view.paginator.count > self.admin_view.list_per_page and not ALL_VAR in self.admin_view.request.GET,
                 'form_params': self.admin_view.get_form_params({'_do_': 'export'}, ('export_type',)),
                 'export_types': [{'type': et, 'name': self.export_names[et]} for et in self.list_export],
+                'export_to_email': self.export_to_email
             })
             nodes.append(loader.render_to_string(self.export_menu_block_template,
                                                  context=get_context_dict(context)))

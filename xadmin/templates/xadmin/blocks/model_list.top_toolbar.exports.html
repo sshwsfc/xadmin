@@ -23,7 +23,7 @@
             {{ form_params|safe }}
             <input type="hidden" name="export_type" value="{{et.type}}">
                 <div class="checkbox">
-                    <label>
+                <label>
                 {% if et.type == "xlsx" %}
                 <input type="checkbox" name="export_xlsx_header" checked="checked" value="on"> {% trans "Export with table header." %}
                 {% endif %}
@@ -39,17 +39,19 @@
                 {% if et.type == "json" %}
                 <input type="checkbox" name="export_json_format" checked="checked" value="on"> {% trans "Export with format." %}
                 {% endif %}
-              </label>
+                </label>
                 </div>
                 <div class="checkbox">
                     <label><input type="checkbox" name="all" value="on"> {% trans "Export all data." %}</label>
                 </div>
+                {% if export_to_email %}
                 <div class="checkbox">
-                    <label>
-                        <input type="checkbox" name="export_to_email" value="on">
-                        {% trans "Send result file via email." %}
-              </label>
+                  <label>
+                    <input type="checkbox" name="export_to_email" value="on">
+                    {% trans "Send result file via email." %}
+                  </label>
                 </div>
+                {% endif %}
             {% endblock %}
           </div>
           <div class="modal-footer">
