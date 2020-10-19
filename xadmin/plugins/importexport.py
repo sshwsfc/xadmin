@@ -445,11 +445,11 @@ class ExportMenuPlugin(ExportMixin, BaseAdminPlugin):
         form = ExportForm(formats)
         self._form_bootstrap_styles(form)
         context = get_context_dict(context or {})  # no error!
+        context.setdefault('export_to_email', bool(self.import_export_args.get('export_to_email', True)))
         context.update({
             'form': form,
             'opts': self.opts,
-            'form_params': self.admin_view.get_form_params({'_action_': 'export'}),
-            'export_to_email': bool(self.import_export_args.get('export_to_email', True))
+            'form_params': self.admin_view.get_form_params({'_action_': 'export'})
         })
         template_name = self.import_export_args.get('template',
                                                     'xadmin/blocks/model_list.top_toolbar.importexport.export.html')
