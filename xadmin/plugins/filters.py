@@ -60,7 +60,7 @@ class FilterPlugin(BaseAdminPlugin):
                 # later.
                 return True
             if hasattr(field, 'remote_field'):
-                model = field.remote_field.to
+                model = field.remote_field.model
                 rel_name = field.remote_field.get_related_field().name
             elif is_related_field(field):
                 model = field.model

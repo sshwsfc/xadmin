@@ -373,7 +373,7 @@ def get_model_from_relation(field):
     elif is_related_field(field):
         return field.model
     elif getattr(field, 'remote_field'):  # or isinstance?
-        return field.remote_field.to
+        return field.remote_field.model
     else:
         raise NotRelationField
 
