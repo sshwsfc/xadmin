@@ -50,8 +50,8 @@ class QuickFilterPlugin(BaseAdminPlugin):
 
         # Last term in lookup is a query term (__exact, __startswith etc)
         # This term can be ignored.
-        if len(parts) > 1 and parts[-1] in QUERY_TERMS:
-            parts.pop()
+        # if len(parts) > 1 and parts[-1] in QUERY_TERMS:
+        #    parts.pop()
 
         # Special case -- foo__id__exact and foo__id queries are implied
         # if foo has been specificially included in the lookup list; so
