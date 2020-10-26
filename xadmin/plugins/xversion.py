@@ -53,7 +53,7 @@ def _register_model(admin, model):
                 ct_fk_field = getattr(inline, 'ct_fk_field', 'object_id')
                 for field in model._meta.many_to_many:
                     if isinstance(field, GenericRelation) \
-                            and field.rel.to == inline_model \
+                            and field.remote_field.model == inline_model \
                             and field.object_id_field_name == ct_fk_field \
                             and field.content_type_field_name == ct_field:
                         inline_fields.append(field.name)

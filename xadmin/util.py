@@ -401,12 +401,12 @@ def reverse_field_path(model, path):
                 break
         if direct:
             related_name = field.related_query_name()
-            parent = field.rel.to
+            parent = field.remote_field.model
         else:
             related_name = field.field.name
             parent = field.model
         reversed_path.insert(0, related_name)
-    return (parent, LOOKUP_SEP.join(reversed_path))
+    return parent, LOOKUP_SEP.join(reversed_path)
 
 
 def get_fields_from_path(model, path):
