@@ -60,11 +60,11 @@ class BaseFilter(object):
     def is_used(self):
         return len(self.used_params) > 0
 
-    def do_filte(self, queryset):
+    def do_filter(self, queryset):
         """
         Returns the filtered queryset.
         """
-        raise NotImplementedError
+        return NotImplementedError
 
     def get_context(self):
         return {'title': self.title, 'spec': self, 'form_params': self.form_params()}
@@ -135,7 +135,7 @@ class FieldFilter(BaseFilter):
     def has_output(self):
         return True
 
-    def do_filte(self, queryset):
+    def do_filter(self, queryset):
         return queryset.filter(**self.used_params)
 
 
@@ -231,7 +231,7 @@ class NumberFieldListFilter(FieldFilter):
     def test(cls, field, request, params, model, admin_view, field_path):
         return isinstance(field, (models.DecimalField, models.FloatField, models.IntegerField))
 
-    def do_filte(self, queryset):
+    def do_filter(self, queryset):
         params = self.used_params.copy()
         ne_key = '%s__ne' % self.field_path
         if ne_key in params:
