@@ -61,8 +61,10 @@ class ForeignKeySearchWidget(forms.Widget):
 
 class ForeignKeySelectWidget(ForeignKeySearchWidget):
 
-    def build_attrs(self, attrs={}, **kwargs):
-        attrs = super(ForeignKeySelectWidget, self).build_attrs(attrs, **kwargs)
+    def build_attrs(self, base_attrs=None, **kwargs):
+        if base_attrs is None:
+            base_attrs = {}
+        attrs = super(ForeignKeySelectWidget, self).build_attrs(base_attrs, **kwargs)
         if "class" not in attrs:
             attrs['class'] = 'select-preload'
         else:
