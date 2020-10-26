@@ -1,3 +1,4 @@
+default_app_config = 'xadmin.apps.XAdminConfig'
 
 VERSION = (0,6,0)
 
@@ -50,9 +51,9 @@ def autodiscover():
 
     for app_config in apps.get_app_configs():
         mod = import_module(app_config.name)
+        before_import_registry = site.copy_registry()
         # Attempt to import the app's admin module.
         try:
-            before_import_registry = site.copy_registry()
             import_module('%s.adminx' % app_config.name)
         except:
             # Reset the model registry to the state before the last import as
@@ -67,4 +68,3 @@ def autodiscover():
             if module_has_submodule(mod, 'adminx'):
                 raise
 
-default_app_config = 'xadmin.apps.XAdminConfig'
