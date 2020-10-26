@@ -150,9 +150,7 @@ class QuickFilterPlugin(BaseAdminPlugin):
 
         self.has_filters = bool(self.filter_specs)
         self.admin_view.quickfilter['filter_specs'] = self.filter_specs
-        obj = filter(lambda f: f.is_used, self.filter_specs)
-        if six.PY3:
-            obj = list(obj)
+        obj = [fspec for fspec in self.filter_specs if fspec.is_used]
         self.admin_view.quickfilter['used_filter_num'] = len(obj)
 
         if use_distinct:
@@ -163,5 +161,6 @@ class QuickFilterPlugin(BaseAdminPlugin):
     def block_left_navbar(self, context, nodes):
         nodes.append(loader.render_to_string('xadmin/blocks/modal_list.left_navbar.quickfilter.html',
                                              get_context_dict(context)))
+
 
 site.register_plugin(QuickFilterPlugin, ListAdminView)

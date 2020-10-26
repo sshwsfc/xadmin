@@ -47,10 +47,8 @@ class BaseFilter(object):
         return self.admin_view.get_query_string(new_params, remove)
 
     def form_params(self):
-        arr = map(lambda k: FILTER_PREFIX + k, self.used_params.keys())
-        if six.PY3:
-            arr = list(arr)
-        return self.admin_view.get_form_params(remove=arr)
+        prefixed_keys = [FILTER_PREFIX + key for key in self.used_params.keys()]
+        return self.admin_view.get_form_params(remove=prefixed_keys)
 
     def has_output(self):
         """
@@ -123,21 +121,15 @@ class FieldFilter(BaseFilter):
                 self.context_params["%s_val" % name] = value
             else:
                 self.context_params["%s_val" % name] = ''
-
-        arr = map(
-            lambda kv: setattr(self, 'lookup_' + kv[0], kv[1]),
-            self.context_params.items()
-        )
-        if six.PY3:
-            list(arr)
+        # set lookups
+        for kv in self.context_params.items():
+            setattr(self, 'lookup_' + kv[0], kv[1])
 
     def get_context(self):
         context = super(FieldFilter, self).get_context()
         context.update(self.context_params)
-        obj = map(lambda k: FILTER_PREFIX + k, self.used_params.keys())
-        if six.PY3:
-            obj = list(obj)
-        context['remove_url'] = self.query_string({}, obj)
+        prefixed_keys = [FILTER_PREFIX + k for k in self.used_params.keys()]
+        context['remove_url'] = self.query_string({}, prefixed_keys)
         return context
 
     def has_output(self):

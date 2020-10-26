@@ -187,10 +187,7 @@ class ModelFormAdminView(ModelAdminView):
     @filter_hook
     def get_form_layout(self):
         layout = copy.deepcopy(self.form_layout)
-        arr = self.form_obj.fields.keys()
-        if six.PY3:
-            arr = [k for k in arr]
-        fields = arr + list(self.get_readonly_fields())
+        fields = list(self.form_obj.fields.keys()) + list(self.get_readonly_fields())
 
         if layout is None:
             layout = Layout(Container(Col('full',

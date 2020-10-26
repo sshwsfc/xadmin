@@ -1,31 +1,25 @@
+import copy
 import datetime
 import sys
-import copy
 import threading
 
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ImproperlyConfigured
 from django.core.mail import EmailMultiAlternatives
+from django.db.models import BooleanField, NullBooleanField
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.utils import six
-if six.PY2:
-    # python 2.x need to work with unicode
-    from django.utils.encoding import \
-        smart_unicode as smart_text, \
-        force_unicode as force_text
-else:
-    from django.utils.encoding import force_text, smart_text
+from django.utils.encoding import force_text, smart_text
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.xmlutils import SimplerXMLGenerator
-from django.db.models import BooleanField, NullBooleanField
 
 from xadmin.plugins.utils import get_context_dict
 from xadmin.sites import site
-from xadmin.views import BaseAdminPlugin, ListAdminView
 from xadmin.util import json
+from xadmin.views import BaseAdminPlugin, ListAdminView
 from xadmin.views.list import ALL_VAR
 
 try:

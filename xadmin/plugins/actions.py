@@ -244,9 +244,7 @@ class ActionPlugin(BaseAdminPlugin):
             actions.extend([self.get_action(action) for action in class_actions])
 
         # get_action might have returned None, so filter any of those out.
-        actions = filter(None, actions)
-        if six.PY3:
-            actions = list(actions)
+        actions = [action for action in actions if action is not None]
 
         # Convert the actions into a OrderedDict keyed by name.
         actions = OrderedDict([
