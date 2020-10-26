@@ -274,11 +274,11 @@ class RevisionListView(BaseReversionView):
         obj._state.db = self.obj._state.db
 
         for field_name, pks in obj_version.m2m_data.items():
-            f = self.opts.get_field(field_name)
-            if f.rel and isinstance(f.rel, models.ManyToManyRel):
-                setattr(obj, f.name, f.rel.to._default_manager.get_query_set(
-                ).filter(pk__in=pks).all())
-
+            field = self.opts.get_field(field_name)
+            if hasattr(field, 'remote_field') and isinstance(field.remote_field, models.ManyToManyRel):
+                getattr(obj, field.name).set(
+                    field.remote_field.model._default_manager.get_queryset().filter(pk__in=pks).all()
+                )
         detail = self.get_model_view(DetailAdminUtil, self.model, obj)
 
         return obj, detail
