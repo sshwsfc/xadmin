@@ -18,22 +18,24 @@ class ForeignKeySearchWidget(forms.Widget):
         self.db = using
         super(ForeignKeySearchWidget, self).__init__(attrs)
 
-    def build_attrs(self, attrs={}, extra_attrs=None, **kwargs):
+    def build_attrs(self, base_attrs=None, extra_attrs=None, **kwargs):
+        if base_attrs is None:
+            base_attrs = {}
         to_opts = self.rel.model._meta
-        if "class" not in attrs:
-            attrs['class'] = 'select-search'
+        if "class" not in base_attrs:
+            base_attrs['class'] = 'select-search'
         else:
-            attrs['class'] = attrs['class'] + ' select-search'
-        attrs['data-search-url'] = self.admin_view.get_admin_url(
+            base_attrs['class'] = base_attrs['class'] + ' select-search'
+        base_attrs['data-search-url'] = self.admin_view.get_admin_url(
             '%s_%s_changelist' % (to_opts.app_label, to_opts.model_name))
-        attrs['data-placeholder'] = _('Search %s') % to_opts.verbose_name
-        attrs['data-choices'] = '?'
+        base_attrs['data-placeholder'] = _('Search %s') % to_opts.verbose_name
+        base_attrs['data-choices'] = '?'
         if self.rel.limit_choices_to:
             for i in list(self.rel.limit_choices_to):
-                attrs['data-choices'] += "&_p_%s=%s" % (i, self.rel.limit_choices_to[i])
-            attrs['data-choices'] = format_html(attrs['data-choices'])
-        attrs.update(kwargs)
-        return super(ForeignKeySearchWidget, self).build_attrs(attrs, extra_attrs=extra_attrs)
+                base_attrs['data-choices'] += "&_p_%s=%s" % (i, self.rel.limit_choices_to[i])
+            base_attrs['data-choices'] = format_html(base_attrs['data-choices'])
+        base_attrs.update(kwargs)
+        return super(ForeignKeySearchWidget, self).build_attrs(base_attrs, extra_attrs=extra_attrs)
 
     def render(self, name, value, attrs=None, **kwargs):
         final_attrs = self.build_attrs(attrs, extra_attrs={'name': name})
