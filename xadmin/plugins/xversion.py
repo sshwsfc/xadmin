@@ -324,7 +324,7 @@ class RevisionListView(BaseReversionView):
             if type(value_a) in (list, tuple) and type(value_b) in (list, tuple) \
                     and len(value_a) == len(value_b) and is_diff:
                 is_diff = False
-                for i in xrange(len(value_a)):
+                for i in range(len(value_a)):
                     if value_a[i] != value_a[i]:
                         is_diff = True
                         break
@@ -555,7 +555,7 @@ class InlineRevisionPlugin(BaseAdminPlugin):
         # Reconstruct the forms with the new revision data.
         formset.initial = initial
         formset.forms = [formset._construct_form(
-            n) for n in xrange(len(initial))]
+            n) for n in range(len(initial))]
         # Hack the formset to force a save of everything.
 
         def get_changed_data(form):
