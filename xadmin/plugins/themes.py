@@ -1,4 +1,5 @@
 # coding:utf-8
+import cgi
 import urllib.parse
 
 import httplib2
@@ -68,7 +69,8 @@ class ThemePlugin(BaseAdminPlugin):
                     resp, content = h.request("https://bootswatch.com/api/3.json", 'GET', '',
                                               headers={"Accept": "application/json",
                                                        "User-Agent": self.request.META['HTTP_USER_AGENT']})
-                    content = content.decode()
+                    mimetype, spec = cgi.parse_header(resp.get('content-type', ''))
+                    content = content.decode(spec.get('charset', 'UTF-8'))
                     watch_themes = json.loads(content)['themes']
                     ex_themes.extend([
                         {'name': t['name'], 'description': t['description'],
