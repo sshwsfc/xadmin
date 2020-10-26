@@ -80,10 +80,9 @@ class ResultField(object):
                                      return_attr=False
                                      )
         try:
-            f, attr, value = lookup_field(
-                self.field_name, self.obj, self.admin_view)
+            f, attr, value = lookup_field(self.field_name, self.obj, self.admin_view)
         except (AttributeError, ObjectDoesNotExist):
-            self.text
+            pass
         else:
             if f is None:
                 self.allow_tags = getattr(attr, 'allow_tags', False)
