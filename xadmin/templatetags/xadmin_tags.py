@@ -23,13 +23,11 @@ def view_block(context, block_name, *args, **kwargs):
     admin_view = context['admin_view']
     nodes = []
     method_name = 'block_%s' % block_name.replace('-', '_')
-
-    cls_str = str if six.PY3 else basestring
     for view in [admin_view] + admin_view.plugins:
         if hasattr(view, method_name) and callable(getattr(view, method_name)):
             block_func = getattr(view, method_name)
             result = block_func(context, nodes, *args, **kwargs)
-            if result and isinstance(result, cls_str):
+            if result and isinstance(result, str):
                 nodes.append(result)
     if nodes:
         return mark_safe(''.join(nodes))

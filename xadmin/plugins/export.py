@@ -187,8 +187,7 @@ class ExportPlugin(BaseAdminPlugin):
         if isinstance(t, bool):
             return _('Yes') if t else _('No')
         t = t.replace('"', '""').replace(',', '\,')
-        cls_str = str if six.PY3 else basestring
-        if isinstance(t, cls_str):
+        if isinstance(t, str):
             t = '"%s"' % t
         return t
 
