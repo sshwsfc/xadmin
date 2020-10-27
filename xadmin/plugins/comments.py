@@ -16,8 +16,7 @@ class UsernameSearch(object):
     """
 
     def __str__(self):
-        model = get_user_model()
-        return 'user__%s' % getattr(model, model.USERNAME_FIELD)
+        return 'user__%s' % getattr(get_user_model().USERNAME_FIELD)
 
 
 class CommentsAdmin(object):
