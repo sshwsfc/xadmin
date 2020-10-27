@@ -31,7 +31,10 @@ LANGUAGES = (
 )
 
 ALLOWED_HOSTS = []
+# SITE_ID = 1
 
+# extra optional plugin
+# XADMIN_INCLUDE_PLUGINS = ('comments',)
 
 # Application definition
 
@@ -42,7 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    # 'django.contrib.sites',
+    # 'django_comments',
     'xadmin',
     'crispy_forms',
     'reversion',
