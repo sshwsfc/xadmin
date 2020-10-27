@@ -416,7 +416,7 @@ class RevisionView(BaseRevisionView):
             if fvalue is None and vvalue == '':
                 vvalue = None
             if is_related_field2(f):
-                vvalue = version_data.get(f.name + '_' + f.rel.get_related_field().name, None)
+                vvalue = version_data.get(f.name + '_' + f.remote_field.get_related_field().name, None)
 
             if fvalue != vvalue:
                 diff_fields[f.name] = self.detail.get_field_result(f.name).val
@@ -519,7 +519,7 @@ class InlineRevisionPlugin(BaseAdminPlugin):
         object_id = obj.pk
         # Get the fk name.
         try:
-            fk_name = formset.fk.name + '_' + formset.fk.rel.get_related_field().name
+            fk_name = formset.fk.name + '_' + formset.fk.remote_field.get_related_field().name
         except AttributeError:
             # This is a GenericInlineFormset, or similar.
             fk_name = formset.ct_fk_field.name
