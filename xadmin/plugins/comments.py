@@ -9,7 +9,7 @@ import xadmin
 from xadmin.layout import *
 
 
-class UsernameSearch(object):
+class UsernameSearch:
     """The User object may not be auth.User, so we need to provide
     a mechanism for issuing the equivalent of a .filter(user__username=...)
     search in CommentAdmin.
@@ -19,7 +19,7 @@ class UsernameSearch(object):
         return 'user__%s' % getattr(get_user_model().USERNAME_FIELD)
 
 
-class CommentsAdmin(object):
+class CommentsAdmin:
     form_layout = (
         Main(
             Fieldset(None,

@@ -4,7 +4,7 @@ VERSION = (0,6,0)
 
 from xadmin.sites import AdminSite, site
 
-class Settings(object):
+class Settings:
     pass
 
 

@@ -129,7 +129,7 @@ class JSONEncoder(DjangoJSONEncoder):
                 return smart_text(o)
 
 
-class BaseAdminObject(object):
+class BaseAdminObject:
 
     def get_view(self, view_class, option_class=None, *args, **kwargs):
         opts = kwargs.pop('opts', {})

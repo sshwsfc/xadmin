@@ -23,7 +23,7 @@ class MergeAdminMetaclass(type):
         return type.__new__(cls, str(name), bases, attrs)
 
 
-class AdminSite(object):
+class AdminSite:
 
     def __init__(self, name='xadmin'):
         self.name = name

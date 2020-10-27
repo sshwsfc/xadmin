@@ -31,7 +31,7 @@ DOT = '.'
 EMPTY_CHANGELIST_VALUE = _('Null')
 
 
-class FakeMethodField(object):
+class FakeMethodField:
     """
     This class used when a column is an model function, wrap function as a fake field to display in select columns.
     """
@@ -47,7 +47,7 @@ class ResultRow(dict):
     pass
 
 
-class ResultItem(object):
+class ResultItem:
 
     def __init__(self, field_name, row):
         self.classes = []

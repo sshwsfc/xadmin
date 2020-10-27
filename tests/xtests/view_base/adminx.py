@@ -7,7 +7,7 @@ from .models import ModelA, ModelB
 site = AdminSite('views_base')
 
 
-class ModelAAdmin(object):
+class ModelAAdmin:
     test_model_attr = 'test_model'
     model_icon = 'flag'
 
@@ -24,7 +24,7 @@ class TestAView(BaseAdminView):
     pass
 
 
-class OptionA(object):
+class OptionA:
     option_attr = 'option_test'
 
 

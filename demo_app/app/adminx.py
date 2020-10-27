@@ -8,7 +8,7 @@ from xadmin.plugins.batch import BatchChangeAction
 
 
 @xadmin.sites.register(views.website.IndexView)
-class MainDashboard(object):
+class MainDashboard:
     widgets = [
         [
             {"type": "html", "title": "Test Widget",
@@ -26,13 +26,13 @@ class MainDashboard(object):
 
 
 @xadmin.sites.register(views.BaseAdminView)
-class BaseSetting(object):
+class BaseSetting:
     enable_themes = True
     use_bootswatch = True
 
 
 @xadmin.sites.register(views.CommAdminView)
-class GlobalSetting(object):
+class GlobalSetting:
     global_search_models = [Host, IDC]
     global_models_icon = {
         Host: "fa fa-laptop", IDC: "fa fa-cloud"
@@ -40,14 +40,14 @@ class GlobalSetting(object):
     menu_style = 'default'  # 'accordion'
 
 
-class MaintainInline(object):
+class MaintainInline:
     model = MaintainLog
     extra = 1
     style = "accordion"
 
 
 @xadmin.sites.register(IDC)
-class IDCAdmin(object):
+class IDCAdmin:
     list_display = ("name", "description", "create_time", "contact", "telphone", "address", "customer_id")
     list_display_links = ("name",)
     wizard_form_list = [
@@ -70,7 +70,7 @@ class IDCAdmin(object):
 
 
 @xadmin.sites.register(Host)
-class HostAdmin(object):
+class HostAdmin:
 
     def open_web(self, instance):
         return """<a href="http://%s" target="_blank">Open</a>""" % instance.ip
@@ -161,7 +161,7 @@ class HostAdmin(object):
 
 
 @xadmin.sites.register(HostGroup)
-class HostGroupAdmin(object):
+class HostGroupAdmin:
     list_display = ("name", "description")
     list_display_links = ("name",)
 
@@ -171,7 +171,7 @@ class HostGroupAdmin(object):
 
 
 @xadmin.sites.register(MaintainLog)
-class MaintainLogAdmin(object):
+class MaintainLogAdmin:
     list_display = (
         "host", "maintain_type", "hard_type", "time", "operator", "note")
     list_display_links = ("host",)
@@ -201,7 +201,7 @@ class MaintainLogAdmin(object):
 
 
 @xadmin.sites.register(AccessRecord)
-class AccessRecordAdmin(object):
+class AccessRecordAdmin:
 
     def avg_count(self, instance):
         return int(instance.view_count / instance.user_count)

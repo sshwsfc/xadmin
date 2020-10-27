@@ -5,13 +5,13 @@ from xadmin.layout import *
 
 from django.utils.translation import ugettext_lazy as _, ugettext
 
-class UserSettingsAdmin(object):
+class UserSettingsAdmin:
     model_icon = 'fa fa-cog'
     hidden_menu = True
 
 xadmin.site.register(UserSettings, UserSettingsAdmin)
 
-class LogAdmin(object):
+class LogAdmin:
 
     def link(self, instance):
         if instance.content_type and instance.object_id and instance.action_flag != 'delete':

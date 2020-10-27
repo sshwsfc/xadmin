@@ -52,7 +52,7 @@ class TDField(Field):
     template = "xadmin/layout/td-field.html"
 
 
-class InlineStyleManager(object):
+class InlineStyleManager:
     inline_styles = {}
 
     def register_style(self, name, style):
@@ -64,7 +64,7 @@ class InlineStyleManager(object):
 style_manager = InlineStyleManager()
 
 
-class InlineStyle(object):
+class InlineStyle:
     template = 'xadmin/edit_inline/stacked.html'
 
     def __init__(self, view, formset):

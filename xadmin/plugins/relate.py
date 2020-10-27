@@ -114,7 +114,7 @@ class RelateMenuPlugin(BaseAdminPlugin):
         return list_display
 
 
-class RelateObject(object):
+class RelateObject:
 
     def __init__(self, admin_view, lookup, value):
         self.admin_view = admin_view
