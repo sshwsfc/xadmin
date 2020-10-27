@@ -108,15 +108,15 @@ class ReversionPlugin(BaseAdminPlugin):
             comment = ''
             admin_view = self.admin_view
             if isinstance(admin_view, CreateAdminView):
-                comment = _(u"Initial version.")
+                comment = _("Initial version.")
             elif isinstance(admin_view, UpdateAdminView):
-                comment = _(u"Change version.")
+                comment = _("Change version.")
             elif isinstance(admin_view, RevisionView):
-                comment = _(u"Revert version.")
+                comment = _("Revert version.")
             elif isinstance(admin_view, RecoverView):
-                comment = _(u"Rercover version.")
+                comment = _("Rercover version.")
             elif isinstance(admin_view, DeleteAdminView):
-                comment = _(u"Deleted %(verbose_name)s.") % {
+                comment = _("Deleted %(verbose_name)s.") % {
                     "verbose_name": self.opts.verbose_name}
             self.revision_context_manager.set_comment(comment)
             return __()
@@ -129,7 +129,7 @@ class ReversionPlugin(BaseAdminPlugin):
     # Block Views
     def block_top_toolbar(self, context, nodes):
         recoverlist_url = self.admin_view.model_admin_url('recoverlist')
-        nodes.append(mark_safe('<div class="btn-group"><a class="btn btn-default btn-sm" href="%s"><i class="fa fa-trash-o"></i> %s</a></div>' % (recoverlist_url, _(u"Recover"))))
+        nodes.append(mark_safe('<div class="btn-group"><a class="btn btn-default btn-sm" href="%s"><i class="fa fa-trash-o"></i> %s</a></div>' % (recoverlist_url, _("Recover"))))
 
     def block_nav_toggles(self, context, nodes):
         obj = getattr(

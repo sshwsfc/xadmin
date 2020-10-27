@@ -79,8 +79,8 @@ class UserWidgetAdmin(object):
     hidden_menu = True
 
     wizard_form_list = (
-        (_(u"Widget Type"), ('page_id', 'widget_type')),
-        (_(u"Widget Params"), {'callback':
+        (_("Widget Type"), ('page_id', 'widget_type')),
+        (_("Widget Params"), {'callback':
                                "get_widget_params_form", 'convert': "convert_widget_params"})
     )
 
@@ -368,7 +368,7 @@ class QuickBtnWidget(BaseWidget):
     widget_type = 'qbutton'
     description = _(u'Quick button Widget, quickly open any page.')
     template = "xadmin/widgets/qbutton.html"
-    base_title = _(u"Quick Buttons")
+    base_title = _("Quick Buttons")
     widget_icon = 'fa fa-caret-square-o-right'
 
     def convert(self, data):
@@ -489,7 +489,7 @@ class Dashboard(CommAdminView):
 
     widget_customiz = True
     widgets = []
-    title = _(u"Dashboard")
+    title = _("Dashboard")
     icon = None
 
     def get_page_id(self):
@@ -637,7 +637,7 @@ class Dashboard(CommAdminView):
 
 class ModelDashboard(Dashboard, ModelAdminView):
 
-    title = _(u"%s Dashboard")
+    title = _("%s Dashboard")
 
     def get_page_id(self):
         return 'model:%s/%s' % self.model_info

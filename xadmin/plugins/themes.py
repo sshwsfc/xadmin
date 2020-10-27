@@ -50,8 +50,8 @@ class ThemePlugin(BaseAdminPlugin):
     def block_top_navmenu(self, context, nodes):
 
         themes = [
-            {'name': _(u"Default"), 'description': _(u"Default bootstrap theme"), 'css': self.default_theme},
-            {'name': _(u"Bootstrap2"), 'description': _(u"Bootstrap 2.x theme"), 'css': self.bootstrap2_theme},
+            {'name': _("Default"), 'description': _("Default bootstrap theme"), 'css': self.default_theme},
+            {'name': _("Bootstrap2"), 'description': _("Bootstrap 2.x theme"), 'css': self.bootstrap2_theme},
         ]
         select_css = context.get('site_theme', self.default_theme)
 

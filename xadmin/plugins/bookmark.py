@@ -56,7 +56,7 @@ class BookmarkPlugin(BaseAdminPlugin):
 
         model_info = (self.opts.app_label, self.opts.model_name)
         has_selected = False
-        menu_title = _(u"Bookmark")
+        menu_title = _("Bookmark")
         list_base_url = reverse('xadmin:%s_%s_changelist' %
                                 model_info, current_app=self.admin_site.name)
 

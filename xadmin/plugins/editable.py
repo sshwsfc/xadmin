@@ -44,7 +44,7 @@ class EditablePlugin(BaseAdminPlugin):
             item.btns.append((
                 '<a class="editable-handler" title="%s" data-editable-field="%s" data-editable-loadurl="%s">' +
                 '<i class="fa fa-edit"></i></a>') %
-                (_(u"Enter %s") % field_label, field_name, self.admin_view.model_admin_url('patch', pk) + '?fields=' + field_name))
+                (_("Enter %s") % field_label, field_name, self.admin_view.model_admin_url('patch', pk) + '?fields=' + field_name))
 
             if field_name not in self.editable_need_fields:
                 self.editable_need_fields[field_name] = item.field
