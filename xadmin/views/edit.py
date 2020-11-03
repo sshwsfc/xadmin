@@ -417,13 +417,16 @@ class CreateAdminView(ModelFormAdminView):
         """
         request = self.request
 
-        msg = _(
-            'The %(name)s "%(obj)s" was added successfully.') % {'name': force_text(self.opts.verbose_name),
-                                                                 'obj': "<a class='alert-link' href='%s'>%s</a>" % (self.model_admin_url('change', self.new_obj._get_pk_val()), force_text(self.new_obj))}
+        msg = _('The %(name)s "%(obj)s" was added successfully.') % {
+            'name': force_text(self.opts.verbose_name),
+            'obj': "<a class='alert-link' href='%s'>%s</a>" % (
+                self.model_admin_url('change', self.new_obj._get_pk_val()),
+                force_text(self.new_obj)
+            )
+        }
 
         if "_continue" in request.POST:
-            self.message_user(
-                msg + ' ' + _("You may edit it again below."), 'success')
+            self.message_user(msg + ' ' + _("You may edit it again below."), 'success')
             return self.model_admin_url('change', self.new_obj._get_pk_val())
 
         if "_addanother" in request.POST:
