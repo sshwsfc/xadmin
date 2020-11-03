@@ -20,7 +20,7 @@
 {% endblock %}
 
 {% block content %}
-<form action="" method="POST">
+<form action="" method="POST" {% view_block 'form_tag_attrs' %}>
   {% csrf_token %}
 
     <fieldset class="module aligned">

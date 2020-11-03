@@ -73,7 +73,7 @@
     {% view_block 'pagination' 'small' %}
   </ul>
   
-  <form id="changelist-form" action="" method="post"{% view_block 'result_list_form' %}>{% csrf_token %}
+  <form id="changelist-form" action="" method="post"{% view_block 'result_list_form' %}{% view_block 'form_tag_attrs' %}>{% csrf_token %}
   {% view_block 'results_top' %}
   <div class="results table-responsive">
   {% if results %}

@@ -26,7 +26,7 @@
           {% trans "Save current page as Bookmark" %}
         </h3>
         <div class="popover-content">
-          <form id="bookmark_form" method="post" action="{{bk_post_url}}">
+          <form id="bookmark_form" method="post" action="{{bk_post_url}}" {% view_block 'form_tag_attrs' %}>
             {% csrf_token %}
             <input type="hidden" name="query" value="{{bk_current_qs}}"/>
             <input name="title" type="text" class="form-control" placeholder="{% trans "Enter bookmark title" %}…"/>

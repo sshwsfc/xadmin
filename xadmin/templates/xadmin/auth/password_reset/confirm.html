@@ -11,7 +11,7 @@
     <div class="panel-heading">
       <h3 class="form-signin-heading">{% trans 'Enter new password' %}</h3>
     </div>
-    <form action="" method="post" id="password-reset-confirm" class="form-horizontal">
+    <form action="" method="post" id="password-reset-confirm" class="form-horizontal" {% view_block 'form_tag_attrs' %}>
     <div class="panel-body">
       {% csrf_token %}
       <p class="text-info">{% trans "Please enter your new password twice so we can verify you typed it in correctly." %}</p>

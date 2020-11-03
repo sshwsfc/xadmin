@@ -5,7 +5,7 @@
 {% block box_class %}{{block.super}} form-horizontal short_label fieldset{% endblock box_class %}
 
 {% block content %}
-<form class="exform quick-form widget-form" action="{{addurl}}" method="post" id="{{ widget.model_name }}_form">{% csrf_token %}
+<form class="exform quick-form widget-form" action="{{addurl}}" method="post" id="{{ widget.model_name }}_form" {% view_block 'form_tag_attrs' %}>{% csrf_token %}
   {% crispy addform addhelper %}
   <div class="form-group row submit-line">
     <div class="controls">
