@@ -4,7 +4,7 @@ import _ from 'lodash'
 import { use } from 'xadmin'
 import { _t } from 'xadmin-i18n'
 import { ModelBlock } from 'xadmin-model'
-import { C, Icon, Page } from 'xadmin-ui'
+import { C, Icon, Page, Loading } from 'xadmin-ui'
 
 const { Content, Sider } = Layout
 
@@ -74,8 +74,10 @@ const ModelListPage = ({ location }) => {
 const ModelFormPage = ({ params, location: { query } }) => {
   const { model } = use('model')
   const { onSaved } = use('model.event')
+  const { data, loading } = use('model.item', { id: params && params.id })
 
-  const title = params && params.id ? _t('Edit {{title}}', { title: model.title }) : _t('Create {{title}}', { title: model.title })
+  const title = params && params.id ? _t('Edit {{title}}', 
+    { title: model.title + ' ' + (data && data[model.displayField || 'name'] || '') }) : _t('Create {{title}}', { title: model.title })
   const FormComponent = (model.components && model.components.DataForm) || C('Model.DataForm')
 
   return (
@@ -84,7 +86,7 @@ const ModelFormPage = ({ params, location: { query } }) => {
       subTitle={<ModelBlock name="model.edit.nav" />}
       actions={<ModelBlock name="model.edit.navbtn" />}>
       <ModelBlock name="model.form.before" />
-      <FormComponent id={params && params.id} query={query} onSubmitSuccess={onSaved} />
+      { loading ? <Loading /> : <FormComponent id={params && params.id} item={data} query={query} onSubmitSuccess={onSaved} /> }
       <ModelBlock name="model.form.after" />
     </Page>
   )

@@ -1,6 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
-import { Block, StoreWrap, app } from 'xadmin'
+import { Block, StoreWrap, app, use } from 'xadmin'
 
 const ModelContext = React.createContext(null)
 
@@ -18,6 +18,7 @@ const getModel = (name, key, props) => {
 }
 
 const Model = ({ name, schema, modelKey, initialValues, children, props: modelProps }) => {
+  const { dispatch } = use('redux')
   const [ state, setState ] = React.useState(null)
 
   const model = React.useMemo(() => {
@@ -40,10 +41,10 @@ const Model = ({ name, schema, modelKey, initialValues, children, props: modelPr
       if(!initial && model.initialValues) {
         initial = _.isFunction(model.initialValues) ? model.initialValues() : model.initialValues
       }
-      app.context.store.dispatch({ type: 'INITIALIZE', model, initial })
+      dispatch({ type: 'INITIALIZE', model, initial })
       setState('INITIALIZE')
     } else if(state == 'DESTROY') {
-      app.context.store.dispatch({ type: 'DESTROY', model })
+      dispatch({ type: 'DESTROY', model })
     }
   }, [ state ])
   if(!model || state != 'INITIALIZE') return null

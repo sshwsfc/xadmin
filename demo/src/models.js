@@ -33,6 +33,7 @@ export default {
       name: {
         type: 'string',
         //description: '用户的真实姓名'
+        renderTemplate: '<b style="color: <%= {1:"red", 2:"blue", 3:"green"}[item.type] || "" %>;"><%= value %></b>'
       },
       username: {
         type: 'string'
