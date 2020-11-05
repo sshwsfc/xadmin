@@ -1,6 +1,6 @@
 {
   "name": "xadmin-model",
-  "version": "3.0.5",
+  "version": "3.0.7",
   "description": "Xadmin Model",
   "main": "./lib/index.js",
   "author": "sshwsfc@gmail.com",
@@ -10,11 +10,9 @@
   },
   "peerDependencies": {
     "redux": "4",
-    "redux-form": "8",
     "redux-saga": "1",
     "xadmin": "2",
-    "xadmin-form": "2",
-    "xadmin-i18n": "2",
+    "xadmin-form": "3",
     "xadmin-ui": "2"
   },
   "scripts": {
