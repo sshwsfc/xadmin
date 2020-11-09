@@ -68,7 +68,7 @@ class AdminSite:
         if issubclass(admin_view_class, BaseAdminView):
             self._registry_modelviews.append((path, admin_view_class, name))
         else:
-            raise ImproperlyConfigured(u'The registered view class %s isn\'t subclass of %s' %
+            raise ImproperlyConfigured('The registered view class %s isn\'t subclass of %s' %
                                        (admin_view_class.__name__, BaseAdminView.__name__))
 
     def register_view(self, path, admin_view_class, name):
@@ -116,8 +116,7 @@ class AdminSite:
                                                'cannot be registered with admin.' % model.__name__)
 
                 if model in self._registry:
-                    raise AlreadyRegistered(
-                        'The model %s is already registered' % model.__name__)
+                    raise AlreadyRegistered('The model %s is already registered' % model.__name__)
 
                 # If we got **options then dynamically construct a subclass of
                 # admin_class with those **options.
@@ -137,8 +136,7 @@ class AdminSite:
                     raise AlreadyRegistered('The admin_view_class %s is already registered' % model.__name__)
                 if options:
                     options['__module__'] = __name__
-                    admin_class = type(str(
-                        "%sAdmin" % model.__name__), (admin_class,), options)
+                    admin_class = type(str("%sAdmin" % model.__name__), (admin_class,), options)
 
                 # Instantiate the admin class to save in the registry
                 self._registry_avs[model] = admin_class
@@ -155,8 +153,7 @@ class AdminSite:
         for model in model_or_iterable:
             if isinstance(model, ModelBase):
                 if model not in self._registry:
-                    raise NotRegistered(
-                        'The model %s is not registered' % model.__name__)
+                    raise NotRegistered('The model %s is not registered' % model.__name__)
                 del self._registry[model]
             else:
                 if model not in self._registry_avs:
