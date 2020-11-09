@@ -20,13 +20,14 @@ class DeleteAdminView(ModelAdminView):
 
     def __init__(self, request, *args, **kwargs):
         if django_version > (2, 0):
-            for model in self.admin_site._registry:
-                if not hasattr(self.admin_site._registry[model], 'has_delete_permission'):
-                    setattr(self.admin_site._registry[model], 'has_delete_permission', self.has_delete_permission)
+            admin_site_registry = self.admin_site._registry
+            for model in admin_site_registry:
+                if not hasattr(admin_site_registry[model], 'has_delete_permission'):
+                    setattr(admin_site_registry[model], 'has_delete_permission', self.has_delete_permission)
         super(DeleteAdminView, self).__init__(request, *args, **kwargs)
 
     def init_request(self, object_id, *args, **kwargs):
-        "The 'delete' admin view for this model."
+        """The 'delete' admin view for this model."""
         self.obj = self.get_object(unquote(object_id))
 
         if not self.has_delete_permission(self.obj):
@@ -39,12 +40,8 @@ class DeleteAdminView(ModelAdminView):
 
         # Populate deleted_objects, a data structure of all related objects that
         # will also be deleted.
-        if django_version > (2, 1):
-            (self.deleted_objects, model_count, self.perms_needed, self.protected) = get_deleted_objects(
-                [self.obj], self.opts, self.admin_site)
-        else:
-            (self.deleted_objects, model_count, self.perms_needed, self.protected) = get_deleted_objects(
-                [self.obj], self.opts, self.request.user, self.admin_site, using)
+        self.deleted_objects, model_count, self.perms_needed, self.protected = get_deleted_objects(
+            [self.obj], self, self.admin_site)
 
     @csrf_protect_m
     @filter_hook

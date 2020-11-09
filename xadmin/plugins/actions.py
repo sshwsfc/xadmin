@@ -55,10 +55,10 @@ class BaseActionView(ModelAdminView):
 
     def __init__(self, request, *args, **kwargs):
         super().__init__(request, *args, **kwargs)
-        if django_version > (2, 0):
-            for model in self.admin_site._registry:
-                if not hasattr(self.admin_site._registry[model], 'has_delete_permission'):
-                    setattr(self.admin_site._registry[model], 'has_delete_permission', self.has_delete_permission)
+        admin_site_registry = self.admin_site._registry
+        for model in admin_site_registry:
+            if not hasattr(admin_site_registry[model], 'has_delete_permission'):
+                setattr(admin_site_registry[model], 'has_delete_permission', self.has_delete_permission)
 
 
 class DeleteSelectedAction(BaseActionView):
@@ -97,15 +97,8 @@ class DeleteSelectedAction(BaseActionView):
 
         # Populate deletable_objects, a data structure of all related objects that
         # will also be deleted.
-
-        if django_version > (2, 1):
-            deletable_objects, model_count, perms_needed, protected = get_deleted_objects(
-                queryset, self.opts, self.admin_site)
-        else:
-            using = router.db_for_write(self.model)
-            deletable_objects, model_count, perms_needed, protected = get_deleted_objects(
-                queryset, self.opts, self.user, self.admin_site, using)
-
+        deletable_objects, model_count, perms_needed, protected = get_deleted_objects(
+            queryset, self, self.admin_site)
 
         # The user has already confirmed the deletion.
         # Do the deletion and return a None to display the change list view again.
