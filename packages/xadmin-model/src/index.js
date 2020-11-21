@@ -8,6 +8,16 @@ import hooks from './hooks'
 import mappers from './mappers'
 import fieldRenders from './render'
 
+import relate from './relate'
+import filter from './filter'
+import actions from './actions'
+
+import search from './search'
+import modalform from './modalform'
+import reldetail from './reldetail'
+
+import utils from './utils'
+
 const app = {
   name: 'xadmin.model',
   items: {
@@ -97,5 +107,9 @@ const app = {
   }
 }
 
-export { Model, ModelWrap, ModelBlock, ModelContext }
+const apps = {
+  relate, filter, actions, search, modalform, reldetail
+}
+
+export { Model, ModelWrap, ModelBlock, ModelContext, apps, utils }
 export default app

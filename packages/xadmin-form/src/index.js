@@ -11,6 +11,7 @@ import {
   useForm,
   fieldBuilder,
   objectBuilder,
+  prefixFieldKey,
   schemaConvert
 } from './base'
 
@@ -47,6 +48,7 @@ export {
   FormWrap,
   fieldBuilder,
   objectBuilder,
+  prefixFieldKey,
   schemaConvert,
   FieldArray
 }

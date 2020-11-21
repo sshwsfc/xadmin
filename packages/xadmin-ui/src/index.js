@@ -1,6 +1,9 @@
 import React from 'react'
 import app from 'xadmin'
 
+import loading from './loading'
+import splashscreen from './splashscreen'
+
 const C = args => {
   if(typeof args == 'string') {
     return app.get('components')[args]
@@ -74,6 +77,8 @@ export default {
   }
 }
 
+const apps = { loading, splashscreen }
+
 export {
   C,
   Page, Icon, Loading,
@@ -81,5 +86,5 @@ export {
   Dropdown, Menu, Badge, Card,
   Modal, Button, Popover, Tooltip, 
   Table, Tabs, Empty, List, Alert,
-  Input, Check, Select
+  Input, Check, Select, apps
 }

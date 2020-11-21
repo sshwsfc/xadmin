@@ -3,7 +3,7 @@ import { StoreWrap, app, config, use } from 'xadmin'
 import { Form as RForm, useForm as rUseForm } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import { C } from 'xadmin-ui'
-import { fieldBuilder, objectBuilder } from './builder'
+import { fieldBuilder, objectBuilder, prefixFieldKey } from './builder'
 
 import Ajv from 'ajv'
 import _ from 'lodash'
@@ -219,5 +219,6 @@ export {
   useForm,
   fieldBuilder,
   objectBuilder,
+  prefixFieldKey,
   schemaConvert
 }

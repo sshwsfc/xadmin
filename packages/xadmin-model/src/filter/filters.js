@@ -65,11 +65,7 @@ export default [
       return f
     }
     const schema_type = stripNullType(schema.type)
-    if(stripNullType(schema_type) === 'object') {
-      f.type = 'filter_relate'
-    } else if(stripNullType(schema_type) === 'array') {
-      f.type = 'filter_mutli'
-    } else if(schema_type === 'string') {
+    if(schema_type === 'string') {
       if(!schema['enum']) {
         f.type = 'filter_text'
       } else {
