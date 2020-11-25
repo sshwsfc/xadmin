@@ -37,7 +37,7 @@
 {% endblock formset_content %}
 
 {% block formset_empty %}
-  <tr class="formset-row">
+  <tr class="formset-row empty-form">
     {% crispy formset.formset.empty_form formset.formset.helper %}
     {% if formset.formset.can_delete %}
       <td><a class="delete-row"><i class="fa fa-times"></i></a></td>
