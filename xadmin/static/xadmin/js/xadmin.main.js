@@ -14,6 +14,16 @@
     $('.exform:not(.rended)').exform();
   });
 
+  /*Returns the value of the name of a url parameter*/
+  $.urlParam = function (name, url = window.location.href) {
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+    results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+ }
+
   $.setCookie = function(name, value, options){
     options = options || {};
     if (value === null) {
