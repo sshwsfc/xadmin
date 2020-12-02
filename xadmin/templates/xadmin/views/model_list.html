@@ -78,7 +78,7 @@
   <div class="results table-responsive">
   {% if results %}
   {% block results_grid %}
-  <table class="table table-bordered table-striped table-hover">
+  <table class="table table-bordered table-striped table-hover" id="changelist-table">
     {% block results_grid_head %}
     <thead>
       <tr>{% for o in result_headers.cells %}
