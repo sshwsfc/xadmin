@@ -393,7 +393,7 @@ class RelatedFieldListFilter(ListFieldFilter):
         super(RelatedFieldListFilter, self).__init__(
             field, request, params, model, model_admin, field_path)
 
-        if hasattr(field, 'verbose_name'):
+        if not field.auto_created and hasattr(field, 'verbose_name'):
             self.lookup_title = field.verbose_name
         else:
             self.lookup_title = other_model._meta.verbose_name
