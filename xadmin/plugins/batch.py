@@ -75,16 +75,16 @@ class BatchChangeAction(BaseActionView):
 
         data = {}
         fields = self.opts.fields + self.opts.many_to_many
-        for f in fields:
-            if not f.editable or isinstance(f, models.AutoField) \
-                    or not f.name in cleaned_data:
+        for field in fields:
+            if not field.editable or isinstance(field, models.AutoField) \
+                    or not field.name in cleaned_data:
                 continue
-            data[f] = cleaned_data[f.name]
+            data[field] = cleaned_data[field.name]
 
         if n:
             for obj in queryset:
-                for f, v in data.items():
-                    f.save_form_data(obj, v)
+                for field, v in data.items():
+                    field.save_form_data(obj, v)
                 obj.save()
             self.message_user(_("Successfully change %(count)d %(items)s.") % {
                 "count": n, "items": model_ngettext(self.opts, n)
