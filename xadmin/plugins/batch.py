@@ -69,6 +69,8 @@ class BatchChangeAction(BaseActionView):
     model_perm = 'change'
 
     batch_fields = []
+    # It allows you to use a different form stated in the view model
+    batch_form = None
 
     def change_models(self, queryset, cleaned_data):
         n = queryset.count()
@@ -106,23 +108,25 @@ class BatchChangeAction(BaseActionView):
             formfield.widget = ChangeFieldWidgetWrapper(formfield.widget)
             return formfield
 
-        def formfield_for_declared(form):
-            """Processes declared fields that are not in the model"""
-            for field_name in form.declared_fields:
-                if field_name not in fields:
-                    continue
-                formfield = form.declared_fields[field_name]
-                if not isinstance(formfield.widget, ChangeFieldWidgetWrapper):
-                    formfield.widget = ChangeFieldWidgetWrapper(formfield.widget)
-            return form
-
+        batch_form = getattr(edit_view, "batch_form",
+                             edit_view.form)
         defaults = {
-            "form": edit_view.form,
+            "form": batch_form or edit_view.form,
             "fields": fields,
             "formfield_callback": formfield_for_dbfield,
         }
         form = modelform_factory(self.model, **defaults)
-        form = formfield_for_declared(form)
+        return form
+
+    @staticmethod
+    def formfield_for_declared(form, fields):
+        """Processes declared fields that are not in the model"""
+        for field_name in form.declared_fields:
+            if field_name not in fields:
+                continue
+            formfield = form.fields[field_name]
+            if not isinstance(formfield.widget, ChangeFieldWidgetWrapper):
+                formfield.widget = ChangeFieldWidgetWrapper(formfield.widget)
         return form
 
     def do_action(self, queryset):
@@ -138,7 +142,9 @@ class BatchChangeAction(BaseActionView):
                 self.change_models(queryset, self.form_obj.cleaned_data)
                 return None
         else:
-            self.form_obj = self.get_change_form(False, self.batch_fields)()
+            form = self.get_change_form(False, self.batch_fields)()
+            # Support for declared fields but without affecting field inheritance.
+            self.form_obj = self.formfield_for_declared(form, self.batch_fields)
 
         helper = FormHelper()
         helper.form_tag = False
