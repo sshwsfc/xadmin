@@ -81,6 +81,14 @@ class BatchChangeAction(BaseActionView):
                 continue
             data[field] = cleaned_data[field.name]
 
+        # custom declared fields
+        declared_fields = self.form_obj.declared_fields
+        for field_name in declared_fields:
+            field_value = cleaned_data.get(field_name)
+            if field_value and field_name not in data:
+                field = declared_fields[field_name]
+                data[field] = cleaned_data[field_name]
+
         if n:
             for obj in queryset:
                 for field, v in data.items():
