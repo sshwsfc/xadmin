@@ -98,12 +98,24 @@ class BatchChangeAction(BaseActionView):
             formfield.widget = ChangeFieldWidgetWrapper(formfield.widget)
             return formfield
 
+        def formfield_for_declared(form):
+            """Processes declared fields that are not in the model"""
+            for field_name in form.declared_fields:
+                if field_name not in fields:
+                    continue
+                formfield = form.declared_fields[field_name]
+                if not isinstance(formfield.widget, ChangeFieldWidgetWrapper):
+                    formfield.widget = ChangeFieldWidgetWrapper(formfield.widget)
+            return form
+
         defaults = {
             "form": edit_view.form,
             "fields": fields,
             "formfield_callback": formfield_for_dbfield,
         }
-        return modelform_factory(self.model, **defaults)
+        form = modelform_factory(self.model, **defaults)
+        form = formfield_for_declared(form)
+        return form
 
     def do_action(self, queryset):
         if not self.has_change_permission():
