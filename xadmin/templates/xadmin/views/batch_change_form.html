@@ -36,6 +36,7 @@
 
   <div class="form-actions well well-sm">
     <input type="submit" value="{% trans 'Change Multiple' %}" class="default btn btn-primary" name="_save"/>
+    <a href="{% url opts|admin_urlname:'changelist' %}" class="btn btn-danger">{% trans 'Cancel' %}</a>
   </div>
 </form>
 {% endblock %}
