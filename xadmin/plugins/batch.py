@@ -78,8 +78,10 @@ class BatchChangeAction(BaseActionView):
         data = {}
         fields = self.opts.fields + self.opts.many_to_many
         for field in fields:
+            # [declared_fields] It has a custom field overlapping the pattern.
             if not field.editable or isinstance(field, models.AutoField) \
-                    or not field.name in cleaned_data:
+                    or field.name not in cleaned_data or \
+                    field.name in self.form_obj.declared_fields:
                 continue
             data[field] = cleaned_data[field.name]
 
