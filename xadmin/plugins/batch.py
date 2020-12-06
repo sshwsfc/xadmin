@@ -84,11 +84,9 @@ class BatchChangeAction(BaseActionView):
             data[field] = cleaned_data[field.name]
 
         # custom declared fields
-        declared_fields = self.form_obj.declared_fields
-        for field_name in declared_fields:
-            field_value = cleaned_data.get(field_name)
-            if field_value and field_name not in data:
-                field = declared_fields[field_name]
+        for field_name in self.form_obj.declared_fields:
+            field = self.form_obj.fields.get(field_name)
+            if field and field_name in cleaned_data and field_name not in data:
                 data[field] = cleaned_data[field_name]
 
         if n:
@@ -124,9 +122,9 @@ class BatchChangeAction(BaseActionView):
         for field_name in form.declared_fields:
             if field_name not in fields:
                 continue
-            formfield = form.fields[field_name]
-            if not isinstance(formfield.widget, ChangeFieldWidgetWrapper):
-                formfield.widget = ChangeFieldWidgetWrapper(formfield.widget)
+            field = form.fields.get(field_name)
+            if field and not isinstance(field.widget, ChangeFieldWidgetWrapper):
+                field.widget = ChangeFieldWidgetWrapper(field.widget)
         return form
 
     def do_action(self, queryset):
