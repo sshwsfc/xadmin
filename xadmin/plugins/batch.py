@@ -2,7 +2,7 @@
 import copy
 from django import forms
 from django.db import models
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ImproperlyConfigured
 from django.forms.models import modelform_factory
 from django.template.response import TemplateResponse
 from django.utils.encoding import force_text
@@ -126,6 +126,10 @@ class BatchChangeAction(BaseActionView):
                 continue
             field = form.fields.get(field_name)
             if field and not isinstance(field.widget, ChangeFieldWidgetWrapper):
+                if not hasattr(field, 'save_form_data'):
+                    raise ImproperlyConfigured("Custom fields need to implement "
+                                               "the 'save_form_data(self, obj, value)' "
+                                               "method in order to update instances.")
                 field.widget = ChangeFieldWidgetWrapper(field.widget)
         return form
 
