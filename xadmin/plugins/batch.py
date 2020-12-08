@@ -133,6 +133,14 @@ class BatchChangeAction(BaseActionView):
                 field.widget = ChangeFieldWidgetWrapper(field.widget)
         return form
 
+    @staticmethod
+    def formfield_declared_in_post(form, fields):
+        """Keep only declared fields sent in the post"""
+        for field_name in form.declared_fields:
+            if field_name not in fields:
+                del form.fields[field_name]
+        return form
+
     def do_action(self, queryset):
         if not self.has_change_permission():
             raise PermissionDenied
@@ -140,8 +148,9 @@ class BatchChangeAction(BaseActionView):
         change_fields = [f for f in self.request.POST.getlist(BATCH_CHECKBOX_NAME) if f in self.batch_fields]
 
         if change_fields and self.request.POST.get('post'):
-            self.form_obj = self.get_change_form(True, change_fields)(
-                data=self.request.POST, files=self.request.FILES)
+            form = self.get_change_form(True, change_fields)(data=self.request.POST,
+                                                             files=self.request.FILES)
+            self.form_obj = self.formfield_declared_in_post(form, change_fields)
             if self.form_obj.is_valid():
                 self.change_models(queryset, self.form_obj.cleaned_data)
                 return None
