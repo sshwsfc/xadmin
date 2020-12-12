@@ -100,6 +100,9 @@ const filter = (name, componentName, groupName) => ({ model }) => (
 
 export default {
   name: 'xadmin.filter',
+  components: {
+    'Model.BaseFilter': BaseFilter
+  },
   blocks: {
     'model.list.nav': filter('navform', 'Filter.NavForm', 'Form.InlineGroup'),
     'model.list.navbtn': filter('nav', 'Filter.Modal'),

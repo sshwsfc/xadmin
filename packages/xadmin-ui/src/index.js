@@ -50,6 +50,15 @@ Input.Static = C.lazy('Input.Static')
 const Check = C.lazy('Check')
 const Select = C.lazy('Select')
 
+const lazy = (fn, fallback) => {
+  const Component = React.lazy(fn)
+  return props => (
+    <React.Suspense fallback={fallback || <Loading />}>
+      <Component {...props} />
+    </React.Suspense>
+  )
+}
+
 export default {
   name: 'xadmin.ui',
   items: {
@@ -80,7 +89,7 @@ export default {
 const apps = { loading, splashscreen }
 
 export {
-  C,
+  C, lazy,
   Page, Icon, Loading,
   Main, Dashboard, App,
   Dropdown, Menu, Badge, Card,
