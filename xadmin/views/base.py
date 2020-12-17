@@ -257,8 +257,11 @@ class BaseAdminView(BaseAdminObject, View):
         self.request_method = request.method.lower()
         self.user = request.user
 
-        self.base_plugins = [p(self) for p in getattr(self,
-                                                      "plugin_classes", [])]
+        def plugin_order_key(plugin):
+            return getattr(plugin, 'order', 100)
+
+        self.base_plugins = sorted((p(self) for p in getattr(self, "plugin_classes", [])),
+                                   key=plugin_order_key)
 
         self.args = args
         self.kwargs = kwargs
