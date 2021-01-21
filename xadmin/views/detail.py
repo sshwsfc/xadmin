@@ -74,11 +74,22 @@ class ResultField:
 
         self.init()
 
+    def get_admin_view_form(self):
+        form = getattr(self.admin_view, 'form_obj', None)
+        if form is None and hasattr(self.admin_view, 'instance_forms'):
+            self.admin_view.instance_forms()
+            form = self.admin_view.form_obj
+        return form
+
     def init(self):
+        try:
+            form = self.get_admin_view_form()
+        except AttributeError:
+            form = None
         self.label = label_for_field(self.field_name, self.obj.__class__,
                                      model_admin=self.admin_view,
-                                     return_attr=False
-                                     )
+                                     return_attr=False,
+                                     form=form)
         try:
             f, attr, value = lookup_field(self.field_name, self.obj, self.admin_view)
         except (AttributeError, ObjectDoesNotExist):
