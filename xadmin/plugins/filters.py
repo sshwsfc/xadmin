@@ -133,8 +133,7 @@ class FilterPlugin(BaseAdminPlugin):
                         field, field_list_filter_class = list_filter, filter_manager.create
                     if not isinstance(field, models.Field):
                         field_path = field
-                        field_parts = get_fields_from_path(
-                            self.model, field_path)
+                        field_parts = get_fields_from_path(self.model, field_path)
                         field = field_parts[-1]
                     spec = field_list_filter_class(
                         field, self.request, lookup_params,
