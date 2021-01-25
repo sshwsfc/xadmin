@@ -1,3 +1,5 @@
+import urllib.parse
+
 import operator
 
 from django.template.loader import render_to_string
@@ -196,7 +198,7 @@ class FilterPlugin(BaseAdminPlugin):
             if not isinstance(queryset, models.query.QuerySet):
                 pass
 
-        query = self.request.GET.get(SEARCH_VAR, '')
+        query = urllib.parse.unquote_plus(self.request.GET.get(SEARCH_VAR, ''))
 
         # Apply keyword searches.
         def construct_search(field_name):
