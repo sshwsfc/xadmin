@@ -51,7 +51,13 @@ from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView, ModelAdminView
 from xadmin.views.base import csrf_protect_m, filter_hook
 from django.db import transaction
-from import_export.admin import DEFAULT_FORMATS, SKIP_ADMIN_LOG, TMP_STORAGE_CLASS
+from import_export.admin import DEFAULT_FORMATS
+try:
+    from import_export.admin import SKIP_ADMIN_LOG, TMP_STORAGE_CLASS
+except ImportError:
+    from import_export.tmp_storages import TempFolderStorage
+    TMP_STORAGE_CLASS = getattr(settings, 'IMPORT_EXPORT_TMP_STORAGE_CLASS', TempFolderStorage)
+    SKIP_ADMIN_LOG = getattr(settings, 'IMPORT_EXPORT_SKIP_ADMIN_LOG', False)
 from import_export.resources import modelresource_factory
 from import_export.forms import (
     ImportForm,
