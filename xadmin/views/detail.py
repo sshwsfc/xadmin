@@ -75,11 +75,12 @@ class ResultField:
         self.init()
 
     def get_admin_view_form(self):
-        form = getattr(self.admin_view, 'form_obj', None)
-        if form is None and hasattr(self.admin_view, 'instance_forms'):
+        form_obj = getattr(self.admin_view, 'form_obj', None)
+        if form_obj is None or not isinstance(form_obj, forms.ModelForm) and \
+                hasattr(self.admin_view, 'instance_forms'):
             self.admin_view.instance_forms()
-            form = self.admin_view.form_obj
-        return form
+            form_obj = self.admin_view.form_obj
+        return form_obj
 
     def init(self):
         try:
@@ -286,6 +287,7 @@ class DetailAdminView(ModelAdminView):
 
 class DetailAdminUtil(DetailAdminView):
 
-    def init_request(self, obj):
+    def init_request(self, obj, form_obj=None):
         self.obj = obj
         self.org_obj = obj
+        self.form_obj = form_obj

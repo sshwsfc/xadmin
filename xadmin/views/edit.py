@@ -225,7 +225,9 @@ class ModelFormAdminView(ModelAdminView):
         # deal with readonly fields
         readonly_fields = self.get_readonly_fields()
         if readonly_fields:
-            detail = self.get_model_view(DetailAdminUtil, self.model, self.form_obj.instance)
+            detail = self.get_model_view(DetailAdminUtil, self.model,
+                                         self.form_obj.instance,
+                                         form_obj=self.form_obj)
             for field in readonly_fields:
                 helper[field].wrap(ReadOnlyField, detail=detail)
 
