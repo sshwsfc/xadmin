@@ -6738,6 +6738,7 @@ button.close {
 }
 .popover-content {
   padding: 9px 14px;
+  min-width: 250px;
 }
 
 .popover > .arrow,
