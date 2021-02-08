@@ -117,8 +117,7 @@ class BatchChangeAction(BaseActionView):
             "formfield_callback": formfield_for_dbfield,
             "exclude": getattr(edit_view, "batch_fields_exclude", ())
         }
-        form = modelform_factory(self.model, **defaults)
-        return form
+        return modelform_factory(self.model, **defaults)
 
     @staticmethod
     def formfield_for_declared(form, fields):
