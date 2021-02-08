@@ -139,7 +139,7 @@ class BatchChangeAction(BaseActionView):
     def formfield_declared_in_post(form, fields):
         """Keep only declared fields sent in the post"""
         for field_name in form.declared_fields:
-            if field_name not in fields:
+            if field_name not in fields and field_name in form.fields:
                 del form.fields[field_name]
         return form
 
