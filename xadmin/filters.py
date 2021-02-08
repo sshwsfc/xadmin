@@ -69,6 +69,10 @@ class BaseFilter:
     def get_context(self):
         return {'title': self.title, 'spec': self, 'form_params': self.form_params()}
 
+    def get_media(self):
+        """Media this filter"""
+        raise NotImplementedError
+
     def __str__(self):
         tpl = get_template(self.template)
         return mark_safe(tpl.render(context=self.get_context()))
@@ -301,6 +305,13 @@ class DateFieldListFilter(ListFieldFilter):
             }),
         )
 
+    def get_media(self):
+        return self.admin_view.vendor(
+            'datepicker.css',
+            'datepicker.js',
+            'xadmin.widget.datetime.js'
+        )
+
     def get_context(self):
         context = super(DateFieldListFilter, self).get_context()
         context['choice_selected'] = bool(self.lookup_year_val) or bool(self.lookup_month_val) \
@@ -320,6 +331,10 @@ class DateFieldListFilter(ListFieldFilter):
 @manager.register
 class RelatedFieldSearchFilter(FieldFilter):
     template = 'xadmin/filters/fk_search.html'
+
+    def get_media(self):
+        return self.admin_view.vendor('select.js', 'select.css',
+                                      'xadmin.widget.select.js')
 
     @classmethod
     def test(cls, field, request, params, model, admin_view, field_path):

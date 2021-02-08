@@ -232,14 +232,11 @@ class FilterPlugin(BaseAdminPlugin):
 
     # Media
     def get_media(self, media):
-        filter_specs = [fspec for fspec in self.filter_specs if isinstance(fspec, DateFieldListFilter)]
-        if bool(filter_specs):
-            media = media + self.vendor('datepicker.css', 'datepicker.js',
-                                        'xadmin.widget.datetime.js')
-        filter_specs = [fspec for fspec in self.filter_specs if isinstance(fspec, RelatedFieldSearchFilter)]
-        if bool(filter_specs):
-            media = media + self.vendor('select.js', 'select.css',
-                                        'xadmin.widget.select.js')
+        for fspec in self.filter_specs:
+            try:
+                media += fspec.get_media()
+            except NotImplementedError:
+                continue
         return media + self.vendor('xadmin.plugin.filters.js')
 
     # Block Views
