@@ -15,7 +15,8 @@
   });
 
   /*Returns the value of the name of a url parameter*/
-  $.urlParam = function (name, url = window.location.href) {
+  $.urlParam = function (name, url) {
+    url = url ? url: window.location.href;
     name = name.replace(/[\[\]]/g, '\\$&');
     var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
     results = regex.exec(url);
@@ -49,12 +50,12 @@
 
   $.getCookie = function(name) {
       var cookieValue = null;
-      if (document.cookie && document.cookie != '') {
+      if (document.cookie && document.cookie !== '') {
           var cookies = document.cookie.split(';');
           for (var i = 0; i < cookies.length; i++) {
-              var cookie = jQuery.trim(cookies[i]);
+              var cookie = $.trim(cookies[i]);
               // Does this cookie string begin with the name we want?
-              if (cookie.substring(0, name.length + 1) == (name + '=')) {
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
                   cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                   break;
               }
@@ -62,7 +63,6 @@
       }
       return cookieValue;
   }
-
   //dropdown submenu plugin
   $(document)
     .on('click.xa.dropdown.data-api touchstart.xa.dropdown.data-api', '.dropdown-submenu', function (e) { e.stopPropagation(); })
