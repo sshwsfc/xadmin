@@ -28,7 +28,7 @@ def view_block(context, block_name, *args, **kwargs):
     for view in [admin_view] + admin_view.plugins:
         block_func = getattr(view, method_name, None)
         if block_func and callable(block_func):
-            block_funcs.append((getattr(view, "priority", 10), block_func))
+            block_funcs.append((getattr(block_func, "priority", 10), block_func))
     for _, block_func in sorted(block_funcs, key=lambda x: x[0],
                                 reverse=True):
         result = block_func(context, nodes, *args, **kwargs)
