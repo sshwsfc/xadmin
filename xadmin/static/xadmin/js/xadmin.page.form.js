@@ -1,7 +1,10 @@
 ;(function($){
+    // QUICK_FORM_PLUGIN: Exists when the script was loaded via the quick-form plugin
+    //noinspection JSUnresolvedVariable
+    var quick_form_ajax = typeof PLUGIN_QUICK_FORM_AJAX == 'undefined' ? false : PLUGIN_QUICK_FORM_AJAX;
     $(function() {
-        var action_bar = $('.form-actions');
-        if(action_bar.length){
+      var action_bar = $('.form-actions');
+      if(action_bar.length && !quick_form_ajax){
             var height=action_bar[0].offsetTop + action_bar.outerHeight();
             var onchange = function(){
                 var s=(document.body.scrollTop||document.documentElement.scrollTop) + window.innerHeight;

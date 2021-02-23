@@ -3,7 +3,6 @@ Created on Mar 26, 2014
 
 @author: LAB_ADM
 '''
-from future.utils import iteritems
 from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 from xadmin.filters import manager, MultiSelectFieldListFilter
@@ -51,8 +50,8 @@ class QuickFilterPlugin(BaseAdminPlugin):
 
         # Last term in lookup is a query term (__exact, __startswith etc)
         # This term can be ignored.
-        if len(parts) > 1 and parts[-1] in QUERY_TERMS:
-            parts.pop()
+        # if len(parts) > 1 and parts[-1] in QUERY_TERMS:
+        #    parts.pop()
 
         # Special case -- foo__id__exact and foo__id queries are implied
         # if foo has been specificially included in the lookup list; so
@@ -84,7 +83,7 @@ class QuickFilterPlugin(BaseAdminPlugin):
 
     def get_list_queryset(self, queryset):
         lookup_params = dict([(smart_str(k)[len(FILTER_PREFIX):], v) for k, v in self.admin_view.params.items() if smart_str(k).startswith(FILTER_PREFIX) and v != ''])
-        for p_key, p_val in iteritems(lookup_params):
+        for p_key, p_val in six.iteritems(lookup_params):
             if p_val == "False":
                 lookup_params[p_key] = False
         use_distinct = False
@@ -140,7 +139,10 @@ class QuickFilterPlugin(BaseAdminPlugin):
                 use_distinct = True  # (use_distinct orlookup_needs_distinct(self.opts, field_path))
                 if spec and spec.has_output():
                     try:
-                        new_qs = spec.do_filte(queryset)
+                        if hasattr(spec, 'do_filte'):
+                            new_qs = spec.do_filte(queryset)
+                        else:
+                            new_qs = spec.do_filter(queryset)
                     except ValidationError as e:
                         new_qs = None
                         self.admin_view.message_user(_("<b>Filtering error:</b> %s") % e.messages[0], 'error')
@@ -151,9 +153,7 @@ class QuickFilterPlugin(BaseAdminPlugin):
 
         self.has_filters = bool(self.filter_specs)
         self.admin_view.quickfilter['filter_specs'] = self.filter_specs
-        obj = filter(lambda f: f.is_used, self.filter_specs)
-        if six.PY3:
-            obj = list(obj)
+        obj = [fspec for fspec in self.filter_specs if fspec.is_used]
         self.admin_view.quickfilter['used_filter_num'] = len(obj)
 
         if use_distinct:
@@ -164,5 +164,6 @@ class QuickFilterPlugin(BaseAdminPlugin):
     def block_left_navbar(self, context, nodes):
         nodes.append(loader.render_to_string('xadmin/blocks/modal_list.left_navbar.quickfilter.html',
                                              get_context_dict(context)))
+
 
 site.register_plugin(QuickFilterPlugin, ListAdminView)

@@ -13,7 +13,7 @@
           {% if item.url %}<a href="{{ item.url }}" class="section">{% endif %}
           {% if item.icon %}<i class="fa-fw {{item.icon}}"></i>
           {% elif item.first_icon %}<i class="fa-fw {{item.first_icon}}"></i>
-          {%else%}<i class="fa-fw fa fa-circle-o"></i>{% endif %}
+          {%else%}<i class="fa-fw fa fa-chevron-right"></i>{% endif %}
           {% trans item.title %}
           {% if item.url %}</a>{% endif %}
         </a>
@@ -22,7 +22,7 @@
     <div id="nav-panel-{{forloop.counter}}" class="list-group panel-collapse collapse{% if item.selected %} in{% endif %}">
       {% for sitem in item.menus %}
       <a href="{{ sitem.url|default_if_none:'#' }}" class="list-group-item{% if sitem.selected %} active{% endif %}">
-        {% if sitem.icon %}<i class="fa-fw {{sitem.icon}}"></i>{%else%}<i class="fa-fw fa fa-circle-o"></i>{% endif %}
+        {% if sitem.icon %}<i class="fa-fw {{sitem.icon}}"></i>{%else%}<i class="fa-fw fa fa-chevron-right"></i>{% endif %}
         {{ sitem.title }}</span>
       </a>
       {% endfor %}

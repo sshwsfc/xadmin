@@ -112,8 +112,7 @@ class FormAdminView(CommAdminView):
         if self.valid_forms():
             self.save_forms()
             response = self.post_response()
-            cls_str = str if six.PY3 else basestring
-            if isinstance(response, cls_str):
+            if isinstance(response, str):
                 return HttpResponseRedirect(response)
             else:
                 return response

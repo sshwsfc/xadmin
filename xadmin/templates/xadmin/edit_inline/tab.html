@@ -26,7 +26,7 @@
 {% endblock formset_content %}
 
 {% block formset_empty %}
-  <div class="formset-row tab-pane col-xs-12" data-replace-id="{{ prefix }}-__prefix__-body">
+  <div class="formset-row empty-form tab-pane col-xs-12" data-replace-id="{{ prefix }}-__prefix__-body">
       {% if formset.formset.can_delete %}
         <a class="delete-row pull-right"><i class="fa fa-times"></i></a>
       {% endif %}

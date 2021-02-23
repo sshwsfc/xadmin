@@ -30,10 +30,12 @@ vendors = {
     },
     'jquery-ui-sortable': {
         "js": {
-            'dev': ['xadmin/vendor/jquery-ui/jquery.ui.core.js', 'xadmin/vendor/jquery-ui/jquery.ui.widget.js',
-                    'xadmin/vendor/jquery-ui/jquery.ui.mouse.js', 'xadmin/vendor/jquery-ui/jquery.ui.sortable.js'],
-            'production': ['xadmin/vendor/jquery-ui/jquery.ui.core.min.js', 'xadmin/vendor/jquery-ui/jquery.ui.widget.min.js',
-                           'xadmin/vendor/jquery-ui/jquery.ui.mouse.min.js', 'xadmin/vendor/jquery-ui/jquery.ui.sortable.min.js']
+            'dev': [
+                'xadmin/vendor/jquery-ui/jquery.ui.sortable.js'
+            ],
+            'production': [
+                'xadmin/vendor/jquery-ui/jquery.ui.sortable.min.js'
+            ]
         }
     },
     "font-awesome": {
@@ -64,10 +66,11 @@ vendors = {
     },
     "datepicker": {
         "css": {
-            'dev': 'xadmin/vendor/bootstrap-datepicker/css/datepicker.css'
+            'dev': 'xadmin/vendor/bootstrap-datepicker/css/bootstrap-datepicker.css'
         },
         "js": {
             'dev': 'xadmin/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js',
+            'production': 'xadmin/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js',
         }
     },
     "flot": {
@@ -82,17 +85,35 @@ vendors = {
             'production': 'xadmin/vendor/bootstrap-image-gallery/css/bootstrap-image-gallery.css',
         },
         "js": {
-            'dev': ['xadmin/vendor/load-image/load-image.js', 'xadmin/vendor/bootstrap-image-gallery/js/bootstrap-image-gallery.js'],
-            'production': ['xadmin/vendor/load-image/load-image.min.js', 'xadmin/vendor/bootstrap-image-gallery/js/bootstrap-image-gallery.js']
+            'dev': ['xadmin/vendor/load-image/load-image.js',
+                    'xadmin/vendor/bootstrap-image-gallery/js/bootstrap-image-gallery.js'],
+            'production': ['xadmin/vendor/load-image/load-image.min.js',
+                           'xadmin/vendor/bootstrap-image-gallery/js/bootstrap-image-gallery.js']
         }
     },
     "select": {
         "css": {
-            'dev': ['xadmin/vendor/select2/select2.css', 'xadmin/vendor/selectize/selectize.css', 'xadmin/vendor/selectize/selectize.bootstrap3.css'],
+            'dev': ['xadmin/vendor/select2/css/select2.css',
+                    'xadmin/vendor/selectize/selectize.css',
+                    'xadmin/vendor/selectize/selectize.bootstrap3.css'],
         },
         "js": {
-            'dev': ['xadmin/vendor/selectize/selectize.js', 'xadmin/vendor/select2/select2.js', 'xadmin/vendor/select2/select2_locale_%(lang)s.js'],
-            'production': ['xadmin/vendor/selectize/selectize.min.js', 'xadmin/vendor/select2/select2.min.js', 'xadmin/vendor/select2/select2_locale_%(lang)s.js']
+            'dev': [
+                # required by selectize
+                'xadmin/vendor/sifter/sifter.js',
+                'xadmin/vendor/microplugin/microplugin.js',
+                'xadmin/vendor/selectize/selectize.js',
+                'xadmin/vendor/select2/js/select2.js',
+                'xadmin/vendor/select2/js/i18n/%(lang)s.js'
+            ],
+            'production': [
+                # required by selectize
+                'xadmin/vendor/sifter/sifter.min.js',
+                'xadmin/vendor/microplugin/microplugin.js',
+                'xadmin/vendor/selectize/selectize.min.js',
+                'xadmin/vendor/select2/js/select2.min.js',
+                'xadmin/vendor/select2/js/i18n/%(lang)s.js'
+            ]
         }
     },
     "multiselect": {

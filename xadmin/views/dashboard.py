@@ -33,7 +33,7 @@ class WidgetTypeSelect(forms.Widget):
         super(WidgetTypeSelect, self).__init__(attrs)
         self._widgets = widgets
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, **kwargs):
         if value is None:
             value = ''
         final_attrs = self.build_attrs(attrs, extra_attrs={'name': name})
@@ -69,7 +69,7 @@ class WidgetTypeSelect(forms.Widget):
         return u'\n'.join(output)
 
 
-class UserWidgetAdmin(object):
+class UserWidgetAdmin:
 
     model_icon = 'fa fa-dashboard'
     list_display = ('widget_type', 'page_id', 'user')
@@ -79,8 +79,8 @@ class UserWidgetAdmin(object):
     hidden_menu = True
 
     wizard_form_list = (
-        (_(u"Widget Type"), ('page_id', 'widget_type')),
-        (_(u"Widget Params"), {'callback':
+        (_("Widget Type"), ('page_id', 'widget_type')),
+        (_("Widget Params"), {'callback':
                                "get_widget_params_form", 'convert': "convert_widget_params"})
     )
 
@@ -147,7 +147,7 @@ class UserWidgetAdmin(object):
 site.register(UserWidget, UserWidgetAdmin)
 
 
-class WidgetManager(object):
+class WidgetManager:
     _widgets = None
 
     def __init__(self):
@@ -261,7 +261,7 @@ class HtmlWidget(BaseWidget):
         context['content'] = self.cleaned_data['content']
 
 
-class ModelChoiceIterator(object):
+class ModelChoiceIterator:
 
     def __init__(self, field):
         self.field = field
@@ -368,7 +368,7 @@ class QuickBtnWidget(BaseWidget):
     widget_type = 'qbutton'
     description = _(u'Quick button Widget, quickly open any page.')
     template = "xadmin/widgets/qbutton.html"
-    base_title = _(u"Quick Buttons")
+    base_title = _("Quick Buttons")
     widget_icon = 'fa fa-caret-square-o-right'
 
     def convert(self, data):
@@ -489,7 +489,7 @@ class Dashboard(CommAdminView):
 
     widget_customiz = True
     widgets = []
-    title = _(u"Dashboard")
+    title = _("Dashboard")
     icon = None
 
     def get_page_id(self):
@@ -524,13 +524,15 @@ class Dashboard(CommAdminView):
         for col in widgets:
             portal_col = []
             for opts in col:
+                widget = UserWidget(user=self.user, page_id=self.get_page_id(),
+                                    widget_type=opts['type'])
                 try:
-                    widget = UserWidget(user=self.user, page_id=self.get_page_id(), widget_type=opts['type'])
                     widget.set_value(opts)
                     widget.save()
                     portal_col.append(self.get_widget(widget))
                 except (PermissionDenied, WidgetDataError):
-                    widget.delete()
+                    if widget.pk is not None:
+                        widget.delete()
                     continue
             portal.append(portal_col)
 
@@ -558,7 +560,11 @@ class Dashboard(CommAdminView):
                             try:
                                 widget = user_widgets.get(int(wid))
                                 if widget:
-                                    ws.append(self.get_widget(widget))
+                                    try:
+                                        ws.append(self.get_widget(widget))
+                                    except LookupError:
+                                        # remove invalid widget
+                                        widget.delete()
                             except Exception as e:
                                 import logging
                                 logging.error(e, exc_info=True)
@@ -631,7 +637,7 @@ class Dashboard(CommAdminView):
 
 class ModelDashboard(Dashboard, ModelAdminView):
 
-    title = _(u"%s Dashboard")
+    title = _("%s Dashboard")
 
     def get_page_id(self):
         return 'model:%s/%s' % self.model_info

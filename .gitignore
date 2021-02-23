@@ -3,6 +3,8 @@
 # C extensions
 *.so
 
+htmlcov
+
 # Packages
 *.egg
 *.egg-info
@@ -17,6 +19,8 @@ develop-eggs
 .installed.cfg
 lib
 lib64
+venv
+venv3
 
 # Installer logs
 pip-log.txt

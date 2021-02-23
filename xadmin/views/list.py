@@ -31,7 +31,7 @@ DOT = '.'
 EMPTY_CHANGELIST_VALUE = _('Null')
 
 
-class FakeMethodField(object):
+class FakeMethodField:
     """
     This class used when a column is an model function, wrap function as a fake field to display in select columns.
     """
@@ -47,7 +47,7 @@ class ResultRow(dict):
     pass
 
 
-class ResultItem(object):
+class ResultItem:
 
     def __init__(self, field_name, row):
         self.classes = []
@@ -297,7 +297,7 @@ class ListAdminView(ModelAdminView):
         # ordering fields so we can guarantee a deterministic order across all
         # database backends.
         pk_name = self.opts.pk.name
-        if not (set(ordering) & set(['pk', '-pk', pk_name, '-' + pk_name])):
+        if not (set(ordering) & {'pk', '-pk', pk_name, '-' + pk_name}):
             # The two sets do not intersect, meaning the pk isn't present. So
             # we add it.
             ordering.append('-pk')
@@ -455,10 +455,8 @@ class ListAdminView(ModelAdminView):
         if field_name in ordering_field_columns:
             sorted = True
             order_type = ordering_field_columns.get(field_name).lower()
-            arr = ordering_field_columns.keys()
-            if six.PY3:
-                arr = list(arr)
-            sort_priority = arr.index(field_name) + 1
+            field_column_keys = list(ordering_field_columns.keys())
+            sort_priority = field_column_keys.index(field_name) + 1
             th_classes.append('sorted %sending' % order_type)
             new_order_type = {'asc': 'desc', 'desc': 'asc'}[order_type]
 

@@ -1,5 +1,7 @@
 from collections import OrderedDict
+
 from django import forms, VERSION as django_version
+from django.contrib.admin.utils import get_deleted_objects
 from django.core.exceptions import PermissionDenied
 from django.db import router
 from django.http import HttpResponse, HttpResponseRedirect
@@ -8,18 +10,14 @@ from django.template.response import TemplateResponse
 from django.utils import six
 from django.utils.encoding import force_text
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext as _, ungettext
 from django.utils.text import capfirst
-
-from django.contrib.admin.utils import get_deleted_objects
+from django.utils.translation import ugettext as _, ungettext
 
 from xadmin.plugins.utils import get_context_dict
 from xadmin.sites import site
 from xadmin.util import model_format_dict, model_ngettext
 from xadmin.views import BaseAdminPlugin, ListAdminView
 from xadmin.views.base import filter_hook, ModelAdminView
-
-from xadmin import views
 
 ACTION_CHECKBOX_NAME = '_selected_action'
 checkbox = forms.CheckboxInput({'class': 'action-select'}, lambda value: False)
@@ -57,10 +55,10 @@ class BaseActionView(ModelAdminView):
 
     def __init__(self, request, *args, **kwargs):
         super().__init__(request, *args, **kwargs)
-        if django_version > (2, 0):
-            for model in self.admin_site._registry:
-                if not hasattr(self.admin_site._registry[model], 'has_delete_permission'):
-                    setattr(self.admin_site._registry[model], 'has_delete_permission', self.has_delete_permission)
+        admin_site_registry = self.admin_site._registry
+        for model in admin_site_registry:
+            if not hasattr(admin_site_registry[model], 'has_delete_permission'):
+                setattr(admin_site_registry[model], 'has_delete_permission', self.has_delete_permission)
 
 
 class DeleteSelectedAction(BaseActionView):
@@ -99,15 +97,8 @@ class DeleteSelectedAction(BaseActionView):
 
         # Populate deletable_objects, a data structure of all related objects that
         # will also be deleted.
-
-        if django_version > (2, 1):
-            deletable_objects, model_count, perms_needed, protected = get_deleted_objects(
-                queryset, self.opts, self.admin_site)
-        else:
-            using = router.db_for_write(self.model)
-            deletable_objects, model_count, perms_needed, protected = get_deleted_objects(
-                queryset, self.opts, self.user, self.admin_site, using)
-
+        deletable_objects, model_count, perms_needed, protected = get_deleted_objects(
+            queryset, self, self.admin_site)
 
         # The user has already confirmed the deletion.
         # Do the deletion and return a None to display the change list view again.
@@ -239,13 +230,14 @@ class ActionPlugin(BaseAdminPlugin):
             class_actions = getattr(klass, 'actions', [])
             if not class_actions:
                 continue
-            actions.extend(
-                [self.get_action(action) for action in class_actions])
+            # Allows additional processing for actions.
+            # May need to select action per user profile.
+            if callable(class_actions):
+                class_actions = class_actions(self.admin_view.request)
+            actions.extend([self.get_action(action) for action in class_actions])
 
         # get_action might have returned None, so filter any of those out.
-        actions = filter(None, actions)
-        if six.PY3:
-            actions = list(actions)
+        actions = [action for action in actions if action is not None]
 
         # Convert the actions into a OrderedDict keyed by name.
         actions = OrderedDict([

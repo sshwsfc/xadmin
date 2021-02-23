@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 from __future__ import print_function
+
 import os
 import shutil
 import sys
 import tempfile
 
 import django
-from django.apps import AppConfig,apps
 from django.utils.encoding import smart_text
-
 
 TEST_ROOT = os.path.realpath(os.path.dirname(__file__))
 RUNTESTS_DIR = os.path.join(TEST_ROOT, 'xtests')
@@ -26,10 +25,13 @@ ALWAYS_INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # required to use import-export plugin
+    'django.contrib.admin',
 
     'xadmin',
     'crispy_forms',
 ]
+
 
 def get_test_modules():
     modules = []
@@ -40,17 +42,17 @@ def get_test_modules():
                 or f.startswith('.')
                 or f.startswith('sql')
                 or not os.path.isdir(os.path.join(RUNTESTS_DIR, f))
-                ):
+        ):
             continue
         modules.append(f)
     return modules
+
 
 def setup(verbosity, test_labels):
     from django.conf import settings
     state = {
         'INSTALLED_APPS': settings.INSTALLED_APPS,
         'ROOT_URLCONF': getattr(settings, "ROOT_URLCONF", ""),
-        'TEMPLATE_DIRS': settings.TEMPLATE_DIRS,
         'USE_I18N': settings.USE_I18N,
         'LOGIN_URL': settings.LOGIN_URL,
         'LANGUAGE_CODE': settings.LANGUAGE_CODE,
@@ -64,7 +66,10 @@ def setup(verbosity, test_labels):
     settings.ROOT_URLCONF = 'urls'
     settings.STATIC_URL = '/static/'
     settings.STATIC_ROOT = os.path.join(TEMP_DIR, 'static')
-    settings.TEMPLATE_DIRS = (os.path.join(RUNTESTS_DIR, TEST_TEMPLATE_DIR),)
+    for engine in settings.TEMPLATES:
+        engine['DIRS'].extend([
+            os.path.join(RUNTESTS_DIR, TEST_TEMPLATE_DIR)
+        ])
     settings.USE_I18N = True
     settings.LANGUAGE_CODE = 'en'
     settings.MIDDLEWARE_CLASSES = (
@@ -83,7 +88,6 @@ def setup(verbosity, test_labels):
     # (This import statement is intentionally delayed until after we
     # access settings because of the USE_I18N dependency.)
 
-
     # Load all the test model apps.
     test_labels_set = set([label.split('.')[0] for label in test_labels])
     test_modules = get_test_modules()
@@ -99,8 +103,8 @@ def setup(verbosity, test_labels):
                 settings.INSTALLED_APPS.append(module_label)
 
     django.setup()
-    [a.models_module for a in apps.get_app_configs()]
     return state
+
 
 def teardown(state):
     from django.conf import settings
@@ -112,6 +116,7 @@ def teardown(state):
     # Restore the old settings.
     for key, value in state.items():
         setattr(settings, key, value)
+
 
 def django_tests(verbosity, interactive, failfast, test_labels):
     from django.conf import settings
@@ -125,18 +130,20 @@ def django_tests(verbosity, interactive, failfast, test_labels):
     TestRunner = get_runner(settings)
 
     test_runner = TestRunner(verbosity=verbosity, interactive=interactive,
-        failfast=failfast)
+                             failfast=failfast)
     failures = test_runner.run_tests(test_labels or get_test_modules(), extra_tests=extra_tests)
 
     teardown(state)
     return failures
 
+
 if __name__ == "__main__":
     from optparse import OptionParser
+
     usage = "%prog [options] [module module module ...]"
     parser = OptionParser(usage=usage)
     parser.add_option(
-        '-v','--verbosity', action='store', dest='verbosity', default='1',
+        '-v', '--verbosity', action='store', dest='verbosity', default='1',
         type='choice', choices=['0', '1', '2', '3'],
         help='Verbosity level; 0=minimal output, 1=normal output, 2=all '
              'output')

@@ -43,7 +43,7 @@ class JsonErrorDict(ErrorDict):
         super(JsonErrorDict, self).__init__(errors)
         self.form = form
 
-    def as_json(self):
+    def as_json(self, **kwargs):
         if not self:
             return u''
         return [{'id': self.form[k].auto_id if k != NON_FIELD_ERRORS else NON_FIELD_ERRORS, 'name': k, 'errors': v} for k, v in self.items()]

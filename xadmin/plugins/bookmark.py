@@ -56,7 +56,7 @@ class BookmarkPlugin(BaseAdminPlugin):
 
         model_info = (self.opts.app_label, self.opts.model_name)
         has_selected = False
-        menu_title = _(u"Bookmark")
+        menu_title = _("Bookmark")
         list_base_url = reverse('xadmin:%s_%s_changelist' %
                                 model_info, current_app=self.admin_site.name)
 
@@ -156,7 +156,7 @@ class BookmarkView(ModelAdminView):
         return self.render_response(content)
 
 
-class BookmarkAdmin(object):
+class BookmarkAdmin:
 
     model_icon = 'fa fa-book'
     list_display = ('title', 'user', 'url_name', 'query')
@@ -184,10 +184,10 @@ class BookmarkAdmin(object):
 
 @widget_manager.register
 class BookmarkWidget(PartialBaseWidget):
-    widget_type = _('bookmark')
+    widget_title = _('bookmark')
+    widget_type = 'bookmark'
     widget_icon = 'fa fa-bookmark'
-    description = _(
-        'Bookmark Widget, can show user\'s bookmark list data in widget.')
+    description = _('Bookmark Widget, can show user\'s bookmark list data in widget.')
     template = "xadmin/widgets/list.html"
 
     bookmark = ModelChoiceField(

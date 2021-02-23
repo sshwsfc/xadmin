@@ -23,7 +23,7 @@ from .util import (get_model_from_relation,
                    reverse_field_path, get_limit_choices_to_from_path, prepare_lookup_value)
 
 
-class BaseFilter(object):
+class BaseFilter:
     title = None
     template = 'xadmin/filters/list.html'
 
@@ -47,10 +47,8 @@ class BaseFilter(object):
         return self.admin_view.get_query_string(new_params, remove)
 
     def form_params(self):
-        arr = map(lambda k: FILTER_PREFIX + k, self.used_params.keys())
-        if six.PY3:
-            arr = list(arr)
-        return self.admin_view.get_form_params(remove=arr)
+        prefixed_keys = [FILTER_PREFIX + key for key in self.used_params.keys()]
+        return self.admin_view.get_form_params(remove=prefixed_keys)
 
     def has_output(self):
         """
@@ -62,21 +60,25 @@ class BaseFilter(object):
     def is_used(self):
         return len(self.used_params) > 0
 
-    def do_filte(self, queryset):
+    def do_filter(self, queryset):
         """
         Returns the filtered queryset.
         """
-        raise NotImplementedError
+        return NotImplementedError
 
     def get_context(self):
         return {'title': self.title, 'spec': self, 'form_params': self.form_params()}
+
+    def get_media(self):
+        """Media this filter"""
+        raise NotImplementedError
 
     def __str__(self):
         tpl = get_template(self.template)
         return mark_safe(tpl.render(context=self.get_context()))
 
 
-class FieldFilterManager(object):
+class FieldFilterManager:
     _field_list_filters = []
     _take_priority_index = 0
 
@@ -123,27 +125,21 @@ class FieldFilter(BaseFilter):
                 self.context_params["%s_val" % name] = value
             else:
                 self.context_params["%s_val" % name] = ''
-
-        arr = map(
-            lambda kv: setattr(self, 'lookup_' + kv[0], kv[1]),
-            self.context_params.items()
-        )
-        if six.PY3:
-            list(arr)
+        # set lookups
+        for kv in self.context_params.items():
+            setattr(self, 'lookup_' + kv[0], kv[1])
 
     def get_context(self):
         context = super(FieldFilter, self).get_context()
         context.update(self.context_params)
-        obj = map(lambda k: FILTER_PREFIX + k, self.used_params.keys())
-        if six.PY3:
-            obj = list(obj)
-        context['remove_url'] = self.query_string({}, obj)
+        prefixed_keys = [FILTER_PREFIX + k for k in self.used_params.keys()]
+        context['remove_url'] = self.query_string({}, prefixed_keys)
         return context
 
     def has_output(self):
         return True
 
-    def do_filte(self, queryset):
+    def do_filter(self, queryset):
         return queryset.filter(**self.used_params)
 
 
@@ -239,7 +235,7 @@ class NumberFieldListFilter(FieldFilter):
     def test(cls, field, request, params, model, admin_view, field_path):
         return isinstance(field, (models.DecimalField, models.FloatField, models.IntegerField))
 
-    def do_filte(self, queryset):
+    def do_filter(self, queryset):
         params = self.used_params.copy()
         ne_key = '%s__ne' % self.field_path
         if ne_key in params:
@@ -309,6 +305,13 @@ class DateFieldListFilter(ListFieldFilter):
             }),
         )
 
+    def get_media(self):
+        return self.admin_view.vendor(
+            'datepicker.css',
+            'datepicker.js',
+            'xadmin.widget.datetime.js'
+        )
+
     def get_context(self):
         context = super(DateFieldListFilter, self).get_context()
         context['choice_selected'] = bool(self.lookup_year_val) or bool(self.lookup_month_val) \
@@ -328,6 +331,10 @@ class DateFieldListFilter(ListFieldFilter):
 @manager.register
 class RelatedFieldSearchFilter(FieldFilter):
     template = 'xadmin/filters/fk_search.html'
+
+    def get_media(self):
+        return self.admin_view.vendor('select.js', 'select.css',
+                                      'xadmin.widget.select.js')
 
     @classmethod
     def test(cls, field, request, params, model, admin_view, field_path):
@@ -401,7 +408,7 @@ class RelatedFieldListFilter(ListFieldFilter):
         super(RelatedFieldListFilter, self).__init__(
             field, request, params, model, model_admin, field_path)
 
-        if hasattr(field, 'verbose_name'):
+        if not field.auto_created and hasattr(field, 'verbose_name'):
             self.lookup_title = field.verbose_name
         else:
             self.lookup_title = other_model._meta.verbose_name

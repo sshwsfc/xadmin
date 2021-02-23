@@ -2,7 +2,7 @@
 import copy
 from django import forms
 from django.db import models
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ImproperlyConfigured
 from django.forms.models import modelform_factory
 from django.template.response import TemplateResponse
 from django.utils.encoding import force_text
@@ -36,7 +36,7 @@ class ChangeFieldWidgetWrapper(forms.Widget):
         media = self.widget.media + vendor('xadmin.plugin.batch.js')
         return media
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, **kwargs):
         output = []
         is_required = self.widget.is_required
         output.append(u'<label class="btn btn-info btn-xs">'
@@ -69,22 +69,33 @@ class BatchChangeAction(BaseActionView):
     model_perm = 'change'
 
     batch_fields = []
+    batch_fields_exclude = []
+    # It allows you to use a different form stated in the view model
+    batch_form = None
 
     def change_models(self, queryset, cleaned_data):
         n = queryset.count()
 
         data = {}
         fields = self.opts.fields + self.opts.many_to_many
-        for f in fields:
-            if not f.editable or isinstance(f, models.AutoField) \
-                    or not f.name in cleaned_data:
+        for field in fields:
+            # [declared_fields] It has a custom field overlapping the pattern.
+            if not field.editable or isinstance(field, models.AutoField) \
+                    or field.name not in cleaned_data or \
+                    field.name in self.form_obj.declared_fields:
                 continue
-            data[f] = cleaned_data[f.name]
+            data[field] = cleaned_data[field.name]
+
+        # custom declared fields
+        for field_name in self.form_obj.declared_fields:
+            field = self.form_obj.fields.get(field_name)
+            if field and field_name in cleaned_data and field_name not in data:
+                data[field] = cleaned_data[field_name]
 
         if n:
             for obj in queryset:
-                for f, v in data.items():
-                    f.save_form_data(obj, v)
+                for field, v in data.items():
+                    field.save_form_data(obj, v)
                 obj.save()
             self.message_user(_("Successfully change %(count)d %(items)s.") % {
                 "count": n, "items": model_ngettext(self.opts, n)
@@ -98,12 +109,38 @@ class BatchChangeAction(BaseActionView):
             formfield.widget = ChangeFieldWidgetWrapper(formfield.widget)
             return formfield
 
+        batch_form = getattr(edit_view, "batch_form",
+                             edit_view.form)
         defaults = {
-            "form": edit_view.form,
+            "form": batch_form or edit_view.form,
             "fields": fields,
             "formfield_callback": formfield_for_dbfield,
+            "exclude": getattr(edit_view, "batch_fields_exclude", ())
         }
         return modelform_factory(self.model, **defaults)
+
+    @staticmethod
+    def formfield_for_declared(form, fields):
+        """Processes declared fields that are not in the model"""
+        for field_name in form.declared_fields:
+            if field_name not in fields:
+                continue
+            field = form.fields.get(field_name)
+            if field and not isinstance(field.widget, ChangeFieldWidgetWrapper):
+                if not hasattr(field, 'save_form_data'):
+                    raise ImproperlyConfigured("Custom fields need to implement "
+                                               "the 'save_form_data(self, obj, value)' "
+                                               "method in order to update instances.")
+                field.widget = ChangeFieldWidgetWrapper(field.widget)
+        return form
+
+    @staticmethod
+    def formfield_declared_in_post(form, fields):
+        """Keep only declared fields sent in the post"""
+        for field_name in form.declared_fields:
+            if field_name not in fields and field_name in form.fields:
+                del form.fields[field_name]
+        return form
 
     def do_action(self, queryset):
         if not self.has_change_permission():
@@ -112,13 +149,16 @@ class BatchChangeAction(BaseActionView):
         change_fields = [f for f in self.request.POST.getlist(BATCH_CHECKBOX_NAME) if f in self.batch_fields]
 
         if change_fields and self.request.POST.get('post'):
-            self.form_obj = self.get_change_form(True, change_fields)(
-                data=self.request.POST, files=self.request.FILES)
+            form = self.get_change_form(True, change_fields)(data=self.request.POST,
+                                                             files=self.request.FILES)
+            self.form_obj = self.formfield_declared_in_post(form, change_fields)
             if self.form_obj.is_valid():
                 self.change_models(queryset, self.form_obj.cleaned_data)
                 return None
         else:
-            self.form_obj = self.get_change_form(False, self.batch_fields)()
+            form = self.get_change_form(False, self.batch_fields)()
+            # Support for declared fields but without affecting field inheritance.
+            self.form_obj = self.formfield_for_declared(form, self.batch_fields)
 
         helper = FormHelper()
         helper.form_tag = False

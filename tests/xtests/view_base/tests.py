@@ -1,12 +1,12 @@
 from __future__ import absolute_import
 
+from base import BaseTest
 from django.contrib.auth.models import User
 
-from base import BaseTest
-from xadmin.views import BaseAdminView, BaseAdminPlugin, ModelAdminView, ListAdminView
-
-from .models import ModelA, ModelB
+from xadmin.views import ListAdminView
 from .adminx import site, ModelAAdmin, TestBaseView, TestCommView, TestAView, OptionA
+from .models import ModelA, ModelB
+
 
 class BaseAdminTest(BaseTest):
 
@@ -55,6 +55,6 @@ class CommAdminTest(BaseTest):
         self.test_view_class = site.get_view_class(TestCommView)
         self.test_view = self.test_view_class(self._mocked_request('test/comm'))
 
-    def test_model_icon(self):  
+    def test_model_icon(self):
         self.assertEqual(self.test_view.get_model_icon(ModelA), 'flag')
         self.assertEqual(self.test_view.get_model_icon(ModelB), 'test')

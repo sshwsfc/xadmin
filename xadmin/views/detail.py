@@ -58,7 +58,7 @@ class ShowField(Field):
         return html
 
 
-class ResultField(object):
+class ResultField:
 
     def __init__(self, obj, field_name, admin_view=None):
         self.text = '&nbsp;'
@@ -74,16 +74,27 @@ class ResultField(object):
 
         self.init()
 
+    def get_admin_view_form(self):
+        form_obj = getattr(self.admin_view, 'form_obj', None)
+        if form_obj is None or not isinstance(form_obj, forms.ModelForm) and \
+                hasattr(self.admin_view, 'instance_forms'):
+            self.admin_view.instance_forms()
+            form_obj = self.admin_view.form_obj
+        return form_obj
+
     def init(self):
+        try:
+            form = self.get_admin_view_form()
+        except AttributeError:
+            form = None
         self.label = label_for_field(self.field_name, self.obj.__class__,
                                      model_admin=self.admin_view,
-                                     return_attr=False
-                                     )
+                                     return_attr=False,
+                                     form=form)
         try:
-            f, attr, value = lookup_field(
-                self.field_name, self.obj, self.admin_view)
+            f, attr, value = lookup_field(self.field_name, self.obj, self.admin_view)
         except (AttributeError, ObjectDoesNotExist):
-            self.text
+            pass
         else:
             if f is None:
                 self.allow_tags = getattr(attr, 'allow_tags', False)
@@ -115,12 +126,11 @@ class ResultField(object):
 
 
 def replace_field_to_value(layout, cb):
-    cls_str = str if six.PY3 else basestring
     for i, lo in enumerate(layout.fields):
         if isinstance(lo, Field) or issubclass(lo.__class__, Field):
             layout.fields[i] = ShowField(
                 cb, *lo.fields, attrs=lo.attrs, wrapper_class=lo.wrapper_class)
-        elif isinstance(lo, cls_str):
+        elif isinstance(lo, str):
             layout.fields[i] = ShowField(cb, lo)
         elif hasattr(lo, 'get_field_names'):
             replace_field_to_value(lo, cb)
@@ -214,8 +224,7 @@ class DetailAdminView(ModelAdminView):
         layout = self.get_form_layout()
         replace_field_to_value(layout, self.get_field_result)
         helper.add_layout(layout)
-        cls_str = str if six.PY3 else basestring
-        helper.filter(cls_str, max_level=20).wrap(ShowField, admin_view=self)
+        helper.filter(str, max_level=20).wrap(ShowField, admin_view=self)
         return helper
 
     @csrf_protect_m
@@ -278,6 +287,7 @@ class DetailAdminView(ModelAdminView):
 
 class DetailAdminUtil(DetailAdminView):
 
-    def init_request(self, obj):
+    def init_request(self, obj, form_obj=None):
         self.obj = obj
         self.org_obj = obj
+        self.form_obj = form_obj

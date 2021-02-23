@@ -6,21 +6,21 @@ from django.utils.encoding import python_2_unicode_compatible
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 SERVER_STATUS = (
-    (0, u"Normal"),
-    (1, u"Down"),
-    (2, u"No Connect"),
-    (3, u"Error"),
+    (0, "Normal"),
+    (1, "Down"),
+    (2, "No Connect"),
+    (3, "Error"),
 )
 SERVICE_TYPES = (
-    ('moniter', u"Moniter"),
-    ('lvs', u"LVS"),
-    ('db', u"Database"),
-    ('analysis', u"Analysis"),
-    ('admin', u"Admin"),
-    ('storge', u"Storge"),
-    ('web', u"WEB"),
-    ('email', u"Email"),
-    ('mix', u"Mix"),
+    ('moniter', "Moniter"),
+    ('lvs', "LVS"),
+    ('db', "Database"),
+    ('analysis', "Analysis"),
+    ('admin', "Admin"),
+    ('storge', "Storge"),
+    ('web', "WEB"),
+    ('email', "Email"),
+    ('mix', "Mix"),
 )
 
 
@@ -41,7 +41,7 @@ class IDC(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = u"IDC"
+        verbose_name = "IDC"
         verbose_name_plural = verbose_name
 
 
@@ -49,7 +49,7 @@ class IDC(models.Model):
 class Host(models.Model):
     idc = models.ForeignKey(IDC, on_delete=models.CASCADE)
     name = models.CharField(max_length=64)
-    nagios_name = models.CharField(u"Nagios Host ID", max_length=64, blank=True, null=True)
+    nagios_name = models.CharField("Nagios Host ID", max_length=64, blank=True, null=True)
     ip = models.GenericIPAddressField(blank=True, null=True)
     internal_ip = models.GenericIPAddressField(blank=True, null=True)
     user = models.CharField(max_length=64)
@@ -57,16 +57,16 @@ class Host(models.Model):
     ssh_port = models.IntegerField(blank=True, null=True)
     status = models.SmallIntegerField(choices=SERVER_STATUS)
 
-    brand = models.CharField(max_length=64, choices=[(i, i) for i in (u"DELL", u"HP", u"Other")])
+    brand = models.CharField(max_length=64, choices=[(i, i) for i in ("DELL", "HP", "Other")])
     model = models.CharField(max_length=64)
     cpu = models.CharField(max_length=64)
     core_num = models.SmallIntegerField(choices=[(i * 2, "%s Cores" % (i * 2)) for i in range(1, 15)])
     hard_disk = models.IntegerField()
     memory = models.IntegerField()
 
-    system = models.CharField(u"System OS", max_length=32, choices=[(i, i) for i in (u"CentOS", u"FreeBSD", u"Ubuntu")])
+    system = models.CharField("System OS", max_length=32, choices=[(i, i) for i in ("CentOS", "FreeBSD", "Ubuntu")])
     system_version = models.CharField(max_length=32)
-    system_arch = models.CharField(max_length=32, choices=[(i, i) for i in (u"x86_64", u"i386")])
+    system_arch = models.CharField(max_length=32, choices=[(i, i) for i in ("x86_64", "i386")])
 
     create_time = models.DateField()
     guarantee_date = models.DateField()
@@ -79,7 +79,7 @@ class Host(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = u"Host"
+        verbose_name = "Host"
         verbose_name_plural = verbose_name
 
 
@@ -97,7 +97,7 @@ class MaintainLog(models.Model):
                                                self.maintain_type, self.hard_type)
 
     class Meta:
-        verbose_name = u"Maintain Log"
+        verbose_name = "Maintain Log"
         verbose_name_plural = verbose_name
 
 
@@ -110,7 +110,7 @@ class HostGroup(models.Model):
         Host, verbose_name=u'Hosts', blank=True, related_name='groups')
 
     class Meta:
-        verbose_name = u"Host Group"
+        verbose_name = "Host Group"
         verbose_name_plural = verbose_name
 
     def __str__(self):
@@ -124,7 +124,7 @@ class AccessRecord(models.Model):
     view_count = models.IntegerField()
 
     class Meta:
-        verbose_name = u"Access Record"
+        verbose_name = "Access Record"
         verbose_name_plural = verbose_name
 
     def __str__(self):

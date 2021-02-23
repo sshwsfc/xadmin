@@ -68,9 +68,15 @@
               var errdiv = this.$form.find('#div_' + e['id'])
               if(errdiv.length){
                 errdiv.addClass('has-error')
-                var err_html = []
+                var err_html = [];
+                var err_id;
                 for (var j = e['errors'].length - 1; j >= 0; j--) {
-                  err_html.push('<span id="error_'+j+'_'+ e['id'] +'" class="text-danger">'+e['errors'][j]+'</span>')
+                  err_id = 'error_' + j + '_' + e['id'];
+
+                  // Prevent the message from being repeated several times.
+                  errdiv.find("#"+err_id).remove();
+
+                  err_html.push('<span id="'+ err_id + '" class="text-danger">' + e['errors'][j] + '</span>')
                 }
                 errdiv.find('.controls').append(err_html.join('\n'))
               } else {
@@ -90,7 +96,7 @@
         }, this))
         .fail($.proxy(function(xhr) {
           this.$mask.hide();
-          alert(typeof xhr === 'string' ? xhr : xhr.responseText || xhr.statusText || 'Unknown error!'); 
+          alert(typeof xhr === 'string' ? xhr : xhr.responseText || xhr.statusText || 'Unknown error!');
         }, this));
     }
     , save: function(newValue) {
@@ -108,16 +114,31 @@
       //   }
       // })
 
+      var $nonfile_input = this.$form.serializeArray();
+
+      var formData = new FormData();
+
+      $nonfile_input.forEach(function(field) {
+        formData.append(field.name, field.value)
+      });
+
+      var $file_input = this.$form.find("input[type=file]");
+      $file_input.each(function (idx, file) {
+        formData.append($(file).attr('name'), file.files[0]);
+      });
+
       return $.ajax({
-        data: [this.$form.serialize(), $.param(off_check_box)].join('&'),
+        data: formData,
         url: this.$form.attr('action'),
         type: "POST",
         dataType: 'json',
+        contentType: false,
+        processData: false,
         beforeSend: function(xhr, settings) {
             xhr.setRequestHeader("X-CSRFToken", $.getCookie('csrftoken'));
         }
       })
-    }, 
+    },
   }
 
   $.fn.ajaxform = function ( option ) {
@@ -167,7 +188,7 @@
 
       if(!this.modal){
         var modal = $('<div class="modal fade quick-form" role="dialog"><div class="modal-dialog"><div class="modal-content">'+
-          '<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>'+ 
+          '<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>'+
           this.$btn.attr('title') +'</h3></div><div class="modal-body"></div>'+
           '<div class="modal-footer" style="display: none;"><button class="btn btn-default" data-dismiss="modal" aria-hidden="true">'+gettext('Close')+'</button>'+
           '<a class="btn btn-primary btn-submit">'+gettext('Add')+'</a></div></div></div></div>')
@@ -180,7 +201,7 @@
           form.addClass('quick-form')
           form.on('post-success', $.proxy(self.post, self))
           form.exform()
-          
+
           modal.find('.modal-footer').show()
           modal.find('.btn-submit').click(function(){form.submit()})
 
@@ -198,11 +219,17 @@
       var input = this.$for_input;
       var selected = [data['obj_id']];
       if (input.attr('multiple')){
+        if (input.hasClass("select2-multiple")) {
+          selected.push($("#" + input.attr("id")).val());
+        } else {
           var opt = 'option';
-          if (input.hasClass('selectdropdown') || input.hasClass('select-multi')){
-              opt = 'option:selected';
+          if (input.hasClass('selectdropdown') || input.hasClass('select-multi')) {
+            opt = 'option:selected';
           }
-          selected.push($.map(input.find(opt) ,function(opt) { return opt.value; }));
+          selected.push($.map(input.find(opt), function (opt) {
+            return opt.value;
+          }));
+        }
       }
       $.get(this.refresh_url + selected.join() ,function(form_html, status, xhr){
         wrap.html($('<body>' + form_html + '</body>').find('#' + wrap.attr('id')).html());

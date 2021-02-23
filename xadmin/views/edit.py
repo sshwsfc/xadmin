@@ -119,8 +119,8 @@ class ModelFormAdminView(ModelAdminView):
             if attrs:
                 return attrs
 
-        if hasattr(db_field, "rel") and db_field.rel:
-            related_modeladmin = self.admin_site._registry.get(db_field.rel.to)
+        if hasattr(db_field, "remote_field") and db_field.remote_field:
+            related_modeladmin = self.admin_site._registry.get(db_field.remote_field.model)
             if related_modeladmin and hasattr(related_modeladmin, 'relfield_style'):
                 attrs = self.get_field_style(
                     db_field, related_modeladmin.relfield_style, **kwargs)
@@ -184,19 +184,10 @@ class ModelFormAdminView(ModelAdminView):
 
         return modelform_factory(self.model, **defaults)
 
-        try:
-            return modelform_factory(self.model, **defaults)
-        except FieldError as e:
-            raise FieldError('%s. Check fields/fieldsets/exclude attributes of class %s.'
-                             % (e, self.__class__.__name__))
-
     @filter_hook
     def get_form_layout(self):
         layout = copy.deepcopy(self.form_layout)
-        arr = self.form_obj.fields.keys()
-        if six.PY3:
-            arr = [k for k in arr]
-        fields = arr + list(self.get_readonly_fields())
+        fields = list(self.form_obj.fields.keys()) + list(self.get_readonly_fields())
 
         if layout is None:
             layout = Layout(Container(Col('full',
@@ -227,14 +218,16 @@ class ModelFormAdminView(ModelAdminView):
     def get_form_helper(self):
         helper = FormHelper()
         helper.form_tag = False
+        helper.label_class = 'col-md-1'
         helper.include_media = False
         helper.add_layout(self.get_form_layout())
 
         # deal with readonly fields
         readonly_fields = self.get_readonly_fields()
         if readonly_fields:
-            detail = self.get_model_view(
-                DetailAdminUtil, self.model, self.form_obj.instance)
+            detail = self.get_model_view(DetailAdminUtil, self.model,
+                                         self.form_obj.instance,
+                                         form_obj=self.form_obj)
             for field in readonly_fields:
                 helper[field].wrap(ReadOnlyField, detail=detail)
 
@@ -292,13 +285,12 @@ class ModelFormAdminView(ModelAdminView):
             self.save_models()
             self.save_related()
             response = self.post_response()
-            cls_str = str if six.PY3 else basestring
-            if isinstance(response, cls_str):
+            if isinstance(response, str):
                 return HttpResponseRedirect(response)
             else:
                 return response
-
-        return self.get_response()
+        else:
+            return self.get_response()
 
     @filter_hook
     def get_context(self):
@@ -426,13 +418,16 @@ class CreateAdminView(ModelFormAdminView):
         """
         request = self.request
 
-        msg = _(
-            'The %(name)s "%(obj)s" was added successfully.') % {'name': force_text(self.opts.verbose_name),
-                                                                 'obj': "<a class='alert-link' href='%s'>%s</a>" % (self.model_admin_url('change', self.new_obj._get_pk_val()), force_text(self.new_obj))}
+        msg = _('The %(name)s "%(obj)s" was added successfully.') % {
+            'name': force_text(self.opts.verbose_name),
+            'obj': "<a class='alert-link' href='%s'>%s</a>" % (
+                self.model_admin_url('change', self.new_obj._get_pk_val()),
+                force_text(self.new_obj)
+            )
+        }
 
         if "_continue" in request.POST:
-            self.message_user(
-                msg + ' ' + _("You may edit it again below."), 'success')
+            self.message_user(msg + ' ' + _("You may edit it again below."), 'success')
             return self.model_admin_url('change', self.new_obj._get_pk_val())
 
         if "_addanother" in request.POST:

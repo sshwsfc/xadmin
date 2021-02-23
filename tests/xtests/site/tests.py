@@ -8,7 +8,7 @@ from xadmin.views import BaseAdminView, BaseAdminPlugin, ModelAdminView, filter_
 from .models import ModelA
 
 
-class ModelAAdmin(object):
+class ModelAAdmin:
     pass
 
 
@@ -23,7 +23,7 @@ class TestAdminView(BaseAdminView):
         return HttpResponse(self.site_title)
 
 
-class TestOption(object):
+class TestOption:
     site_title = "TEST PROJECT"
 
 

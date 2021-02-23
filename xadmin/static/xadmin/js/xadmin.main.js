@@ -14,14 +14,48 @@
     $('.exform:not(.rended)').exform();
   });
 
+  /*Returns the value of the name of a url parameter*/
+  $.urlParam = function (name, url) {
+    url = url ? url: window.location.href;
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+    results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+ }
+
+  $.setCookie = function(name, value, options){
+    options = options || {};
+    if (value === null) {
+        value = '';
+        options.expires = -1;
+    }
+    var expires = '';
+    if (options.expires && (typeof options.expires == 'number' || options.expires.toUTCString)) {
+        var date;
+        if (typeof options.expires == 'number') {
+            date = new Date();
+            date.setTime(date.getTime() + (options.expires * 24 * 60 * 60 * 1000));
+        } else {
+            date = options.expires;
+        }
+        expires = '; expires=' + date.toUTCString(); // use expires attribute, max-age is not supported by IE
+    }
+    var path = options.path ? '; path=' + options.path : '';
+    var domain = options.domain ? '; domain=' + options.domain : '';
+    var secure = options.secure ? '; secure' : '';
+    document.cookie = [name, '=', encodeURIComponent(value), expires, path, domain, secure].join('');
+  }
+
   $.getCookie = function(name) {
       var cookieValue = null;
-      if (document.cookie && document.cookie != '') {
+      if (document.cookie && document.cookie !== '') {
           var cookies = document.cookie.split(';');
           for (var i = 0; i < cookies.length; i++) {
-              var cookie = jQuery.trim(cookies[i]);
+              var cookie = $.trim(cookies[i]);
               // Does this cookie string begin with the name we want?
-              if (cookie.substring(0, name.length + 1) == (name + '=')) {
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
                   cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                   break;
               }
@@ -29,7 +63,6 @@
       }
       return cookieValue;
   }
-
   //dropdown submenu plugin
   $(document)
     .on('click.xa.dropdown.data-api touchstart.xa.dropdown.data-api', '.dropdown-submenu', function (e) { e.stopPropagation(); })

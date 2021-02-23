@@ -30,7 +30,7 @@
       var end_date = el.find('.calendar.date-end').datepicker({format: 'yyyy-mm-dd', language: 'xadmin'});
       
       var checkAvailable = function(){
-        if(start_date.data('datepicker').getDate().valueOf() <= end_date.data('datepicker').getDate().valueOf()){
+        if(start_date.data('datepicker').getDate() <= end_date.data('datepicker').getDate()){
           el.find('button[type=submit]').removeAttr('disabled');
         } else {
           el.find('button[type=submit]').attr('disabled', 'disabled');
@@ -38,15 +38,13 @@
       }
       
       start_date.on('changeDate', function(ev){
-          var startdate = start_date.data('date');
-          el.find('.start_input').val(startdate);
-          end_date.data('datepicker').setStartDate(startdate);
+          el.find('.start_input').val(start_date.datepicker('getFormattedDate'));
+          end_date.data('datepicker').setStartDate(start_date.data('datepicker').getDate());
           checkAvailable();
       });
       end_date.on('changeDate', function(ev){
-          var enddate = end_date.data('date');
-          el.find('.end_input').val(enddate);
-          start_date.data('datepicker').setEndDate(enddate);
+          el.find('.end_input').val(end_date.datepicker('getFormattedDate'));
+          start_date.data('datepicker').setEndDate(end_date.data('datepicker').getDate());
           checkAvailable();
       });
       

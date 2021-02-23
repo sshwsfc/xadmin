@@ -5,7 +5,7 @@
   <i class="fa fa-globe"></i> <span class="hide-sm">
     {% get_current_language as l %}{{ l.name_local }}
     <i class="caret"></i></span></a>
-  <form id="setlang-form" action="{% url 'xadmin:set_language' %}" method="post" style="display:none;">
+  <form id="setlang-form" action="{% url 'xadmin:set_language' %}" method="post" style="display:none;" {% view_block 'form_tag_attrs' %}>
     {% csrf_token %}
     <input name="next" type="hidden" value="{{ redirect_to }}" />
     <input id="setlang-id_language" name="language" type="hidden" value="{{ LANGUAGE_CODE }}" />

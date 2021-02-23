@@ -14,7 +14,7 @@ class DetailsPlugin(BaseAdminPlugin):
     show_all_rel_details = True
 
     def result_item(self, item, obj, field_name, row):
-        if (self.show_all_rel_details or (field_name in self.show_detail_fields)):
+        if self.show_all_rel_details or field_name in self.show_detail_fields:
             rel_obj = None
             if hasattr(item.field, 'remote_field') and isinstance(item.field.remote_field, models.ManyToOneRel):
                 rel_obj = getattr(obj, field_name)
@@ -33,7 +33,8 @@ class DetailsPlugin(BaseAdminPlugin):
                 else:
                     has_view_perm = self.admin_view.has_model_perm(rel_obj.__class__, 'view')
                     has_change_perm = self.has_model_perm(rel_obj.__class__, 'change')
-
+            else:
+                has_view_perm = has_change_perm = False
             if rel_obj and has_view_perm:
                 opts = rel_obj._meta
                 try:

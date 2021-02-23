@@ -15,6 +15,7 @@ from xadmin.layout import FormHelper, Layout, flatatt, Container, Column, Field,
 from xadmin.plugins.utils import get_context_dict
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView, DetailAdminView, filter_hook
+from collections import OrderedDict
 
 
 class ShowField(Field):
@@ -51,7 +52,7 @@ class TDField(Field):
     template = "xadmin/layout/td-field.html"
 
 
-class InlineStyleManager(object):
+class InlineStyleManager:
     inline_styles = {}
 
     def register_style(self, name, style):
@@ -63,7 +64,7 @@ class InlineStyleManager(object):
 style_manager = InlineStyleManager()
 
 
-class InlineStyle(object):
+class InlineStyle:
     template = 'xadmin/edit_inline/stacked.html'
 
     def __init__(self, view, formset):
@@ -115,11 +116,10 @@ style_manager.register_style("table", TableInlineStyle)
 
 def replace_field_to_value(layout, av):
     if layout:
-        cls_str = str if six.PY3 else basestring
         for i, lo in enumerate(layout.fields):
             if isinstance(lo, Field) or issubclass(lo.__class__, Field):
                 layout.fields[i] = ShowField(av, *lo.fields, **lo.attrs)
-            elif isinstance(lo, cls_str):
+            elif isinstance(lo, str):
                 layout.fields[i] = ShowField(av, lo)
             elif hasattr(lo, 'get_field_names'):
                 replace_field_to_value(lo, av)
@@ -164,7 +164,7 @@ class InlineModelAdmin(ModelFormAdminView):
             "form": self.form,
             "formset": self.formset,
             "fk_name": self.fk_name,
-            'fields': forms.ALL_FIELDS,
+            'fields': self.fields if self.fields else forms.ALL_FIELDS,
             "exclude": exclude,
             "formfield_callback": self.formfield_for_dbfield,
             "extra": self.extra,
@@ -193,6 +193,7 @@ class InlineModelAdmin(ModelFormAdminView):
         helper = FormHelper()
         helper.form_tag = False
         helper.include_media = False
+        helper.label_class = 'col-md-1'
         # override form method to prevent render csrf_token in inline forms, see template 'bootstrap/whole_uni_form.html'
         helper.form_method = 'get'
 
@@ -225,20 +226,24 @@ class InlineModelAdmin(ModelFormAdminView):
         if readonly_fields:
             for form in instance:
                 form.readonly_fields = []
-                inst = form.save(commit=False)
-                if inst:
-                    meta_field_names = [field.name for field in inst._meta.get_fields()]
+                try:
+                    # only a valid form can execute the save method
+                    form_instance = form.save(commit=False)
+                except ValueError:
+                    form_instance = form.instance
+                if form_instance:
+                    instance_fields = dict([(f.name, f) for f in form_instance._meta.get_fields()])
                     for readonly_field in readonly_fields:
                         value = None
                         label = None
-                        if readonly_field in meta_field_names:
-                            label = inst._meta.get_field(readonly_field).verbose_name
-                            value = smart_text(getattr(inst, readonly_field))
-                        elif inspect.ismethod(getattr(inst, readonly_field, None)):
-                            value = getattr(inst, readonly_field)()
-                            label = getattr(getattr(inst, readonly_field), 'short_description', readonly_field)
+                        if readonly_field in instance_fields:
+                            label = instance_fields[readonly_field].verbose_name
+                            value = smart_text(getattr(form_instance, readonly_field))
+                        elif inspect.ismethod(getattr(form_instance, readonly_field, None)):
+                            value = getattr(form_instance, readonly_field)()
+                            label = getattr(getattr(form_instance, readonly_field), 'short_description', readonly_field)
                         elif inspect.ismethod(getattr(self, readonly_field, None)):
-                            value = getattr(self, readonly_field)(inst)
+                            value = getattr(self, readonly_field)(form_instance)
                             label = getattr(getattr(self, readonly_field), 'short_description', readonly_field)
                         if value:
                             form.readonly_fields.append({'label': label, 'contents': value})
@@ -432,8 +437,8 @@ class InlineFormsetPlugin(BaseAdminPlugin):
 
     def get_form_layout(self, layout):
         allow_blank = isinstance(self.admin_view, DetailAdminView)
-        # fixed #176 bug, change dict to list
-        fs = [(f.model, InlineFormset(f, allow_blank)) for f in self.formsets]
+        # fixed #176, #363 bugs, change dict to list
+        fs = OrderedDict([(f.model, InlineFormset(f, allow_blank)) for f in self.formsets])
         replace_inline_objects(layout, fs)
 
         if fs:
@@ -443,8 +448,8 @@ class InlineFormsetPlugin(BaseAdminPlugin):
             if not container:
                 container = layout
 
-            # fixed #176 bug, change dict to list
-            for key, value in fs:
+            # fixed #176, #363 bugs, change dict to list
+            for key, value in fs.items():
                 container.append(value)
 
         return layout

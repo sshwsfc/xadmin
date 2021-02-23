@@ -30,7 +30,7 @@
 {% block body %}
 <div class="container">
 
-  <form action="" method="post" id="login-form">
+  <form action="" method="post" id="login-form" {% view_block 'form_tag_attrs' %}>
     <div class="panel panel-default panel-single" id="panel-login">
     {% csrf_token %}
     {% block login_form %}

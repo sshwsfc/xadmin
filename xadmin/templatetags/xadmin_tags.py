@@ -1,12 +1,18 @@
 from django import template
 from django.template import Library
 from django.utils import six
-from django.utils.safestring import mark_safe
 from django.utils.html import escape
+from django.utils.safestring import mark_safe
 
 from xadmin.util import static, vendor as util_vendor
 
 register = Library()
+
+
+@register.simple_tag(takes_context=True)
+def username_field(context):
+    """Get the userame based on the variable [USERNAME_FIELD]"""
+    return getattr(context['original'], context['original'].USERNAME_FIELD)
 
 
 @register.simple_tag(takes_context=True)
@@ -16,15 +22,19 @@ def view_block(context, block_name, *args, **kwargs):
 
     admin_view = context['admin_view']
     nodes = []
-    method_name = 'block_%s' % block_name
+    method_name = 'block_%s' % block_name.replace('-', '_')
 
-    cls_str = str if six.PY3 else basestring
+    block_funcs = []
     for view in [admin_view] + admin_view.plugins:
-        if hasattr(view, method_name) and callable(getattr(view, method_name)):
-            block_func = getattr(view, method_name)
-            result = block_func(context, nodes, *args, **kwargs)
-            if result and isinstance(result, cls_str):
-                nodes.append(result)
+        block_func = getattr(view, method_name, None)
+        if block_func and callable(block_func):
+            block_funcs.append((getattr(block_func, "priority", 10), block_func))
+    for _, block_func in sorted(block_funcs, key=lambda x: x[0],
+                                reverse=True):
+        result = block_func(context, nodes, *args, **kwargs)
+        if result and isinstance(result, str):
+            nodes.append(result)
+
     if nodes:
         return mark_safe(''.join(nodes))
     else:

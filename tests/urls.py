@@ -1,5 +1,5 @@
-from django.conf.urls import patterns, include
+from django.urls import path, include
 
-urlpatterns = patterns('',
-    (r'^view_base/', include('view_base.urls')),
-)
+urlpatterns = [
+    path(r'view_base/', include('view_base.urls')),
+]

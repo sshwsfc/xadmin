@@ -29,6 +29,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.generic import View
 from collections import OrderedDict
 from xadmin.util import static, json, vendor, sortkeypicker
+from django.utils.functional import Promise
 
 from xadmin.models import Log
 
@@ -89,10 +90,9 @@ def inclusion_tag(file_name, context_class=Context, takes_context=False):
         def method(self, context, nodes, *arg, **kwargs):
             _dict = func(self, context, nodes, *arg, **kwargs)
             from django.template.loader import get_template, select_template
-            cls_str = str if six.PY3 else basestring
             if isinstance(file_name, Template):
                 t = file_name
-            elif not isinstance(file_name, cls_str) and is_iterable(file_name):
+            elif not isinstance(file_name, str) and is_iterable(file_name):
                 t = select_template(file_name)
             else:
                 t = get_template(file_name)
@@ -129,7 +129,7 @@ class JSONEncoder(DjangoJSONEncoder):
                 return smart_text(o)
 
 
-class BaseAdminObject(object):
+class BaseAdminObject:
 
     def get_view(self, view_class, option_class=None, *args, **kwargs):
         opts = kwargs.pop('opts', {})
@@ -257,8 +257,11 @@ class BaseAdminView(BaseAdminObject, View):
         self.request_method = request.method.lower()
         self.user = request.user
 
-        self.base_plugins = [p(self) for p in getattr(self,
-                                                      "plugin_classes", [])]
+        def plugin_order_key(plugin):
+            return getattr(plugin, 'order', 100)
+
+        self.base_plugins = sorted((p(self) for p in getattr(self, "plugin_classes", [])),
+                                   key=plugin_order_key)
 
         self.args = args
         self.kwargs = kwargs
@@ -320,8 +323,8 @@ class CommAdminView(BaseAdminView):
     base_template = 'xadmin/base_site.html'
     menu_template = 'xadmin/includes/sitemenu_default.html'
 
-    site_title = getattr(settings, "XADMIN_TITLE", _(u"Django Xadmin"))
-    site_footer = getattr(settings, "XADMIN_FOOTER_TITLE", _(u"my-company.inc"))
+    site_title = getattr(settings, "XADMIN_TITLE", _("Django Xadmin"))
+    site_footer = getattr(settings, "XADMIN_FOOTER_TITLE", _("my-company.inc"))
 
     global_models_icon = {}
     default_model_icon = None
@@ -330,6 +333,19 @@ class CommAdminView(BaseAdminView):
 
     def get_site_menu(self):
         return None
+
+    @filter_hook
+    def hidden_model_menu(self, model, model_admin):
+        """Hook that lets you configure menus dynamically through plugins
+        'hidden_menu' when defined in model-admin, represents a static configuration
+        and this creates problems in a multithreads environment.
+        Example usage:
+            class MenuHiddenPlugin(BaseAdminPlugin):
+                # Example of a plugin that changes the default setting given in model-admin
+                def hidden_model_menu(self, hidden_menu, model, model_admin):
+                    return not hidden_menu
+        """
+        return getattr(model_admin, 'hidden_menu', False)
 
     @filter_hook
     def get_nav_menu(self):
@@ -347,7 +363,8 @@ class CommAdminView(BaseAdminView):
         nav_menu = OrderedDict()
 
         for model, model_admin in self.admin_site._registry.items():
-            if getattr(model_admin, 'hidden_menu', False):
+            # Menus will be shown based on model-admin configuration or plugins.
+            if self.hidden_model_menu(model, model_admin):
                 continue
             app_label = model._meta.app_label
             app_icon = None
@@ -434,6 +451,7 @@ class CommAdminView(BaseAdminView):
             nav_menu = list(filter(lambda x: x, nav_menu))
 
             if not settings.DEBUG:
+                self.request.session['nav_menu'] = json.dumps(nav_menu, cls=JSONEncoder)
                 self.request.session['nav_menu'] = json.dumps(nav_menu, cls=JSONEncoder, ensure_ascii=False)
                 self.request.session.modified = True
 

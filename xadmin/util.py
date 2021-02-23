@@ -43,7 +43,6 @@ def xstatic(*tags):
     fs = []
     lang = get_language()
 
-    cls_str = str if six.PY3 else basestring
     for tag in tags:
         try:
             for p in tag.split('.'):
@@ -58,7 +57,7 @@ def xstatic(*tags):
             else:
                 raise e
 
-        if isinstance(node, cls_str):
+        if isinstance(node, str):
             files = node
         else:
             mode = 'dev'
@@ -128,8 +127,7 @@ def quote(s):
     quoting is slightly different so that it doesn't get automatically
     unquoted by the Web browser.
     """
-    cls_str = str if six.PY3 else basestring
-    if not isinstance(s, cls_str):
+    if not isinstance(s, str):
         return s
     res = list(s)
     for i in range(len(res)):
@@ -143,8 +141,7 @@ def unquote(s):
     """
     Undo the effects of quote(). Based heavily on urllib.unquote().
     """
-    cls_str = str if six.PY3 else basestring
-    if not isinstance(s, cls_str):
+    if not isinstance(s, str):
         return s
     mychr = chr
     myatoi = int
@@ -270,8 +267,9 @@ def model_ngettext(obj, n=None):
 def is_rel_field(name, model):
     if hasattr(name, 'split') and name.find("__") > 0:
         parts = name.split("__")
-        if parts[0] in model._meta.get_all_field_names():
-            return True
+        for field in model._meta.get_fields():
+            if parts[0] == field.name:
+                return True
     return False
 
 
@@ -372,7 +370,7 @@ def get_model_from_relation(field):
     elif is_related_field(field):
         return field.model
     elif getattr(field, 'remote_field'):  # or isinstance?
-        return field.remote_field.to
+        return field.remote_field.model
     else:
         raise NotRelationField
 
@@ -400,12 +398,12 @@ def reverse_field_path(model, path):
                 break
         if direct:
             related_name = field.related_query_name()
-            parent = field.rel.to
+            parent = field.remote_field.model
         else:
             related_name = field.field.name
             parent = field.model
         reversed_path.insert(0, related_name)
-    return (parent, LOOKUP_SEP.join(reversed_path))
+    return parent, LOOKUP_SEP.join(reversed_path)
 
 
 def get_fields_from_path(model, path):
