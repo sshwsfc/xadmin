@@ -54,10 +54,6 @@ const BaseFilter = props => {
 
   }, [ model, name ])
 
-  if(!filters || !filters.length) {
-    return null
-  }
-
   const fields = React.useMemo(() => filters.map(filter => {
     const field = convert(filter.schema, { key: filter.key })
     return _.merge(field, filter.field, fieldProps)
@@ -84,7 +80,7 @@ const BaseFilter = props => {
 
   const onChange = (options && options.submitOnChange == true) ? onSubmit : undefined
   
-  return fields ? (<Form onSubmit={onSubmit} onChange={onChange}
+  return (fields && filters.length) ? (<Form onSubmit={onSubmit} onChange={onChange}
     fields={fields}
     component={props => <FilterForm {...props} component={component}/>}
     group={group}

@@ -45,7 +45,7 @@ const Submenu = ({ children, invalid, handleSubmit, submitting, options, resetFi
   return (
     <Form className="ant-advanced-search-form" onSubmit={handleSubmit}>
       <Card style={{ marginBottom: '.5rem' }}>
-        <Row gutter={8} style={{ flexWrap: (children.length <= 3 || showAllFilter) ? 'wrap' : 'nowrap', overflow: 'hidden' }}>{children}</Row>
+        <Row gutter={8} style={{ flexWrap: (children.length <= 3 || showAllFilter) ? 'wrap' : 'nowrap' }}>{children}</Row>
         {options && options.submitOnChange ? null : (
           <Row>
             <Col span={24} style={{ textAlign: 'center' }}>

@@ -1,11 +1,12 @@
 import React from 'react'
 import _ from 'lodash'
-import { getFieldProp } from 'xadmin-model/lib/utils'
+import { utils } from 'xadmin-model'
 import { app, Block, use } from 'xadmin'
 import { _t } from 'xadmin-i18n'
 import { SchemaForm } from 'xadmin-form'
 import { C, Loading } from 'xadmin-ui'
 
+const { getFieldProp } = utils
 import {
   CaretDownOutlined,
   CaretUpOutlined,

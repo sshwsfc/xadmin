@@ -16,7 +16,7 @@ import search from './search'
 import modalform from './modalform'
 import reldetail from './reldetail'
 
-import utils from './utils'
+import * as utils from './utils'
 
 const app = {
   name: 'xadmin.model',
