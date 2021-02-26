@@ -33,31 +33,6 @@ const BaseForm = (props) => {
   }
 }
 
-const validateByFields = (errors, values, fields) => {
-  const { _t } = app.context
-
-  fields.forEach(field => {
-    const name = field.name
-
-    if(!_.get(errors, name)) {
-      const value = _.get(values, name)
-      if(_.isFunction(field.validate)) {
-        const err = field.validate(value, values)
-        if(_.isArray(err)) {
-          _.set(errors, name, err.join(' '))
-        } else if(err) {
-          _.set(errors, name, err.toString())
-        }
-      } else if(field.required == true) {
-        if(value == null || value == undefined) {
-          _.set(errors, name, _t('{{label}} is required', { label: field.label || name }))
-        }
-      }
-    }
-  })
-  return errors
-}
-
 const isPromise = obj =>
   !!obj &&
   (typeof obj === 'object' || typeof obj === 'function') &&
@@ -114,10 +89,7 @@ const Form = (props) => {
     }
   }, [ onSubmit ])
 
-  return (<RForm key={formKey} validate={(values) => {
-    let errors = validate ? validate(values) : {}
-    return validateByFields(errors, values, fields)
-  }} 
+  return (<RForm key={formKey} validate={validate} 
   mutators={{
     ...arrayMutators,
     ...mutators
@@ -175,7 +147,6 @@ const SchemaForm = (props) => {
 
       return prev
     }, {})
-    errors = validateByFields(errors, values, fields)
     return errors
   }
 
