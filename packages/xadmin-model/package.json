@@ -3,6 +3,7 @@
   "version": "3.0.10",
   "description": "Xadmin Model",
   "main": "./lib/index.js",
+  "module": "es/index.js",
   "author": "sshwsfc@gmail.com",
   "license": "MIT",
   "dependencies": {
@@ -16,11 +17,14 @@
     "xadmin-ui": "2"
   },
   "scripts": {
-    "compile": "babel src --out-dir lib",
+    "compile": "babel src --root-mode upward --out-dir lib",
+    "es": "babel src --root-mode upward --env-name esbuild --out-dir es",
     "watch": "babel src --out-dir lib -w"
   },
   "files": [
-    "lib"
+    "lib",
+    "es",
+    "src"
   ],
   "gitHead": "7a976e3f4034bef2e8042de81f37eeda9abcf50c"
 }

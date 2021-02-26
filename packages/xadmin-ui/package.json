@@ -2,7 +2,8 @@
   "name": "xadmin-ui",
   "version": "2.1.3",
   "description": "Xadmin Base UI",
-  "main": "./lib/index.js",
+  "main": "lib/index.js",
+  "module": "es/index.js",
   "author": "sshwsfc@gmail.com",
   "license": "MIT",
   "dependencies": {
@@ -15,11 +16,13 @@
     "xadmin": "2"
   },
   "scripts": {
-    "compile": "babel src --out-dir lib",
+    "compile": "babel src --root-mode upward --out-dir lib",
+    "es": "babel src --root-mode upward --env-name esbuild --out-dir es",
     "watch": "babel src --out-dir lib -w"
   },
   "files": [
-    "lib"
-  ],
-  "gitHead": "7a976e3f4034bef2e8042de81f37eeda9abcf50c"
+    "lib",
+    "es",
+    "src"
+  ]
 }

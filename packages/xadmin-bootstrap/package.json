@@ -2,7 +2,8 @@
   "name": "xadmin-bootstrap",
   "version": "2.1.4",
   "description": "Xadmin Bootstrap UI",
-  "main": "./lib/index.js",
+  "main": "lib/index.js",
+  "module": "es/index.js",
   "author": "sshwsfc@gmail.com",
   "license": "MIT",
   "dependencies": {
@@ -19,10 +20,13 @@
     "xadmin": "2"
   },
   "scripts": {
-    "compile": "babel src --out-dir lib",
+    "compile": "babel src --root-mode upward --out-dir lib",
+    "es": "babel src --root-mode upward --env-name esbuild --out-dir es",
     "watch": "babel src --out-dir lib -w"
   },
   "files": [
-    "lib"
+    "lib",
+    "es",
+    "src"
   ]
 }

@@ -2,7 +2,8 @@
   "name": "xadmin-i18n",
   "version": "2.0.4",
   "description": "Xadmin i18n",
-  "main": "./lib/index.js",
+  "main": "lib/index.js",
+  "module": "es/index.js",
   "author": "sshwsfc@gmail.com",
   "license": "MIT",
   "dependencies": {
@@ -17,11 +18,14 @@
     "xadmin": "2"
   },
   "scripts": {
-    "compile": "babel src --out-dir lib",
+    "compile": "babel src --root-mode upward --out-dir lib",
+    "es": "babel src --root-mode upward --env-name esbuild --out-dir es",
     "watch": "babel src --out-dir lib -w"
   },
   "files": [
-    "lib"
+    "lib",
+    "es",
+    "src"
   ],
   "gitHead": "7a976e3f4034bef2e8042de81f37eeda9abcf50c"
 }
