@@ -1,6 +1,6 @@
 {
   "name": "xadmin-antd",
-  "version": "3.0.13",
+  "version": "3.0.14",
   "description": "Xadmin Antd UI",
   "main": "lib/index.js",
   "module": "es/index.js",

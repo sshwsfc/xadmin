@@ -1,6 +1,6 @@
 {
   "name": "xadmin-ui",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "description": "Xadmin Base UI",
   "main": "lib/index.js",
   "module": "es/index.js",

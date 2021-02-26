@@ -1,6 +1,6 @@
 {
   "name": "xadmin-model",
-  "version": "3.0.10",
+  "version": "3.0.11",
   "description": "Xadmin Model",
   "main": "./lib/index.js",
   "module": "es/index.js",
