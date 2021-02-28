@@ -1,6 +1,6 @@
 {
   "name": "xadmin-i18n",
-  "version": "2.0.5",
+  "version": "3.0.0",
   "description": "Xadmin i18n",
   "main": "lib/index.js",
   "module": "es/index.js",

@@ -1,6 +1,6 @@
 {
   "name": "xadmin",
-  "version": "2.1.9",
+  "version": "2.2.0",
   "description": "Xadmin Core",
   "main": "lib/index.js",
   "module": "es/index.js",
