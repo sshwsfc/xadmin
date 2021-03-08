@@ -1,6 +1,6 @@
 {
   "name": "xadmin-bootstrap",
-  "version": "2.1.6",
+  "version": "2.2.0",
   "description": "Xadmin Bootstrap UI",
   "main": "lib/index.js",
   "module": "es/index.js",

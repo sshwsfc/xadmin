@@ -1,6 +1,6 @@
 {
   "name": "xadmin",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Xadmin Core",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -19,8 +19,7 @@
     "redux-saga": "^1.0.2",
     "lodash": "^4.17.11"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "scripts": {
     "build:lib": "babel src --root-mode upward --out-dir lib",
     "build:es": "cross-env BABEL_ENV=es babel src --root-mode upward --out-dir es",
