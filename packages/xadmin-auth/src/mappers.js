@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import { SubmissionError } from 'xadmin-form'
 import { UserSignIn, UserChangePassword } from './models'
 import app from 'xadmin'
 
@@ -31,7 +30,7 @@ export default {
           app.go(query && query.redirect || '/app/')
         }).catch(error => {
           dispatch({ type: '@@xadmin/AUTH_SIGN_IN_ERROR', error })
-          throw new SubmissionError(error.json && error.json.non_field_errors == undefined ? error.json : { password: _t('Incorrect username or password') })
+          throw new Error(error.json && error.json.non_field_errors == undefined ? error.json : { password: _t('Incorrect username or password') })
         })
       }
     },
@@ -77,7 +76,7 @@ export default {
         }).then(user => {
           app.go('/app/')
         }).catch(error => {
-          throw new SubmissionError({ old_password: _t('Incorrect old password') })
+          throw new Error({ old_password: _t('Incorrect old password') })
         })
       }
     }

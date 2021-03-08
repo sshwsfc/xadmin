@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card } from 'antd'
-import { objectBuilder } from 'xadmin-form/lib/builder'
+import { objectBuilder } from 'xadmin-form'
 
 export default ({ input, label, meta: { touched, error }, field, group, option }) => {
   return (

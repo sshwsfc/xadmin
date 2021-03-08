@@ -2,7 +2,8 @@
   "name": "xadmin-start",
   "version": "3.0.1",
   "description": "Xadmin Start Template -- Default",
-  "main": "./lib/index.js",
+  "main": "lib/index.js",
+  "module": "es/index.js",
   "author": "sshwsfc@gmail.com",
   "license": "MIT",
   "dependencies": {
@@ -14,6 +15,7 @@
     "react-router": "^3.2.0",
     "redux": "^4.0.1",
     "redux-saga": "^1.0.2",
+    "moment": "2",
     "xadmin": "^2.2.0",
     "xadmin-auth": "^3.1.0",
     "xadmin-form": "^3.1.0",
@@ -22,11 +24,14 @@
     "xadmin-ui": "^3.0.0"
   },
   "scripts": {
-    "compile": "babel src --out-dir lib",
-    "watch": "babel src --out-dir lib -w"
+    "build:lib": "babel src --root-mode upward --out-dir lib",
+    "build:es": "cross-env BABEL_ENV=es babel src --root-mode upward --out-dir es",
+    "clean": "rm -rf lib es dist",
+    "build": "npm run clean && npm run build:lib && npm run build:es"
   },
   "files": [
-    "lib"
+    "lib",
+    "es"
   ],
   "gitHead": "7a976e3f4034bef2e8042de81f37eeda9abcf50c"
 }

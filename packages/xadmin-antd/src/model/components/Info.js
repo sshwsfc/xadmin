@@ -1,7 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import { Loading } from 'xadmin-ui'
-import { convert as schemaConvert } from 'xadmin-form/lib/schema'
+import { schemaConvert } from 'xadmin-form'
 import { Form, Card } from 'antd'
 import { Item } from './Items'
 import { use } from 'xadmin'

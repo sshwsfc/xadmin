@@ -4,29 +4,33 @@
   "description": "Xadmin Core",
   "main": "lib/index.js",
   "module": "es/index.js",
+  "unpkg": "dist/xadmin.js",
   "author": "sshwsfc@gmail.com",
   "license": "MIT",
   "dependencies": {
-    "async": "^2.6.2",
-    "lodash": "^4.17.11",
-    "react-router": "^3.2.1",
-    "redux-saga": "^1.0.2"
+    "async": "^2.6.2"
   },
   "peerDependencies": {
     "react": "16",
     "react-dom": "16",
     "react-redux": "^7.0.0",
-    "redux": "^4.0.0"
+    "react-router": "^3.2.1",
+    "redux": "^4.0.0",
+    "redux-saga": "^1.0.2",
+    "lodash": "^4.17.11"
+  },
+  "devDependencies": {
   },
   "scripts": {
-    "compile": "babel src --root-mode upward --out-dir lib",
-    "es": "babel src --root-mode upward --env-name esbuild --out-dir es",
-    "watch": "babel src --out-dir lib -w"
+    "build:lib": "babel src --root-mode upward --out-dir lib",
+    "build:es": "cross-env BABEL_ENV=es babel src --root-mode upward --out-dir es",
+    "build:umd": "rollup -c ../../rollup.config.js",
+    "clean": "rm -rf lib es dist",
+    "build": "npm run clean && npm run build:lib && npm run build:es && npm run build:umd"
   },
   "files": [
     "lib",
     "es",
-    "src"
-  ],
-  "gitHead": "7a976e3f4034bef2e8042de81f37eeda9abcf50c"
+    "dist"
+  ]
 }

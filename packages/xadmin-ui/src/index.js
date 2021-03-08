@@ -1,7 +1,7 @@
 import React from 'react'
 import app from 'xadmin'
 
-import loading from './loading'
+// import loading from './loading'
 import splashscreen from './splashscreen'
 
 const C = args => {
@@ -83,10 +83,25 @@ export default {
       path: 'dashboard',
       component: Dashboard
     }
+  },
+  reducers: {
+    loading: (state={}, { type, key }) => {
+      if(!key) {
+        return state
+      }
+      switch (type) {
+        case 'START_LOADING':
+          return { ...state, [key]: true }
+        case 'END_LOADING':
+          return { ..._.omit(state, key) }
+        default:
+          return state
+      }
+    }
   }
 }
 
-const apps = { loading, splashscreen }
+const apps = { splashscreen }
 
 export {
   C, lazy,

@@ -2,7 +2,7 @@ import React from 'react'
 import { FieldArray } from 'xadmin-form'
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
 import { Card, Button } from 'antd'
-import { objectBuilder, prefixFieldKey } from 'xadmin-form/lib/builder'
+import { objectBuilder, prefixFieldKey } from 'xadmin-form'
 import app from 'xadmin'
 
 const defaultItemsRender = ({ fields, meta: { touched, error }, field, fieldsBuilder }) => {

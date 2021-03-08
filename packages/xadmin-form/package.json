@@ -1,6 +1,6 @@
 {
   "name": "xadmin-form",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Xadmin Form",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -11,23 +11,27 @@
     "ajv-i18n": "^3.4.0",
     "final-form": "^4.18.7",
     "final-form-arrays": "^3.0.2",
-    "lodash": "^4.17.11",
     "react-final-form": "^6.3.4",
     "react-final-form-arrays": "^3.1.1"
   },
   "peerDependencies": {
+    "react": "16",
+    "lodash": "^4.17.11",
+    "react-redux": "^7.0.0",
     "moment": "2",
-    "xadmin": "2"
+    "xadmin": "2 || 3",
+    "xadmin-ui": "3"
   },
   "scripts": {
-    "compile": "babel src --root-mode upward --out-dir lib",
-    "es": "babel src --root-mode upward --env-name esbuild --out-dir es",
-    "watch": "babel src --out-dir lib -w"
+    "build:lib": "babel src --root-mode upward --out-dir lib",
+    "build:es": "cross-env BABEL_ENV=es babel src --root-mode upward --out-dir es",
+    "build:umd": "rollup -c ../../rollup.config.js",
+    "clean": "rm -rf lib es dist",
+    "build": "npm run clean && npm run build:lib && npm run build:es && npm run build:umd"
   },
   "files": [
     "lib",
     "es",
-    "src"
-  ],
-  "gitHead": "7a976e3f4034bef2e8042de81f37eeda9abcf50c"
+    "dist"
+  ]
 }

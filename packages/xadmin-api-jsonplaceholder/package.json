@@ -13,14 +13,13 @@
     "xadmin": "2"
   },
   "scripts": {
-    "compile": "babel src --root-mode upward --out-dir lib",
-    "es": "babel src --root-mode upward --env-name esbuild --out-dir es",
-    "watch": "babel src --out-dir lib -w"
+    "build:lib": "babel src --root-mode upward --out-dir lib",
+    "build:es": "cross-env BABEL_ENV=es babel src --root-mode upward --out-dir es",
+    "clean": "rm -rf lib es dist",
+    "build": "npm run clean && npm run build:lib && npm run build:es"
   },
   "files": [
     "lib",
-    "es",
-    "src"
-  ],
-  "gitHead": "7a976e3f4034bef2e8042de81f37eeda9abcf50c"
+    "es"
+  ]
 }
