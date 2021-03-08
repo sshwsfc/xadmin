@@ -1,16 +1,15 @@
 {
   "name": "xadmin-antd",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "Xadmin Antd UI",
   "main": "lib/index.js",
   "module": "es/index.js",
   "author": "sshwsfc@gmail.com",
   "license": "MIT",
-  "dependencies": {
-    "@ant-design/icons": "^4.0.3",
-    "antd": "4"
-  },
+  "dependencies": {},
   "peerDependencies": {
+    "@ant-design/icons": "^4.0.3",
+    "antd": "4",
     "react": "16",
     "lodash": "^4.17.11",
     "react-redux": "^7.0.0",
@@ -26,11 +25,13 @@
   "scripts": {
     "build:lib": "babel src --root-mode upward --out-dir lib",
     "build:es": "cross-env BABEL_ENV=es babel src --root-mode upward --out-dir es",
+    "build:umd": "rollup -c ../../rollup.config.js",
     "clean": "rm -rf lib es dist",
-    "build": "npm run clean && npm run build:lib && npm run build:es"
+    "build": "npm run clean && npm run build:lib && npm run build:es && npm run build:umd"
   },
   "files": [
     "lib",
-    "es"
+    "es",
+    "dist"
   ]
 }

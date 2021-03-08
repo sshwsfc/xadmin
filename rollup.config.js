@@ -80,7 +80,11 @@ export default [
       babel(babelConfig),
       commonjs(),
       json(),
-      postcss(),
+      postcss({
+        plugins: [
+          require('autoprefixer')()
+        ]
+      }),
       replace({
         'process.env.NODE_ENV': JSON.stringify('development'),
       }),
@@ -109,7 +113,11 @@ export default [
       babel(babelConfig),
       commonjs(),
       json(),
-      postcss(),
+      postcss({
+        plugins: [
+          require('autoprefixer')()
+        ]
+      }),
       replace({
         'process.env.NODE_ENV': JSON.stringify('production'),
       }),
