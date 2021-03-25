@@ -20,5 +20,5 @@ export default props => {
         { count > 0 ? _t('{{count}} record selected', { count }) : _t('No data selected')} <DownOutlined />
       </Button>
     </Dropdown>
-  ) : null;
+  ) : <div></div>;
 }

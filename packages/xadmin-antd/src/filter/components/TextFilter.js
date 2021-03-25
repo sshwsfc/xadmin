@@ -46,13 +46,13 @@ const useTextFilter = ({ input }) => {
   }
 
   const onKeyPress = (e) => {
-    if(value && e.key === 'Enter') {
+    if(e.key === 'Enter') {
       form.submit()
     }
   }
 
   const clear = () => onValueChange(null)
-  const changeModeBtn = (<Tooltip title={_t('Exact search')}>
+  const changeModeBtn = (<Tooltip title={_t('Exact Search')}>
     <Typography.Text type={!like ? 'success' : 'secondary'} onClick={()=>onLikeChange(!like)} style={{ cursor: 'pointer' }}>
       { (value == null || value == undefined || value == '') ? null : <AimOutlined /> }
     </Typography.Text>

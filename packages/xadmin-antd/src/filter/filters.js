@@ -1,7 +1,9 @@
 import React from 'react'
 import { app, config } from 'xadmin'
 import { FilterOutlined, SearchOutlined } from '@ant-design/icons'
-import { Row, Col, Form, Space, Button, Card, Modal, Typography } from 'antd'
+import { Row, Col, Form, Space, Button, Card, Modal, Typography, Grid } from 'antd'
+
+const { useBreakpoint } = Grid;
 
 const FilterForm = ({ children, invalid, handleSubmit, submitting, options, resetFilter }) => {
   const { _t } = app.context
@@ -37,6 +39,16 @@ const NavForm = ({ children, invalid, handleSubmit, submitting, options, resetFi
   )
 }
 
+const FilterOpenLink = ({ count, onClick, show }) => {
+  const { _t } = app.context
+  const screens = useBreakpoint();
+  
+  return (screens.xxl == false && count > 3) || count > 4 ? 
+  <Typography.Link onClick={onClick}>
+    {show ? _t('Collapse'): _t('Expand') }
+  </Typography.Link> : null
+}
+
 const Submenu = ({ children, invalid, handleSubmit, submitting, options, resetFilter }) => {
   const { _t } = app.context
   const defaultShowAllFilter = config('filter') && config('filter').submenuShowAllFilter == true
@@ -44,7 +56,7 @@ const Submenu = ({ children, invalid, handleSubmit, submitting, options, resetFi
 
   return (
     <Form className="ant-advanced-search-form" onSubmit={handleSubmit}>
-      <Card style={{ marginBottom: '.5rem' }}>
+      <Card style={{ marginBottom: '.5rem', overflow: 'hidden' }}>
         <Row gutter={8} style={{ flexWrap: (children.length <= 3 || showAllFilter) ? 'wrap' : 'nowrap' }}>{children}</Row>
         {options && options.submitOnChange ? null : (
           <Row>
@@ -52,8 +64,7 @@ const Submenu = ({ children, invalid, handleSubmit, submitting, options, resetFi
               <Space>
                 <Button disabled={invalid} loading={submitting} type="primary" onClick={handleSubmit} icon={<SearchOutlined />}>{_t('Search')}</Button>
                 <Button disabled={submitting} onClick={resetFilter}>{_t('Reset')}</Button>
-                { children.length > 3 ? 
-                  <Typography.Link onClick={() => setShowAllFilter(!showAllFilter)}>{showAllFilter ? _t('Collapse'): _t('Expand') }</Typography.Link> : null }
+                <FilterOpenLink count={children.length} onClick={() => setShowAllFilter(!showAllFilter)} show={showAllFilter} />
               </Space>
             </Col>
           </Row>
