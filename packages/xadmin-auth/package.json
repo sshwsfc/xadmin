@@ -1,6 +1,6 @@
 {
   "name": "xadmin-auth",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "Xadmin Auth",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -17,7 +17,7 @@
     "react-redux": "^7.0.0",
     "xadmin": "2",
     "xadmin-form": "3",
-    "xadmin-i18n": "2",
+    "xadmin-i18n": "3",
     "xadmin-model": "3"
   },
   "scripts": {
