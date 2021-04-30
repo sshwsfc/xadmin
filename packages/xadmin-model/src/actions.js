@@ -1,9 +1,8 @@
 import React from 'react'
 import _ from 'lodash'
-import { effects } from 'redux-saga'
+import { all, fork, put, call, cancelled, takeEvery } from 'redux-saga/effects'
 import app, { api, use } from 'xadmin'
 import { C } from 'xadmin-ui'
-const { all, fork, put, call, cancelled, takeEvery } = effects
 
 function *handle_delete_items({ model, items, promise, message }) {
   yield put({ type: 'START_LOADING', model, key: `${model.key}.delete_items` })
