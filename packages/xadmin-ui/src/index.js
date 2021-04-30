@@ -52,11 +52,11 @@ const Select = C.lazy('Select')
 
 const lazy = (fn, fallback) => {
   const Component = React.lazy(fn)
-  return props => (
+  return React.forwardRef((props, ref) => (
     <React.Suspense fallback={fallback || <Loading />}>
-      <Component {...props} />
+      <Component ref={ref} {...props} />
     </React.Suspense>
-  )
+  ))
 }
 
 export default {
