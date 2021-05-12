@@ -139,12 +139,16 @@ const SchemaForm = (props) => {
       }
     }
     let errors = valid ? {} : ajValidate.errors.reduce((prev, err) => {
-      const path = [
-        err.dataPath.length > 1 ? err.dataPath.substr(1) : '',
-        err.keyword == 'required' && err.params.missingProperty
-      ].filter(Boolean).join('.')
-      _.set(prev, path, err.message)
-
+      let p = err.dataPath
+      if(err.keyword == 'required' && err.params.missingProperty) {
+        if(err.params.missingProperty.indexOf('-') >= 0) {
+          p += `['${err.params.missingProperty}']`
+        } else {
+          p += '.' + err.params.missingProperty
+        }
+      }
+      if(p.startsWith('.')) p = p.substr(1)
+      _.set(prev, p, err.message)
       return prev
     }, {})
     return errors
