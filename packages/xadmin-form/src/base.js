@@ -138,7 +138,8 @@ const SchemaForm = (props) => {
         ajvLocalize['en'](ajValidate.errors)
       }
     }
-    let errors = valid ? {} : ajValidate.errors.reduce((prev, err) => {
+    let errors = (props.validate && _.isFunction(props.validate)) ? props.validate(values) : {}
+    errors = valid ? errors : ajValidate.errors.reduce((prev, err) => {
       let p = err.dataPath
       if(err.keyword == 'required' && err.params.missingProperty) {
         if(err.params.missingProperty.indexOf('-') >= 0) {
@@ -150,7 +151,8 @@ const SchemaForm = (props) => {
       if(p.startsWith('.')) p = p.substr(1)
       _.set(prev, p, err.message)
       return prev
-    }, {})
+    }, errors)
+    
     return errors
   }
 
