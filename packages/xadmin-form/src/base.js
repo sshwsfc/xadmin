@@ -156,7 +156,7 @@ const SchemaForm = (props) => {
     return errors
   }
 
-  return <Form validate={validate} fields={fields} effect={schema.formEffect} {...props} />
+  return <Form {...props} validate={validate} fields={fields} effect={schema.formEffect} />
 }
 
 const useForm = (props, select) => {
