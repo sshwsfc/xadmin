@@ -40,7 +40,7 @@ const BatchDeleteBtn = props => {
   return canDelete ? [ (
     <Menu.Item {...props} key={'actions_batch_delete'} 
       onClick={(e)=>{
-        props.onClick(e)
+        props.onClick && props.onClick(e)
         setShow(true)
       }} disabled={selected.length == 0}>
       {_t('Batch Delete Items')}

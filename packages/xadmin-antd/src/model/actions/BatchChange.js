@@ -44,7 +44,7 @@ const BatchChangeBtn = props => {
   return (canEdit && fields.length > 0) ? [ (
     <Menu.Item {...props} key="actions_batch_change" 
       onClick={(e)=>{
-        props.onClick(e)
+        props.onClick && props.onClick(e)
         setShow(true)
       }} disabled={selected.length == 0}>
       {_t('Batch Change Items')}
