@@ -196,15 +196,18 @@ export default {
     const { loading } = use('redux', state => ({ loading: state.loading && state.loading[`${model.key}.items`] }))
 
     useEffect(() => {
-      if(model.initQuery == false) return
-      
       let wheres
       const query = props && props.query
       if(query && Object.keys(query).length > 0) {
         wheres = { ...modelState.wheres, param_filter: query }
+        modelDispatch({ type: 'UPDATE_WHERE', key: 'param_filter', payload: query})
       } else {
         wheres = _.omit(modelState.wheres, 'param_filter')
+        modelDispatch({ type: 'UPDATE_WHERE', key: 'param_filter'})
       }
+
+      if(model.initQuery == false) return
+      
       if(!_.isEqual(wheres, modelState.wheres)) {
         modelDispatch({ type: 'GET_ITEMS', items: [], filter: { ...modelState.filter, skip: 0 }, success: true })
       }

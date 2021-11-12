@@ -7,6 +7,7 @@ export default class App {
     this.items = {}
     this.context = {}
     this._cache = {}
+    this.started = false
   }
 
   checkAddItems(items) {
@@ -92,6 +93,9 @@ export default class App {
   }
 
   reduce(key, load_reducer, init_state = {}) {
+    if(!this.started) {
+      throw Error('App not started, can\'t use app item.')
+    }
     if(this._cache[key] == undefined) {
       this._cache[key] = this.apps.reduce((prev, app) => {
         return app[key] !== undefined ? load_reducer(prev, app[key]) : prev
@@ -146,6 +150,7 @@ export default class App {
 
   start(init_context={}) {
     const self = this
+    this.started = true
 
     waterfall([ (cb) => { cb(null, init_context) }, 
       ...this.get('context')
