@@ -1,6 +1,5 @@
 import React from 'react'
 import { StoreWrap, config as _c, Block, app } from 'xadmin'
-import { IsAuthenticated } from 'xadmin-auth'
 import { Layout, Menu, Breadcrumb } from 'antd'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 
@@ -12,8 +11,6 @@ function itemRender(route, params, routes, paths) {
   const click = (to) => () => app.go(to)
   return last ? <span>{route.breadcrumbName}</span> : <a onClick={click('/' + paths.join(''))}>{route.breadcrumbName}</a>
 }
-
-@StoreWrap('main.menu')
 class MenuBar extends React.Component {
 
   render() {
@@ -29,7 +26,6 @@ class MenuBar extends React.Component {
   }
 }
 
-@IsAuthenticated
 class App extends React.Component {
 
   state = {

@@ -8,26 +8,4 @@ import { AlertOutlined } from '@ant-design/icons'
 
 const Icon = ({ name, ...props }) => <AlertOutlined type={name} {...props} />
 
-export { Main, App, Page, Loading, Icon }
-export default {
-  '@' : {
-    path: '/',
-    component: Main,
-    breadcrumbName: '',
-    indexRoute: {
-      onEnter: (_, replace) => replace({ pathname: '/app/' })
-    }
-  },
-  '/' : {
-    path: 'app/',
-    component: App,
-    breadcrumbName: 'Home',
-    indexRoute: {
-      onEnter: (_, replace) => replace({ pathname: '/app/dashboard' })
-    }
-  },
-  '/app/': {
-    path: 'dashboard',
-    component: Dashboard
-  }
-}
+export { Main, App, Page, Loading, Icon, Dashboard }

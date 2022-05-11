@@ -3,7 +3,7 @@ import { Menu } from 'antd'
 
 const MenuItem = ({ itemKey, onItemClick, children, icon, title, ...props }) => (
   <Menu.Item key={itemKey} {...props} onClick={e => {
-    props.onClick(e)
+    props.onClick && props.onClick(e)
     onItemClick && onItemClick(e)
   }}>
     {icon} <span className="nav-text">{children}</span>

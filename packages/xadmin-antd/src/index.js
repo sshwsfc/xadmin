@@ -1,7 +1,7 @@
 import React from 'react'
 import app from 'xadmin'
 //import 'antd/dist/antd.min.css'
-import routers, { Main, App, Page, Loading, Icon } from './layout'
+import { Main, App, Page, Loading, Icon, Dashboard } from './layout'
 
 import { Menu, MenuItem } from './components/Menu'
 
@@ -17,7 +17,7 @@ export default {
   name: 'xadmin.ui.antd',
   locales,
   components: {
-    Main, App, Page, Loading, Icon,
+    Main, App, Page, Loading, Icon, Dashboard,
     Menu, 'Menu.Item': MenuItem,
     ...form.components,
     ...model.components,
@@ -25,7 +25,6 @@ export default {
     ...relate.components,
     ...auth.components
   },
-  routers,
   form_fields: {
     ...form.form_fields,
     ...filter.form_fields,

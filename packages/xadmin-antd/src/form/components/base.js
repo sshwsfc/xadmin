@@ -22,7 +22,6 @@ const FieldGroup = ({ label, meta, input, field, tailLayout, children }) => {
 
   if (error) {
     groupProps['validateStatus'] = 'error'
-    groupProps['hasFeedback'] = true
     if(_.isString(error)) {
       groupProps['help'] = error
     }
@@ -56,7 +55,6 @@ const FieldTableGroup = ({ label, meta, input, field, nav, children }) => {
 
   if (error) {
     groupProps['validateStatus'] = 'error'
-    groupProps['hasFeedback'] = true
     groupProps['help'] = error
   }
 
@@ -81,7 +79,6 @@ const InlineGroup = ({ label, meta, input, field, children }) => {
 
   if (error) {
     groupProps['validateStatus'] = 'error'
-    groupProps['hasFeedback'] = true
     groupProps['help'] = error
   }
 
@@ -102,7 +99,6 @@ const SimpleGroup = ({ label, meta, input, field, children }) => {
 
   if (error) {
     groupProps['validateStatus'] = 'error'
-    groupProps['hasFeedback'] = true
     groupProps['help'] = error
   }
 
@@ -134,7 +130,6 @@ const ColGroup = ({ label, meta, input, field, children }) => {
 
   if (error) {
     groupProps['validateStatus'] = 'error'
-    groupProps['hasFeedback'] = true
     groupProps['help'] = error
   }
 

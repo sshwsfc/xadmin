@@ -5,6 +5,7 @@ import { use } from 'xadmin'
 import { _t } from 'xadmin-i18n'
 import { ModelBlock } from 'xadmin-model'
 import { C, Icon, Page, Loading } from 'xadmin-ui'
+import { useSearchParams } from "react-router-dom"
 
 const { Content, Sider } = Layout
 
@@ -12,13 +13,13 @@ const DefaultAddButton = ({ onAdd, children }) => (
   <Button type="primary" onClick={onAdd}>{children}</Button>
 )
 
-const ModelListPage = ({ location }) => {
+const ModelListPage = () => {
   const { model } = use('model')
   const { canAdd } = use('model.permission')
   const { onAdd } = use('model.event')
 
   const ItemsComponent = (model.components && model.components.DataList) || C('Model.DataTable')
-  const query = location && location.query
+  const query = useSearchParams()
 
   let icon = model.icon || model.name
   if(_.isString(icon)) {
@@ -71,11 +72,12 @@ const ModelListPage = ({ location }) => {
   )
 }
 
-const ModelFormPage = ({ params, location: { query } }) => {
+const ModelFormPage = ({ params }) => {
   const { model } = use('model')
   const { onSaved } = use('model.event')
   const { data, loading } = use('model.item', { id: params && params.id })
-
+  const query = useSearchParams()
+  
   const title = params && params.id ? _t('Edit {{title}}', 
     { title: model.title + ' ' + (data && data[model.displayField || 'name'] || '') }) : _t('Create {{title}}', { title: model.title })
   const FormComponent = (model.components && model.components.DataForm) || C('Model.DataForm')
