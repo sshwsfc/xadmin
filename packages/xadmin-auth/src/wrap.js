@@ -1,29 +1,38 @@
-import React, { Component } from 'react'
+import React from 'react'
 import _ from 'lodash'
-import { connectedRouterRedirect } from 'redux-auth-wrapper/history3/redirect'
-import connectedAuthWrapper from 'redux-auth-wrapper/connectedAuthWrapper'
-import app from 'xadmin'
+import app, { use } from 'xadmin'
 
-const IsAuthenticated = connectedRouterRedirect({
-  authenticatedSelector: state => state.user !== null,
-  redirectPath: '/login',
-  wrapperDisplayName: 'UserIsAuthenticated'
-})
+const IsAuthenticated = ({ children }) => {
+  const { user } = use('redux', state => ({ user: state.user }))
+  if(!user) {
+    app.go('/login')
+    return null
+  }
+  return children
+}
 
-const ShowAuthenticated = connectedAuthWrapper({
-  authenticatedSelector: state => state.user !== null,
-  wrapperDisplayName: 'UserShowAuthenticated'
-})
+const ShowAuthenticated = ({ children }) => {
+  const { user } = use('redux', state => ({ user: state.user }))
+  if(!user) {
+    return null
+  }
+  return children
+}
 
-const IsSuperUser = connectedRouterRedirect({
-  authenticatedSelector: state => state.user !== null && state.user.isSuper,
-  redirectPath: '/app',
-  wrapperDisplayName: 'UserIsSuper'
-})
+const IsSuperUser = ({ children }) => {
+  const { user } = use('redux', state => ({ user: state.user }))
+  if(user !== null && user.isSuper) {
+    return children
+  } else {
+    app.go('/app')
+    return null
+  }
+}
 
-const PermissionWrap = (permission, FailureComponent) => connectedAuthWrapper({
-  authenticatedSelector: state => {
-    const user = state.user
+const HasPermission = ({ permission, FailureComponent='NoPermission', children, ...props }) => {
+  const { user } = use('redux', state => ({ user: state.user }))
+
+  const checkPermission = user => {
     if(user && user.isSuper) { return true }
     if(user && user.permissions) {
       if(_.isArray(permission)) {
@@ -36,18 +45,19 @@ const PermissionWrap = (permission, FailureComponent) => connectedAuthWrapper({
     } else {
       return false
     }
-  },
-  wrapperDisplayName: 'VisibleOnlyHasPermission',
-  FailureComponent
-})
-
-const HasPermission = ({ permission, FailureComponent='NoPermission', children, ...props }) => {
-  const UserAuthTag = PermissionWrap(permission, FailureComponent)(
-    () => {
-      return Object.keys(props).length > 0 ? React.cloneElement(children, props) : children
+  }
+  
+  if(checkPermission(user)) {
+    return Object.keys(props).length > 0 ? React.cloneElement(children, props) : children
+  } else {
+    if(React.isValidElement(FailureComponent)) {
+      return FailureComponent
+    } else if(React.isFunction(FailureComponent)) {
+      return <FailureComponent />
+    } else {
+      return FailureComponent
     }
-  )
-  return <UserAuthTag />
+  }
 }
 
 const perm = (permission, component, failureComponent=null) => {

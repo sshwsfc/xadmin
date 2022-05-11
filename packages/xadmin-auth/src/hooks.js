@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import React from 'react'
 import { app, use } from 'xadmin'
-import { UserChangePassword, UserSignIn } from './models'
+import { useSearchParams } from 'react-router-dom'
 
 export default {
   'auth.user': props => {
@@ -15,7 +15,7 @@ export default {
     return { ...props, user, onLogout, onChangePassword }
   },
   'auth.login': props => {
-    const { location: { query } } = props
+    const [ query ] = useSearchParams()
     const { dispatch } = use('redux')
     const { saveItem } = use('model.save', { successMessage: false })
     const { _t } = app.context

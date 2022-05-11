@@ -35,7 +35,7 @@ export default {
     'top.right': (props) => <C is="Auth.UserMenu" key="auth.user" {...props} />
   },
   components: {
-    App: IsAuthenticated(BaseApp)
+    App: () => <IsAuthenticated><BaseApp /></IsAuthenticated>
   },
   context: (app) => (context, cb) => {
     const { store } = context

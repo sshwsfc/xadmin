@@ -1,6 +1,6 @@
 {
   "name": "xadmin-auth",
-  "version": "3.2.1",
+  "version": "3.3.0",
   "description": "Xadmin Auth",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -8,13 +8,12 @@
   "license": "MIT",
   "dependencies": {
     "js-cookie": "^2.2.0",
-    "localforage": "^1.7.3",
-    "redux-auth-wrapper": "^2.1.0"
+    "localforage": "^1.7.3"
   },
   "peerDependencies": {
-    "react": "16",
+    "react": ">=16.8",
     "lodash": "^4.17.11",
-    "react-redux": "^7.0.0",
+    "react-router-dom": "6",
     "xadmin": "2",
     "xadmin-form": "3",
     "xadmin-i18n": "3",
