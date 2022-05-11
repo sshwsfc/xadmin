@@ -1,13 +1,16 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import _ from 'lodash'
-import { browserHistory, hashHistory, Router } from 'react-router'
+import { Routes, BrowserRouter, HashRouter, Route, Outlet, useNavigate } from "react-router-dom"
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
 import createSagaMiddleware from 'redux-saga'
+import { app } from '../lib'
 
 // redux app
 const redux_app = {
+  name: 'redux',
   items: {
     reducers: { type: 'mapArray' },
     'redux/subscribe': { type: 'array' },
@@ -93,24 +96,49 @@ const sage_app = {
   'redux/middlewares': (app) => { return sagaMiddleware }
 }
 
+const configToRouter = r => {
+  // ole router format
+  if(!r.element && r.component) {
+    const RouterComponent = r.component
+    r.element = <RouterComponent><Outlet /></RouterComponent>
+    delete r.component
+  }
+  if(r.childRoutes) {
+    r.children = r.childRoutes
+    delete r.childRoutes
+  }
+  return <Route {..._.omit(r, 'children')} >{(r.children || []).map(configToRouter)}</Route>
+}
+
+const AppRouters = ({ routers }) => {
+  app.go = useNavigate()
+
+  const find_childs = (path) => {
+    return (routers[path] || []).map((r) => {
+      const childs = r.path ? find_childs((path == '@' ? '' : path) + r.path) : []
+
+      let routerElement = null
+      if(React.isValidElement(r)) {
+        routerElement = r
+      } else if(_.isPlainObject(r)) {
+        routerElement = configToRouter(r)
+      }
+      if(childs.length > 0) {
+        routerElement = React.cloneElement(routerElement, {}, ...(routerElement.props?.children || []), ...childs)
+      }
+      return routerElement
+    }).filter(Boolean)
+  }
+
+  return <Routes>{find_childs('@')[0]}</Routes>
+}
+
 // react & react-router app
 const react_app = {
+  name: 'react',
   items: {
     routers: { type: 'mapArray' },
     root_component: { type: 'array' }
-  },
-  context: (app) => (context, cb) => {
-    app.go = (uri) => {
-      app.context.router.push(uri)
-    }
-    
-    const routerType = app.config('router') || 'browser'
-    const router = (typeof routerType === 'string') ? {
-      browser: browserHistory,
-      hash: hashHistory
-    }[routerType] : routerType
-
-    cb(null, { ...context, router })
   },
   start: (app) => () => {
     // init container
@@ -119,27 +147,33 @@ const react_app = {
       container = document.querySelector(container)
     }
 
-    const rs = app.get('routers')
-    const find_childs = (path) => {
-      return (rs[path] || []).map((r) => {
-        const childs = find_childs((path == '@' ? '' : path) + r.path)
-        return childs.length > 0 ? { ...r, childRoutes: [ ...(r.childRoutes||[]), ...childs ] } : r
-      })
-    }
-    const routers = find_childs('@')
+    const routerType = app.config('router') || 'browser'
+    const RootRouter = (typeof routerType === 'string') ? {
+      browser: BrowserRouter,
+      hash: HashRouter
+    }[routerType] : routerType
+
+    const routers = app.get('routers')
 
     const root = app.get('root_component').reduce((children, render) => {
       return render(children)
-    }, (routers && routers.length) ?
-      <Router history={app.context.router} routes={routers[0]}/> :
-      <span>Please config routers or Main component.</span>)
+    }, (routers && !_.isEmpty(routers)) ? (
+      <RootRouter>
+        <AppRouters routers={routers} />
+      </RootRouter> 
+    ) : <span>Please config routers or Main component.</span>)
 
-    ReactDOM.render(root, container)
+    if(createRoot) {
+      createRoot(container).render(root)
+    } else {
+      ReactDOM.render(root, container)
+    }
   }
 }
 
 // react-redux app
 const react_redux_app = {
+  name: 'react_redux',
   root_component: (app) => (children) => (
     <Provider store={app.context.store}>{children}</Provider>
   ),

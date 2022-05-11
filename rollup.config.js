@@ -34,12 +34,13 @@ const babelConfig = {
     require.resolve("@babel/preset-react")
   ],
   plugins: [
+    require.resolve("@babel/plugin-transform-runtime"),
     require.resolve("@babel/plugin-proposal-object-rest-spread"),
     [require.resolve("@babel/plugin-proposal-decorators"), { "legacy": true }],
-    [require.resolve("@babel/plugin-proposal-class-properties"), { "loose": true }]
+    require.resolve("@babel/plugin-proposal-class-properties")
   ],
   exclude: [ '../../node_modules/**', 'node_modules/**' ],
-  //babelHelpers: 'runtime'
+  babelHelpers: 'runtime'
 }
 
 const globals = {
@@ -47,6 +48,7 @@ const globals = {
   redux: 'Redux',
   'react-dom': 'ReactDOM',
   'react-router': 'ReactRouter',
+  'react-router-dom': 'ReactRouterDOM',
   'react-redux': 'ReactRedux',
   'redux-saga': 'ReduxSaga',
   'lodash': '_',
@@ -66,6 +68,7 @@ export default [
       format: 'umd',
       name: pkgName,
       indent: false,
+      exports: 'named',
       globals
     },
     external: makeExternalPredicate([
@@ -87,6 +90,7 @@ export default [
       }),
       replace({
         'process.env.NODE_ENV': JSON.stringify('development'),
+        'preventAssignment': true
       }),
     ],
   },
@@ -99,6 +103,7 @@ export default [
       format: 'umd',
       name: pkgName,
       indent: false,
+      exports: 'named',
       globals
     },
     external: makeExternalPredicate([
@@ -120,6 +125,7 @@ export default [
       }),
       replace({
         'process.env.NODE_ENV': JSON.stringify('production'),
+        'preventAssignment': true
       }),
       terser({
         compress: {
