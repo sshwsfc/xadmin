@@ -1,5 +1,6 @@
 import React from 'react'
 import app from 'xadmin'
+import { Navigate } from 'react-router-dom'
 
 // import loading from './loading'
 import splashscreen from './splashscreen'
@@ -67,22 +68,22 @@ export default {
   routers: {
     '@' : {
       path: '/',
-      component: Main,
-      indexRoute: {
-        onEnter: (_, replace) => replace({ pathname: '/app/' })
-      }
+      component: Main
     },
-    '/' : {
+    '/' : [ {
+      index: true,
+      element: <Navigate to="/app/" replace />
+    }, {
       path: 'app/',
-      component: App,
-      indexRoute: {
-        onEnter: (_, replace) => replace({ pathname: '/app/dashboard' })
-      }
-    },
-    '/app/': {
+      component: App
+    } ],
+    '/app/': [ {
+      index: true,
+      component: Dashboard
+    }, {
       path: 'dashboard',
       component: Dashboard
-    }
+    } ]
   },
   reducers: {
     loading: (state={}, { type, key }) => {

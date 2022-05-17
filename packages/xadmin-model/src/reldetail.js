@@ -1,8 +1,8 @@
 import React from 'react'
 import _ from 'lodash'
 import app from 'xadmin'
-import { Model } from 'xadmin-model'
 import { C } from 'xadmin-ui'
+import { Model } from './base'
 
 export default {
   name: 'xadmin.model.reldetail',

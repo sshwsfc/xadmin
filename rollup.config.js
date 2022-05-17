@@ -5,7 +5,7 @@ import commonjs from "rollup-plugin-commonjs";
 import postcss from "rollup-plugin-postcss"
 import json from 'rollup-plugin-json'
 import { terser } from 'rollup-plugin-terser'
-import nodePolyfills from 'rollup-plugin-node-polyfills'
+//import nodePolyfills from 'rollup-plugin-node-polyfills'
 
 import fs from 'fs'
 import path from 'path'
@@ -44,14 +44,18 @@ const babelConfig = {
 }
 
 const globals = {
+  "antd": "antd",
+  "@ant-design/icons": "icons",
   react: 'React',
   redux: 'Redux',
   'react-dom': 'ReactDOM',
   'react-router': 'ReactRouter',
   'react-router-dom': 'ReactRouterDOM',
+  "recoil": "Recoil",
   'react-redux': 'ReactRedux',
   'redux-saga': 'ReduxSaga',
   'lodash': '_',
+  "moment": "moment",
   'xadmin': 'xadmin',
   'xadmin-i18n': 'xadminI18n',
   'xadmin-ui': 'xadminUi',
@@ -79,7 +83,7 @@ export default [
         browser: true,
         preferBuiltins: true
       }),
-      nodePolyfills(),
+      //nodePolyfills(),
       babel(babelConfig),
       commonjs(),
       json(),
@@ -114,7 +118,7 @@ export default [
         browser: true,
         preferBuiltins: true
       }),
-      nodePolyfills(),
+      //nodePolyfills(),
       babel(babelConfig),
       commonjs(),
       json(),

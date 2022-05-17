@@ -1,7 +1,7 @@
 import React from 'react'
 import { C, Icon, Menu } from 'xadmin-ui'
 
-import { Model, ModelWrap, ModelContext, ModelBlock } from './base'
+import { Model, ModelWrap, ModelContext, ModelBlock, ModelRoutes } from './base'
 import modelReducer from './reducer'
 import effects from './effects'
 import hooks from './hooks'
@@ -17,6 +17,7 @@ import modalform from './modalform'
 import reldetail from './reldetail'
 
 import * as utils from './utils'
+import _ from 'lodash'
 
 const app = {
   name: 'xadmin.model',
@@ -24,6 +25,9 @@ const app = {
     models: { type: 'map' },
     fieldRenders: { type: 'array' },
     modelActions: { type: 'map' }
+  },
+  components: {
+    'Model.Routes': ModelRoutes
   },
   blocks: (app) => {
     const models = app.get('models')
@@ -42,53 +46,41 @@ const app = {
   routers: (app) => {
     const models = app.get('models')
     const { _t } = app.context
-    let routes = []
+    let routes = {
+      '/app/': [
+        { path: 'model' }
+      ]
+    }
+
+    const autoModelRoutes = app.config('autoModelRoutes')
+    let defaultRootRoute = '/app/model'
+    if(autoModelRoutes === false) {
+      return routes
+    } else if(_.isString(autoModelRoutes)) {
+      defaultRootRoute = autoModelRoutes
+    }
+
     for (let name in models) {
       const model = models[name]
-      const model_routes = []
       const modelName = model.title || model.name
+      const rs = _.isArray(model.route) ? model.route : [ (model.route || { parentPath: defaultRootRoute, path: name }) ]
 
-      if(!model.permission || model.permission.view) {
-        model_routes.push({
-          path: 'list',
+      rs.forEach(r => {
+        const parent = r.parentPath || '/'
+        const path = _.isString(r) ? r : r.path
+        if(!routes[parent]) {
+          routes[parent] = []
+        }
+        routes[parent].push({
+          path: `${path}/*`,
           breadcrumbName: _t('{{name}} List', { name: modelName }),
-          component: model.components && model.components['ListPage'] || C('Model.ListPage')
+          element: <Model key={`model.${parent}.${path}`} name={name}><ModelRoutes /></Model>
         })
-      }
-      if(model.permission && model.permission.view) {
-        model_routes.push({
-          path: ':id/detail',
-          breadcrumbName: _t('{{name}} Detail', { name: modelName }),
-          component: model.components && model.components['DetailPage'] || C('Model.DetailPage')
-        })
-      }
-      if(model.permission && model.permission.add) {
-        model_routes.push({
-          path: 'add',
-          breadcrumbName: _t('Create {{name}}', { name: modelName }),
-          component: model.components && model.components['AddPage'] || C('Model.FormPage')
-        })
-      }
-      if(model.permission && model.permission.edit) {
-        model_routes.push({
-          path: ':id/edit',
-          breadcrumbName: _t('Edit {{name}}', { name: modelName }),
-          component: model.components && model.components['EditPage'] || C('Model.FormPage')
-        })
-      }
-      routes = routes.concat({
-        path: `model/${name}/`,
-        breadcrumbName: _t('{{name}} List', { name: modelName }),
-        component: ({ children }) => <Model name={name}>{children}</Model>,
-        indexRoute: {
-          onEnter: ({ location }, replace) => replace({ pathname: location.pathname + 'list' })
-        },
-        childRoutes: model_routes
+
       })
     }
-    return {
-      '/app/': routes
-    }
+    
+    return routes
   },
   reducers: {
     model: modelReducer
@@ -111,5 +103,5 @@ const apps = {
   relate, filter, actions, search, modalform, reldetail
 }
 
-export { Model, ModelWrap, ModelBlock, ModelContext, apps, utils }
+export { Model, ModelWrap, ModelBlock, ModelContext, ModelRoutes, apps, utils }
 export default app

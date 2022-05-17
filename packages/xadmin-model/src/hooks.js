@@ -123,12 +123,13 @@ export default {
   },
   'model.event': props => {
     const { model } = use('model', props)
+    const nav = use('navigate')
     return {
       ...props,
-      onAdd: () => app.go(`/app/model/${model.name}/add`),
-      onSaved: () => (history && history.length > 1) && history.back() || app.go(`/app/model/${model.name}/list`),
-      onBack: () => (history && history.length > 1) && history.back() || app.go(`/app/model/${model.name}/list`),
-      onEdit: (id) => app.go(`/app/model/${model.name}/${encodeURIComponent(id || props.id)}/edit`),
+      onAdd: () => nav(`../add`),
+      onSaved: () => (history && history.length > 1) && history.back() || nav(`../`),
+      onBack: () => (history && history.length > 1) && history.back() || nav(-1),
+      onEdit: (id) => nav(`../${encodeURIComponent(id || props.id)}/edit`),
       ...model.events
     }
   },

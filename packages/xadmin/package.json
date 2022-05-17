@@ -1,6 +1,6 @@
 {
   "name": "xadmin",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Xadmin Core",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -15,6 +15,7 @@
     "react": ">=16.8",
     "react-dom": ">=16.8",
     "react-redux": "8",
+    "react-router": "6",
     "react-router-dom": "6",
     "redux": "4",
     "redux-saga": "1"
@@ -31,6 +32,5 @@
     "lib",
     "es",
     "dist"
-  ],
-  "browserslist": "last 2 major versions"
+  ]
 }

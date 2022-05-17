@@ -1,7 +1,6 @@
 import _ from 'lodash'
 import React from 'react'
 import { app, use } from 'xadmin'
-import { useSearchParams } from 'react-router-dom'
 
 export default {
   'auth.user': props => {
@@ -15,7 +14,10 @@ export default {
     return { ...props, user, onLogout, onChangePassword }
   },
   'auth.login': props => {
-    const [ query ] = useSearchParams()
+    const location = use('location')
+    const query = use('query')
+    const navigate = use('navigate')
+
     const { dispatch } = use('redux')
     const { saveItem } = use('model.save', { successMessage: false })
     const { _t } = app.context
@@ -24,7 +26,7 @@ export default {
       const { _t } = app.context
       return saveItem(item).then(user => {
         dispatch({ type: '@@xadmin/AUTH_SIGN_IN', payload: _.omit(user, 'password') })
-        app.go(query && query.redirect || '/app/')
+        navigate(location.state?.from?.pathname || '/app/', { replace: true })
       }).catch(error => {
         dispatch({ type: '@@xadmin/AUTH_SIGN_IN_ERROR', error })
         throw new Error(error.json && error.json.non_field_errors == undefined ? error.json : { password: _t('Incorrect username or password') })

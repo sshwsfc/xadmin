@@ -1,13 +1,16 @@
 import React from 'react'
 import _ from 'lodash'
+import { Navigate } from 'react-router-dom'
 import app, { use } from 'xadmin'
 
 const IsAuthenticated = ({ children }) => {
+  const location = use('location')
   const { user } = use('redux', state => ({ user: state.user }))
+
   if(!user) {
-    app.go('/login')
-    return null
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
+
   return children
 }
 

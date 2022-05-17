@@ -5,7 +5,6 @@ import { use } from 'xadmin'
 import { _t } from 'xadmin-i18n'
 import { ModelBlock } from 'xadmin-model'
 import { C, Icon, Page, Loading } from 'xadmin-ui'
-import { useSearchParams } from "react-router-dom"
 
 const { Content, Sider } = Layout
 
@@ -17,9 +16,9 @@ const ModelListPage = () => {
   const { model } = use('model')
   const { canAdd } = use('model.permission')
   const { onAdd } = use('model.event')
+  const query = use('searchParams')
 
   const ItemsComponent = (model.components && model.components.DataList) || C('Model.DataTable')
-  const query = useSearchParams()
 
   let icon = model.icon || model.name
   if(_.isString(icon)) {
@@ -72,13 +71,14 @@ const ModelListPage = () => {
   )
 }
 
-const ModelFormPage = ({ params }) => {
+const ModelFormPage = () => {
   const { model } = use('model')
+  const { id } = use('params')
   const { onSaved } = use('model.event')
-  const { data, loading } = use('model.item', { id: params && params.id })
-  const query = useSearchParams()
+  const { data, loading } = use('model.item', { id })
+  const query = use('searchParams')
   
-  const title = params && params.id ? _t('Edit {{title}}', 
+  const title = id ? _t('Edit {{title}}', 
     { title: model.title + ' ' + (data && data[model.displayField || 'name'] || '') }) : _t('Create {{title}}', { title: model.title })
   const FormComponent = (model.components && model.components.DataForm) || C('Model.DataForm')
 
@@ -88,14 +88,15 @@ const ModelFormPage = ({ params }) => {
       subTitle={<ModelBlock name="model.edit.nav" />}
       actions={<ModelBlock name="model.edit.navbtn" />}>
       <ModelBlock name="model.form.before" />
-      { loading ? <Loading /> : <FormComponent id={params && params.id} item={data} query={query} onSubmitSuccess={onSaved} /> }
+      { loading ? <Loading /> : <FormComponent id={id} item={data} query={query} onSubmitSuccess={onSaved} /> }
       <ModelBlock name="model.form.after" />
     </Page>
   )
 }
 
-const ModelDetailPage = ({ params }) => {
+const ModelDetailPage = () => {
   const { model } = use('model')
+  const { id } = use('params')
 
   const renderActions = () => {
     const { canEdit } = use('model.permission')
@@ -104,7 +105,7 @@ const ModelDetailPage = ({ params }) => {
     return (<>
       <ModelBlock name="model.detail.navbtn" />
       { canEdit ?
-        (<Button type="primary" onClick={()=>onEdit(params && params.id)}><Icon name="edit"/> {_t('Edit')}</Button>) : null
+        (<Button type="primary" onClick={()=>onEdit(id)}><Icon name="edit"/> {_t('Edit')}</Button>) : null
       }
     </>)
   }
@@ -117,7 +118,7 @@ const ModelDetailPage = ({ params }) => {
       subTitle={<ModelBlock name="model.detail.nav" />}
       actions={renderActions()}>
       <ModelBlock name="model.detail.before" />
-      <DetailComponent id={params && params.id} />
+      <DetailComponent id={id} />
       <ModelBlock name="model.detail.after" />
     </Page>
   )

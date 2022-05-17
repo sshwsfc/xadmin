@@ -1,6 +1,14 @@
 import React from 'react'
 import _ from 'lodash'
 import { Block, StoreWrap, app, use } from 'xadmin'
+import { C } from 'xadmin-ui'
+import { Routes, Route } from "react-router-dom"
+
+import {
+  RecoilRoot,
+  useRecoilState,
+  useRecoilValue,
+} from 'recoil'
 
 const ModelContext = React.createContext(null)
 
@@ -29,11 +37,14 @@ const Model = ({ name, schema, modelKey, initialValues, children, props: modelPr
     }
   }, [ name, schema, modelKey ])
 
-  React.useEffect(() => () => {
-    if(model.persistent != true) {
-      setState('DESTROY')
+  React.useEffect(() => {
+    setState(null)
+    return () => {
+      if(model.persistent != true) {
+        setState('DESTROY')
+      }
     }
-  }, [])
+  }, [ model ])
 
   React.useEffect(() => {
     if(state == null) {
@@ -47,9 +58,27 @@ const Model = ({ name, schema, modelKey, initialValues, children, props: modelPr
       dispatch({ type: 'DESTROY', model })
     }
   }, [ state ])
+
   if(!model || state != 'INITIALIZE') return null
 
   return <ModelContext.Provider value={model}>{children}</ModelContext.Provider>
+}
+
+const ModelRecoil = ({ name, schema, modelKey, initialValues, children, props: modelProps }) => {
+
+  const model = React.useMemo(() => {
+    return name ? getModel(name, modelKey, modelProps) : {
+      ...schema,
+      key: modelKey || schema.name,
+      ...modelProps
+    }
+  }, [ name, schema, modelKey ])
+
+  return (
+    <RecoilRoot>
+      <ModelContext.Provider value={model}>{children}</ModelContext.Provider>
+    </RecoilRoot>
+  )
 }
 
 const ModelWrap = StoreWrap(Connect => (props) => {
@@ -78,9 +107,44 @@ const ModelBlock = (props) => (
   </ModelContext.Consumer>
 )
 
+const ModelRoutes = () => {
+  const { model } = use('model')
+
+  const ModelList = model.components && model.components['ListPage'] || C('Model.ListPage')
+  const ModelDetail =  model.components && model.components['DetailPage'] || C('Model.DetailPage')
+  const ModelForm = model.components && model.components['AddPage'] || C('Model.FormPage')
+
+  return (
+    <Routes>
+      { (!model.permission || model.permission.view) && <Route
+        path="/"
+        element={<ModelList />}
+      /> }
+      { (!model.permission || model.permission.view) && <Route
+        path="list"
+        element={<ModelList />}
+      /> }
+      { (!model.permission || model.permission.view) && <Route
+        path=":id/detail"
+        element={<ModelDetail />}
+      /> }
+      { (!model.permission || model.permission.add) && <Route
+        path="add"
+        element={<ModelForm />}
+      /> }
+      { (!model.permission || model.permission.edit) && <Route
+        path=":id/edit"
+        element={<ModelForm />}
+      /> }
+    </Routes>
+  )
+}
+
 export {
   ModelContext,
   ModelWrap,
   ModelBlock,
+  ModelRoutes,
+  ModelRecoil,
   Model
 }

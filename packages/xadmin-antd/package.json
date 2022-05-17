@@ -1,6 +1,6 @@
 {
   "name": "xadmin-antd",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "description": "Xadmin Antd UI",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -13,6 +13,7 @@
     "react": ">=16.8",
     "lodash": "4",
     "moment": "2",
+    "react-router": "6",
     "react-router-dom": "6",
     "redux-saga": "^1.0.2",
     "xadmin": "2 || 3",

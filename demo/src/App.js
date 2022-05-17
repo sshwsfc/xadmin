@@ -28,6 +28,9 @@ class App extends React.Component {
             return null
           }}
           onChange={value => { console.log('changed', value) }}
+          validate={values => {
+            return { }
+          }}
         />
       </Page>
     );

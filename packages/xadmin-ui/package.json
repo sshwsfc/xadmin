@@ -1,6 +1,6 @@
 {
   "name": "xadmin-ui",
-  "version": "3.1.1",
+  "version": "3.3.1",
   "description": "Xadmin Base UI",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -13,6 +13,8 @@
     "react": "16",
     "lodash": "^4.17.11",
     "react-redux": "^7.0.0",
+    "react-router": "6",
+    "react-router-dom": "6",
     "xadmin": "2||3",
     "redux-saga": "^1.0.2"
   },

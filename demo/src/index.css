@@ -12,3 +12,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+.ant-table-cell .anticon-edit { 
+  display: none; 
+}
+.ant-table-cell:hover .anticon-edit { 
+  display: inline-block; 
+}

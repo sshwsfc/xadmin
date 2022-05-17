@@ -1,5 +1,6 @@
 import React from 'react'
 import { use } from 'xadmin'
+import { fieldBuilder } from 'xadmin-form'
 import { RelateAction } from 'xadmin-model/lib/relate'
 import { C } from 'xadmin-ui'
 
@@ -89,10 +90,16 @@ export default {
         },
         required:[ 'street', 'suite' ],
         field: {
-          validate: () => {
-            return 'null'
+          render: (fields, option) => {
+            console.log(fields)
+            return '123'
           }
         }
+        // field: {
+        //   validate: () => {
+        //     return 'null'
+        //   }
+        // }
       },
       property: {
         type: 'array',
@@ -107,7 +114,15 @@ export default {
       }
     },
     permission: { view: true, add: true, edit: true, delete: true },
-    form: [ 'name', 'email', 'address', '*',
+    form: [ 'name', 'email', { key: 'address', fieldsRender: (fields, option) => {
+      return (
+        <>
+          {fieldBuilder(fields[0], option)}
+          <b>asdasasdads</b>
+          {fieldBuilder(fields[1], option)}
+        </>
+      )
+    } }, '*',
       { key: 'website', type: 'textarea', attrs: { rows: 5 } } ],
     formEffect: form => {
 
@@ -139,6 +154,11 @@ export default {
       submenu: [ 'name', 'email', 'type', 'superUser', 'id' ],
       //sidemenu: [ 'name' ]
     },
+    formProps: {
+      // validate: values => {
+      //   return { name: 'error name' }
+      // }
+    },
     itemActions: [ 
       (item) => <RelateAction item={item} />,
       (item) => <C is="Model.ChildrenModel" model="Post" parent={item} refField="userId" refreshTimeout={3000} />,
@@ -152,10 +172,14 @@ export default {
     editableFields: ['name', 'type', 'address.street'],
     batchChangeFields: ['website', 'brithday', 'address.street'],
     searchFields: [ 'name', 'email' ],
-    required: [ 'name' ],
+    required: [ 'name', 'address' ],
     readonly: [ 'id' ],
     listFields: [ 'id', 'name', 'email', 'type', 'website', 'address.street' ],
-    defaultPageSize: 20
+    defaultPageSize: 20,
+    route: [ {
+      parentPath: '/app/',
+      path: 'users'
+    }, 'us' ]
   },
   Post: {
     name: 'Post',

@@ -39,18 +39,19 @@ app
 .use(filter)
 .use(actions)
 .use(relate)
-.use(auth)
-.use(modalform)
+//.use(modalform)
 .use(search)
 .use(reldetail)
 .use(components)
 .use(splashscreen)
+//.use(auth)
 .use({
   config: {
     api: API,
     locale: {
       lng: 'zh_Hans', moment: 'zh-cn'
     },
+    router: 'hash',
     auth: { can_signin: true, can_signup: true, can_reset_password: true, persist_type: 'session-storage' },
     date_format: {
       time: 'HH:mm:ss', date: 'YYYY-MM-DD', datetime: 'YYYY-MM-DD HH:mm:ss'

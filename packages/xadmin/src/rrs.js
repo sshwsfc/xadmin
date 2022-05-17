@@ -3,10 +3,9 @@ import ReactDOM from 'react-dom'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import _ from 'lodash'
-import { Routes, BrowserRouter, HashRouter, Route, Outlet, useNavigate } from "react-router-dom"
+import { Routes, BrowserRouter, HashRouter, Route, Outlet, useRoutes, useNavigate, useHref, useLocation, useMatch, useParams, useOutlet, useSearchParams } from "react-router-dom"
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
 import createSagaMiddleware from 'redux-saga'
-import { app } from '../lib'
 
 // redux app
 const redux_app = {
@@ -110,7 +109,7 @@ const configToRouter = r => {
   return <Route {..._.omit(r, 'children')} >{(r.children || []).map(configToRouter)}</Route>
 }
 
-const AppRouters = ({ routers }) => {
+const AppRouters = ({ app, routers }) => {
   app.go = useNavigate()
 
   const find_childs = (path) => {
@@ -140,6 +139,20 @@ const react_app = {
     routers: { type: 'mapArray' },
     root_component: { type: 'array' }
   },
+  hooks: {
+    location: () => useLocation(),
+    navigate: () => useNavigate(),
+    params: () => useParams(),
+    outlet: () => useOutlet(),
+    match: props => useMatch(props),
+    href: props => useHref(props),
+    routes: () => useRoutes(),
+    searchParams: () => useSearchParams(),
+    query: () => {
+      const [ searchParams ] = useSearchParams()
+      return _.fromPairs(Array.from(searchParams.entries()))
+    }
+  },
   start: (app) => () => {
     // init container
     let { container='#app' } = app.context
@@ -154,12 +167,12 @@ const react_app = {
     }[routerType] : routerType
 
     const routers = app.get('routers')
-
+    
     const root = app.get('root_component').reduce((children, render) => {
       return render(children)
     }, (routers && !_.isEmpty(routers)) ? (
       <RootRouter>
-        <AppRouters routers={routers} />
+        <AppRouters app={app} routers={routers} />
       </RootRouter> 
     ) : <span>Please config routers or Main component.</span>)
 

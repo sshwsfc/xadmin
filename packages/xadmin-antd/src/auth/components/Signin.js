@@ -1,12 +1,12 @@
 import React from 'react'
-import app from 'xadmin'
+import app, { use } from 'xadmin'
 import { Form, Card, Button, Alert } from 'antd'
-import { useNavigate } from "react-router-dom"
 
 const SigininLayout = ({ error, children, invalid, handleSubmit, submitting }) => {
   const { _t } = app.context
   const { auth } = app.get('config')
-  const nav = useNavigate()
+  const nav = use('navigate')
+  
   return (
     <div>
       <Form className="sigin-form" onSubmit={handleSubmit}>
