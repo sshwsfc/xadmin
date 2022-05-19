@@ -18,7 +18,7 @@ export default {
     'model.list.nav': (props) => <C is="Model.SearchBar" key="searchBar" {...props} />
   },
   hooks: {
-    'model.searchbar': props => {
+    'model.searchbar': () => {
       const [ searchValue, setSearch ] = useRecoilState(search)
       const { model } = use('model')
       const { getItems } = use('model.getItems')
@@ -44,7 +44,7 @@ export default {
         setSearch(search)
       }, [ model.searchFields, setSearch ])
 
-      return { ...props, searchValue, searchFields, searchTitles, onSearch }
+      return { searchValue, searchFields, searchTitles, onSearch }
     }
   }
 }

@@ -113,7 +113,7 @@ export default {
     'model.list.sidemenu': filter('sidemenu', 'Filter.Form', 'Form.SimpleGroup')
   },
   hooks: {
-    'model.list.filter': props => {
+    'model.list.filter': () => {
       const { model } = use('model')
       const { getItems } = use('model.getItems')
       const { form } = use('form')
@@ -137,7 +137,7 @@ export default {
         }
       }, [ model.filterDefault ])
 
-      return { ...props, resetFilter }
+      return { resetFilter }
     }
   },
   filter_converter

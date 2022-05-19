@@ -4,8 +4,8 @@ import { Loading } from 'xadmin-ui'
 import { Transfer } from 'antd'
 import _ from 'lodash'
 
-const RelateMultiTransfer = props => {
-  const { loading, options, input: { value, onChange }, field } = use('model.relate.select', props)
+const RelateMultiTransfer = ({ input: { value, onChange }, field }) => {
+  const { loading, options } = use('model.relate.select')
   const data = React.useMemo(() => options.map(opt => ({ key: opt.value, title: opt.label, ...opt })), [ options ])
 
   const onSelectChange = (targetKeys) => {

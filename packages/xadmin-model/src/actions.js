@@ -36,8 +36,8 @@ export default {
     }
   },
   hooks: {
-    'model.batchActions': props => {
-      const { model } = use('model', props)
+    'model.batchActions': () => {
+      const { model } = use('model')
       const modelActions = app.get('modelBatchActions')
       const actions = model.batchActions === undefined ? 
         Object.keys(modelActions).filter(k => modelActions[k].default) : model.batchActions
@@ -52,14 +52,13 @@ export default {
         }).filter(Boolean) : null
       }, [ actions ])
   
-      return { ...props, actions, renderActions }
+      return { actions, renderActions }
     },
-    'actons.batch_delete': props => {
+    'actons.batch_delete': ({ successMessage }) => {
       const { model, rest } = use('model')
       const { getItems } = use('model.getItems')
       const message = use('message')
       const { canDelete } = use('model.permission')
-      const { successMessage } = props
       const loading = useRecoilValue(atoms.loading('delete_items'))
 
       const onBatchDelete = useRecoilCallback(({ snapshot, set, reset }) => async () => {
@@ -94,14 +93,13 @@ export default {
         }
       }, [ getItems, model ])
 
-      return { ...props, loading, canDelete, onBatchDelete }
+      return { loading, canDelete, onBatchDelete }
     },
-    'actons.batch_change': props => {
+    'actons.batch_change': ({ successMessage }) => {
       const { model, rest } = use('model')
       const { getItems } = use('model.getItems')
       const message = use('message')
       const { canEdit } = use('model.permission')
-      const { successMessage } = props
       const loading = useRecoilValue(atoms.loading('save_items'))
 
       const onBatchChange = useRecoilCallback(({ snapshot, set }) => async (value) => {
@@ -139,7 +137,7 @@ export default {
 
       }, [ getItems, model ])
 
-      return { ...props, loading, fields: model.batchChangeFields || [], canEdit, onBatchChange }
+      return { loading, fields: model.batchChangeFields || [], canEdit, onBatchChange }
     }
   }
 }

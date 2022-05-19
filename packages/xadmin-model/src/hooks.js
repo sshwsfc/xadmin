@@ -11,14 +11,14 @@ import {
 } from 'recoil'
 
 export default {
-  'model': (props) => {
-    const model = props.model || useContext(ModelContext)
+  'model': () => {
+    const model = useContext(ModelContext)
     const rest = useMemo(() => api(model), [ model ])
-    return { ...props, model, rest }
+    return { model, rest }
   },
   // Get Model Item
-  'model.get': props => {
-    const { model, rest, id, query, item } = use('model', props)
+  'model.get': ({ id, query, item }) => {
+    const { model, rest } = use('model')
 
     const defaultData = React.useMemo(() => {
       let data = item
@@ -49,12 +49,11 @@ export default {
 
     const title = id ? _t('Edit {{title}}', { title: model.title }) : _t('Create {{title}}', { title: model.title })
 
-    return { ...props, model, title, ...state }
+    return { model, title, ...state }
   },
   // Save Model Item
-  'model.save': props => {
-    const { model, rest } = use('model', props)
-    const { successMessage } = props
+  'model.save': ({ successMessage }) => {
+    const { model, rest } = use('model')
     const message = use('message')
 
     const saveItem = useRecoilCallback(({ set }) => async (item, partial) => {
@@ -81,30 +80,30 @@ export default {
       }
     }, [ model ])
 
-    return { ...props, model, saveItem }
+    return { model, saveItem }
   },
   // Delete Model Item
-  'model.delete': props => {
-    const { model, rest } = use('model', props)
+  'model.delete': ({ id: itemId, deleteMessage }) => {
+    const { model, rest } = use('model')
     const { getItems } = use('model.getItems')
     const message = use('message')
 
     const deleteItem = useRecoilCallback(({ snapshot, set }) => async (id) => {
-      id = id || props.id
+      id = id || itemId
       await rest.delete(id)
       // unselect
       const selected = snapshot.getLoadable(atoms.selected).contents
       set(atoms.selected, selected.filter(i => { return i.id !== id }))
-      message?.success && message.success(props.message || _t('Delete {{object}} success', { object: model.title || model.name }))
+      message?.success && message.success(deleteMessage || _t('Delete {{object}} success', { object: model.title || model.name }))
       // getItems
       await getItems()
-    }, [ model, props.id ])
+    }, [ model, itemId ])
 
-    return { ...props, model, deleteItem }
+    return { model, deleteItem }
   },
   // Delete Model Item
-  'model.getItems': props => {
-    const { model, rest } = use('model', props)
+  'model.getItems': () => {
+    const { model, rest } = use('model')
 
     const getItems = useRecoilCallback(({ snapshot: ss, set, reset }) => async (query) => {
       let { wheres: newWheres, ...newOption } = query || {}
@@ -134,19 +133,18 @@ export default {
       }
     });
 
-    return { ...props, model, getItems }
+    return { model, getItems }
   },
   // Model Item hooks
   'model.item': props => {
     return {
-      ...props,
       ...use('model.get', props),
       ...use('model.save', props),
       ...use('model.delete', props)
     }
   },
-  'model.query': props => {
-    const { model, rest } = use('model', props)
+  'model.query': () => {
+    const { model, rest } = use('model')
 
     const [ data, setData ] = useState(null)
     const [ loading, setLoading ] = useState(false)
@@ -159,22 +157,20 @@ export default {
       })
     }, [ ])
 
-    return { ...props, items: data, loading, model }
+    return { items: data, loading, model }
   },
-  'model.permission': props => {
-    const { model } = use('model', props)
+  'model.permission': () => {
+    const { model } = use('model')
     return {
-      ...props,
       canAdd: !!model.permission && !!model.permission.add,
       canDelete: !!model.permission && !!model.permission.delete,
       canEdit: !!model.permission && !!model.permission.edit
     }
   },
-  'model.event': props => {
-    const { model } = use('model', props)
+  'model.event': () => {
+    const { model } = use('model')
     const nav = use('navigate')
     return {
-      ...props,
       onAdd: () => nav(`../add`),
       onSaved: () => (history && history.length > 1) && history.back() || nav(`../`),
       onBack: () => (history && history.length > 1) && history.back() || nav(-1),
@@ -194,7 +190,7 @@ export default {
 
     return null
   },
-  'model.pagination': props => {
+  'model.pagination': () => {
     const count = useRecoilValue(atoms.count)
     const limit = useRecoilValue(atoms.limit)
     const [ skip, setSkip ] = useRecoilState(atoms.skip)
@@ -207,10 +203,10 @@ export default {
       setSkip(skip)
     }, [ setSkip, limit ])
     
-    return { ...props, items, activePage, changePage }
+    return { items, activePage, changePage }
   },
-  'model.count': props => ({ ...props, count: useRecoilValue(atoms.count) }),
-  'model.pagesize': props => {
+  'model.count': () => ({ count: useRecoilValue(atoms.count) }),
+  'model.pagesize': () => {
     const [limit, setLimit] = useRecoilState(atoms.limit)
     const setSkip = useSetRecoilState(atoms.skip)
 
@@ -221,10 +217,10 @@ export default {
       setSkip(0)
     }, [ setLimit, setSkip ] )
 
-    return { ...props, sizes, setPageSize, size: limit }
+    return { sizes, setPageSize, size: limit }
   },
-  'model.fields': props => {
-    const { model } = use('model', props)
+  'model.fields': () => {
+    const { model } = use('model')
     const [ selectedFields, setFields ] = useRecoilState(atoms.fields)
 
     const changeFieldDisplay = useCallback(([ field, selected ]) => {
@@ -240,19 +236,19 @@ export default {
       setFields(list.filter(f => fs.indexOf(f) >= 0))
     }, [ selectedFields, model, setFields ] )
 
-    return { ...props, fields: model.properties, changeFieldDisplay, selected: selectedFields }
+    return { fields: model.properties, changeFieldDisplay, selected: selectedFields }
 
   },
-  'model.list': props => {
+  'model.list': () => {
     const items = useRecoilValue(atoms.items)
     const selected = useRecoilValue(atoms.selected)
     const fields = useRecoilValue(atoms.fields)
     const loading = useRecoilValue(atoms.loading('items'))
 
-    return { ...props, loading, items, fields, selected }
+    return { loading, items, fields, selected }
   },
-  'model.actions': props => {
-    const { model } = use('model', props)
+  'model.actions': () => {
+    const { model } = use('model')
     const modelActions = app.get('modelActions')
     const actions = model.itemActions === undefined ? 
       Object.keys(modelActions).filter(k => modelActions[k].default) : model.itemActions
@@ -267,9 +263,9 @@ export default {
       }).filter(Boolean) : null
     }, [ actions ])
 
-    return { ...props, actions, renderActions }
+    return { actions, renderActions }
   },
-  'model.select': props => {
+  'model.select': () => {
     const selected = useRecoilValue(atoms.selected)
     const [isSelectedAll, onSelectAll] = useRecoilState(atoms.allSelected)
 
@@ -277,35 +273,33 @@ export default {
       set(atoms.itemSelected(item.id), isSelect)
     }, [ ])
 
-    return { ...props, count: selected.length, selected, isSelectedAll, onSelect, onSelectAll }
+    return { count: selected.length, selected, isSelectedAll, onSelect, onSelectAll }
   },
-  'model.list.row': props => {
-    const { model } = use('model', props)
-    const item = useRecoilValue(atoms.item(props.id))
-    const [ itemSelected, changeSelect ] = useRecoilState(atoms.itemSelected(props.id))
+  'model.list.row': ({ id }) => {
+    const { model } = use('model')
+    const item = useRecoilValue(atoms.item(id))
+    const [ itemSelected, changeSelect ] = useRecoilState(atoms.itemSelected(id))
 
-    return { ...props, selected: itemSelected, item, changeSelect, actions: model.itemActions || [ 'edit', 'delete' ] }
+    return { selected: itemSelected, item, changeSelect, actions: model.itemActions || [ 'edit', 'delete' ] }
   },
-  'model.list.header': props => {
-    const { model } = use('model', props)
-    const field = props.field
+  'model.list.header': ({ field }) => {
+    const { model } = use('model')
     const property = getFieldProp(model, field) || {}
     const title = property.header || property.title || _.startCase(field)
 
-    return { ...props, title }
+    return { title }
   },
-  'model.list.order': props => {
-    const { model } = use('model', props)
-    const field = props.field
+  'model.list.order': ({ field }) => {
+    const { model } = use('model')
     const property = getFieldProp(model, field) || {}
     const canOrder = (property.canOrder !== undefined ? property.canOrder : 
       ( property.orderField !== undefined || (property.type != 'object' && property.type != 'array')))
     const [itemOrder, changeOrder] = useRecoilState(atoms.itemOrder(field))
 
-    return { ...props, changeOrder, canOrder, order: itemOrder }
+    return { changeOrder, canOrder, order: itemOrder }
   },
-  'model.list.item': props => {
-    const { model, schema, field, item, nest } = use('model', props)
+  'model.list.item': ({ schema, field, item, nest }) => {
+    const { model } = use('model')
     const property = schema || getFieldProp(model, field)
     const data = schema ? {} : { schema: property }
     const key = schema ? `${schema.name}.${field}` : field
@@ -324,7 +318,7 @@ export default {
     data['value'] = _.get(item, field)
     data['editable'] = nest == true || model.editableFields == undefined || model.editableFields.indexOf(field) < 0
 
-    return { ...props, ...data, model }
+    return data
   }
 
 }

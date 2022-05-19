@@ -7,9 +7,9 @@ import { Icon } from 'xadmin-ui'
 const BatchDeleteBtn = props => {
   const { _t } = app.context
   const [ show, setShow ] = React.useState(false)
-  const { canDelete, loading, onBatchDelete } = use('actons.batch_delete', props)
-  const { selected } = use('model.select', props)
-  const { model } = use('model', props)
+  const { canDelete, loading, onBatchDelete } = use('actons.batch_delete')
+  const { selected } = use('model.select')
+  const { model } = use('model')
 
   const onClose = () => {
     setShow(false)

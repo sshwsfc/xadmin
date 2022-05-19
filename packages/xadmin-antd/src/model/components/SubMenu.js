@@ -6,13 +6,13 @@ import { app, use } from 'xadmin'
 import { _t } from 'xadmin-i18n'
 import { ModelBlock } from 'xadmin-model'
 
-const CountButton = props => {
-  const { count } = use('model.count', props)
+const CountButton = () => {
+  const { count } = use('model.count')
   return <Button>{_t('{{count}} records', { count })}</Button>
 }
 
-const PageSizeButton = props => {
-  const { size, sizes, setPageSize } = use('model.pagesize', props)
+const PageSizeButton = () => {
+  const { size, sizes, setPageSize } = use('model.pagesize')
   const [ visible, setVisible ] = React.useState(false)
   const [ inputSize, setInputSize ] = React.useState('')
   const input = React.createRef()
@@ -47,8 +47,8 @@ const PageSizeButton = props => {
   )
 }
 
-const ColsDropdown = props => {
-  const { selected, fields, changeFieldDisplay } = use('model.fields', props)
+const ColsDropdown = () => {
+  const { selected, fields, changeFieldDisplay } = use('model.fields')
 
   let items = []
   const showFields = Object.keys(fields).filter(name => fields[name].showInList !== false)

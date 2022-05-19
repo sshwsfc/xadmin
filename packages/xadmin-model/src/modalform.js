@@ -73,11 +73,10 @@ export default {
     }
   },
   hooks: {
-    'model.event': props => {
+    'model.event': () => {
       const setModalItemId = useSetRecoilState(modalItem)
 
       return {
-        ...props,
         onAdd: () => setModalItemId(''),
         onSaved: () => setModalItemId(null),
         onEdit: (id) => setModalItemId(id)

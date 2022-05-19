@@ -48,4 +48,4 @@ const ModelInfo = ({ data, title, schema, model, loading, saveItem, ...formProps
     </Form>)
 }
 
-export default (props) => <ModelInfo {...use('model.get', props)} />
+export default (props) => <ModelInfo {...props} {...use('model.get', props)} />

@@ -4,7 +4,8 @@ import app, { use } from 'xadmin'
 import { _t } from 'xadmin-i18n'
 
 export default props => {
-  const { emptyComponent, items, activePage, maxButtons=6, changePage, ...pagerProps } = use('model.pagination', props)
+  const { emptyComponent, maxButtons=6, ...pagerProps } = props
+  const { items, activePage, changePage } = use('model.pagination')
 
   if(items > 1 || emptyComponent == undefined) {
     return (

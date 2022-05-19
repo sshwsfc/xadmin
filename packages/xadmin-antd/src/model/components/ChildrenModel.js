@@ -71,7 +71,8 @@ const ChildrenModel = props => {
 
 const AddChildrenModelBtn = props => {
   const [ show, setShow ] = React.useState(false)
-  const { model, getItems } = use('model.getItems')
+  const { model } = use('model')
+  const { getItems } = use('model.getItems')
   const { canAdd } = use('model.permission')
   const { refData, refreshTimeout } = props
 
@@ -91,7 +92,8 @@ const AddChildrenModelBtn = props => {
 
 const EditChildrenModelBtn = props => {
   const [ show, setShow ] = React.useState(false)
-  const { model, getItems } = use('model.getItems')
+  const { model } = use('model')
+  const { getItems } = use('model.getItems')
   const { id, refData, refreshTimeout } = props
   const canChildEdit = !!model.permission && !!model.permission.childEdit
 
@@ -112,10 +114,9 @@ const EditChildrenModelBtn = props => {
 }
 
 const ChildrenFormModel = props => {
-
-  const {
-    show, data, loading, model, title, onClose, modalProps, saveItem, onSuccess, refData
-  } = use('model.item', props)
+  const { show, title, onClose, modalProps, onSuccess, refData } = props
+  const { model } = use('model')
+  const { data, loading, saveItem } = use('model.item', props)
 
   const onSubmitSuccess = (item) => {
     onClose()

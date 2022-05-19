@@ -8,8 +8,8 @@ import { Icon } from 'xadmin-ui'
 
 const Option = Select.Option
 
-const AsyncSelect = props => {
-  const { loadOptions, loading, options, value, isOptionSelected, label, onChange, style, ...extraProps } = use('model.relate.select', props)
+const AsyncSelect = ({ value, isOptionSelected, label, onChange, style, ...extraProps }) => {
+  const { loadOptions, loading, options } = use('model.relate.select')
   
   const data = React.useMemo(() => options.reduce((prev, opt) => {
     prev[opt.value] = { key: opt.value, ...opt }

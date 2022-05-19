@@ -6,9 +6,9 @@ import { app, use } from 'xadmin'
 import { _t } from 'xadmin-i18n'
 
 export default props => {
-  const { model } = use('model', props)
-  const { count } = use('model.select', props)
-  const { renderActions } = use('model.batchActions', props)
+  const { model } = use('model')
+  const { count } = use('model.select')
+  const { renderActions } = use('model.batchActions')
   const actions = renderActions({ ...props, model })
   return actions && actions.length > 0 ? (
     <Dropdown id="model-list-actions" overlay={(

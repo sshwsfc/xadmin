@@ -6,7 +6,8 @@ import { Loading, C, Check, Input } from 'xadmin-ui'
 import { Model } from './base'
 
 const Checkboxes = props => {
-  const { input: { value, onChange }, field, loading, options } = use('model.relate.select', props)
+  const { input: { value, onChange }, field } = props
+  const { loading, options } = use('model.relate.select', { field })
 
   const onCheckChange = React.useCallback((checked, option) => {
     if(checked) {
@@ -76,8 +77,9 @@ const filter_converter = [
 
 const RelateContext = React.createContext()
 
-const RelateContainer = props => {
-  const { data, loading, model, children } = use('model.get', props)
+const RelateContainer = ({ id, children }) => {
+  const { model } = use('model')
+  const { data, loading } = use('model.get', { id })
   return loading || data == undefined ? <Loading /> : 
     <C is="Relate.Container" model={model} data={data} >
       <RelateContext.Provider value={{ item: data, model }}>{children}</RelateContext.Provider>
@@ -151,8 +153,8 @@ const routers = (app) => {
   return routes
 }
 
-const RelateAction = props => {
-  const { model, item } = use('model', props)
+const RelateAction = ({ item }) => {
+  const { model } = use('model')
   const actions = []
 
   const models = app.get('models')
@@ -176,8 +178,8 @@ export default {
   filter_converter,
   routers,
   hooks: {
-    'model.relate.select': props => {
-      const { model, field } = use('model', props)
+    'model.relate.select': ({ field }) => {
+      const { model } = use('model')
       const [ loading, setLoadig ] = React.useState(false)
       const [ options, setOptions ] = React.useState([])
       
@@ -200,7 +202,7 @@ export default {
         loadOptions()
       }, [])
 
-      return { ...props, loadOptions, loading, options }
+      return { loadOptions, loading, options }
     }
   }
 }

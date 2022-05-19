@@ -41,7 +41,9 @@ const ItemEditFormLayout = (props) => {
 }
 
 const ItemEditForm = props => {
-  const { item, field, value, schema, model, onClose, saveItem } = use('model.save', props)
+  const { item, field, value, schema, onClose } = props
+  const { model } = use('model')
+  const { saveItem } = use('model.save', props)
 
   const getSchema = () => {
     const formField = _.find(model.form || [], obj => obj && obj.key == field ) || { key: field }
@@ -77,7 +79,8 @@ const ItemEditForm = props => {
 }
 
 const Item = props => {
-  const { item, value, field, schema, componentClass, wrap, editable, ...itemProps } = use('model.list.item', props)
+  const { item, field, wrap, ...itemProps } = props
+  const { value, schema, componentClass, editable } = use('model.list.item', props)
   
   const RawWrapComponent = wrap || 'span'
   const WrapComponent = editable ? RawWrapComponent : ({ children, ...props }) => {
@@ -104,8 +107,9 @@ const Item = props => {
 }
 
 const Header = props => {
-  const { title } = use('model.list.header', props)
-  const { order, showText, canOrder, changeOrder } = use('model.list.order', props)
+  const { showText, field } = props
+  const { title } = use('model.list.header', { field })
+  const { order, canOrder, changeOrder } = use('model.list.order', { field })
 
   const renderOrder = () => {
     let orderItems = []
@@ -143,7 +147,7 @@ const useActions = props => {
 }
 
 const useList = render => props => {
-  const state = use('model.list', use('model', props))
+  const state = { ...props, ...use('model.list'), ...use('model') }
   const { loading, items, model } = state
   const list = render(state)
 
@@ -164,7 +168,7 @@ const useList = render => props => {
 }
 
 const DataTableActionRender = props => {
-  return <div style={{ width: '100%', textAlign: 'center' }}>{useActions(use('model.list.row', props))}</div>
+  return <div style={{ width: '100%', textAlign: 'center' }}>{useActions({ ...props, ...use('model.list.row', { id: props.id }) })}</div>
 }
 
 const DataTable = useList(({ model, items, fields, size, onRow }) => {
@@ -242,7 +246,8 @@ const DataTable = useList(({ model, items, fields, size, onRow }) => {
 })
 
 const DataListRender = props => {
-  const { item, fields, selected } = use('model.list.row', props)
+  const { id, fields } = props
+  const { item, selected } = use('model.list.row', { id })
   const Item = C('Model.DataItem')
   
   return (
@@ -280,8 +285,8 @@ const DataList = useList(({ model, items, fields, size }) => {
 const DataCard = DataTable
 
 const ActionEdit = props => {
-  const { canEdit } = use('model.permission', props)
-  const { onEdit } = use('model.event', props)
+  const { canEdit } = use('model.permission')
+  const { onEdit } = use('model.event')
 
   if(canEdit) {
     return (
@@ -295,8 +300,8 @@ const ActionEdit = props => {
 }
 
 const ActionDelete = props => {
-  const { canDelete } = use('model.permission', props)
-  const { deleteItem } = use('model.delete', props)
+  const { canDelete } = use('model.permission')
+  const { deleteItem } = use('model.delete')
 
   if(canDelete) {
     return (
