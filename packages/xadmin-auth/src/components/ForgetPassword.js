@@ -7,7 +7,7 @@ import { UserForgetPassword } from '../models'
 
 export default props => {
   const { _t } = app.context
-  const { onSuccess } = use('auth.forget_password', props)
+  const { onSuccess } = use('auth.forget_password')
   return (
     <Model schema={UserForgetPassword(app)}>
       <C is="Model.DataForm" 

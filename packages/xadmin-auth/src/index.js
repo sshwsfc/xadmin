@@ -1,7 +1,4 @@
 import React from 'react'
-import localforage from 'localforage'
-import Cookies from 'js-cookie'
-import mappers from './mappers'
 import hooks from './hooks'
 import { App as BaseApp, C } from 'xadmin-ui'
 import SignInForm from './components/SignIn'
@@ -9,9 +6,8 @@ import SignUpForm from './components/SignUp'
 import ForgetPasswordForm from './components/ForgetPassword'
 import ResetPasswordForm from './components/ResetPassword'
 import ChangePasswordForm from './components/ChangePassword'
-import reducers from './reducer'
 import models from './models'
-import effects from './effects'
+import { UserRoot } from './context'
 import {
   IsAuthenticated,
   ShowAuthenticated,
@@ -35,68 +31,11 @@ export default {
     'top.right': (props) => <C is="Auth.UserMenu" key="auth.user" {...props} />
   },
   components: {
-    App: () => <IsAuthenticated><BaseApp /></IsAuthenticated>
+    // App: () => <IsAuthenticated><BaseApp /></IsAuthenticated>
   },
-  context: (app) => (context, cb) => {
-    const { store } = context
-    const { auth } = app.load_dict('config')
-
-    let user = null
-    store.subscribe(() => {
-      const state = store.getState()
-      if(state.user !== user) {
-        if(auth.persist_type == 'localforage') {
-          if(state.user) {
-            localforage.setItem('user', JSON.stringify(state.user))
-          } else {
-            localforage.removeItem('user')
-          }
-        } else if(auth.persist_type == 'session-storage') {
-          if(state.user) {
-            sessionStorage.setItem('user', JSON.stringify(state.user))
-          } else {
-            sessionStorage.removeItem('user')
-          }
-        } else if(auth.persist_type == 'cookie') {
-          if(state.user) {
-            Cookies.set('user', state.user, auth.userinfo_timeout ? { expires: auth.userinfo_timeout } : {})
-          } else {
-            Cookies.remove('user')
-          }
-        }
-        user = state.user
-      }
-    })
-
-    if(auth.persist_type == 'localforage') {
-      localforage.getItem('user', function (err, value) {
-        if(err == null && value) {
-          try {
-            const user = JSON.parse(value)
-            store.dispatch({ type: '@@xadmin/AUTH_SIGN_IN', payload: user })
-          } catch(err) {
-            localforage.removeItem('user')
-          }
-        }
-        cb(null, context)
-      })
-    } else if(auth.persist_type == 'session-storage') {
-      const value = sessionStorage.getItem('user')
-      if(value) {
-        const user = JSON.parse(value)
-        store.dispatch({ type: '@@xadmin/AUTH_SIGN_IN', payload: user })
-      }
-      cb(null, context)
-    }  else if(auth.persist_type == 'cookie') {
-      const user = Cookies.getJSON('user')
-      if(user) {
-        store.dispatch({ type: '@@xadmin/AUTH_SIGN_IN', payload: user })
-      }
-      cb(null, context)
-    } else {
-      cb(null, context)
-    }
-  },
+  root_component: (app) => (children) => (
+    <UserRoot>{children}</UserRoot>
+  ),
   routers: (app) => {
     const { auth } = app.load_dict('config')
     const routes = []
@@ -137,10 +76,7 @@ export default {
     return f
   },
   models,
-  effects,
-  mappers,
-  hooks,
-  reducers
+  hooks
 }
 
 export {

@@ -44,7 +44,7 @@ app
 //.use(reldetail)
 .use(components)
 .use(splashscreen)
-//.use(auth)
+.use(auth)
 .use({
   config: {
     api: API,
@@ -52,7 +52,7 @@ app
       lng: 'zh_Hans', moment: 'zh-cn'
     },
     router: 'hash',
-    auth: { can_signin: true, can_signup: true, can_reset_password: true, persist_type: 'session-storage' },
+    auth: { can_signin: true, can_signup: true, can_reset_password: true, persist_type: 'localforage' },
     date_format: {
       time: 'HH:mm:ss', date: 'YYYY-MM-DD', datetime: 'YYYY-MM-DD HH:mm:ss'
     },

@@ -13,6 +13,7 @@ import search from './search'
 import modalform from './modalform'
 import reldetail from './reldetail'
 
+import * as atoms from './atoms'
 import * as utils from './utils'
 import _ from 'lodash'
 
@@ -95,5 +96,5 @@ const apps = {
   relate, filter, actions, search, modalform, reldetail
 }
 
-export { Model, ModelWrap, ModelBlock, ModelContext, ModelRoutes, apps, utils }
+export { Model, ModelWrap, ModelBlock, ModelContext, ModelRoutes, atoms, apps, utils,  }
 export default app

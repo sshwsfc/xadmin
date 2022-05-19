@@ -6,7 +6,6 @@ import { _t } from 'xadmin-i18n'
 import * as atoms from './atoms'
 import {  useRecoilCallback, useRecoilValue } from 'recoil'
 
-
 export default {
   items: {
     modelBatchActions: { type: 'map' }

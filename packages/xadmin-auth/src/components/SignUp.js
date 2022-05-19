@@ -6,7 +6,7 @@ import { C } from 'xadmin-ui'
 import { UserSignUp } from '../models'
 
 const SignUpForm = props => {
-  const { onSuccess } = use('auth.sign_up', props)
+  const { onSuccess } = use('auth.sign_up')
   const { _t } = app.context
   return (
     <Model schema={UserSignUp(app)}>

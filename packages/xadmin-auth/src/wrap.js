@@ -5,7 +5,7 @@ import app, { use } from 'xadmin'
 
 const IsAuthenticated = ({ children }) => {
   const location = use('location')
-  const { user } = use('redux', state => ({ user: state.user }))
+  const { user } = use('auth.user')
 
   if(!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
@@ -15,7 +15,7 @@ const IsAuthenticated = ({ children }) => {
 }
 
 const ShowAuthenticated = ({ children }) => {
-  const { user } = use('redux', state => ({ user: state.user }))
+  const { user } = use('auth.user')
   if(!user) {
     return null
   }
@@ -23,7 +23,7 @@ const ShowAuthenticated = ({ children }) => {
 }
 
 const IsSuperUser = ({ children }) => {
-  const { user } = use('redux', state => ({ user: state.user }))
+  const { user } = use('auth.user')
   if(user !== null && user.isSuper) {
     return children
   } else {
@@ -33,7 +33,7 @@ const IsSuperUser = ({ children }) => {
 }
 
 const HasPermission = ({ permission, FailureComponent='NoPermission', children, ...props }) => {
-  const { user } = use('redux', state => ({ user: state.user }))
+  const { user } = use('auth.user')
 
   const checkPermission = user => {
     if(user && user.isSuper) { return true }

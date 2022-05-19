@@ -7,8 +7,8 @@ import { UserResetPassword } from '../models'
 
 export default props => {
   const { _t } = app.context
-  const { onSuccess } = use('auth.reset_password', props)
-  const query = use('searchParams')
+  const { onSuccess } = use('auth.reset_password')
+  const query = use('query')
 
   return (
     <Model schema={UserResetPassword(app)}>

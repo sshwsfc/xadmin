@@ -7,7 +7,7 @@ import { UserChangePassword } from '../models'
 
 const ChangePassword = props => {
   const { _t } = app.context
-  const { onChange } = use('auth.change_password', props)
+  const { onChange } = use('auth.change_password')
   return (
     <C is="Model.DataForm"
       onSubmit={onChange}

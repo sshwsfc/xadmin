@@ -1,7 +1,8 @@
 import { config as _c } from 'xadmin'
+import { _t } from 'xadmin-i18n'
 
 // Forms
-const UserSignIn = ({ context: { _t } }) => ({
+const UserSignIn = () => ({
   type: 'object',
   name: 'user_sign_in',
   resource: 'auth/login',
@@ -33,13 +34,13 @@ const UserSignIn = ({ context: { _t } }) => ({
   ]
 })
 
-const UserSignOut = ({ context: { _t } }) => ({ 
+const UserSignOut = () => ({ 
   type: 'object',
   name: 'user_sign_out',
   resource: 'auth/logout'
 })
 
-const UserForgetPassword = ({ context: { _t } }) => ({ 
+const UserForgetPassword = () => ({ 
   type: 'object',
   name: 'user_forgot_password',
   resource: 'auth/password/reset',
@@ -55,7 +56,7 @@ const UserForgetPassword = ({ context: { _t } }) => ({
   form: [ 'email' ]
 })
 
-const UserResetPassword = ({ context: { _t } }) => ({ 
+const UserResetPassword = () => ({ 
   type: 'object',
   name: 'user_reset_password',
   resource: 'auth/password/reset/confirm',
@@ -87,7 +88,7 @@ const UserResetPassword = ({ context: { _t } }) => ({
   ]
 })
 
-const UserChangePassword = ({ context: { _t } }) => ({ 
+const UserChangePassword = () => ({ 
   type: 'object',
   name: 'user_change_password',
   resource: 'user/password',
@@ -121,7 +122,7 @@ const UserChangePassword = ({ context: { _t } }) => ({
   ]
 })
 
-const UserSignUp = ({ context: { _t } }) => ({ 
+const UserSignUp = () => ({ 
   type: 'object',
   name: 'user_sign_up',
   resource: 'auth/registration',
@@ -170,7 +171,7 @@ const UserSignUp = ({ context: { _t } }) => ({
 })
 
 // Models
-const Permission = ({ context: { _t } }) => ({ 
+const Permission = () => ({ 
   type: 'object',
   name: 'auth_permission',
   resource: 'auth/permission',
@@ -190,8 +191,7 @@ const Permission = ({ context: { _t } }) => ({
   ui: { showMenu: false }
 })
 
-const Role = (app) => {
-  const { _t } = app.context
+const Role = () => {
   return { 
     type: 'object',
     name: 'auth_role',
@@ -206,7 +206,7 @@ const Role = (app) => {
       permissions: {
         title: _t('Permission'),
         type: 'array',
-        items: Permission(app)
+        items: Permission()
       }
     },
     searchFields: [ 'name' ],
@@ -214,8 +214,7 @@ const Role = (app) => {
   }
 }
 
-const User = (app) => {
-  const { _t } = app.context
+const User = () => {
   return { 
     type: 'object',
     name: 'auth_user',
@@ -247,12 +246,12 @@ const User = (app) => {
       permissions: {
         title: _t('Permission'),
         type: 'array',
-        items: Permission(app)
+        items: Permission()
       },
       roles: {
         title: _t('Role'),
         type: 'array',
-        items: Role(app)
+        items: Role()
       }
     },
     searchFields: [ 'username', 'email' ],
@@ -266,10 +265,10 @@ const User = (app) => {
   }
 }
 
-export default (app) => ({
-  auth_user: User(app),
-  auth_permission: Permission(app),
-  auth_role: Role(app)
+export default () => ({
+  auth_user: User(),
+  auth_permission: Permission(),
+  auth_role: Role()
 })
 
 export {

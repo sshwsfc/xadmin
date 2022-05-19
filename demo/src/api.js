@@ -14,4 +14,13 @@ export default class API extends RESTBaseAPI {
     //return new Promise((resolve, reject) => { reject({ json: { name: 'User Name error' }})})
   }
 
+  save(data = {}, partial = false) {
+    if (this.resource == 'auth/logout') {
+      return new Promise((resolve, reject) => resolve({}))
+    }
+    if (this.resource == 'auth/login') {
+      return new Promise((resolve, reject) => resolve({ token: '123' }))
+    }
+    return super.save(data, partial)
+  }
 }

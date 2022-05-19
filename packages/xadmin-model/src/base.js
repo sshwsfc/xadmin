@@ -52,7 +52,7 @@ const Model = ({ name, schema, modelKey, initialValues, children, props: modelPr
     const { wheres={}, ...option } = initial
 
     const defaultOpt = {
-      fields: [ ...model.listFields ],
+      fields: [ ...(model.listFields || []) ],
       order: {},
       limit: model.defaultPageSize || 15,
       skip: 0

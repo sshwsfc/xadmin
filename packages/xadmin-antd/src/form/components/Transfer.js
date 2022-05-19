@@ -5,7 +5,7 @@ import { Transfer } from 'antd'
 import _ from 'lodash'
 
 const RelateMultiTransfer = ({ input: { value, onChange }, field }) => {
-  const { loading, options } = use('model.relate.select')
+  const { loading, options } = use('model.relate.select', { field })
   const data = React.useMemo(() => options.map(opt => ({ key: opt.value, title: opt.label, ...opt })), [ options ])
 
   const onSelectChange = (targetKeys) => {
