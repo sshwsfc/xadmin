@@ -7,7 +7,7 @@ import { app, use } from 'xadmin'
 const BatchChangeBtn = props => {
   const { _t } = app.context
   const [ show, setShow ] = React.useState(false)
-  const { canEdit, fields, onBatchChange } = use('actons.batch_change', props)
+  const { canEdit, fields, loading, onBatchChange } = use('actons.batch_change', props)
   const { selected } = use('model.select', props)
   const { model } = use('model', props)
 
@@ -33,6 +33,7 @@ const BatchChangeBtn = props => {
             okButtonDisabled={invalid || submitting}
             cancelText={_t('Cancel')}
             onCancel={onClose}
+            okButtonProps={{ loading }}
           >
             <Form onSubmit={handleSubmit}>{children}</Form>
           </Modal>

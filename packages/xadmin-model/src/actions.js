@@ -1,78 +1,11 @@
 import React from 'react'
 import _ from 'lodash'
-import { all, fork, put, call, cancelled, takeEvery } from 'redux-saga/effects'
-import app, { api, use } from 'xadmin'
+import app, { use } from 'xadmin'
 import { C } from 'xadmin-ui'
+import { _t } from 'xadmin-i18n'
+import * as atoms from './atoms'
+import {  useRecoilCallback, useRecoilValue } from 'recoil'
 
-function *handle_delete_items({ model, items, promise, message }) {
-  yield put({ type: 'START_LOADING', model, key: `${model.key}.delete_items` })
-  const { _t } = app.context
-  const API = api(model)
-
-  try {
-    if(API.batchDelte) {
-      yield API.batchDelte(items.map(item=>item.id))
-    } else {
-      yield all(items.map(item => call([ API, API.delete ], item.id)))
-    }
-    for(let item of items) {
-      yield put({ type: 'SELECT_ITEMS', selected: false, item, model })
-    }
-
-    if(promise) {
-      promise.resolve(null)
-    }
-    if( message !== false) {
-      const object = model.title || model.name
-      const noticeMessage = message || _t('Delete {{object}} success', { object })
-      yield put({ type: '@@xadmin/ADD_NOTICE', payload: {
-        type: 'success', headline: 'Success', message: noticeMessage
-      } }) 
-    }
-    yield put({ type: 'GET_ITEMS', model })
-  } catch(err) {
-    app.error(err)
-    if(promise) {
-      promise.reject(err)
-    }
-  }
-
-  yield put({ type: 'END_LOADING', model, key: `${model.key}.delete_items` })
-}
-
-function *handle_change_items({ model, items, value, promise, message }) {
-  yield put({ type: 'START_LOADING', model, key: `${model.key}.save_items` })
-  const { _t } = app.context
-  const API = api(model)
-  let ret
-
-  try {
-    if(API.batchSave) {
-      ret = yield API.batchSave(items, value)
-    } else {
-      ret = yield all(items.map(item => call([ API, API.save ], { id: item.id, ...value }, true)))
-    }
-    yield put({ type: 'GET_ITEMS', model })
-
-    if(promise) {
-      promise.resolve(ret)
-    }
-
-    if( message !== false) {
-      const object = model.title || model.name
-      const noticeMessage = message || _t('Batch Save {{object}} success', { object })
-      yield put({ type: '@@xadmin/ADD_NOTICE', payload: {
-        type: 'success', headline: 'Success', message: noticeMessage
-      } }) 
-    }
-  } catch(err) {
-    app.error(err)
-    if(promise) {
-      promise.reject(err)
-    }
-  }
-  yield put({ type: 'END_LOADING', model , key: `${model.key}.save_items` })
-}
 
 export default {
   items: {
@@ -122,42 +55,91 @@ export default {
       return { ...props, actions, renderActions }
     },
     'actons.batch_delete': props => {
-      const { getModelState, modelDispatch, successMessage } = use('model', props)
-      const { canDelete } = use('model.permission', props)
+      const { model, rest } = use('model')
+      const { getItems } = use('model.getItems')
+      const message = use('message')
+      const { canDelete } = use('model.permission')
+      const { successMessage } = props
+      const loading = useRecoilValue(atoms.loading('delete_items'))
 
-      const onBatchDelete = () => {
-        const items = getModelState().selected
-        return new Promise((resolve, reject) => {
-          modelDispatch({ type: 'DELETE_ITEMS', items, 
-            promise: { resolve, reject: err => {
-              reject(err.formError || err.json)
-            } }, message: successMessage })
-        })
-      }
+      const onBatchDelete = useRecoilCallback(({ snapshot, set, reset }) => async () => {
+        const items = snapshot.getLoadable(atoms.selected).contents
 
-      return { ...props, canDelete, onBatchDelete }
+        set(atoms.loading('delete_items'), true)
+        try {
+          if(rest.batchSave) {
+            await rest.batchSave(items.map(item=>item.id))
+          } else {
+            await Promise.all(items.map(item => rest.delete(item.id)))
+          }
+
+          // clear selected
+          reset(atoms.selected)
+
+          // show message
+          if(message?.success &&  successMessage !== false) {
+            const object = model.title || model.name
+            const noticeMessage = _.isString(successMessage) ? successMessage :  _t('Delete {{object}} success', { object })
+            message?.success(noticeMessage) 
+          }
+          // get items
+          getItems()
+
+          return null
+        } catch(err) {
+          app.error(err)
+          throw err.formError || err.json || err
+        } finally {
+          set(atoms.loading('delete_items'), false)
+        }
+      }, [ getItems, model ])
+
+      return { ...props, loading, canDelete, onBatchDelete }
     },
     'actons.batch_change': props => {
-      const { model, getModelState, modelDispatch, successMessage } = use('model', props)
-      const { canEdit } = use('model.permission', props)
+      const { model, rest } = use('model')
+      const { getItems } = use('model.getItems')
+      const message = use('message')
+      const { canEdit } = use('model.permission')
+      const { successMessage } = props
+      const loading = useRecoilValue(atoms.loading('save_items'))
 
-      const onBatchChange = (value) => {
-        const items = getModelState().selected
-        return new Promise((resolve, reject) => {
-          modelDispatch({ type: 'SAVE_ITEMS', items, value, 
-            promise: { resolve, reject: err => {
-              reject(err.formError || err.json)
-            } }, message: successMessage })
-        })
-      }
+      const onBatchChange = useRecoilCallback(({ snapshot, set }) => async (value) => {
+        const items = snapshot.getLoadable(atoms.selected).contents
 
-      return { ...props, fields: model.batchChangeFields || [], canEdit, onBatchChange }
+        set(atoms.loading('save_items'), true)
+        try {
+          let ret
+          if(rest.batchDelte) {
+            ret = await rest.batchDelte(items, value)
+          } else {
+            ret = await Promise.all(items.map(item => rest.save({ id: item.id, ...value }, true)))
+          }
+
+          // show message
+          if(message?.success &&  successMessage !== false) {
+            const object = model.title || model.name
+            const noticeMessage = _.isString(successMessage) ? successMessage : _t('Batch Save {{object}} success', { object })
+            message?.success(noticeMessage) 
+          }
+          // update items
+          if(_.isNil(ret) || _.isEmpty(ret)) {
+            getItems()
+          } else {
+            ret.forEach(item => set(atoms.item(item.id), item))
+          }
+
+          return ret
+        } catch(err) {
+          app.error(err)
+          throw err.formError || err.json || err
+        } finally {
+          set(atoms.loading('save_items'), false)
+        }
+
+      }, [ getItems, model ])
+
+      return { ...props, loading, fields: model.batchChangeFields || [], canEdit, onBatchChange }
     }
-  },
-  effects: function *() {
-    yield all([
-      takeEvery(action => action.model && action.type == 'DELETE_ITEMS' && action.success !== true, handle_delete_items),
-      takeEvery(action => action.model && action.type == 'SAVE_ITEMS' && action.success !== true, handle_change_items)
-    ])
   }
 }

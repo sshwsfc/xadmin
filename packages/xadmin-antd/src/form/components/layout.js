@@ -14,15 +14,15 @@ const FormLayout = props => {
   
   return (
     <Card>
-      <Form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         {children}
         <Form.Item {...groupProps}>
           <Space>
-            <Button type="primary" onClick={handleSubmit} loading={submitting} disabled={invalid}>{_t('Save')}</Button>
+            <Button type="primary" htmlType="submit" loading={submitting} disabled={invalid}>{_t('Save')}</Button>
             <Button onClick={() => history.back()}>{_t('Cancel')}</Button>
           </Space>
         </Form.Item>
-      </Form>
+      </form>
     </Card>
   )
 }

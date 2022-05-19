@@ -17,7 +17,7 @@
   "peerDependencies": {
     "react": "16",
     "lodash": "^4.17.11",
-    "react-redux": "^7.0.0",
+    "react-redux": "^8.0.0",
     "moment": "2",
     "redux-saga": "^1.0.2",
     "xadmin": "2 || 3",

@@ -1,6 +1,7 @@
 import React from 'react'
 import app from 'xadmin'
 //import 'antd/dist/antd.min.css'
+import { message } from 'antd'
 import { Main, App, Page, Loading, Icon, Dashboard } from './layout'
 
 import { Menu, MenuItem } from './components/Menu'
@@ -30,6 +31,9 @@ export default {
     ...filter.form_fields,
     ...relate.form_fields,
     ...auth.form_fields
+  },
+  hooks: {
+    'message': () => message
   },
   effects
 }

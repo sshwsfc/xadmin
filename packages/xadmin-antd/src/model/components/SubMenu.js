@@ -14,6 +14,7 @@ const CountButton = props => {
 const PageSizeButton = props => {
   const { size, sizes, setPageSize } = use('model.pagesize', props)
   const [ visible, setVisible ] = React.useState(false)
+  const [ inputSize, setInputSize ] = React.useState('')
   const input = React.createRef()
 
   const onSetPageSize = (size) => {
@@ -23,9 +24,9 @@ const PageSizeButton = props => {
 
   const onInputSize = (e) => {
     if (e.key == 'Enter') {
-      const size = parseInt(input.current.input.value)
+      const size = parseInt(inputSize)
       onSetPageSize(size)
-      input.current.setState({ value: '' })
+      setInputSize('')
     }
     e.persist()
   }
@@ -35,7 +36,7 @@ const PageSizeButton = props => {
       <Menu>
         {sizes.map(size => <Menu.Item key={`size-${size}`} onClick={()=>setPageSize(size)} eventKey={`size-${size}`}>{_t('Set {{size}} per page', { size })}</Menu.Item>)}
         <Menu.Item key="size-custom">
-          <Input placeholder={_t('Customize page size')} ref={input} precision={0} onKeyPress={onInputSize} style={{ width: 100 }}/>
+          <Input placeholder={_t('Customize page size')} value={inputSize} onChange={e => setInputSize(e.target.value)} precision={0} onKeyPress={onInputSize} style={{ width: 100 }}/>
         </Menu.Item>
       </Menu>
     )}>

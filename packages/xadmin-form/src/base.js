@@ -81,7 +81,7 @@ const Form = (props) => {
           form.submitReturnValue = retValue
           resolve()
         }).catch(err => {
-          resolve(err)
+          reject(err)
         })
       })
     } else if(onSubmit.length < 3) {

@@ -12,7 +12,7 @@
   "peerDependencies": {
     "react": "16",
     "lodash": "^4.17.11",
-    "react-redux": "^7.0.0",
+    "react-redux": "^8.0.0",
     "react-router": "6",
     "react-router-dom": "6",
     "xadmin": "2||3",

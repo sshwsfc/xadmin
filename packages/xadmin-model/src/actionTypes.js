@@ -1,8 +1,0 @@
-export const GET_ITEMS = '@@xadmin-model/GET_ITEMS'
-export const GET_ITEM = '@@xadmin-model/GET_ITEM'
-export const SAVE_ITEM = '@@xadmin-model/SAVE_ITEM'
-export const SELECT_ITEMS = '@@xadmin-model/SELECT_ITEMS'
-export const UPDATE_FILTER = '@@xadmin-model/UPDATE_FILTER'
-export const UPDATE_WHERE = '@@xadmin-model/UPDATE_WHERE'
-export const DESTROY = '@@xadmin-model/DESTROY'
-export const INITIALIZE = '@@xadmin-model/INITIALIZE'

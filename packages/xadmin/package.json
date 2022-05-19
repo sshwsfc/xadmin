@@ -8,7 +8,9 @@
   "author": "sshwsfc@gmail.com",
   "license": "MIT",
   "dependencies": {
-    "async": "^2.6.2"
+    "async": "^2.6.2",
+    "react-redux": "^8",
+    "react-router": "^6.3.0"
   },
   "peerDependencies": {
     "lodash": "4",

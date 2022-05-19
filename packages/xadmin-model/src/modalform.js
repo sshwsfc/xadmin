@@ -1,29 +1,56 @@
 import React from 'react'
 import { SchemaForm } from 'xadmin-form'
 import { C } from 'xadmin-ui'
+import { _t } from 'xadmin-i18n'
 import { use } from 'xadmin'
+import {
+  atom, useSetRecoilState, useRecoilState
+} from 'recoil'
 
-const AddModelBtn = () => {
+const modalItem = atom({
+  key: 'modalItem', default: null
+})
+
+const ItemModalForm = () => {
   const { model } = use('model')
-  const { canAdd } = use('model.permission')
+  const message = use('message')
+  const { canAdd, canEdit } = use('model.permission')
   const { saveItem } = use('model.save')
+  const { getItems } = use('model.getItems')
+  const [ modalItemId, setModalItemId ] = useRecoilState(modalItem)
+  const { data, loading } = use('model.item', { id: modalItemId })
 
-  const { show, dispatch } = use('redux', state => ({ show: state.showModalAddForm[model.name] || false }))
-  const hideModal = () => {
-    dispatch({ model, type: '@@xadmin-modalform/CLOSE' })
-  }
+  const hideLoading = React.useRef()
+
+  const show = !_.isNil(modalItemId)
+
+  const hideModal = () => setModalItemId(null)
 
   const onSubmitSuccess = (item) => {
     hideModal()
-    dispatch({ model, type: 'GET_ITEMS' })
+    getItems()
   }
 
-  return (canAdd && show) ? (
+  React.useEffect(() => {
+    if(message?.loading) {
+      if(loading) {
+        hideLoading.current = message?.loading(_t('Loading data'))
+      } else if(hideLoading.current) {
+        hideLoading.current()
+        hideLoading.current = null
+      }
+    }
+  }, [ loading ])
+
+  const hasPermission = (data?.id == undefined && canAdd) ||(data?.id != undefined && canEdit)
+  return ( hasPermission && show && !loading ) ? (
     <SchemaForm 
-      formKey={`model.modalform.${model.key}`}
+      formKey={`model.modalform.${model.key}.${modalItemId}`}
       schema={model}
+      initialValues={data}
       onSubmit={saveItem}
       onSubmitSuccess={onSubmitSuccess}
+      {...model.formProps}
     >
       { props => <C is="Form.ModalLayout" {...props} title={model.title} show={show} onClose={hideModal} />}
     </SchemaForm>
@@ -33,7 +60,7 @@ const AddModelBtn = () => {
 export default {
   name: 'xadmin.model.modalform',
   blocks: {
-    'model.list.navbtn': () => <AddModelBtn />
+    'model.list.navbtn': () => <ItemModalForm />
   },
   reducers: {
     showModalAddForm: (state={}, action) => {
@@ -47,12 +74,15 @@ export default {
   },
   hooks: {
     'model.event': props => {
-      const { modelDispatch } = use('model')
+      const setModalItemId = useSetRecoilState(modalItem)
+
       return {
         ...props,
-        onAdd: () => modelDispatch({ type: '@@xadmin-modalform/SHOW' })
+        onAdd: () => setModalItemId(''),
+        onSaved: () => setModalItemId(null),
+        onEdit: (id) => setModalItemId(id)
       }
     }
   }
 }
-export { AddModelBtn }
+export { ItemModalForm }

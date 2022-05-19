@@ -6,6 +6,9 @@ import { C } from 'xadmin-ui'
 import { getFieldProp } from '../utils'
 import filter_converter from './filters'
 
+import * as atoms from '../atoms'
+import { selector, useRecoilValue, useRecoilCallback } from 'recoil'
+
 const convert = (schema, options) => {
   const opts = options || {}
   return app.load_list('filter_converter').reduce((prve, converter) => {
@@ -19,10 +22,16 @@ const FilterForm = (props) => {
   return <FilterComponent {...filterForm} resetFilter={resetFilter} />
 }
 
+const whereFilters = selector({
+  key: 'whereFilters',
+  get: ({get}) => get(atoms.wheres).filters
+})
+
 const BaseFilter = props => {
   const { name, component, group, fieldProps } = props
-  const { dispatch } = use('redux')
-  const { data, model, getModelState } = use('model', state => ({ data: state.wheres.filters }))
+  const { model } = use('model')
+  const { getItems } = use('model.getItems')
+  const data = useRecoilValue(whereFilters)
 
   const { filters, options, formKey } = React.useMemo(() => {
     const formKey = `filter.${model.key || model.name}`
@@ -59,9 +68,8 @@ const BaseFilter = props => {
     return _.merge(field, filter.field, fieldProps)
   }), [ filters, fieldProps ])
 
-
-  const onSubmit = React.useCallback((values) => {
-    const modelState = getModelState()
+  const onSubmit = useRecoilCallback(({ snapshot, set }) => (values) => {
+    const modelWheres = snapshot.getLoadable(atoms.wheres).contents
     const where = Object.keys(values).reduce((prev, key) => {
       if(!_.isNil(values[key])) {
         prev[key] = values[key]
@@ -69,14 +77,13 @@ const BaseFilter = props => {
         prev = _.omit(prev, key)
       }
       return prev
-    }, { ...modelState.wheres.filters })
-    const wheres = (Object.keys(where).length > 0 ? 
-      { ...modelState.wheres, filters: where } : _.omit(modelState.wheres, 'filters'))
-    
-    return new Promise((resolve, reject) => {
-      dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres, promise: { resolve, reject } })
-    })
-  }, [ model ])
+    }, { ...modelWheres.filters })
+
+    const wheres = (!_.isEmpty(where) ? 
+      { ...modelWheres, filters: where } : _.omit(modelWheres, 'filters'))
+
+    return getItems({ wheres, skip: 0 })
+  }, [ model, getItems ])
 
   const onChange = (options && options.submitOnChange == true) ? onSubmit : undefined
   
@@ -107,20 +114,20 @@ export default {
   },
   hooks: {
     'model.list.filter': props => {
-      const { dispatch } = use('redux')
-      const { model, getModelState } = use('model')
+      const { model } = use('model')
+      const { getItems } = use('model.getItems')
       const { form } = use('form')
 
-      const resetFilter = React.useCallback(() => {
+      const resetFilter = useRecoilCallback(({ snapshot, set }) => () => {
         const initial = _.isFunction(model.initialValues) ? model.initialValues() : model.initialValues
         const where = initial && initial.wheres && initial.wheres.filters || {}
         form.reset(where)
 
-        const modelState = getModelState()
-        const wheres = (Object.keys(where).length > 0 ? 
-          { ...modelState.wheres, filters: where } : _.omit(modelState.wheres, 'filters'))
+        const modelWheres = snapshot.getLoadable(atoms.wheres).contents
+        const wheres = (!_.isEmpty(where) ? 
+          { ...modelWheres, filters: where } : _.omit(modelWheres, 'filters'))
 
-        dispatch({ model, type: 'GET_ITEMS', filter: { ...modelState.filter, skip: 0 }, wheres })
+        getItems({ wheres })
       }, [ model ])
 
       React.useEffect(() => {

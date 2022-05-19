@@ -2,10 +2,7 @@ import React from 'react'
 import { C, Icon, Menu } from 'xadmin-ui'
 
 import { Model, ModelWrap, ModelContext, ModelBlock, ModelRoutes } from './base'
-import modelReducer from './reducer'
-import effects from './effects'
 import hooks from './hooks'
-import mappers from './mappers'
 import fieldRenders from './render'
 
 import relate from './relate'
@@ -82,11 +79,6 @@ const app = {
     
     return routes
   },
-  reducers: {
-    model: modelReducer
-  },
-  effects: (app) => effects,
-  mappers,
   hooks,
   fieldRenders,
   modelActions: {

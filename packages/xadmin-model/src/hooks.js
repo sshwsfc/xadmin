@@ -4,26 +4,23 @@ import { app, config, use, api } from 'xadmin'
 import { _t } from 'xadmin-i18n'
 import { getFieldProp } from './utils'
 import { ModelContext } from './base'
+import * as atoms from './atoms'
+import {
+  useRecoilState,
+  useRecoilValue, useSetRecoilState, useRecoilCallback
+} from 'recoil'
 
 export default {
-  'model': (props, select) => {
+  'model': (props) => {
     const model = props.model || useContext(ModelContext)
     const rest = useMemo(() => api(model), [ model ])
-
-    const { dispatch, store, state, ...values } = select ? 
-      use('redux', state => select(model ? state.model[model.key] : {})) : use('redux')
-
-    return { ...props, model, rest, ...values,
-      modelState: model ? state.model[model.key] : {},
-      getModelState: useCallback(() => model ? store.getState().model[model.key] : {}, [ model, store ]),
-      modelDispatch: useCallback(action => dispatch({ ...action, model }), [ model, dispatch ])
-    }
+    return { ...props, model, rest }
   },
   // Get Model Item
   'model.get': props => {
     const { model, rest, id, query, item } = use('model', props)
 
-    const [ state, setState ] = useState(() => {
+    const defaultData = React.useMemo(() => {
       let data = item
       if(!data) {
         if(model.defaultValue) {
@@ -33,16 +30,20 @@ export default {
           data = { ...data, ...query }
         }
       }
-      return { data, loading: Boolean(!data && id) }
-    })
+      return data
+    }, [ item, model.defaultValue, query ])
+
+    const [ state, setState ] = useState(() => ({ data: defaultData, loading: Boolean(!defaultData && id) }))
   
     useEffect(() => {
       const { data } = state
-      if((!data && id) || ( data && data.id != id) ) {
+      if(id && data?.id != id ) {
         setState({ data, loading: true })
         rest.get(id).then(payload => {
           setState({ data: payload, loading: false })
         })
+      } else {
+        setState({ data: defaultData, loading: false })
       }
     }, [ id ])
 
@@ -52,38 +53,86 @@ export default {
   },
   // Save Model Item
   'model.save': props => {
-    const { model, modelDispatch, successMessage } = use('model', props)
+    const { model, rest } = use('model', props)
+    const { successMessage } = props
+    const message = use('message')
 
-    const saveItem = useCallback((item, partial) => {
-      return new Promise((resolve, reject) => {
-        modelDispatch({ type: 'SAVE_ITEM', item, partial, 
-          promise: { resolve, reject: err => {
-            reject(err.formError || err.json)
-          } }, message: successMessage })
-      })
+    const saveItem = useRecoilCallback(({ set }) => async (item, partial) => {
+      set(atoms.loading('save'), true)
+      try {
+        if(model.partialSave || item['__partial__']) {
+          partial = true
+        }
+        const data = await rest.save(item, partial)
+        set(atoms.item(data.id || item.id), data || item)
+        if( message?.success && successMessage !== false) {
+          const object = model.title || model.name
+          const noticeMessage = successMessage || (item.id == undefined ? 
+            _t('Create {{object}} success', { object }) : 
+            _t('Save {{object}} success', { object }))
+          message.success(noticeMessage)
+        }
+        return data
+      } catch(err) {
+        app.error(err)
+        throw err.formError || err.json || err
+      } finally {
+        set(atoms.loading('save'), false)
+      }
     }, [ model ])
 
     return { ...props, model, saveItem }
   },
   // Delete Model Item
   'model.delete': props => {
-    const { model, getModelState, modelDispatch } = use('model', props)
+    const { model, rest } = use('model', props)
+    const { getItems } = use('model.getItems')
+    const message = use('message')
 
-    const deleteItem = useCallback((id) => {
+    const deleteItem = useRecoilCallback(({ snapshot, set }) => async (id) => {
       id = id || props.id
-      const item = getModelState().items[id] || { id }
-      modelDispatch({ type: 'DELETE_ITEM', item })
+      await rest.delete(id)
+      // unselect
+      const selected = snapshot.getLoadable(atoms.selected).contents
+      set(atoms.selected, selected.filter(i => { return i.id !== id }))
+      message?.success && message.success(props.message || _t('Delete {{object}} success', { object: model.title || model.name }))
+      // getItems
+      await getItems()
     }, [ model, props.id ])
 
     return { ...props, model, deleteItem }
   },
   // Delete Model Item
   'model.getItems': props => {
-    const { model, modelDispatch } = use('model', props)
+    const { model, rest } = use('model', props)
 
-    const getItems = useCallback(() => {
-      modelDispatch({ type: 'GET_ITEMS' })
-    }, [ modelDispatch ])
+    const getItems = useRecoilCallback(({ snapshot: ss, set, reset }) => async (query) => {
+      let { wheres: newWheres, ...newOption } = query || {}
+      const wheres = newWheres || ss.getLoadable(atoms.wheres).content
+      const option = { ...ss.getLoadable(atoms.option).contents, ...newOption }
+      
+      set(atoms.loading('items'), true)
+      try {
+        let { items, total } = await rest.query(option, wheres)
+
+        set(atoms.items, items)
+        set(atoms.count, total)
+
+        if(!_.isEmpty(newOption)) set(atoms.option, option)
+        if(newWheres) set(atoms.wheres, wheres)
+
+        return { items, total }
+      } catch (error) {
+        app.error(error)
+
+        reset(atoms.ids)
+        reset(atoms.count)
+
+        throw error
+      } finally {
+        set(atoms.loading('items'), false)
+      }
+    });
 
     return { ...props, model, getItems }
   },
@@ -133,89 +182,72 @@ export default {
       ...model.events
     }
   },
+  // Model effect hook
+  'model.effect': () => {
+    const { getItems } = use('model.getItems')
+    const option = useRecoilValue(atoms.option)
+    const wheres = useRecoilValue(atoms.wheres)
 
-  // Model List Hooks
+    React.useEffect(() => {
+      getItems()
+    }, [ option, wheres ])
+
+    return null
+  },
   'model.pagination': props => {
-    const { count, limit, skip, getModelState, modelDispatch } = use('model', props,
-      state => ({ 
-        count: state.count, limit: state.filter.limit, skip: state.filter.skip 
-      })
-    )
+    const count = useRecoilValue(atoms.count)
+    const limit = useRecoilValue(atoms.limit)
+    const [ skip, setSkip ] = useRecoilState(atoms.skip)
     
     const items = Math.ceil(count / limit)
     const activePage = Math.floor(skip / limit) + 1
 
     const changePage = useCallback((page) => {
-      const filter = getModelState().filter
-      const pageSize = filter.limit
-        , skip = pageSize * (page - 1)
-      modelDispatch({ type: 'GET_ITEMS', filter: { ...filter, skip: skip } })
-    }, [ getModelState, modelDispatch ])
+      const skip = limit * (page - 1)
+      setSkip(skip)
+    }, [ setSkip, limit ])
     
     return { ...props, items, activePage, changePage }
   },
-  'model.count': props => use('model', props, state => ({ count: state.count })),
+  'model.count': props => ({ ...props, count: useRecoilValue(atoms.count) }),
   'model.pagesize': props => {
-    const { size, getModelState, modelDispatch } = use('model', props, state => ({ size: state.filter.limit }) )
+    const [limit, setLimit] = useRecoilState(atoms.limit)
+    const setSkip = useSetRecoilState(atoms.skip)
+
     const sizes = config('pageSizes', [ 15, 30, 50, 100 ])
 
     const setPageSize = useCallback((size) => {
-      const filter = getModelState().filter
-      modelDispatch({ type: 'GET_ITEMS', filter: { ...filter, limit: size, skip: 0 } })
-    }, [ getModelState, modelDispatch ] )
+      setLimit(size)
+      setSkip(0)
+    }, [ setLimit, setSkip ] )
 
-    return { ...props, sizes, setPageSize, size }
+    return { ...props, sizes, setPageSize, size: limit }
   },
   'model.fields': props => {
-    const { selected, model, getModelState, modelDispatch } = 
-      use('model', props, state => ({ selected: state.filter.fields }))
+    const { model } = use('model', props)
+    const [ selectedFields, setFields ] = useRecoilState(atoms.fields)
 
     const changeFieldDisplay = useCallback(([ field, selected ]) => {
-      const filter = getModelState().filter
-      const fields = [].concat(filter.fields || [])
-      const index = _.indexOf(fields, field)
+      const fs = [ ...selectedFields ]
+      const index = _.indexOf(fs, field)
 
       if (selected) {
-        if (index === -1) fields.push(field)
+        if (index === -1) fs.push(field)
       } else {
-        _.remove(fields, (i) => { return i === field })
+        _.remove(fs, (i) => { return i === field })
       }
       const list = Array.from(new Set([ ...model.listFields, ...Object.keys(model.properties) ]))
-      modelDispatch({ type: 'GET_ITEMS', filter: { ...filter, 
-        fields: list.filter(f => fields.indexOf(f) >= 0) } })
-    }, [ getModelState, modelDispatch, model ] )
+      setFields(list.filter(f => fs.indexOf(f) >= 0))
+    }, [ selectedFields, model, setFields ] )
 
-    return { ...props, fields: model.properties, changeFieldDisplay, selected }
+    return { ...props, fields: model.properties, changeFieldDisplay, selected: selectedFields }
 
   },
   'model.list': props => {
-    const { ids, items: itemsMap, fields, selected, model, modelDispatch, modelState } = 
-      use('model', props, state => ({ 
-        ids: state.ids, items: state.items, fields: state.filter.fields
-      }))
-
-    const { loading } = use('redux', state => ({ loading: state.loading && state.loading[`${model.key}.items`] }))
-
-    useEffect(() => {
-      let wheres
-      const query = props && props.query
-      if(query && Object.keys(query).length > 0) {
-        wheres = { ...modelState.wheres, param_filter: query }
-        modelDispatch({ type: 'UPDATE_WHERE', key: 'param_filter', payload: query})
-      } else {
-        wheres = _.omit(modelState.wheres, 'param_filter')
-        modelDispatch({ type: 'UPDATE_WHERE', key: 'param_filter'})
-      }
-
-      if(model.initQuery == false) return
-      
-      if(!_.isEqual(wheres, modelState.wheres)) {
-        modelDispatch({ type: 'GET_ITEMS', items: [], filter: { ...modelState.filter, skip: 0 }, success: true })
-      }
-      modelDispatch({ type: 'GET_ITEMS', filter: { ...modelState.filter }, wheres })
-    }, [])
-
-    const items = ids.map(id => itemsMap[id]).filter(item => !_.isNil(item))
+    const items = useRecoilValue(atoms.items)
+    const selected = useRecoilValue(atoms.selected)
+    const fields = useRecoilValue(atoms.fields)
+    const loading = useRecoilValue(atoms.loading('items'))
 
     return { ...props, loading, items, fields, selected }
   },
@@ -238,72 +270,39 @@ export default {
     return { ...props, actions, renderActions }
   },
   'model.select': props => {
-    const { selected, ids, modelDispatch, modelState } = 
-      use('model', props, state => ({ selected: state.selected, ids: state.ids }))
+    const selected = useRecoilValue(atoms.selected)
+    const [isSelectedAll, onSelectAll] = useRecoilState(atoms.allSelected)
 
-    const selects = selected.map(item => item.id)
-    const isSelectedAll = _.every(ids, id => selects.indexOf(id) >= 0)
-
-    const onSelectAll = useCallback((selected) => {
-      if(selected) {
-        const items = modelState.items
-        modelDispatch({ type: 'SELECT_ITEMS', items: modelState.ids.map(id=>items[id]), selected })
-      } else {
-        modelDispatch({ type: 'SELECT_CLEAR' })
-      }
-    }, [ modelDispatch, modelState.items, modelState.ids ])
-
-    const onSelect = useCallback((item, selected) => {
-      modelDispatch({ type: 'SELECT_ITEMS', item, selected })
-    }, [ modelDispatch ])
+    const onSelect = useRecoilCallback(({ set }) => (item, isSelect) => {
+      set(atoms.itemSelected(item.id), isSelect)
+    }, [ ])
 
     return { ...props, count: selected.length, selected, isSelectedAll, onSelect, onSelectAll }
   },
   'model.list.row': props => {
-    const { model, selected, item, modelDispatch } = use('model', props, state => {
-      let selected = false
-      for (let i of state.selected) {
-        if (i.id === props.id) {
-          selected = true
-          break
-        }
-      }
-      return { 
-        selected,
-        item: state.items[props.id]
-      }
-    })
+    const { model } = use('model', props)
+    const item = useRecoilValue(atoms.item(props.id))
+    const [ itemSelected, changeSelect ] = useRecoilState(atoms.itemSelected(props.id))
 
-    const changeSelect = useCallback((selected) => {
-      modelDispatch({ type: 'SELECT_ITEMS', item, selected })
-    }, [ modelDispatch, item ])
-
-    return { ...props, selected, item, changeSelect, actions: model.itemActions || [ 'edit', 'delete' ] }
+    return { ...props, selected: itemSelected, item, changeSelect, actions: model.itemActions || [ 'edit', 'delete' ] }
   },
   'model.list.header': props => {
-    const { field, model, modelState, modelDispatch } = use('model', props)
+    const { model } = use('model', props)
+    const field = props.field
+    const property = getFieldProp(model, field) || {}
+    const title = property.header || property.title || _.startCase(field)
 
+    return { ...props, title }
+  },
+  'model.list.order': props => {
+    const { model } = use('model', props)
+    const field = props.field
     const property = getFieldProp(model, field) || {}
     const canOrder = (property.canOrder !== undefined ? property.canOrder : 
       ( property.orderField !== undefined || (property.type != 'object' && property.type != 'array')))
+    const [itemOrder, changeOrder] = useRecoilState(atoms.itemOrder(field))
 
-    const changeOrder = useCallback((order) => {
-      const filter = modelState.filter
-      const orders = filter.order || {}
-      const property = getFieldProp(model, field) || {}
-      orders[property.orderField || field] = order
-
-      modelDispatch({ type: 'GET_ITEMS', filter: { ...filter, order: orders } })
-    }, [ modelDispatch, modelState.filter ])
-
-    const { order } = use('model', props, state => {
-      const orders = state.filter.order
-      return { order: orders !== undefined ? (orders[property.orderField || field] || '') : '' }
-    })
-
-    const title = property.header || property.title || _.startCase(field)
-
-    return { ...props, title, changeOrder, canOrder, order, property }
+    return { ...props, changeOrder, canOrder, order: itemOrder }
   },
   'model.list.item': props => {
     const { model, schema, field, item, nest } = use('model', props)

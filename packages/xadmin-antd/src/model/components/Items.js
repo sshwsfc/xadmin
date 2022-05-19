@@ -33,10 +33,10 @@ import {
 const ItemEditFormLayout = (props) => {
   const { children, pristine, invalid, handleSubmit, submitting } = props
   return (
-    <Form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
       {children}
-      <Button style={{ marginTop: '-1rem' }} block type="submit" loading={submitting} disabled={pristine || invalid} size="small" onClick={handleSubmit}>{_t('Change')}</Button>
-    </Form>
+      <Button style={{ marginTop: '-1rem' }} block htmlType="submit" loading={submitting} disabled={pristine || invalid} size="small">{_t('Change')}</Button>
+    </form>
   )
 }
 
@@ -61,7 +61,7 @@ const ItemEditForm = props => {
   React.useEffect(() => {
     setFormSchema(getSchema())
   }, [ model, field, schema ])
-
+  
   return (
     <SchemaForm
       initialValues={{ id: item['id'], value }}
@@ -104,7 +104,8 @@ const Item = props => {
 }
 
 const Header = props => {
-  const { title, order, showText, canOrder, changeOrder } = use('model.list.header', props)
+  const { title } = use('model.list.header', props)
+  const { order, showText, canOrder, changeOrder } = use('model.list.order', props)
 
   const renderOrder = () => {
     let orderItems = []
