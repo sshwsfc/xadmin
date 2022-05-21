@@ -1,6 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
-import { Block, StoreWrap, app, use } from 'xadmin'
+import { Block, app, use } from 'xadmin'
 import { C } from 'xadmin-ui'
 import { Routes, Route } from "react-router-dom"
 import { RecoilRoot, useRecoilSnapshot } from 'recoil'
@@ -73,15 +73,6 @@ const Model = ({ name, schema, modelKey, initialValues, children, debug, props: 
   )
 }
 
-const ModelWrap = StoreWrap(Connect => (props) => {
-  const { state } = props.wrapContext
-  return (
-    <ModelContext.Consumer>
-      { model => <Connect {...props} model={model} wrapContext={{ ...props.wrapContext, model, modelState: state.model[model.key] }} /> }
-    </ModelContext.Consumer>
-  )
-})
-
 const ModelBlock = (props) => (
   <ModelContext.Consumer>
     { model => (
@@ -134,7 +125,6 @@ const ModelRoutes = () => {
 
 export {
   ModelContext,
-  ModelWrap,
   ModelBlock,
   ModelRoutes,
   Model

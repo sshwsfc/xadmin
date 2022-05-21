@@ -1,7 +1,7 @@
 import React from 'react'
 import { C, Icon, Menu } from 'xadmin-ui'
 
-import { Model, ModelWrap, ModelContext, ModelBlock, ModelRoutes } from './base'
+import { Model, ModelContext, ModelBlock, ModelRoutes } from './base'
 import hooks from './hooks'
 import fieldRenders from './render'
 
@@ -95,5 +95,5 @@ const apps = {
   relate, filter, actions, search, modalform, reldetail
 }
 
-export { Model, ModelWrap, ModelBlock, ModelContext, ModelRoutes, atoms, apps, utils,  }
+export { Model, ModelBlock, ModelContext, ModelRoutes, atoms, apps, utils,  }
 export default app

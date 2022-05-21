@@ -2,7 +2,6 @@ import App from './app'
 import rrs from './rrs'
 import RESTBaseAPI from './api'
 import { Block } from './block'
-import { Wrap, StoreWrap, wrap } from './wrap'
 
 const base = {
   items: {
@@ -54,8 +53,5 @@ export {
   config,
   use,
   RESTBaseAPI,
-  Block,
-  Wrap,
-  StoreWrap,
-  wrap
+  Block
 }

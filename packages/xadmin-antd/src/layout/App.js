@@ -1,5 +1,5 @@
 import React from 'react'
-import { StoreWrap, config as _c, Block, app } from 'xadmin'
+import { config as _c, Block, app } from 'xadmin'
 import { Layout, Menu, Breadcrumb } from 'antd'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 

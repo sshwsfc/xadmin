@@ -16,7 +16,7 @@
     "redux": "^4.0.1",
     "redux-saga": "^1.0.2",
     "moment": "2",
-    "xadmin": "^2.2.0",
+    "xadmin": "^3.0.0",
     "xadmin-auth": "^3.1.0",
     "xadmin-form": "^3.1.0",
     "xadmin-i18n": "^3.0.0",
