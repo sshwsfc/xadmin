@@ -1,6 +1,6 @@
 import React from 'react'
 import hooks from './hooks'
-import { App as BaseApp, C } from 'xadmin-ui'
+import { C } from 'xadmin-ui'
 import SignInForm from './components/SignIn'
 import SignUpForm from './components/SignUp'
 import ForgetPasswordForm from './components/ForgetPassword'
@@ -31,7 +31,7 @@ export default {
     'top.right': (props) => <C is="Auth.UserMenu" key="auth.user" {...props} />
   },
   components: {
-    // App: () => <IsAuthenticated><BaseApp /></IsAuthenticated>
+    App: props => <IsAuthenticated><C is="BaseApp" {...props} /></IsAuthenticated>
   },
   root_component: (app) => (children) => (
     <UserRoot>{children}</UserRoot>

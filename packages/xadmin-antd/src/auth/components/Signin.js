@@ -17,11 +17,11 @@ const SigininLayout = ({ error, children, invalid, handleSubmit, submitting }) =
             xs: { span: 24 },
             sm: { span: 18, offset: 5 }
           }}>
-            { auth.can_reset_password && (<div>{_t('Forgot password')}? <a href="#" onClick={()=>nav('/forget_password')}>{_t('reset password')}</a></div>) }
+            { auth.can_reset_password && (<div>{_t('Forgot password')}? <a onClick={()=>nav('/forget_password')}>{_t('reset password')}</a></div>) }
             <Button type="primary" loading={submitting} onClick={handleSubmit} htmlType="submit" className="login-form-button">
               {_t('Login')}
             </Button>
-            { auth.can_signup && (<div>{_t('Not registed')}? <a href="#" onClick={()=>nav('/signup')}>{_t('please signup')}</a></div>) }
+            { auth.can_signup && (<div>{_t('Not registed')}? <a onClick={()=>nav('/signup')}>{_t('please signup')}</a></div>) }
           </Form.Item>
         </Card>
       </Form>

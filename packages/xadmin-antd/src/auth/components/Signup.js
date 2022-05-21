@@ -17,7 +17,7 @@ export default ({ error, children, invalid, handleSubmit, submitting }) => {
             <Button type="primary" disabled={invalid} loading={submitting} onClick={handleSubmit} htmlType="submit" className="signup-form-button">
               {_t('Signup')}
             </Button>
-            <div>{_t('Have account')}? <a href="#" onClick={()=>app.go('/login')}>{_t('please login')}</a></div>
+            <div>{_t('Have account')}? <a onClick={()=>app.go('/login')}>{_t('please login')}</a></div>
           </Form.Item>
         </Card>
       </Form>

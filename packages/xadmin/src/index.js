@@ -34,15 +34,17 @@ const api = (opt) => {
   }
 }
 
-const use = (key, props, select) => {
+const use = (key, ...args) => {
   const hooks = app.get('hooks')[key]
-  if(typeof(props) == 'function' && select == undefined) {
-    select = props
-    props = {}
-  }
-  return hooks ? hooks.reduce((prev, hook) => {
-    return hook(prev, select)
-  }, props || {}) : (props || {})
+  let runHook = null
+  hooks.forEach(hook => {
+    if(hook.extend == true) {
+      runHook = hook(runHook)
+    } else {
+      runHook = hook
+    }
+  })
+  return runHook && runHook(...args)
 }
 
 export default app

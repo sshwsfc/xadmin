@@ -18,7 +18,7 @@ export default {
   name: 'xadmin.ui.antd',
   locales,
   components: {
-    Main, App, Page, Loading, Icon, Dashboard,
+    Main, App, BaseApp: App, Page, Loading, Icon, Dashboard,
     Menu, 'Menu.Item': MenuItem,
     ...form.components,
     ...model.components,

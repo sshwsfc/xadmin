@@ -5,7 +5,7 @@ import app from 'xadmin';
 import i18n from 'xadmin-i18n'
 import auth from 'xadmin-auth'
 import form from 'xadmin-form'
-import ui, { Loading } from 'xadmin-ui'
+import ui, { C, Loading } from 'xadmin-ui'
 import model from 'xadmin-model'
 import relate from 'xadmin-model/lib/relate'
 import filter from 'xadmin-model/lib/filter'
@@ -41,7 +41,7 @@ app
 .use(relate)
 .use(modalform)
 .use(search)
-//.use(reldetail)
+.use(reldetail)
 .use(components)
 .use(splashscreen)
 .use(auth)
@@ -62,11 +62,7 @@ app
     }
   },
   components: {
-    Dashboard: () => (
-      <React.Suspense fallback={<Loading />}>
-        <App />
-      </React.Suspense>
-    )
+    Dashboard: App
   },
   reducers: {
     test: (state=0, action) => {

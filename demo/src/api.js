@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-fetch'
-import { RESTBaseAPI } from 'xadmin'
+import { RESTBaseAPI, app } from 'xadmin'
 
 export default class API extends RESTBaseAPI {
 
@@ -8,6 +8,9 @@ export default class API extends RESTBaseAPI {
   }
 
   fetch(id, options) {
+    if (this.resource == 'auth' && id == 'user') {
+      return new Promise((resolve, reject) => resolve({ username: 'tom' }))
+    }
     return fetch(this.getHost() + this.resource + (id ? ('/' + id) : '') , options).then((resp) => {
       return resp.json()
     }).catch(console.error)

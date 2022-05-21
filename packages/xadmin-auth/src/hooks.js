@@ -13,7 +13,12 @@ export default {
   'auth.context': () => {
     const { auth } = app.load_dict('config')
     const [ init, setInit ] = React.useState(false)
-    const [ user, setUser ] = React.useState(null)
+    const [ user, setUserInfo ] = React.useState(null)
+
+    const setUser = user => {
+      app.context.user = user
+      setUserInfo(user)
+    }
 
     React.useEffect(() => {
       const loadUser = async () => {
@@ -44,7 +49,7 @@ export default {
             }
           } catch (err) {}
         }
-        setInit(true)
+        setTimeout(() => setInit(true), 0)  
       }
       loadUser()
     }, [])
@@ -127,15 +132,18 @@ export default {
   },
   'auth.sign_up': () => {
     const navigate = use('navigate')
-    const { dispatch } = use('redux')
+    const message = use('message')
     
     const onSuccess = (resp) => {
       if(resp.key) {
-        dispatch({ type: '@@xadmin/AUTH_VERIFY_EMAIL', payload: resp })
+        api({ name: 'auth/registration/verify-email' }).save({
+          language: 'zh_CN',
+          ...resp
+        }).then(() => {
+          message && message.success(_t('Send verify code to your email, please check'))
+        })
       } else if(resp.detail) {
-        dispatch({ type: '@@xadmin/ADD_NOTICE', payload: {
-          type: 'success', headline: 'Success', message: resp.detail
-        } })
+        message && message.success(resp.detail)
       }
       navigate('/login')
     }

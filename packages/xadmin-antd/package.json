@@ -28,7 +28,8 @@
     "build:es": "cross-env BABEL_ENV=es babel src --root-mode upward --out-dir es",
     "build:umd": "rollup -c ../../rollup.config.js",
     "clean": "rm -rf lib es dist",
-    "build": "npm run clean && npm run build:lib && npm run build:es && npm run build:umd"
+    "copyCss": "cp src/layout/layout.css es/layout/ && cp src/layout/layout.css lib/layout/",
+    "build": "npm run clean && npm run build:lib && npm run build:es && npm run copyCss && npm run build:umd"
   },
   "files": [
     "lib",

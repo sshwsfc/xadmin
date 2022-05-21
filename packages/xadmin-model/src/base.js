@@ -32,9 +32,7 @@ const DebugObserver = () => {
   return null;
 }
 
-const ModelStateEffect = () => { use('model.effect'); return null }
-
-const Model = ({ name, schema, modelKey, initialValues, children, props: modelProps }) => {
+const Model = ({ name, schema, modelKey, initialValues, children, debug, props: modelProps }) => {
   const query = use('query')
   const model = React.useMemo(() => {
     return name ? getModel(name, modelKey, modelProps) : {
@@ -67,9 +65,8 @@ const Model = ({ name, schema, modelKey, initialValues, children, props: modelPr
 
   return model && (
     <RecoilRoot initializeState={initializeState}>
-      <DebugObserver />
+      { debug && <DebugObserver /> }
       <ModelContext.Provider value={model}>
-        <ModelStateEffect />
         {children}
       </ModelContext.Provider>
     </RecoilRoot>

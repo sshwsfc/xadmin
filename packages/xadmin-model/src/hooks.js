@@ -52,9 +52,10 @@ export default {
     return { model, title, ...state }
   },
   // Save Model Item
-  'model.save': ({ successMessage }) => {
+  'model.save': (props) => {
     const { model, rest } = use('model')
     const message = use('message')
+    const successMessage = props?.successMessage
 
     const saveItem = useRecoilCallback(({ set }) => async (item, partial) => {
       set(atoms.loading('save'), true)
@@ -83,10 +84,12 @@ export default {
     return { model, saveItem }
   },
   // Delete Model Item
-  'model.delete': ({ id: itemId, deleteMessage }) => {
+  'model.delete': (props) => {
     const { model, rest } = use('model')
     const { getItems } = use('model.getItems')
     const message = use('message')
+    const deleteMessage = props?.deleteMessage
+    const itemId = props?.id
 
     const deleteItem = useRecoilCallback(({ snapshot, set }) => async (id) => {
       id = id || itemId
@@ -240,6 +243,8 @@ export default {
 
   },
   'model.list': () => {
+    use('model.effect')
+    
     const items = useRecoilValue(atoms.items)
     const selected = useRecoilValue(atoms.selected)
     const fields = useRecoilValue(atoms.fields)

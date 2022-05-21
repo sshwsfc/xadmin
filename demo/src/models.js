@@ -176,6 +176,7 @@ export default {
     readonly: [ 'id' ],
     listFields: [ 'id', 'name', 'email', 'type', 'website', 'address.street' ],
     defaultPageSize: 20,
+    ui: { showMenu: true, menuPath: '/app/users' },
     route: [ {
       parentPath: '/app/',
       path: 'users'
@@ -238,6 +239,7 @@ export default {
     required: [ 'title', 'user', 'body' ],
     readonly: [ 'id' ],
     listFields: [ 'id', 'title', 'user' ],
+    ui: { showMenu: true, menuPath: '/app/model/Post' },
     components: {
       DataList: C.lazy('Model.DataList')
     }

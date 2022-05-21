@@ -1,6 +1,5 @@
 import React from 'react'
 import { use, app } from 'xadmin'
-import { Model } from 'xadmin-model'
 import { SchemaForm } from 'xadmin-form'
 import { C } from 'xadmin-ui'
 

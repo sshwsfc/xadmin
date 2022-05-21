@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StoreWrap, app, config, use } from 'xadmin'
+import { app, config, use } from 'xadmin'
 import { Form as RForm, useForm as rUseForm } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import { C } from 'xadmin-ui'
@@ -159,7 +159,7 @@ const SchemaForm = (props) => {
   return <Form {...props} validate={validate} fields={fields} effect={schema.formEffect} />
 }
 
-const useForm = (props, select) => {
+const useForm = (select) => {
   const form = rUseForm()
   const formState = form.getState()
   const [ values, setValues ] = React.useState(select ? select(formState) : {})
@@ -186,7 +186,7 @@ const useForm = (props, select) => {
     }
   }, [])
 
-  return { ...props, ...values, form, getFormState: form.getState, formState }
+  return { ...values, form, getFormState: form.getState, formState }
 }
 
 export {
