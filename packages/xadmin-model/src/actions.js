@@ -3,8 +3,7 @@ import _ from 'lodash'
 import app, { use } from 'xadmin'
 import { C } from 'xadmin-ui'
 import { _t } from 'xadmin-i18n'
-import * as atoms from './atoms'
-import {  useRecoilCallback, useRecoilValue } from 'recoil'
+import { useRecoilCallback, useRecoilValue } from 'recoil'
 
 export default {
   items: {
@@ -54,7 +53,7 @@ export default {
       return { actions, renderActions }
     },
     'actons.batch_delete': ({ successMessage }) => {
-      const { model, rest } = use('model')
+      const { model, rest, atoms } = use('model')
       const { getItems } = use('model.getItems')
       const message = use('message')
       const { canDelete } = use('model.permission')
@@ -95,7 +94,7 @@ export default {
       return { loading, canDelete, onBatchDelete }
     },
     'actons.batch_change': ({ successMessage }) => {
-      const { model, rest } = use('model')
+      const { model, rest, atoms } = use('model')
       const { getItems } = use('model.getItems')
       const message = use('message')
       const { canEdit } = use('model.permission')

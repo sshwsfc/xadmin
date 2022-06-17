@@ -4,12 +4,8 @@ import { C } from 'xadmin-ui'
 import { _t } from 'xadmin-i18n'
 import { use } from 'xadmin'
 import {
-  atom, useSetRecoilState, useRecoilState
+  atom
 } from 'recoil'
-
-const modalItem = atom({
-  key: 'modalItem', default: null
-})
 
 const ItemModalForm = () => {
   const { model } = use('model')
@@ -17,7 +13,7 @@ const ItemModalForm = () => {
   const { canAdd, canEdit } = use('model.permission')
   const { saveItem } = use('model.save')
   const { getItems } = use('model.getItems')
-  const [ modalItemId, setModalItemId ] = useRecoilState(modalItem)
+  const [ modalItemId, setModalItemId ] = use('model.state', 'modalItem')
   const { data, loading } = use('model.item', { id: modalItemId })
 
   const hideLoading = React.useRef()
@@ -62,19 +58,12 @@ export default {
   blocks: {
     'model.list.navbtn': () => <ItemModalForm />
   },
-  reducers: {
-    showModalAddForm: (state={}, action) => {
-      if(action.type == '@@xadmin-modalform/SHOW') {
-        return { ...state, [action.model.name]: true }
-      } else if(action.type == '@@xadmin-modalform/CLOSE') {
-        return { ...state, [action.model.name]: false }
-      }
-      return state
-    }
-  },
+  modelAtoms: [ (k) => ({ modalItem: atom({
+    key: k('modalItem'), default: null
+  }) }) ],
   hooks: {
     'model.event': () => {
-      const setModalItemId = useSetRecoilState(modalItem)
+      const setModalItemId = use('model.setter', 'modalItem')
 
       return {
         onAdd: () => setModalItemId(''),

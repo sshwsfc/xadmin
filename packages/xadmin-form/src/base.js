@@ -127,7 +127,8 @@ const SchemaForm = (props) => {
   const ajValidate = ajv.compile(schema)
   const { fields } = schemaConvert(schema)
   
-  const validate = (values) => {
+  const validate = (vs) => {
+    const values = _.cloneDeep(vs)
     const valid = ajValidate(omitNull(values))
 
     if(!valid) {

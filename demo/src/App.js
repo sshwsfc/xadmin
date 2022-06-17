@@ -1,5 +1,4 @@
 import React from 'react';
-import { StoreWrap } from 'xadmin';
 import { Page } from 'xadmin-ui';
 import { SchemaForm } from 'xadmin-form';
 import models from './models';
@@ -37,9 +36,11 @@ class App extends React.Component {
   }
 }
 
-export default StoreWrap('test', { 
-  data: ({ state }) => ({ title: state.test }),
-  event: {
-    mount: ({ dispatch }) => dispatch({ type: '@@xadmin/ADD_NOTICE', headline: 'Test', message: 'Test message' })
-  }
-})(App);
+// export default StoreWrap('test', { 
+//   data: ({ state }) => ({ title: state.test }),
+//   event: {
+//     mount: ({ dispatch }) => dispatch({ type: '@@xadmin/ADD_NOTICE', headline: 'Test', message: 'Test message' })
+//   }
+// })(App);
+
+export default App

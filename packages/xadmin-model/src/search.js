@@ -2,14 +2,6 @@ import React from 'react'
 import _ from 'lodash'
 import { C } from 'xadmin-ui'
 import { use } from 'xadmin'
-import * as atoms from './atoms'
-import {
-  useRecoilState, atom, useRecoilCallback
-} from 'recoil'
-
-const search = atom({
-  key: 'search', default: null
-})
 
 export default {
   name: 'xadmin.model.search',
@@ -18,30 +10,29 @@ export default {
   },
   hooks: {
     'model.searchbar': () => {
-      const [ searchValue, setSearch ] = useRecoilState(search)
+      const [ searchValue, setSearch ] = React.useState(null)
+      const setSearchFilter = use('model.setter', 'where', 'searchbar')
+
       const { model } = use('model')
-      const { getItems } = use('model.getItems')
 
       const searchFields = model.searchFields
       const searchTitles = model.searchFields && model.searchFields.map(field => model.properties[field].title || field)
 
-      const onSearch = useRecoilCallback(({ snapshot, set }) => (search) => {
-        let wheres = { ...(snapshot.getLoadable(atoms.wheres).contents || {}) }
+      const onSearch = React.useCallback((search) => {
         if(search) {
           const searchs = model.searchFields.map(field => {
             return { [field]: { like: search } }
           })
           if(searchs.length > 1) {
-            wheres['searchbar'] = { or: searchs }
+            setSearchFilter({ or: searchs })
           } else if(searchs.length > 0) {
-            wheres['searchbar'] = searchs[0]
+            setSearchFilter(searchs[0])
           }
         } else {
-          wheres = _.omit(wheres, 'searchbar')
+          setSearchFilter(null)
         }
-        getItems({ wheres: { ...wheres }, skip: 0 })
         setSearch(search)
-      }, [ model.searchFields, setSearch ])
+      }, [ model.searchFields, setSearch, setSearchFilter ])
 
       return { searchValue, searchFields, searchTitles, onSearch }
     }

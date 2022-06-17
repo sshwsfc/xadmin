@@ -34,7 +34,7 @@ const api = (opt) => {
 }
 
 const use = (key, ...args) => {
-  const hooks = app.get('hooks')[key]
+  const hooks = app.get('hooks')[key] || []
   let runHook = null
   hooks.forEach(hook => {
     if(hook.extend == true) {
@@ -43,7 +43,7 @@ const use = (key, ...args) => {
       runHook = hook
     }
   })
-  return runHook && runHook(...args)
+  return runHook ? runHook(...args) : {}
 }
 
 export default app

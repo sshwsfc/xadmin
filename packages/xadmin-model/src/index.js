@@ -13,7 +13,6 @@ import search from './search'
 import modalform from './modalform'
 import reldetail from './reldetail'
 
-import * as atoms from './atoms'
 import * as utils from './utils'
 import _ from 'lodash'
 
@@ -22,7 +21,8 @@ const app = {
   items: {
     models: { type: 'map' },
     fieldRenders: { type: 'array' },
-    modelActions: { type: 'map' }
+    modelActions: { type: 'map' },
+    modelAtoms: { type: 'array' }
   },
   components: {
     'Model.Routes': ModelRoutes
@@ -95,5 +95,5 @@ const apps = {
   relate, filter, actions, search, modalform, reldetail
 }
 
-export { Model, ModelBlock, ModelContext, ModelRoutes, atoms, apps, utils,  }
+export { Model, ModelBlock, ModelContext, ModelRoutes, apps, utils,  }
 export default app

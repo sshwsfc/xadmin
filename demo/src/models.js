@@ -11,6 +11,7 @@ export default {
     type: 'object',
     icon: 'user', // fa-icon
     title: 'User',
+    debug: true,
     persistent: true,
     properties: {
       id: {
@@ -188,6 +189,7 @@ export default {
     type: 'object',
     icon: 'file-o', // fa-icon
     title: 'Post',
+    debug: true,
     properties: {
       id: {
         type: 'number',

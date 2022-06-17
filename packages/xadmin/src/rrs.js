@@ -191,7 +191,7 @@ const react_redux_app = {
     <Provider store={app.context.store}>{children}</Provider>
   ),
   hooks: (app) => ({
-    'redux': (props, select) => {
+    'redux': (select) => {
       const store = app.context.store
       const { getState, dispatch, subscribe } = store
 
@@ -211,9 +211,9 @@ const react_redux_app = {
           return subscribe(updateState)
         }, [])
 
-        return { ...props, store, dispatch: dispatch, state, ...values }
+        return { store, dispatch: dispatch, state, ...values }
       } else {
-        return { ...props, store, dispatch: dispatch, state: getState() }
+        return { store, dispatch: dispatch, state: getState() }
       }
     }
   })

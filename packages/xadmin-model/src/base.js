@@ -4,7 +4,7 @@ import { Block, app, use } from 'xadmin'
 import { C } from 'xadmin-ui'
 import { Routes, Route } from "react-router-dom"
 import { RecoilRoot, useRecoilSnapshot } from 'recoil'
-import * as atoms from './atoms'
+import modelAtoms from './atoms'
 
 const ModelContext = React.createContext(null)
 
@@ -24,7 +24,7 @@ const getModel = (name, key, props) => {
 const DebugObserver = () => {
   const snapshot = useRecoilSnapshot();
   React.useEffect(() => {
-    console.debug('[Recoil]数据状态变更:');
+    console.debug('[Recoil] state change:');
     for (const node of snapshot.getNodes_UNSTABLE({isModified: true})) {
       console.debug(node.key, snapshot.getLoadable(node));
     }
@@ -35,11 +35,15 @@ const DebugObserver = () => {
 const Model = ({ name, schema, modelKey, initialValues, children, debug, props: modelProps }) => {
   const query = use('query')
   const model = React.useMemo(() => {
-    return name ? getModel(name, modelKey, modelProps) : {
+    const model =  name ? getModel(name, modelKey, modelProps) : {
       ...schema,
       key: modelKey || schema.name,
       ...modelProps
     }
+    const atoms = [ modelAtoms, ...app.get('modelAtoms') ].reduce((p, getAtoms) => {
+      return { ...p, ...getAtoms(id => `model.${model.key}.${id}`, model)}
+    }, {})
+    return { ...model, atoms }
   }, [ name, schema, modelKey ])
 
   const initializeState = React.useCallback(({ set }) => {
@@ -59,13 +63,13 @@ const Model = ({ name, schema, modelKey, initialValues, children, debug, props: 
       wheres.param_filter = query
     }
     
-    set(atoms.option, { ...defaultOpt, ...option })
-    set(atoms.wheres, wheres)
+    set(model.atoms.option, { ...defaultOpt, ...option })
+    set(model.atoms.wheres, wheres)
   }, [ initialValues, model, query ])
 
   return model && (
-    <RecoilRoot initializeState={initializeState}>
-      { debug && <DebugObserver /> }
+    <RecoilRoot initializeState={initializeState} override={false}>
+      { (model.debug || debug) && <DebugObserver /> }
       <ModelContext.Provider value={model}>
         {children}
       </ModelContext.Provider>
