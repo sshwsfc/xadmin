@@ -177,6 +177,7 @@ export default {
     readonly: [ 'id' ],
     listFields: [ 'id', 'name', 'email', 'type', 'website', 'address.street' ],
     defaultPageSize: 20,
+    initialValues: { limit: 5 },
     ui: { showMenu: true, menuPath: '/app/users' },
     route: [ {
       parentPath: '/app/',

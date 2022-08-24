@@ -48,14 +48,15 @@ const Model = ({ name, schema, modelKey, initialValues, children, debug, props: 
 
   const initializeState = React.useCallback(({ set }) => {
     let initial = initialValues || {}
-    if(!initial && model.initialValues) {
-      initial = _.isFunction(model.initialValues) ? model.initialValues() : model.initialValues
+    if(model.initialValues) {
+      let modelInitial = _.isFunction(model.initialValues) ? model.initialValues() : model.initialValues
+      initial = { ...modelInitial, ...initial }
     }
     const { wheres={}, ...option } = initial
 
     const defaultOpt = {
       fields: [ ...(model.listFields || []) ],
-      order: {},
+      order: model.defaultOrder || model.orders || {},
       limit: model.defaultPageSize || 15,
       skip: 0
     }
@@ -99,7 +100,8 @@ const ModelRoutes = () => {
 
   const ModelList = model.components && model.components['ListPage'] || C('Model.ListPage')
   const ModelDetail =  model.components && model.components['DetailPage'] || C('Model.DetailPage')
-  const ModelForm = model.components && model.components['AddPage'] || C('Model.FormPage')
+  const ModelAddForm = model.components && model.components['AddPage'] || C('Model.FormPage')
+  const ModelEditForm = model.components && model.components['EditPage'] || C('Model.FormPage')
 
   return (
     <Routes>
@@ -117,11 +119,11 @@ const ModelRoutes = () => {
       /> }
       { (!model.permission || model.permission.add) && <Route
         path="add"
-        element={<ModelForm />}
+        element={<ModelAddForm />}
       /> }
       { (!model.permission || model.permission.edit) && <Route
         path=":id/edit"
-        element={<ModelForm />}
+        element={<ModelEditForm />}
       /> }
     </Routes>
   )

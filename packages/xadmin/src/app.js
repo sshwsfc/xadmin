@@ -112,7 +112,11 @@ export default class App {
 
   array(key) {
     return this.reduce(key, (prev, value) => {
-      return prev.concat(this.getValue(value))
+      let values = this.getValue(value)
+      if(!Array.isArray(value)) {
+        values = [ values ]
+      }
+      return prev.concat(values)
     }, [])
   }
 

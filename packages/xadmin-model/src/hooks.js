@@ -95,14 +95,21 @@ export default {
     const message = use('message')
     const successMessage = props?.successMessage
 
-    const saveItem = useModelCallback(({ set, atoms }) => async (item, partial) => {
+    const saveItem = useModelCallback(({ snapshot, set, atoms }) => async (item, partial) => {
       set(atoms.loading('save'), true)
       try {
         if(model.partialSave || item['__partial__']) {
           partial = true
         }
         const data = await rest.save(item, partial)
-        set(atoms.item(data.id || item.id), data || item)
+        const id = data.id || item.id
+        const newData = data || item
+        set(atoms.item(id), newData)
+        
+        // change selected item
+        const selected = snapshot.getLoadable(atoms.selected).contents
+        set(atoms.selected, selected.map(i => i.id !== id ? i : newData))
+
         if( message?.success && successMessage !== false) {
           const object = model.title || model.name
           const noticeMessage = successMessage || (item.id == undefined ? 
