@@ -76,7 +76,7 @@ const ModelFormPage = () => {
   const { id } = use('params')
   const { onSaved } = use('model.event')
   const { data, loading } = use('model.item', { id })
-  const query = use('searchParams')
+  const query = use('query')
   
   const title = id ? _t('Edit {{title}}', 
     { title: model.title + ' ' + (data && data[model.displayField || 'name'] || '') }) : _t('Create {{title}}', { title: model.title })
