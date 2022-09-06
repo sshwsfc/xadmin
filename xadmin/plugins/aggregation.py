@@ -1,4 +1,6 @@
-from django.db.models import FieldDoesNotExist, Avg, Max, Min, Count, Sum
+# from django.db.models import FieldDoesNotExist, Avg, Max, Min, Count, Sum
+from django.db.models import Avg, Max, Min, Count, Sum
+from django.core.exceptions import FieldDoesNotExis
 from django.utils.translation import ugettext as _
 from django.forms import Media
 

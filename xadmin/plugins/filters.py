@@ -6,7 +6,8 @@ from xadmin.plugins.utils import get_context_dict
 from django.contrib.admin.utils import get_fields_from_path, lookup_needs_distinct
 from django.core.exceptions import SuspiciousOperation, ImproperlyConfigured, ValidationError
 from django.db import models
-from django.db.models.fields import FieldDoesNotExist
+# from django.db.models.fields import FieldDoesNotExist
+from django.core.exceptions import FieldDoesNotExist
 from django.db.models.constants import LOOKUP_SEP
 # from django.db.models.sql.constants import QUERY_TERMS
 from django.template import loader

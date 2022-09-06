@@ -45,7 +45,8 @@ from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView, ModelAdminView
 from xadmin.views.base import csrf_protect_m, filter_hook
 from django.db import transaction
-from import_export.admin import DEFAULT_FORMATS, SKIP_ADMIN_LOG, TMP_STORAGE_CLASS
+from import_export.admin import DEFAULT_FORMATS
+from import_export.admin import ImportMixin, ImportExportMixinBase
 from import_export.resources import modelresource_factory
 from import_export.forms import (
     ImportForm,

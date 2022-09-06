@@ -21,10 +21,11 @@ from django import VERSION as version
 import datetime
 import decimal
 
-try:
-    from django.contrib.staticfiles.templatetags.staticfiles import static
-except ModuleNotFoundError:
-    from django.templatetags.static import static
+# try:
+#     from django.contrib.staticfiles.templatetags.staticfiles import static
+# except ModuleNotFoundError:
+#     from django.templatetags.static import static
+from django.templatetags.static import static
 
 try:
     import json
