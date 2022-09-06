@@ -12,6 +12,7 @@ from django.utils.html import escape, conditional_escape
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
+from django.core.exceptions import FieldDoesNotExist
 
 from xadmin.util import lookup_field, display_for_field, label_for_field, boolean_icon
 
@@ -222,7 +223,7 @@ class ListAdminView(ModelAdminView):
                 for field_name in self.list_display:
                     try:
                         field = self.opts.get_field(field_name)
-                    except models.FieldDoesNotExist:
+                    except FieldDoesNotExist:
                         pass
                     else:
                         if isinstance(field.remote_field, models.ManyToOneRel):
@@ -259,7 +260,7 @@ class ListAdminView(ModelAdminView):
         try:
             field = self.opts.get_field(field_name)
             return field.name
-        except models.FieldDoesNotExist:
+        except FieldDoesNotExist:
             # See whether field_name is a name of a non-field
             # that allows sorting.
             if callable(field_name):
