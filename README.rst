@@ -9,7 +9,7 @@ Drop-in replacement of Django admin comes with lots of goodies, fully extensible
 Xadmin-Django3
 --------------
 - Tips: 这个项目合并了原项目的#706和#716 PR请求，并做了部分修改适应Django3
-  在django-3.2.15上测试暂无问题
+- 在django-3.2.15上测试暂无问题
 - 参考:  
 - https://github.com/sshwsfc/xadmin/pull/706/files
 - https://github.com/sshwsfc/xadmin/pull/716/files  
