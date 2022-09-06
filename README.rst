@@ -1,3 +1,10 @@
+Xadmin-Django3
+--------------
+Tips: 这个项目合并了原项目的#706和#716 PR请求，并做了部分修改适应Django3
+参考:
+https://github.com/sshwsfc/xadmin/pull/706
+https://github.com/sshwsfc/xadmin/pull/716/files
+
 Xadmin |Build Status|
 ============================================
 
