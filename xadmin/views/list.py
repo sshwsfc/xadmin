@@ -2,16 +2,17 @@ from __future__ import absolute_import
 from collections import OrderedDict
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.core.paginator import InvalidPage, Paginator
-from django.core.urlresolvers import NoReverseMatch
+from django.urls.base import NoReverseMatch
 from django.db import models
 from django.http import HttpResponseRedirect
 from django.template.response import SimpleTemplateResponse, TemplateResponse
-from django.utils import six
+import six
 from django.utils.encoding import force_text, smart_text
 from django.utils.html import escape, conditional_escape
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
+from django.core.exceptions import FieldDoesNotExist
 
 from xadmin.util import lookup_field, display_for_field, label_for_field, boolean_icon
 
@@ -35,6 +36,7 @@ class FakeMethodField(object):
     """
     This class used when a column is an model function, wrap function as a fake field to display in select columns.
     """
+
     def __init__(self, name, verbose_name):
         # Initial comm field attrs
         self.name = name
@@ -78,7 +80,7 @@ class ResultItem(object):
     def tagattrs(self):
         return mark_safe(
             '%s%s' % ((self.tag_attrs and ' '.join(self.tag_attrs) or ''),
-            (self.classes and (' class="%s"' % ' '.join(self.classes)) or '')))
+                      (self.classes and (' class="%s"' % ' '.join(self.classes)) or '')))
 
 
 class ResultHeader(ResultItem):
@@ -149,8 +151,8 @@ class ListAdminView(ModelAdminView):
         """
         Return a sequence containing the fields to be displayed on the list.
         """
-        self.base_list_display = (COL_LIST_VAR in self.request.GET and self.request.GET[COL_LIST_VAR] != "" and \
-            self.request.GET[COL_LIST_VAR].split('.')) or self.list_display
+        self.base_list_display = (COL_LIST_VAR in self.request.GET and self.request.GET[COL_LIST_VAR] != "" and
+                                  self.request.GET[COL_LIST_VAR].split('.')) or self.list_display
         return list(self.base_list_display)
 
     @filter_hook
@@ -168,7 +170,6 @@ class ListAdminView(ModelAdminView):
 
     def make_result_list(self):
         # Get search parameters from the query string.
-        self.base_queryset = self.queryset()
         self.list_queryset = self.get_list_queryset()
         self.ordering_field_columns = self.get_ordering_field_columns()
         self.paginator = self.get_paginator()
@@ -222,10 +223,10 @@ class ListAdminView(ModelAdminView):
                 for field_name in self.list_display:
                     try:
                         field = self.opts.get_field(field_name)
-                    except models.FieldDoesNotExist:
+                    except FieldDoesNotExist:
                         pass
                     else:
-                        if isinstance(field.rel, models.ManyToOneRel):
+                        if isinstance(field.remote_field, models.ManyToOneRel):
                             related_fields.append(field_name)
                 if related_fields:
                     queryset = queryset.select_related(*related_fields)
@@ -259,7 +260,7 @@ class ListAdminView(ModelAdminView):
         try:
             field = self.opts.get_field(field_name)
             return field.name
-        except models.FieldDoesNotExist:
+        except FieldDoesNotExist:
             # See whether field_name is a name of a non-field
             # that allows sorting.
             if callable(field_name):
@@ -285,13 +286,13 @@ class ListAdminView(ModelAdminView):
         if ORDER_VAR in self.params and self.params[ORDER_VAR]:
             # Clear ordering and used params
             ordering = [
-                    pfx + self.get_ordering_field(field_name)
-                    for n, pfx, field_name in map(
-                            lambda p: p.rpartition('-'),
-                            self.params[ORDER_VAR].split('.')
-                            )
-                        if self.get_ordering_field(field_name)
-                    ]
+                pfx + self.get_ordering_field(field_name)
+                for n, pfx, field_name in map(
+                    lambda p: p.rpartition('-'),
+                    self.params[ORDER_VAR].split('.')
+                )
+                if self.get_ordering_field(field_name)
+            ]
 
         # Ensure that the primary key is systematically present in the list of
         # ordering fields so we can guarantee a deterministic order across all
@@ -505,10 +506,10 @@ class ListAdminView(ModelAdminView):
                 self.get_query_string({ORDER_VAR: '.'.join(o_list_toggle)}), 'sort-up' if order_type == "asc" else 'sort-down'))
 
         item.menus.extend(['<li%s><a href="%s" class="active"><i class="fa fa-%s"></i> %s</a></li>' %
-                         (
-                             (' class="active"' if sorted and order_type == i[
-                              0] else ''),
-                           self.get_query_string({ORDER_VAR: '.'.join(i[1])}), i[2], i[3]) for i in menus])
+                           (
+                               (' class="active"' if sorted and order_type == i[
+                                   0] else ''),
+                               self.get_query_string({ORDER_VAR: '.'.join(i[1])}), i[2], i[3]) for i in menus])
         item.classes.extend(th_classes)
 
         return item
@@ -544,7 +545,7 @@ class ListAdminView(ModelAdminView):
                 else:
                     item.text = smart_text(value)
             else:
-                if isinstance(f.rel, models.ManyToOneRel):
+                if isinstance(f.remote_field, models.ManyToOneRel):
                     field_val = getattr(obj, f.name)
                     if field_val is None:
                         item.text = mark_safe("<span class='text-muted'>%s</span>" % EMPTY_CHANGELIST_VALUE)
@@ -574,7 +575,7 @@ class ListAdminView(ModelAdminView):
                     else:
                         edit_url = ""
                     item.wraps.append('<a data-res-uri="%s" data-edit-uri="%s" class="details-handler" rel="tooltip" title="%s">%%s</a>'
-                                     % (item_res_uri, edit_url, _(u'Details of %s') % str(obj)))
+                                      % (item_res_uri, edit_url, _(u'Details of %s') % str(obj)))
             else:
                 url = self.url_for_result(obj)
                 item.wraps.append(u'<a href="%s">%%s</a>' % url)

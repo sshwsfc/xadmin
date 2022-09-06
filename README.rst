@@ -6,6 +6,30 @@ Xadmin |Build Status|
 
 Drop-in replacement of Django admin comes with lots of goodies, fully extensible with plugin support, pretty UI based on Twitter Bootstrap.
 
+Xadmin-Django3
+--------------
+- Tips: 这个项目合并了原项目的#706和#716 PR请求，并做了部分修改适应Django3
+- 在django-3.2.15上测试暂无问题
+- 参考:  
+- https://github.com/sshwsfc/xadmin/pull/706/files
+- https://github.com/sshwsfc/xadmin/pull/716/files  
+- https://blog.csdn.net/weixin_43865334/article/details/115071848  
+
+安装以下两个依赖：
+
+.. code:: bash   
+
+    pip install requests
+   
+    pip install cryptography
+
+使用pip安装这个分支的xadmin：
+
+.. code:: bash   
+
+    pip install https://github.com/SzLeaves/xadmin-django3/archive/refs/heads/master.zip
+
+
 Live Demo
 ---------
 

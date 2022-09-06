@@ -1,11 +1,13 @@
 from django import template
 from django.template import Library
-from django.utils import six
+import six
 from django.utils.safestring import mark_safe
+from django.utils.html import escape
 
 from xadmin.util import static, vendor as util_vendor
 
 register = Library()
+
 
 @register.simple_tag(takes_context=True)
 def view_block(context, block_name, *args, **kwargs):
@@ -28,9 +30,11 @@ def view_block(context, block_name, *args, **kwargs):
     else:
         return ""
 
+
 @register.filter
 def admin_urlname(value, arg):
     return 'xadmin:%s_%s_%s' % (value.app_label, value.model_name, arg)
+
 
 static = register.simple_tag(static)
 
@@ -42,13 +46,14 @@ def vendor(context, *tags):
 
 class BlockcaptureNode(template.Node):
     """https://chriskief.com/2013/11/06/conditional-output-of-a-django-block/"""
+
     def __init__(self, nodelist, varname):
         self.nodelist = nodelist
         self.varname = varname
 
     def render(self, context):
         output = self.nodelist.render(context)
-        context[self.varname] = str(output)
+        context[self.varname] = escape(output)
         return ''
 
 

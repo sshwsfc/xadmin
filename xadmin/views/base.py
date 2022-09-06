@@ -3,7 +3,7 @@ import functools
 import datetime
 import decimal
 from functools import update_wrapper
-from inspect import getargspec
+from inspect import getfullargspec
 
 from django import forms
 from django.apps import apps
@@ -12,11 +12,11 @@ from django.contrib import messages
 from django.contrib.auth import get_permission_codename
 from django.core.exceptions import ValidationError
 from django.core.serializers.json import DjangoJSONEncoder
-from django.core.urlresolvers import reverse
+from django.urls.base import reverse
 from django.http import HttpResponse
 from django.template import Context, Template
 from django.template.response import TemplateResponse
-from django.utils import six
+import six
 from django.utils.decorators import method_decorator, classonlymethod
 from django.utils.encoding import force_text, smart_text, smart_str
 from django.utils.functional import Promise
@@ -38,9 +38,11 @@ csrf_protect_m = method_decorator(csrf_protect)
 class IncorrectPluginArg(Exception):
     pass
 
+
 def get_content_type_for_model(obj):
     from django.contrib.contenttypes.models import ContentType
     return ContentType.objects.get_for_model(obj, for_concrete_model=False)
+
 
 def filter_chain(filters, token, func, *args, **kwargs):
     if token == -1:
@@ -48,7 +50,7 @@ def filter_chain(filters, token, func, *args, **kwargs):
     else:
         def _inner_method():
             fm = filters[token]
-            fargs = getargspec(fm)[0]
+            fargs = getfullargspec(fm)[0]
             if len(fargs) == 1:
                 # Only self arg
                 result = func()
@@ -110,6 +112,7 @@ def inclusion_tag(file_name, context_class=Context, takes_context=False):
 
 
 class JSONEncoder(DjangoJSONEncoder):
+
     def default(self, o):
         if isinstance(o, datetime.datetime):
             return o.strftime('%Y-%m-%d %H:%M:%S')
@@ -217,7 +220,7 @@ class BaseAdminObject(object):
 
     def log(self, flag, message, obj=None):
         log = Log(
-            user=self.user, 
+            user=self.user,
             ip_addr=self.request.META['REMOTE_ADDR'],
             action_flag=flag,
             message=message
@@ -253,7 +256,7 @@ class BaseAdminView(BaseAdminObject, View):
         self.request = request
         self.request_method = request.method.lower()
         self.user = request.user
-        
+
         self.base_plugins = [p(self) for p in getattr(self,
                                                       "plugin_classes", [])]
 
@@ -317,8 +320,8 @@ class CommAdminView(BaseAdminView):
     base_template = 'xadmin/base_site.html'
     menu_template = 'xadmin/includes/sitemenu_default.html'
 
-    site_title = getattr(settings,"XADMIN_TITLE",_(u"Django Xadmin"))
-    site_footer = getattr(settings,"XADMIN_FOOTER_TITLE",_(u"my-company.inc"))
+    site_title = getattr(settings, "XADMIN_TITLE", _(u"Django Xadmin"))
+    site_footer = getattr(settings, "XADMIN_FOOTER_TITLE", _(u"my-company.inc"))
 
     global_models_icon = {}
     default_model_icon = None
@@ -368,7 +371,7 @@ class CommAdminView(BaseAdminView):
                     app_title = self.apps_label_title[app_label.lower()]
                 else:
                     app_title = smart_text(apps.get_app_config(app_label).verbose_name)
-                #find app icon
+                # find app icon
                 if app_label.lower() in self.apps_icons:
                     app_icon = self.apps_icons[app_label.lower()]
 
@@ -428,7 +431,7 @@ class CommAdminView(BaseAdminView):
                 return item
 
             nav_menu = [filter_item(item) for item in menus if check_menu_permission(item)]
-            nav_menu = list(filter(lambda x:x, nav_menu))
+            nav_menu = list(filter(lambda x: x, nav_menu))
 
             if not settings.DEBUG:
                 self.request.session['nav_menu'] = json.dumps(nav_menu, cls=JSONEncoder, ensure_ascii=False)
@@ -476,7 +479,8 @@ class CommAdminView(BaseAdminView):
         return [{
             'url': self.get_admin_url('index'),
             'title': _('Home')
-            }]
+        }]
+
 
 class ModelAdminView(CommAdminView):
 
@@ -522,11 +526,10 @@ class ModelAdminView(CommAdminView):
         Get model object instance by object_id, used for change admin view
         """
         # first get base admin view property queryset, return default model queryset
-        queryset = self.queryset()
-        model = queryset.model
+        model = self.model
         try:
             object_id = model._meta.pk.to_python(object_id)
-            return queryset.get(pk=object_id)
+            return model.objects.get(pk=object_id)
         except (model.DoesNotExist, ValidationError):
             return None
 
@@ -542,7 +545,7 @@ class ModelAdminView(CommAdminView):
     def model_admin_url(self, name, *args, **kwargs):
         return reverse(
             "%s:%s_%s_%s" % (self.admin_site.app_name, self.opts.app_label,
-            self.model_name, name), args=args, kwargs=kwargs)
+                             self.model_name, name), args=args, kwargs=kwargs)
 
     def get_model_perms(self):
         """
@@ -584,8 +587,8 @@ class ModelAdminView(CommAdminView):
         view_codename = get_permission_codename('view', self.opts)
         change_codename = get_permission_codename('change', self.opts)
 
-        return ('view' not in self.remove_permissions) and (self.user.has_perm('%s.%s' % (self.app_label, view_codename)) or \
-            self.user.has_perm('%s.%s' % (self.app_label, change_codename)))
+        return ('view' not in self.remove_permissions) and (self.user.has_perm('%s.%s' % (self.app_label, view_codename)) or
+                                                            self.user.has_perm('%s.%s' % (self.app_label, change_codename)))
 
     def has_add_permission(self):
         codename = get_permission_codename('add', self.opts)
@@ -595,6 +598,6 @@ class ModelAdminView(CommAdminView):
         codename = get_permission_codename('change', self.opts)
         return ('change' not in self.remove_permissions) and self.user.has_perm('%s.%s' % (self.app_label, codename))
 
-    def has_delete_permission(self, obj=None):
+    def has_delete_permission(self, request=None, obj=None):
         codename = get_permission_codename('delete', self.opts)
         return ('delete' not in self.remove_permissions) and self.user.has_perm('%s.%s' % (self.app_label, codename))

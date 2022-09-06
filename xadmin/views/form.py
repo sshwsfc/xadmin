@@ -8,7 +8,7 @@ from django.db import models, transaction
 from django.forms.models import modelform_factory
 from django.http import Http404, HttpResponseRedirect
 from django.template.response import TemplateResponse
-from django.utils import six
+import six
 from django.utils.encoding import force_text
 from django.utils.html import escape
 from django.template import loader

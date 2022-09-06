@@ -45,7 +45,8 @@ from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView, ModelAdminView
 from xadmin.views.base import csrf_protect_m, filter_hook
 from django.db import transaction
-from import_export.admin import DEFAULT_FORMATS, SKIP_ADMIN_LOG, TMP_STORAGE_CLASS
+from import_export.formats.base_formats import DEFAULT_FORMATS
+from import_export.admin import ImportMixin, ImportExportMixinBase
 from import_export.resources import modelresource_factory
 from import_export.forms import (
     ImportForm,
@@ -63,7 +64,7 @@ from django.template.response import TemplateResponse
 from django.contrib.admin.models import LogEntry, ADDITION, CHANGE, DELETION
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
-from django.core.urlresolvers import reverse
+from django.urls.base import reverse
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect, HttpResponse
 
@@ -153,6 +154,7 @@ class ImportBaseView(ModelAdminView):
 
 
 class ImportView(ImportBaseView):
+
     def get_media(self):
         media = super(ImportView, self).get_media()
         media = media + self.vendor('xadmin.plugin.importexport.css')
@@ -254,6 +256,7 @@ class ImportView(ImportBaseView):
 
 
 class ImportProcessView(ImportBaseView):
+
     @filter_hook
     @csrf_protect_m
     @transaction.atomic

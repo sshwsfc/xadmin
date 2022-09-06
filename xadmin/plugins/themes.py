@@ -1,9 +1,9 @@
-#coding:utf-8
+# coding:utf-8
 from __future__ import print_function
-import requests
+import httplib2
 from django.template import loader
 from django.core.cache import cache
-from django.utils import six
+import six
 from django.utils.translation import ugettext as _
 from xadmin.sites import site
 from xadmin.models import UserSettings
@@ -58,7 +58,7 @@ class ThemePlugin(BaseAdminPlugin):
         themes = [
             {'name': _(u"Default"), 'description': _(u"Default bootstrap theme"), 'css': self.default_theme},
             {'name': _(u"Bootstrap2"), 'description': _(u"Bootstrap 2.x theme"), 'css': self.bootstrap2_theme},
-            ]
+        ]
         select_css = context.get('site_theme', self.default_theme)
 
         if self.user_themes:
@@ -71,13 +71,16 @@ class ThemePlugin(BaseAdminPlugin):
             else:
                 ex_themes = []
                 try:
-                    headers = {"Accept": "application/json", "User-Agent": self.request.META['HTTP_USER_AGENT']}
-                    content = requests.get("https://bootswatch.com/api/3.json", headers=headers)
+                    h = httplib2.Http()
+                    resp, content = h.request("https://bootswatch.com/api/3.json", 'GET', '',
+                                              headers={"Accept": "application/json", "User-Agent": self.request.META['HTTP_USER_AGENT']})
                     if six.PY3:
-                        content = content.text.decode()
-                    watch_themes = json.loads(content.text)['themes']
-                    ex_themes.extend([{'name': t['name'], 'description': t['description'], 'css': t['cssMin'],
-                                       'thumbnail': t['thumbnail']} for t in watch_themes])
+                        content = content.decode()
+                    watch_themes = json.loads(content)['themes']
+                    ex_themes.extend([
+                        {'name': t['name'], 'description': t['description'],
+                            'css': t['cssMin'], 'thumbnail': t['thumbnail']}
+                        for t in watch_themes])
                 except Exception as e:
                     print(e)
 
