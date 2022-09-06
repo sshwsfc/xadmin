@@ -15,6 +15,15 @@ Xadmin-Django3
 - https://github.com/sshwsfc/xadmin/pull/716/files  
 - https://blog.csdn.net/weixin_43865334/article/details/115071848  
 
+安装以下两个依赖：
+
+.. code:: bash   
+
+    pip install requests
+   
+    pip install cryptography
+
+
 Live Demo
 ---------
 
