@@ -23,6 +23,12 @@ Xadmin-Django3
    
     pip install cryptography
 
+使用pip安装这个分支的xadmin：
+
+.. code:: bash   
+
+    pip install https://github.com/SzLeaves/xadmin-django3/archive/refs/heads/master.zip
+
 
 Live Demo
 ---------
