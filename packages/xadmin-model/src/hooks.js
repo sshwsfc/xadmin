@@ -12,6 +12,9 @@ import {
 
 const useModelRecoilAtom = (atom, fkey) => {
   const model = useContext(ModelContext)
+  if(!model) {
+    throw Error('Need Model Context when use model hooks.')
+  }
   let state = atom
   if(_.isFunction(atom)) {
     state = atom(model.atoms)
@@ -47,6 +50,9 @@ const useModelCallback = (cb, deps) => {
 export default {
   'model': () => {
     const model = useContext(ModelContext)
+    if(!model) {
+      throw Error('Need Model Context when use model hooks.')
+    }
     const rest = useMemo(() => api(model), [ model ])
     return { model, rest, atoms: model.atoms }
   },

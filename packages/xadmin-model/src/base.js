@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { Block, app, use } from 'xadmin'
 import { C } from 'xadmin-ui'
 import { Routes, Route } from "react-router-dom"
-import { RecoilRoot, useRecoilSnapshot } from 'recoil'
+import { RecoilRoot, useRecoilSnapshot, useRecoilCallback } from 'recoil'
 import modelAtoms from './atoms'
 
 const ModelContext = React.createContext(null)
@@ -22,31 +22,23 @@ const getModel = (name, key, props) => {
 }
 
 const DebugObserver = () => {
-  const snapshot = useRecoilSnapshot();
+  let snapshot = useRecoilSnapshot();
   React.useEffect(() => {
+    if(! snapshot ) return 
     console.debug('[Recoil] state change:');
     for (const node of snapshot.getNodes_UNSTABLE({isModified: true})) {
       console.debug(node.key, snapshot.getLoadable(node));
     }
   }, [snapshot]);
+  
   return null;
 }
 
-const Model = ({ name, schema, modelKey, initialValues, children, debug, props: modelProps }) => {
+const ModelInitial = ({ model, initialValues, children }) => {
   const query = use('query')
-  const model = React.useMemo(() => {
-    const model =  name ? getModel(name, modelKey, modelProps) : {
-      ...schema,
-      key: modelKey || schema.name,
-      ...modelProps
-    }
-    const atoms = [ modelAtoms, ...app.get('modelAtoms') ].reduce((p, getAtoms) => {
-      return { ...p, ...getAtoms(id => `model.${model.key}.${id}`, model)}
-    }, {})
-    return { ...model, atoms }
-  }, [ name, schema, modelKey ])
+  const [ loading, setLoading ] = React.useState(true)
 
-  const initializeState = React.useCallback(({ set }) => {
+  const initializeState = useRecoilCallback(({ set }) => () => {
     let initial = initialValues || {}
     if(model.initialValues) {
       let modelInitial = _.isFunction(model.initialValues) ? model.initialValues() : model.initialValues
@@ -68,11 +60,56 @@ const Model = ({ name, schema, modelKey, initialValues, children, debug, props: 
     set(model.atoms.wheres, wheres)
   }, [ initialValues, model, query ])
 
+  React.useEffect(() => {
+    initializeState()
+    setLoading(false)
+  }, [])
+
+  return !loading ? children : null
+}
+
+const Model = ({ name, schema, modelKey, initialValues, children, debug, props: modelProps }) => {
+  const model = React.useMemo(() => {
+    const model =  name ? getModel(name, modelKey, modelProps) : {
+      ...schema,
+      key: modelKey || schema.name,
+      ...modelProps
+    }
+    const atoms = [ modelAtoms, ...app.get('modelAtoms') ].reduce((p, getAtoms) => {
+      return { ...p, ...getAtoms(id => `model.${model.key}.${id}`, model)}
+    }, {})
+    return { ...model, atoms }
+  }, [ name, schema, modelKey ])
+
+  // const initializeState = React.useCallback(({ set }) => {
+  //   let initial = initialValues || {}
+  //   if(model.initialValues) {
+  //     let modelInitial = _.isFunction(model.initialValues) ? model.initialValues() : model.initialValues
+  //     initial = { ...modelInitial, ...initial }
+  //   }
+  //   const { wheres={}, ...option } = initial
+
+  //   const defaultOpt = {
+  //     fields: [ ...(model.listFields || []) ],
+  //     order: model.defaultOrder || model.orders || {},
+  //     limit: model.defaultPageSize || 15,
+  //     skip: 0
+  //   }
+  //   if(query && !_.isEmpty(query)) {
+  //     wheres.param_filter = query
+  //   }
+    
+  //   set(model.atoms.option, { ...defaultOpt, ...option })
+  //   set(model.atoms.wheres, wheres)
+  // }, [ initialValues, model, query ])
+
   return model && (
-    <RecoilRoot initializeState={initializeState} override={false}>
+    <RecoilRoot override={false}>
       { (model.debug || debug) && <DebugObserver /> }
       <ModelContext.Provider value={model}>
-        {children}
+        <ModelInitial initialValues={initialValues} model={model} >
+          {children}
+        </ModelInitial>
       </ModelContext.Provider>
     </RecoilRoot>
   )

@@ -301,7 +301,7 @@ const ActionEdit = props => {
 
 const ActionDelete = props => {
   const { canDelete } = use('model.permission')
-  const { deleteItem } = use('model.delete')
+  const { deleteItem } = use('model.delete', props)
 
   if(canDelete) {
     return (
