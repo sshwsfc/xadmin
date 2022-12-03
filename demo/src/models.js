@@ -11,7 +11,7 @@ export default {
     type: 'object',
     icon: 'user', // fa-icon
     title: 'User',
-    debug: true,
+    debug: false,
     persistent: true,
     properties: {
       id: {
@@ -20,10 +20,12 @@ export default {
         field: {
           effect: ({ value }, form) => {
             if(value === 1) {
+              form.setFieldData('name', { display: false})
               form.setFieldData('type', { field: {
                 titleMap: [ { name: 'A', value: 'A' }, { name: 'B', value: 'B' } ]
               }})
             } else {
+              form.setFieldData('name', { display: true})
               form.setFieldData('type', { field: {
                 titleMap: [ { name: 'C', value: 'C' }, { name: 'D', value: 'D' } ]
               }})
@@ -56,8 +58,7 @@ export default {
         // }
       },
       website: {
-        type: 'string',
-        maxLength: 5
+        type: 'string'
       },
       superUser: {
         type: 'boolean',
@@ -86,7 +87,7 @@ export default {
       address: {
         type: 'object',
         properties: {
-          street: { type: 'string', maxLength: 5 },
+          street: { type: 'string' },
           suite: { type: 'string' }
         },
         required:[ 'street', 'suite' ],
