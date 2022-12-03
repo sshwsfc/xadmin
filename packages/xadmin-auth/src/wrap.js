@@ -55,7 +55,7 @@ const HasPermission = ({ permission, FailureComponent='NoPermission', children, 
   } else {
     if(React.isValidElement(FailureComponent)) {
       return FailureComponent
-    } else if(React.isFunction(FailureComponent)) {
+    } else if(_.isFunction(FailureComponent)) {
       return <FailureComponent />
     } else {
       return FailureComponent

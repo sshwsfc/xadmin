@@ -53,7 +53,15 @@ const ModelInitial = ({ model, initialValues, children }) => {
       skip: 0
     }
     if(query && !_.isEmpty(query)) {
-      wheres.param_filter = query
+      const filterQuery = Object.keys(query).reduce((p, key) => {
+        if(key.startsWith('f_')) {
+          p[key.substring(2)] = query[key]
+        }
+        return p
+      }, {})
+      if(!_.isEmpty(filterQuery)) {
+        wheres.param_filter = filterQuery
+      }
     }
     
     set(model.atoms.option, { ...defaultOpt, ...option })

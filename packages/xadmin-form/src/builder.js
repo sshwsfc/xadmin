@@ -46,7 +46,7 @@ const fieldBuilder = (field, option, ...props) => {
   if(field.render) {
     return field.render(field, option, fieldBuilder, objectBuilder, ...props)
   } else {
-    const { name, component: FieldComponent, group, ...fieldProps } = field
+    const { name, component: FieldComponent, group, type, ...fieldProps } = field
     const FieldGroup = group || (option && option.group ? option.group : C('Form.FieldGroup'))
     return (<Field name={name} {...fieldProps}
       component={FieldWrapComponent} field={field} option={option} group={FieldGroup} fieldComponent={FieldComponent}

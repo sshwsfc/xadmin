@@ -52,7 +52,7 @@ export default {
   
       return { actions, renderActions }
     },
-    'actons.batch_delete': ({ successMessage }) => {
+    'actons.batch_delete': (args) => {
       const { model, rest, atoms } = use('model')
       const { getItems } = use('model.getItems')
       const message = use('message')
@@ -74,9 +74,9 @@ export default {
           reset(atoms.selected)
 
           // show message
-          if(message?.success &&  successMessage !== false) {
+          if(message?.success &&  args?.successMessage !== false) {
             const object = model.title || model.name
-            const noticeMessage = _.isString(successMessage) ? successMessage :  _t('Delete {{object}} success', { object })
+            const noticeMessage = _.isString(args?.successMessage) ? args.successMessage :  _t('Delete {{object}} success', { object })
             message?.success(noticeMessage) 
           }
           // get items
@@ -93,7 +93,7 @@ export default {
 
       return { loading, canDelete, onBatchDelete }
     },
-    'actons.batch_change': ({ successMessage }) => {
+    'actons.batch_change': (args) => {
       const { model, rest, atoms } = use('model')
       const { getItems } = use('model.getItems')
       const message = use('message')
@@ -113,9 +113,9 @@ export default {
           }
 
           // show message
-          if(message?.success &&  successMessage !== false) {
+          if(message?.success &&  args?.successMessage !== false) {
             const object = model.title || model.name
-            const noticeMessage = _.isString(successMessage) ? successMessage : _t('Batch Save {{object}} success', { object })
+            const noticeMessage = _.isString(args?.successMessage) ? args.successMessage : _t('Batch Save {{object}} success', { object })
             message?.success(noticeMessage) 
           }
           // update items

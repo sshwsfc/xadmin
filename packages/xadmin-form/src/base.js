@@ -40,7 +40,7 @@ const isPromise = obj =>
 
 const Form = (props) => {
   const { formKey, validate, effect, fields, render, option, component, children, wrapProps, 
-    onChange, onSubmitSuccess, onSubmit, data, ...formProps } = props
+    onChange, onSubmitSuccess, onSubmit, data, formRef, ...formProps } = props
   const formConfig = config('form-config')
 
   const mutators = { 
@@ -69,6 +69,9 @@ const Form = (props) => {
     }
 
     form.data = data
+    if(formRef) {
+      formRef.current = form
+    }
     effect && effect(form)
   }
 
@@ -81,7 +84,7 @@ const Form = (props) => {
           form.submitReturnValue = retValue
           resolve()
         }).catch(err => {
-          reject(err)
+          resolve(err)
         })
       })
     } else if(onSubmit.length < 3) {
@@ -119,16 +122,24 @@ const omitNull = value => {
 
 const SchemaForm = (props) => {
   const { schema } = props
+  const formRef = React.useRef()
 
   if(!_.isPlainObject(schema)) {
     return null
   }
 
-  const ajValidate = ajv.compile(schema)
   const { fields } = schemaConvert(schema)
   
   const validate = (vs) => {
+    const form = formRef.current
     const values = _.cloneDeep(vs)
+    let validateSchema = schema
+
+    if(form) {
+      validateSchema = convertSchemaFormFieldState(validateSchema, form)
+    }
+
+    const ajValidate = ajv.compile(schema)
     const valid = ajValidate(omitNull(values))
 
     if(!valid) {
@@ -157,7 +168,29 @@ const SchemaForm = (props) => {
     return errors
   }
 
-  return <Form {...props} validate={validate} fields={fields} effect={schema.formEffect} />
+  return <Form {...props} validate={validate} fields={fields} effect={schema.formEffect} formRef={formRef} />
+}
+
+const convertSchemaFormFieldState = (schema, form, prefix='') => {
+  let required = schema.required
+  let properties = Object.keys(schema.properties).reduce((prev, key) => {
+    let prop = schema.properties[key]
+    let fieldState = form.getFieldState(prefix + key)
+    if(prop.type == 'object') {
+      prop = convertSchemaFormFieldState(prop, form, key + '.')
+    } else {
+      if(fieldState.data?.display === false) {
+        required = required.filter(fieldName => fieldName != key)
+      }
+    }
+    prev[key] = prop
+    return prev
+  }, {})
+  return {
+    ...schema,
+    properties,
+    required
+  }
 }
 
 const useForm = (select) => {

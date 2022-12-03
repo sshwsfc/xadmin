@@ -1,9 +1,10 @@
 import React from 'react'
 import { Form, Button, Card, Space, Modal } from 'antd'
 import app from 'xadmin'
+import _ from 'lodash'
 
 const FormLayout = props => {
-  const { children, invalid, handleSubmit, submitting } = props
+  const { children, invalid, handleSubmit, submitting, onCancel } = props
   const { _t } = app.context
   const groupProps = {
     wrapperCol: {
@@ -19,7 +20,7 @@ const FormLayout = props => {
         <Form.Item {...groupProps}>
           <Space>
             <Button type="primary" htmlType="submit" loading={submitting} disabled={invalid}>{_t('Save')}</Button>
-            <Button onClick={() => history.back()}>{_t('Cancel')}</Button>
+            <Button onClick={() => onCancel ? onCancel() : history.back()}>{_t('Cancel')}</Button>
           </Space>
         </Form.Item>
       </form>
