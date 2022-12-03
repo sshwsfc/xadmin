@@ -109,7 +109,11 @@ export default {
         }
         const data = await rest.save(item, partial)
         const id = data.id || item.id
-        const newData = data || item
+        let newData = data || item
+        if(partial) {
+          const oldItem = snapshot.getLoadable(atoms.item(id)).contents
+          newData = { ...oldItem, ...newData }
+        }
         set(atoms.item(id), newData)
         
         // change selected item

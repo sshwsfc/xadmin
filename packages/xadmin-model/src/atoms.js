@@ -19,9 +19,13 @@ const modelAtoms = (k, model) => {
     get: ({get}) => get(ids).map(id => get(item(id))).filter(item => !_.isNil(item)),
     set: ({set}, newItems) => {
       const newIds = newItems.map(record => {
+        if(_.isNil(record.id)) {
+          // record without id field should throw warnning.
+          return null
+        }
         set(item(record.id), record)
         return record.id
-      })
+      }).filter(Boolean)
       set(ids, newIds)
     }
   })
