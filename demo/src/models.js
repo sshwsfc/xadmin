@@ -198,6 +198,7 @@ export default {
     defaultPageSize: 20,
     initialValues: { limit: 5 },
     ui: { showMenu: true, menuPath: '/app/users' },
+    initQuery: false,
     route: [{
       parentPath: '/app/',
       path: 'users'

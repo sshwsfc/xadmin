@@ -1,6 +1,6 @@
 {
   "name": "xadmin-form",
-  "version": "3.2.3",
+  "version": "3.2.4",
   "description": "Xadmin Form",
   "main": "lib/index.js",
   "module": "es/index.js",

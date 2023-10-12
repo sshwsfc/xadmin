@@ -238,11 +238,16 @@ export default {
   },
   // Model effect hook
   'model.effect': () => {
+    const { model } = use('model')
     const { getItems } = use('model.getItems')
     const option = useModelValue('option')
     const wheres = useModelValue('wheres')
 
     React.useEffect(() => {
+      if(model.initQuery === false) {
+        model.initQuery = undefined
+        return
+      }
       getItems()
     }, [ option, wheres ])
 

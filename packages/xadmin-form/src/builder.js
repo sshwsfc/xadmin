@@ -41,9 +41,9 @@ const objectBuilder = (fields, render, option) => {
   const fields_wraped = fields
     .filter(field => field.type === undefined || fields_defined[field.type] !== undefined)
     .map(field => { return { ...fields_defined[field.type || 'text'], ...field, option } })
-    .map(field => option.fieldValidate ? { ...field, validate: (field.validate ? (
-      _.isArray(field.validate) ? [ ...field.validate, option.fieldValidate ] : [ field.validate, option.fieldValidate ]
-    ) : option.fieldValidate ) } : field)
+    .map(field => option.fieldValidate ? { ...field, validate: (field.validate ? (...args) => {
+      return field.validate(...args) || option.fieldValidate(...args)
+    } : option.fieldValidate ) } : field)
 
   return (render || defaultUIRender)(fields_wraped, option)
 }
