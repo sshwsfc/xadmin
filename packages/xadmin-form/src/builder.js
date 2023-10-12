@@ -19,6 +19,9 @@ const FieldWrapComponent = ({ fieldComponent: FieldComponent, group: FieldGroup,
     return null
   }
   const newField = (data.field) ? { ...props.field, ...data.field } : props.field
+  if(data.required === true) {
+    newField.required = true
+  }
 
   return FieldComponent.useGroup === false ? (
     <FieldComponent {...props} field={newField} group={FieldGroup} />
@@ -38,6 +41,9 @@ const objectBuilder = (fields, render, option) => {
   const fields_wraped = fields
     .filter(field => field.type === undefined || fields_defined[field.type] !== undefined)
     .map(field => { return { ...fields_defined[field.type || 'text'], ...field, option } })
+    .map(field => option.fieldValidate ? { ...field, validate: (field.validate ? (
+      _.isArray(field.validate) ? [ ...field.validate, option.fieldValidate ] : [ field.validate, option.fieldValidate ]
+    ) : option.fieldValidate ) } : field)
 
   return (render || defaultUIRender)(fields_wraped, option)
 }

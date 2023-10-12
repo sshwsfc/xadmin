@@ -20,6 +20,7 @@
     "react-redux": "^8.0.0",
     "moment": "2",
     "xadmin": "2 || 3",
+    "xadmin-i18n": "3",
     "xadmin-ui": "3"
   },
   "scripts": {

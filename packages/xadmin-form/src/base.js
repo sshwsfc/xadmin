@@ -3,12 +3,14 @@ import { app, config, use } from 'xadmin'
 import { Form as RForm, useForm as rUseForm } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import { C } from 'xadmin-ui'
+import { _t } from 'xadmin-i18n'
 import { fieldBuilder, objectBuilder, prefixFieldKey } from './builder'
 
 import Ajv from 'ajv'
 import _ from 'lodash'
 import ajvLocalize from './locales'
 import { convert as schemaConvert } from './schema'
+import { findFieldByName } from './utils'
 
 const datetimeRegex = /^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])\s+(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/
 const ajv = new Ajv({ allErrors: true, verbose: true, nullable: true, formats: { datetime: datetimeRegex } })
@@ -18,7 +20,15 @@ const BaseForm = (props) => {
   const { form } = use('form')
   const invalid = !(_.isNil(errors) || _.isEmpty(errors))
 
-  const build_fields = objectBuilder(fields, render, { form, ...option, invalid, ...formProps })
+  const fieldValidate = React.useCallback((value, values, meta) => {
+    if(meta.data?.required) {
+      if(_.isEmpty(value)) {
+        return _t(`{{label}} is required`, { label: findFieldByName(meta.name, fields)?.label || meta.name })
+      }
+    }
+  }, [ fields])
+  
+  const build_fields = objectBuilder(fields, render, { form, ...option, invalid, ...formProps, fieldValidate })
 
   useEffect(() => effect && effect(form), [ form ])
 
@@ -131,13 +141,7 @@ const SchemaForm = (props) => {
   const { fields } = schemaConvert(schema)
   
   const validate = (vs) => {
-    const form = formRef.current
     const values = _.cloneDeep(vs)
-    let validateSchema = schema
-
-    if(form) {
-      validateSchema = convertSchemaFormFieldState(validateSchema, form)
-    }
 
     const ajValidate = ajv.compile(schema)
     const valid = ajValidate(omitNull(values))
@@ -151,6 +155,7 @@ const SchemaForm = (props) => {
       }
     }
     let errors = (props.validate && _.isFunction(props.validate)) ? props.validate(values) : {}
+
     errors = valid ? errors : ajValidate.errors.reduce((prev, err) => {
       let p = err.dataPath
       if(err.keyword == 'required' && err.params.missingProperty) {
@@ -160,7 +165,7 @@ const SchemaForm = (props) => {
           p += '.' + err.params.missingProperty
         }
       }
-      if(p.startsWith('.')) p = p.substr(1)
+      if(p.startsWith('.')) p = p.substring(1)
       _.set(prev, p, err.message)
       return prev
     }, errors)
@@ -169,28 +174,6 @@ const SchemaForm = (props) => {
   }
 
   return <Form {...props} validate={validate} fields={fields} effect={schema.formEffect} formRef={formRef} />
-}
-
-const convertSchemaFormFieldState = (schema, form, prefix='') => {
-  let required = schema.required
-  let properties = Object.keys(schema.properties).reduce((prev, key) => {
-    let prop = schema.properties[key]
-    let fieldState = form.getFieldState(prefix + key)
-    if(prop.type == 'object') {
-      prop = convertSchemaFormFieldState(prop, form, key + '.')
-    } else {
-      if(fieldState.data?.display === false) {
-        required = required.filter(fieldName => fieldName != key)
-      }
-    }
-    prev[key] = prop
-    return prev
-  }, {})
-  return {
-    ...schema,
-    properties,
-    required
-  }
 }
 
 const useForm = (select) => {

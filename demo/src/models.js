@@ -3,6 +3,7 @@ import { use } from 'xadmin'
 import { fieldBuilder } from 'xadmin-form'
 import { RelateAction } from 'xadmin-model/lib/relate'
 import { C } from 'xadmin-ui'
+import { Input } from 'antd'
 
 export default {
   User: {
@@ -19,16 +20,20 @@ export default {
         title: 'User ID',
         field: {
           effect: ({ value }, form) => {
-            if(value === 1) {
-              form.setFieldData('name', { display: false})
-              form.setFieldData('type', { field: {
-                titleMap: [ { name: 'A', value: 'A' }, { name: 'B', value: 'B' } ]
-              }})
+            if (value === 1) {
+              form.setFieldData('name', { display: false })
+              form.setFieldData('type', {
+                field: {
+                  titleMap: [{ name: 'A', value: 'A' }, { name: 'B', value: 'B' }]
+                }
+              })
             } else {
-              form.setFieldData('name', { display: true})
-              form.setFieldData('type', { field: {
-                titleMap: [ { name: 'C', value: 'C' }, { name: 'D', value: 'D' } ]
-              }})
+              form.setFieldData('name', { display: true })
+              form.setFieldData('type', {
+                field: {
+                  titleMap: [{ name: 'C', value: 'C' }, { name: 'D', value: 'D' }]
+                }
+              })
             }
           },
           formText: 'User'
@@ -43,8 +48,8 @@ export default {
         type: 'string'
       },
       type: {
-        type: 'number',
-        enum: [ 1, 2, 3 ]
+        type: 'string',
+        enum: ['Nomral', 'Super', ]
       },
       email: {
         type: 'string',
@@ -58,7 +63,15 @@ export default {
         // }
       },
       website: {
-        type: 'string'
+        type: 'string',
+        field: {
+          component: (props) => <Input {...props.input} />,
+          // validate: value => {
+          //   console.log(value)
+          //   return value ? '密码必须为字母与数字组合' : '123456'
+          // }
+        }
+
       },
       superUser: {
         type: 'boolean',
@@ -71,7 +84,10 @@ export default {
       },
       brithday: {
         type: 'string',
-        format: 'date'
+        format: 'date',
+        field: {
+          required: true,
+        }
       },
       time: {
         type: 'string',
@@ -90,7 +106,7 @@ export default {
           street: { type: 'string' },
           suite: { type: 'string' }
         },
-        required:[ 'street', 'suite' ],
+        required: ['street', 'suite'],
         field: {
           render: (fields, option) => {
             console.log(fields)
@@ -111,32 +127,34 @@ export default {
             name: { type: 'string' },
             value: { type: 'string' }
           },
-          required:[ 'name' ]
+          required: ['name']
         }
       }
     },
     permission: { view: true, add: true, edit: true, delete: true },
-    form: [ 'name', 'email', { key: 'address', fieldsRender: (fields, option) => {
-      return (
-        <>
-          {fieldBuilder(fields[0], option)}
-          <b>asdasasdads</b>
-          {fieldBuilder(fields[1], option)}
-        </>
-      )
-    } }, '*',
-      { key: 'website', type: 'textarea', attrs: { rows: 5 } } ],
+    form: ['name', 'email', {
+      key: 'address', fieldsRender: (fields, option) => {
+        return (
+          <>
+            {fieldBuilder(fields[0], option)}
+            <b>asdasasdads</b>
+            {fieldBuilder(fields[1], option)}
+          </>
+        )
+      }
+    }, '*',
+      { key: 'website' }],
     formEffect: form => {
 
-      // form.useField('type', state => {
-      //   if(state.value === 'Nomral') {
-      //     form.change('name', 'hi Nomral')
-      //     form.setFieldData('website', { display: false })
-      //   } else {
-      //     form.change('name', 'hi ' + state.value)
-      //     form.setFieldData('website', { display: true })
-      //   }
-      // })
+      form.useField('type', state => {
+        if(state.value === 'Nomral') {
+          //form.change('name', 'hi Nomral')
+          form.setFieldData('address.suite', { display: true, required: false })
+        } else {
+          //form.change('name', 'hi ' + state.value)
+          form.setFieldData('address.suite', { display: true, required: true })
+        }
+      })
 
       // form.useEffect(({ values, errors }) => {
       //   const { email, type } = values
@@ -150,10 +168,10 @@ export default {
 
       form.useEffect(({ submitSucceeded, submitErrors, submitFailed }) => {
         console.log('submitSucceeded', submitSucceeded, submitErrors, submitFailed)
-      }, [ 'submitSucceeded', 'submitErrors', 'submitFailed' ])
+      }, ['submitSucceeded', 'submitErrors', 'submitFailed'])
     },
     filters: {
-      submenu: [ 'name', 'email', 'type', 'superUser', 'id' ],
+      submenu: ['name', 'email', 'type', 'superUser', 'id'],
       //sidemenu: [ 'name' ]
     },
     formProps: {
@@ -161,29 +179,29 @@ export default {
       //   return { name: 'error name' }
       // }
     },
-    itemActions: [ 
+    itemActions: [
       (item) => <RelateAction item={item} />,
       (item) => <C is="Model.ChildrenModel" model="Post" parent={item} refField="userId" refreshTimeout={3000} />,
       'edit', 'delete'
     ],
     dataTableProps: (columns) => ({
       scroll: { x: 1500 },
-      columns: columns.map(c => c.key === '__action__' ? { ...c, width: 200 } : c )
+      columns: columns.map(c => c.key === '__action__' ? { ...c, width: 200 } : c)
     }),
     // batchActions: null,
     editableFields: ['name', 'type', 'address.street'],
     batchChangeFields: ['website', 'brithday', 'address.street'],
-    searchFields: [ 'name', 'email' ],
-    required: [ 'name', 'address' ],
-    readonly: [ 'id' ],
-    listFields: [ 'id', 'name', 'email', 'type', 'website', 'address.street' ],
+    searchFields: ['name', 'email'],
+    required: ['name',],
+    readonly: ['id'],
+    listFields: ['id', 'name', 'email', 'type', 'website', 'address.street'],
     defaultPageSize: 20,
     initialValues: { limit: 5 },
     ui: { showMenu: true, menuPath: '/app/users' },
-    route: [ {
+    route: [{
       parentPath: '/app/',
       path: 'users'
-    }, 'us' ]
+    }, 'us']
   },
   Post: {
     name: 'Post',
@@ -205,7 +223,7 @@ export default {
       },
       category: {
         type: 'string',
-        enum: [ 'Question', 'Idea', 'Isusse' ]
+        enum: ['Question', 'Idea', 'Isusse']
       },
       user: {
         type: 'object',
@@ -231,18 +249,18 @@ export default {
       }
     },
     permission: { view: true, add: true, edit: true, delete: true },
-    form: [ 'title', 'body', 'category', 'user', { key: 'readers', type: 'transfer' } ],
+    form: ['title', 'body', 'category', 'user', { key: 'readers', type: 'transfer' }],
     filters: {
-      nav: [ 'title', 'user' ],
+      nav: ['title', 'user'],
       //navform: { fields: [ 'title' ], submitOnChange: false },
-      sidemenu: [ 'user' ],
-      submenu: { fields: [ 'id', 'title', 'body' ], submitOnChange: true },
+      sidemenu: ['user'],
+      submenu: { fields: ['id', 'title', 'body'], submitOnChange: true },
     },
     display: (post) => post.title,
-    searchFields: [ 'title' ],
-    required: [ 'title', 'user', 'body' ],
-    readonly: [ 'id' ],
-    listFields: [ 'id', 'title', 'user' ],
+    searchFields: ['title'],
+    required: ['title', 'user', 'body'],
+    readonly: ['id'],
+    listFields: ['id', 'title', 'user'],
     ui: { showMenu: true, menuPath: '/app/model/Post' },
     components: {
       DataList: C.lazy('Model.DataList')
