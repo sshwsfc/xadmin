@@ -22,7 +22,7 @@ const BaseForm = (props) => {
 
   const fieldValidate = React.useCallback((value, values, meta) => {
     if(meta.data?.required) {
-      if(_.isEmpty(value)) {
+      if(!_.isNumber(value) && _.isEmpty(value)) {
         return _t(`{{label}} is required`, { label: findFieldByName(meta.name, fields)?.label || meta.name })
       }
     }

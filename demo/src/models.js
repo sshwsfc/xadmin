@@ -47,6 +47,9 @@ export default {
       username: {
         type: 'string'
       },
+      age: {
+        type: 'number'
+      },
       type: {
         type: 'string',
         enum: ['Nomral', 'Super', ]
@@ -106,7 +109,7 @@ export default {
           street: { type: 'string' },
           suite: { type: 'string' }
         },
-        required: ['street', 'suite'],
+        required: ['street'],
         field: {
           render: (fields, option) => {
             console.log(fields)
@@ -137,7 +140,6 @@ export default {
         return (
           <>
             {fieldBuilder(fields[0], option)}
-            <b>asdasasdads</b>
             {fieldBuilder(fields[1], option)}
           </>
         )
@@ -149,9 +151,11 @@ export default {
       form.useField('type', state => {
         if(state.value === 'Nomral') {
           //form.change('name', 'hi Nomral')
+          form.setFieldData('age', { display: true, required: false })
           form.setFieldData('address.suite', { display: true, required: false })
         } else {
           //form.change('name', 'hi ' + state.value)
+          form.setFieldData('age', { display: true, required: true })
           form.setFieldData('address.suite', { display: true, required: true })
         }
       })

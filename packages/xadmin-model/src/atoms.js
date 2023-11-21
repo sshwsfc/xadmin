@@ -105,7 +105,7 @@ const modelAtoms = (k, model) => {
       if(selectAll) {
         set(selected, _.unionWith(get(selected), get(items), (a, b) => a.id == b.id))
       } else {
-        set(selected, [])
+        set(selected, _.differenceWith(get(selected), get(items), (a, b) => a.id == b.id))
       }
     }
   })
