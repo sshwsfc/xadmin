@@ -15,9 +15,7 @@
       <div class="panel-body">
       
 			<p class="text-default">{% trans "Forgotten your password? Enter your e-mail address below, and we'll e-mail instructions for setting a new one." %}</p>
-
       {% include 'bootstrap3/errors.html' %}
-
       <div id="div_id_email" class="row{% if form.email.errors %} has-error{% endif %}">
         <div class="controls clearfix">
         <div class="input-group input-group-lg">

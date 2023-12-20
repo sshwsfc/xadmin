@@ -1,7 +1,7 @@
 from django.db import models
 from django import forms
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.forms.models import modelform_factory
 import copy
 from xadmin.sites import site
@@ -11,9 +11,11 @@ from xadmin.layout import Layout
 
 
 class QuickFormPlugin(BaseAdminPlugin):
+    def is_ajax(self):
+        return bool(self.request.headers.get('x-requested-with') == 'XMLHttpRequest' or self.request.GET.get('_ajax'))
 
     def init_request(self, *args, **kwargs):
-        if self.request.method == 'GET' and self.request.is_ajax() or self.request.GET.get('_ajax'):
+        if self.request.method == 'GET' and self.is_ajax() or self.request.GET.get('_ajax'):
             self.admin_view.add_form_template = 'xadmin/views/quick_form.html'
             self.admin_view.change_form_template = 'xadmin/views/quick_form.html'
             return True

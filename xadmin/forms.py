@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import AuthenticationForm
 
-from django.utils.translation import ugettext_lazy, ugettext as _
+from django.utils.translation import gettext_lazy as ugettext_lazy, gettext as _
 
 from django.contrib.auth import get_user_model
 

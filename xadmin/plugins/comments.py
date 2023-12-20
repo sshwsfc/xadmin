@@ -5,7 +5,7 @@ from xadmin.util import username_field
 
 from django.conf import settings
 from django.contrib.comments.models import Comment
-from django.utils.translation import ugettext_lazy as _, ungettext
+from django.utils.translation import gettext_lazy as _, ungettext
 from django.contrib.comments import get_model
 from django.contrib.comments.views.moderation import perform_flag, perform_approve, perform_delete
 

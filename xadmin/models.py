@@ -4,11 +4,12 @@ from django.db import models
 from django.utils import timezone
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
-from django.utils.translation import ugettext_lazy as _, ugettext
+from django.utils.translation import gettext_lazy as _, gettext as ugettext
 from django.urls.base import reverse
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models.base import ModelBase
-from django.utils.encoding import python_2_unicode_compatible, smart_text
+from six import python_2_unicode_compatible
+from django.utils.encoding import smart_str as smart_text
 
 from django.db.models.signals import post_migrate
 from django.contrib.auth.models import Permission

@@ -1,6 +1,6 @@
 # coding=utf-8
 from django.template import loader
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from xadmin.plugins.utils import get_context_dict
 from xadmin.sites import site

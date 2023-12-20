@@ -7,7 +7,7 @@ import tempfile
 
 import django
 from django.apps import AppConfig,apps
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str as smart_text
 
 
 TEST_ROOT = os.path.realpath(os.path.dirname(__file__))

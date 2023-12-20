@@ -5,10 +5,10 @@ from future.utils import iteritems
 
 from django.http import HttpResponse
 from django.template import loader
-from django.utils import six
-from django.utils.encoding import force_text, smart_text
+import six
+from django.utils.encoding import force_str as force_text, smart_str as smart_text
 from django.utils.html import escape
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.utils.xmlutils import SimplerXMLGenerator
 from django.db.models import BooleanField, NullBooleanField
 

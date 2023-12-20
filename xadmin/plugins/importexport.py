@@ -45,7 +45,8 @@ from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView, ModelAdminView
 from xadmin.views.base import csrf_protect_m, filter_hook
 from django.db import transaction
-from import_export.admin import DEFAULT_FORMATS, SKIP_ADMIN_LOG, TMP_STORAGE_CLASS
+from import_export.admin import ImportExportMixinBase, ImportMixin
+from import_export.formats.base_formats import DEFAULT_FORMATS
 from import_export.resources import modelresource_factory
 from import_export.forms import (
     ImportForm,
@@ -55,10 +56,10 @@ from import_export.forms import (
 from import_export.results import RowResult
 from import_export.signals import post_export, post_import
 try:
-    from django.utils.encoding import force_text
+    from django.utils.encoding import force_str as force_text
 except ImportError:
     from django.utils.encoding import force_unicode as force_text
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.template.response import TemplateResponse
 from django.contrib.admin.models import LogEntry, ADDITION, CHANGE, DELETION
 from django.contrib.contenttypes.models import ContentType
@@ -106,13 +107,14 @@ class ImportBaseView(ModelAdminView):
 
     def get_skip_admin_log(self):
         if self.skip_admin_log is None:
-            return SKIP_ADMIN_LOG
+            # return SKIP_ADMIN_LOG
+            return ImportMixin(ImportExportMixinBase).get_skip_admin_log()
         else:
             return self.skip_admin_log
 
     def get_tmp_storage_class(self):
         if self.tmp_storage_class is None:
-            return TMP_STORAGE_CLASS
+            return ImportMixin(ImportExportMixinBase).get_tmp_storage_class()
         else:
             return self.tmp_storage_class
 

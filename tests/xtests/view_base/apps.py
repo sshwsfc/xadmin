@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #coding:utf-8
 import sys
-from django.utils import six
+import six
 if six.PY2 and sys.getdefaultencoding()=='ascii':
     import imp
     imp.reload(sys)

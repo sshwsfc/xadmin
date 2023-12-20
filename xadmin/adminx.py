@@ -3,7 +3,7 @@ import xadmin
 from .models import UserSettings, Log
 from xadmin.layout import *
 
-from django.utils.translation import ugettext_lazy as _, ugettext
+from django.utils.translation import gettext_lazy as _, gettext as ugettext
 
 class UserSettingsAdmin(object):
     model_icon = 'fa fa-cog'

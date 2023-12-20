@@ -5,10 +5,10 @@ from django.db import router
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.template.response import TemplateResponse
-from django.utils import six
-from django.utils.encoding import force_text
+import six
+from django.utils.encoding import force_str as force_text
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext as _, ungettext
+from django.utils.translation import gettext as _, gettext as ungettext
 from django.utils.text import capfirst
 
 from django.contrib.admin.utils import get_deleted_objects
@@ -172,8 +172,9 @@ class ActionPlugin(BaseAdminPlugin):
     def get_context(self, context):
         if self.actions and self.admin_view.result_count:
             av = self.admin_view
-            selection_note_all = ungettext('%(total_count)s selected',
-                                           'All %(total_count)s selected', av.result_count)
+            selection_note_all = ungettext('%(total_count)s selected' + 
+                                           'All %(total_count)s selected' + 
+                                           str(av.result_count))
 
             new_context = {
                 'selection_note': _('0 of %(cnt)s selected') % {'cnt': len(av.result_list)},

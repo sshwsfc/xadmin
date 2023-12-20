@@ -4,7 +4,7 @@ from future.utils import iteritems
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.base import ModelBase
-from django.utils import six
+import six
 from django.views.decorators.cache import never_cache
 from django.template.engine import Engine
 import inspect
@@ -169,9 +169,9 @@ class AdminSite(object):
         """
         from django.contrib.contenttypes.models import ContentType
 
-        if not ContentType._meta.installed:
-            raise ImproperlyConfigured("Put 'django.contrib.contenttypes' in "
-                                       "your INSTALLED_APPS setting in order to use the admin application.")
+        # if not ContentType._meta.installed:
+        #     raise ImproperlyConfigured("Put 'django.contrib.contenttypes' in "
+        #                                "your INSTALLED_APPS setting in order to use the admin application.")
 
         default_template_engine = Engine.get_default()
         if not ('django.contrib.auth.context_processors.auth' in default_template_engine.context_processors or

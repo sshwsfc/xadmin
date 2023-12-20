@@ -1,8 +1,8 @@
-django>=2
-django-crispy-forms>=1.6.0
-django-import-export>=0.5.1
-django-reversion>=2.0.0
-django-formtools==2.1
-future==0.15.2
-httplib2==0.9.2
-six==1.10.0
+django<5,>=4
+django-crispy-forms==1.14.0
+django-import-export==3.3.5
+django-reversion==5.0.8
+django-formtools==2.5.1
+future==0.18.3
+httplib2==0.22.0
+six==1.16.0

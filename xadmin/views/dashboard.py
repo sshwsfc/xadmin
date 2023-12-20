@@ -9,12 +9,13 @@ from django.forms.utils import flatatt
 from django.template import loader
 from django.http import Http404
 from django.test.client import RequestFactory
-from django.utils.encoding import force_text, smart_text
+from django.utils.encoding import force_str as force_text, smart_str as smart_text
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext as _
-from django.utils.http import urlencode, urlquote
+from django.utils.translation import gettext as _
+from django.utils.http import urlencode, quote as urlquote
 from django.views.decorators.cache import never_cache
+from django.utils.decorators import method_decorator
 from xadmin import widgets as exwidgets
 from xadmin.layout import FormHelper
 from xadmin.models import UserSettings, UserWidget
@@ -587,7 +588,7 @@ class Dashboard(CommAdminView):
         context.update(new_context)
         return context
 
-    @never_cache
+    @method_decorator(never_cache)
     def get(self, request, *args, **kwargs):
         self.widgets = self.get_widgets()
         return self.template_response('xadmin/views/dashboard.html', self.get_context())
@@ -661,7 +662,7 @@ class ModelDashboard(Dashboard, ModelAdminView):
         context.update(new_context)
         return context
 
-    @never_cache
+    @method_decorator(never_cache)
     def get(self, request, *args, **kwargs):
         self.widgets = self.get_widgets()
         return self.template_response(self.get_template_list('views/model_dashboard.html'), self.get_context())

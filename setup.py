@@ -6,7 +6,7 @@ from setuptools import setup
 
 setup(
     name='xadmin',
-    version='2.0.1',
+    version='4.0.1',
     description='Drop-in replacement of Django admin comes with lots of goodies, fully extensible with plugin support, pretty UI based on Twitter Bootstrap.',
     long_description=open('README.rst', encoding='utf-8').read(),
     author='sshwsfc',
@@ -18,18 +18,18 @@ setup(
     include_package_data=True,
     install_requires=[
         'setuptools',
-        'django>=2',
-        'django-crispy-forms>=1.6.0',
-        'django-reversion>=2.0.0',
-        'django-formtools>=1.0',
-        'django-import-export>=0.5.1',
-        'httplib2==0.9.2',
-        'future',
-        'six'
+        'django<5,>=4',
+        'django-crispy-forms==1.14.0',
+        'django-reversion==5.0.8',
+        'django-formtools==2.5.1',
+        'django-import-export==3.3.5',
+        'httplib2==0.22.0',
+        'future==0.18.3',
+        'six==1.16.0'
     ],
     extras_require={
         'Excel': ['xlwt', 'xlsxwriter'],
-        'Reversion': ['django-reversion>=2.0.0'],
+        'Reversion': ['django-reversion==5.0.8'],
     },
     zip_safe=False,
     keywords=['admin', 'django', 'xadmin', 'bootstrap'],
@@ -43,7 +43,7 @@ setup(
         "Programming Language :: JavaScript",
         'Programming Language :: Python',
         "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.11",
         "Topic :: Internet :: WWW/HTTP",
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
         "Topic :: Software Development :: Libraries :: Python Modules",

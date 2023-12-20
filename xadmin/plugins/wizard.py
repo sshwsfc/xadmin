@@ -13,8 +13,8 @@ except:
     from django.contrib.formtools.wizard.forms import ManagementForm
     from django.contrib.formtools.wizard.views import StepsHelper
 
-from django.utils import six
-from django.utils.encoding import smart_text
+import six
+from django.utils.encoding import smart_str as smart_text
 from django.utils.module_loading import import_string
 from django.forms import ValidationError
 from django.forms.models import modelform_factory
@@ -61,10 +61,13 @@ class WizardFormPlugin(BaseAdminPlugin):
             self._form_list = init_form_list
 
         return self._form_list
+    
+    def is_ajax(self):
+        return bool(self.request.headers.get('x-requested-with') == 'XMLHttpRequest' or self.request.GET.get('_ajax'))
 
     # Plugin replace methods
     def init_request(self, *args, **kwargs):
-        if self.request.is_ajax() or ("_ajax" in self.request.GET) or not hasattr(self.request, 'session') or (args and not self.wizard_for_update):
+        if self.is_ajax() or ("_ajax" in self.request.GET) or not hasattr(self.request, 'session') or (args and not self.wizard_for_update):
             # update view
             return False
         return bool(self.wizard_form_list)

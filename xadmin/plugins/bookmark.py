@@ -7,8 +7,8 @@ from django.forms import ModelChoiceField
 from django.http import QueryDict
 from django.template import loader
 from django.utils.decorators import method_decorator
-from django.utils.encoding import smart_text
-from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import smart_str as smart_text
+from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import csrf_protect
 
 from xadmin.filters import FILTER_PREFIX, SEARCH_VAR
